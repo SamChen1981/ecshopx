@@ -62,7 +62,7 @@ class UserRank extends BaseModel
         Log::debug("用户ID记录".$uid);
         $user = Member::where('user_id', $uid)->first();
 
-        $data = ['rank_id' => 0,'discount' => 1];        
+        $data = ['rank_id' => 0,'discount' => 1];
         if (!$user) {
             $data = null;
         } else {

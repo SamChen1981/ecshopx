@@ -360,7 +360,8 @@ class Member extends BaseModel
             $activation = md5($model->user_id . $hash_code . $model->reg_time);
 
             //Send mail
-            Mail::send('emails.reset',
+            Mail::send(
+                'emails.reset',
             [
                 'username' => $model->user_name,
                 'sitename' => env('MAIL_FROM_NAME'),
@@ -369,7 +370,8 @@ class Member extends BaseModel
             function ($message) use ($model) {
                 $message->to($model->email)
                   ->subject(trans('message.email.reset.subject'));
-            });
+            }
+            );
 
             return self::formatBody();
         }
@@ -448,7 +450,8 @@ class Member extends BaseModel
         }
 
         // login
-        return self::formatBody(['token' => Token::encode(['uid' => $user_id]), 'user' => Member::where('user_id', $user_id)->first(),'openid'=>$open_id,'is_new_user' => $is_new_user]
+        return self::formatBody(
+            ['token' => Token::encode(['uid' => $user_id]), 'user' => Member::where('user_id', $user_id)->first(),'openid'=>$open_id,'is_new_user' => $is_new_user]
             );
     }
 
@@ -877,9 +880,9 @@ class Member extends BaseModel
         /* 格式化帐户余额 */
         if ($user) {
             //        if ($user['user_money'] < 0)
-    //        {
-    //            $user['user_money'] = 0;
-    //        }
+            //        {
+            //            $user['user_money'] = 0;
+            //        }
             $user['formated_user_money'] = Goods::price_format($user['user_money'], false);
             $user['formated_frozen_money'] = Goods::price_format($user['frozen_money'], false);
         }

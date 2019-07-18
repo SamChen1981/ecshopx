@@ -531,7 +531,7 @@ class AopClient
             $inflector->conf["separator"] = ".";
             $setterMethodName = "set" . $inflector->camelize($setterMethodName);
             if (method_exists($req, $setterMethodName)) {
-                $req->$setterMethodName ($paraValue);
+                $req->$setterMethodName($paraValue);
             }
         }
         return $this->execute($req, $session);

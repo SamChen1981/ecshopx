@@ -43,7 +43,7 @@ class UnionNotifyController extends BaseController
             $out_trade_no = $unionpay->params['queryId'];
             $order_sn = $unionpay->params['orderId'];
 
-           //业务代码
+            //业务代码
             $this->pay($order_sn, $out_trade_no);
 
             $this->callback(json_encode($unionpay->params), $order_sn, $out_trade_no);

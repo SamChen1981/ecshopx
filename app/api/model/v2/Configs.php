@@ -216,13 +216,13 @@ class Configs extends BaseModel
         return $body;
     }
 
-   /**
-    * 二进制流生成文件
-    * $_POST 无法解释二进制流，需要用到 $GLOBALS['HTTP_RAW_POST_DATA'] 或 php://input
-    * $GLOBALS['HTTP_RAW_POST_DATA'] 和 php://input 都不能用于 enctype=multipart/form-data
-    * @param    String  $file   要生成的文件路径
-    * @return   boolean
-    */
+    /**
+     * 二进制流生成文件
+     * $_POST 无法解释二进制流，需要用到 $GLOBALS['HTTP_RAW_POST_DATA'] 或 php://input
+     * $GLOBALS['HTTP_RAW_POST_DATA'] 和 php://input 都不能用于 enctype=multipart/form-data
+     * @param    String  $file   要生成的文件路径
+     * @return   boolean
+     */
     public function binary_to_file($src, $file)
     {
         $ret = file_put_contents($file, $src);

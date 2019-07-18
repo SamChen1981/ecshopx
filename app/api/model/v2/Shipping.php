@@ -110,7 +110,7 @@ class Shipping extends BaseModel
         }
     
         // 查看购物车中是否全为免运费商品，若是则把运费赋为零
-    $is_shipping = Goods::whereIn('goods_id', $goods_ids)
+        $is_shipping = Goods::whereIn('goods_id', $goods_ids)
             ->where('is_shipping', 0)
             ->count();
         if ($is_shipping == 0) {
@@ -126,7 +126,7 @@ class Shipping extends BaseModel
            ->where('shipping.enabled', 1)
            ->where('shipping.shipping_id', $shipping_id)
            ->first();
-        if(!$model){
+        if (!$model) {
             return false;
         }
 

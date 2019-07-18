@@ -625,7 +625,7 @@ class Goods extends BaseModel
         Log::debug("平台记录".json_encode($user_agent));
         if ($user_agent == array('Platform' => 'Wechat')) {
             $volume_price  = '0'; //商品优惠价格
-        } 
+        }
         // else {
         //     $goods_list =array(
         //          array(
@@ -820,7 +820,7 @@ class Goods extends BaseModel
 
     public static function purchase(array $attributes)
     {
-        Log::info("create order log begin==".__FUNCTION__."==".__LINE__."==attributes:",$attributes);
+        Log::info("create order log begin==".__FUNCTION__."==".__LINE__."==attributes:", $attributes);
         extract($attributes);
 
         $user_id = Token::authorization();
@@ -867,14 +867,14 @@ class Goods extends BaseModel
             $property = [];
         }
         $good['property'] = $property;
-        Log::info("create order log==function:".__FUNCTION__."==".__LINE__."==property：",$property);
+        Log::info("create order log==function:".__FUNCTION__."==".__LINE__."==property：", $property);
         /* 如果商品有规格则取规格商品信息 配件除外 property */
         $prod = Products::where('goods_id', $product)->first();
         $prod_arr = $prod ? $prod->toArray() : [];
-        Log::info("create order log==function:".__FUNCTION__."==".__LINE__."==prod：",$prod_arr);
+        Log::info("create order log==function:".__FUNCTION__."==".__LINE__."==prod：", $prod_arr);
         if (Attribute::is_property($property) && !empty($prod)) {
             $product_info = Products::get_products_info($product, $property);
-            Log::info("create order log==function:".__FUNCTION__."==".__LINE__."==is_property is not prod==product_info:",$product_info->toArray());
+            Log::info("create order log==function:".__FUNCTION__."==".__LINE__."==is_property is not prod==product_info:", $product_info->toArray());
         }
         if (empty($product_info)) {
             Log::info("create order log==function:".__FUNCTION__."==".__LINE__."==product_info is empty");
@@ -1021,8 +1021,8 @@ class Goods extends BaseModel
         }
         /* 订单中的总额 */
         $total = Order::purchase_fee($order, $good, $property_price, $goods_price, $amount, $consignee_info, $shipping, $consignee);
-        Log::info("create order log==function:".__FUNCTION__."==".__LINE__."==计算订单中的总额total=",$total);
-        if($total === false){
+        Log::info("create order log==function:".__FUNCTION__."==".__LINE__."==计算订单中的总额total=", $total);
+        if ($total === false) {
             return self::formatError(self::BAD_REQUEST, trans('message.shipping.error'));
         }
         /* 红包 */
@@ -1108,7 +1108,7 @@ class Goods extends BaseModel
         unset($order['wasRecentlyCreated']);
         unset($order['cod_fee']);
 
-        Log::info("create order log==function:".__FUNCTION__."==".__LINE__."==创建order之前，order:",$order);
+        Log::info("create order log==function:".__FUNCTION__."==".__LINE__."==创建order之前，order:", $order);
         $new_order_id      = Order::insertGetId($order);
         $order['order_id'] = $new_order_id;
 
@@ -1137,7 +1137,7 @@ class Goods extends BaseModel
         $order_good->parent_id      = 0;
         $order_good->is_gift        = 0;
         $order_good->goods_attr_id  = $goods_attr_id;
-        Log::info("create order log end==".__FUNCTION__."==".__LINE__."==OrderGoods:",['order_id'=>$order_good->order_id,'goods_id'=>$order_good->goods_id,'goods_name'=>$order_good->goods_name,'goods_sn'=>$order_good->goods_sn,'product_id'=>$order_good->product_id,'goods_number'=>$order_good->goods_number,'goods_attr'=>$order_good->goods_attr]);
+        Log::info("create order log end==".__FUNCTION__."==".__LINE__."==OrderGoods:", ['order_id'=>$order_good->order_id,'goods_id'=>$order_good->goods_id,'goods_name'=>$order_good->goods_name,'goods_sn'=>$order_good->goods_sn,'product_id'=>$order_good->product_id,'goods_number'=>$order_good->goods_number,'goods_attr'=>$order_good->goods_attr]);
         $order_good->save();
 
         /* 修改拍卖活动状态 */
@@ -1179,7 +1179,7 @@ class Goods extends BaseModel
             'consignee' => $order['consignee'],//收货人姓名
             'tel' => $order['tel'],//收货人手机号
         ];
-        Sms::sendSms('sms_order_placed',$params,null);
+        Sms::sendSms('sms_order_placed', $params, null);
         return self::formatBody(['order' => $orderObj]);
     }
 }

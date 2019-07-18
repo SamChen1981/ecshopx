@@ -74,27 +74,27 @@ if (! function_exists('formatPhoto')) {
      * @param  string $photo
      * @return array
      */
-     function formatPhoto($img, $thumb = null, $domain = null)
-     {
-         if ($img == null) {
-             return null;
-         }
-         if ($thumb == null) {
-             $thumb = $img;
-         }
+    function formatPhoto($img, $thumb = null, $domain = null)
+    {
+        if ($img == null) {
+            return null;
+        }
+        if ($thumb == null) {
+            $thumb = $img;
+        }
         
-         $domain = $domain == null ?  config('app.shop_url') : $domain ;
+        $domain = $domain == null ?  config('app.shop_url') : $domain ;
 
-         if (!preg_match('/^http/', $thumb)  &&!preg_match('/^https/', $thumb)) {
-             $thumb =  $domain.'/'.$thumb ;
-         }
+        if (!preg_match('/^http/', $thumb)  &&!preg_match('/^https/', $thumb)) {
+            $thumb =  $domain.'/'.$thumb ;
+        }
 
 
-         if (!preg_match('/^http/', $img)  &&!preg_match('/^https/', $img)) {
-             $img =  $domain.'/'.$img ;
-         }
+        if (!preg_match('/^http/', $img)  &&!preg_match('/^https/', $img)) {
+            $img =  $domain.'/'.$img ;
+        }
 
-         return [
+        return [
             'width'  => null,
             'height' => null,
 
@@ -102,7 +102,7 @@ if (! function_exists('formatPhoto')) {
             'thumb'  => $thumb,
             'large'  => $img
         ];
-     }
+    }
 }
 
 if (! function_exists('curl_request')) {

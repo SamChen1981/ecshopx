@@ -308,6 +308,7 @@ class Token
                 } else {
                     return $signature;
                 }
+                // no break
             case 'hash_hmac':
             default:
                 $hash = hash_hmac($algorithm, $msg, $key, true);

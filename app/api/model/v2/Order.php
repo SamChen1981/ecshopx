@@ -266,17 +266,17 @@ class Order extends BaseModel
         // 税额
         $need_inv = ShopConfig::findByCode('can_invoice');
         $inv_type = isset($invoice_type) ? $invoice_type : '';
-        if($need_inv == '1' && $inv_type != ""){
+        if ($need_inv == '1' && $inv_type != "") {
             $rate = 0;
             // 查询发票税率
             $invoice = ShopConfig::findByCode('invoice_type');
             $invoice = unserialize($invoice);
             foreach ($invoice['type'] as $key => $type) {
-                if($key+1 == $invoice_type){
+                if ($key+1 == $invoice_type) {
                     $rate = floatval($invoice['rate'][$key]) / 100;
                 }
             }
-            if($rate > 0){
+            if ($rate > 0) {
                 $total['tax'] = $rate * $total['goods_price'];
             }
         }
@@ -400,11 +400,11 @@ class Order extends BaseModel
         $order_price['shipping_price'] = Goods::price_format($total['shipping_fee_formated'], false);
         $order_price['promos'] = [];
         // if (isset($cashgift)) {
-            $order_price['promos'][] = ['promo' => 'cashgift','price' => $total['bonus_formated']];
+        $order_price['promos'][] = ['promo' => 'cashgift','price' => $total['bonus_formated']];
         // }
 
         // if (isset($score)) {
-            $order_price['promos'][] = ['promo' => 'score','price' => $total['integral_formated']];
+        $order_price['promos'][] = ['promo' => 'score','price' => $total['integral_formated']];
         // }
         if ($total['discount_formated'] > 0) {
             $order_price['promos'][] = ['promo' => 'preferential','price' => $total['discount_formated']];
@@ -793,21 +793,20 @@ class Order extends BaseModel
 
         /* 税额 */
         $need_inv = ShopConfig::findByCode('can_invoice');
-        if($need_inv == '1' && $order['inv_type'] != ""){
+        if ($need_inv == '1' && $order['inv_type'] != "") {
             $rate = 0;
             // 查询发票税率
             $invoice = ShopConfig::findByCode('invoice_type');
             $invoice = unserialize($invoice);
             foreach ($invoice['type'] as $key => $type) {
-                if($key+1 == $order['inv_type']){
+                if ($key+1 == $order['inv_type']) {
                     $rate = floatval($invoice['rate'][$key]) / 100;
                 }
             }
-            if($rate > 0){
+            if ($rate > 0) {
                 $total['tax'] = $rate * $total['goods_price'];
-                Log::info('total',$total);
+                Log::info('total', $total);
             }
-            
         }
         $total['tax_formated'] = Goods::price_format($total['tax'], false);
 
@@ -824,11 +823,11 @@ class Order extends BaseModel
         $total['bonus_formated'] = Goods::price_format($total['bonus'], false);
 
         /* 线下红包 */
-         if (!empty($order['bonus_kill'])) {
-             $bonus          = BonusType::bonus_info(0, $order['bonus_kill']);
-             $total['bonus_kill'] = $order['bonus_kill'];
-             $total['bonus_kill_formated'] = Goods::price_format($total['bonus_kill'], false);
-         }
+        if (!empty($order['bonus_kill'])) {
+            $bonus          = BonusType::bonus_info(0, $order['bonus_kill']);
+            $total['bonus_kill'] = $order['bonus_kill'];
+            $total['bonus_kill_formated'] = Goods::price_format($total['bonus_kill'], false);
+        }
 
 
         /* 配送费用 */
@@ -934,7 +933,7 @@ class Order extends BaseModel
         $weight = 0;
         /* 商品总价 */
 
-            /* 统计实体商品的个数 */
+        /* 统计实体商品的个数 */
         $total['real_goods_count'] = $amount;
 
         $total['goods_price']  += $goods_price * $amount;
@@ -956,21 +955,20 @@ class Order extends BaseModel
         $total['discount_formated'] = Goods::price_format($total['discount'], false);
         /* 税额 */
         $need_inv = ShopConfig::findByCode('can_invoice');
-        if($need_inv == '1' && $order['inv_type'] != ""){
+        if ($need_inv == '1' && $order['inv_type'] != "") {
             $rate = 0;
             // 查询发票税率
             $invoice = ShopConfig::findByCode('invoice_type');
             $invoice = unserialize($invoice);
             foreach ($invoice['type'] as $key => $type) {
-                if($key+1 == $order['inv_type']){
+                if ($key+1 == $order['inv_type']) {
                     $rate = floatval($invoice['rate'][$key]) / 100;
                 }
             }
-            if($rate > 0){
+            if ($rate > 0) {
                 $total['tax'] = $rate * $total['goods_price'];
-                Log::info('total',$total);
+                Log::info('total', $total);
             }
-            
         }
         $total['tax_formated'] = Goods::price_format($total['tax'], false);
 
@@ -987,11 +985,11 @@ class Order extends BaseModel
         $total['bonus_formated'] = Goods::price_format($total['bonus'], false);
 
         /* 线下红包 */
-         if (!empty($order['bonus_kill'])) {
-             $bonus          = BonusType::bonus_info(0, $order['bonus_kill']);
-             $total['bonus_kill'] = $order['bonus_kill'];
-             $total['bonus_kill_formated'] = Goods::price_format($total['bonus_kill'], false);
-         }
+        if (!empty($order['bonus_kill'])) {
+            $bonus          = BonusType::bonus_info(0, $order['bonus_kill']);
+            $total['bonus_kill'] = $order['bonus_kill'];
+            $total['bonus_kill_formated'] = Goods::price_format($total['bonus_kill'], false);
+        }
 
 
         /* 配送费用 */
@@ -1006,7 +1004,7 @@ class Order extends BaseModel
             $goods['goods_id'] = $goods['id'];
             $goods_array[] = $goods;
             $total['shipping_fee'] = Shipping::shipFee($consignee_id, $goods_array, $shipping);
-            if($total['shipping_fee'] === false){
+            if ($total['shipping_fee'] === false) {
                 return false;
             }
         }

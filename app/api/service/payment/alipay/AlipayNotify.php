@@ -67,8 +67,8 @@ class AlipayNotify
                 $isSignStr = 'false';
             }
             $log_text = "responseTxt=".$responseTxt."\n notify_url_log:isSign=".$isSignStr.",";
-//			$log_text = $log_text.createLinkString($_POST);
-//			logResult($log_text);
+            //			$log_text = $log_text.createLinkString($_POST);
+            //			logResult($log_text);
             //验证
             //$responsetTxt的结果不是true，与服务器设置问题、合作身份者ID、notify_id一分钟失效有关
             //isSign的结果不是true，与安全校验码、请求时的参数格式（如：带自定义参数等）、编码格式有关
@@ -105,7 +105,7 @@ class AlipayNotify
             }
             $log_text = "responseTxt=".$responseTxt."\n return_url_log:isSign=".$isSignStr.",";
             $log_text = $log_text.createLinkString($_GET);
-//			logResult($log_text);
+            //			logResult($log_text);
 
             //验证
             //$responsetTxt的结果不是true，与服务器设置问题、合作身份者ID、notify_id一分钟失效有关

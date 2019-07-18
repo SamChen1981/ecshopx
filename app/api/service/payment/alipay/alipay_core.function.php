@@ -19,11 +19,11 @@
 function createLinkstring($para)
 {
     $arg  = "";
-    foreach ($para as $key => $val) { 
+    foreach ($para as $key => $val) {
         $arg.=$key."=".$val."&";
     }
     //去掉最后一个&字符
-    $arg = rtrim($arg,'&');
+    $arg = rtrim($arg, '&');
 
     //如果存在转义字符，那么去掉转义
     if (get_magic_quotes_gpc()) {
@@ -44,7 +44,7 @@ function createLinkstringUrlencode($para)
         $arg.=$key."=".urlencode($val)."&";
     }
     //去掉最后一个&字符
-    $arg = rtrim($arg,'&');
+    $arg = rtrim($arg, '&');
 
     //如果存在转义字符，那么去掉转义
     if (get_magic_quotes_gpc()) {
@@ -61,7 +61,7 @@ function createLinkstringUrlencode($para)
 function paraFilter($para)
 {
     $para_filter = array();
-    foreach ($para as $key => $val) { 
+    foreach ($para as $key => $val) {
         if ($key == "sign" || $key == "sign_type" || $val == "") {
             continue;
         } else {

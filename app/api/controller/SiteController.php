@@ -18,7 +18,8 @@ class SiteController extends Controller
     }
 
     //POST  ecapi.site.configs
-    public function configs(){
+    public function configs()
+    {
         $rules = [
             'key' => 'required|string',// 要获取的配置项name数组
         ];

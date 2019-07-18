@@ -129,9 +129,9 @@ class Qc
     public function get_distant_contents($url)
     {
         //if (ini_get("allow_url_fopen") == "1") {
-           // $response = file_get_contents($url);
+        // $response = file_get_contents($url);
         //}else{
-            $ch = curl_init();
+        $ch = curl_init();
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_URL, $url);

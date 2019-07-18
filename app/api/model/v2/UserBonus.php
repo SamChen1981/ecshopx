@@ -65,30 +65,29 @@ class UserBonus extends BaseModel
         extract($attribute);
         $uid = Token::authorization();
         Log::info($bonus_sn);
-        if(!$model = self::where('bonus_sn',$bonus_sn)->first() ){
+        if (!$model = self::where('bonus_sn', $bonus_sn)->first()) {
             return self::formatError(self::BAD_REQUEST, trans('message.member.bonus.not_exists'));
         }
-        Log::info("bonus_info",$model->toArray());
-        if($model->user_id != 0){
-            if ($model->user_id == $uid){
+        Log::info("bonus_info", $model->toArray());
+        if ($model->user_id != 0) {
+            if ($model->user_id == $uid) {
                 //红包已经添加过了。
                 return self::formatError(self::BAD_REQUEST, trans('message.member.bonus.is_used'));
-            }else{
+            } else {
                 //红包被其他人使用过了。
                 return self::formatError(self::BAD_REQUEST, trans('message.member.bonus.is_used_by_other'));
             }
             return self::formatError(self::UNKNOWN_ERROR);
         }
         //红包没有被使用
-        $bonus_type = BonusType::where('type_id',$model->bonus_type_id)->select('send_end_date','use_end_date')->first();
-        if(time() > $bonus_type->use_end_date){
+        $bonus_type = BonusType::where('type_id', $model->bonus_type_id)->select('send_end_date', 'use_end_date')->first();
+        if (time() > $bonus_type->use_end_date) {
             return self::formatError(self::BAD_REQUEST, trans('message.member.bonus.use_expire'));
         }
         $data = [
             'user_id' => $uid,
         ];
-        self::where('bonus_id',$model->bonus_id)->update($data);
+        self::where('bonus_id', $model->bonus_id)->update($data);
         return self::formatBody([]);
     }
-
 }

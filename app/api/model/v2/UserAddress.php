@@ -52,14 +52,14 @@ class UserAddress extends BaseModel
     {
         extract($attributes);
         $uid = Token::authorization();
-    // UserAddress::where('address_id', $consignee)->where('user_id', $uid)->delete();
-    if (UserAddress::where('address_id', $consignee)->where('user_id', $uid)->delete()) {
-        if ($address = UserAddress::where('user_id', $uid)->first()) {
-            $model = Member::where('user_id', $uid)->first();
-            $model->address_id = $address->address_id;
-            $model->save();
+        // UserAddress::where('address_id', $consignee)->where('user_id', $uid)->delete();
+        if (UserAddress::where('address_id', $consignee)->where('user_id', $uid)->delete()) {
+            if ($address = UserAddress::where('user_id', $uid)->first()) {
+                $model = Member::where('user_id', $uid)->first();
+                $model->address_id = $address->address_id;
+                $model->save();
+            }
         }
-    }
         return self::formatBody();
     }
 

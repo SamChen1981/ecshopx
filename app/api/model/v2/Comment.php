@@ -86,24 +86,24 @@ class Comment extends BaseModel
         extract($attributes);
 
         $bad = self::where(['comment_type' => self::GOODS, 'id_value' => $product])
-                    ->where('status',1)
+                    ->where('status', 1)
                     ->where(function ($query) {
                         $query->where('comment_rank', '<', '3')->where('comment_rank', '>', 0);
                     })
                     ->count();
 
         $medium = self::where(['comment_type' => self::GOODS, 'id_value' => $product])
-                ->where('status',1)
+                ->where('status', 1)
                 ->where('comment_rank', '=', 3)->count();
 
         $good = self::where(['comment_type' => self::GOODS, 'id_value' => $product])
-                ->where('status',1)
+                ->where('status', 1)
                 ->where(function ($query) {
-                        $query->where('comment_rank', '>', 3)->orWhere('comment_rank', 0);
-                    })
+                    $query->where('comment_rank', '>', 3)->orWhere('comment_rank', 0);
+                })
                 ->count();
 
-        $total = self::where(['comment_type' => self::GOODS, 'id_value' => $product])->where('status',1)->count();
+        $total = self::where(['comment_type' => self::GOODS, 'id_value' => $product])->where('status', 1)->count();
 
         return self::formatBody(['subtotal' => ['total' => $total, 'bad' => $bad, 'medium' => $medium, 'good' => $good]]);
     }

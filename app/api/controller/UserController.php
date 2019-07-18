@@ -266,31 +266,31 @@ class UserController extends Controller
     /**
      * GET /ecapi.auth.web.callback/:vendor
      */
-     public function webCallback($vendor)
-     {
-         $data = Member::webOauthCallback($vendor);
+    public function webCallback($vendor)
+    {
+        $data = Member::webOauthCallback($vendor);
 
-         if (isset($data['error'])) {
-             return $this->json($data);
-         }
+        if (isset($data['error'])) {
+            return $this->json($data);
+        }
 
-         if (isset($_GET['referer'])) {
-             Log::info('微信认证回调成功', $data);
+        if (isset($_GET['referer'])) {
+            Log::info('微信认证回调成功', $data);
 
-             if (isset($data['openid'])) {
-                 Log::info('设置的cookie为' . config('app.domain_url'));
-                 setcookie('o', $data['openid'], time()+7200, '/', config('app.domain_url'));
-             }
+            if (isset($data['openid'])) {
+                Log::info('设置的cookie为' . config('app.domain_url'));
+                setcookie('o', $data['openid'], time()+7200, '/', config('app.domain_url'));
+            }
 
-             if (isset($data['token'])) {
-                 setcookie('t', $data['token'], time()+7200, '/', config('app.domain_url'));
-             }
+            if (isset($data['token'])) {
+                setcookie('t', $data['token'], time()+7200, '/', config('app.domain_url'));
+            }
           
-             return redirect(urldecode($_GET['referer']));
-         }
+            return redirect(urldecode($_GET['referer']));
+        }
         
-         return $this->json(['token' => $data]);
-     }
+        return $this->json(['token' => $data]);
+    }
     
     /**
      * POST /ecapi.auth.mobile.binding

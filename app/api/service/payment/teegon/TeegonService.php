@@ -157,7 +157,7 @@ class TeegonService
     {
         $para_filter = array();
         // while (list($key, $val) = each($para)) { // php7.2废除了 each
-        foreach($para as $key=>$val){
+        foreach ($para as $key=>$val) {
             if ($key == "sign") {
                 continue;
             } else {
@@ -228,7 +228,7 @@ class TeegonService
         
         $sHtml = "<form id='alipaysubmit' name='alipaysubmit' action='".self::TEE_API_URL."charge/pay' method='".$method."'>";
         foreach ($para_temp as $key => $val) { // php7.2废除了 each
-        // while (list($key, $val) = each($para_temp)) {
+            // while (list($key, $val) = each($para_temp)) {
             $sHtml.= "<input type='hidden' name='".$key."' value='".$val."'/>";
         }
 

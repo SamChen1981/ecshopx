@@ -34,17 +34,17 @@ class ShopConfig extends BaseModel
         ];
     }
 
-    public static function getConfigs(array $attributes){
+    public static function getConfigs(array $attributes)
+    {
         extract($attributes);
-        $key = json_decode($key,1);
+        $key = json_decode($key, 1);
         $all_key = ['can_invoice','use_integral'];
         foreach ($key as $name) {
-            if(in_array($name, $all_key)){
+            if (in_array($name, $all_key)) {
                 $data[$name] = self::findByCode($name);
             }
         }
         return $data;
-
     }
 
     private static function getConfigure($configure)

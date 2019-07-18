@@ -63,7 +63,8 @@ class CashGiftController extends Controller
     /**
     * POST ecapi.cashgift.add
     */
-    public function add(Request $request){
+    public function add(Request $request)
+    {
         $rules = [
             'bonus_sn'  => 'required|integer',
         ];

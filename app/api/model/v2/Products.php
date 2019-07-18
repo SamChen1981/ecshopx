@@ -78,7 +78,7 @@ class Products extends BaseModel
 
             $return_array = self::where('goods_id', $goods_id)->where('goods_attr', $goods_attr)->first();
 
-        // if (!empty($return_array)) {
+            // if (!empty($return_array)) {
             //     $return_array = $return_array->toArray();
             // }
         }

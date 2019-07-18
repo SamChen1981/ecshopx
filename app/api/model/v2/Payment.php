@@ -39,19 +39,18 @@ class Payment extends BaseModel
         if ($response['result'] == 'success') {
             if (true) {
                 //余额支付
-                if ($arr = Pay::where(['enabled' => 1, 'pay_code' => 'balance'])->select('pay_code as code','pay_name as name','pay_desc as desc')->first()) {
+                if ($arr = Pay::where(['enabled' => 1, 'pay_code' => 'balance'])->select('pay_code as code', 'pay_name as name', 'pay_desc as desc')->first()) {
                     $arr = $arr->toArray();
                     array_push($model, $arr);
                 }
                 // 货到付款
-                if ($arr = Pay::where(['enabled' => 1, 'pay_code' => 'cod'])->select('pay_code as code','pay_name as name','pay_desc as desc')->first()) {
+                if ($arr = Pay::where(['enabled' => 1, 'pay_code' => 'cod'])->select('pay_code as code', 'pay_name as name', 'pay_desc as desc')->first()) {
                     $orderinfo = Order::where(['order_id'=>$order])->first();
                     $support_cod = Shipping::where(['shipping_id'=>$orderinfo['shipping']['id'],'support_cod'=>1])->first();
-                    if($support_cod){
+                    if ($support_cod) {
                         $arr = $arr->toArray();
                         array_push($model, $arr);
                     }
-                    
                 }
                 if (isset($userAgent['Platform']) && strtolower($userAgent['Platform']) == 'wechat') {
                     // 旗舰版授权...
@@ -108,11 +107,10 @@ class Payment extends BaseModel
 
         $shop_name = ShopConfig::findByCode('shop_name');
         // 查询支付方式id pay_id
-        $paymentModel = Pay::where('pay_code',$code)->select('pay_id','pay_code','pay_name','enabled','type')->first();
+        $paymentModel = Pay::where('pay_code', $code)->select('pay_id', 'pay_code', 'pay_name', 'enabled', 'type')->first();
         $pay_id = $paymentModel?$paymentModel->pay_id:65535;
 
         if ($code == "wxpay.h5") {
-
             $payment = self::where(['type' => 'payment', 'status' => 1, 'code' => $code])->first();
 
             if (!$payment) {
@@ -141,9 +139,9 @@ class Payment extends BaseModel
 
             Log::debug('请求参数' . json_encode($data));
 
-            $xml = self::arraytoxml($data);      
+            $xml = self::arraytoxml($data);
             $url = "https://api.mch.weixin.qq.com/pay/unifiedorder";
-            $dataxml = self::http_post($url,$xml);
+            $dataxml = self::http_post($url, $xml);
             $objectxml = (array)simplexml_load_string($dataxml, 'SimpleXMLElement', LIBXML_NOCDATA);
             Log::debug('返回结果' . json_encode($objectxml));
             if ($objectxml['return_code'] == 'SUCCESS') {
@@ -152,8 +150,8 @@ class Payment extends BaseModel
                 } else {
                     return self::formatBody(['message' => $objectxml['err_code_des']]);
                 }
-            }else{
-                $msg = array_get($objectxml,'return_msg','请求失败');
+            } else {
+                $msg = array_get($objectxml, 'return_msg', '请求失败');
                 return self::formatBody(['message' => $msg]);
             }
             return false;
@@ -272,12 +270,12 @@ class Payment extends BaseModel
                 'consignee' => $order->consignee['name'],//收货人姓名
                 'tel' => $order->tel,//收货人手机号
             ];
-            Sms::sendSms('sms_order_payed',$params,null);//消费者支付订单时发商家
+            Sms::sendSms('sms_order_payed', $params, null);//消费者支付订单时发商家
             $params = [
                 'order_sn' => $order->order_sn,
                 'money_paid' => $order->money_paid,//支付金额
             ];
-            Sms::sendSms('sms_order_payed_to_customer',$params,$order->tel);//消费者支付订单时发消费者
+            Sms::sendSms('sms_order_payed_to_customer', $params, $order->tel);//消费者支付订单时发消费者
             return self::formatBody(['order' => $order]);
         }
 
@@ -310,12 +308,12 @@ class Payment extends BaseModel
                 'consignee' => $order->consignee['name'],//收货人姓名
                 'tel' => $order->tel,//收货人手机号
             ];
-            Sms::sendSms('sms_order_payed',$params,null);//消费者支付订单时发商家
+            Sms::sendSms('sms_order_payed', $params, null);//消费者支付订单时发商家
             $params = [
                 'order_sn' => $order->order_sn,
                 'money_paid' => $order->money_paid,//支付金额
             ];
-            Sms::sendSms('sms_order_payed_to_customer',$params,$order->tel);//消费者支付订单时发消费者
+            Sms::sendSms('sms_order_payed_to_customer', $params, $order->tel);//消费者支付订单时发消费者
             return self::formatBody(['order' => $order]);
         }
         if ($code == 'alipay.app') {
@@ -602,7 +600,7 @@ class Payment extends BaseModel
                 'version' => '5.1.0',         //版本号
                 'encoding' => 'utf-8',        //编码方式
                 'signMethod' => '01',         //签名方法
-                'txnType' => '01',            //交易类型    
+                'txnType' => '01',            //交易类型
                 'txnSubType' => '01',         //交易子类
                 'bizType' => '000201',        //业务类型
                 'accessType' => '0',          //接入类型
@@ -614,7 +612,7 @@ class Payment extends BaseModel
                 'currencyCode' => '156', //交易币种
                 'backUrl' => url('/v2/order.notify.unionpay.app'), //后台通知地址
                 'signature' => '', //签名
-                'frontUrl' => SDKConfig::getSDKConfig()->frontTransUrl, //前台通知地址  
+                'frontUrl' => SDKConfig::getSDKConfig()->frontTransUrl, //前台通知地址
                 // 'certId' => 77917653140,
                 );
             //私钥证书
@@ -622,11 +620,11 @@ class Payment extends BaseModel
             $cert_path = $signCert;
             $cert_pwd = $config['cert_pwd'];
 
-            AcpService::signByCertInfo( $params, $cert_path, $cert_pwd ); // 签名
+            AcpService::signByCertInfo($params, $cert_path, $cert_pwd); // 签名
 
             //消费接口地址
             $url = SDKConfig::getSDKConfig()->appTransUrl;
-            $result_arr = AcpService::post ( $params, $url);
+            $result_arr = AcpService::post($params, $url);
 
             if (!isset($result_arr['tn'])) {
                 Log::debug('获取银联受理订单号失败，错误码：' . $result_arr['respMsg']);
@@ -641,7 +639,7 @@ class Payment extends BaseModel
     {
         Log::info('支付开始回调');
         // 查询支付方式id pay_id
-        $paymentModel = Pay::where('pay_code',$code)->select('pay_id','pay_code','pay_name','enabled','type')->first();
+        $paymentModel = Pay::where('pay_code', $code)->select('pay_id', 'pay_code', 'pay_name', 'enabled', 'type')->first();
         $pay_id = $paymentModel?$paymentModel->pay_id:65535;
 
         //--------- 天工收银 notify ----------
@@ -672,12 +670,12 @@ class Payment extends BaseModel
                         'consignee' => $order->consignee['name'],//收货人姓名
                         'tel' => $order->tel,//收货人手机号
                     ];
-                    Sms::sendSms('sms_order_payed',$params,null);//消费者支付订单时发商家
+                    Sms::sendSms('sms_order_payed', $params, null);//消费者支付订单时发商家
                     $params = [
                         'order_sn' => $order->order_sn,
                         'money_paid' => $order->money_paid,//支付金额
                     ];
-                    Sms::sendSms('sms_order_payed_to_customer',$params,$order->tel);//消费者支付订单时发消费者
+                    Sms::sendSms('sms_order_payed_to_customer', $params, $order->tel);//消费者支付订单时发消费者
                     Log::info('notify_order:'. json_encode($order));
 
                     Log::info('notify_is_success:'. $_POST['is_success']);
@@ -751,12 +749,12 @@ class Payment extends BaseModel
                         'consignee' => $order->consignee['name'],//收货人姓名
                         'tel' => $order->tel,//收货人手机号
                     ];
-                    Sms::sendSms('sms_order_payed',$params,null);//消费者支付订单时发商家
+                    Sms::sendSms('sms_order_payed', $params, null);//消费者支付订单时发商家
                     $params = [
                         'order_sn' => $order->order_sn,
                         'money_paid' => $order->money_paid,//支付金额
                     ];
-                    Sms::sendSms('sms_order_payed_to_customer',$params,$order->tel);//消费者支付订单时发消费者
+                    Sms::sendSms('sms_order_payed_to_customer', $params, $order->tel);//消费者支付订单时发消费者
                 } elseif ($_POST['trade_status'] == 'TRADE_SUCCESS') {
                     //修改订单状态
                     $order->order_status = Order::OS_CONFIRMED;
@@ -778,12 +776,12 @@ class Payment extends BaseModel
                         'consignee' => $order->consignee['name'],//收货人姓名
                         'tel' => $order->tel,//收货人手机号
                     ];
-                    Sms::sendSms('sms_order_payed',$params,null);//消费者支付订单时发商家
+                    Sms::sendSms('sms_order_payed', $params, null);//消费者支付订单时发商家
                     $params = [
                         'order_sn' => $order->order_sn,
                         'money_paid' => $order->money_paid,//支付金额
                     ];
-                    Sms::sendSms('sms_order_payed_to_customer',$params,$order->tel);//消费者支付订单时发消费者
+                    Sms::sendSms('sms_order_payed_to_customer', $params, $order->tel);//消费者支付订单时发消费者
                 } else {
                     Log::error('订单支付回调处理异常: '.$out_trade_no);
                     Log::error('TRADE_STATUS:'.$_POST['trade_status']);
@@ -866,12 +864,12 @@ class Payment extends BaseModel
                         'consignee' => $order->consignee['name'],//收货人姓名
                         'tel' => $order->tel,//收货人手机号
                     ];
-                    Sms::sendSms('sms_order_payed',$params,null);//消费者支付订单时发商家
+                    Sms::sendSms('sms_order_payed', $params, null);//消费者支付订单时发商家
                     $params = [
                         'order_sn' => $order->order_sn,
                         'money_paid' => $order->money_paid,//支付金额
                     ];
-                    Sms::sendSms('sms_order_payed_to_customer',$params,$order->tel);//消费者支付订单时发消费者
+                    Sms::sendSms('sms_order_payed_to_customer', $params, $order->tel);//消费者支付订单时发消费者
                 } else {
                     Log::error('后台通知失败');
                 }
@@ -957,12 +955,12 @@ class Payment extends BaseModel
                         'consignee' => $order->consignee['name'],//收货人姓名
                         'tel' => $order->tel,//收货人手机号
                     ];
-                    Sms::sendSms('sms_order_payed',$params,null);//消费者支付订单时发商家
+                    Sms::sendSms('sms_order_payed', $params, null);//消费者支付订单时发商家
                     $params = [
                         'order_sn' => $order->order_sn,
                         'money_paid' => $order->money_paid,//支付金额
                     ];
-                    Sms::sendSms('sms_order_payed_to_customer',$params,$order->tel);//消费者支付订单时发消费者
+                    Sms::sendSms('sms_order_payed_to_customer', $params, $order->tel);//消费者支付订单时发消费者
                     Log::error('微信公众号支付成功');
                 } else {
                     Log::error('后台通知失败');
@@ -1039,12 +1037,12 @@ class Payment extends BaseModel
                     'consignee' => $order->consignee['name'],//收货人姓名
                     'tel' => $order->tel,//收货人手机号
                 ];
-                Sms::sendSms('sms_order_payed',$params,null);//消费者支付订单时发商家
+                Sms::sendSms('sms_order_payed', $params, null);//消费者支付订单时发商家
                 $params = [
                     'order_sn' => $order->order_sn,
                     'money_paid' => $order->money_paid,//支付金额
                 ];
-                Sms::sendSms('sms_order_payed_to_customer',$params,$order->tel);//消费者支付订单时发消费者
+                Sms::sendSms('sms_order_payed_to_customer', $params, $order->tel);//消费者支付订单时发消费者
             }
             echo 'success';
             return true;
@@ -1118,12 +1116,12 @@ class Payment extends BaseModel
                         'consignee' => $order->consignee['name'],//收货人姓名
                         'tel' => $order->tel,//收货人手机号
                     ];
-                    Sms::sendSms('sms_order_payed',$params,null);//消费者支付订单时发商家
+                    Sms::sendSms('sms_order_payed', $params, null);//消费者支付订单时发商家
                     $params = [
                         'order_sn' => $order->order_sn,
                         'money_paid' => $order->money_paid,//支付金额
                     ];
-                    Sms::sendSms('sms_order_payed_to_customer',$params,$order->tel);//消费者支付订单时发消费者
+                    Sms::sendSms('sms_order_payed_to_customer', $params, $order->tel);//消费者支付订单时发消费者
                 } else {
                     Log::error('后台通知失败');
                 }
@@ -1156,11 +1154,11 @@ class Payment extends BaseModel
         return $this->attributes['description'];
     }
 
-    public static function http_post($url, $data) 
+    public static function http_post($url, $data)
     {
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL,$url);
-        curl_setopt($ch, CURLOPT_HEADER,0);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
@@ -1172,24 +1170,24 @@ class Payment extends BaseModel
     public static function arraytoxml($data)
     {
         $str='<xml>';
-        foreach($data as $k=>$v) {
+        foreach ($data as $k=>$v) {
             $str.='<'.$k.'>'.$v.'</'.$k.'>';
         }
         $str.='</xml>';
         return $str;
     }
 
-    public static function get_client_ip() 
+    public static function get_client_ip()
     {
-        if(getenv('HTTP_CLIENT_IP') && strcasecmp(getenv('HTTP_CLIENT_IP'), 'unknown')) {
+        if (getenv('HTTP_CLIENT_IP') && strcasecmp(getenv('HTTP_CLIENT_IP'), 'unknown')) {
             $ip = getenv('HTTP_CLIENT_IP');
-        } elseif(getenv('HTTP_X_FORWARDED_FOR') && strcasecmp(getenv('HTTP_X_FORWARDED_FOR'), 'unknown')) {
+        } elseif (getenv('HTTP_X_FORWARDED_FOR') && strcasecmp(getenv('HTTP_X_FORWARDED_FOR'), 'unknown')) {
             $ip = getenv('HTTP_X_FORWARDED_FOR');
-        } elseif(getenv('REMOTE_ADDR') && strcasecmp(getenv('REMOTE_ADDR'), 'unknown')) {
+        } elseif (getenv('REMOTE_ADDR') && strcasecmp(getenv('REMOTE_ADDR'), 'unknown')) {
             $ip = getenv('REMOTE_ADDR');
-        } elseif(isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] && strcasecmp($_SERVER['REMOTE_ADDR'], 'unknown')) {
+        } elseif (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] && strcasecmp($_SERVER['REMOTE_ADDR'], 'unknown')) {
             $ip = $_SERVER['REMOTE_ADDR'];
         }
-        return preg_match ( '/[\d\.]{7,15}/', $ip, $matches ) ? $matches [0] : '';
+        return preg_match('/[\d\.]{7,15}/', $ip, $matches) ? $matches [0] : '';
     }
 }

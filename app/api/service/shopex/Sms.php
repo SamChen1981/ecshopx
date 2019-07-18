@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace App\Services\Shopex;
 
 use Log;
@@ -88,9 +88,12 @@ class Sms
         return false;
     }
 
-    public static function sendSms($action,$params,$mobile=null){
-        $_data = self::checkSendSms($action,$params,$mobile);
-        if(!$_data) return false;
+    public static function sendSms($action, $params, $mobile=null)
+    {
+        $_data = self::checkSendSms($action, $params, $mobile);
+        if (!$_data) {
+            return false;
+        }
         //发送短信参数
         $param = array(
            'act' => 'ecmobile_send_sms',//固定方法
@@ -98,7 +101,7 @@ class Sms
            'content' => $_data['content'], //短信内容
            'return_data' => 'json',//返回类型
         );
-        Log::info("发送短信",$param);
+        Log::info("发送短信", $param);
 
         $ac = self::get_ac($param, $_data['token']);//验证签名
 
@@ -114,49 +117,51 @@ class Sms
         return false;
     }
 
-    public static function checkSendSms($action,$params,$mobile=null){
+    public static function checkSendSms($action, $params, $mobile=null)
+    {
         $error = ['action'=>$action,'mobile' => $mobile, 'msg' => ''];
-        if(!in_array($action, self::$action)){
+        if (!in_array($action, self::$action)) {
             $error['msg'] = "短信类型错误";
-            Log::error('短信发送失败',$error);
+            Log::error('短信发送失败', $error);
             return false;
         }
         // 检查是否开启
         $status = ShopConfig::findByCode($action);
-        if($status != 1){
+        if ($status != 1) {
             return false;
         }
         // 获取token
-        if(!$token = self::getToken()){
+        if (!$token = self::getToken()) {
             $error['msg'] = "获取token失败";
-            Log::error('短信发送失败',$error);
+            Log::error('短信发送失败', $error);
             return false;
         }
 
-        if(in_array($action, ['sms_order_placed','sms_order_payed'])){
-            if(!$mobile = self::getShopMobile()){
+        if (in_array($action, ['sms_order_placed','sms_order_payed'])) {
+            if (!$mobile = self::getShopMobile()) {
                 $error['msg'] = "获取商家手机号失败";
-                Log::error('短信发送失败',$error);
+                Log::error('短信发送失败', $error);
                 return false;
             }
         }
 
-        if(!$mobile){
+        if (!$mobile) {
             $error['msg'] = "手机号为空";
-            Log::error('短信发送失败',$error);
+            Log::error('短信发送失败', $error);
             return false;
         }
 
-        $content = self::getConent($action,$params);
-        if($content == ""){
+        $content = self::getConent($action, $params);
+        if ($content == "") {
             $error['msg'] = "内容为空";
-            Log::error('短信发送失败',$error);
+            Log::error('短信发送失败', $error);
             return false;
         }
         return ['token'=>$token,'mobile'=>$mobile,'content'=>$content];
     }
 
-    public static function getToken(){
+    public static function getToken()
+    {
         $certificate_info = ShopConfig::findByCode('certificate');
         
         if (!$certificate_info) {
@@ -172,8 +177,9 @@ class Sms
         return $certificate['token'];
     }
 
-    public static function getConent($action,$params){
-        Log::info("params===",$params);
+    public static function getConent($action, $params)
+    {
+        Log::info("params===", $params);
         $content = "";
         switch ($action) {
             case 'sms_order_placed'://商家接收新订单
@@ -194,12 +200,12 @@ class Sms
                 break;
         }
         return $content;
-        
     }
 
-    public static function getShopMobile(){
+    public static function getShopMobile()
+    {
         // 检查是否设置了商家手机号 shop_config sms_shop_mobile
-        if(!$shop_mobile = ShopConfig::findByCode('sms_shop_mobile')){
+        if (!$shop_mobile = ShopConfig::findByCode('sms_shop_mobile')) {
             return false;
         }
         return $shop_mobile;

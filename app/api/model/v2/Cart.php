@@ -243,7 +243,7 @@ class Cart extends BaseModel
 
     public static function checkout(array $attributes)
     {
-        Log::info("create order begin==function:".__FUNCTION__."==".__LINE__."==attributes:",$attributes);
+        Log::info("create order begin==function:".__FUNCTION__."==".__LINE__."==attributes:", $attributes);
         extract($attributes);
         //-- 完成所有订单操作，提交到数据库
         /* 取得购物类型 */
@@ -325,7 +325,7 @@ class Cart extends BaseModel
         }
 
         /* 扩展信息 */
-            $order['extension_code'] = '';
+        $order['extension_code'] = '';
         $order['extension_id'] = 0;
 
         /* 订单中的商品 */
@@ -380,7 +380,7 @@ class Cart extends BaseModel
 
         /* 订单中的商品 */
         $cart_goods = self::cart_goods($flow_type, $cart_good_ids);
-        Log::info("create order log ==".__FUNCTION__."==".__LINE__."==cart_goods:",$cart_goods->toArray());
+        Log::info("create order log ==".__FUNCTION__."==".__LINE__."==cart_goods:", $cart_goods->toArray());
         if (empty($cart_goods)) {
             return self::formatError(self::BAD_REQUEST, trans('message.cart.no_goods'));
         }
@@ -401,7 +401,7 @@ class Cart extends BaseModel
         $order['zipcode'] = $consignee_info->zipcode;
         $order['district'] = $consignee_info->district;
         $order['address'] = $consignee_info->address;
-       /* 判断是不是实体商品 */
+        /* 判断是不是实体商品 */
         foreach ($cart_goods as $val) {
             /* 统计实体商品的个数 */
             if ($val['is_real']) {
@@ -495,7 +495,7 @@ class Cart extends BaseModel
         unset($order['wasRecentlyCreated']);
         unset($order['cod_fee']);
         // unset($order['surplus']);
-        Log::info("create order function:".__FUNCTION__."==".__LINE__."==创建order之前，order:",$order);
+        Log::info("create order function:".__FUNCTION__."==".__LINE__."==创建order之前，order:", $order);
         $new_order_id = Order::insertGetId($order);
         $order['order_id'] = $new_order_id;
     
@@ -517,7 +517,7 @@ class Cart extends BaseModel
             $order_good->parent_id      = $cart_good->parent_id;
             $order_good->is_gift        = $cart_good->is_gift;
             $order_good->goods_attr_id  = $cart_good->goods_attr_id;
-            Log::info("create order log end==".__FUNCTION__."==".__LINE__."==OrderGoods:",['order_id'=>$order_good->order_id,'goods_id'=>$order_good->goods_id,'goods_name'=>$order_good->goods_name,'goods_sn'=>$order_good->goods_sn,'product_id'=>$order_good->product_id,'goods_number'=>$order_good->goods_number,'goods_attr'=>$order_good->goods_attr]);
+            Log::info("create order log end==".__FUNCTION__."==".__LINE__."==OrderGoods:", ['order_id'=>$order_good->order_id,'goods_id'=>$order_good->goods_id,'goods_name'=>$order_good->goods_name,'goods_sn'=>$order_good->goods_sn,'product_id'=>$order_good->product_id,'goods_number'=>$order_good->goods_number,'goods_attr'=>$order_good->goods_attr]);
             $order_good->save();
         }
 
@@ -602,7 +602,7 @@ class Cart extends BaseModel
             'consignee' => $order['consignee'],//收货人姓名
             'tel' => $order['tel'],//收货人手机号
         ];
-        Sms::sendSms('sms_order_placed',$params,null);
+        Sms::sendSms('sms_order_placed', $params, null);
 
         return self::formatBody(['order' => $orderObj]);
     }
@@ -686,7 +686,7 @@ class Cart extends BaseModel
             ->where('user_id', $uid)
             ->where('goods.is_on_sale', 1)
             ->where('goods.is_delete', 0)
-            ->select('goods.goods_number','cart.goods_number as cart_goods_number','goods_attr_id','goods.goods_id','cart.rec_id')
+            ->select('goods.goods_number', 'cart.goods_number as cart_goods_number', 'goods_attr_id', 'goods.goods_id', 'cart.rec_id')
             ->get();
         foreach ($goods as $key => $value) {
             //订货数量大于0
@@ -984,8 +984,8 @@ class Cart extends BaseModel
                             ->where(DB::raw("CONCAT(',', user_rank, ',')"), 'LIKE', "%".$user_rank."%")
                             ->whereIn('act_type', array(FavourableActivity::FAT_DISCOUNT, FavourableActivity::FAT_PRICE))
                             ->orderBy('min_amount', 'DESC')
-                            ->orderBy('act_range','DESC')
-                            ->orderBy('act_type_ext','DESC')
+                            ->orderBy('act_range', 'DESC')
+                            ->orderBy('act_type_ext', 'DESC')
                             ->get()->toArray();
         if (!$favourable_list) {
             Log::debug("第一步");
@@ -1221,9 +1221,9 @@ class Cart extends BaseModel
         }
         $goods_list = [$order_products];
         foreach ($goods_list as $key => $good) {
-            if(!empty($good['property'])){
-                $goods_list[$key]['price'] = Goods::get_final_price($good['id'], $good['num'],true,$good['property']);
-            }else{
+            if (!empty($good['property'])) {
+                $goods_list[$key]['price'] = Goods::get_final_price($good['id'], $good['num'], true, $good['property']);
+            } else {
                 $goods_list[$key]['price'] = Goods::get_final_price($good['id'], $good['num']);
             }
             $goods_list[$key]['amount'] = $good['num'];
@@ -1373,15 +1373,15 @@ class Cart extends BaseModel
     public static function get_give_integral()
     {
         // $sql = "SELECT SUM(c.goods_number * IF(g.give_integral > -1, g.give_integral, c.goods_price))" .
-            //         "FROM " . $GLOBALS['ecs']->table('cart') . " AS c, " .
-            //                   $GLOBALS['ecs']->table('goods') . " AS g " .
-            //         "WHERE c.goods_id = g.goods_id " .
-            //         "AND c.session_id = '" . SESS_ID . "' " .
-            //         "AND c.goods_id > 0 " .
-            //         "AND c.parent_id = 0 " .
-            //         "AND c.rec_type = 0 " .
-            //         "AND c.is_gift = 0";
-            $allIntegral = Cart::join('goods', 'goods.goods_id', '=', 'cart.goods_id')
+        //         "FROM " . $GLOBALS['ecs']->table('cart') . " AS c, " .
+        //                   $GLOBALS['ecs']->table('goods') . " AS g " .
+        //         "WHERE c.goods_id = g.goods_id " .
+        //         "AND c.session_id = '" . SESS_ID . "' " .
+        //         "AND c.goods_id > 0 " .
+        //         "AND c.parent_id = 0 " .
+        //         "AND c.rec_type = 0 " .
+        //         "AND c.is_gift = 0";
+        $allIntegral = Cart::join('goods', 'goods.goods_id', '=', 'cart.goods_id')
                 ->where('cart.goods_id', '>', 0)
                 ->where('cart.parent_id', '=', 0)
                 ->where('cart.rec_type', '=', 0)

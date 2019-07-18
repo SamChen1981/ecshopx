@@ -109,7 +109,7 @@ class AlipayWapSubmit
         $para = $this->buildRequestPara($para_temp);
         
         $sHtml = "<form id='alipaysubmit' name='alipaysubmit' action='".$this->alipay_gateway_new."_input_charset=".trim(strtolower($this->alipay_config['input_charset']))."' method='".$method."'>";
-        foreach ($para as $key => $val) { 
+        foreach ($para as $key => $val) {
             $sHtml.= "<input type='hidden' name='".$key."' value='".$val."'/>";
         }
 
