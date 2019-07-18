@@ -8,7 +8,6 @@ namespace app\console\controller;
 
 
 
-include_once(ROOT_PATH . "includes/cls_certificate.php");
 /*------------------------------------------------------ */
 //-- 移动端应用配置
 /*------------------------------------------------------ */

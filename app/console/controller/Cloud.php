@@ -8,8 +8,6 @@ namespace app\console\controller;
 
 
 
-require_once(ROOT_PATH . 'includes/cls_transport.php');
-require(ROOT_PATH . 'includes/cls_json.php');
 
 require(ROOT_PATH . 'includes/shopex_json.php');
 
@@ -69,9 +67,7 @@ if ($act == 'menu_api') {
         make_json_result($api_data['content']);
     }
 } elseif ($act == 'load_crontab') {
-    include_once(ROOT_PATH . 'includes/cls_matrix.php');
-    include_once(ROOT_PATH . 'includes/cls_certificate.php');
-    $cert = new certificate();
+            $cert = new certificate();
     $matrix = new matrix();
     if ($cert->is_bind_sn('ecos.taocrm', 'bind_type')) {
         $matrix->push_history_order();//推送历史订单到crm

@@ -61,13 +61,10 @@ if (isset($_SERVER['PHP_SELF'])) {
     define('PHP_SELF', $_SERVER['SCRIPT_NAME']);
 }
 require(ROOT_PATH . 'includes/inc_constant.php');
-require(ROOT_PATH . 'includes/cls_ecshop.php');
-require(ROOT_PATH . 'includes/cls_error.php');
 require(ROOT_PATH . 'includes/lib_time.php');
 require(ROOT_PATH . 'includes/lib_base.php');
 require(ROOT_PATH . 'includes/lib_common.php');
 require(ROOT_PATH . ADMIN_PATH . '/includes/lib_main.php');
-require(ROOT_PATH . ADMIN_PATH . '/includes/cls_exchange.php');
 
 /* 对用户传入的变量进行转义操作。*/
 if (!get_magic_quotes_gpc()) {
@@ -94,7 +91,6 @@ define('DATA_DIR', $ecs->data_dir());
 define('IMAGE_DIR', $ecs->image_dir());
 
 /* 初始化数据库类 */
-require(ROOT_PATH . 'includes/cls_mysql.php');
 $db = new cls_mysql($db_host, $db_user, $db_pass, $db_name);
 $db_host = $db_user = $db_pass = $db_name = null;
 
@@ -102,7 +98,6 @@ $db_host = $db_user = $db_pass = $db_name = null;
 $err = new ecs_error('message.htm');
 
 /* 初始化session */
-require(ROOT_PATH . 'includes/cls_session.php');
 $sess = new cls_session($db, $ecs->table('sessions'), $ecs->table('sessions_data'), 'ECSCP_ID');
 
 /* 初始化 action */
@@ -121,7 +116,6 @@ $_CFG = load_config();
 
 // TODO : 登录部分准备拿出去做，到时候把以下操作一起挪过去
 if ($_REQUEST['act'] == 'captcha') {
-    include(ROOT_PATH . 'includes/cls_captcha.php');
 
     $img = new captcha('../data/captcha/', 104, 36);
     @ob_end_clean(); //清除之前出现的多余输入
@@ -164,7 +158,6 @@ if (preg_replace('/(?:\.|\s+)[a-z]*$/i', '', $_CFG['ecs_version']) != preg_repla
 }
 
 /* 创建 Smarty 对象。*/
-require(ROOT_PATH . 'includes/cls_template.php');
 $smarty = new cls_template;
 
 $smarty->template_dir = ROOT_PATH . ADMIN_PATH . '/templates';
@@ -189,8 +182,7 @@ if (isset($_GET['ent_id']) && isset($_GET['ent_ac']) && isset($_GET['ent_sign'])
     $domain_url = $ecs->url();
     $token = $_GET['token'];
     if ($token == md5(md5($_CFG['token']) . $domain_url . ADMIN_PATH)) {
-        require(ROOT_PATH . 'includes/cls_transport.php');
-        $t = new transport('-1', 5);
+                $t = new transport('-1', 5);
         $apiget = "act=ent_sign&ent_id= $ent_id & certificate_id=$certificate_id";
 
         // $t->request('https://cloud-ecshop.xyunqi.com/api.php', $apiget);

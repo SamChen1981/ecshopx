@@ -521,7 +521,6 @@ elseif ($_REQUEST['act'] == 'batch_drop') {
 elseif ($_REQUEST['act'] == 'search_goods') {
     check_authz_json('group_by');
 
-    include_once(ROOT_PATH . 'includes/cls_json.php');
 
     $json = new JSON;
     $filter = $json->decode($_GET['JSON']);

@@ -22,8 +22,7 @@ class Certificate
         $openapi_key = array('key' => OPENAPI_KEY, 'secret' => OPENAPI_SECRET, 'site' => OPENAPI_SITE, 'oauth' => OPENAPI_OAUTH);
         $openapi_key_old = array('key' => OPENAPI_KEY_OLD, 'secret' => OPENAPI_SECRET_OLD, 'site' => OPENAPI_SITE, 'oauth' => OPENAPI_OAUTH);
         $this->oauth = isset($_COOKIE['use_oldkey']) ? new oauth2($openapi_key) : new oauth2($openapi_key_old);
-        include_once(ROOT_PATH . "includes/cls_transport.php");
-        $this->transport = new transport();
+                $this->transport = new transport();
     }
 
     /**

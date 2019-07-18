@@ -6,8 +6,6 @@ namespace app\home\controller;
  */
 
 // require(ROOT_PATH . 'includes/lib_license.php');
-require_once('includes/cls_certificate.php');
-require_once('includes/cls_json.php');
 define('RETURN_TYPE', empty($_POST['return_data']) ? 1 : ($_POST['return_data'] == 'json' ? 2 : 1));
 define('GMTIME_UTC', gmtime()); // 获取 UTC 时间戳
 /* 接收传递参数并初步检验 */
@@ -195,8 +193,7 @@ function ecmobile_fire_event()
     check_auth();   //检查基本权限
     $type = $_POST['type'];
     $args = $_POST['id'];
-    include_once(ROOT_PATH . 'includes/cls_matrix.php');
-    $matrix = new matrix;
+        $matrix = new matrix;
 
     switch ($type) {
         case 'member_create':
@@ -227,8 +224,7 @@ function yunqi_send_sms()
         api_response('fail', 'ERR_PARAMS', '', RETURN_TYPE);
     }
 
-    include_once(ROOT_PATH . 'includes/cls_sms.php');
-    $sms = new sms();
+        $sms = new sms();
     $is_succ = $sms->send($_POST['phone'], $_POST['content']) ? 'true' : 'fail';
     api_response($is_succ, '', '', RETURN_TYPE);
 }
@@ -660,8 +656,7 @@ function search_order_lists()
     $result['trades'] = array();
 
     //订单结构体
-    include_once(ROOT_PATH . 'includes/cls_matrix.php');
-    $matrix = new matrix;
+        $matrix = new matrix;
     $msg = $matrix->getOrderStruct($order_id, $fields);
     foreach ($row as $val) {
         if ($params = $matrix->getOrderStruct($val['order_sn'], $fields)) {
@@ -685,8 +680,7 @@ function get_orders_info()
     $fields = $data['fields'] ? trim($data['fields']) : '*';
     $order_id = trim($data['order_id']);
     $all = $data['search_all'] ? true : false;
-    include_once(ROOT_PATH . 'includes/cls_matrix.php');
-    $matrix = new matrix;
+        $matrix = new matrix;
     $msg = $matrix->getOrderStruct($order_id, $fields);
     if ($msg) {
         $result['trade'] = last_filter_params($msg, $fields);
@@ -964,8 +958,7 @@ function update_order_status()
                         $loginfo['behavior'] = '死单';
                         $status = 2;
                     } else {
-                        include_once(ROOT_PATH . 'includes/cls_matrix.php');
-                        $matrix = new matrix;
+                                                $matrix = new matrix;
                         $matrix->updateOrder($order_sn);
                         api_err('0x003', "pay_status 不是未支付状态");
                     }
@@ -1485,8 +1478,7 @@ function get_certinfo()
     if (!$data['node_id'] || !$data['token']) {
         api_err('0x003', 'required date invalid');
     }
-    include_once(ROOT_PATH . "includes/cls_certificate.php");
-    $cert = new certificate();
+        $cert = new certificate();
     //验证是否有eid的账号认证过
     $row = $GLOBALS['db']->getRow("select user_id from " . $GLOBALS['ecs']->table('admin_user') . " where passport_uid = '" . trim($data['eid']) . "'");
     if ($row) {
@@ -1933,8 +1925,7 @@ function fy_logistics_offline_send()
 
             /* 如果需要，发短信 */
             if ($GLOBALS['_CFG']['sms_order_shipped'] == '1' && $order['mobile'] != '') {
-                include_once('../includes/cls_sms.php');
-                $sms = new sms();
+                                $sms = new sms();
                 $sms->send($order['mobile'], sprintf(
                     $GLOBALS['_LANG']['order_shipped_sms'],
                     $order['order_sn'],
@@ -2314,8 +2305,7 @@ function ome_create_payments()
         } else {
             log_account_other_change($order['user_id'], $order['order_id'], $order['order_sn'], $data['money'], $data['payment'], $data['t_end']);
         }
-        include_once(ROOT_PATH . 'includes/cls_matrix.php');
-        $matrix = new matrix;
+                $matrix = new matrix;
         $matrix->updateOrder($order['order_sn']);
         // 请求crm
         update_order_crm($order['order_sn']);
@@ -2444,8 +2434,7 @@ function send_refund_to_matrix($data)
     $msg['pay_type'] = $data['pay_type'] ? $data['pay_type'] : 'deposit';
     $msg['status'] = 'SUCC';
     $msg['t_begin'] = date('Y-m-d H:i:s', time());
-    include_once(ROOT_PATH . 'includes/cls_matrix.php');
-    $matrix = new matrix;
+        $matrix = new matrix;
     $is_succ = $matrix->send_refund_to_matrix($msg);
     $is_succ = $matrix->updateOrder($data['order_id']);
 }
@@ -2459,8 +2448,7 @@ function send_refund_to_crm($data)
     $msg['pay_type'] = $data['pay_type'] ? $data['pay_type'] : 'deposit';
     $msg['status'] = 'SUCC';
     $msg['t_begin'] = date('Y-m-d H:i:s', time());
-    include_once(ROOT_PATH . 'includes/cls_matrix.php');
-    $matrix = new matrix;
+        $matrix = new matrix;
     $bind_info = $matrix->get_bind_info(array('ecos.taocrm'));
     if ($bind_info) {
         $matrix->send_refund_to_crm($msg);
@@ -2689,8 +2677,7 @@ function ome_create_delivery()
                 /* 如果需要，发短信 */
                 if ($GLOBALS['_CFG']['sms_order_shipped'] == '1' && $order['mobile'] != '') {
                     require_once(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/admin/order.php');
-                    include_once(ROOT_PATH . 'includes/cls_sms.php');
-                    $sms = new sms();
+                                        $sms = new sms();
                     $sms->send($order['mobile'], sprintf(
                         $GLOBALS['_LANG']['order_shipped_sms'],
                         $order['order_sn'],
@@ -3577,8 +3564,7 @@ function gallery($goods_data, $goods)
     }
 
     include_once(ROOT_PATH . '/' . ADMIN_PATH . '/includes/lib_goods.php');
-    include_once(ROOT_PATH . '/includes/cls_image.php');
-    //筛选出没有保存的图片
+        //筛选出没有保存的图片
     if ($images = array_diff($images, $tmp_img_arr)) {
         $_CFG = load_config();
         $GLOBALS['image'] = new cls_image($_CFG['bgcolor']);
@@ -3743,8 +3729,7 @@ function shopex_goods_search()
 // 更新订单到crm
 function update_order_crm($order_sn)
 {
-    include_once(ROOT_PATH . 'includes/cls_matrix.php');
-    $matrix = new matrix();
+        $matrix = new matrix();
     $bind_info = $matrix->get_bind_info(array('ecos.taocrm'));
     if ($bind_info) {
         return $matrix->updateOrder($order_sn, 'ecos.taocrm');

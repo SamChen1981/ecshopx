@@ -89,8 +89,7 @@ while ($i <= $total) {
         $sn_list[] = $order['order_sn'];
 
         // 通知erp取消订单
-        include_once(ROOT_PATH . 'includes/cls_matrix.php');
-        $matrix = new matrix();
+                $matrix = new matrix();
         $bind_info = $matrix->get_bind_info(array('ecos.ome'));
         if ($bind_info) {
             $matrix->set_dead_order($order_id);

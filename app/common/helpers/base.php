@@ -225,8 +225,7 @@ function send_mail($name, $email, $subject, $content, $type = 0, $notification =
                 return false;
             }
 
-            include_once(ROOT_PATH . 'includes/cls_smtp.php');
-            static $smtp;
+                        static $smtp;
 
             $send_params['recipients'] = $email;
             $send_params['headers'] = $headers;
@@ -269,7 +268,6 @@ function send_mail($name, $email, $subject, $content, $type = 0, $notification =
  */
 function gd_version()
 {
-    include_once(ROOT_PATH . 'includes/cls_image.php');
 
     return cls_image::gd_version();
 }
@@ -822,8 +820,7 @@ function ecs_iconv($source_lang, $target_lang, $source_string = '')
     }
 
     if ($chs === null) {
-        require_once(ROOT_PATH . 'includes/cls_iconv.php');
-        $chs = new Chinese(ROOT_PATH);
+                $chs = new Chinese(ROOT_PATH);
     }
 
     return $chs->Convert($source_lang, $target_lang, $source_string);

@@ -9,7 +9,6 @@ namespace app\home\controller;
 
 
 
-require(ROOT_PATH . 'includes/cls_json.php');
 
 if (!isset($_REQUEST['vote']) || !isset($_REQUEST['options']) || !isset($_REQUEST['type'])) {
     ecs_header("Location: ./\n");

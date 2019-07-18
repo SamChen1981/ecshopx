@@ -488,8 +488,7 @@ elseif ($_REQUEST['act'] == 'main') {
     $data = read_static_cache('api_str');
 
     if ($data === false || API_TIME < date('Y-m-d H:i:s', time() - 43200)) {
-        include_once(ROOT_PATH . 'includes/cls_transport.php');
-        $ecs_version = VERSION;
+                $ecs_version = VERSION;
         $ecs_lang = $_CFG['lang'];
         $ecs_release = RELEASE;
         $php_ver = PHP_VERSION;
@@ -830,8 +829,7 @@ elseif ($_REQUEST['act'] == 'third') {
         $max_id = $db->getOne("SELECT MAX(goods_id) + 1 FROM " . $ecs->table('goods'));
         $goods_sn = generate_goods_sn($max_id);
 
-        include_once(ROOT_PATH . 'includes/cls_image.php');
-        $image = new cls_image($_CFG['bgcolor']);
+                $image = new cls_image($_CFG['bgcolor']);
 
         if (!empty($good_name)) {
             /* 检查图片：如果有错误，检查尺寸是否超过最大值；否则，检查文件类型 */
@@ -1100,9 +1098,7 @@ elseif ($_REQUEST['act'] == 'license') {
 
     if (isset($is_ajax) && $is_ajax) {
         // license 检查
-        include_once(ROOT_PATH . 'includes/cls_transport.php');
-        include_once(ROOT_PATH . 'includes/cls_json.php');
-        include_once(ROOT_PATH . 'includes/lib_main.php');
+                        include_once(ROOT_PATH . 'includes/lib_main.php');
         include_once(ROOT_PATH . 'includes/lib_license.php');
 
         $license = license_check();

@@ -7,7 +7,6 @@ namespace app\console\controller;
 
 
 require('leancloud_push.php');
-include_once(ROOT_PATH . "includes/cls_certificate.php");
 $platform = array(1 => 'iOS', 2 => 'Android', 3 => '全平台');
 $status = array(1 => '等待中', 2 => '已发送');//数据库0：等待中，1：已发送
 /*------------------------------------------------------ */

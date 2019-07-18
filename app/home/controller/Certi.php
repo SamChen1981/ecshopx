@@ -8,7 +8,6 @@ namespace app\home\controller;
 
 
 
-require(ROOT_PATH . 'includes/cls_certificate.php');
 $cert = new certificate();
 /*------------------------------------------------------ */
 //-- 获取证书反查地址

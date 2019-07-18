@@ -8,7 +8,6 @@ namespace app\console\controller;
 
 
 
-include_once(ROOT_PATH . "includes/cls_certificate.php");
 $uri = $ecs->url();
 $allow_suffix = array('gif', 'jpg', 'png', 'jpeg', 'bmp');
 

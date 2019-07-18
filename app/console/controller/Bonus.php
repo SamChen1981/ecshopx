@@ -587,8 +587,7 @@ if ($_REQUEST['act'] == 'gen_excel') {
 //-- 搜索商品
 /*------------------------------------------------------ */
 if ($_REQUEST['act'] == 'get_goods_list') {
-    include_once(ROOT_PATH . 'includes/cls_json.php');
-    $json = new JSON;
+        $json = new JSON;
 
     $filters = $json->decode($_GET['JSON']);
 
@@ -608,8 +607,7 @@ if ($_REQUEST['act'] == 'get_goods_list') {
 //-- 添加发放红包的商品
 /*------------------------------------------------------ */
 if ($_REQUEST['act'] == 'add_bonus_goods') {
-    include_once(ROOT_PATH . 'includes/cls_json.php');
-    $json = new JSON;
+        $json = new JSON;
 
     check_authz_json('bonus_manage');
 
@@ -639,8 +637,7 @@ if ($_REQUEST['act'] == 'add_bonus_goods') {
 //-- 删除发放红包的商品
 /*------------------------------------------------------ */
 if ($_REQUEST['act'] == 'drop_bonus_goods') {
-    include_once(ROOT_PATH . 'includes/cls_json.php');
-    $json = new JSON;
+        $json = new JSON;
 
     check_authz_json('bonus_manage');
 

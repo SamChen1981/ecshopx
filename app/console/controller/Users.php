@@ -29,8 +29,7 @@ if ($_REQUEST['act'] == 'list') {
     $smarty->assign('action_link', array('text' => $_LANG['04_users_add'], 'href' => 'users.php?act=add'));
 
     $user_list = user_list();
-    include_once(ROOT_PATH . 'includes/cls_certificate.php');
-    $cert = new certificate();
+        $cert = new certificate();
     $is_bind_crm = $cert->is_bind_sn('ecos.taocrm', 'bind_type');
     $smarty->assign('is_bind_crm', $is_bind_crm);
     $smarty->assign('user_list', $user_list['user_list']);

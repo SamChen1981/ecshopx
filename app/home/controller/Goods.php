@@ -33,7 +33,6 @@ if (($ua == '' || preg_match($uachar, $ua)) && !strpos(strtolower($_SERVER['REQU
 /*------------------------------------------------------ */
 
 if (!empty($_REQUEST['act']) && $_REQUEST['act'] == 'price') {
-    include('includes/cls_json.php');
 
     $json = new JSON;
     $res = array('err_msg' => '', 'result' => '', 'qty' => 1);
@@ -64,7 +63,6 @@ if (!empty($_REQUEST['act']) && $_REQUEST['act'] == 'price') {
 /*------------------------------------------------------ */
 
 if (!empty($_REQUEST['act']) && $_REQUEST['act'] == 'gotopage') {
-    include('includes/cls_json.php');
 
     $json = new JSON;
     $res = array('err_msg' => '', 'result' => '');

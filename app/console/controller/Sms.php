@@ -8,7 +8,6 @@ namespace app\console\controller;
 
 
 
-require_once(ROOT_PATH . 'includes/cls_sms.php');
 require_once(ROOT_PATH . "admin/includes/oauth/oauth2.php");
 
 

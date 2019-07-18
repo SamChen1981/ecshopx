@@ -43,8 +43,7 @@ $smarty->assign('data_dir', DATA_DIR);       // 数据目录
 /*------------------------------------------------------ */
 if ($_REQUEST['step'] == 'add_to_cart') {
     add_log("add_to_cart begin=" . __LINE__ . "=POST:", $_POST);
-    include_once('includes/cls_json.php');
-    $_POST['goods'] = strip_tags(urldecode($_POST['goods']));
+        $_POST['goods'] = strip_tags(urldecode($_POST['goods']));
     $_POST['goods'] = json_str_iconv($_POST['goods']);
 
     if (!empty($_REQUEST['goods_id']) && empty($_POST['goods'])) {
@@ -192,7 +191,6 @@ if ($_REQUEST['step'] == 'add_to_cart') {
                 }
 
                 /* 检查验证码 */
-                include_once('includes/cls_captcha.php');
 
                 $validator = new captcha();
                 $validator->session_word = 'captcha_login';
@@ -227,7 +225,6 @@ if ($_REQUEST['step'] == 'add_to_cart') {
                 }
 
                 /* 检查验证码 */
-                include_once('includes/cls_captcha.php');
 
                 $validator = new captcha();
                 if (!$validator->check_word($_POST['captcha'])) {
@@ -236,8 +233,7 @@ if ($_REQUEST['step'] == 'add_to_cart') {
             }
 
             if (register(trim($_POST['username']), trim($_POST['password']), trim($_POST['email']))) {
-                include_once(ROOT_PATH . 'includes/cls_matrix.php');
-                $matrix = new matrix;
+                                $matrix = new matrix;
                 if ($matrix->get_bind_info('ecos.taocrm')) {
                     $matrix->createMember($_SESSION['user_id'], 'ecos.taocrm');
                 }
@@ -641,8 +637,7 @@ if ($_REQUEST['step'] == 'add_to_cart') {
     /*------------------------------------------------------ */
     //-- 改变配送方式
     /*------------------------------------------------------ */
-    include_once('includes/cls_json.php');
-    $json = new JSON;
+        $json = new JSON;
     $result = array('error' => '', 'content' => '', 'need_insure' => 0);
 
     /* 取得购物类型 */
@@ -695,8 +690,7 @@ if ($_REQUEST['step'] == 'add_to_cart') {
     //-- 选定/取消配送的保价
     /*------------------------------------------------------ */
 
-    include_once('includes/cls_json.php');
-    $json = new JSON;
+        $json = new JSON;
     $result = array('error' => '', 'content' => '', 'need_insure' => 0);
 
     /* 取得购物类型 */
@@ -745,8 +739,7 @@ if ($_REQUEST['step'] == 'add_to_cart') {
     //-- 改变支付方式
     /*------------------------------------------------------ */
 
-    include_once('includes/cls_json.php');
-    $json = new JSON;
+        $json = new JSON;
     $result = array('error' => '', 'content' => '', 'need_insure' => 0, 'payment' => 1);
 
     /* 取得购物类型 */
@@ -797,8 +790,7 @@ if ($_REQUEST['step'] == 'add_to_cart') {
     //-- 改变商品包装
     /*------------------------------------------------------ */
 
-    include_once('includes/cls_json.php');
-    $json = new JSON;
+        $json = new JSON;
     $result = array('error' => '', 'content' => '', 'need_insure' => 0);
 
     /* 取得购物类型 */
@@ -847,8 +839,7 @@ if ($_REQUEST['step'] == 'add_to_cart') {
     //-- 改变贺卡
     /*------------------------------------------------------ */
 
-    include_once('includes/cls_json.php');
-    $json = new JSON;
+        $json = new JSON;
     $result = array('error' => '', 'content' => '', 'need_insure' => 0);
 
     /* 取得购物类型 */
@@ -896,7 +887,6 @@ if ($_REQUEST['step'] == 'add_to_cart') {
     /*------------------------------------------------------ */
     //-- 改变余额
     /*------------------------------------------------------ */
-    include_once('includes/cls_json.php');
 
     $surplus = floatval($_GET['surplus']);
     $user_info = user_info($_SESSION['user_id']);
@@ -942,7 +932,6 @@ if ($_REQUEST['step'] == 'add_to_cart') {
     /*------------------------------------------------------ */
     //-- 改变积分
     /*------------------------------------------------------ */
-    include_once('includes/cls_json.php');
 
     $points = floatval($_GET['points']);
     $user_info = user_info($_SESSION['user_id']);
@@ -993,8 +982,7 @@ if ($_REQUEST['step'] == 'add_to_cart') {
     /*------------------------------------------------------ */
     //-- 改变红包
     /*------------------------------------------------------ */
-    include_once('includes/cls_json.php');
-    $result = array('error' => '', 'content' => '');
+        $result = array('error' => '', 'content' => '');
 
     /* 取得购物类型 */
     $flow_type = isset($_SESSION['flow_type']) ? intval($_SESSION['flow_type']) : CART_GENERAL_GOODS;
@@ -1041,8 +1029,7 @@ if ($_REQUEST['step'] == 'add_to_cart') {
     /*------------------------------------------------------ */
     //-- 改变发票的设置
     /*------------------------------------------------------ */
-    include_once('includes/cls_json.php');
-    $result = array('error' => '', 'content' => '');
+        $result = array('error' => '', 'content' => '');
     $json = new JSON();
     $_GET['inv_type'] = !empty($_GET['inv_type']) ? json_str_iconv(urldecode($_GET['inv_type'])) : '';
     $_GET['invPayee'] = !empty($_GET['invPayee']) ? json_str_iconv(urldecode($_GET['invPayee'])) : '';
@@ -1450,8 +1437,7 @@ elseif ($_REQUEST['step'] == 'done') {
     if ($order['user_id'] > 0 && $order['surplus'] > 0) {
         log_account_change($order['user_id'], $order['surplus'] * (-1), 0, 0, 0, sprintf($_LANG['pay_order'], $order['order_sn']));
         //订单支付后，创建订单到淘打
-        include_once("includes/cls_matrix.php");
-        $matrix = new matrix();
+                $matrix = new matrix();
         $bind_info = $matrix->get_bind_info(array('taodali'));
         if ($bind_info) {
             $matrix->createOrder($order['order_sn'], 'taodali');
@@ -1460,8 +1446,7 @@ elseif ($_REQUEST['step'] == 'done') {
     if ($order['user_id'] > 0 && $order['integral'] > 0) {
         log_account_change($order['user_id'], 0, 0, 0, $order['integral'] * (-1), sprintf($_LANG['pay_order'], $order['order_sn']));
         //订单支付后，创建订单到淘打
-        include_once("includes/cls_matrix.php");
-        $matrix = new matrix();
+                $matrix = new matrix();
         $bind_info = $matrix->get_bind_info(array('taodali'));
         if ($bind_info) {
             $matrix->createOrder($order['order_sn'], 'taodali');
@@ -1492,8 +1477,7 @@ elseif ($_REQUEST['step'] == 'done') {
 
     /* 如果需要，发短信 */
     if ($_CFG['sms_order_placed'] == '1' && $_CFG['sms_shop_mobile'] != '') {
-        include_once('includes/cls_sms.php');
-        $sms = new sms();
+                $sms = new sms();
         $msg = $order['pay_status'] == PS_UNPAYED ?
             $_LANG['order_placed_sms'] : $_LANG['order_placed_sms'] . '[' . $_LANG['sms_paid'] . ']';
         $sms->send($_CFG['sms_shop_mobile'], sprintf($msg, $order['consignee'], $order['tel']), '', 13, 1);
@@ -1588,8 +1572,7 @@ elseif ($_REQUEST['step'] == 'done') {
     $smarty->assign('order_submit_back', sprintf($_LANG['order_submit_back'], $_LANG['back_home'], $_LANG['goto_user_center'])); // 返回提示
 
     // 对接erp将订单推送到erp
-    include_once(ROOT_PATH . 'includes/cls_matrix.php');
-    $matrix = new matrix;
+        $matrix = new matrix;
     $matrix->createOrder($order['order_sn']);
 
     user_uc_call('add_feed', array($order['order_id'], BUY_GOODS)); //推送feed到uc
@@ -1730,8 +1713,7 @@ elseif ($_REQUEST['step'] == 'validate_bonus') {
 //    die(sprintf($_LANG['bonus_is_ok'], price_format($bonus['type_money'], false)));
     $bonus_kill = price_format($bonus['type_money'], false);
 
-    include_once('includes/cls_json.php');
-    $result = array('error' => '', 'content' => '');
+        $result = array('error' => '', 'content' => '');
 
     /* 取得购物类型 */
     $flow_type = isset($_SESSION['flow_type']) ? intval($_SESSION['flow_type']) : CART_GENERAL_GOODS;
@@ -1794,8 +1776,7 @@ elseif ($_REQUEST['step'] == 'validate_bonus') {
 //-- 添加礼包到购物车
 /*------------------------------------------------------ */
 elseif ($_REQUEST['step'] == 'add_package_to_cart') {
-    include_once('includes/cls_json.php');
-    $_POST['package_info'] = json_str_iconv($_POST['package_info']);
+        $_POST['package_info'] = json_str_iconv($_POST['package_info']);
 
     $result = array('error' => 0, 'message' => '', 'content' => '', 'package_id' => '');
     $json = new JSON;
@@ -1836,8 +1817,7 @@ elseif ($_REQUEST['step'] == 'add_package_to_cart') {
     $result['confirm_type'] = !empty($_CFG['cart_confirm']) ? $_CFG['cart_confirm'] : 2;
     die($json->encode($result));
 } elseif ($_REQUEST['step'] == 'repurchase') {
-    include_once('includes/cls_json.php');
-    $order_id = intval($_POST['order_id']);
+        $order_id = intval($_POST['order_id']);
     $order_id = json_str_iconv($order_id);
     $user_id = $_SESSION['user_id'];
     $json = new JSON;

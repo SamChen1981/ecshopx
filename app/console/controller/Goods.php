@@ -9,7 +9,6 @@ namespace app\console\controller;
 
 
 require_once(ROOT_PATH . '/' . ADMIN_PATH . '/includes/lib_goods.php');
-include_once(ROOT_PATH . '/includes/cls_image.php');
 $image = new cls_image($_CFG['bgcolor']);
 $exc = new exchange($ecs->table('goods'), $db, 'goods_id', 'goods_name');
 
@@ -1602,8 +1601,7 @@ elseif ($_REQUEST['act'] == 'drop_image') {
 //-- 搜索商品，仅返回名称及ID
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'get_goods_list') {
-    include_once(ROOT_PATH . 'includes/cls_json.php');
-    $json = new JSON;
+        $json = new JSON;
 
     $filters = $json->decode($_GET['JSON']);
 
@@ -1623,8 +1621,7 @@ elseif ($_REQUEST['act'] == 'get_goods_list') {
 //-- 把商品加入关联
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'add_link_goods') {
-    include_once(ROOT_PATH . 'includes/cls_json.php');
-    $json = new JSON;
+        $json = new JSON;
 
     check_authz_json('goods_manage');
 
@@ -1663,8 +1660,7 @@ elseif ($_REQUEST['act'] == 'add_link_goods') {
 //-- 删除关联商品
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'drop_link_goods') {
-    include_once(ROOT_PATH . 'includes/cls_json.php');
-    $json = new JSON;
+        $json = new JSON;
 
     check_authz_json('goods_manage');
 
@@ -1712,8 +1708,7 @@ elseif ($_REQUEST['act'] == 'drop_link_goods') {
 /*------------------------------------------------------ */
 
 elseif ($_REQUEST['act'] == 'add_group_goods') {
-    include_once(ROOT_PATH . 'includes/cls_json.php');
-    $json = new JSON;
+        $json = new JSON;
 
     check_authz_json('goods_manage');
 
@@ -1746,8 +1741,7 @@ elseif ($_REQUEST['act'] == 'add_group_goods') {
 /*------------------------------------------------------ */
 
 elseif ($_REQUEST['act'] == 'drop_group_goods') {
-    include_once(ROOT_PATH . 'includes/cls_json.php');
-    $json = new JSON;
+        $json = new JSON;
 
     check_authz_json('goods_manage');
 
@@ -1781,8 +1775,7 @@ elseif ($_REQUEST['act'] == 'drop_group_goods') {
 /*------------------------------------------------------ */
 
 elseif ($_REQUEST['act'] == 'get_article_list') {
-    include_once(ROOT_PATH . 'includes/cls_json.php');
-    $json = new JSON;
+        $json = new JSON;
 
     $filters = (array)$json->decode(json_str_iconv($_GET['JSON']));
 
@@ -1809,8 +1802,7 @@ elseif ($_REQUEST['act'] == 'get_article_list') {
 /*------------------------------------------------------ */
 
 elseif ($_REQUEST['act'] == 'add_goods_article') {
-    include_once(ROOT_PATH . 'includes/cls_json.php');
-    $json = new JSON;
+        $json = new JSON;
 
     check_authz_json('goods_manage');
 
@@ -1841,8 +1833,7 @@ elseif ($_REQUEST['act'] == 'add_goods_article') {
 //-- 删除关联文章
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'drop_goods_article') {
-    include_once(ROOT_PATH . 'includes/cls_json.php');
-    $json = new JSON;
+        $json = new JSON;
 
     check_authz_json('goods_manage');
 

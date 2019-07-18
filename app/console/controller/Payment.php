@@ -74,8 +74,7 @@ if ($_REQUEST['act'] == 'list') {
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'check_yunqi') {
     //获取云起收银账号
-    include_once(ROOT_PATH . 'includes/cls_certificate.php');
-    $cert = new certificate();
+        $cert = new certificate();
     $yunqi_account = $cert->get_yunqi_account();
     if (!$yunqi_account || !$yunqi_account['status']) {
         $yqaccount_result = $cert->yqaccount_appget();
@@ -407,8 +406,7 @@ elseif (isset($_POST['Submit'])) {
     // echo "<pre>";print_r($pay_config);print_r($_FILES); exit();
     /*  兼容老的站点和移动端 */
     if ($_POST['pay_code'] == 'yunqi') {
-        include_once(ROOT_PATH . 'includes/cls_certificate.php');
-        $cert = new certificate();
+                $cert = new certificate();
         foreach ($pay_config as $key => $value) {
             if ($value['name'] == 'appkey') {
                 $appkey = $value['value'];

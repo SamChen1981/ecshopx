@@ -8,7 +8,6 @@ namespace app\console\controller;
 
 
 
-require_once(ROOT_PATH . ADMIN_PATH . '/includes/cls_sql_dump.php');
 
 @ini_set('memory_limit', '64M');
 

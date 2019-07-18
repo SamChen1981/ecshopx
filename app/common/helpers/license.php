@@ -67,9 +67,7 @@ function exchange_shop_license($certi, $license, $use_lib = 0)
         return array();
     }
 
-    include_once(ROOT_PATH . 'includes/cls_transport.php');
-    include_once(ROOT_PATH . 'includes/cls_json.php');
-
+        
     $params = '';
     foreach ($certi as $key => $value) {
         $params .= '&' . $key . '=' . $value;

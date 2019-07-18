@@ -326,7 +326,6 @@ elseif ($_REQUEST['act'] == 'search') {
     /* 检查权限 */
     check_authz_json('favourable');
 
-    include_once(ROOT_PATH . 'includes/cls_json.php');
 
     $json = new JSON;
     $filter = $json->decode($_GET['JSON']);

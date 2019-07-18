@@ -38,11 +38,9 @@ require(ROOT_PATH . 'includes/lib_common.php');
 require(ROOT_PATH . 'includes/lib_time.php');
 
 /* 创建错误处理对象 */
-require(ROOT_PATH . 'includes/cls_error.php');
 $err = new ecs_error('message.dwt');
 
 /* 初始化模板引擎 */
-require(ROOT_PATH . 'install/includes/cls_template.php');
 $smarty = new template(ROOT_PATH . 'install/templates/');
 
 require(ROOT_PATH . 'install/includes/lib_installer.php');

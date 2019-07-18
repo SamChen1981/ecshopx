@@ -149,7 +149,6 @@ elseif ($_REQUEST['act'] == 'query') {
 elseif ($_REQUEST['act'] == 'search_goods') {
     check_authz_json('tag_manage');
 
-    include_once(ROOT_PATH . 'includes/cls_json.php');
 
     $json = new JSON;
     $filter = $json->decode($_GET['JSON']);
@@ -197,8 +196,7 @@ elseif ($_REQUEST['act'] == 'batch_drop') {
 elseif ($_REQUEST['act'] == 'remove') {
     check_authz_json('tag_manage');
 
-    include_once(ROOT_PATH . 'includes/cls_json.php');
-    $json = new JSON;
+        $json = new JSON;
 
     $id = intval($_GET['id']);
 

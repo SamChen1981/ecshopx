@@ -8,7 +8,6 @@ namespace app\console\controller;
 
 
 
-include_once(ROOT_PATH . 'includes/cls_image.php');
 include_once(ROOT_PATH . '/' . ADMIN_PATH . '/includes/lib_goods.php');
 $image = new cls_image($_CFG['bgcolor']);
 
@@ -22,8 +21,7 @@ if (empty($_GET['is_ajax'])) {
     $smarty->assign('brand_list', get_brand_list());
     $smarty->display('picture_batch.htm');
 } elseif (!empty($_GET['get_goods'])) {
-    include_once(ROOT_PATH . 'includes/cls_json.php');
-    $json = new JSON();
+        $json = new JSON();
     $brand_id = intval($_GET['brand_id']);
     $cat_id = intval($_GET['cat_id']);
     $goods_where = '';
@@ -39,8 +37,7 @@ if (empty($_GET['is_ajax'])) {
 
     die($json->encode($db->getAll($sql)));
 } else {
-    include_once(ROOT_PATH . 'includes/cls_json.php');
-    $json = new JSON();
+        $json = new JSON();
     $proc_thumb = (isset($GLOBALS['shop_id']) && $GLOBALS['shop_id'] > 0);
     $do_album = empty($_GET['do_album']) ? 0 : 1;
     $do_icon = empty($_GET['do_icon']) ? 0 : 1;

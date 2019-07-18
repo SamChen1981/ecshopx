@@ -301,8 +301,7 @@ elseif ($_REQUEST['act'] == 'query_bid') {
 /*------------------------------------------------------ */
 
 elseif ($_REQUEST['act'] == 'search_goods') {
-    include_once(ROOT_PATH . 'includes/cls_json.php');
-    $json = new JSON;
+        $json = new JSON;
 
     $filters = $json->decode($_GET['JSON']);
 
@@ -320,8 +319,7 @@ elseif ($_REQUEST['act'] == 'search_goods') {
 /*------------------------------------------------------ */
 
 elseif ($_REQUEST['act'] == 'search_products') {
-    include_once(ROOT_PATH . 'includes/cls_json.php');
-    $json = new JSON;
+        $json = new JSON;
 
     $filters = $json->decode($_GET['JSON']);
 

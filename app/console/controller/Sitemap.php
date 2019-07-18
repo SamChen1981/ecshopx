@@ -26,8 +26,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     /*------------------------------------------------------ */
     //-- 生成站点地图
     /*------------------------------------------------------ */
-    include_once('includes/cls_phpzip.php');
-    include_once('includes/cls_google_sitemap.php');
 
     $domain = $ecs->url();
     $today = local_date('Y-m-d');

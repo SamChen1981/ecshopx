@@ -94,8 +94,7 @@ if ($_REQUEST['act'] == 'new_price_list') {
 
 /* 用户出价处理 */
 if ($_REQUEST['act'] == 'bid') {
-    include_once(ROOT_PATH . 'includes/cls_json.php');
-    $json = new JSON();
+        $json = new JSON();
     $result = array('error' => 0, 'content' => '');
 
     $price = isset($_POST['price']) ? floatval($_POST['price']) : 0;

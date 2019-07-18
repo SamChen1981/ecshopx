@@ -63,8 +63,7 @@ class Init extends Controller
         define('IMAGE_DIR', $ecs->image_dir());
 
         /* 初始化数据库类 */
-        require(ROOT_PATH . 'includes/cls_mysql.php');
-        $db = new cls_mysql($db_host, $db_user, $db_pass, $db_name);
+                $db = new cls_mysql($db_host, $db_user, $db_pass, $db_name);
         $db->set_disable_cache_tables(array($ecs->table('sessions'), $ecs->table('sessions_data'), $ecs->table('cart')));
         $db_host = $db_user = $db_pass = $db_name = null;
 
@@ -104,7 +103,6 @@ class Init extends Controller
 
         if (!defined('INIT_NO_USERS')) {
             /* 初始化session */
-            include(ROOT_PATH . 'includes/cls_session.php');
 
             $sess = new cls_session($db, $ecs->table('sessions'), $ecs->table('sessions_data'));
 
@@ -118,8 +116,7 @@ class Init extends Controller
             header('Content-type: text/html; charset=' . EC_CHARSET);
 
             /* 创建 Smarty 对象。*/
-            require(ROOT_PATH . 'includes/cls_template.php');
-            $smarty = new cls_template;
+                        $smarty = new cls_template;
 
             $smarty->cache_lifetime = $_CFG['cache_time'];
             $smarty->template_dir = ROOT_PATH . 'themes/' . $_CFG['template'];

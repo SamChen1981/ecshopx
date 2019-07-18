@@ -473,8 +473,7 @@ if ($_REQUEST['act'] == 'install') {
 /*------------------------------------------------------ */
 if ($_REQUEST['act'] == 'backup') {
     check_authz_json('backup_setting');
-    include_once('includes/cls_mdl_tar.php');
-    $template = $_CFG['template'];
+        $template = $_CFG['template'];
     $folder = $template;
     @chdir('..' . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . $template);
     $filename = ROOT_PATH . 'temp' . DIRECTORY_SEPARATOR . 'backup' . DIRECTORY_SEPARATOR . $template . '_' . date('Ymd') . '.tgz';
@@ -662,8 +661,7 @@ if ($_REQUEST['act'] == 'restore_backup') {
 /*------------------------------------------------------ */
 if ($_REQUEST['act'] == 'upload') {
     admin_priv('upload');
-    include_once('includes/cls_mdl_tar.php');
-    if (!empty($_FILES) && $_FILES['file']['size'] < 2097152) {
+        if (!empty($_FILES) && $_FILES['file']['size'] < 2097152) {
         $pathinfo = pathinfo($_FILES['file']['name']);
         if ($pathinfo['extension'] == 'tgz') {
             $template = $pathinfo['filename'];

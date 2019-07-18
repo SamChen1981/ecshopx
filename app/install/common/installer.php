@@ -12,7 +12,6 @@
  */
 function get_gd_version()
 {
-    include_once(ROOT_PATH . 'includes/cls_image.php');
 
     return cls_image::gd_version();
 }
@@ -335,8 +334,6 @@ function install_data($sql_files)
     global $err;
 
     include(ROOT_PATH . 'data/config.php');
-    include_once(ROOT_PATH . 'includes/cls_mysql.php');
-    include_once(ROOT_PATH . 'includes/cls_sql_executor.php');
 
     $db = new cls_mysql($db_host, $db_user, $db_pass, $db_name);
     $se = new sql_executor($db, EC_DB_CHARSET, 'ecs_', $prefix);
@@ -390,8 +387,7 @@ function create_admin_passport($admin_name, $admin_password, $admin_password2, $
     }
 
     include(ROOT_PATH . 'data/config.php');
-    include_once(ROOT_PATH . 'includes/cls_mysql.php');
-    include_once(ROOT_PATH . 'includes/lib_common.php');
+        include_once(ROOT_PATH . 'includes/lib_common.php');
 
     $nav_list = join(',', $_LANG['admin_user']);
 
@@ -425,8 +421,7 @@ function install_goods_types($goods_types, $lang)
     }
 
     include(ROOT_PATH . 'data/config.php');
-    include_once(ROOT_PATH . 'includes/cls_mysql.php');
-    $db = new cls_mysql($db_host, $db_user, $db_pass, $db_name);
+        $db = new cls_mysql($db_host, $db_user, $db_pass, $db_name);
 
     if (file_exists(ROOT_PATH . 'install/data/inc_goods_type_' . $lang . '.php')) {
         include(ROOT_PATH . 'install/data/inc_goods_type_' . $lang . '.php');
@@ -553,8 +548,7 @@ function do_others($system_lang, $captcha, $goods_types, $install_demo, $integra
     }
 
     include(ROOT_PATH . 'data/config.php');
-    include_once(ROOT_PATH . 'includes/cls_mysql.php');
-    $db = new cls_mysql($db_host, $db_user, $db_pass, $db_name);
+        $db = new cls_mysql($db_host, $db_user, $db_pass, $db_name);
 
     /* 更新 ECSHOP 语言 */
     $sql = "UPDATE $prefix" . "shop_config SET value='" . $system_lang . "' WHERE code='lang'";
@@ -605,8 +599,6 @@ function deal_aftermath()
     global $err, $_LANG;
 
     include(ROOT_PATH . 'data/config.php');
-    include_once(ROOT_PATH . 'includes/cls_ecshop.php');
-    include_once(ROOT_PATH . 'includes/cls_mysql.php');
 
     $db = new cls_mysql($db_host, $db_user, $db_pass, $db_name);
 
@@ -678,9 +670,7 @@ function deal_aftermath()
 function get_spt_code()
 {
     include(ROOT_PATH . 'data/config.php');
-    include_once(ROOT_PATH . 'includes/cls_ecshop.php');
-    include_once(ROOT_PATH . 'includes/cls_mysql.php');
-    $db = new cls_mysql($db_host, $db_user, $db_pass, $db_name);
+            $db = new cls_mysql($db_host, $db_user, $db_pass, $db_name);
     $ecs = new ECS($db_name, $prefix);
     $hash_code = $db->getOne("SELECT value FROM " . $ecs->table('shop_config') . " WHERE code='hash_code'");
     $spt = '<script type="text/javascript" src="https://api-ecshop.xyunqi.com/record.php?';

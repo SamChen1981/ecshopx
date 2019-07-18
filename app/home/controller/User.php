@@ -195,8 +195,7 @@ elseif ($action == 'act_register') {
                 send_regiter_hash($_SESSION['user_id']);
             }
             $ucdata = empty($user->ucdata) ? "" : $user->ucdata;
-            include_once(ROOT_PATH . 'includes/cls_matrix.php');
-            $matrix = new matrix;
+                        $matrix = new matrix;
             if ($matrix->get_bind_info('ecos.taocrm')) {
                 $matrix->createMember($_SESSION['user_id'], 'ecos.taocrm');
             }
@@ -221,8 +220,7 @@ elseif ($action == 'act_register') {
         }
 
         /* 检查验证码 */
-        include_once('includes/cls_captcha.php');
-        $validator = new captcha();
+                $validator = new captcha();
         if ($validator->check_word($code)) {
             $_SESSION['v_code'] = 'true';
             make_json_result('succ');
@@ -305,7 +303,6 @@ elseif ($action == 'act_login') {
         }
 
         /* 检查验证码 */
-        include_once('includes/cls_captcha.php');
 
         $validator = new captcha();
         $validator->session_word = 'captcha_login';
@@ -327,8 +324,7 @@ elseif ($action == 'act_login') {
     }
 } /* 处理 ajax 的登录请求 */
 elseif ($action == 'signin') {
-    include_once('includes/cls_json.php');
-    $json = new JSON;
+        $json = new JSON;
 
     $username = !empty($_POST['username']) ? json_str_iconv(trim($_POST['username'])) : '';
     $password = !empty($_POST['password']) ? trim($_POST['password']) : '';
@@ -344,7 +340,6 @@ elseif ($action == 'signin') {
         }
 
         /* 检查验证码 */
-        include_once('includes/cls_captcha.php');
 
         $validator = new captcha();
         $validator->session_word = 'captcha_login';
@@ -572,7 +567,6 @@ elseif ($action == 'check_answer') {
         }
 
         /* 检查验证码 */
-        include_once('includes/cls_captcha.php');
 
         $validator = new captcha();
         $validator->session_word = 'captcha_login';
@@ -672,8 +666,7 @@ elseif ($action == 'order_list') {
     $orders = get_user_orders($user_id, $pager['size'], $pager['start']);
     $merge = get_user_merge($user_id);
 
-    include_once(ROOT_PATH . 'includes/cls_certificate.php');
-    $cert = new certificate();
+        $cert = new certificate();
     $cert->is_bind_sn('erp', 'goods_name') ? $smarty->assign('no_bind_erp', 0) : $smarty->assign('no_bind_erp', 1);
 
     $smarty->assign('open_logistics_trace', is_open_logistics_trace());
@@ -841,8 +834,7 @@ elseif ($action == 'cancel_order') {
 
     if (cancel_order($order_id, $user_id)) {
         // 通知erp取消订单
-        include_once(ROOT_PATH . 'includes/cls_matrix.php');
-        $matrix = new matrix();
+                $matrix = new matrix();
         $matrix->set_dead_order($order_id);
 
         ecs_header("Location: user.php?act=order_list\n");
@@ -1054,8 +1046,7 @@ elseif ($action == 'act_add_message') {
     if (add_message($message)) {
         // 通知erp订单留言
         // if (isset($_POST['order_id']) && $_POST['order_id']) {
-        //     include_once(ROOT_PATH . 'includes/cls_matrix.php');
-        //     $matrix = new matrix();
+        //             //     $matrix = new matrix();
         //     $matrix->update_order_buyer_message($message);
         // }
         show_message($_LANG['add_message_success'], $_LANG['message_list_lnk'], 'user.php?act=message_list&order_id=' . $message['order_id'], 'info');
@@ -1469,8 +1460,7 @@ elseif ($action == 'pay') {
     }
 } /* 添加标签(ajax) */
 elseif ($action == 'add_tag') {
-    include_once('includes/cls_json.php');
-    include_once('includes/lib_clips.php');
+        include_once('includes/lib_clips.php');
 
     $result = array('error' => 0, 'message' => '', 'content' => '');
     $id = isset($_POST['id']) ? intval($_POST['id']) : 0;
@@ -1498,8 +1488,7 @@ elseif ($action == 'add_tag') {
     exit;
 } /* 添加收藏商品(ajax) */
 elseif ($action == 'collect') {
-    include_once(ROOT_PATH . 'includes/cls_json.php');
-    $json = new JSON();
+        $json = new JSON();
     $result = array('error' => 0, 'message' => '');
     $goods_id = $_GET['id'];
 
@@ -1572,8 +1561,7 @@ elseif ($action == 'merge_order') {
     }
 } /* 将指定订单中商品添加到购物车 */
 elseif ($action == 'return_to_cart') {
-    include_once(ROOT_PATH . 'includes/cls_json.php');
-    include_once(ROOT_PATH . 'includes/lib_transaction.php');
+        include_once(ROOT_PATH . 'includes/lib_transaction.php');
     $json = new JSON();
 
     $result = array('error' => 0, 'message' => '', 'content' => '');
@@ -1722,8 +1710,7 @@ elseif ($action == 'act_edit_surplus') {
     }
 
     // 支付后通知erp
-    include_once(ROOT_PATH . 'includes/cls_matrix.php');
-    $matrix = new matrix;
+        $matrix = new matrix;
     $matrix->createOrder($order['order_sn']);
 
     /* 跳转 */
@@ -1810,8 +1797,7 @@ elseif ($action == 'save_order_address') {
             $sql = "UPDATE " . $ecs->table('order_info') .
                 " SET lastmodify=" . gmtime() . "  WHERE order_id = " . $address['order_id'];
             $db->query($sql);
-            include_once(ROOT_PATH . 'includes/cls_matrix.php');
-            $matrix = new matrix;
+                        $matrix = new matrix;
             $matrix->createOrder($order_sn);
         }
         ecs_header('Location: user.php?act=order_detail&order_id=' . $address['order_id'] . "\n");
@@ -2114,8 +2100,7 @@ elseif ($action == 'email_list') {
     }
 } /* ajax 发送验证邮件 */
 elseif ($action == 'send_hash_mail') {
-    include_once(ROOT_PATH . 'includes/cls_json.php');
-    include_once(ROOT_PATH . 'includes/lib_passport.php');
+        include_once(ROOT_PATH . 'includes/lib_passport.php');
     $json = new JSON();
 
     $result = array('error' => 0, 'message' => '', 'content' => '');
@@ -2160,8 +2145,7 @@ elseif ($action == 'send_hash_mail') {
 } elseif ($action == 'order_query') {
     $_GET['order_sn'] = trim(substr($_GET['order_sn'], 1));
     $order_sn = empty($_GET['order_sn']) ? '' : addslashes($_GET['order_sn']);
-    include_once(ROOT_PATH . 'includes/cls_json.php');
-    $json = new JSON();
+        $json = new JSON();
 
     $result = array('error' => 0, 'message' => '', 'content' => '');
 
@@ -2441,8 +2425,7 @@ elseif ($action == 'delivery_info') {
     $smarty->display('delivery_info.dwt');
 } /* ajax 物流信息 */
 elseif ($action == 'ajax_delivery_info') {
-    include_once('includes/cls_json.php');
-    $json = new JSON;
+        $json = new JSON;
 
     $_POST['order_sn'] = trim($_POST['order_sn']);
     $order_sn = empty($_POST['order_sn']) ? '' : addslashes($_POST['order_sn']);
@@ -2511,8 +2494,7 @@ elseif ($action == 'ajax_delivery_info') {
             }
         }
         $sms_code = mt_rand(100000, 999999);
-        include_once('includes/cls_sms.php');
-        $sms = new sms();
+                $sms = new sms();
         $_SESSION[$mobile . '-sms_code'] = $sms_code;
         $is_send = $sms->send($mobile, '您本次的验证码为：' . $sms_code . '，十分钟内有效，请不要把验证码泄露给其他人，如非本人操作可不用理会');
         $is_send = $is_send ? 'succ' : 'fail';

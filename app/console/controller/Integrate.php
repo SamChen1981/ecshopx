@@ -335,8 +335,7 @@ if ($_REQUEST['act'] == 'save_uc_config_first') {
 /*------------------------------------------------------ */
 if ($_REQUEST['act'] == 'check_user') {
     $code = $_SESSION['code'];
-    include_once(ROOT_PATH . 'includes/cls_json.php');
-    include_once(ROOT_PATH . "includes/modules/integrates/" . $code . ".php");
+        include_once(ROOT_PATH . "includes/modules/integrates/" . $code . ".php");
     $cls_user = new $code($_SESSION['cfg']);
     $json = new JSON();
 
@@ -431,8 +430,7 @@ if ($_REQUEST['act'] == 'import_user') {
     // die($json->encode(array('error' => 1, 'message' => 'ucenter整合已被屏蔽掉，如有疑问联系ecshop官方客服')));
     */
     $cfg = $_SESSION['cfg'];
-    include_once(ROOT_PATH . 'includes/cls_json.php');
-    $ucdb = new cls_mysql($cfg['db_host'], $cfg['db_user'], $cfg['db_pass'], $cfg['db_name'], $cfg['db_charset']);
+        $ucdb = new cls_mysql($cfg['db_host'], $cfg['db_user'], $cfg['db_pass'], $cfg['db_name'], $cfg['db_charset']);
     $result = array('error' => 0, 'message' => '');
     $query = $db->query("SHOW TABLE STATUS LIKE '" . $GLOBALS['prefix'] . 'users' . "'");
     $data = $db->fetch_array($query);
@@ -680,8 +678,7 @@ if ($_REQUEST['act'] == 'task') {
         $size = intval($_GET['size']);
     }
 
-    include_once(ROOT_PATH . 'includes/cls_json.php');
-    $json = new JSON();
+        $json = new JSON();
     $result = array('message' => '', 'error' => 0, 'content' => '', 'id' => '', 'end' => 0, 'size' => $size);
 
     if ($_SESSION['task']['del']['start'] < $_SESSION['task']['del']['total']) {
@@ -775,9 +772,7 @@ if ($_REQUEST['act'] == 'task') {
 //-- 保存UCenter设置
 /*------------------------------------------------------ */
 if ($_REQUEST['act'] == 'setup_ucenter') {
-    include_once(ROOT_PATH . 'includes/cls_json.php');
-    include_once(ROOT_PATH . 'includes/cls_transport.php');
-    $json = new JSON();
+            $json = new JSON();
     $result = array('error' => 0, 'message' => '');
 
     $app_type = 'ECSHOP';

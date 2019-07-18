@@ -319,8 +319,7 @@ elseif ($_REQUEST['act'] == 'insert') {
     admin_priv('goods_batch');
 
     if (isset($_POST['checked'])) {
-        include_once(ROOT_PATH . 'includes/cls_image.php');
-        $image = new cls_image($_CFG['bgcolor']);
+                $image = new cls_image($_CFG['bgcolor']);
 
         /* 字段默认值 */
         $default_value = array(

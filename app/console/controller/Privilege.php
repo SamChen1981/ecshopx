@@ -179,7 +179,6 @@ if ($_REQUEST['act'] == 'login') {
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'signin') {
     if (intval($_CFG['captcha']) & CAPTCHA_ADMIN) {
-        include_once(ROOT_PATH . 'includes/cls_captcha.php');
 
         /* 检查验证码是否正确 */
         $validator = new captcha();
@@ -804,8 +803,7 @@ function get_role_list()
 
 function yunqi_logout()
 {
-    include_once(ROOT_PATH . 'includes/cls_certificate.php');
-    $cert = new certificate();
+        $cert = new certificate();
     $url = $cert->logout_url();
     header("location: $url");
 }

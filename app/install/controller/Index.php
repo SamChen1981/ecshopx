@@ -161,8 +161,7 @@ case 'get_db_list':
     $db_user    = isset($_POST['db_user']) ? trim($_POST['db_user']) : '';
     $db_pass    = isset($_POST['db_pass']) ? trim($_POST['db_pass']) : '';
 
-    include_once(ROOT_PATH . 'includes/cls_json.php');
-    $json = new JSON();
+        $json = new JSON();
 
     $databases  = get_db_list($db_host, $db_port, $db_user, $db_pass);
     if ($databases === false) {
@@ -210,8 +209,7 @@ case 'create_config_file':
 
 case 'setup_ucenter':
 
-    include_once(ROOT_PATH . 'includes/cls_json.php');
-    $json = new JSON();
+        $json = new JSON();
     $result = array('error' => 0, 'message' => '');
 
     $app_type   = 'ECSHOP';

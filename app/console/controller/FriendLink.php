@@ -8,7 +8,6 @@ namespace app\console\controller;
 
 
 
-include_once(ROOT_PATH . 'includes/cls_image.php');
 $image = new cls_image($_CFG['bgcolor']);
 
 $exc = new exchange($ecs->table('friend_link'), $db, 'link_id', 'link_name');
