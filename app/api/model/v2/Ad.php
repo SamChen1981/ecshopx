@@ -6,9 +6,9 @@
  * Time: 下午7:05
  */
 
-namespace App\Models\v2;
+namespace app\api\model\v2;
 
-use App\Models\BaseModel;
+use app\api\model\BaseModel;
 
 class Ad extends BaseModel
 {

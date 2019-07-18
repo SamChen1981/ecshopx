@@ -1,7 +1,7 @@
 <?php
-namespace App\Services\Payment\Unionpaynew\sdk;
+namespace app\api\service\payment\unionpay_new\sdk;
 
-use App\Services\Payment\Unionpaynew\sdk\PhpLog;
+use app\api\service\payment\unionpay_new\sdk\PhpLog;
 
 include_once 'log.class.php';
 include_once 'SDKConfig.php';

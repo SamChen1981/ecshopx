@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\v2;
+namespace app\api\controller;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Models\v2\Activity;
+use think\facade\Request;
+
+use app\api\model\v2\Activity;
 
 class ActivityController extends Controller
 {

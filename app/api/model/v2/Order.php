@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Models\v2;
+namespace app\api\model\v2;
 
-use App\Models\BaseModel;
-use App\Helper\Token;
+use app\api\model\BaseModel;
+use app\api\library\Token;
 use DB;
-use App\Services\Shopex\Erp;
-use Log;
-use App\Helper\Header;
+use app\api\service\shopex\Erp;
+
+use app\api\library\Header;
 
 class Order extends BaseModel
 {
@@ -667,7 +667,7 @@ class Order extends BaseModel
 
     public function goods()
     {
-        return $this->hasMany('App\Models\v2\OrderGoods', 'order_id', 'order_id');
+        return $this->hasMany('app\api\model\v2\OrderGoods', 'order_id', 'order_id');
     }
 
     private static function convertOrderStatus($order_id, $order_status, $pay_status, $shipping_status)

@@ -1,5 +1,5 @@
 <?php
-namespace App\Services\Payment\Teegon;
+namespace app\api\service\payment\teegon;
 
 require_once("core.function.php");
 

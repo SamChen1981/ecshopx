@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\v2;
+namespace app\api\controller;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Models\v2\UserAddress;
-use App\Models\v2\Features;
-use App\Helper\Token;
+use think\facade\Request;
+
+use app\api\model\v2\UserAddress;
+use app\api\model\v2\Features;
+use app\api\library\Token;
 
 class ConsigneeController extends Controller
 {

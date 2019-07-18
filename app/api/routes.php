@@ -1,13 +1,7 @@
 <?php
 
-use App\Helper\Token;
-
-$app->get('/', function () use ($app) {
-    return 'Hi shopex';
-});
-
 //Other
-$app->group(['namespace' => 'App\Http\Controllers\v2', 'prefix' => 'v2'], function ($app) {
+$app->group(['namespace' => 'app\api\controller', 'prefix' => 'v2'], function ($app) {
     $app->get('article.{id:[0-9]+}', 'ArticleController@show');
 
     $app->get('notice.{id:[0-9]+}', 'NoticeController@show');
@@ -15,7 +9,7 @@ $app->group(['namespace' => 'App\Http\Controllers\v2', 'prefix' => 'v2'], functi
     $app->post('order.notify.{code}', 'OrderController@notify');
 
     $app->get('product.intro.{id:[0-9]+}', 'GoodsController@intro');
-    
+
     $app->get('product.share.{id:[0-9]+}', 'GoodsController@share');
 
     $app->get('ecapi.auth.web', 'UserController@webOauth');
@@ -24,7 +18,7 @@ $app->group(['namespace' => 'App\Http\Controllers\v2', 'prefix' => 'v2'], functi
 });
 
 //Guest
-$app->group(['namespace' => 'App\Http\Controllers\v2','prefix' => 'v2', 'middleware' => ['xss']], function ($app) {
+$app->group(['namespace' => 'app\api\controller', 'prefix' => 'v2', 'middleware' => ['xss']], function ($app) {
     $app->post('ecapi.ad.list', 'AdController@ad_list');
 
     $app->post('ecapi.access.dns', 'AccessController@dns');
@@ -32,13 +26,13 @@ $app->group(['namespace' => 'App\Http\Controllers\v2','prefix' => 'v2', 'middlew
     $app->post('ecapi.access.batch', 'AccessController@batch');
 
     $app->post('ecapi.category.list', 'GoodsController@category');
-    
+
     $app->post('ecapi.activity.list', 'ActivityController@index');
 
     $app->post('ecapi.activity.get', 'ActivityController@info');
 
     $app->post('ecapi.product.list', 'GoodsController@index');
-    
+
     $app->post('ecapi.home.product.list', 'GoodsController@home');
 
     $app->post('ecapi.search.product.list', 'GoodsController@search');
@@ -76,7 +70,7 @@ $app->group(['namespace' => 'App\Http\Controllers\v2','prefix' => 'v2', 'middlew
     $app->post('ecapi.cardpage.preview', 'CardPageController@preview');
 
     $app->post('ecapi.config.get', 'ConfigController@index');
-    
+
     $app->post('ecapi.config.wechat', 'ConfigController@wechat');
 
     $app->post('ecapi.article.list', 'ArticleController@index');
@@ -136,7 +130,7 @@ $app->group(['namespace' => 'App\Http\Controllers\v2','prefix' => 'v2', 'middlew
 });
 
 //Authorization
-$app->group(['prefix' => 'v2', 'namespace' => 'App\Http\Controllers\v2', 'middleware' => ['token', 'xss']], function ($app) {
+$app->group(['prefix' => 'v2', 'namespace' => 'app\api\controller', 'middleware' => ['token', 'xss']], function ($app) {
     $app->post('ecapi.user.profile.get', 'UserController@profile');
 
     $app->post('ecapi.user.profile.update', 'UserController@updateProfile');

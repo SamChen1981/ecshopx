@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\v2;
+namespace app\api\controller;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use think\facade\Request;
 
-use App\Models\v2\Configs;
+
+use app\api\model\v2\Configs;
 
 class ConfigController extends Controller
 {

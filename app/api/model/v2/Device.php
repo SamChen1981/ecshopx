@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Models\v2;
+namespace app\api\model\v2;
 
-use App\Models\BaseModel;
-use App\Helper\Token;
-use App\Helper\Header;
+use app\api\model\BaseModel;
+use app\api\library\Token;
+use app\api\library\Header;
 
 class Device extends BaseModel
 {

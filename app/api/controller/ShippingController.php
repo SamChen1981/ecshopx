@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\v2;
+namespace app\api\controller;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\v2\Shipping;
-use App\Models\v2\Features;
+use think\facade\Request;
+use app\api\model\v2\Shipping;
+use app\api\model\v2\Features;
 
 class ShippingController extends Controller
 {

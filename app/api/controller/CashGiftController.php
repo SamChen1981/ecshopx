@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\v2;
+namespace app\api\controller;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Models\v2\BonusType;
-use App\Models\v2\UserBonus;
-use App\Models\v2\Features;
-use App\Helper\Token;
+use think\facade\Request;
+
+use app\api\model\v2\BonusType;
+use app\api\model\v2\UserBonus;
+use app\api\model\v2\Features;
+use app\api\library\Token;
 
 class CashGiftController extends Controller
 {

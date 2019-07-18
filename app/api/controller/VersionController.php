@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\v2;
+namespace app\api\controller;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\v2\Version;
+use think\facade\Request;
+use app\api\model\v2\Version;
 
 class VersionController extends Controller
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Models\v2;
+namespace app\api\model\v2;
 
-use App\Models\BaseModel;
+use app\api\model\BaseModel;
 
 // 商品配件表
 class GoodsGroup extends BaseModel
@@ -63,6 +63,6 @@ class GoodsGroup extends BaseModel
     }
     // public function goods()
     // {
-    //     return $this->belongsTo('App\Models\v2\Goods','goods_id','goods_id');
+    //     return $this->belongsTo('app\api\model\v2\Goods','goods_id','goods_id');
     // }
 }

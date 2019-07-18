@@ -1,19 +1,18 @@
 <?php
 
-namespace App\Http\Middleware;
+namespace app\api\middleware;
 
 use Closure;
-use Illuminate\Http\Response;
-use App\Helper\Token;
-use App\Helper\Protocol;
+use app\api\library\Token;
+use app\api\library\Protocol;
 
 class TokenAuthenticate
 {
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param \think\facade\Request $request
+     * @param \Closure $next
      * @return mixed
      */
     public function handle($request, Closure $next)
@@ -24,7 +23,7 @@ class TokenAuthenticate
             return show_error(10001, trans('message.token.invalid'));
         }
 
-        if ($token ===  'token-expired') {
+        if ($token === 'token-expired') {
             return show_error(10002, trans('message.token.expired'));
         }
 

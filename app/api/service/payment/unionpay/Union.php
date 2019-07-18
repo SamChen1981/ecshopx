@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Payment\Unionpay;
+namespace app\api\service\payment\unionpay;
 
 use Exception;
 

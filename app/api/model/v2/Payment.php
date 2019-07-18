@@ -1,24 +1,24 @@
 <?php
 
-namespace App\Models\v2;
+namespace app\api\model\v2;
 
-use App\Models\BaseModel;
-use App\Helper\Token;
-use App\Helper\Header;
-use App\Services\Payment\Alipay\AlipayRSA;
-use App\Services\Payment\Alipay\AlipayNotify;
-use App\Services\Payment\wxpay\WxPay;
-use App\Services\Payment\wxpay\WxResponse;
-use App\Services\Payment\Unionpay\Union;
-use Log;
-use App\Services\Shopex\Erp;
-use App\Services\Shopex\Sms;
-use App\Services\Shopex\Authorize;
-use App\Services\Payment\Teegon\TeegonService;
-use App\Services\Payment\AlipayWap\AlipayWapSubmit;
-use App\Services\Payment\AlipayWap\AlipayWapNotify;
-use App\Services\Payment\Unionpaynew\sdk\AcpService;
-use App\Services\Payment\Unionpaynew\sdk\SDKConfig;
+use app\api\model\BaseModel;
+use app\api\library\Token;
+use app\api\library\Header;
+use app\api\service\payment\alipay\AlipayRSA;
+use app\api\service\payment\alipay\AlipayNotify;
+use app\api\service\payment\wxpay\WxPay;
+use app\api\service\payment\wxpay\WxResponse;
+use app\api\service\payment\unionpay\Union;
+
+use app\api\service\shopex\Erp;
+use app\api\service\shopex\Sms;
+use app\api\service\shopex\Authorize;
+use app\api\service\payment\teegon\TeegonService;
+use app\api\service\payment\alipay_wap\AlipayWapSubmit;
+use app\api\service\payment\alipay_wap\AlipayWapNotify;
+use app\api\service\payment\unionpay_new\sdk\AcpService;
+use app\api\service\payment\unionpay_new\sdk\SDKConfig;
 
 class Payment extends BaseModel
 {

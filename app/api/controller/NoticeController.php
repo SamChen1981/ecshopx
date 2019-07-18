@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\v2;
+namespace app\api\controller;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Models\v2\Card;
-use App\Models\v2\Notice;
+use think\facade\Request;
+
+use app\api\model\v2\Card;
+use app\api\model\v2\Notice;
 
 class NoticeController extends Controller
 {

@@ -7,9 +7,9 @@
  * http://www.geek-zoo.com
  */
 
-namespace App\Models\v2;
+namespace app\api\model\v2;
 
-use App\Models\BaseModel;
+use app\api\model\BaseModel;
 
 class GoodsCategory extends BaseModel
 {
@@ -140,11 +140,11 @@ class GoodsCategory extends BaseModel
 
     public function parentCategory()
     {
-        return $this->belongsTo('App\Models\v2\GoodsCategory', 'parent_id', 'id');
+        return $this->belongsTo('app\api\model\v2\GoodsCategory', 'parent_id', 'id');
     }
 
     public function categories()
     {
-        return $this->hasMany('App\Models\v2\GoodsCategory', 'parent_id', 'id');
+        return $this->hasMany('app\api\model\v2\GoodsCategory', 'parent_id', 'id');
     }
 }

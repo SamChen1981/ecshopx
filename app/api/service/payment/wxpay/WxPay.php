@@ -16,10 +16,9 @@
  * ============================================================================
  *
  */
-namespace App\Services\Payment\wxpay;
+namespace app\api\service\payment\wxpay;
 
-use App\Services\Payment\wxpay\TenpayHttpClient;
-use Log;
+use app\api\service\payment\wxpay\TenpayHttpClient;
 
 class WxPay
 {

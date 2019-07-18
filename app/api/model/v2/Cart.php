@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Models\v2;
+namespace app\api\model\v2;
 
-use App\Models\BaseModel;
-use App\Helper\Token;
+use app\api\model\BaseModel;
+use app\api\library\Token;
 use DB;
-use App\Services\Shopex\Erp;
-use App\Services\Shopex\Sms;
-use Log;
-use App\Helper\Header;
-use App\Services\Shopex\Logistics;
+use app\api\service\shopex\Erp;
+use app\api\service\shopex\Sms;
+
+use app\api\library\Header;
+use app\api\service\shopex\Logistics;
 
 class Cart extends BaseModel
 {
@@ -798,13 +798,13 @@ class Cart extends BaseModel
 
     public function product()
     {
-        return $this->belongsTo('App\Models\v2\Goods', 'goods_id', 'goods_id')->with('properties');
+        return $this->belongsTo('app\api\model\v2\Goods', 'goods_id', 'goods_id')->with('properties');
     }
 
 
     public function properties()
     {
-        return $this->belongsToMany('App\Models\v2\Attribute', 'goods_attr', 'goods_id', 'attr_id')->where('attribute.attr_type', '!=', 0)->groupBy('attr_id');
+        return $this->belongsToMany('app\api\model\v2\Attribute', 'goods_attr', 'goods_id', 'attr_id')->where('attribute.attr_type', '!=', 0)->groupBy('attr_id');
     }
 
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Models\v2;
+namespace app\api\model\v2;
 
-use App\Models\BaseModel;
-use App\Helper\Header;
+use app\api\model\BaseModel;
+use app\api\library\Header;
 
 class Version extends BaseModel
 {

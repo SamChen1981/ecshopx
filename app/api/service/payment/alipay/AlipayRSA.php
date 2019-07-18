@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Payment\Alipay;
+namespace app\api\service\payment\alipay;
 
 class AlipayRSA
 {

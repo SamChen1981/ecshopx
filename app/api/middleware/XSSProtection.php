@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Middleware;
+namespace app\api\middleware;
 
 use Closure;
 
@@ -9,7 +9,7 @@ class XSSProtection
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \think\facade\Request  $request
      * @param  \Closure  $next
      * @return mixed
      */

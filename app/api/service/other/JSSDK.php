@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Services\Other;
+namespace app\api\service\other;
 
 use Cache;
-use Log;
 
 class JSSDK
 {

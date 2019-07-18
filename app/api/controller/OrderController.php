@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\v2;
+namespace app\api\controller;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use think\facade\Request;
 
-use App\Models\v2\Order;
-use App\Models\v2\Payment;
-use App\Models\v2\Features;
+use app\api\model\v2\Order;
+use app\api\model\v2\Payment;
+use app\api\model\v2\Features;
 
 class OrderController extends Controller
 {

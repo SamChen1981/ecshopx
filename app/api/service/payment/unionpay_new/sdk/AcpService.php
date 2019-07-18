@@ -1,8 +1,8 @@
 <?php
-namespace App\Services\Payment\Unionpaynew\sdk;
+namespace app\api\service\payment\unionpay_new\sdk;
 
-use App\Services\Payment\Unionpaynew\sdk\LogUtil;
-use App\Services\Payment\Unionpaynew\sdk\CertUtil;
+use app\api\service\payment\unionpay_new\sdk\LogUtil;
+use app\api\service\payment\unionpay_new\sdk\CertUtil;
 
 header('Content-type:text/html;charset=utf-8');
 include_once 'log.class.php';

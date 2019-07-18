@@ -1,17 +1,16 @@
 <?php
 
-namespace App\Http\Controllers\v2;
+namespace app\api\controller;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use think\facade\Request;
 
-use App\Helper\Token;
-use App\Models\v2\Member;
-use App\Models\v2\RegFields;
-use App\Models\v2\Configs;
-use App\Models\v2\Features;
+use app\api\library\Token;
+use app\api\model\v2\Member;
+use app\api\model\v2\RegFields;
+use app\api\model\v2\Configs;
+use app\api\model\v2\Features;
 
-use Log;
+
 use Cookie;
 
 class UserController extends Controller

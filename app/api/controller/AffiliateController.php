@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Http\Controllers\v2;
+namespace app\api\controller;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Models\v2\AffiliateLog;
+use think\facade\Request;
+
+use app\api\model\v2\AffiliateLog;
 
 class AffiliateController extends Controller
 {
 
     /**
-    * POST ecapi.recommend.affiliate.list
-    */
+     * POST ecapi.recommend.affiliate.list
+     */
     public function index(Request $request)
     {
         $rules = [
@@ -27,8 +27,8 @@ class AffiliateController extends Controller
     }
 
     /**
-    * POST ecapi.recommend.affiliate.info
-    */
+     * POST ecapi.recommend.affiliate.info
+     */
     public function info(Request $request)
     {
         $data = AffiliateLog::info();

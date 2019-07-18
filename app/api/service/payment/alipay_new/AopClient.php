@@ -1,5 +1,5 @@
 <?php
-namespace App\Services\Payment\AlipayNew;
+namespace app\api\service\payment\alipay_new;
 
 require_once 'AopEncrypt.php';
 

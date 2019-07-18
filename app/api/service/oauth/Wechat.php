@@ -1,5 +1,5 @@
 <?php
-namespace App\Services\Oauth;
+namespace app\api\service\oauth;
 
 class Wechat
 {

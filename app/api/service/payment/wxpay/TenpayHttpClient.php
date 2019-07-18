@@ -18,7 +18,7 @@
  * ============================================================================
  *
  */
-namespace App\Services\Payment\wxpay;
+namespace app\api\service\payment\wxpay;
 
 class TenpayHttpClient
 {

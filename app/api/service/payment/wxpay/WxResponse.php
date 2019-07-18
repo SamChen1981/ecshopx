@@ -11,9 +11,7 @@
 //getDebugInfo(),获取debug信息
 //============================================================================
 
-namespace App\Services\Payment\wxpay;
-
-use Log;
+namespace app\api\service\payment\wxpay;
 
 class WxResponse
 {

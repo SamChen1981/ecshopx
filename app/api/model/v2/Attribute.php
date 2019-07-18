@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Models\v2;
+namespace app\api\model\v2;
 
-use App\Models\BaseModel;
-use App\Helper\Token;
-use Log;
+use app\api\model\BaseModel;
+use app\api\library\Token;
 
 class Attribute extends BaseModel
 {
@@ -154,6 +153,6 @@ class Attribute extends BaseModel
 
     public function goodsattr()
     {
-        return $this->hasMany('App\Models\v2\GoodsAttr', 'attr_id', 'attr_id');
+        return $this->hasMany('app\api\model\v2\GoodsAttr', 'attr_id', 'attr_id');
     }
 }

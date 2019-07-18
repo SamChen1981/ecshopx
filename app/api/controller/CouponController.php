@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\v2;
+namespace app\api\controller;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\v2\Features;
-use App\Models\v2\Coupon;
+use think\facade\Request;
+use app\api\model\v2\Features;
+use app\api\model\v2\Coupon;
 
 class CouponController extends Controller
 {

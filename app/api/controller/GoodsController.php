@@ -1,19 +1,17 @@
 <?php
 
-namespace App\Http\Controllers\v2;
+namespace app\api\controller;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use think\facade\Request;
 
-use App\Helper\Token;
-use App\Models\v2\Shipping;
-use App\Models\v2\Goods;
-use App\Models\v2\Comment;
-use App\Models\v2\GoodsCategory;
-use App\Models\v2\CollectGoods;
-use App\Models\v2\Products;
-use App\Models\v2\Activity;
-use Log;
+use app\api\library\Token;
+use app\api\model\v2\Shipping;
+use app\api\model\v2\Goods;
+use app\api\model\v2\Comment;
+use app\api\model\v2\GoodsCategory;
+use app\api\model\v2\CollectGoods;
+use app\api\model\v2\Products;
+use app\api\model\v2\Activity;
 
 class GoodsController extends Controller
 {

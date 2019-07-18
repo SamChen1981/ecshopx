@@ -1,17 +1,16 @@
 <?php
 
-namespace App\Models\v2;
+namespace app\api\model\v2;
 
-use App\Models\BaseModel;
+use app\api\model\BaseModel;
 
-use App\Helper\Token;
-use App\Helper\XXTEA;
+use app\api\library\Token;
+use app\api\library\XXTEA;
 use App\Services\Cloud\Client;
-use App\Services\QiNiu\QiNiu;
-use App\Services\Other\JSSDK;
-use App\Services\Shopex\Authorize;
+use app\api\service\qiniu\QiNiu;
+use app\api\service\other\JSSDK;
+use app\api\service\shopex\Authorize;
 use Cache;
-use Log;
 
 class Configs extends BaseModel
 {

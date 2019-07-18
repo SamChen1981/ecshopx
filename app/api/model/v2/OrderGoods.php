@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Models\v2;
+namespace app\api\model\v2;
 
-use App\Models\BaseModel;
+use app\api\model\BaseModel;
 
-use App\Helper\Token;
+use app\api\library\Token;
 
 class OrderGoods extends BaseModel
 {
@@ -72,7 +72,7 @@ class OrderGoods extends BaseModel
 
     public function orderinfo()
     {
-        return $this->belongsTo('App\Models\v2\OrderInfo', 'order_id', 'order_id');
+        return $this->belongsTo('app\api\model\v2\OrderInfo', 'order_id', 'order_id');
     }
 
     public function getIdAttribute()

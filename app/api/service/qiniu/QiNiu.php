@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\QiNiu;
+namespace app\api\service\qiniu;
 
 class QiNiu
 {

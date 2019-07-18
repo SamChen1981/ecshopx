@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\v2;
+namespace app\api\controller;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Models\v2\Article;
-use App\Models\v2\ArticleCategory;
+use think\facade\Request;
+
+use app\api\model\v2\Article;
+use app\api\model\v2\ArticleCategory;
 
 class ArticleController extends Controller
 {

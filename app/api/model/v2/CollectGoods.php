@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Models\v2;
+namespace app\api\model\v2;
 
-use App\Models\BaseModel;
+use app\api\model\BaseModel;
 
-use App\Helper\Token;
+use app\api\library\Token;
 
 class CollectGoods extends BaseModel
 {
@@ -104,6 +104,6 @@ class CollectGoods extends BaseModel
 
     public function goods()
     {
-        return $this->hasOne('App\Models\v2\Goods', 'goods_id', 'goods_id');
+        return $this->hasOne('app\api\model\v2\Goods', 'goods_id', 'goods_id');
     }
 }

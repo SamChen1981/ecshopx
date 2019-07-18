@@ -6,10 +6,9 @@
  * Time: 下午6:59
  */
 
-namespace App\Http\Controllers\v2;
+namespace app\api\controller;
 
-use App\Http\Controllers\Controller;
-use App\Models\v2\Ad;
+use app\api\model\v2\Ad;
 
 class AdController extends Controller
 {

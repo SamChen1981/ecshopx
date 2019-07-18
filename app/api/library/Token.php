@@ -1,14 +1,9 @@
 <?php
 
-namespace App\Helper;
+namespace app\api\library;
 
 use \DomainException;
-use \InvalidArgumentException;
 use \UnexpectedValueException;
-use \DateTime;
-use Cache;
-use App\Helper\Header;
-use Log;
 
 class Token
 {
@@ -30,10 +25,10 @@ class Token
     /**
      * Decodes a JWT string into a PHP object.
      *
-     * @param string            $jwt            The JWT
-     * @param string|array|null $key            The key, or map of keys.
+     * @param string $jwt The JWT
+     * @param string|array|null $key The key, or map of keys.
      *                                          If the algorithm used is asymmetric, this is the public key
-     * @param array             $allowed_algs   List of supported verification algorithms
+     * @param array $allowed_algs List of supported verification algorithms
      *                                          Supported algorithms are 'HS256', 'HS384', 'HS512' and 'RS256'
      *
      * @return object The JWT's payload as a PHP object
@@ -68,7 +63,7 @@ class Token
             return false;
         }
         $sig = self::urlsafeB64Decode($cryptob64);
-        
+
         if (empty($header->alg)) {
             return false;
         }
@@ -120,9 +115,9 @@ class Token
 
     public static function authorization()
     {
-        $token = app('request')->header('X-'.config('app.name').'-Authorization');
+        $token = app('request')->header('X-' . config('app.name') . '-Authorization');
         if (empty($token)) {
-            $token = app('request')->get('X-'.config('app.name').'-Authorization');
+            $token = app('request')->get('X-' . config('app.name') . '-Authorization');
         }
 
         // Log::debug('Authorization', ['token' => $token]);
@@ -142,7 +137,7 @@ class Token
 
     public static function refresh()
     {
-        $token = app('request')->header('X-'.config('app.name').'-Authorization');
+        $token = app('request')->header('X-' . config('app.name') . '-Authorization');
 
         if ($token) {
             if ($payload = self::decode($token)) {
@@ -150,7 +145,7 @@ class Token
 
                     // 超过1天
                     if (property_exists($payload, 'exp')) {
-                        if ((time()+config('token.ttl')*60-$payload->exp) > config('token.refresh_ttl')*60) {
+                        if ((time() + config('token.ttl') * 60 - $payload->exp) > config('token.refresh_ttl') * 60) {
                             return self::new_token($payload);
                         }
                     }
@@ -176,9 +171,9 @@ class Token
     private static function new_token($payload)
     {
         return self::encode([
-                'uid' => $payload->uid,
-                'ver' => config('token.ver')
-            ]);
+            'uid' => $payload->uid,
+            'ver' => config('token.ver')
+        ]);
     }
 
     private static function str_mix($domain, $uuid)
@@ -205,12 +200,12 @@ class Token
     /**
      * Converts and signs a PHP object or array into a JWT string.
      *
-     * @param object|array  $payload    PHP object or array
-     * @param string        $key        The secret key.
+     * @param object|array $payload PHP object or array
+     * @param string $key The secret key.
      *                                  If the algorithm used is asymmetric, this is the private key
-     * @param string        $alg        The signing algorithm.
+     * @param string $alg The signing algorithm.
      *                                  Supported algorithms are 'HS256', 'HS384', 'HS512' and 'RS256'
-     * @param array         $head       An array with header elements to attach
+     * @param array $head An array with header elements to attach
      *
      * @return string A signed JWT
      *
@@ -251,9 +246,9 @@ class Token
     /**
      * Sign a string with a given key and algorithm.
      *
-     * @param string            $msg    The message to sign
-     * @param string|resource   $key    The secret key
-     * @param string            $alg    The signing algorithm.
+     * @param string $msg The message to sign
+     * @param string|resource $key The secret key
+     * @param string $alg The signing algorithm.
      *                                  Supported algorithms are 'HS256', 'HS384', 'HS512' and 'RS256'
      *
      * @return string An encrypted message
@@ -284,10 +279,10 @@ class Token
      * Verify a signature with the message, key and method. Not all methods
      * are symmetric, so we must have a separate verify and sign method.
      *
-     * @param string            $msg        The original message (header and body)
-     * @param string            $signature  The original signature
-     * @param string|resource   $key        For HS*, a string key works. for RS*, must be a resource of an openssl public key
-     * @param string            $alg        The algorithm
+     * @param string $msg The original message (header and body)
+     * @param string $signature The original signature
+     * @param string|resource $key For HS*, a string key works. for RS*, must be a resource of an openssl public key
+     * @param string $alg The algorithm
      *
      * @return bool
      *
@@ -308,7 +303,7 @@ class Token
                 } else {
                     return $signature;
                 }
-                // no break
+            // no break
             case 'hash_hmac':
             default:
                 $hash = hash_hmac($algorithm, $msg, $key, true);
@@ -349,8 +344,8 @@ class Token
              * manually detect large ints in the JSON string and quote them (thus converting
              *them to strings) before decoding, hence the preg_replace() call.
              */
-            $max_int_length = strlen((string) PHP_INT_MAX) - 1;
-            $json_without_bigints = preg_replace('/:\s*(-?\d{'.$max_int_length.',})/', ': "$1"', $input);
+            $max_int_length = strlen((string)PHP_INT_MAX) - 1;
+            $json_without_bigints = preg_replace('/:\s*(-?\d{' . $max_int_length . ',})/', ': "$1"', $input);
             $obj = json_decode($json_without_bigints);
         }
 

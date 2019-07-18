@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\v2;
+namespace app\api\controller;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Models\v2\Member;
-use App\Models\v2\Features;
-use App\Models\v2\AccountLog;
+use think\facade\Request;
+
+use app\api\model\v2\Member;
+use app\api\model\v2\Features;
+use app\api\model\v2\AccountLog;
 
 class ScoreController extends Controller
 {

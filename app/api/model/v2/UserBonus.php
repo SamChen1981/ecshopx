@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Models\v2;
+namespace app\api\model\v2;
 
-use App\Models\BaseModel;
-use App\Helper\Token;
-use Log;
+use app\api\model\BaseModel;
+use app\api\library\Token;
 
 class UserBonus extends BaseModel
 {

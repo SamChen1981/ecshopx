@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\v2;
+namespace app\api\controller;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Models\BaseModel;
-use App\Helper\XXTEA;
-use Log;
+use think\facade\Request;
+
+use app\api\model\BaseModel;
+use app\api\library\XXTEA;
 
 class AccessController extends Controller
 {
@@ -38,7 +37,7 @@ class AccessController extends Controller
             $header_arr = [];
             if ($headers = @json_decode($value['header'], true)) {
                 foreach ($headers as $header_key => $header_value) {
-                    $header_arr[] = $header_key.': '.$header_value;
+                    $header_arr[] = $header_key . ': ' . $header_value;
                 }
             }
 

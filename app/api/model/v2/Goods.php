@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Models\v2;
+namespace app\api\model\v2;
 
-use App\Models\BaseModel;
+use app\api\model\BaseModel;
 
-use App\Helper\Token;
+use app\api\library\Token;
 use \DB;
-use App\Services\Shopex\Erp;
-use App\Services\Shopex\Sms;
-use App\Helper\Header;
-use Log;
-use App\Services\Shopex\Logistics;
+use app\api\service\shopex\Erp;
+use app\api\service\shopex\Sms;
+use app\api\library\Header;
+
+use app\api\service\shopex\Logistics;
 
 class Goods extends BaseModel
 {
@@ -427,38 +427,38 @@ class Goods extends BaseModel
 
     public function tags()
     {
-        return $this->hasMany('App\Models\v2\Tags', 'goods_id', 'goods_id');
+        return $this->hasMany('app\api\model\v2\Tags', 'goods_id', 'goods_id');
     }
 
     // public function promos()
     // {
-    //     return $this->hasMany('App\Models\v2\GoodsActivity', 'goods_id', 'goods_id');
+    //     return $this->hasMany('app\api\model\v2\GoodsActivity', 'goods_id', 'goods_id');
 
     // }
 
     public function properties()
     {
-        return $this->belongsToMany('App\Models\v2\Attribute', 'goods_attr', 'goods_id', 'attr_id')->where('attribute.attr_type', '!=', 0)->groupBy('attr_id');
+        return $this->belongsToMany('app\api\model\v2\Attribute', 'goods_attr', 'goods_id', 'attr_id')->where('attribute.attr_type', '!=', 0)->groupBy('attr_id');
     }
 
     public function propertie_info()
     {
-        return $this->belongsToMany('App\Models\v2\Attribute', 'goods_attr', 'goods_id', 'attr_id')->groupBy('attr_id');
+        return $this->belongsToMany('app\api\model\v2\Attribute', 'goods_attr', 'goods_id', 'attr_id')->groupBy('attr_id');
     }
 
     public function attachments()
     {
-        return $this->hasMany('App\Models\v2\GoodsGroup', 'parent_id', 'goods_id');
+        return $this->hasMany('app\api\model\v2\GoodsGroup', 'parent_id', 'goods_id');
     }
 
     public function stock()
     {
-        return $this->hasMany('App\Models\v2\Products', 'goods_id', 'goods_id');
+        return $this->hasMany('app\api\model\v2\Products', 'goods_id', 'goods_id');
     }
 
     public function comments()
     {
-        return $this->hasMany('App\Models\v2\Comment', 'id_value', 'goods_id')->where('comment.comment_type', 0)->where('comment_rank', '>', 3); //商品
+        return $this->hasMany('app\api\model\v2\Comment', 'id_value', 'goods_id')->where('comment.comment_type', 0)->where('comment_rank', '>', 3); //商品
     }
 
     public function getSkuAttribute()

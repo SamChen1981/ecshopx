@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Payment\Unionpay;
+namespace app\api\service\payment\unionpay;
 
 //---------------------------------------------------------
 //即时到帐支付后台回调示例，商户按照此文档进行开发即可
@@ -10,7 +10,7 @@ namespace App\Services\Payment\Unionpay;
 // use \Input;
 // use \Message;
 use DB;
-use Log;
+
 use Request;
 use Config;
 use Response;

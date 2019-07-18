@@ -1,13 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\v2;
+namespace app\api\controller;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use think\facade\Request;
 
-use App\Models\v2\ShopConfig;
-use App\Models\v2\Configs;
-use Log;
+use app\api\model\v2\ShopConfig;
+use app\api\model\v2\Configs;
 
 class SiteController extends Controller
 {

@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Models\v2;
+namespace app\api\model\v2;
 
-use App\Models\BaseModel;
-use App\Helper\Token;
+use app\api\model\BaseModel;
+use app\api\library\Token;
 
 class Account extends BaseModel
 {
     protected $connection = 'shop';
 
-    protected $table      = 'account_log';
+    protected $table = 'account_log';
 
     protected $primaryKey = 'log_id';
-    
+
     public $timestamps = false;
 
     protected $appends = ['price', 'action', 'memo', 'create_at', 'status'];
@@ -72,13 +72,13 @@ class Account extends BaseModel
         } elseif ($status == 2) {
             $model = $model->where('user_money', '<', 0);
         }
-        
+
         $total = $model->count();
 
         $lists = $model->orderBy('change_time', 'desc')->paginate($per_page)->toArray();
 
         $paged = self::formatpaged($page, $per_page, $total);
-        
+
         return self::formatBody(['paged' => $paged, 'balances' => $lists['data']]);
     }
 }
