@@ -9,11 +9,6 @@ namespace app\home\controller;
 
 define('INIT_NO_USERS', true);
 
-
-if ((DEBUG_MODE & 2) != 2) {
-    $smarty->caching = true;
-}
-
 $charset = empty($_GET['charset']) ? EC_CHARSET : $_GET['charset'];
 $type = empty($_GET['type']) ? '' : 'collection';
 if (strtolower($charset) == 'gb2312') {

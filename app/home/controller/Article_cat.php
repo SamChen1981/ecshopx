@@ -6,14 +6,6 @@ namespace app\home\controller;
  * 文章分类
  */
 
-
-
-
-
-if ((DEBUG_MODE & 2) != 2) {
-    $smarty->caching = true;
-}
-
 /* 清除缓存 */
 clear_cache_files();
 

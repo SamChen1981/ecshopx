@@ -6,13 +6,6 @@ namespace app\home\controller;
  * 商品详情
  */
 
-
-
-
-if ((DEBUG_MODE & 2) != 2) {
-    $smarty->caching = true;
-}
-
 $affiliate = unserialize($GLOBALS['_CFG']['affiliate']);
 $smarty->assign('affiliate', $affiliate);
 

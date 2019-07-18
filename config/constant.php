@@ -1,13 +1,5 @@
 <?php
 
-/**
- * 常量
- */
-
-if (!defined('IN_ECS')) {
-    die('Hacking attempt');
-}
-
 /* 图片处理相关常数 */
 define('ERR_INVALID_IMAGE', 1);
 define('ERR_NO_GD', 2);
@@ -277,7 +269,7 @@ define('VERSION_UTF8', 'https://update.xyunqi.com/version/program/ECShop/ecshop_
 
 /* debug start */
 define('DEBUG_API', true);
-define('LOG_DIR', ROOT_PATH."temp/logs/".date("Y-m", time()));
+define('LOG_DIR', ROOT_PATH . "temp/logs/" . date("Y-m", time()));
 /* debug end*/
 
 define('PMP_DESKTOP', 'https://pmp.shopex.cn/index.php?app=ad&ctl=display&act=index&nobar=1&nobtn=1&code=babda8d9d1c2863bd2b6091fce411881&entid=131110483129&username=&r=1461304885');

@@ -6,13 +6,6 @@ namespace app\home\controller;
  * 列出所有分类及品牌
  */
 
-
-
-
-if ((DEBUG_MODE & 2) != 2) {
-    $smarty->caching = true;
-}
-
 if (!$smarty->is_cached('catalog.dwt')) {
     /* 取出所有分类 */
     $cat_list = cat_list(0, 0, false);
@@ -22,7 +15,6 @@ if (!$smarty->is_cached('catalog.dwt')) {
             unset($cat_list[$key]);
         }
     }
-
 
     assign_template();
     assign_dynamic('catalog');

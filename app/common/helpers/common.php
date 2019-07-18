@@ -4,9 +4,6 @@
  * 公用函数库
  */
 
-if (!defined('IN_ECS')) {
-    die('Hacking attempt');
-}
 
 /*  开启全局的Cookie的HttpOnly属性  2017-09-28 17:20:20  */
 @ini_set("session.cookie_httponly", 1);
@@ -15,8 +12,8 @@ if (!defined('IN_ECS')) {
  * 创建像这样的查询: "IN('a','b')";
  *
  * @access   public
- * @param    mix      $item_list      列表数组或字符串
- * @param    string   $field_name     字段名称
+ * @param mix $item_list 列表数组或字符串
+ * @param string $field_name 字段名称
  *
  * @return   void
  */
@@ -47,7 +44,7 @@ function db_create_in($item_list, $field_name = '')
  * 验证输入的邮件地址是否合法
  *
  * @access  public
- * @param   string      $email      需要验证的邮件地址
+ * @param string $email 需要验证的邮件地址
  *
  * @return bool
  */
@@ -69,7 +66,7 @@ function is_email($user_email)
  * 检查是否为一个合法的时间格式
  *
  * @access  public
- * @param   string  $time
+ * @param string $time
  * @return  void
  */
 function is_time($time)
@@ -93,7 +90,7 @@ function assign_query_info()
         if (PHP_VERSION >= '5.0.0') {
             $query_time = number_format(microtime(true) - $GLOBALS['db']->queryTime, 6);
         } else {
-            list($now_usec, $now_sec)     = explode(' ', microtime());
+            list($now_usec, $now_sec) = explode(' ', microtime());
             list($start_usec, $start_sec) = explode(' ', $GLOBALS['db']->queryTime);
             $query_time = number_format(($now_sec - $start_sec) + ($now_usec - $start_usec), 6);
         }
@@ -114,7 +111,7 @@ function assign_query_info()
  * 创建地区的返回信息
  *
  * @access  public
- * @param   array   $arr    地区数组 *
+ * @param array $arr 地区数组 *
  * @return  void
  */
 function region_result($parent, $sel_name, $type)
@@ -123,8 +120,8 @@ function region_result($parent, $sel_name, $type)
 
     $arr = get_regions($type, $parent);
     foreach ($arr as $v) {
-        $region      =& $cp->add_node('region');
-        $region_id   =& $region->add_node('id');
+        $region =& $cp->add_node('region');
+        $region_id =& $region->add_node('id');
         $region_name =& $region->add_node('name');
 
         $region_id->set_data($v['region_id']);
@@ -138,7 +135,7 @@ function region_result($parent, $sel_name, $type)
  * 获得指定国家的所有省份
  *
  * @access      public
- * @param       int     country    国家的编号
+ * @param int     country    国家的编号
  * @return      array
  */
 function get_regions($type = 0, $parent = 0)
@@ -153,7 +150,7 @@ function get_regions($type = 0, $parent = 0)
  * 获得配送区域中指定的配送方式的配送费用的计算参数
  *
  * @access  public
- * @param   int     $area_id        配送区域ID
+ * @param int $area_id 配送区域ID
  *
  * @return array;
  */
@@ -197,11 +194,11 @@ function init_users()
  * 获得指定分类下的子分类的数组
  *
  * @access  public
- * @param   int     $cat_id     分类的ID
- * @param   int     $selected   当前选中分类的ID
- * @param   boolean $re_type    返回的类型: 值为真时返回下拉列表,否则返回数组
- * @param   int     $level      限定返回的级数。为0时返回所有级数
- * @param   int     $is_show_all 如果为true显示所有分类，如果为false隐藏不可见分类。
+ * @param int $cat_id 分类的ID
+ * @param int $selected 当前选中分类的ID
+ * @param boolean $re_type 返回的类型: 值为真时返回下拉列表,否则返回数组
+ * @param int $level 限定返回的级数。为0时返回所有级数
+ * @param int $is_show_all 如果为true显示所有分类，如果为false隐藏不可见分类。
  * @return  mix
  */
 function cat_list($cat_id = 0, $selected = 0, $re_type = true, $level = 0, $is_show_all = true)
@@ -211,10 +208,10 @@ function cat_list($cat_id = 0, $selected = 0, $re_type = true, $level = 0, $is_s
     if ($res === null) {
         $data = read_static_cache('cat_pid_releate');
         if ($data === false) {
-            $sql = "SELECT c.cat_id, c.cat_name, c.measure_unit, c.parent_id, c.is_show, c.show_in_nav, c.grade, c.sort_order, COUNT(s.cat_id) AS has_children ".
-                'FROM ' . $GLOBALS['ecs']->table('category') . " AS c ".
-                "LEFT JOIN " . $GLOBALS['ecs']->table('category') . " AS s ON s.parent_id=c.cat_id ".
-                "GROUP BY c.cat_id ".
+            $sql = "SELECT c.cat_id, c.cat_name, c.measure_unit, c.parent_id, c.is_show, c.show_in_nav, c.grade, c.sort_order, COUNT(s.cat_id) AS has_children " .
+                'FROM ' . $GLOBALS['ecs']->table('category') . " AS c " .
+                "LEFT JOIN " . $GLOBALS['ecs']->table('category') . " AS s ON s.parent_id=c.cat_id " .
+                "GROUP BY c.cat_id " .
                 'ORDER BY c.parent_id, c.sort_order ASC';
             $res = $GLOBALS['db']->getAll($sql);
 
@@ -231,16 +228,16 @@ function cat_list($cat_id = 0, $selected = 0, $re_type = true, $level = 0, $is_s
             $res3 = $GLOBALS['db']->getAll($sql);
 
             $newres = array();
-            foreach ($res2 as $k=>$v) {
+            foreach ($res2 as $k => $v) {
                 $newres[$v['cat_id']] = $v['goods_num'];
-                foreach ($res3 as $ks=>$vs) {
+                foreach ($res3 as $ks => $vs) {
                     if ($v['cat_id'] == $vs['cat_id']) {
                         $newres[$v['cat_id']] = $v['goods_num'] + $vs['goods_num'];
                     }
                 }
             }
 
-            foreach ($res as $k=>$v) {
+            foreach ($res as $k => $v) {
                 $res[$k]['goods_num'] = !empty($newres[$v['cat_id']]) ? $newres[$v['cat_id']] : 0;
             }
             //如果数组过大，不采用静态缓存方式
@@ -282,7 +279,7 @@ function cat_list($cat_id = 0, $selected = 0, $re_type = true, $level = 0, $is_s
             $end_level = $level;
         } else {
             $first_item = reset($options); // 获取第一个元素
-            $end_level  = $first_item['level'] + $level;
+            $end_level = $first_item['level'] + $level;
         }
 
         /* 保留level小于end_level的部分 */
@@ -320,9 +317,9 @@ function cat_list($cat_id = 0, $selected = 0, $re_type = true, $level = 0, $is_s
  * 过滤和排序所有分类，返回一个带有缩进级别的数组
  *
  * @access  private
- * @param   int     $cat_id     上级分类ID
- * @param   array   $arr        含有所有分类的数组
- * @param   int     $level      级别
+ * @param int $cat_id 上级分类ID
+ * @param array $arr 含有所有分类的数组
+ * @param int $level 级别
  * @return  void
  */
 function cat_options($spec_cat_id, $arr)
@@ -346,33 +343,33 @@ function cat_options($spec_cat_id, $arr)
                             break;
                         }
 
-                        $options[$cat_id]          = $value;
+                        $options[$cat_id] = $value;
                         $options[$cat_id]['level'] = $level;
-                        $options[$cat_id]['id']    = $cat_id;
-                        $options[$cat_id]['name']  = $value['cat_name'];
+                        $options[$cat_id]['id'] = $cat_id;
+                        $options[$cat_id]['name'] = $value['cat_name'];
                         unset($arr[$key]);
 
                         if ($value['has_children'] == 0) {
                             continue;
                         }
-                        $last_cat_id  = $cat_id;
+                        $last_cat_id = $cat_id;
                         $cat_id_array = array($cat_id);
                         $level_array[$last_cat_id] = ++$level;
                         continue;
                     }
 
                     if ($value['parent_id'] == $last_cat_id) {
-                        $options[$cat_id]          = $value;
+                        $options[$cat_id] = $value;
                         $options[$cat_id]['level'] = $level;
-                        $options[$cat_id]['id']    = $cat_id;
-                        $options[$cat_id]['name']  = $value['cat_name'];
+                        $options[$cat_id]['id'] = $cat_id;
+                        $options[$cat_id]['name'] = $value['cat_name'];
                         unset($arr[$key]);
 
                         if ($value['has_children'] > 0) {
                             if (end($cat_id_array) != $last_cat_id) {
                                 $cat_id_array[] = $last_cat_id;
                             }
-                            $last_cat_id    = $cat_id;
+                            $last_cat_id = $cat_id;
                             $cat_id_array[] = $cat_id;
                             $level_array[$last_cat_id] = ++$level;
                         }
@@ -465,37 +462,37 @@ function load_config()
         }
 
         /* 对数值型设置处理 */
-        $arr['watermark_alpha']      = intval($arr['watermark_alpha']);
-        $arr['market_price_rate']    = floatval($arr['market_price_rate']);
-        $arr['integral_scale']       = floatval($arr['integral_scale']);
+        $arr['watermark_alpha'] = intval($arr['watermark_alpha']);
+        $arr['market_price_rate'] = floatval($arr['market_price_rate']);
+        $arr['integral_scale'] = floatval($arr['integral_scale']);
         //$arr['integral_percent']     = floatval($arr['integral_percent']);
-        $arr['cache_time']           = intval($arr['cache_time']);
-        $arr['thumb_width']          = intval($arr['thumb_width']);
-        $arr['thumb_height']         = intval($arr['thumb_height']);
-        $arr['image_width']          = intval($arr['image_width']);
-        $arr['image_height']         = intval($arr['image_height']);
-        $arr['best_number']          = !empty($arr['best_number']) && intval($arr['best_number']) > 0 ? intval($arr['best_number'])     : 3;
-        $arr['new_number']           = !empty($arr['new_number']) && intval($arr['new_number']) > 0 ? intval($arr['new_number'])      : 3;
-        $arr['hot_number']           = !empty($arr['hot_number']) && intval($arr['hot_number']) > 0 ? intval($arr['hot_number'])      : 3;
-        $arr['promote_number']       = !empty($arr['promote_number']) && intval($arr['promote_number']) > 0 ? intval($arr['promote_number'])  : 3;
-        $arr['top_number']           = intval($arr['top_number'])      > 0 ? intval($arr['top_number'])      : 10;
-        $arr['history_number']       = intval($arr['history_number'])  > 0 ? intval($arr['history_number'])  : 5;
-        $arr['comments_number']      = intval($arr['comments_number']) > 0 ? intval($arr['comments_number']) : 5;
-        $arr['article_number']       = intval($arr['article_number'])  > 0 ? intval($arr['article_number'])  : 5;
-        $arr['page_size']            = intval($arr['page_size'])       > 0 ? intval($arr['page_size'])       : 10;
-        $arr['bought_goods']         = intval($arr['bought_goods']);
-        $arr['goods_name_length']    = intval($arr['goods_name_length']);
-        $arr['top10_time']           = intval($arr['top10_time']);
+        $arr['cache_time'] = intval($arr['cache_time']);
+        $arr['thumb_width'] = intval($arr['thumb_width']);
+        $arr['thumb_height'] = intval($arr['thumb_height']);
+        $arr['image_width'] = intval($arr['image_width']);
+        $arr['image_height'] = intval($arr['image_height']);
+        $arr['best_number'] = !empty($arr['best_number']) && intval($arr['best_number']) > 0 ? intval($arr['best_number']) : 3;
+        $arr['new_number'] = !empty($arr['new_number']) && intval($arr['new_number']) > 0 ? intval($arr['new_number']) : 3;
+        $arr['hot_number'] = !empty($arr['hot_number']) && intval($arr['hot_number']) > 0 ? intval($arr['hot_number']) : 3;
+        $arr['promote_number'] = !empty($arr['promote_number']) && intval($arr['promote_number']) > 0 ? intval($arr['promote_number']) : 3;
+        $arr['top_number'] = intval($arr['top_number']) > 0 ? intval($arr['top_number']) : 10;
+        $arr['history_number'] = intval($arr['history_number']) > 0 ? intval($arr['history_number']) : 5;
+        $arr['comments_number'] = intval($arr['comments_number']) > 0 ? intval($arr['comments_number']) : 5;
+        $arr['article_number'] = intval($arr['article_number']) > 0 ? intval($arr['article_number']) : 5;
+        $arr['page_size'] = intval($arr['page_size']) > 0 ? intval($arr['page_size']) : 10;
+        $arr['bought_goods'] = intval($arr['bought_goods']);
+        $arr['goods_name_length'] = intval($arr['goods_name_length']);
+        $arr['top10_time'] = intval($arr['top10_time']);
         $arr['goods_gallery_number'] = intval($arr['goods_gallery_number']) ? intval($arr['goods_gallery_number']) : 5;
-        $arr['no_picture']           = !empty($arr['no_picture']) ? str_replace('../', './', $arr['no_picture']) : 'images/no_picture.gif'; // 修改默认商品图片的路径
-        $arr['qq']                   = !empty($arr['qq']) ? $arr['qq'] : '';
-        $arr['ww']                   = !empty($arr['ww']) ? $arr['ww'] : '';
-        $arr['default_storage']      = isset($arr['default_storage']) ? intval($arr['default_storage']) : 1;
-        $arr['min_goods_amount']     = isset($arr['min_goods_amount']) ? floatval($arr['min_goods_amount']) : 0;
-        $arr['one_step_buy']         = empty($arr['one_step_buy']) ? 0 : 1;
-        $arr['invoice_type']         = empty($arr['invoice_type']) ? array('type' => array(), 'rate' => array()) : unserialize($arr['invoice_type']);
-        $arr['show_order_type']      = isset($arr['show_order_type']) ? $arr['show_order_type'] : 0;    // 显示方式默认为列表方式
-        $arr['help_open']            = isset($arr['help_open']) ? $arr['help_open'] : 1;    // 显示方式默认为列表方式
+        $arr['no_picture'] = !empty($arr['no_picture']) ? str_replace('../', './', $arr['no_picture']) : 'images/no_picture.gif'; // 修改默认商品图片的路径
+        $arr['qq'] = !empty($arr['qq']) ? $arr['qq'] : '';
+        $arr['ww'] = !empty($arr['ww']) ? $arr['ww'] : '';
+        $arr['default_storage'] = isset($arr['default_storage']) ? intval($arr['default_storage']) : 1;
+        $arr['min_goods_amount'] = isset($arr['min_goods_amount']) ? floatval($arr['min_goods_amount']) : 0;
+        $arr['one_step_buy'] = empty($arr['one_step_buy']) ? 0 : 1;
+        $arr['invoice_type'] = empty($arr['invoice_type']) ? array('type' => array(), 'rate' => array()) : unserialize($arr['invoice_type']);
+        $arr['show_order_type'] = isset($arr['show_order_type']) ? $arr['show_order_type'] : 0;    // 显示方式默认为列表方式
+        $arr['help_open'] = isset($arr['help_open']) ? $arr['help_open'] : 1;    // 显示方式默认为列表方式
 
         if (!isset($GLOBALS['_CFG']['ecs_version'])) {
             /* 如果没有版本号则默认为2.0.5 */
@@ -540,7 +537,7 @@ function get_brand_list()
  * 获得某个分类下
  *
  * @access  public
- * @param   int     $cat
+ * @param int $cat
  * @return  array
  */
 function get_brands($cat = 0, $app = 'brand')
@@ -556,11 +553,11 @@ function get_brands($cat = 0, $app = 'brand')
 
     $children = ($cat > 0) ? ' AND ' . get_children($cat) : '';
 
-    $sql = "SELECT b.brand_id, b.brand_name, b.brand_logo, b.brand_desc, COUNT(*) AS goods_num, IF(b.brand_logo > '', '1', '0') AS tag ".
-        "FROM " . $GLOBALS['ecs']->table('brand') . "AS b, ".
-        $GLOBALS['ecs']->table('goods') . " AS g ".
+    $sql = "SELECT b.brand_id, b.brand_name, b.brand_logo, b.brand_desc, COUNT(*) AS goods_num, IF(b.brand_logo > '', '1', '0') AS tag " .
+        "FROM " . $GLOBALS['ecs']->table('brand') . "AS b, " .
+        $GLOBALS['ecs']->table('goods') . " AS g " .
         "WHERE g.brand_id = b.brand_id $children AND is_show = 1 " .
-        " AND g.is_on_sale = 1 AND g.is_alone_sale = 1 AND g.is_delete = 0 ".
+        " AND g.is_on_sale = 1 AND g.is_alone_sale = 1 AND g.is_delete = 0 " .
         "GROUP BY b.brand_id HAVING goods_num > 0 ORDER BY tag DESC, b.sort_order ASC";
     if (isset($static_page_libs[$template]['/library/brands.lbi'])) {
         $num = get_library_number("brands");
@@ -717,7 +714,7 @@ function get_promotion_info($goods_id = '')
  * 获得指定分类下所有底层分类的ID
  *
  * @access  public
- * @param   integer     $cat        指定的分类ID
+ * @param integer $cat 指定的分类ID
  * @return  string
  */
 function get_children($cat = 0)
@@ -729,7 +726,7 @@ function get_children($cat = 0)
  * 获得指定文章分类下所有底层分类的ID
  *
  * @access  public
- * @param   integer     $cat        指定的分类ID
+ * @param integer $cat 指定的分类ID
  *
  * @return void
  */
@@ -757,12 +754,12 @@ function get_mail_template($tpl_name)
  * 记录订单操作记录
  *
  * @access  public
- * @param   string  $order_sn           订单编号
- * @param   integer $order_status       订单状态
- * @param   integer $shipping_status    配送状态
- * @param   integer $pay_status         付款状态
- * @param   string  $note               备注
- * @param   string  $username           用户名，用户自己的操作则为 buyer
+ * @param string $order_sn 订单编号
+ * @param integer $order_status 订单状态
+ * @param integer $shipping_status 配送状态
+ * @param integer $pay_status 付款状态
+ * @param string $note 备注
+ * @param string $username 用户名，用户自己的操作则为 buyer
  * @return  void
  */
 function order_action($order_sn, $order_status, $shipping_status, $pay_status, $note = '', $username = null, $place = 0)
@@ -774,7 +771,7 @@ function order_action($order_sn, $order_status, $shipping_status, $pay_status, $
     $sql = 'INSERT INTO ' . $GLOBALS['ecs']->table('order_action') .
         ' (order_id, action_user, order_status, shipping_status, pay_status, action_place, action_note, log_time) ' .
         'SELECT ' .
-        "order_id, '$username', '$order_status', '$shipping_status', '$pay_status', '$place', '$note', '" .gmtime() . "' " .
+        "order_id, '$username', '$order_status', '$shipping_status', '$pay_status', '$place', '$note', '" . gmtime() . "' " .
         'FROM ' . $GLOBALS['ecs']->table('order_info') . " WHERE order_sn = '$order_sn'";
     $GLOBALS['db']->query($sql);
 }
@@ -783,13 +780,13 @@ function order_action($order_sn, $order_status, $shipping_status, $pay_status, $
  * 格式化商品价格
  *
  * @access  public
- * @param   float   $price  商品价格
+ * @param float $price 商品价格
  * @return  string
  */
 function price_format($price, $change_price = true)
 {
-    if ($price==='') {
-        $price=0;
+    if ($price === '') {
+        $price = 0;
     }
     if ($change_price && defined('ECS_ADMIN') === false) {
         switch (isset($GLOBALS['_CFG']['price_format'])) {
@@ -828,19 +825,19 @@ function price_format($price, $change_price = true)
  * 返回订单中的虚拟商品
  *
  * @access  public
- * @param   int   $order_id   订单id值
- * @param   bool  $shipping   是否已经发货
+ * @param int $order_id 订单id值
+ * @param bool $shipping 是否已经发货
  *
  * @return array()
  */
 function get_virtual_goods($order_id, $shipping = false)
 {
     if ($shipping) {
-        $sql = 'SELECT goods_id, goods_name, send_number AS num, extension_code FROM '.
+        $sql = 'SELECT goods_id, goods_name, send_number AS num, extension_code FROM ' .
             $GLOBALS['ecs']->table('order_goods') .
             " WHERE order_id = '$order_id' AND extension_code > ''";
     } else {
-        $sql = 'SELECT goods_id, goods_name, (goods_number - send_number) AS num, extension_code FROM '.
+        $sql = 'SELECT goods_id, goods_name, (goods_number - send_number) AS num, extension_code FROM ' .
             $GLOBALS['ecs']->table('order_goods') .
             " WHERE order_id = '$order_id' AND is_real = 0 AND (goods_number - send_number) > 0 AND extension_code > '' ";
     }
@@ -858,10 +855,10 @@ function get_virtual_goods($order_id, $shipping = false)
  *  虚拟商品发货
  *
  * @access  public
- * @param   array  $virtual_goods   虚拟商品数组
- * @param   string $msg             错误信息
- * @param   string $order_sn        订单号。
- * @param   string $process         设定当前流程：split，发货分单流程；other，其他，默认。
+ * @param array $virtual_goods 虚拟商品数组
+ * @param string $msg 错误信息
+ * @param string $order_sn 订单号。
+ * @param string $process 设定当前流程：split，发货分单流程；other，其他，默认。
  *
  * @return bool
  */
@@ -874,7 +871,7 @@ function virtual_goods_ship(&$virtual_goods, &$msg, $order_sn, $return_result = 
             foreach ($goods_list as $goods) {
                 if (virtual_card_shipping($goods, $order_sn, $msg, $process)) {
                     if ($return_result) {
-                        $virtual_card[] = array('goods_id'=>$goods['goods_id'], 'goods_name'=>$goods['goods_name'], 'info'=>virtual_card_result($order_sn, $goods));
+                        $virtual_card[] = array('goods_id' => $goods['goods_id'], 'goods_name' => $goods['goods_name'], 'info' => virtual_card_result($order_sn, $goods));
                     }
                 } else {
                     return false;
@@ -891,10 +888,10 @@ function virtual_goods_ship(&$virtual_goods, &$msg, $order_sn, $return_result = 
  *  虚拟卡发货
  *
  * @access  public
- * @param   string      $goods      商品详情数组
- * @param   string      $order_sn   本次操作的订单
- * @param   string      $msg        返回信息
- * @param   string      $process    设定当前流程：split，发货分单流程；other，其他，默认。
+ * @param string $goods 商品详情数组
+ * @param string $order_sn 本次操作的订单
+ * @param string $msg 返回信息
+ * @param string $process 设定当前流程：split，发货分单流程；other，其他，默认。
  *
  * @return  boolen
  */
@@ -904,7 +901,7 @@ function virtual_card_shipping($goods, $order_sn, &$msg, $process = 'other')
     include_once(ROOT_PATH . 'includes/lib_code.php');
 
     /* 检查有没有缺货 */
-    $sql = "SELECT COUNT(*) FROM ".$GLOBALS['ecs']->table('virtual_card')." WHERE goods_id = '$goods[goods_id]' AND is_saled = 0 ";
+    $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('virtual_card') . " WHERE goods_id = '$goods[goods_id]' AND is_saled = 0 ";
     $num = $GLOBALS['db']->GetOne($sql);
 
     if ($num < $goods['num']) {
@@ -914,7 +911,7 @@ function virtual_card_shipping($goods, $order_sn, &$msg, $process = 'other')
     }
 
     /* 取出卡片信息 */
-    $sql = "SELECT card_id, card_sn, card_password, end_date, crc32 FROM ".$GLOBALS['ecs']->table('virtual_card')." WHERE goods_id = '$goods[goods_id]' AND is_saled = 0  LIMIT " . $goods['num'];
+    $sql = "SELECT card_id, card_sn, card_password, end_date, crc32 FROM " . $GLOBALS['ecs']->table('virtual_card') . " WHERE goods_id = '$goods[goods_id]' AND is_saled = 0  LIMIT " . $goods['num'];
     $arr = $GLOBALS['db']->getAll($sql);
 
     $card_ids = array();
@@ -941,9 +938,9 @@ function virtual_card_shipping($goods, $order_sn, &$msg, $process = 'other')
     }
 
     /* 标记已经取出的卡片 */
-    $sql = "UPDATE ".$GLOBALS['ecs']->table('virtual_card')." SET ".
-        "is_saled = 1 ,".
-        "order_sn = '$order_sn' ".
+    $sql = "UPDATE " . $GLOBALS['ecs']->table('virtual_card') . " SET " .
+        "is_saled = 1 ," .
+        "order_sn = '$order_sn' " .
         "WHERE " . db_create_in($card_ids, 'card_id');
     if (!$GLOBALS['db']->query($sql, 'SILENT')) {
         $msg .= $GLOBALS['db']->error();
@@ -952,22 +949,22 @@ function virtual_card_shipping($goods, $order_sn, &$msg, $process = 'other')
     }
 
     /* 更新库存 */
-    $sql = "UPDATE ".$GLOBALS['ecs']->table('goods'). " SET goods_number = goods_number - '$goods[num]' WHERE goods_id = '$goods[goods_id]'";
+    $sql = "UPDATE " . $GLOBALS['ecs']->table('goods') . " SET goods_number = goods_number - '$goods[num]' WHERE goods_id = '$goods[goods_id]'";
     $GLOBALS['db']->query($sql);
 
     if (true) {
         /* 获取订单信息 */
-        $sql = "SELECT order_id, order_sn, consignee, email FROM ".$GLOBALS['ecs']->table('order_info'). " WHERE order_sn = '$order_sn'";
+        $sql = "SELECT order_id, order_sn, consignee, email FROM " . $GLOBALS['ecs']->table('order_info') . " WHERE order_sn = '$order_sn'";
         $order = $GLOBALS['db']->GetRow($sql);
 
         /* 更新订单信息 */
         if ($process == 'split') {
-            $sql = "UPDATE ".$GLOBALS['ecs']->table('order_goods'). "
+            $sql = "UPDATE " . $GLOBALS['ecs']->table('order_goods') . "
                     SET send_number = send_number + '" . $goods['num'] . "'
                     WHERE order_id = '" . $order['order_id'] . "'
                     AND goods_id = '" . $goods['goods_id'] . "' ";
         } else {
-            $sql = "UPDATE ".$GLOBALS['ecs']->table('order_goods'). "
+            $sql = "UPDATE " . $GLOBALS['ecs']->table('order_goods') . "
                     SET send_number = '" . $goods['num'] . "'
                     WHERE order_id = '" . $order['order_id'] . "'
                     AND goods_id = '" . $goods['goods_id'] . "' ";
@@ -1011,8 +1008,8 @@ function virtual_card_result($order_sn, $goods)
     include_once(ROOT_PATH . 'includes/lib_code.php');
 
     /* 获取已经发送的卡片数据 */
-    $sql = "SELECT card_sn, card_password, end_date, crc32 FROM ".$GLOBALS['ecs']->table('virtual_card')." WHERE goods_id= '$goods[goods_id]' AND order_sn = '$order_sn' ";
-    $res= $GLOBALS['db']->query($sql);
+    $sql = "SELECT card_sn, card_password, end_date, crc32 FROM " . $GLOBALS['ecs']->table('virtual_card') . " WHERE goods_id= '$goods[goods_id]' AND order_sn = '$order_sn' ";
+    $res = $GLOBALS['db']->query($sql);
 
     $cards = array();
 
@@ -1029,7 +1026,7 @@ function virtual_card_result($order_sn, $goods)
             $row['card_password'] = '***';
         }
 
-        $cards[] = array('card_sn'=>$row['card_sn'], 'card_password'=>$row['card_password'], 'end_date'=>date($GLOBALS['_CFG']['date_format'], $row['end_date']));
+        $cards[] = array('card_sn' => $row['card_sn'], 'card_password' => $row['card_password'], 'end_date' => date($GLOBALS['_CFG']['date_format'], $row['end_date']));
     }
 
     return $cards;
@@ -1039,7 +1036,7 @@ function virtual_card_result($order_sn, $goods)
  * 获取指定 id snatch 活动的结果
  *
  * @access  public
- * @param   int   $id       snatch_id
+ * @param int $id snatch_id
  *
  * @return  array           array(user_name, bie_price, bid_time, num)
  *                          num通常为1，如果为2表示有2个用户取到最小值，但结果只返回最早出价用户。
@@ -1047,21 +1044,21 @@ function virtual_card_result($order_sn, $goods)
 function get_snatch_result($id)
 {
     $sql = 'SELECT u.user_id, u.user_name, u.email, lg.bid_price, lg.bid_time, count(*) as num' .
-        ' FROM ' . $GLOBALS['ecs']->table('snatch_log') . ' AS lg '.
-        ' LEFT JOIN ' . $GLOBALS['ecs']->table('users') . ' AS u ON lg.user_id = u.user_id'.
-        " WHERE lg.snatch_id = '$id'".
+        ' FROM ' . $GLOBALS['ecs']->table('snatch_log') . ' AS lg ' .
+        ' LEFT JOIN ' . $GLOBALS['ecs']->table('users') . ' AS u ON lg.user_id = u.user_id' .
+        " WHERE lg.snatch_id = '$id'" .
         ' GROUP BY lg.bid_price' .
         ' ORDER BY num ASC, lg.bid_price ASC, lg.bid_time ASC LIMIT 1';
     $rec = $GLOBALS['db']->GetRow($sql);
 
     if ($rec) {
-        $rec['bid_time']  = local_date($GLOBALS['_CFG']['time_format'], $rec['bid_time']);
+        $rec['bid_time'] = local_date($GLOBALS['_CFG']['time_format'], $rec['bid_time']);
         $rec['formated_bid_price'] = price_format($rec['bid_price'], false);
 
         /* 活动信息 */
         $sql = 'SELECT ext_info " .
                " FROM ' . $GLOBALS['ecs']->table('goods_activity') .
-            " WHERE act_id= '$id' AND act_type=" . GAT_SNATCH.
+            " WHERE act_id= '$id' AND act_type=" . GAT_SNATCH .
             " LIMIT 1";
         $row = $GLOBALS['db']->getOne($sql);
         $info = unserialize($row);
@@ -1071,7 +1068,6 @@ function get_snatch_result($id)
         } else {
             $rec['buy_price'] = $rec['bid_price'];
         }
-
 
 
         /* 检查订单 */
@@ -1091,8 +1087,8 @@ function get_snatch_result($id)
  *  清除指定后缀的模板缓存或编译文件
  *
  * @access  public
- * @param  bool       $is_cache  是否清除缓存还是清出编译文件
- * @param  string     $ext       需要删除的文件名，不包含后缀
+ * @param bool $is_cache 是否清除缓存还是清出编译文件
+ * @param string $ext 需要删除的文件名，不包含后缀
  *
  * @return int        返回清除的文件个数
  */
@@ -1101,7 +1097,7 @@ function clear_tpl_files($is_cache = true, $ext = '')
     $dirs = array();
 
     if (isset($GLOBALS['shop_id']) && $GLOBALS['shop_id'] > 0) {
-        $tmp_dir = DATA_DIR ;
+        $tmp_dir = DATA_DIR;
     } else {
         $tmp_dir = 'temp';
     }
@@ -1119,7 +1115,7 @@ function clear_tpl_files($is_cache = true, $ext = '')
     }
 
     $str_len = strlen($ext);
-    $count   = 0;
+    $count = 0;
 
     foreach ($dirs as $dir) {
         $folder = @opendir($dir);
@@ -1161,7 +1157,7 @@ function clear_tpl_files($is_cache = true, $ext = '')
  * 清除模版编译文件
  *
  * @access  public
- * @param   mix     $ext    模版文件名， 不包含后缀
+ * @param mix $ext 模版文件名， 不包含后缀
  * @return  void
  */
 function clear_compiled_files($ext = '')
@@ -1173,7 +1169,7 @@ function clear_compiled_files($ext = '')
  * 清除缓存文件
  *
  * @access  public
- * @param   mix     $ext    模版文件名， 不包含后缀
+ * @param mix $ext 模版文件名， 不包含后缀
  * @return  void
  */
 function clear_cache_files($ext = '')
@@ -1185,7 +1181,7 @@ function clear_cache_files($ext = '')
  * 清除模版编译和缓存文件
  *
  * @access  public
- * @param   mix     $ext    模版文件名后缀
+ * @param mix $ext 模版文件名后缀
  * @return  void
  */
 function clear_all_files($ext = '')
@@ -1197,7 +1193,7 @@ function clear_all_files($ext = '')
  * 页面上调用的js文件
  *
  * @access  public
- * @param   string      $files
+ * @param string $files
  * @return  void
  */
 function smarty_insert_scripts($args)
@@ -1225,7 +1221,7 @@ function smarty_insert_scripts($args)
  * 创建分页的列表
  *
  * @access  public
- * @param   integer $count
+ * @param integer $count
  * @return  string
  */
 function smarty_create_pages($params)
@@ -1264,11 +1260,11 @@ function smarty_create_pages($params)
  * 重写 URL 地址
  *
  * @access  public
- * @param   string  $app        执行程序
- * @param   array   $params     参数数组
- * @param   string  $append     附加字串
- * @param   integer $page       页数
- * @param   string  $keywords   搜索关键词字符串
+ * @param string $app 执行程序
+ * @param array $params 参数数组
+ * @param string $append 附加字串
+ * @param integer $page 页数
+ * @param string $keywords 搜索关键词字符串
  * @return  void
  */
 function build_uri($app, $params, $append = '', $page = 0, $keywords = '', $size = 0)
@@ -1279,15 +1275,15 @@ function build_uri($app, $params, $append = '', $page = 0, $keywords = '', $size
         $rewrite = intval($GLOBALS['_CFG']['rewrite']);
     }
 
-    $args = array('cid'   => 0,
-        'gid'   => 0,
-        'bid'   => 0,
-        'acid'  => 0,
-        'aid'   => 0,
-        'sid'   => 0,
-        'gbid'  => 0,
-        'auid'  => 0,
-        'sort'  => '',
+    $args = array('cid' => 0,
+        'gid' => 0,
+        'bid' => 0,
+        'acid' => 0,
+        'aid' => 0,
+        'sid' => 0,
+        'gbid' => 0,
+        'auid' => 0,
+        'sort' => '',
         'order' => '',
     );
 
@@ -1305,10 +1301,10 @@ function build_uri($app, $params, $append = '', $page = 0, $keywords = '', $size
                         $uri .= '-b' . $bid;
                     }
                     if (isset($price_min)) {
-                        $uri .= '-min'.$price_min;
+                        $uri .= '-min' . $price_min;
                     }
                     if (isset($price_max)) {
-                        $uri .= '-max'.$price_max;
+                        $uri .= '-max' . $price_max;
                     }
                     if (isset($filter_attr)) {
                         $uri .= '-attr' . $filter_attr;
@@ -1334,7 +1330,7 @@ function build_uri($app, $params, $append = '', $page = 0, $keywords = '', $size
                         $uri .= '&amp;price_max=' . $price_max;
                     }
                     if (!empty($filter_attr)) {
-                        $uri .='&amp;filter_attr=' . $filter_attr;
+                        $uri .= '&amp;filter_attr=' . $filter_attr;
                     }
 
                     if (!empty($page)) {
@@ -1468,10 +1464,10 @@ function build_uri($app, $params, $append = '', $page = 0, $keywords = '', $size
             if ($rewrite) {
                 $uri = 'exchange-' . $cid;
                 if (isset($price_min)) {
-                    $uri .= '-min'.$price_min;
+                    $uri .= '-min' . $price_min;
                 }
                 if (isset($price_max)) {
-                    $uri .= '-max'.$price_max;
+                    $uri .= '-max' . $price_max;
                 }
                 if (!empty($page)) {
                     $uri .= '-' . $page;
@@ -1531,7 +1527,7 @@ function build_uri($app, $params, $append = '', $page = 0, $keywords = '', $size
 
 /**
  * 格式化重量：小于1千克用克表示，否则用千克表示
- * @param   float   $weight     重量
+ * @param float $weight 重量
  * @return  string  格式化后的重量
  */
 function formated_weight($weight)
@@ -1552,27 +1548,27 @@ function formated_weight($weight)
 
 /**
  * 记录帐户变动
- * @param   int     $user_id        用户id
- * @param   float   $user_money     可用余额变动
- * @param   float   $frozen_money   冻结余额变动
- * @param   int     $rank_points    等级积分变动
- * @param   int     $pay_points     消费积分变动
- * @param   string  $change_desc    变动说明
- * @param   int     $change_type    变动类型：参见常量文件
+ * @param int $user_id 用户id
+ * @param float $user_money 可用余额变动
+ * @param float $frozen_money 冻结余额变动
+ * @param int $rank_points 等级积分变动
+ * @param int $pay_points 消费积分变动
+ * @param string $change_desc 变动说明
+ * @param int $change_type 变动类型：参见常量文件
  * @return  void
  */
 function log_account_change($user_id, $user_money = 0, $frozen_money = 0, $rank_points = 0, $pay_points = 0, $change_desc = '', $change_type = ACT_OTHER)
 {
     /* 插入帐户变动记录 */
     $account_log = array(
-        'user_id'       => $user_id,
-        'user_money'    => $user_money,
-        'frozen_money'  => $frozen_money,
-        'rank_points'   => $rank_points,
-        'pay_points'    => $pay_points,
-        'change_time'   => gmtime(),
-        'change_desc'   => $change_desc,
-        'change_type'   => $change_type
+        'user_id' => $user_id,
+        'user_money' => $user_money,
+        'frozen_money' => $frozen_money,
+        'rank_points' => $rank_points,
+        'pay_points' => $pay_points,
+        'change_time' => gmtime(),
+        'change_desc' => $change_desc,
+        'change_type' => $change_type
     );
     $GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('account_log'), $account_log, 'INSERT');
 
@@ -1589,26 +1585,26 @@ function log_account_change($user_id, $user_money = 0, $frozen_money = 0, $rank_
 
 /**
  * 记录非预存款支付变动
- * @param   int     $user_id        用户id
- * @param   int     $order_id       order_id
- * @param   string  $order_sn       order_sn
- * @param   float   $money          支付金额
- * @param   string  $pay_type       支付类型
- * @param   string  $pay_time       支付时间
- * @param   string  $change_desc    变动说明
+ * @param int $user_id 用户id
+ * @param int $order_id order_id
+ * @param string $order_sn order_sn
+ * @param float $money 支付金额
+ * @param string $pay_type 支付类型
+ * @param string $pay_time 支付时间
+ * @param string $change_desc 变动说明
  * @return  void
  */
 function log_account_other_change($user_id, $order_id, $order_sn, $money = 0, $pay_type = '', $pay_time = '', $change_desc = '')
 {
     /* 插入帐户变动记录 */
     $account_other_log = array(
-        'user_id'       =>  $user_id,
-        'order_id'      =>  $order_id,
-        'order_sn'      =>  $order_sn,
-        'money'         =>  $money,
-        'pay_type'      =>  $pay_type,
-        'pay_time'      =>  $pay_time ? $pay_time : gmtime(),
-        'change_desc'   =>  $change_desc
+        'user_id' => $user_id,
+        'order_id' => $order_id,
+        'order_sn' => $order_sn,
+        'money' => $money,
+        'pay_type' => $pay_type,
+        'pay_time' => $pay_time ? $pay_time : gmtime(),
+        'change_desc' => $change_desc
     );
     $GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('account_other_log'), $account_other_log, 'INSERT');
 }
@@ -1618,10 +1614,10 @@ function log_account_other_change($user_id, $order_id, $order_sn, $money = 0, $p
  * 获得指定分类下的子分类的数组
  *
  * @access  public
- * @param   int     $cat_id     分类的ID
- * @param   int     $selected   当前选中分类的ID
- * @param   boolean $re_type    返回的类型: 值为真时返回下拉列表,否则返回数组
- * @param   int     $level      限定返回的级数。为0时返回所有级数
+ * @param int $cat_id 分类的ID
+ * @param int $selected 当前选中分类的ID
+ * @param boolean $re_type 返回的类型: 值为真时返回下拉列表,否则返回数组
+ * @param int $level 限定返回的级数。为0时返回所有级数
  * @return  mix
  */
 function article_cat_list($cat_id = 0, $selected = 0, $re_type = true, $level = 0)
@@ -1631,11 +1627,11 @@ function article_cat_list($cat_id = 0, $selected = 0, $re_type = true, $level = 
     if ($res === null) {
         $data = read_static_cache('art_cat_pid_releate');
         if ($data === false) {
-            $sql = "SELECT c.*, COUNT(s.cat_id) AS has_children, COUNT(a.article_id) AS aricle_num ".
-                ' FROM ' . $GLOBALS['ecs']->table('article_cat') . " AS c".
-                " LEFT JOIN " . $GLOBALS['ecs']->table('article_cat') . " AS s ON s.parent_id=c.cat_id".
-                " LEFT JOIN " . $GLOBALS['ecs']->table('article') . " AS a ON a.cat_id=c.cat_id".
-                " GROUP BY c.cat_id ".
+            $sql = "SELECT c.*, COUNT(s.cat_id) AS has_children, COUNT(a.article_id) AS aricle_num " .
+                ' FROM ' . $GLOBALS['ecs']->table('article_cat') . " AS c" .
+                " LEFT JOIN " . $GLOBALS['ecs']->table('article_cat') . " AS s ON s.parent_id=c.cat_id" .
+                " LEFT JOIN " . $GLOBALS['ecs']->table('article') . " AS a ON a.cat_id=c.cat_id" .
+                " GROUP BY c.cat_id " .
                 " ORDER BY parent_id, sort_order ASC";
             $res = $GLOBALS['db']->getAll($sql);
             write_static_cache('art_cat_pid_releate', $res);
@@ -1656,7 +1652,7 @@ function article_cat_list($cat_id = 0, $selected = 0, $re_type = true, $level = 
             $end_level = $level;
         } else {
             $first_item = reset($options); // 获取第一个元素
-            $end_level  = $first_item['level'] + $level;
+            $end_level = $first_item['level'] + $level;
         }
 
         /* 保留level小于end_level的部分 */
@@ -1704,9 +1700,9 @@ function article_cat_list($cat_id = 0, $selected = 0, $re_type = true, $level = 
  * 过滤和排序所有文章分类，返回一个带有缩进级别的数组
  *
  * @access  private
- * @param   int     $cat_id     上级分类ID
- * @param   array   $arr        含有所有分类的数组
- * @param   int     $level      级别
+ * @param int $cat_id 上级分类ID
+ * @param array $arr 含有所有分类的数组
+ * @param int $level 级别
  * @return  void
  */
 function article_cat_options($spec_cat_id, $arr)
@@ -1728,33 +1724,33 @@ function article_cat_options($spec_cat_id, $arr)
                         break;
                     }
 
-                    $options[$cat_id]          = $value;
+                    $options[$cat_id] = $value;
                     $options[$cat_id]['level'] = $level;
-                    $options[$cat_id]['id']    = $cat_id;
-                    $options[$cat_id]['name']  = $value['cat_name'];
+                    $options[$cat_id]['id'] = $cat_id;
+                    $options[$cat_id]['name'] = $value['cat_name'];
                     unset($arr[$key]);
 
                     if ($value['has_children'] == 0) {
                         continue;
                     }
-                    $last_cat_id  = $cat_id;
+                    $last_cat_id = $cat_id;
                     $cat_id_array = array($cat_id);
                     $level_array[$last_cat_id] = ++$level;
                     continue;
                 }
 
                 if ($value['parent_id'] == $last_cat_id) {
-                    $options[$cat_id]          = $value;
+                    $options[$cat_id] = $value;
                     $options[$cat_id]['level'] = $level;
-                    $options[$cat_id]['id']    = $cat_id;
-                    $options[$cat_id]['name']  = $value['cat_name'];
+                    $options[$cat_id]['id'] = $cat_id;
+                    $options[$cat_id]['name'] = $value['cat_name'];
                     unset($arr[$key]);
 
                     if ($value['has_children'] > 0) {
                         if (end($cat_id_array) != $last_cat_id) {
                             $cat_id_array[] = $last_cat_id;
                         }
-                        $last_cat_id    = $cat_id;
+                        $last_cat_id = $cat_id;
                         $cat_id_array[] = $cat_id;
                         $level_array[$last_cat_id] = ++$level;
                     }
@@ -1823,12 +1819,12 @@ function article_cat_options($spec_cat_id, $arr)
 /**
  * 调用UCenter的函数
  *
- * @param   string  $func
- * @param   array   $params
+ * @param string $func
+ * @param array $params
  *
  * @return  mixed
  */
-function uc_call($func, $params=null)
+function uc_call($func, $params = null)
 {
     restore_error_handler();
     if (!function_exists($func)) {
@@ -1863,7 +1859,7 @@ function exception_handler($errno, $errstr, $errfile, $errline)
  *
  * @return string   $url
  */
-function get_image_path($goods_id, $image='', $thumb=false, $call='goods', $del=false)
+function get_image_path($goods_id, $image = '', $thumb = false, $call = 'goods', $del = false)
 {
     $url = empty($image) ? $GLOBALS['_CFG']['no_picture'] : $image;
     return $url;
@@ -1872,8 +1868,8 @@ function get_image_path($goods_id, $image='', $thumb=false, $call='goods', $del=
 /**
  * 调用使用UCenter插件时的函数
  *
- * @param   string  $func
- * @param   array   $params
+ * @param string $func
+ * @param array $params
  *
  * @return  mixed
  */
@@ -1898,29 +1894,29 @@ function user_uc_call($func, $params = null)
 /**
  * 取得商品优惠价格列表
  *
- * @param   string  $goods_id    商品编号
- * @param   string  $price_type  价格类别(0为全店优惠比率，1为商品优惠价格，2为分类优惠比率)
+ * @param string $goods_id 商品编号
+ * @param string $price_type 价格类别(0为全店优惠比率，1为商品优惠价格，2为分类优惠比率)
  *
  * @return  优惠价格列表
  */
 function get_volume_price_list($goods_id, $price_type = '1')
 {
     $volume_price = array();
-    $temp_index   = '0';
+    $temp_index = '0';
 
-    $sql = "SELECT `volume_number` , `volume_price`".
-        " FROM " .$GLOBALS['ecs']->table('volume_price'). "".
-        " WHERE `goods_id` = '" . $goods_id . "' AND `price_type` = '" . $price_type . "'".
+    $sql = "SELECT `volume_number` , `volume_price`" .
+        " FROM " . $GLOBALS['ecs']->table('volume_price') . "" .
+        " WHERE `goods_id` = '" . $goods_id . "' AND `price_type` = '" . $price_type . "'" .
         " ORDER BY `volume_number`";
 
     $res = $GLOBALS['db']->getAll($sql);
 
     foreach ($res as $k => $v) {
-        $volume_price[$temp_index]                 = array();
-        $volume_price[$temp_index]['number']       = $v['volume_number'];
-        $volume_price[$temp_index]['price']        = $v['volume_price'];
+        $volume_price[$temp_index] = array();
+        $volume_price[$temp_index]['number'] = $v['volume_number'];
+        $volume_price[$temp_index]['price'] = $v['volume_price'];
         $volume_price[$temp_index]['format_price'] = price_format($v['volume_price']);
-        $temp_index ++;
+        $temp_index++;
     }
     return $volume_price;
 }
@@ -1928,22 +1924,22 @@ function get_volume_price_list($goods_id, $price_type = '1')
 /**
  * 取得商品最终使用价格
  *
- * @param   string  $goods_id      商品编号
- * @param   string  $goods_num     购买数量
- * @param   boolean $is_spec_price 是否加入规格价格
- * @param   mix     $spec          规格ID的数组或者逗号分隔的字符串
+ * @param string $goods_id 商品编号
+ * @param string $goods_num 购买数量
+ * @param boolean $is_spec_price 是否加入规格价格
+ * @param mix $spec 规格ID的数组或者逗号分隔的字符串
  *
  * @return  商品最终购买价格
  */
 function get_final_price($goods_id, $goods_num = '1', $is_spec_price = false, $spec = array())
 {
-    $final_price   = '0'; //商品最终购买价格
-    $volume_price  = '0'; //商品优惠价格
+    $final_price = '0'; //商品最终购买价格
+    $volume_price = '0'; //商品优惠价格
     $promote_price = '0'; //商品促销价格
-    $user_price    = '0'; //商品会员价格
+    $user_price = '0'; //商品会员价格
 
     //取得商品优惠价格列表
-    $price_list   = get_volume_price_list($goods_id, '1');
+    $price_list = get_volume_price_list($goods_id, '1');
 
     if (!empty($price_list)) {
         foreach ($price_list as $value) {
@@ -1955,11 +1951,11 @@ function get_final_price($goods_id, $goods_num = '1', $is_spec_price = false, $s
 
     //取得商品促销价格列表
     /* 取得商品信息 */
-    $sql = "SELECT g.promote_price, g.promote_start_date, g.promote_end_date, ".
-        "IFNULL(mp.user_price, g.shop_price * '" . $_SESSION['discount'] . "') AS shop_price ".
-        " FROM " .$GLOBALS['ecs']->table('goods'). " AS g ".
-        " LEFT JOIN " . $GLOBALS['ecs']->table('member_price') . " AS mp ".
-        "ON mp.goods_id = g.goods_id AND mp.user_rank = '" . $_SESSION['user_rank']. "' ".
+    $sql = "SELECT g.promote_price, g.promote_start_date, g.promote_end_date, " .
+        "IFNULL(mp.user_price, g.shop_price * '" . $_SESSION['discount'] . "') AS shop_price " .
+        " FROM " . $GLOBALS['ecs']->table('goods') . " AS g " .
+        " LEFT JOIN " . $GLOBALS['ecs']->table('member_price') . " AS mp " .
+        "ON mp.goods_id = g.goods_id AND mp.user_rank = '" . $_SESSION['user_rank'] . "' " .
         " WHERE g.goods_id = '" . $goods_id . "'" .
         " AND g.is_delete = 0";
     $goods = $GLOBALS['db']->getRow($sql);
@@ -1972,7 +1968,7 @@ function get_final_price($goods_id, $goods_num = '1', $is_spec_price = false, $s
     }
 
     //取得商品会员价格列表
-    $user_price    = $goods['shop_price'];
+    $user_price = $goods['shop_price'];
 
     //比较商品的促销价格，会员价格，优惠价格
     if (empty($volume_price) && empty($promote_price)) {
@@ -1994,7 +1990,7 @@ function get_final_price($goods_id, $goods_num = '1', $is_spec_price = false, $s
     //如果需要加入规格价格
     if ($is_spec_price) {
         if (!empty($spec)) {
-            $spec_price   = spec_price($spec);
+            $spec_price = spec_price($spec);
             $final_price += $spec_price;
         }
     }
@@ -2009,8 +2005,8 @@ function get_final_price($goods_id, $goods_num = '1', $is_spec_price = false, $s
  * 注意：非规格属性的id会被排除
  *
  * @access      public
- * @param       array       $goods_attr_id_array        一维数组
- * @param       string      $sort                       序号：asc|desc，默认为：asc
+ * @param array $goods_attr_id_array 一维数组
+ * @param string $sort 序号：asc|desc，默认为：asc
  *
  * @return      string
  */
@@ -2022,8 +2018,8 @@ function sort_goods_attr_id_array($goods_attr_id_array, $sort = 'asc')
 
     //重新排序
     $sql = "SELECT a.attr_type, v.attr_value, v.goods_attr_id
-            FROM " .$GLOBALS['ecs']->table('attribute'). " AS a
-            LEFT JOIN " .$GLOBALS['ecs']->table('goods_attr'). " AS v
+            FROM " . $GLOBALS['ecs']->table('attribute') . " AS a
+            LEFT JOIN " . $GLOBALS['ecs']->table('goods_attr') . " AS v
                 ON v.attr_id = a.attr_id
                 AND a.attr_type = 1
             WHERE v.goods_attr_id " . db_create_in($goods_attr_id_array) . "
@@ -2032,9 +2028,9 @@ function sort_goods_attr_id_array($goods_attr_id_array, $sort = 'asc')
 
     $return_arr = array();
     foreach ($row as $value) {
-        $return_arr['sort'][]   = $value['goods_attr_id'];
+        $return_arr['sort'][] = $value['goods_attr_id'];
 
-        $return_arr['row'][$value['goods_attr_id']]    = $value;
+        $return_arr['row'][$value['goods_attr_id']] = $value;
     }
 
     return $return_arr;
@@ -2045,7 +2041,7 @@ function sort_goods_attr_id_array($goods_attr_id_array, $sort = 'asc')
  * 是否存在规格
  *
  * @access      public
- * @param       array       $goods_attr_id_array        一维数组
+ * @param array $goods_attr_id_array 一维数组
  *
  * @return      string
  */
@@ -2057,8 +2053,8 @@ function is_spec($goods_attr_id_array, $sort = 'asc')
 
     //重新排序
     $sql = "SELECT a.attr_type, v.attr_value, v.goods_attr_id
-            FROM " .$GLOBALS['ecs']->table('attribute'). " AS a
-            LEFT JOIN " .$GLOBALS['ecs']->table('goods_attr'). " AS v
+            FROM " . $GLOBALS['ecs']->table('attribute') . " AS a
+            LEFT JOIN " . $GLOBALS['ecs']->table('goods_attr') . " AS v
                 ON v.attr_id = a.attr_id
                 AND a.attr_type = 1
             WHERE v.goods_attr_id " . db_create_in($goods_attr_id_array) . "
@@ -2067,9 +2063,9 @@ function is_spec($goods_attr_id_array, $sort = 'asc')
 
     $return_arr = array();
     foreach ($row as $value) {
-        $return_arr['sort'][]   = $value['goods_attr_id'];
+        $return_arr['sort'][] = $value['goods_attr_id'];
 
-        $return_arr['row'][$value['goods_attr_id']]    = $value;
+        $return_arr['row'][$value['goods_attr_id']] = $value;
     }
 
     if (!empty($return_arr)) {
@@ -2083,17 +2079,17 @@ function is_spec($goods_attr_id_array, $sort = 'asc')
  * 获取指定id package 的信息
  *
  * @access  public
- * @param   int         $id         package_id
+ * @param int $id package_id
  *
  * @return array       array(package_id, package_name, goods_id,start_time, end_time, min_price, integral)
  */
 function get_package_info($id)
 {
-    global $ecs, $db,$_CFG;
-    $id = is_numeric($id)?intval($id):0;
+    global $ecs, $db, $_CFG;
+    $id = is_numeric($id) ? intval($id) : 0;
     $now = gmtime();
 
-    $sql = "SELECT act_id AS id,  act_name AS package_name, goods_id , goods_name, start_time, end_time, act_desc, ext_info".
+    $sql = "SELECT act_id AS id,  act_name AS package_name, goods_id , goods_name, start_time, end_time, act_desc, ext_info" .
         " FROM " . $GLOBALS['ecs']->table('goods_activity') .
         " WHERE act_id='$id' AND act_type = " . GAT_PACKAGE;
 
@@ -2106,36 +2102,36 @@ function get_package_info($id)
         $package['is_on_sale'] = "0";
     }
     $package['start_time'] = local_date('Y-m-d H:i', $package['start_time']);
-    $package['end_time']   = local_date('Y-m-d H:i', $package['end_time']);
+    $package['end_time'] = local_date('Y-m-d H:i', $package['end_time']);
     $row = unserialize($package['ext_info']);
     unset($package['ext_info']);
     if ($row) {
-        foreach ($row as $key=>$val) {
+        foreach ($row as $key => $val) {
             $package[$key] = $val;
         }
     }
 
-    $sql = "SELECT pg.package_id, pg.goods_id, pg.goods_number, pg.admin_id, ".
-        " g.goods_sn, g.goods_name, g.market_price, g.goods_thumb, g.is_real, ".
+    $sql = "SELECT pg.package_id, pg.goods_id, pg.goods_number, pg.admin_id, " .
+        " g.goods_sn, g.goods_name, g.market_price, g.goods_thumb, g.is_real, " .
         " IFNULL(mp.user_price, g.shop_price * '$_SESSION[discount]') AS rank_price " .
-        " FROM " . $GLOBALS['ecs']->table('package_goods') . " AS pg ".
-        "   LEFT JOIN ". $GLOBALS['ecs']->table('goods') . " AS g ".
-        "   ON g.goods_id = pg.goods_id ".
-        " LEFT JOIN " . $GLOBALS['ecs']->table('member_price') . " AS mp ".
-        "ON mp.goods_id = g.goods_id AND mp.user_rank = '$_SESSION[user_rank]' ".
-        " WHERE pg.package_id = " . $id. " ".
+        " FROM " . $GLOBALS['ecs']->table('package_goods') . " AS pg " .
+        "   LEFT JOIN " . $GLOBALS['ecs']->table('goods') . " AS g " .
+        "   ON g.goods_id = pg.goods_id " .
+        " LEFT JOIN " . $GLOBALS['ecs']->table('member_price') . " AS mp " .
+        "ON mp.goods_id = g.goods_id AND mp.user_rank = '$_SESSION[user_rank]' " .
+        " WHERE pg.package_id = " . $id . " " .
         " ORDER BY pg.package_id, pg.goods_id";
 
     $goods_res = $GLOBALS['db']->getAll($sql);
 
-    $market_price        = 0;
-    $real_goods_count    = 0;
+    $market_price = 0;
+    $real_goods_count = 0;
     $virtual_goods_count = 0;
 
     foreach ($goods_res as $key => $val) {
-        $goods_res[$key]['goods_thumb']         = get_image_path($val['goods_id'], $val['goods_thumb'], true);
+        $goods_res[$key]['goods_thumb'] = get_image_path($val['goods_id'], $val['goods_thumb'], true);
         $goods_res[$key]['market_price_format'] = price_format($val['market_price']);
-        $goods_res[$key]['rank_price_format']   = price_format($val['rank_price']);
+        $goods_res[$key]['rank_price_format'] = price_format($val['rank_price']);
         $market_price += $val['market_price'] * $val['goods_number'];
         /* 统计实体商品和虚拟商品的个数 */
         if ($val['is_real']) {
@@ -2146,15 +2142,15 @@ function get_package_info($id)
     }
 
     if ($real_goods_count > 0) {
-        $package['is_real']            = 1;
+        $package['is_real'] = 1;
     } else {
-        $package['is_real']            = 0;
+        $package['is_real'] = 0;
     }
 
-    $package['goods_list']            = $goods_res;
-    $package['market_package']        = $market_price;
+    $package['goods_list'] = $goods_res;
+    $package['market_package'] = $market_price;
     $package['market_package_format'] = price_format($market_price);
-    $package['package_price_format']  = price_format($package['package_price']);
+    $package['package_price_format'] = price_format($package['package_price']);
 
     return $package;
 }
@@ -2163,14 +2159,14 @@ function get_package_info($id)
  * 获得指定礼包的商品
  *
  * @access  public
- * @param   integer $package_id
+ * @param integer $package_id
  * @return  array
  */
 function get_package_goods($package_id)
 {
     $sql = "SELECT pg.goods_id, g.goods_name, pg.goods_number, p.goods_attr, p.product_number, p.product_id
             FROM " . $GLOBALS['ecs']->table('package_goods') . " AS pg
-                LEFT JOIN " .$GLOBALS['ecs']->table('goods') . " AS g ON pg.goods_id = g.goods_id
+                LEFT JOIN " . $GLOBALS['ecs']->table('goods') . " AS g ON pg.goods_id = g.goods_id
                 LEFT JOIN " . $GLOBALS['ecs']->table('products') . " AS p ON pg.product_id = p.product_id
             WHERE pg.package_id = '$package_id'";
     if ($package_id == 0) {
@@ -2207,7 +2203,7 @@ function get_package_goods($package_id)
 
     /* 取商品属性 */
     if ($good_product_str != '') {
-        $sql = "SELECT goods_attr_id, attr_value FROM " .$GLOBALS['ecs']->table('goods_attr'). " WHERE goods_id IN ($good_product_str)";
+        $sql = "SELECT goods_attr_id, attr_value FROM " . $GLOBALS['ecs']->table('goods_attr') . " WHERE goods_id IN ($good_product_str)";
         $result_goods_attr = $GLOBALS['db']->getAll($sql);
 
         $_goods_attr = array();
@@ -2240,8 +2236,8 @@ function get_package_goods($package_id)
 /**
  * 取商品的货品列表
  *
- * @param       mixed       $goods_id       单个商品id；多个商品id数组；以逗号分隔商品id字符串
- * @param       string      $conditions     sql条件
+ * @param mixed $goods_id 单个商品id；多个商品id数组；以逗号分隔商品id字符串
+ * @param string $conditions sql条件
  *
  * @return  array
  */
@@ -2267,11 +2263,11 @@ function get_good_products($goods_id, $conditions = '')
     }
 
     /* 取货品 */
-    $sql = "SELECT * FROM " .$GLOBALS['ecs']->table('products'). " WHERE $_goods_id $conditions";
+    $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('products') . " WHERE $_goods_id $conditions";
     $result_products = $GLOBALS['db']->getAll($sql);
 
     /* 取商品属性 */
-    $sql = "SELECT goods_attr_id, attr_value FROM " .$GLOBALS['ecs']->table('goods_attr'). " WHERE $_goods_id";
+    $sql = "SELECT goods_attr_id, attr_value FROM " . $GLOBALS['ecs']->table('goods_attr') . " WHERE $_goods_id";
     $result_goods_attr = $GLOBALS['db']->getAll($sql);
 
     $_goods_attr = array();
@@ -2300,7 +2296,7 @@ function get_good_products($goods_id, $conditions = '')
 /**
  * 取商品的下拉框Select列表
  *
- * @param       int      $goods_id    商品id
+ * @param int $goods_id 商品id
  *
  * @return  array
  */
@@ -2323,8 +2319,8 @@ function get_good_products_select($goods_id)
 /**
  * 取商品的规格列表
  *
- * @param       int      $goods_id    商品id
- * @param       string   $conditions  sql条件
+ * @param int $goods_id 商品id
+ * @param string $conditions sql条件
  *
  * @return  array
  */
@@ -2332,7 +2328,7 @@ function get_specifications_list($goods_id, $conditions = '')
 {
     /* 取商品属性 */
     $sql = "SELECT ga.goods_attr_id, ga.attr_id, ga.attr_value, a.attr_name
-            FROM " .$GLOBALS['ecs']->table('goods_attr'). " AS ga, " .$GLOBALS['ecs']->table('attribute'). " AS a
+            FROM " . $GLOBALS['ecs']->table('goods_attr') . " AS ga, " . $GLOBALS['ecs']->table('attribute') . " AS a
             WHERE ga.attr_id = a.attr_id
             AND ga.goods_id = '$goods_id'
             $conditions";
@@ -2349,8 +2345,8 @@ function get_specifications_list($goods_id, $conditions = '')
 /**
  * 调用array_combine函数
  *
- * @param   array  $keys
- * @param   array  $values
+ * @param array $keys
+ * @param array $values
  *
  * @return  $combined
  */
@@ -2381,8 +2377,8 @@ if (!function_exists('array_combine')) {
             return false;
         }
 
-        $keys    = array_values($keys);
-        $values  = array_values($values);
+        $keys = array_values($keys);
+        $values = array_values($values);
 
         $combined = array();
         for ($i = 0; $i < $key_count; $i++) {
@@ -2408,36 +2404,36 @@ function get_yunqi_code()
  */
 function delete_yunqi_code()
 {
-    $sql = "select value from ".$GLOBALS['ecs']->table('shop_config')." where code='certificate'";
+    $sql = "select value from " . $GLOBALS['ecs']->table('shop_config') . " where code='certificate'";
     $row = $GLOBALS['db']->getOne($sql);
     if (!$row) {
         return false;
     }
     $certificate = unserialize($row);
     unset($certificate['yunqi_code']);
-    $update_sql = "update ".$GLOBALS['ecs']->table('shop_config')." set value='".serialize($certificate)."' where code='certificate'";
+    $update_sql = "update " . $GLOBALS['ecs']->table('shop_config') . " set value='" . serialize($certificate) . "' where code='certificate'";
     return $GLOBALS['db']->query($update_sql);
 }
 
 /**
  * 获取云起证书信息
- * @param   string  $key
+ * @param string $key
  * @return  string
  */
-function get_certificate_info($key, $code='certificate')
+function get_certificate_info($key, $code = 'certificate')
 {
-    $sql = "select value from ".$GLOBALS['ecs']->table('shop_config')." where code='".$code."'";
+    $sql = "select value from " . $GLOBALS['ecs']->table('shop_config') . " where code='" . $code . "'";
     $row = $GLOBALS['db']->getOne($sql);
     if (!$row) {
         return false;
     }
     $certificate = unserialize($row);
-    return isset($certificate[$key])?$certificate[$key]:false;
+    return isset($certificate[$key]) ? $certificate[$key] : false;
 }
 
 /**
  * 获取iframe签名
- * @param   string  $product
+ * @param string $product
  * @return  string
  */
 function iframe_source_encode($product)
@@ -2453,21 +2449,20 @@ function iframe_source_encode($product)
 
 /**
  * 创建env配置文件
-
  */
 
-function create_env($arr, $file='appserver')
+function create_env($arr, $file = 'appserver')
 {
     global $err, $_LANG;
     $replace = array();
     $url = $_SERVER['HTTP_HOST'];
     if ($file == 'appserver') {
         $path_arr = explode('/', ROOT_PATH);
-        $count = count($path_arr)-2;
+        $count = count($path_arr) - 2;
         $path_arr[$count] = 'appserver';
         $path_tmp = implode('/', $path_arr);
-        $path = $path_tmp.'.env';
-        $path_example = $path_tmp.'.env.example';
+        $path = $path_tmp . '.env';
+        $path_example = $path_tmp . '.env.example';
         if (file_exists($path)) {
             $file = file_get_contents($path);
         } elseif (file_exists($path_example)) {
@@ -2477,14 +2472,14 @@ function create_env($arr, $file='appserver')
         }
         if ($arr['SHOP_URL']) {
             $domain_url = str_replace('www.', '', $url);
-            $api_url = defined('FORCE_SSL_LOGIN') ? 'https://api.' : 'http://api.'.$domain_url;
+            $api_url = defined('FORCE_SSL_LOGIN') ? 'https://api.' : 'http://api.' . $domain_url;
             $arr['TERMS_URL'] = $api_url . '/v2/article.6';
             $arr['ABOUT_URL'] = $api_url . '/v2/article.80';
             $arr['SHARE_URL'] = $arr['SHOP_H5'];
             $arr['DOMAIN_URL'] = $domain_url;
         }
         foreach ($arr as $k => $v) {
-            $replace['#'.$k.'.*#i'] = $k.'='.$v;
+            $replace['#' . $k . '.*#i'] = $k . '=' . $v;
         }
 
 
@@ -2497,9 +2492,9 @@ function create_env($arr, $file='appserver')
     }
     if ($file == 'h5') {
         // $path = ROOT_PATH.$file.'/config/config.app.js';
-        $path = ROOT_PATH.$file.'/static/config.js';
+        $path = ROOT_PATH . $file . '/static/config.js';
         // $path_example =  ROOT_PATH.$file.'/config/config.app.sample.js';
-        $path_example =  ROOT_PATH.$file.'/static/config.sample.js';
+        $path_example = ROOT_PATH . $file . '/static/config.sample.js';
         if (file_exists($path)) {
             $file = file_get_contents($path);
         } elseif (file_exists($path_example)) {
@@ -2508,8 +2503,8 @@ function create_env($arr, $file='appserver')
             return true;
         }
         $api_url = str_replace('www.', '', $url);
-        $api_url = defined('FORCE_SSL_LOGIN') ? 'https://api.' : 'http://api.'.$api_url;
-        $new_file = preg_replace("/'API_HOST.*/i", "'API_HOST': '".$api_url."',", $file);
+        $api_url = defined('FORCE_SSL_LOGIN') ? 'https://api.' : 'http://api.' . $api_url;
+        $new_file = preg_replace("/'API_HOST.*/i", "'API_HOST': '" . $api_url . "',", $file);
         if (file_put_contents($path, $new_file)) {
             return true;
         } else {
@@ -2522,7 +2517,6 @@ function create_env($arr, $file='appserver')
 
 /**
  * 创建env配置文件
-
  */
 
 function test_api()
@@ -2532,8 +2526,8 @@ function test_api()
     $api_url = get_h5_api_host();
 
     $headers = array(
-            'Content-Type' => 'application/json;charset=utf-8'
-        );
+        'Content-Type' => 'application/json;charset=utf-8'
+    );
 
     $data = array();
     if (strpos($headers["Content-Type"], "/json") !== false) {
@@ -2545,8 +2539,8 @@ function test_api()
         function ($key, $val) {
             return "$key: $val";
         },
-                             array_keys($headers),
-                             $headers
+        array_keys($headers),
+        $headers
     );
 
     $req = curl_init($api_url);
@@ -2557,30 +2551,30 @@ function test_api()
     curl_setopt($req, CURLOPT_TIMEOUT, 60);
     // curl_setopt($req, CURLINFO_HEADER_OUT, true);
     curl_setopt(
-         $req,
-         CURLOPT_URL,
-                                $api_url ."?". http_build_query($data)
-     );
-   
-   
-    $resp     = curl_exec($req);
+        $req,
+        CURLOPT_URL,
+        $api_url . "?" . http_build_query($data)
+    );
+
+
+    $resp = curl_exec($req);
     $respCode = curl_getinfo($req, CURLINFO_HTTP_CODE);
     $respType = curl_getinfo($req, CURLINFO_CONTENT_TYPE);
-    $error    = curl_error($req);
-    $errno    = curl_errno($req);
+    $error = curl_error($req);
+    $errno = curl_errno($req);
     curl_close($req);
     /** type of error:
-      *  - curl connection error
-      *  - http status error 4xx, 5xx
-      *  - rest api error
-      */
+     *  - curl connection error
+     *  - http status error 4xx, 5xx
+     *  - rest api error
+     */
     if ($errno > 0) {
         return false;
     }
     if ($respCode != 200) {
         return false;
     }
-    
+
     if (strpos($respType, "text/html") !== false) {
         $err->add($_LANG['test_appserver_failed']);
     }
@@ -2595,7 +2589,7 @@ function test_api()
 
 /**
  *  获取h5/config/config.app.js文件中配置的API_HOST
- *  @return  string|boolean
+ * @return  string|boolean
  */
 function get_h5_api_host()
 {
@@ -2606,12 +2600,13 @@ function get_h5_api_host()
         return false;
     }
 }
+
 function createQrCode($url)
 {
-    if ($url=="") {
+    if ($url == "") {
         return false;
     }
-    return QRCODE_URL.urlencode($url);
+    return QRCODE_URL . urlencode($url);
 }
 
 function createShortUrl($url)
@@ -2622,7 +2617,7 @@ function createShortUrl($url)
     // $short_url = file_get_contents(SHORT_URL.urlencode($url));
     // return $short_url?$short_url:$url;
 
-    $params = json_encode(array('url'=>$url));
+    $params = json_encode(array('url' => $url));
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, SHORT_URL);
     curl_setopt($ch, CURLOPT_POST, 1);
@@ -2633,13 +2628,13 @@ function createShortUrl($url)
     $result = curl_exec($ch);
     curl_close($ch);
     $result = json_decode($getDB, 1);
-    return ($result['Code']==0 && $result['ShortUrl']) ? trim($result['ShortUrl']) : $url;
+    return ($result['Code'] == 0 && $result['ShortUrl']) ? trim($result['ShortUrl']) : $url;
 }
 
 /**
-* 保存支付方式
-*/
-function save_payment($code, $name, $description, $config, $status, $type=PAY_TYPE_PC)
+ * 保存支付方式
+ */
+function save_payment($code, $name, $description, $config, $status, $type = PAY_TYPE_PC)
 {
     $data = [
         'pay_code' => $code,
@@ -2650,7 +2645,7 @@ function save_payment($code, $name, $description, $config, $status, $type=PAY_TY
         'is_online' => 1,
         'type' => $type,
     ];
-    $sql = "SELECT * FROM ".$GLOBALS['ecs']->table('payment')." WHERE pay_code='".$code."'";
+    $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('payment') . " WHERE pay_code='" . $code . "'";
     $row = $GLOBALS['db']->getRow($sql);
     if ($row) {
         return $GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('payment'), $data, 'UPDATE', "pay_id = '$row[pay_id]'");
@@ -2659,12 +2654,12 @@ function save_payment($code, $name, $description, $config, $status, $type=PAY_TY
     }
 }
 
-function add_log($msg, $data=null)
+function add_log($msg, $data = null)
 {
     if (@constant("DEBUG_API")) {
         if (!is_dir(LOG_DIR)) {
             mkdir(LOG_DIR, 0777);
         }
-        error_log(date("c")."\t".$msg."\t".stripslashes(json_encode($data))."\t\n", 3, LOG_DIR."/order_".date("Y-m-d").".log");
+        error_log(date("c") . "\t" . $msg . "\t" . stripslashes(json_encode($data)) . "\t\n", 3, LOG_DIR . "/order_" . date("Y-m-d") . ".log");
     }
 }

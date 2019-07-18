@@ -6,12 +6,6 @@ namespace app\home\controller;
  * 专题前台
  */
 
-
-
-
-if ((DEBUG_MODE & 2) != 2) {
-    $smarty->caching = true;
-}
 $topic_id = empty($_REQUEST['topic_id']) ? 0 : intval($_REQUEST['topic_id']);
 
 $sql = "SELECT template FROM " . $ecs->table('topic') .

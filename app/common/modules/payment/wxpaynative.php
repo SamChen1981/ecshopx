@@ -3,10 +3,6 @@
  * 中国银联支付
  */
 
-if (!defined('IN_ECS')) {
-    die('Hacking attempt');
-}
-
 $payment_lang = ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/payment/wxpaynative.php';
 
 if (file_exists($payment_lang)) {

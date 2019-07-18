@@ -4,11 +4,7 @@
  * 天工支付(支付宝)
  */
 
-if (!defined('IN_ECS')) {
-    die('Hacking attempt');
-}
-
-$payment_lang = ROOT_PATH . 'languages/' .$GLOBALS['_CFG']['lang']. '/payment/tiangong.php';
+$payment_lang = ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/payment/tiangong.php';
 
 
 if (file_exists($payment_lang)) {
@@ -23,19 +19,19 @@ if (isset($set_modules) && $set_modules == true) {
     $i = isset($modules) ? count($modules) : 0;
 
     /* 代码 */
-    $modules[$i]['code']    = basename(__FILE__, '.php');
+    $modules[$i]['code'] = basename(__FILE__, '.php');
 
     /* 描述对应的语言项 */
-    $modules[$i]['desc']    = 'tiangong_desc';
+    $modules[$i]['desc'] = 'tiangong_desc';
 
     /* 是否支持货到付款 */
-    $modules[$i]['is_cod']  = '0';
+    $modules[$i]['is_cod'] = '0';
 
     /* 是否支持在线支付 */
-    $modules[$i]['is_online']  = '1';
+    $modules[$i]['is_online'] = '1';
 
     /* 作者 */
-    $modules[$i]['author']  = 'TIANGONG TEAM';
+    $modules[$i]['author'] = 'TIANGONG TEAM';
 
     /* 网址 */
     $modules[$i]['website'] = 'https://charging.teegon.com/';
@@ -44,9 +40,9 @@ if (isset($set_modules) && $set_modules == true) {
     $modules[$i]['version'] = '1.0';
 
     /* 配置信息 */
-    $modules[$i]['config']  = array(
-        array('name' => 'tiangong_client_id',           'type' => 'text',   'value' => ''),
-        array('name' => 'tiangong_client_secret',           'type' => 'text',   'value' => ''),
+    $modules[$i]['config'] = array(
+        array('name' => 'tiangong_client_id', 'type' => 'text', 'value' => ''),
+        array('name' => 'tiangong_client_secret', 'type' => 'text', 'value' => ''),
     );
 
     return;
@@ -73,8 +69,8 @@ class tiangong
 
     /**
      * 生成支付代码
-     * @param   array   $order      订单信息
-     * @param   array   $payment    支付方式信息
+     * @param array $order 订单信息
+     * @param array $payment 支付方式信息
      */
     public function get_code($order, $payment)
     {
@@ -84,7 +80,7 @@ class tiangong
         //$param['return_url'] = return_url(basename(__FILE__, '.php'));
         $param['return_url'] = 'https://www.qq.com';
         $param['amount'] = 0.01;
-        $param['subject'] =iconv('GBK', 'UTF-8', $name);
+        $param['subject'] = iconv('GBK', 'UTF-8', $name);
         $param['metadata'] = "";
         $param['notify_url'] = 'https://www.baidu.com';//支付成功后天工支付网关通知
         //$param['notify'] = return_url(basename(__FILE__, '.php'));
@@ -93,7 +89,7 @@ class tiangong
         $param['sign'] = $this->sign($param, $payment);
 
 
-        $def_url  = '<div style="text-align:center"><form name="tiangong" accept-charset="UTF-8" style="text-align:center;" method="post" action="https://api.teegon.com/charge/pay" target="_blank">';
+        $def_url = '<div style="text-align:center"><form name="tiangong" accept-charset="UTF-8" style="text-align:center;" method="post" action="https://api.teegon.com/charge/pay" target="_blank">';
         $def_url .= "<input type='hidden' name='order_no' value='" . $param['order_no'] . "' />";
         $def_url .= "<input type='hidden' name='channel' value='" . $param['channel'] . "' />";
         $def_url .= "<input type='hidden' name='amount' value='" . $param['amount'] . "' />";
@@ -120,7 +116,7 @@ class tiangong
                 $_GET[$key] = $data;
             }
         }
-        $payment  = get_payment($_GET['code']);
+        $payment = get_payment($_GET['code']);
         $_GET['data'] = stripslashes($_GET['data']);
         unset($_GET['code']);
         $resign = $this->sign($_GET, $payment);
@@ -148,7 +144,7 @@ class tiangong
         $para_sort = $this->arg_sort($para_filter);
         //生成加密字符串
         $prestr = $this->create_string($para_sort);
-        $prestr = $payment['tiangong_client_secret'] .$prestr . $payment['tiangong_client_secret'];
+        $prestr = $payment['tiangong_client_secret'] . $prestr . $payment['tiangong_client_secret'];
         return strtoupper(md5($prestr));
     }
 
@@ -175,9 +171,9 @@ class tiangong
 
     private function create_string($para)
     {
-        $arg  = "";
+        $arg = "";
         while (list($key, $val) = each($para)) {
-            $arg.=$key.$val;
+            $arg .= $key . $val;
         }
 
 

@@ -6,9 +6,6 @@ namespace app\console\controller;
  * 管理中心公用文件
  */
 require_once(str_replace('/admin/includes', '/includes', str_replace('\\', '/', dirname(__FILE__))) . '/safety.php');
-if (!defined('IN_ECS')) {
-    die('Hacking attempt');
-}
 
 /* https 检测https */
 if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
@@ -57,14 +54,6 @@ if (!defined('ADMIN_PATH')) {
     define('ADMIN_PATH', 'admin');
 }
 define('ROOT_PATH', str_replace(ADMIN_PATH . '/includes/init.php', '', str_replace('\\', '/', __FILE__)));
-
-if (defined('DEBUG_MODE') == false) {
-    define('DEBUG_MODE', 0);
-}
-
-if (PHP_VERSION >= '5.1' && !empty($timezone)) {
-    date_default_timezone_set($timezone);
-}
 
 if (isset($_SERVER['PHP_SELF'])) {
     define('PHP_SELF', $_SERVER['PHP_SELF']);
@@ -180,10 +169,6 @@ $smarty = new cls_template;
 
 $smarty->template_dir = ROOT_PATH . ADMIN_PATH . '/templates';
 $smarty->compile_dir = ROOT_PATH . 'temp/compiled/admin';
-if ((DEBUG_MODE & 2) == 2) {
-    $smarty->force_compile = true;
-}
-
 
 $smarty->assign('lang', $_LANG);
 $smarty->assign('help_open', $_CFG['help_open']);
@@ -293,45 +278,3 @@ if ($_REQUEST['act'] != 'login' && $_REQUEST['act'] != 'signin' &&
         exit;
     }
 }
-
-/* 管理员登录后可在任何页面使用 act=phpinfo 显示 phpinfo() 信息 */
-if ($_REQUEST['act'] == 'phpinfo' && function_exists('phpinfo')) {
-    phpinfo();
-
-    exit;
-}
-
-//header('Cache-control: private');
-header('content-type: text/html; charset=' . EC_CHARSET);
-header('Expires: Fri, 14 Mar 1980 20:53:00 GMT');
-header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
-header('Cache-Control: no-cache, must-revalidate');
-header('Pragma: no-cache');
-
-if ((DEBUG_MODE & 1) == 1) {
-    error_reporting(E_ALL);
-} else {
-    error_reporting(E_ALL ^ E_NOTICE);
-}
-if ((DEBUG_MODE & 4) == 4) {
-    include(ROOT_PATH . 'includes/lib.debug.php');
-}
-
-/* 判断是否支持gzip模式 */
-if (gzip_enabled()) {
-    ob_start('ob_gzhandler');
-} else {
-    ob_start();
-}
-
-/* 云起认证 */
-include_once(ROOT_PATH . "includes/cls_certificate.php");
-$cert = new certificate();
-$certificate = $cert->get_shop_certificate();
-if (!$certificate['certificate_id']) {
-    $callback = $ecs->url() . "admin/certificate.php?act=get_certificate&type=index";
-    $iframe_url = $cert->get_authorize_url($callback);
-    $smarty->assign('iframe_url', $iframe_url);
-}
-$smarty->assign('certi', $certificate);
-/* 云起认证 */

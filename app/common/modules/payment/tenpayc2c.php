@@ -4,11 +4,7 @@
  * 财付通中介担保支付插件
  */
 
-if (!defined('IN_ECS')) {
-    die('Hacking attempt');
-}
-
-$payment_lang = ROOT_PATH . 'languages/' .$GLOBALS['_CFG']['lang']. '/payment/tenpayc2c.php';
+$payment_lang = ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/payment/tenpayc2c.php';
 
 if (file_exists($payment_lang)) {
     global $_LANG;
@@ -21,19 +17,19 @@ if (isset($set_modules) && $set_modules == true) {
     $i = isset($modules) ? count($modules) : 0;
 
     /* 代码 */
-    $modules[$i]['code']    = basename(__FILE__, '.php');
+    $modules[$i]['code'] = basename(__FILE__, '.php');
 
     /* 描述对应的语言项 */
-    $modules[$i]['desc']    = 'tenpay_desc';
+    $modules[$i]['desc'] = 'tenpay_desc';
 
     /* 是否支持货到付款 */
-    $modules[$i]['is_cod']  = '0';
+    $modules[$i]['is_cod'] = '0';
 
     /* 是否支持在线支付 */
-    $modules[$i]['is_online']  = '1';
+    $modules[$i]['is_online'] = '1';
 
     /* 作者 */
-    $modules[$i]['author']  = 'ECSHOP TEAM';
+    $modules[$i]['author'] = 'ECSHOP TEAM';
 
     /* 网址 */
     $modules[$i]['website'] = 'https://www.tenpay.com';
@@ -42,10 +38,10 @@ if (isset($set_modules) && $set_modules == true) {
     $modules[$i]['version'] = '1.0.0';
 
     /* 配置信息 */
-    $modules[$i]['config']  = array(
-        array('name' => 'tenpay_account',   'type' => 'text', 'value' => ''),
-        array('name' => 'tenpay_key',       'type' => 'text', 'value' => ''),
-        array('name' => 'tenpay_type',       'type' => 'select', 'value'=>'1'),
+    $modules[$i]['config'] = array(
+        array('name' => 'tenpay_account', 'type' => 'text', 'value' => ''),
+        array('name' => 'tenpay_key', 'type' => 'text', 'value' => ''),
+        array('name' => 'tenpay_type', 'type' => 'select', 'value' => '1'),
     );
 
     return;
@@ -75,8 +71,8 @@ class tenpayc2c
 
     /**
      * 生成支付代码
-     * @param   array    $order       订单信息
-     * @param   array    $payment     支付方式信息
+     * @param array $order 订单信息
+     * @param array $payment 支付方式信息
      */
     public function get_code($order, $payment)
     {
@@ -120,7 +116,7 @@ class tenpayc2c
 
         /* 交易说明 */
         $mch_desc = $GLOBALS['_LANG']['shop_order_sn'] . $order['order_sn'];
-        $need_buyerinfo = '2' ;
+        $need_buyerinfo = '2';
 
         /* 交易类型：2、虚拟交易，1、实物交易 */
         $mch_type = $payment['tenpay_type'];
@@ -130,43 +126,43 @@ class tenpayc2c
 
         /* 返回的路径 */
         $mch_returl = return_url('tenpayc2c');
-        $show_url   = return_url('tenpayc2c');
+        $show_url = return_url('tenpayc2c');
         $attach = '';
 
         /* 数字签名 */
-        $sign_text = "chnid=" . $chnid . "&cmdno=" . $cmdno . "&encode_type=" . $encode_type . "&mch_desc=" . $mch_desc . "&mch_name=" . $mch_name . "&mch_price=" . $mch_price ."&mch_returl=" . $mch_returl . "&mch_type=" . $mch_type . "&mch_vno=" . $mch_vno . "&need_buyerinfo=" . $need_buyerinfo ."&seller=" . $seller . "&show_url=" . $show_url . "&version=" . $version . "&key=" . $payment['tenpay_key'];
+        $sign_text = "chnid=" . $chnid . "&cmdno=" . $cmdno . "&encode_type=" . $encode_type . "&mch_desc=" . $mch_desc . "&mch_name=" . $mch_name . "&mch_price=" . $mch_price . "&mch_returl=" . $mch_returl . "&mch_type=" . $mch_type . "&mch_vno=" . $mch_vno . "&need_buyerinfo=" . $need_buyerinfo . "&seller=" . $seller . "&show_url=" . $show_url . "&version=" . $version . "&key=" . $payment['tenpay_key'];
 
-        $sign =md5($sign_text);
+        $sign = md5($sign_text);
 
         /* 交易参数 */
         $parameter = array(
-            'attach'            => $attach,
-            'chnid'             => $chnid,
-            'cmdno'             => $cmdno,                     // 业务代码, 财付通支付支付接口填  1
-            'encode_type'       => $encode_type,                //编码标准
-            'mch_desc'          => $mch_desc,
-            'mch_name'          => $mch_name,
-            'mch_price'         => $mch_price,                  // 订单金额
-            'mch_returl'        => $mch_returl,                 // 接收财付通返回结果的URL
-            'mch_type'          => $mch_type,                   //交易类型
-            'mch_vno'           => $mch_vno,             // 交易号(订单号)，由商户网站产生(建议顺序累加)
-            'need_buyerinfo'    => $need_buyerinfo,             //是否需要在财付通填定物流信息
-            'seller'            => $seller,  // 商家的财付通商户号
-            'show_url'          => $show_url,
-            'transport_desc'    => $transport_desc,
-            'transport_fee'     => $transport_fee,
-            'version'           => $version,                    //版本号 2
-            'sign'              => $sign,                       // MD5签名
-            'sys_id'            => '542554970'                  //ecshop C账号 不参与签名
+            'attach' => $attach,
+            'chnid' => $chnid,
+            'cmdno' => $cmdno,                     // 业务代码, 财付通支付支付接口填  1
+            'encode_type' => $encode_type,                //编码标准
+            'mch_desc' => $mch_desc,
+            'mch_name' => $mch_name,
+            'mch_price' => $mch_price,                  // 订单金额
+            'mch_returl' => $mch_returl,                 // 接收财付通返回结果的URL
+            'mch_type' => $mch_type,                   //交易类型
+            'mch_vno' => $mch_vno,             // 交易号(订单号)，由商户网站产生(建议顺序累加)
+            'need_buyerinfo' => $need_buyerinfo,             //是否需要在财付通填定物流信息
+            'seller' => $seller,  // 商家的财付通商户号
+            'show_url' => $show_url,
+            'transport_desc' => $transport_desc,
+            'transport_fee' => $transport_fee,
+            'version' => $version,                    //版本号 2
+            'sign' => $sign,                       // MD5签名
+            'sys_id' => '542554970'                  //ecshop C账号 不参与签名
         );
 
-        $button  = '<br /><form style="text-align:center;" action="https://www.tenpay.com/cgi-bin/med/show_opentrans.cgi " target="_blank" style="margin:0px;padding:0px" >';
+        $button = '<br /><form style="text-align:center;" action="https://www.tenpay.com/cgi-bin/med/show_opentrans.cgi " target="_blank" style="margin:0px;padding:0px" >';
 
-        foreach ($parameter as $key=>$val) {
-            $button  .= "<input type='hidden' name='$key' value='$val' />";
+        foreach ($parameter as $key => $val) {
+            $button .= "<input type='hidden' name='$key' value='$val' />";
         }
 
-        $button  .= '<input type="image" src="'. $GLOBALS['ecs']->url() .'images/tenpayc2c.jpg" value="' .$GLOBALS['_LANG']['pay_button']. '" /></form><br />';
+        $button .= '<input type="image" src="' . $GLOBALS['ecs']->url() . 'images/tenpayc2c.jpg" value="' . $GLOBALS['_LANG']['pay_button'] . '" /></form><br />';
 
         return $button;
     }
@@ -177,23 +173,23 @@ class tenpayc2c
     public function respond()
     {
         /*取返回参数*/
-        $cmd_no         = $_GET['cmdno'];
-        $retcode        = $_GET['retcode'];
-        $status         = $_GET['status'];
-        $seller         = $_GET['seller'];
-        $total_fee      = $_GET['total_fee'];
-        $trade_price    = $_GET['trade_price'];
-        $transport_fee  = $_GET['transport_fee'];
-        $buyer_id       = $_GET['buyer_id'];
-        $chnid          = $_GET['chnid'];
-        $cft_tid        = $_GET['cft_tid'];
-        $mch_vno        = $_GET['mch_vno'];
-        $attach         = !empty($_GET['attach']) ? $_GET['attach'] : '';
-        $version        = $_GET['version'];
-        $sign           = $_GET['sign'];
+        $cmd_no = $_GET['cmdno'];
+        $retcode = $_GET['retcode'];
+        $status = $_GET['status'];
+        $seller = $_GET['seller'];
+        $total_fee = $_GET['total_fee'];
+        $trade_price = $_GET['trade_price'];
+        $transport_fee = $_GET['transport_fee'];
+        $buyer_id = $_GET['buyer_id'];
+        $chnid = $_GET['chnid'];
+        $cft_tid = $_GET['cft_tid'];
+        $mch_vno = $_GET['mch_vno'];
+        $attach = !empty($_GET['attach']) ? $_GET['attach'] : '';
+        $version = $_GET['version'];
+        $sign = $_GET['sign'];
 
-        $payment    = get_payment('tenpayc2c');
-        $log_id     = get_order_id_by_sn($mch_vno);
+        $payment = get_payment('tenpayc2c');
+        $log_id = get_order_id_by_sn($mch_vno);
         //$log_id = str_replace($attach, '', $mch_vno); //取得支付的log_id
 
         /* 如果$retcode大于0则表示支付失败 */
@@ -209,7 +205,7 @@ class tenpayc2c
         }
 
         /* 检查数字签名是否正确 */
-        $sign_text = "buyer_id=" . $buyer_id . "&cft_tid=" . $cft_tid . "&chnid=" . $chnid . "&cmdno=" . $cmd_no . "&mch_vno=" . $mch_vno . "&retcode=" . $retcode . "&seller=" .$seller . "&status=" . $status . "&total_fee=" . $total_fee . "&trade_price=" . $trade_price . "&transport_fee=" . $transport_fee . "&version=" . $version . "&key=" . $payment['tenpay_key'];
+        $sign_text = "buyer_id=" . $buyer_id . "&cft_tid=" . $cft_tid . "&chnid=" . $chnid . "&cmdno=" . $cmd_no . "&mch_vno=" . $mch_vno . "&retcode=" . $retcode . "&seller=" . $seller . "&status=" . $status . "&total_fee=" . $total_fee . "&trade_price=" . $trade_price . "&transport_fee=" . $transport_fee . "&version=" . $version . "&key=" . $payment['tenpay_key'];
         $sign_md5 = strtoupper(md5($sign_text));
         if ($sign_md5 != $sign) {
             //echo '签名错误';

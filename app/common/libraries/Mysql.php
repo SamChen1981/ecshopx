@@ -213,21 +213,6 @@ class Mysql
             return false;
         }
 
-        if (defined('DEBUG_MODE') && (DEBUG_MODE & 8) == 8) {
-            $logfilename = $this->root_path . DATA_DIR . '/mysqli_query_' . $this->dbhash . '_' . date('Y_m_d') . '.log';
-            $str = $sql . "\n\n";
-
-            if (PHP_VERSION >= '5.0') {
-                file_put_contents($logfilename, $str, FILE_APPEND);
-            } else {
-                $fp = @fopen($logfilename, 'ab+');
-                if ($fp) {
-                    fwrite($fp, $str);
-                    fclose($fp);
-                }
-            }
-        }
-
         return $query;
     }
 
