@@ -522,7 +522,7 @@ elseif ($_REQUEST['act'] == 'search_goods') {
     check_authz_json('group_by');
 
 
-        $filter = json_decode($_GET['JSON']);
+    $filter = json_decode($_GET['JSON']);
     $arr = get_goods_list($filter);
 
     make_json_result($arr);

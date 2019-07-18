@@ -143,7 +143,7 @@ elseif ($_REQUEST['act'] == 'post') {
     $is_succ = create_env($arr, 'appserver');
 
     if (isset($_POST['value']['247']) and $_POST['value']['247']) {
-                $cert = new certificate();
+        $cert = new certificate();
         if (false == $cert->open_logistics_trace()) {
             $links[] = array('text' => $_LANG['back_shop_config'], 'href' => 'shop_config.php?act=list_edit');
             sys_msg($_LANG['open_logistics_trace_fail'], 0, $links);

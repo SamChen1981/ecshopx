@@ -225,7 +225,6 @@ elseif ($_REQUEST['act'] == 'edit_package_name') {
 /*------------------------------------------------------ */
 
 elseif ($_REQUEST['act'] == 'search_goods') {
-
     $filters = json_decode($_GET['JSON']);
 
     $arr = get_goods_list($filters);
@@ -271,7 +270,6 @@ elseif ($_REQUEST['act'] == 'search_goods') {
 /*------------------------------------------------------ */
 
 elseif ($_REQUEST['act'] == 'add_package_goods') {
-
     check_authz_json('package_manage');
 
     $fittings = json_decode($_GET['add_ids']);
@@ -308,7 +306,6 @@ elseif ($_REQUEST['act'] == 'add_package_goods') {
 /*------------------------------------------------------ */
 
 elseif ($_REQUEST['act'] == 'drop_package_goods') {
-
     check_authz_json('package_manage');
 
     $fittings = json_decode($_GET['drop_ids']);

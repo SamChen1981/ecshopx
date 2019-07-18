@@ -301,7 +301,6 @@ elseif ($_REQUEST['act'] == 'query_bid') {
 /*------------------------------------------------------ */
 
 elseif ($_REQUEST['act'] == 'search_goods') {
-
     $filters = json_decode($_GET['JSON']);
 
     $arr['goods'] = get_goods_list($filters);
@@ -318,7 +317,6 @@ elseif ($_REQUEST['act'] == 'search_goods') {
 /*------------------------------------------------------ */
 
 elseif ($_REQUEST['act'] == 'search_products') {
-
     $filters = json_decode($_GET['JSON']);
 
     if (!empty($filters->goods_id)) {

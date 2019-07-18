@@ -1,6 +1,7 @@
 <?php
 
 namespace app\console\controller;
+
 /**
  * 专题管理
  */
@@ -85,7 +86,7 @@ if ($_REQUEST['act'] == 'add' || $_REQUEST['act'] == 'edit') {
         create_html_editor('topic_intro', $topic['intro']);
 
 
-                $topic['data'] = addcslashes($topic['data'], "'");
+        $topic['data'] = addcslashes($topic['data'], "'");
         $topic['data'] = json_encode(@unserialize($topic['data']));
         $topic['data'] = addcslashes($topic['data'], "'");
 
@@ -200,7 +201,7 @@ if ($_REQUEST['act'] == 'add' || $_REQUEST['act'] == 'edit') {
     $start_time = local_strtotime($_POST['start_time']);
     $end_time = local_strtotime($_POST['end_time']);
 
-        $tmp_data = json_decode($_POST['topic_data']);
+    $tmp_data = json_decode($_POST['topic_data']);
     $data = serialize($tmp_data);
     $base_style = $_POST['base_style'];
     $keywords = $_POST['keywords'];
@@ -222,7 +223,6 @@ if ($_REQUEST['act'] == 'add' || $_REQUEST['act'] == 'edit') {
     $links[] = array('href' => 'topic.php', 'text' => $_LANG['back_list']);
     sys_msg($_LANG['succed'], 0, $links);
 } elseif ($_REQUEST['act'] == 'get_goods_list') {
-
     $filters = json_decode($_GET['JSON']);
 
     $arr = get_goods_list($filters);

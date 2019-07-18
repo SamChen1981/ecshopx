@@ -94,7 +94,7 @@ if ($_REQUEST['act'] == 'new_price_list') {
 
 /* 用户出价处理 */
 if ($_REQUEST['act'] == 'bid') {
-            $result = array('error' => 0, 'content' => '');
+    $result = array('error' => 0, 'content' => '');
 
     $price = isset($_POST['price']) ? floatval($_POST['price']) : 0;
     $price = round($price, 2);

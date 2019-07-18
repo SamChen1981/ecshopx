@@ -86,7 +86,7 @@ elseif ($_REQUEST['act'] == 'upload') {
         $links[] = array('text' => $_LANG['back'], 'href' => 'license.php?act=list_edit');
         sys_msg($_LANG['fail_license'], 1, $links);
     } else {
-                        include_once(ROOT_PATH . 'includes/lib_main.php');
+        include_once(ROOT_PATH . 'includes/lib_main.php');
         include_once(ROOT_PATH . 'includes/lib_license.php');
 
         // 证书登录

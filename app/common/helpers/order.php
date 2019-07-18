@@ -2986,7 +2986,7 @@ function get_logistics_trace($order_sn, $limit = 0, $lang)
         // $row['expno'] = $corp[$row['expcode']];
     }
     $row['expno'] = $row['invoice_no'];
-        $cert = new certificate();
+    $cert = new certificate();
     $tData = $cert->yqexp_exp_get($row);
     if ($tData) {
         $cur_day = '';
@@ -3045,7 +3045,7 @@ function return_user_surplus_integral_bonus($order)
  */
 function order_retry($order_sn)
 {
-        $matrix = new matrix();
+    $matrix = new matrix();
     $row = $matrix->get_callback($order_sn);
     $matrix->http_request_matrix($row['data']['params'], 'retry');
     return true;

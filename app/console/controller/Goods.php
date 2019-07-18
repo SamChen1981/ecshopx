@@ -1601,7 +1601,6 @@ elseif ($_REQUEST['act'] == 'drop_image') {
 //-- 搜索商品，仅返回名称及ID
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'get_goods_list') {
-
     $filters = json_decode($_GET['JSON']);
 
     $arr = get_goods_list($filters);
@@ -1620,7 +1619,6 @@ elseif ($_REQUEST['act'] == 'get_goods_list') {
 //-- 把商品加入关联
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'add_link_goods') {
-
     check_authz_json('goods_manage');
 
     $linked_array = json_decode($_GET['add_ids']);
@@ -1658,7 +1656,6 @@ elseif ($_REQUEST['act'] == 'add_link_goods') {
 //-- 删除关联商品
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'drop_link_goods') {
-
     check_authz_json('goods_manage');
 
     $drop_goods = json_decode($_GET['drop_ids']);
@@ -1705,7 +1702,6 @@ elseif ($_REQUEST['act'] == 'drop_link_goods') {
 /*------------------------------------------------------ */
 
 elseif ($_REQUEST['act'] == 'add_group_goods') {
-
     check_authz_json('goods_manage');
 
     $fittings = json_decode($_GET['add_ids']);
@@ -1737,7 +1733,6 @@ elseif ($_REQUEST['act'] == 'add_group_goods') {
 /*------------------------------------------------------ */
 
 elseif ($_REQUEST['act'] == 'drop_group_goods') {
-
     check_authz_json('goods_manage');
 
     $fittings = json_decode($_GET['drop_ids']);
@@ -1770,7 +1765,6 @@ elseif ($_REQUEST['act'] == 'drop_group_goods') {
 /*------------------------------------------------------ */
 
 elseif ($_REQUEST['act'] == 'get_article_list') {
-
     $filters = (array)json_decode(json_str_iconv($_GET['JSON']));
 
     $where = " WHERE cat_id > 0 ";
@@ -1796,7 +1790,6 @@ elseif ($_REQUEST['act'] == 'get_article_list') {
 /*------------------------------------------------------ */
 
 elseif ($_REQUEST['act'] == 'add_goods_article') {
-
     check_authz_json('goods_manage');
 
     $articles = json_decode($_GET['add_ids']);
@@ -1826,7 +1819,6 @@ elseif ($_REQUEST['act'] == 'add_goods_article') {
 //-- 删除关联文章
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'drop_goods_article') {
-
     check_authz_json('goods_manage');
 
     $articles = json_decode($_GET['drop_ids']);

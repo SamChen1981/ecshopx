@@ -195,7 +195,7 @@ elseif ($action == 'act_register') {
                 send_regiter_hash($_SESSION['user_id']);
             }
             $ucdata = empty($user->ucdata) ? "" : $user->ucdata;
-                        $matrix = new matrix;
+            $matrix = new matrix;
             if ($matrix->get_bind_info('ecos.taocrm')) {
                 $matrix->createMember($_SESSION['user_id'], 'ecos.taocrm');
             }
@@ -220,7 +220,7 @@ elseif ($action == 'act_register') {
         }
 
         /* 检查验证码 */
-                $validator = new captcha();
+        $validator = new captcha();
         if ($validator->check_word($code)) {
             $_SESSION['v_code'] = 'true';
             make_json_result('succ');
@@ -324,7 +324,6 @@ elseif ($action == 'act_login') {
     }
 } /* 处理 ajax 的登录请求 */
 elseif ($action == 'signin') {
-
     $username = !empty($_POST['username']) ? json_str_iconv(trim($_POST['username'])) : '';
     $password = !empty($_POST['password']) ? trim($_POST['password']) : '';
     $captcha = !empty($_POST['captcha']) ? json_str_iconv(trim($_POST['captcha'])) : '';
@@ -665,7 +664,7 @@ elseif ($action == 'order_list') {
     $orders = get_user_orders($user_id, $pager['size'], $pager['start']);
     $merge = get_user_merge($user_id);
 
-        $cert = new certificate();
+    $cert = new certificate();
     $cert->is_bind_sn('erp', 'goods_name') ? $smarty->assign('no_bind_erp', 0) : $smarty->assign('no_bind_erp', 1);
 
     $smarty->assign('open_logistics_trace', is_open_logistics_trace());
@@ -833,7 +832,7 @@ elseif ($action == 'cancel_order') {
 
     if (cancel_order($order_id, $user_id)) {
         // 通知erp取消订单
-                $matrix = new matrix();
+        $matrix = new matrix();
         $matrix->set_dead_order($order_id);
 
         ecs_header("Location: user.php?act=order_list\n");
@@ -1459,7 +1458,7 @@ elseif ($action == 'pay') {
     }
 } /* 添加标签(ajax) */
 elseif ($action == 'add_tag') {
-        include_once('includes/lib_clips.php');
+    include_once('includes/lib_clips.php');
 
     $result = array('error' => 0, 'message' => '', 'content' => '');
     $id = isset($_POST['id']) ? intval($_POST['id']) : 0;
@@ -1486,7 +1485,7 @@ elseif ($action == 'add_tag') {
     exit;
 } /* 添加收藏商品(ajax) */
 elseif ($action == 'collect') {
-            $result = array('error' => 0, 'message' => '');
+    $result = array('error' => 0, 'message' => '');
     $goods_id = $_GET['id'];
 
     if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] == 0) {
@@ -1558,7 +1557,7 @@ elseif ($action == 'merge_order') {
     }
 } /* 将指定订单中商品添加到购物车 */
 elseif ($action == 'return_to_cart') {
-        include_once(ROOT_PATH . 'includes/lib_transaction.php');
+    include_once(ROOT_PATH . 'includes/lib_transaction.php');
 
     $result = array('error' => 0, 'message' => '', 'content' => '');
     $order_id = isset($_POST['order_id']) ? intval($_POST['order_id']) : 0;
@@ -1706,7 +1705,7 @@ elseif ($action == 'act_edit_surplus') {
     }
 
     // 支付后通知erp
-        $matrix = new matrix;
+    $matrix = new matrix;
     $matrix->createOrder($order['order_sn']);
 
     /* 跳转 */
@@ -1793,7 +1792,7 @@ elseif ($action == 'save_order_address') {
             $sql = "UPDATE " . $ecs->table('order_info') .
                 " SET lastmodify=" . gmtime() . "  WHERE order_id = " . $address['order_id'];
             $db->query($sql);
-                        $matrix = new matrix;
+            $matrix = new matrix;
             $matrix->createOrder($order_sn);
         }
         ecs_header('Location: user.php?act=order_detail&order_id=' . $address['order_id'] . "\n");
@@ -2096,7 +2095,7 @@ elseif ($action == 'email_list') {
     }
 } /* ajax 发送验证邮件 */
 elseif ($action == 'send_hash_mail') {
-        include_once(ROOT_PATH . 'includes/lib_passport.php');
+    include_once(ROOT_PATH . 'includes/lib_passport.php');
 
     $result = array('error' => 0, 'message' => '', 'content' => '');
 
@@ -2419,7 +2418,6 @@ elseif ($action == 'delivery_info') {
     $smarty->display('delivery_info.dwt');
 } /* ajax 物流信息 */
 elseif ($action == 'ajax_delivery_info') {
-
     $_POST['order_sn'] = trim($_POST['order_sn']);
     $order_sn = empty($_POST['order_sn']) ? '' : addslashes($_POST['order_sn']);
 
@@ -2487,7 +2485,7 @@ elseif ($action == 'ajax_delivery_info') {
             }
         }
         $sms_code = mt_rand(100000, 999999);
-                $sms = new sms();
+        $sms = new sms();
         $_SESSION[$mobile . '-sms_code'] = $sms_code;
         $is_send = $sms->send($mobile, '您本次的验证码为：' . $sms_code . '，十分钟内有效，请不要把验证码泄露给其他人，如非本人操作可不用理会');
         $is_send = $is_send ? 'succ' : 'fail';

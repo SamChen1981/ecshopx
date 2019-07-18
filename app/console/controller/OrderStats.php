@@ -84,7 +84,7 @@ if ($_REQUEST['act'] == 'list') {
     } else {
         $tmp_time = local_strtotime_new(local_date('Y-m-d'));
         $start_date_arr[] = local_strtotime_new(local_date('Y-m') . '-1');
-        $end_date_arr[] = local_strtotime_new(local_date('Y-m') . '-31');;
+        $end_date_arr[] = local_strtotime_new(local_date('Y-m') . '-31');
     }
 
     /* 按月份交叉查询 */

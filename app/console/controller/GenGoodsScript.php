@@ -1,6 +1,7 @@
 <?php
 
 namespace app\console\controller;
+
 /**
  * 生成显示商品的js代码
  */

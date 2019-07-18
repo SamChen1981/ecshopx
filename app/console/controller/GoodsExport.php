@@ -2,9 +2,6 @@
 
 namespace app\console\controller;
 
-
-
-
 if ($_REQUEST['act'] == 'goods_export') {
     /* 检查权限 */
     admin_priv('goods_export');
@@ -30,7 +27,7 @@ if ($_REQUEST['act'] == 'goods_export') {
 } elseif ($_REQUEST['act'] == 'act_export_taobao') {
     /* 检查权限 */
     admin_priv('goods_export');
-        $zip = new PHPZip;
+    $zip = new PHPZip;
 
     $where = get_export_where_sql($_POST);
 
@@ -100,7 +97,7 @@ if ($_REQUEST['act'] == 'goods_export') {
 } elseif ($_REQUEST['act'] == 'act_export_taobao V4.3') {
     /* 检查权限 */
     admin_priv('goods_export');
-        $zip = new PHPZip;
+    $zip = new PHPZip;
 
     $where = get_export_where_sql($_POST);
 
@@ -173,7 +170,7 @@ elseif ($_REQUEST['act'] == 'import_taobao') {
     /* 检查权限 */
     admin_priv('goods_export');
 
-        $zip = new PHPZip;
+    $zip = new PHPZip;
 
     $where = get_export_where_sql($_POST);
 
@@ -255,7 +252,7 @@ elseif ($_REQUEST['act'] == 'import_taobao') {
     /* 检查权限 */
     admin_priv('goods_export');
 
-        $zip = new PHPZip;
+    $zip = new PHPZip;
 
     $where = get_export_where_sql($_POST);
 
@@ -369,7 +366,7 @@ elseif ($_REQUEST['act'] == 'import_taobao') {
     /* 检查权限 */
     admin_priv('goods_export');
 
-        $zip = new PHPZip;
+    $zip = new PHPZip;
 
     $where = get_export_where_sql($_POST);
 
@@ -488,7 +485,7 @@ elseif ($_REQUEST['act'] == 'get_goods_fields') {
     /* 检查权限 */
     admin_priv('goods_export');
 
-        $zip = new PHPZip;
+    $zip = new PHPZip;
 
     $where = get_export_where_sql($_POST);
 
@@ -558,7 +555,7 @@ elseif ($_REQUEST['act'] == 'get_goods_fields') {
     header("Content-Type: application/unknown");
     die($zip->file());
 } elseif ($_REQUEST['act'] == 'get_goods_list') {
-            $filters = json_decode($_REQUEST['JSON']);
+    $filters = json_decode($_REQUEST['JSON']);
     $arr = get_goods_list($filters);
     $opt = array();
 
@@ -571,7 +568,7 @@ elseif ($_REQUEST['act'] == 'get_goods_fields') {
 } elseif ($_REQUEST['act'] == 'act_export_taobao V4.6') {
     /* 检查权限 */
     admin_priv('goods_export');
-        $zip = new PHPZip;
+    $zip = new PHPZip;
 
     $where = get_export_where_sql($_POST);
 

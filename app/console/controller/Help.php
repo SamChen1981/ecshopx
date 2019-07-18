@@ -1,6 +1,7 @@
 <?php
 
 namespace app\console\controller;
+
 /**
  * 帮助信息接口
  */

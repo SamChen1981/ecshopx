@@ -803,7 +803,7 @@ function get_role_list()
 
 function yunqi_logout()
 {
-        $cert = new certificate();
+    $cert = new certificate();
     $url = $cert->logout_url();
     header("location: $url");
 }

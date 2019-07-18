@@ -851,7 +851,7 @@ elseif ($_REQUEST['act'] == 'delivery_ship') {
 
         /* 如果需要，发短信 */
         if ($GLOBALS['_CFG']['sms_order_shipped'] == '1' && $order['mobile'] != '') {
-                        $sms = new sms();
+            $sms = new sms();
             $sms->send($order['mobile'], sprintf(
                 $GLOBALS['_LANG']['order_shipped_sms'],
                 $order['order_sn'],
@@ -3074,7 +3074,7 @@ elseif ($_REQUEST['act'] == 'operate_post') {
         }
         update_order($order_id, $arr);
         //订单支付后，创建订单到淘打
-                $matrix = new matrix();
+        $matrix = new matrix();
         $bind_info = $matrix->get_bind_info(array('taodali'));
         if ($bind_info) {
             $matrix->createOrder($order['order_sn'], 'taodali');
@@ -3721,7 +3721,6 @@ elseif ($_REQUEST['act'] == 'operate_post') {
     $links[] = array('text' => $_LANG['order_info'], 'href' => 'order.php?act=info&order_id=' . $order_id);
     sys_msg($_LANG['act_ok'] . $msg, 0, $links);
 } elseif ($_REQUEST['act'] == 'json') {
-
     $func = $_REQUEST['func'];
     if ($func == 'get_goods_info') {
         /* 取得商品信息 */
@@ -3826,7 +3825,6 @@ elseif ($_REQUEST['act'] == 'remove_order') {
 //-- 根据关键字和id搜索用户
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'search_users') {
-
     $id_name = empty($_GET['id_name']) ? '' : json_str_iconv(trim($_GET['id_name']));
 
     $result = array('error' => 0, 'message' => '', 'content' => '');
@@ -3853,7 +3851,6 @@ elseif ($_REQUEST['act'] == 'search_users') {
 //-- 根据关键字搜索商品
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'search_goods') {
-
     $keyword = empty($_GET['keyword']) ? '' : json_str_iconv(trim($_GET['keyword']));
 
     $result = array('error' => 0, 'message' => '', 'content' => '');
@@ -4011,7 +4008,7 @@ elseif ($_REQUEST['act'] == 'get_goods_info') {
  **/
 elseif ($_REQUEST['act'] == 'getSnList') {
     if ($_SESSION['yunqi_login'] && $_SESSION['TOKEN']) {
-                $cert = new certificate();
+        $cert = new certificate();
         $result = $cert->getsnlistoauth($_SESSION['TOKEN'], array());
         $result['status'] == 'success' and $cert->save_snlist($result['data']);
     }
@@ -5630,7 +5627,7 @@ function send_refund_to_crm($data)
     $msg['refund_fee'] = $data['cur_money'];
     $msg['status'] = 'SUCC';
     $msg['t_begin'] = date('Y-m-d H:i:s', time());
-        $matrix = new matrix;
+    $matrix = new matrix;
     $bind_info = $matrix->get_bind_info(array('ecos.taocrm'));
     if ($bind_info) {
         $is_succ = $matrix->send_refund_to_crm($msg);

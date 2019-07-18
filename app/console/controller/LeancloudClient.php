@@ -1,6 +1,7 @@
 <?php
 
 namespace app\console\controller;
+
 class leancloud_client
 {
     const VERSION = '0.2.5';

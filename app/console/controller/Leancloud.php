@@ -1,6 +1,7 @@
 <?php
 
 namespace app\console\controller;
+
 /**
  * 程序说明
  */

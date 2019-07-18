@@ -976,7 +976,7 @@ function product_list($goods_id, $conditions = '')
                 ORDER BY $filter[sort_by] $filter[sort_order]";
 
         $filter['keyword'] = stripslashes($filter['keyword']);
-        //set_filter($filter, $sql, $param_str);
+    //set_filter($filter, $sql, $param_str);
     } else {
         $sql = $result['sql'];
         $filter = $result['filter'];

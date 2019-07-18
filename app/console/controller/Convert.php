@@ -57,7 +57,7 @@ elseif ($_REQUEST['act'] == 'check') {
     check_authz_json('convert');
 
     /* 取得参数 */
-        //    $_POST['JSON'] = '{"host":"localhost","db":"shopex","user":"root","pass":"123456","prefix":"sdb_","code":"shopex48","path":"../shopex","charset":"UTF8"}';
+    //    $_POST['JSON'] = '{"host":"localhost","db":"shopex","user":"root","pass":"123456","prefix":"sdb_","code":"shopex48","path":"../shopex","charset":"UTF8"}';
     $config = json_decode($_POST['JSON']);
 
     /* 测试连接数据库 */

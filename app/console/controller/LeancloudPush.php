@@ -1,6 +1,7 @@
 <?php
 
 namespace app\console\controller;
+
 include('leancloud_client.php');
 function delivery_msg_push($id, $db, $ecs)
 {

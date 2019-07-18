@@ -225,7 +225,7 @@ function send_mail($name, $email, $subject, $content, $type = 0, $notification =
                 return false;
             }
 
-                        static $smtp;
+            static $smtp;
 
             $send_params['recipients'] = $email;
             $send_params['headers'] = $headers;
@@ -268,7 +268,6 @@ function send_mail($name, $email, $subject, $content, $type = 0, $notification =
  */
 function gd_version()
 {
-
     return cls_image::gd_version();
 }
 
@@ -820,7 +819,7 @@ function ecs_iconv($source_lang, $target_lang, $source_string = '')
     }
 
     if ($chs === null) {
-                $chs = new Chinese(ROOT_PATH);
+        $chs = new Chinese(ROOT_PATH);
     }
 
     return $chs->Convert($source_lang, $target_lang, $source_string);

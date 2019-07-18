@@ -33,8 +33,7 @@ if (($ua == '' || preg_match($uachar, $ua)) && !strpos(strtolower($_SERVER['REQU
 /*------------------------------------------------------ */
 
 if (!empty($_REQUEST['act']) && $_REQUEST['act'] == 'price') {
-
-        $res = array('err_msg' => '', 'result' => '', 'qty' => 1);
+    $res = array('err_msg' => '', 'result' => '', 'qty' => 1);
 
     $attr_id = isset($_REQUEST['attr']) ? explode(',', $_REQUEST['attr']) : array();
     $number = (isset($_REQUEST['number'])) ? intval($_REQUEST['number']) : 1;
@@ -62,8 +61,7 @@ if (!empty($_REQUEST['act']) && $_REQUEST['act'] == 'price') {
 /*------------------------------------------------------ */
 
 if (!empty($_REQUEST['act']) && $_REQUEST['act'] == 'gotopage') {
-
-        $res = array('err_msg' => '', 'result' => '');
+    $res = array('err_msg' => '', 'result' => '');
 
     $goods_id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
     $page = (isset($_REQUEST['page'])) ? intval($_REQUEST['page']) : 1;
@@ -96,7 +94,8 @@ if (!empty($_REQUEST['act']) && $_REQUEST['act'] == 'gotopage') {
         $pager['page'] = $page;
         $pager['size'] = $size = 5;
         $pager['record_count'] = $count;
-        $pager['page_count'] = $page_count = ($count > 0) ? intval(ceil($count / $size)) : 1;;
+        $pager['page_count'] = $page_count = ($count > 0) ? intval(ceil($count / $size)) : 1;
+        ;
         $pager['page_first'] = "javascript:gotoBuyPage(1,$goods_id)";
         $pager['page_prev'] = $page > 1 ? "javascript:gotoBuyPage(" . ($page - 1) . ",$goods_id)" : 'javascript:;';
         $pager['page_next'] = $page < $page_count ? 'javascript:gotoBuyPage(' . ($page + 1) . ",$goods_id)" : 'javascript:;';

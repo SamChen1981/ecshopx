@@ -327,7 +327,7 @@ elseif ($_REQUEST['act'] == 'search') {
     check_authz_json('favourable');
 
 
-        $filter = json_decode($_GET['JSON']);
+    $filter = json_decode($_GET['JSON']);
     $filter->keyword = json_str_iconv($filter->keyword);
     if ($filter->act_range == FAR_ALL) {
         $arr[0] = array(

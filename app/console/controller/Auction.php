@@ -358,7 +358,7 @@ elseif ($_REQUEST['act'] == 'search_goods') {
     check_authz_json('auction');
 
 
-        $filter = json_decode($_GET['JSON']);
+    $filter = json_decode($_GET['JSON']);
     $arr['goods'] = get_goods_list($filter);
 
     if (!empty($arr['goods'][0]['goods_id'])) {
@@ -373,7 +373,6 @@ elseif ($_REQUEST['act'] == 'search_goods') {
 /*------------------------------------------------------ */
 
 elseif ($_REQUEST['act'] == 'search_products') {
-
     $filters = json_decode($_GET['JSON']);
 
     if (!empty($filters->goods_id)) {

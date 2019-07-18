@@ -116,7 +116,6 @@ $_CFG = load_config();
 
 // TODO : 登录部分准备拿出去做，到时候把以下操作一起挪过去
 if ($_REQUEST['act'] == 'captcha') {
-
     $img = new captcha('../data/captcha/', 104, 36);
     @ob_end_clean(); //清除之前出现的多余输入
     $img->generate_image();
@@ -182,7 +181,7 @@ if (isset($_GET['ent_id']) && isset($_GET['ent_ac']) && isset($_GET['ent_sign'])
     $domain_url = $ecs->url();
     $token = $_GET['token'];
     if ($token == md5(md5($_CFG['token']) . $domain_url . ADMIN_PATH)) {
-                $t = new transport('-1', 5);
+        $t = new transport('-1', 5);
         $apiget = "act=ent_sign&ent_id= $ent_id & certificate_id=$certificate_id";
 
         // $t->request('https://cloud-ecshop.xyunqi.com/api.php', $apiget);

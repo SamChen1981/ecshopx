@@ -422,8 +422,7 @@ function assign_pager(
     $filter_attr = '',
     $url_format = '',
     $sch_array = ''
-)
-{
+) {
     $sch = array('keywords' => $keywords,
         'sort' => $sort,
         'order' => $order,

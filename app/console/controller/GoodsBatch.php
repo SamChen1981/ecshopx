@@ -1,6 +1,7 @@
 <?php
 
 namespace app\console\controller;
+
 /**
  * 商品批量上传、修改
  */
@@ -319,7 +320,7 @@ elseif ($_REQUEST['act'] == 'insert') {
     admin_priv('goods_batch');
 
     if (isset($_POST['checked'])) {
-                $image = new cls_image($_CFG['bgcolor']);
+        $image = new cls_image($_CFG['bgcolor']);
 
         /* 字段默认值 */
         $default_value = array(

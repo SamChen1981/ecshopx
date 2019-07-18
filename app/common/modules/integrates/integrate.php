@@ -581,8 +581,8 @@ class integrate
                   if (!empty($cfg['ec_salt'])) {
                       return md5($cfg['md5password'].$cfg['ec_salt']);
                   } else {
-                   return $cfg['md5password'];
-               }
+                      return $cfg['md5password'];
+                  }
 
                // no break
            case PWD_PRE_SALT:

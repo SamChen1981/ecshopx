@@ -298,7 +298,7 @@ class Mysql
     {
         if ($message) {
             echo "<b>ECSHOP info</b>: $message\n\n<br /><br />";
-            //print('<a href="http://faq.comsenz.com/?type=mysql&dberrno=2003&dberror=Can%27t%20connect%20to%20MySQL%20server%20on" target="_blank">http://faq.comsenz.com/</a>');
+        //print('<a href="http://faq.comsenz.com/?type=mysql&dberrno=2003&dberror=Can%27t%20connect%20to%20MySQL%20server%20on" target="_blank">http://faq.comsenz.com/</a>');
         } else {
             echo "<b>MySQL server error report:";
             print_r($this->error_message);

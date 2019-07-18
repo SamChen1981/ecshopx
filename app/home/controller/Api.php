@@ -1,6 +1,7 @@
 <?php
 
 namespace app\home\controller;
+
 /**
  * OPEN API统一接口
  */
@@ -193,7 +194,7 @@ function ecmobile_fire_event()
     check_auth();   //检查基本权限
     $type = $_POST['type'];
     $args = $_POST['id'];
-        $matrix = new matrix;
+    $matrix = new matrix;
 
     switch ($type) {
         case 'member_create':
@@ -224,7 +225,7 @@ function yunqi_send_sms()
         api_response('fail', 'ERR_PARAMS', '', RETURN_TYPE);
     }
 
-        $sms = new sms();
+    $sms = new sms();
     $is_succ = $sms->send($_POST['phone'], $_POST['content']) ? 'true' : 'fail';
     api_response($is_succ, '', '', RETURN_TYPE);
 }
@@ -296,7 +297,7 @@ function ome_update_order_item()
         $order['pay_status'] = ($order['pay_status'] == 2 ? 2 : 1);    //如果2是支付中，否则已支付
     } elseif ($refunds = $data['payed_fee'] - $data['total_trade_fee'] > 0) {// 支付金额多余订单总金额
         $order['pay_status'] = 2;
-        //多余的钱需要请求退款接口进行退还到预存款
+    //多余的钱需要请求退款接口进行退还到预存款
     } elseif ($order['order_amount'] > 0) {//部分支付(ecshop没有部分付款，视为未支付)
         $order['pay_status'] = 0;
     }
@@ -656,7 +657,7 @@ function search_order_lists()
     $result['trades'] = array();
 
     //订单结构体
-        $matrix = new matrix;
+    $matrix = new matrix;
     $msg = $matrix->getOrderStruct($order_id, $fields);
     foreach ($row as $val) {
         if ($params = $matrix->getOrderStruct($val['order_sn'], $fields)) {
@@ -680,7 +681,7 @@ function get_orders_info()
     $fields = $data['fields'] ? trim($data['fields']) : '*';
     $order_id = trim($data['order_id']);
     $all = $data['search_all'] ? true : false;
-        $matrix = new matrix;
+    $matrix = new matrix;
     $msg = $matrix->getOrderStruct($order_id, $fields);
     if ($msg) {
         $result['trade'] = last_filter_params($msg, $fields);
@@ -958,7 +959,7 @@ function update_order_status()
                         $loginfo['behavior'] = '死单';
                         $status = 2;
                     } else {
-                                                $matrix = new matrix;
+                        $matrix = new matrix;
                         $matrix->updateOrder($order_sn);
                         api_err('0x003', "pay_status 不是未支付状态");
                     }
@@ -1343,7 +1344,7 @@ function data_back($info, $msg = '', $post, $result = 'success')
         die('<?xml version="1.0" encoding="UTF-8"?>' . array2xml($data_arr));
     } else {
         /* json方式 */
-                // error_log(print_R(json_encode($data_arr),1)."\n",3,"/tmp/chen_".date('Y-m-d',time()).".log");
+        // error_log(print_R(json_encode($data_arr),1)."\n",3,"/tmp/chen_".date('Y-m-d',time()).".log");
         die(json_encode($data_arr));    //把生成的返回字符串打印出来
     }
 }
@@ -1477,7 +1478,7 @@ function get_certinfo()
     if (!$data['node_id'] || !$data['token']) {
         api_err('0x003', 'required date invalid');
     }
-        $cert = new certificate();
+    $cert = new certificate();
     //验证是否有eid的账号认证过
     $row = $GLOBALS['db']->getRow("select user_id from " . $GLOBALS['ecs']->table('admin_user') . " where passport_uid = '" . trim($data['eid']) . "'");
     if ($row) {
@@ -1924,7 +1925,7 @@ function fy_logistics_offline_send()
 
             /* 如果需要，发短信 */
             if ($GLOBALS['_CFG']['sms_order_shipped'] == '1' && $order['mobile'] != '') {
-                                $sms = new sms();
+                $sms = new sms();
                 $sms->send($order['mobile'], sprintf(
                     $GLOBALS['_LANG']['order_shipped_sms'],
                     $order['order_sn'],
@@ -2304,7 +2305,7 @@ function ome_create_payments()
         } else {
             log_account_other_change($order['user_id'], $order['order_id'], $order['order_sn'], $data['money'], $data['payment'], $data['t_end']);
         }
-                $matrix = new matrix;
+        $matrix = new matrix;
         $matrix->updateOrder($order['order_sn']);
         // 请求crm
         update_order_crm($order['order_sn']);
@@ -2400,7 +2401,7 @@ function ome_create_reimburse()
         }
         if ($order['money_paid'] - $data['cur_money'] >= 0) {
             $arr['money_paid'] = $order['money_paid'] - $data['cur_money'];
-            // $arr['order_amount'] = $arr['order_amount'] - $data['cur_money'];
+        // $arr['order_amount'] = $arr['order_amount'] - $data['cur_money'];
         } elseif ($order['money_paid'] + $order['surplus'] >= $data['cur_money']) {
             $arr['money_paid'] = 0;
             $arr['surplus'] = $order['surplus'] + $order['money_paid'] - $data['cur_money'];
@@ -2433,7 +2434,7 @@ function send_refund_to_matrix($data)
     $msg['pay_type'] = $data['pay_type'] ? $data['pay_type'] : 'deposit';
     $msg['status'] = 'SUCC';
     $msg['t_begin'] = date('Y-m-d H:i:s', time());
-        $matrix = new matrix;
+    $matrix = new matrix;
     $is_succ = $matrix->send_refund_to_matrix($msg);
     $is_succ = $matrix->updateOrder($data['order_id']);
 }
@@ -2447,7 +2448,7 @@ function send_refund_to_crm($data)
     $msg['pay_type'] = $data['pay_type'] ? $data['pay_type'] : 'deposit';
     $msg['status'] = 'SUCC';
     $msg['t_begin'] = date('Y-m-d H:i:s', time());
-        $matrix = new matrix;
+    $matrix = new matrix;
     $bind_info = $matrix->get_bind_info(array('ecos.taocrm'));
     if ($bind_info) {
         $matrix->send_refund_to_crm($msg);
@@ -2676,7 +2677,7 @@ function ome_create_delivery()
                 /* 如果需要，发短信 */
                 if ($GLOBALS['_CFG']['sms_order_shipped'] == '1' && $order['mobile'] != '') {
                     require_once(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/admin/order.php');
-                                        $sms = new sms();
+                    $sms = new sms();
                     $sms->send($order['mobile'], sprintf(
                         $GLOBALS['_LANG']['order_shipped_sms'],
                         $order['order_sn'],
@@ -3563,7 +3564,7 @@ function gallery($goods_data, $goods)
     }
 
     include_once(ROOT_PATH . '/' . ADMIN_PATH . '/includes/lib_goods.php');
-        //筛选出没有保存的图片
+    //筛选出没有保存的图片
     if ($images = array_diff($images, $tmp_img_arr)) {
         $_CFG = load_config();
         $GLOBALS['image'] = new cls_image($_CFG['bgcolor']);
@@ -3728,7 +3729,7 @@ function shopex_goods_search()
 // 更新订单到crm
 function update_order_crm($order_sn)
 {
-        $matrix = new matrix();
+    $matrix = new matrix();
     $bind_info = $matrix->get_bind_info(array('ecos.taocrm'));
     if ($bind_info) {
         return $matrix->updateOrder($order_sn, 'ecos.taocrm');

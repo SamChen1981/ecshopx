@@ -80,7 +80,7 @@ function exchange_shop_license($certi, $license, $use_lib = 0)
     $request_str = json_str_iconv($request['body']);
 
     if (empty($use_lib)) {
-                $request_arr = json_decode($request_str, 1);
+        $request_arr = json_decode($request_str, 1);
     } else {
         include_once(ROOT_PATH . 'includes/shopex_json.php');
         $request_arr = json_decode($request_str, 1);

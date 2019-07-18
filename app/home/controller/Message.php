@@ -18,7 +18,7 @@ if ($action == 'act_add_message') {
 
     /* 验证码防止灌水刷屏 */
     if ((intval($_CFG['captcha']) & CAPTCHA_MESSAGE) && gd_version() > 0) {
-                $validator = new captcha();
+        $validator = new captcha();
         if (!$validator->check_word($_POST['captcha'])) {
             show_message($_LANG['invalid_captcha']);
         }

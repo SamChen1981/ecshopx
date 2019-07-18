@@ -21,7 +21,7 @@ if (empty($_GET['is_ajax'])) {
     $smarty->assign('brand_list', get_brand_list());
     $smarty->display('picture_batch.htm');
 } elseif (!empty($_GET['get_goods'])) {
-            $brand_id = intval($_GET['brand_id']);
+    $brand_id = intval($_GET['brand_id']);
     $cat_id = intval($_GET['cat_id']);
     $goods_where = '';
 
@@ -36,7 +36,7 @@ if (empty($_GET['is_ajax'])) {
 
     die(json_encode($db->getAll($sql)));
 } else {
-            $proc_thumb = (isset($GLOBALS['shop_id']) && $GLOBALS['shop_id'] > 0);
+    $proc_thumb = (isset($GLOBALS['shop_id']) && $GLOBALS['shop_id'] > 0);
     $do_album = empty($_GET['do_album']) ? 0 : 1;
     $do_icon = empty($_GET['do_icon']) ? 0 : 1;
     $goods_id = trim($_GET['goods_id']);

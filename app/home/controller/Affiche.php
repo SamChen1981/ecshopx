@@ -1,6 +1,7 @@
 <?php
 
 namespace app\home\controller;
+
 /**
  * 广告处理文件
  */

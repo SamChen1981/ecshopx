@@ -587,7 +587,6 @@ if ($_REQUEST['act'] == 'gen_excel') {
 //-- 搜索商品
 /*------------------------------------------------------ */
 if ($_REQUEST['act'] == 'get_goods_list') {
-
     $filters = json_decode($_GET['JSON']);
 
     $arr = get_goods_list($filters);
@@ -606,7 +605,6 @@ if ($_REQUEST['act'] == 'get_goods_list') {
 //-- 添加发放红包的商品
 /*------------------------------------------------------ */
 if ($_REQUEST['act'] == 'add_bonus_goods') {
-
     check_authz_json('bonus_manage');
 
     $add_ids = json_decode($_GET['add_ids']);
@@ -635,7 +633,6 @@ if ($_REQUEST['act'] == 'add_bonus_goods') {
 //-- 删除发放红包的商品
 /*------------------------------------------------------ */
 if ($_REQUEST['act'] == 'drop_bonus_goods') {
-
     check_authz_json('bonus_manage');
 
     $drop_goods = json_decode($_GET['drop_ids']);

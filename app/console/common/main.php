@@ -504,8 +504,6 @@ function get_charset_list()
  */
 function make_json_response($content = '', $error = "0", $message = '', $append = array())
 {
-
-
     $res = array('error' => $error, 'message' => $message, 'content' => $content);
 
     if (!empty($append)) {
