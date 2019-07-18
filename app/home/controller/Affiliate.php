@@ -1,12 +1,13 @@
 <?php
 
+namespace app\home\controller;
+
 /**
  * 生成商品列表
  */
 
-define('IN_ECS', true);
 
-require(dirname(__FILE__) . '/includes/init.php');
+
 
 if ((DEBUG_MODE & 2) != 2) {
     $smarty->caching = true;
@@ -16,9 +17,9 @@ if ((DEBUG_MODE & 2) != 2) {
 $display_mode = empty($_GET['display_mode']) ? 'javascript' : $_GET['display_mode'];
 
 if ($display_mode == 'javascript') {
-    $charset_array=array('UTF8','GBK','gbk','utf8','GB2312','gb2312');
+    $charset_array = array('UTF8', 'GBK', 'gbk', 'utf8', 'GB2312', 'gb2312');
     if (!in_array($charset, $charset_array)) {
-        $charset='UTF8';
+        $charset = 'UTF8';
     }
     header('content-type: application/x-javascript; charset=' . ($charset == 'UTF8' ? 'utf-8' : $charset));
 }

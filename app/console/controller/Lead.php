@@ -1,17 +1,18 @@
 <?php
 
+namespace app\console\controller;
+
 /**
  * 程序说明
  */
 
-define('IN_ECS', true);
 
-require(dirname(__FILE__) . '/includes/init.php');
+
 
 /*------------------------------------------------------ */
 //-- 移动端全民分销开通引导页
 /*------------------------------------------------------ */
-if ($_REQUEST['act']== 'list') {
+if ($_REQUEST['act'] == 'list') {
     /* 检查权限 */
     admin_priv('lead');
     $url_cur = $_SERVER['HTTP_REFERER'];

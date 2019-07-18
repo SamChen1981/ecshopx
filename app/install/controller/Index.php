@@ -4,12 +4,11 @@
  * 安装程序 之 控制器
  */
 
-define('IN_ECS', true);
+
 if (isset($_REQUEST['dbhost']) || isset($_REQUEST['dbname']) || isset($_REQUEST['dbuser']) || isset($_REQUEST['dbpass']) || isset($_REQUEST['password']) || isset($_REQUEST['data'])) {
     include("./auto_index.php");
     exit;
 }
-require(dirname(__FILE__) . '/includes/init.php');
 session_start();
 /* 初始化语言变量 */
 $installer_lang = isset($_REQUEST['lang']) ? trim($_REQUEST['lang']) : 'zh_cn';

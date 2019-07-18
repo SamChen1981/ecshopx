@@ -1,12 +1,13 @@
 <?php
 
+namespace app\home\controller;
+
 /**
  * 支付响应页面
  */
 
-define('IN_ECS', true);
 
-require(dirname(__FILE__) . '/includes/init.php');
+
 require(ROOT_PATH . 'includes/lib_payment.php');
 require(ROOT_PATH . 'includes/lib_order.php');
 /* 支付方式代码 */
@@ -20,7 +21,7 @@ if (empty($pay_code) && !empty($_REQUEST['v_pmode']) && !empty($_REQUEST['v_pstr
 //pc微信扫码的判断
 if (empty($pay_code)) {
     $xml = file_get_contents('php://input');
-    if (strpos($xml, '<xml><appid>')!== false && strpos($xml, 'openid') !== false) {
+    if (strpos($xml, '<xml><appid>') !== false && strpos($xml, 'openid') !== false) {
         $pay_code = 'wxpaynative';
     }
 }
@@ -54,11 +55,11 @@ if (empty($pay_code)) {
         $arr1 = explode('?', $pay_code);
         $arr2 = explode('=', $arr1[1]);
 
-        $_REQUEST['code']   = $arr1[0];
+        $_REQUEST['code'] = $arr1[0];
         $_REQUEST[$arr2[0]] = $arr2[1];
-        $_GET['code']       = $arr1[0];
-        $_GET[$arr2[0]]     = $arr2[1];
-        $pay_code           = $arr1[0];
+        $_GET['code'] = $arr1[0];
+        $_GET[$arr2[0]] = $arr2[1];
+        $pay_code = $arr1[0];
     }
 
     /* 判断是否启用 */
@@ -66,14 +67,14 @@ if (empty($pay_code)) {
     if ($db->getOne($sql) == 0) {
         $msg = $_LANG['pay_disabled'];
     } else {
-        $plugin_file = dirname(__FILE__).'/includes/modules/payment/' . $pay_code . '.php';
+        $plugin_file = dirname(__FILE__) . '/includes/modules/payment/' . $pay_code . '.php';
         /* 检查插件文件是否存在，如果存在则验证支付是否成功，否则则返回失败信息 */
         if (file_exists($plugin_file)) {
             /* 根据支付方式代码创建支付类的对象并调用其响应操作方法 */
             include_once($plugin_file);
 
             $payment = new $pay_code();
-            $msg     = (@$payment->respond()) ? $_LANG['pay_success'] : $_LANG['pay_fail'];
+            $msg = (@$payment->respond()) ? $_LANG['pay_success'] : $_LANG['pay_fail'];
         } else {
             $msg = $_LANG['pay_not_exist'];
         }

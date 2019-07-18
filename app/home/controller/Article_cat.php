@@ -1,13 +1,14 @@
 <?php
 
+namespace app\home\controller;
+
 /**
  * 文章分类
  */
 
 
-define('IN_ECS', true);
 
-require(dirname(__FILE__) . '/includes/init.php');
+
 
 if ((DEBUG_MODE & 2) != 2) {
     $smarty->caching = true;
@@ -32,7 +33,7 @@ if (!empty($_GET['id'])) {
 }
 
 /* 获得当前页码 */
-$page   = !empty($_REQUEST['page'])  && intval($_REQUEST['page'])  > 0 ? intval($_REQUEST['page'])  : 1;
+$page = !empty($_REQUEST['page']) && intval($_REQUEST['page']) > 0 ? intval($_REQUEST['page']) : 1;
 
 /*------------------------------------------------------ */
 //-- PROCESSOR
@@ -73,9 +74,9 @@ if (!$smarty->is_cached('article_cat.dwt', $cache_id)) {
     $smarty->assign('description', htmlspecialchars($meta['cat_desc']));
 
     /* 获得文章总数 */
-    $size   = isset($_CFG['article_page_size']) && intval($_CFG['article_page_size']) > 0 ? intval($_CFG['article_page_size']) : 20;
-    $count  = get_article_count($cat_id);
-    $pages  = ($count > 0) ? ceil($count / $size) : 1;
+    $size = isset($_CFG['article_page_size']) && intval($_CFG['article_page_size']) > 0 ? intval($_CFG['article_page_size']) : 20;
+    $count = get_article_count($cat_id);
+    $pages = ($count > 0) ? ceil($count / $size) : 1;
 
     if ($page > $pages) {
         $page = $pages;
@@ -92,8 +93,8 @@ if (!$smarty->is_cached('article_cat.dwt', $cache_id)) {
 
         $smarty->assign('search_value', stripslashes(stripslashes($keywords)));
         $smarty->assign('search_url', $search_url);
-        $count  = get_article_count($cat_id, $keywords);
-        $pages  = ($count > 0) ? ceil($count / $size) : 1;
+        $count = get_article_count($cat_id, $keywords);
+        $pages = ($count > 0) ? ceil($count / $size) : 1;
         if ($page > $pages) {
             $page = $pages;
         }

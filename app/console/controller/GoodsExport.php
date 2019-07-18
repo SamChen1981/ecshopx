@@ -1,8 +1,9 @@
 <?php
 
-define('IN_ECS', true);
+namespace app\console\controller;
 
-require(dirname(__FILE__) . '/includes/init.php');
+
+
 
 if ($_REQUEST['act'] == 'goods_export') {
     /* 检查权限 */

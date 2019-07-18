@@ -1,12 +1,13 @@
 <?php
 
+namespace app\console\controller;
+
 /**
  * 文章分类管理程序
  */
 
-define('IN_ECS', true);
 
-require(dirname(__FILE__) . '/includes/init.php');
+
 $exc = new exchange($ecs->table("article_cat"), $db, 'cat_id', 'cat_name');
 /* act操作项的初始化 */
 $_REQUEST['act'] = trim($_REQUEST['act']);
@@ -81,15 +82,15 @@ elseif ($_REQUEST['act'] == 'add') {
     }
 
 
-    $sql = "INSERT INTO ".$ecs->table('article_cat')."(cat_name, cat_type, cat_desc,keywords, parent_id, sort_order, show_in_nav)
+    $sql = "INSERT INTO " . $ecs->table('article_cat') . "(cat_name, cat_type, cat_desc,keywords, parent_id, sort_order, show_in_nav)
            VALUES ('$_POST[cat_name]', '$cat_type',  '$_POST[cat_desc]','$_POST[keywords]', '$_POST[parent_id]', '$_POST[sort_order]', '$_POST[show_in_nav]')";
     $db->query($sql);
 
     if ($_POST['show_in_nav'] == 1) {
-        $vieworder = $db->getOne("SELECT max(vieworder) FROM ". $ecs->table('nav') . " WHERE type = 'middle'");
+        $vieworder = $db->getOne("SELECT max(vieworder) FROM " . $ecs->table('nav') . " WHERE type = 'middle'");
         $vieworder += 2;
         //显示在自定义导航栏中
-        $sql = "INSERT INTO " . $ecs->table('nav') . " (name,ctype,cid,ifshow,vieworder,opennew,url,type) VALUES('" . $_POST['cat_name'] . "', 'a', '" . $db->insert_id() . "','1','$vieworder','0', '" . build_uri('article_cat', array('acid'=> $db->insert_id()), $_POST['cat_name']) . "','middle')";
+        $sql = "INSERT INTO " . $ecs->table('nav') . " (name,ctype,cid,ifshow,vieworder,opennew,url,type) VALUES('" . $_POST['cat_name'] . "', 'a', '" . $db->insert_id() . "','1','$vieworder','0', '" . build_uri('article_cat', array('acid' => $db->insert_id()), $_POST['cat_name']) . "','middle')";
         $db->query($sql);
     }
 
@@ -101,7 +102,7 @@ elseif ($_REQUEST['act'] == 'add') {
     $link[1]['text'] = $_LANG['back_list'];
     $link[1]['href'] = 'articlecat.php?act=list';
     clear_cache_files();
-    sys_msg($_POST['cat_name'].$_LANG['catadd_succed'], 0, $link);
+    sys_msg($_POST['cat_name'] . $_LANG['catadd_succed'], 0, $link);
 }
 
 /*------------------------------------------------------ */
@@ -111,16 +112,16 @@ elseif ($_REQUEST['act'] == 'edit') {
     /* 权限判断 */
     admin_priv('article_cat');
 
-    $sql = "SELECT cat_id, cat_name, cat_type, cat_desc, show_in_nav, keywords, parent_id,sort_order FROM ".
-           $ecs->table('article_cat'). " WHERE cat_id='$_REQUEST[id]'";
+    $sql = "SELECT cat_id, cat_name, cat_type, cat_desc, show_in_nav, keywords, parent_id,sort_order FROM " .
+        $ecs->table('article_cat') . " WHERE cat_id='$_REQUEST[id]'";
     $cat = $db->GetRow($sql);
 
-    if ($cat['cat_type'] == 2 || $cat['cat_type'] == 3 || $cat['cat_type'] ==4) {
+    if ($cat['cat_type'] == 2 || $cat['cat_type'] == 3 || $cat['cat_type'] == 4) {
         $smarty->assign('disabled', 1);
     }
-    $options    =   article_cat_list(0, $cat['parent_id'], false);
-    $select     =   '';
-    $selected   =   $cat['parent_id'];
+    $options = article_cat_list(0, $cat['parent_id'], false);
+    $select = '';
+    $selected = $cat['parent_id'];
     foreach ($options as $var) {
         if ($var['cat_id'] == $_REQUEST['id']) {
             continue;
@@ -162,7 +163,7 @@ elseif ($_REQUEST['act'] == 'edit') {
 
     $row = $db->getRow("SELECT cat_type, parent_id FROM " . $ecs->table('article_cat') . " WHERE cat_id='$_POST[id]'");
     $cat_type = $row['cat_type'];
-    if ($cat_type == 3 || $cat_type ==4) {
+    if ($cat_type == 3 || $cat_type == 4) {
         $_POST['parent_id'] = $row['parent_id'];
     }
 
@@ -191,7 +192,7 @@ elseif ($_REQUEST['act'] == 'edit') {
         }
     }
 
-    $dat = $db->getOne("SELECT cat_name, show_in_nav FROM ". $ecs->table('article_cat') . " WHERE cat_id = '" . $_POST['id'] . "'");
+    $dat = $db->getOne("SELECT cat_name, show_in_nav FROM " . $ecs->table('article_cat') . " WHERE cat_id = '" . $_POST['id'] . "'");
     if ($exc->edit("cat_name = '$_POST[cat_name]', cat_desc ='$_POST[cat_desc]', keywords='$_POST[keywords]',parent_id = '$_POST[parent_id]', cat_type='$cat_type', sort_order='$_POST[sort_order]', show_in_nav = '$_POST[show_in_nav]'", $_POST['id'])) {
         if ($_POST['cat_name'] != $dat['cat_name']) {
             //如果分类名称发生了改变
@@ -201,14 +202,14 @@ elseif ($_REQUEST['act'] == 'edit') {
         if ($_POST['show_in_nav'] != $dat['show_in_nav']) {
             if ($_POST['show_in_nav'] == 1) {
                 //显示
-                $nid = $db->getOne("SELECT id FROM ". $ecs->table('nav') . " WHERE ctype = 'a' AND cid = '" . $_POST['id'] . "' AND type = 'middle'");
+                $nid = $db->getOne("SELECT id FROM " . $ecs->table('nav') . " WHERE ctype = 'a' AND cid = '" . $_POST['id'] . "' AND type = 'middle'");
                 if (empty($nid)) {
-                    $vieworder = $db->getOne("SELECT max(vieworder) FROM ". $ecs->table('nav') . " WHERE type = 'middle'");
+                    $vieworder = $db->getOne("SELECT max(vieworder) FROM " . $ecs->table('nav') . " WHERE type = 'middle'");
                     $vieworder += 2;
-                    $uri = build_uri('article_cat', array('acid'=> $_POST['id']), $_POST['cat_name']);
+                    $uri = build_uri('article_cat', array('acid' => $_POST['id']), $_POST['cat_name']);
                     //不存在
                     $sql = "INSERT INTO " . $ecs->table('nav') .
-                        " (name,ctype,cid,ifshow,vieworder,opennew,url,type) ".
+                        " (name,ctype,cid,ifshow,vieworder,opennew,url,type) " .
                         "VALUES('" . $_POST['cat_name'] . "', 'a', '" . $_POST['id'] . "','1','$vieworder','0', '" . $uri . "','middle')";
                 } else {
                     $sql = "UPDATE " . $ecs->table('nav') . " SET ifshow = 1 WHERE ctype = 'a' AND cid = '" . $_POST['id'] . "' AND type = 'middle'";
@@ -238,7 +239,7 @@ elseif ($_REQUEST['act'] == 'edit') {
 elseif ($_REQUEST['act'] == 'edit_sort_order') {
     check_authz_json('article_cat');
 
-    $id    = intval($_POST['id']);
+    $id = intval($_POST['id']);
     $order = json_str_iconv(trim($_POST['val']));
 
     /* 检查输入的值是否合法 */
@@ -264,7 +265,7 @@ elseif ($_REQUEST['act'] == 'remove') {
 
     $sql = "SELECT cat_type FROM " . $ecs->table('article_cat') . " WHERE cat_id = '$id'";
     $cat_type = $db->getOne($sql);
-    if ($cat_type == 2 || $cat_type == 3 || $cat_type ==4) {
+    if ($cat_type == 2 || $cat_type == 3 || $cat_type == 4) {
         /* 系统保留分类，不能删除 */
         make_json_error($_LANG['not_allow_remove']);
     }
@@ -276,7 +277,7 @@ elseif ($_REQUEST['act'] == 'remove') {
     }
 
     /* 非空的分类不允许删除 */
-    $sql = "SELECT COUNT(*) FROM ".$ecs->table('article')." WHERE cat_id = '$id'";
+    $sql = "SELECT COUNT(*) FROM " . $ecs->table('article') . " WHERE cat_id = '$id'";
     if ($db->getOne($sql) > 0) {
         make_json_error(sprintf($_LANG['not_emptycat']));
     } else {
@@ -304,15 +305,15 @@ if ($_REQUEST['act'] == 'toggle_show_in_nav') {
     if (cat_update($id, array('show_in_nav' => $val)) != false) {
         if ($val == 1) {
             //显示
-            $nid = $db->getOne("SELECT id FROM ". $ecs->table('nav') . " WHERE ctype='a' AND cid='$id' AND type = 'middle'");
+            $nid = $db->getOne("SELECT id FROM " . $ecs->table('nav') . " WHERE ctype='a' AND cid='$id' AND type = 'middle'");
             if (empty($nid)) {
                 //不存在
-                $vieworder = $db->getOne("SELECT max(vieworder) FROM ". $ecs->table('nav') . " WHERE type = 'middle'");
+                $vieworder = $db->getOne("SELECT max(vieworder) FROM " . $ecs->table('nav') . " WHERE type = 'middle'");
                 $vieworder += 2;
-                $catname = $db->getOne("SELECT cat_name FROM ". $ecs->table('article_cat') . " WHERE cat_id = '$id'");
-                $uri = build_uri('article_cat', array('acid'=> $id), $_POST['cat_name']);
+                $catname = $db->getOne("SELECT cat_name FROM " . $ecs->table('article_cat') . " WHERE cat_id = '$id'");
+                $uri = build_uri('article_cat', array('acid' => $id), $_POST['cat_name']);
 
-                $sql = "INSERT INTO " . $ecs->table('nav') . " (name,ctype,cid,ifshow,vieworder,opennew,url,type) ".
+                $sql = "INSERT INTO " . $ecs->table('nav') . " (name,ctype,cid,ifshow,vieworder,opennew,url,type) " .
                     "VALUES('" . $catname . "', 'a', '$id','1','$vieworder','0', '" . $uri . "','middle')";
             } else {
                 $sql = "UPDATE " . $ecs->table('nav') . " SET ifshow = 1 WHERE ctype='a' AND cid='$id' AND type = 'middle'";
@@ -332,8 +333,8 @@ if ($_REQUEST['act'] == 'toggle_show_in_nav') {
 /**
  * 添加商品分类
  *
- * @param   integer $cat_id
- * @param   array   $args
+ * @param integer $cat_id
+ * @param array $args
  *
  * @return  mix
  */

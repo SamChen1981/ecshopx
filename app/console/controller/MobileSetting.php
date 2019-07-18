@@ -1,28 +1,29 @@
 <?php
 
+namespace app\console\controller;
+
 /**
  * 程序说明
  */
 
-define('IN_ECS', true);
 
-require(dirname(__FILE__) . '/includes/init.php');
-include_once(ROOT_PATH."includes/cls_certificate.php");
+
+include_once(ROOT_PATH . "includes/cls_certificate.php");
 $uri = $ecs->url();
 $allow_suffix = array('gif', 'jpg', 'png', 'jpeg', 'bmp');
 
 /*------------------------------------------------------ */
 //-- 移动端应用配置
 /*------------------------------------------------------ */
-if ($_REQUEST['act']== 'list') {
+if ($_REQUEST['act'] == 'list') {
     /* 检查权限 */
     admin_priv('mobile_setting');
     $smarty->assign('ur_here', $_LANG['banner_mobile']);
     $cert = new certificate;
     $isOpenWap = $cert->is_open_sn('fy');
-    if ($isOpenWap==false && $_SESSION['yunqi_login'] && $_SESSION['TOKEN']) {
+    if ($isOpenWap == false && $_SESSION['yunqi_login'] && $_SESSION['TOKEN']) {
         $result = $cert->getsnlistoauth($_SESSION['TOKEN'], array());
-        if ($result['status']=='success') {
+        if ($result['status'] == 'success') {
             $cert->save_snlist($result['data']);
             $isOpenWap = $cert->is_open_sn('fy');
         }
@@ -46,7 +47,7 @@ if ($_REQUEST['act']== 'list') {
     $smarty->assign('playerdb', $playerdb);
     $smarty->assign('group_list', $grouplist);
     $smarty->display('banner_config.html');
-} elseif ($_REQUEST['act']== 'del') {
+} elseif ($_REQUEST['act'] == 'del') {
     admin_priv('flash_manage');
 
     $id = (int)$_GET['id'];
@@ -79,11 +80,11 @@ if ($_REQUEST['act']== 'list') {
         $url = isset($_GET['url']) ? $_GET['url'] : (defined('FORCE_SSL_LOGIN') ? 'https://' : 'http://');
         $src = isset($_GET['src']) ? $_GET['src'] : '';
         $sort = 0;
-        $rt = array('act'=>'add','img_url'=>$url,'img_src'=>$src, 'img_sort'=>$sort);
-        $rt = array('act'=>'add','img_url'=>$url,'img_src'=>$src, 'img_sort'=>$sort);
+        $rt = array('act' => 'add', 'img_url' => $url, 'img_src' => $src, 'img_sort' => $sort);
+        $rt = array('act' => 'add', 'img_url' => $url, 'img_src' => $src, 'img_sort' => $sort);
         $width_height = get_width_height();
         assign_query_info();
-        if (isset($width_height['width'])|| isset($width_height['height'])) {
+        if (isset($width_height['width']) || isset($width_height['height'])) {
             $smarty->assign('width_height', sprintf($_LANG['width_height'], $width_height['width'], $width_height['height']));
         }
 
@@ -128,11 +129,11 @@ if ($_REQUEST['act']== 'list') {
         $flashdb = get_flash_xml();
 
         // 插入新数据
-        array_unshift($flashdb, array('src'=>$src, 'url'=>$_POST['img_url'], 'text'=>$_POST['img_text'] ,'sort'=>$_POST['img_sort']));
+        array_unshift($flashdb, array('src' => $src, 'url' => $_POST['img_url'], 'text' => $_POST['img_text'], 'sort' => $_POST['img_sort']));
 
         // 实现排序
-        $flashdb_sort   = array();
-        $_flashdb       = array();
+        $flashdb_sort = array();
+        $_flashdb = array();
         foreach ($flashdb as $key => $value) {
             $flashdb_sort[$key] = $value['sort'];
         }
@@ -196,7 +197,7 @@ if ($_REQUEST['act']== 'list') {
                 $src = DATA_DIR . '/afficheimg/' . $name;
             }
         } elseif (!empty($_POST['img_src'])) {
-            $src =$_POST['img_src'];
+            $src = $_POST['img_src'];
             if (!get_file_suffix($_POST['img_src'], $allow_suffix)) {
                 sys_msg($_LANG['invalid_type']);
             }
@@ -211,11 +212,11 @@ if ($_REQUEST['act']== 'list') {
         if (strpos($rt['src'], 'http') === false && $rt['src'] != $src) {
             @unlink(ROOT_PATH . $rt['src']);
         }
-        $flashdb[$id] = array('src'=>$src,'url'=>$_POST['img_url'],'text'=>$_POST['img_text'],'sort'=>$_POST['img_sort']);
+        $flashdb[$id] = array('src' => $src, 'url' => $_POST['img_url'], 'text' => $_POST['img_text'], 'sort' => $_POST['img_sort']);
 
         // 实现排序
-        $flashdb_sort   = array();
-        $_flashdb       = array();
+        $flashdb_sort = array();
+        $_flashdb = array();
         foreach ($flashdb as $key => $value) {
             $flashdb_sort[$key] = $value['sort'];
         }
@@ -246,7 +247,7 @@ function get_flash_xml()
         if (!empty($t)) {
             foreach ($t as $key => $val) {
                 $val[4] = isset($val[4]) ? $val[4] : 0;
-                $flashdb[] = array('src'=>$val[1],'url'=>$val[2],'text'=>$val[3],'sort'=>$val[4]);
+                $flashdb[] = array('src' => $val[1], 'url' => $val[2], 'text' => $val[3], 'sort' => $val[4]);
             }
         }
     }
@@ -324,7 +325,7 @@ function get_width_height()
 function get_flash_templates($dir)
 {
     $flashtpls = array();
-    $template_dir        = @opendir($dir);
+    $template_dir = @opendir($dir);
     while ($file = readdir($template_dir)) {
         if ($file != '.' && $file != '..' && is_dir($dir . $file) && $file != '.svn' && $file != 'index.htm') {
             $flashtpls[] = get_flash_tpl_info($dir, $file);
@@ -343,8 +344,8 @@ function get_flash_tpl_info($dir, $file)
         $arr = array_slice(file($dir . $file . '/cycle_image.js'), 1, 2);
         $info_name = explode(':', $arr[0]);
         $info_desc = explode(':', $arr[1]);
-        $info['name'] = isset($info_name[1])?trim($info_name[1]):'';
-        $info['desc'] = isset($info_desc[1])?trim($info_desc[1]):'';
+        $info['name'] = isset($info_name[1]) ? trim($info_name[1]) : '';
+        $info['desc'] = isset($info_desc[1]) ? trim($info_desc[1]) : '';
     }
     return $info;
 }
@@ -356,18 +357,18 @@ function set_flash_data($tplname, &$msg)
         $flashdata[] = array(
             'src' => 'data/afficheimg/20081027angsif.jpg',
             'text' => 'ECShop',
-            'url' =>'http://www.ecshop.com'
+            'url' => 'http://www.ecshop.com'
         );
         $flashdata[] = array(
             'src' => 'data/afficheimg/20081027wdwd.jpg',
             'text' => 'wdwd',
-            'url' =>'https://www.wdwd.com'
+            'url' => 'https://www.wdwd.com'
         );
         $flashdata[] = array(
             'src' => 'data/afficheimg/20081027xuorxj.jpg',
             'text' => 'ECShop',
             // 'url' =>'http://help.ecshop.com/index.php?doc-view-108.htm'
-            'url' =>'https://help-ecshop.xyunqi.com/index.php?doc-view-108.htm'
+            'url' => 'https://help-ecshop.xyunqi.com/index.php?doc-view-108.htm'
         );
     }
     switch ($tplname) {
@@ -462,11 +463,11 @@ function ad_list()
                                    ELSE '' END AS type_name, ad_name, add_time, CASE WHEN ad_status = 1 THEN '启用' ELSE '关闭' END AS status_name, ad_type, ad_status
                 FROM " . $GLOBALS['ecs']->table("ad_custom") . "
                 $where
-                ORDER BY " . $filter['sort_by'] . " " . $filter['sort_order']. " ";
+                ORDER BY " . $filter['sort_by'] . " " . $filter['sort_order'] . " ";
 
         set_filter($filter, $sql);
     } else {
-        $sql    = $result['sql'];
+        $sql = $result['sql'];
         $filter = $result['filter'];
     }
 
@@ -485,8 +486,8 @@ function ad_list()
 /**
  * 修改自定义相状态
  *
- * @param   int     $ad_id       自定义广告 id
- * @param   int     $ad_status   自定义广告 状态 0，关闭；1，开启。
+ * @param int $ad_id 自定义广告 id
+ * @param int $ad_status 自定义广告 状态 0，关闭；1，开启。
  * @access  private
  * @return  Bool
  */

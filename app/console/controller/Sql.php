@@ -1,12 +1,13 @@
 <?php
 
+namespace app\console\controller;
+
 /**
  * 会员管理程序
  */
 
-define('IN_ECS', true);
 
-require(dirname(__FILE__) . '/includes/init.php');
+
 
 $_POST['sql'] = !empty($_POST['sql']) ? trim($_POST['sql']) : '';
 
@@ -54,14 +55,14 @@ function assign_sql($sql)
     /* 解析查询项 */
     $sql = str_replace("\r", '', $sql);
     $query_items = explode(";\n", $sql);
-    foreach ($query_items as $key=>$value) {
+    foreach ($query_items as $key => $value) {
         if (empty($value)) {
             unset($query_items[$key]);
         }
     }
     /* 如果是多条语句，拆开来执行 */
     if (count($query_items) > 1) {
-        foreach ($query_items as $key=>$value) {
+        foreach ($query_items as $key => $value) {
             if ($db->query($value, 'SILENT')) {
                 $smarty->assign('type', 1);
             } else {
@@ -104,7 +105,7 @@ function assign_sql($sql)
                 }
                 $result .= "</table>\n";
             } else {
-                $result ="<center><h3>" . $_LANG['no_data'] . "</h3></center>";
+                $result = "<center><h3>" . $_LANG['no_data'] . "</h3></center>";
             }
 
             $smarty->assign('type', 2);

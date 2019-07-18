@@ -1,4 +1,6 @@
 <?php
+
+namespace app\console\controller;
 class leancloud_client
 {
     const VERSION = '0.2.5';
@@ -19,13 +21,13 @@ class leancloud_client
 
     public static function initialize($appId, $appKey)
     {
-        self::$appId        = $appId;
-        self::$appKey       = $appKey;
+        self::$appId = $appId;
+        self::$appKey = $appKey;
 
         self::$defaultHeaders = array(
             'X-LC-Id' => self::$appId,
             'Content-Type' => 'application/json;charset=utf-8',
-            'User-Agent'   => self::getVersionString()
+            'User-Agent' => self::getVersionString()
         );
     }
 
@@ -34,8 +36,8 @@ class leancloud_client
         if (!isset(self::$appId) &&
             !isset(self::$appKey)) {
             throw new \RuntimeException("Client is not initialized, " .
-                                        "please specify application key " .
-                                        "with Client::initialize.");
+                "please specify application key " .
+                "with Client::initialize.");
         }
     }
 
@@ -51,7 +53,7 @@ class leancloud_client
 
     public static function getAPIEndPoint()
     {
-        return self::$api . "/"  . self::$apiVersion;
+        return self::$api . "/" . self::$apiVersion;
     }
 
     public static function buildHeaders()
@@ -61,10 +63,10 @@ class leancloud_client
         $h['X-LC-Prod'] = self::$useProduction ? 1 : 0;
 
         $timestamp = time();
-        $key       = self::$appKey;
-        $sign      = md5($timestamp . $key);
+        $key = self::$appKey;
+        $sign = md5($timestamp . $key);
         $h['X-LC-Sign'] = $sign . "," . $timestamp;
-        
+
         return $h;
     }
 
@@ -74,7 +76,7 @@ class leancloud_client
             return false;
         }
         $parts = explode(",", $sign);
-        $key   = self::$appKey;
+        $key = self::$appKey;
 
         return $parts[0] === md5(trim($parts[1]) . $key);
     }
@@ -89,10 +91,10 @@ class leancloud_client
         return self::$appKey === $parts[0];
     }
 
-    public static function request($method, $path, $data, $headers=array())
+    public static function request($method, $path, $data, $headers = array())
     {
         self::assertInitialized();
-        $url  = self::getAPIEndPoint();
+        $url = self::getAPIEndPoint();
         $url .= $path;
 
         $defaultHeaders = self::buildHeaders();
@@ -110,8 +112,8 @@ class leancloud_client
             function ($key, $val) {
                 return "$key: $val";
             },
-                                 array_keys($headers),
-                                 $headers
+            array_keys($headers),
+            $headers
         );
 
         $req = curl_init($url);
@@ -128,7 +130,7 @@ class leancloud_client
                     curl_setopt(
                         $req,
                         CURLOPT_URL,
-                                $url ."?". http_build_query($data)
+                        $url . "?" . http_build_query($data)
                     );
                 }
                 break;
@@ -139,29 +141,29 @@ class leancloud_client
             case "PUT":
                 curl_setopt($req, CURLOPT_POSTFIELDS, $json);
                 curl_setopt($req, CURLOPT_CUSTOMREQUEST, $method);
-                // no break
+            // no break
             case "DELETE":
                 curl_setopt($req, CURLOPT_CUSTOMREQUEST, $method);
                 break;
             default:
                 break;
         }
-        $resp     = curl_exec($req);
+        $resp = curl_exec($req);
         $respCode = curl_getinfo($req, CURLINFO_HTTP_CODE);
         $respType = curl_getinfo($req, CURLINFO_CONTENT_TYPE);
-        $error    = curl_error($req);
-        $errno    = curl_errno($req);
+        $error = curl_error($req);
+        $errno = curl_errno($req);
         curl_close($req);
         /** type of error:
-          *  - curl connection error
-          *  - http status error 4xx, 5xx
-          *  - rest api error
-          */
+         *  - curl connection error
+         *  - http status error 4xx, 5xx
+         *  - rest api error
+         */
         if ($errno > 0) {
             throw new \RuntimeException(
                 "CURL connection ($url) error: " .
-                                        "$errno $error",
-                                        $errno
+                "$errno $error",
+                $errno
             );
         }
         if (strpos($respType, "text/html") !== false) {
@@ -176,52 +178,52 @@ class leancloud_client
         return $data;
     }
 
-    public static function get($path, $data=null, $headers=array())
+    public static function get($path, $data = null, $headers = array())
     {
         return self::request(
             "GET",
             $path,
             $data,
-                             $headers
+            $headers
         );
     }
 
-    public static function post($path, $data, $headers=array())
+    public static function post($path, $data, $headers = array())
     {
         return self::request(
             "POST",
             $path,
             $data,
-                             $headers
+            $headers
         );
     }
 
-    public static function put($path, $data, $headers=array())
+    public static function put($path, $data, $headers = array())
     {
         return self::request(
             "PUT",
             $path,
             $data,
-                             $headers
+            $headers
         );
     }
 
-    public static function delete($path, $headers=array())
+    public static function delete($path, $headers = array())
     {
         return self::request(
             "DELETE",
             $path,
             null,
-                             $headers
+            $headers
         );
     }
 
-    public static function batch($requests, $headers=array())
+    public static function batch($requests, $headers = array())
     {
         $response = self::post("/batch", array("requests" => $requests), $headers);
         if (count($requests) != count($response)) {
             self::error("Number of resquest and response " .
-                                    "mismatch in batch operation!");
+                "mismatch in batch operation!");
         }
         return $response;
     }
@@ -229,12 +231,12 @@ class leancloud_client
     /**
      * Encode file with params in multipart format
      *
-     * @param array  $file     File data and attributes
-     * @param array  $params   Key-value params
+     * @param array $file File data and attributes
+     * @param array $params Key-value params
      * @param string $boundary Boundary string used for frontier
      * @return string          Multipart encoded string
      */
-    public static function multipartEncode($file, $params, $boundary=null)
+    public static function multipartEncode($file, $params, $boundary = null)
     {
         if (!$boundary) {
             $boundary = md5(microtime());
@@ -259,7 +261,7 @@ EOT;
             // escape quotes in file name
             $filename = filter_var(
                 $file["name"],
-                                   FILTER_SANITIZE_MAGIC_QUOTES
+                FILTER_SANITIZE_MAGIC_QUOTES
             );
 
             $body .= <<<EOT
@@ -273,7 +275,7 @@ EOT;
         }
 
         // append end frontier
-        $body .=<<<EOT
+        $body .= <<<EOT
 --{$boundary}
 
 EOT;
@@ -284,25 +286,25 @@ EOT;
     /**
      * Upload file content to Qiniu storage
      *
-     * @param string $token    Qiniu token
-     * @param string $content  File content
-     * @param string $name     File name
+     * @param string $token Qiniu token
+     * @param string $content File content
+     * @param string $name File name
      * @param string $mimeType MIME type of file
      * @return array           JSON response from qiniu
      * @throws CloudException, RuntimeException
      */
-    public static function uploadToQiniu($token, $content, $name, $mimeType=null)
+    public static function uploadToQiniu($token, $content, $name, $mimeType = null)
     {
         $boundary = md5(microtime());
-        $file     = array("name"     => $name,
-                          "content"  => $content,
-                          "mimeType" => $mimeType);
-        $params   = array("token" => $token, "key" => $name);
-        $body     = static::multipartEncode($file, $params, $boundary);
+        $file = array("name" => $name,
+            "content" => $content,
+            "mimeType" => $mimeType);
+        $params = array("token" => $token, "key" => $name);
+        $body = static::multipartEncode($file, $params, $boundary);
 
         $headers[] = "User-Agent: " . self::getVersionString();
         $headers[] = "Content-Type: multipart/form-data;" .
-                     " boundary={$boundary}";
+            " boundary={$boundary}";
         $headers[] = "Content-Length: " . strlen($body);
 
         $url = "https://upload.qiniu.com";
@@ -312,11 +314,11 @@ EOT;
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
-        $resp     = curl_exec($ch);
+        $resp = curl_exec($ch);
         $respCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $respType = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
-        $error    = curl_errno($ch);
-        $errno    = curl_errno($ch);
+        $error = curl_errno($ch);
+        $errno = curl_errno($ch);
         curl_close($ch);
 
         /** type of error:
@@ -327,8 +329,8 @@ EOT;
         if ($errno > 0) {
             throw new \RuntimeException(
                 "CURL connection ($url) error: " .
-                                        "$errno $error",
-                                        $errno
+                "$errno $error",
+                $errno
             );
         }
 
@@ -347,6 +349,6 @@ EOT;
                     'error'=>$code, 'data' => $message
                 ]));
         exit;*/
-        error_log(date("c")."\t".print_r(array('error'=>$code, 'data' => $message), 1)."\t\n", 3, LOG_DIR."/leancloud_client_error_".date("Y-m-d").".log");
+        error_log(date("c") . "\t" . print_r(array('error' => $code, 'data' => $message), 1) . "\t\n", 3, LOG_DIR . "/leancloud_client_error_" . date("Y-m-d") . ".log");
     }
 }

@@ -1,12 +1,13 @@
 <?php
 
+namespace app\home\controller;
+
 /**
  * 证书反查文件
  */
 
-define('IN_ECS', true);
 
-require(dirname(__FILE__) . '/includes/init.php');
+
 require(ROOT_PATH . 'includes/cls_certificate.php');
 $cert = new certificate();
 /*------------------------------------------------------ */
@@ -24,7 +25,7 @@ if ($_POST['certi_ac'] == $certi_ac) {
         'res' => 'succ',
         'msg' => '',
         'info' => ''
-        );
+    );
     echo json_encode($return);
     exit;
 } else {
@@ -32,7 +33,7 @@ if ($_POST['certi_ac'] == $certi_ac) {
         'res' => 'fail',
         'msg' => '000001',
         'info' => 'You have the different ac!'
-        );
+    );
     echo json_encode($return);
     exit;
 }

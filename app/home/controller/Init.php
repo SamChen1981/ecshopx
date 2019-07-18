@@ -1,5 +1,7 @@
 <?php
 
+namespace app\home\controller;
+
 /**
  * 前台公用文件
  */
@@ -22,7 +24,7 @@ if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
     define('FORCE_SSL_LOGIN', true);
     define('FORCE_SSL_ADMIN', true);
 } else {
-    if (isset($_SERVER['HTTP_ORIGIN']) && substr($_SERVER['HTTP_ORIGIN'], 0, 5)=='https') {
+    if (isset($_SERVER['HTTP_ORIGIN']) && substr($_SERVER['HTTP_ORIGIN'], 0, 5) == 'https') {
         $_SERVER['HTTPS'] = 'on';
         define('FORCE_SSL_LOGIN', true);
         define('FORCE_SSL_ADMIN', true);
@@ -80,14 +82,14 @@ require(ROOT_PATH . 'includes/lib_article.php');
 /* 对用户传入的变量进行转义操作。*/
 if (!get_magic_quotes_gpc()) {
     if (!empty($_GET)) {
-        $_GET  = addslashes_deep($_GET);
+        $_GET = addslashes_deep($_GET);
     }
     if (!empty($_POST)) {
         $_POST = addslashes_deep($_POST);
     }
 
-    $_COOKIE   = addslashes_deep($_COOKIE);
-    $_REQUEST  = addslashes_deep($_REQUEST);
+    $_COOKIE = addslashes_deep($_COOKIE);
+    $_REQUEST = addslashes_deep($_REQUEST);
 }
 
 /* 创建 ECSHOP 对象 */
@@ -110,10 +112,10 @@ $_CFG = load_config();
 require(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/common.php');
 
 $document_uri = $_SERVER['DOCUMENT_URI'];
-$document_uris = ['/captcha.php','/yunqi_check.php'];
+$document_uris = ['/captcha.php', '/yunqi_check.php'];
 if ($_CFG['shop_closed'] == 1 && !in_array($document_uri, $document_uris)) {
     /* 商店关闭了，输出关闭的消息 */
-    header('Content-type: text/html; charset='.EC_CHARSET);
+    header('Content-type: text/html; charset=' . EC_CHARSET);
 
     die('<div style="margin: 150px; text-align: center; font-size: 14px"><p>' . $_LANG['shop_closed'] . '</p><p>' . $_CFG['close_comment'] . '</p></div>');
 }
@@ -128,11 +130,11 @@ if (is_spider()) {
         }
     }
     $_SESSION = array();
-    $_SESSION['user_id']     = 0;
-    $_SESSION['user_name']   = '';
-    $_SESSION['email']       = '';
-    $_SESSION['user_rank']   = 0;
-    $_SESSION['discount']    = 1.00;
+    $_SESSION['user_id'] = 0;
+    $_SESSION['user_name'] = '';
+    $_SESSION['email'] = '';
+    $_SESSION['user_rank'] = 0;
+    $_SESSION['discount'] = 1.00;
 }
 
 if (!defined('INIT_NO_USERS')) {
@@ -144,20 +146,20 @@ if (!defined('INIT_NO_USERS')) {
     define('SESS_ID', $sess->get_session_id());
 }
 if (isset($_SERVER['PHP_SELF'])) {
-    $_SERVER['PHP_SELF']=htmlspecialchars($_SERVER['PHP_SELF']);
+    $_SERVER['PHP_SELF'] = htmlspecialchars($_SERVER['PHP_SELF']);
 }
 if (!defined('INIT_NO_SMARTY')) {
     header('Cache-control: private');
-    header('Content-type: text/html; charset='.EC_CHARSET);
+    header('Content-type: text/html; charset=' . EC_CHARSET);
 
     /* 创建 Smarty 对象。*/
     require(ROOT_PATH . 'includes/cls_template.php');
     $smarty = new cls_template;
 
     $smarty->cache_lifetime = $_CFG['cache_time'];
-    $smarty->template_dir   = ROOT_PATH . 'themes/' . $_CFG['template'];
-    $smarty->cache_dir      = ROOT_PATH . 'temp/caches';
-    $smarty->compile_dir    = ROOT_PATH . 'temp/compiled';
+    $smarty->template_dir = ROOT_PATH . 'themes/' . $_CFG['template'];
+    $smarty->cache_dir = ROOT_PATH . 'temp/caches';
+    $smarty->compile_dir = ROOT_PATH . 'temp/compiled';
 
     if ((DEBUG_MODE & 2) == 2) {
         $smarty->direct_output = true;
@@ -183,8 +185,8 @@ if (!defined('INIT_NO_USERS')) {
 
     if (!isset($_SESSION['user_id'])) {
         /* 获取投放站点的名称 */
-        $site_name = isset($_GET['from'])   ? htmlspecialchars($_GET['from']) : addslashes($_LANG['self_site']);
-        $from_ad   = !empty($_GET['ad_id']) ? intval($_GET['ad_id']) : 0;
+        $site_name = isset($_GET['from']) ? htmlspecialchars($_GET['from']) : addslashes($_LANG['self_site']);
+        $from_ad = !empty($_GET['ad_id']) ? intval($_GET['ad_id']) : 0;
 
         $_SESSION['from_ad'] = $from_ad; // 用户点击的广告ID
         $_SESSION['referer'] = stripslashes($site_name); // 用户来源
@@ -203,11 +205,11 @@ if (!defined('INIT_NO_USERS')) {
                 update_user_info();
             }
         } else {
-            $_SESSION['user_id']     = 0;
-            $_SESSION['user_name']   = '';
-            $_SESSION['email']       = '';
-            $_SESSION['user_rank']   = 0;
-            $_SESSION['discount']    = 1.00;
+            $_SESSION['user_id'] = 0;
+            $_SESSION['user_name'] = '';
+            $_SESSION['email'] = '';
+            $_SESSION['user_rank'] = 0;
+            $_SESSION['discount'] = 1.00;
             if (!isset($_SESSION['login_fail'])) {
                 $_SESSION['login_fail'] = 0;
             }
@@ -223,8 +225,8 @@ if (!defined('INIT_NO_USERS')) {
     if (!empty($_COOKIE['ECS']['user_id']) && !empty($_COOKIE['ECS']['password'])) {
         // 找到了cookie, 验证cookie信息
         $sql = 'SELECT user_id, user_name, password ' .
-                ' FROM ' .$ecs->table('users') .
-                " WHERE user_id = '" . intval($_COOKIE['ECS']['user_id']) . "' AND password = '" .$_COOKIE['ECS']['password']. "'";
+            ' FROM ' . $ecs->table('users') .
+            " WHERE user_id = '" . intval($_COOKIE['ECS']['user_id']) . "' AND password = '" . $_COOKIE['ECS']['password'] . "'";
 
         $row = $db->GetRow($sql);
 

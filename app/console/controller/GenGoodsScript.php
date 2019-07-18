@@ -1,11 +1,12 @@
 <?php
+
+namespace app\console\controller;
 /**
  * 生成显示商品的js代码
  */
 
-define('IN_ECS', true);
 
-require(dirname(__FILE__) . '/includes/init.php');
+
 
 /*------------------------------------------------------ */
 //-- 生成代码
@@ -17,9 +18,9 @@ if ($_REQUEST['act'] == 'setup') {
 
     /* 编码 */
     $lang_list = array(
-        'UTF8'   => $_LANG['charset']['utf8'],
+        'UTF8' => $_LANG['charset']['utf8'],
         'GB2312' => $_LANG['charset']['zh_cn'],
-        'BIG5'   => $_LANG['charset']['zh_tw'],
+        'BIG5' => $_LANG['charset']['zh_tw'],
     );
 
     /* 参数赋值 */

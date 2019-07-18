@@ -1,4 +1,6 @@
 <?php
+
+namespace app\console\controller;
 include('leancloud_client.php');
 function delivery_msg_push($id, $db, $ecs)
 {
@@ -8,16 +10,16 @@ function delivery_msg_push($id, $db, $ecs)
         return false;
     }
 
-    $delivery_info = $db->getRow("SELECT * FROM ".$ecs->table('delivery_order')." WHERE delivery_id = '$id'");
+    $delivery_info = $db->getRow("SELECT * FROM " . $ecs->table('delivery_order') . " WHERE delivery_id = '$id'");
     if ($delivery_info) {
         $user_id = $delivery_info['user_id'];
         $time = date('Y-m-d H:i:s');
         $title = '您的订单已发货';
-        $content = '您的订单号：'.$delivery_info['order_sn'].',已经由'.$delivery_info['shipping_name'].'发出,物流单号'.$delivery_info['invoice_no'];
-        $link = 'deeplink://goto/shipping/:'.$delivery_info['order_id'];
-        $sql ="INSERT INTO ".$ecs->table('push')." (`user_id`,`title`,`content`,`link`,`platform`,`push_type`,`message_type`,`push_at`,`created_at`,`updated_at`) VALUES ('$user_id','$title','$content','$link','0','0','2','$time','$time','$time')";
+        $content = '您的订单号：' . $delivery_info['order_sn'] . ',已经由' . $delivery_info['shipping_name'] . '发出,物流单号' . $delivery_info['invoice_no'];
+        $link = 'deeplink://goto/shipping/:' . $delivery_info['order_id'];
+        $sql = "INSERT INTO " . $ecs->table('push') . " (`user_id`,`title`,`content`,`link`,`platform`,`push_type`,`message_type`,`push_at`,`created_at`,`updated_at`) VALUES ('$user_id','$title','$content','$link','0','0','2','$time','$time','$time')";
         $db->query($sql);
-        $msg_id = $db->getRow("SELECT id FROM ".$ecs->table('push')." ORDER BY `id` DESC LIMIT 1");
+        $msg_id = $db->getRow("SELECT id FROM " . $ecs->table('push') . " ORDER BY `id` DESC LIMIT 1");
         $is_push = push($msg_id['id'], $db, $ecs);
         return $is_push;
     }
@@ -41,7 +43,7 @@ function push($message_id, $db, $ecs)
     //物流信息定向推送
     if ($messageInfo['user_id'] != '0') {
         $user_id = $messageInfo['user_id'];
-        $user_info = $db->getRow("SELECT * FROM ".$ecs->table('device')." WHERE user_id = '$user_id'");
+        $user_info = $db->getRow("SELECT * FROM " . $ecs->table('device') . " WHERE user_id = '$user_id'");
         if ($user_info) {
             $messageInfo['platform'] = $user_info['platform_type'];
             $device_id = $user_info['device_id'];
@@ -49,20 +51,20 @@ function push($message_id, $db, $ecs)
     }
 
     // 推送内容
-    $data  = json_encode(['badge' => 'Increment','alert' => $messageInfo['content'],'title' => $messageInfo['title'],'link' => $messageInfo['link'],'action' => $config['package_name']]);
+    $data = json_encode(['badge' => 'Increment', 'alert' => $messageInfo['content'], 'title' => $messageInfo['title'], 'link' => $messageInfo['link'], 'action' => $config['package_name']]);
     // 推送条件
-  $where = null; //
-  switch ($messageInfo['platform']) {
-    case '1':
-      $where = json_encode(['deviceType' => 'ios']);
-          break;
-    case '2':
-      $where = json_encode(['deviceType' => 'android']);
-      break;
-    case '3':
-      $where = json_encode(['deviceType' => 'all']);
-      break;
-  }
+    $where = null; //
+    switch ($messageInfo['platform']) {
+        case '1':
+            $where = json_encode(['deviceType' => 'ios']);
+            break;
+        case '2':
+            $where = json_encode(['deviceType' => 'android']);
+            break;
+        case '3':
+            $where = json_encode(['deviceType' => 'all']);
+            break;
+    }
 
     //推送时间
     $push_time = strtotime($messageInfo['push_at']);
@@ -77,13 +79,13 @@ function push($message_id, $db, $ecs)
     }
 
     $post = array(
-    // "channels" => ['public'], //推送给哪些频道，将作为条件加入 where 对象。
-      "data" => json_decode($data, true),// 推送的内容数据，JSON 对象
-      "expiration_interval" => 86400, // 消息过期的相对时间，从调用 API 的时间开始算起，单位是「秒」。
-    // "expiration_time" => (time() + 86400 * 7), // 消息过期的绝对日期时间
-      "prod" => 'prod', // 开发证书（dev）还是生产证书（prod）
-      "push_time" => $push_time, // 定期推送时间
-  );
+        // "channels" => ['public'], //推送给哪些频道，将作为条件加入 where 对象。
+        "data" => json_decode($data, true),// 推送的内容数据，JSON 对象
+        "expiration_interval" => 86400, // 消息过期的相对时间，从调用 API 的时间开始算起，单位是「秒」。
+        // "expiration_time" => (time() + 86400 * 7), // 消息过期的绝对日期时间
+        "prod" => 'prod', // 开发证书（dev）还是生产证书（prod）
+        "push_time" => $push_time, // 定期推送时间
+    );
     if ($device_id) {
         $post['deviceToken'] = $device_id;
     }
@@ -95,9 +97,9 @@ function push($message_id, $db, $ecs)
     $res_objectId = $res['objectId'];
     if ($res_objectId) {
         if ($messageInfo['push_type'] == 0) {
-            $sql ="UPDATE ".$ecs->table('push')." SET `isPush`='1',`objectId`='$res_objectId' WHERE id = '$message_id'";
+            $sql = "UPDATE " . $ecs->table('push') . " SET `isPush`='1',`objectId`='$res_objectId' WHERE id = '$message_id'";
         } else {
-            $sql ="UPDATE ".$ecs->table('push')." SET `isPush`='0',`objectId`='$res_objectId' WHERE id = '$message_id'";
+            $sql = "UPDATE " . $ecs->table('push') . " SET `isPush`='0',`objectId`='$res_objectId' WHERE id = '$message_id'";
         }
         $db->query($sql);
         return true;
@@ -108,7 +110,7 @@ function push($message_id, $db, $ecs)
 
 function get_config($db, $ecs)
 {
-    $sql = "SELECT * FROM ".$ecs->table('config')." WHERE code = 'leancloud' AND status = '1'";
+    $sql = "SELECT * FROM " . $ecs->table('config') . " WHERE code = 'leancloud' AND status = '1'";
     $res = $db->getAll($sql);
     if ($res) {
         return $res[0];
@@ -119,7 +121,7 @@ function get_config($db, $ecs)
 
 function get_msginfo($msg_id, $db, $ecs)
 {
-    $sql = "SELECT * FROM ".$ecs->table('push')." WHERE id = '$msg_id'";
+    $sql = "SELECT * FROM " . $ecs->table('push') . " WHERE id = '$msg_id'";
     $res = $db->getAll($sql);
     if ($res) {
         return $res[0];
@@ -127,6 +129,7 @@ function get_msginfo($msg_id, $db, $ecs)
         return false;
     }
 }
+
 /**
  * GET
  * 查询定时任务
@@ -151,7 +154,7 @@ function scheduledPushMessages($message_id)
         return false;
     }
 
-    $header = ['X-LC-Id' => $config['app_id'] ,'X-LC-Key' => $config['master_key'].',master' ,'Content-Type' => 'application/json'];
+    $header = ['X-LC-Id' => $config['app_id'], 'X-LC-Key' => $config['master_key'] . ',master', 'Content-Type' => 'application/json'];
 
     $res = Client::get("/scheduledPushMessages", [], $header);
     if (!empty($res['results'])) {
@@ -190,9 +193,9 @@ function deleteScheduledPushMessages($message_id)
         return false;
     }
 
-    $header = ['X-LC-Id' => $config['app_id'] ,'X-LC-Key' => $config['master_key'].',master' ,'Content-Type' => 'application/json'];
+    $header = ['X-LC-Id' => $config['app_id'], 'X-LC-Key' => $config['master_key'] . ',master', 'Content-Type' => 'application/json'];
 
-    Client::delete("/scheduledPushMessages".'/'.$result_id, $header);
+    Client::delete("/scheduledPushMessages" . '/' . $result_id, $header);
 
     return Push::findOne($message_id);
 }
@@ -222,8 +225,8 @@ function notifications($message_id)
         return false;
     }
 
-    $header = ['X-LC-Id' => $config['app_id'] ,'X-LC-Key' => $config['master_key'] ,'Content-Type' => 'application/json'];
-    $res = Client::get("/tables/Notifications/".$messageInfo['objectId'], $header);
+    $header = ['X-LC-Id' => $config['app_id'], 'X-LC-Key' => $config['master_key'], 'Content-Type' => 'application/json'];
+    $res = Client::get("/tables/Notifications/" . $messageInfo['objectId'], $header);
     if (($res) && $res["status"] == 'done') {
         Push::where('id', $message_id)->update(['status' => 2]);
     }

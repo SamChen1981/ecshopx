@@ -1,32 +1,33 @@
 <?php
 
+namespace app\console\controller;
+
 /**
  * 程序说明
  */
 
-define('IN_ECS', true);
 
-require(dirname(__FILE__) . '/includes/init.php');
-include_once(ROOT_PATH."includes/cls_certificate.php");
+
+include_once(ROOT_PATH . "includes/cls_certificate.php");
 /*------------------------------------------------------ */
 //-- 移动端应用配置
 /*------------------------------------------------------ */
-if ($_REQUEST['act']== 'list') {
+if ($_REQUEST['act'] == 'list') {
     /* 检查权限 */
     admin_priv('mobile_setting');
     $smarty->assign('ur_here', $_LANG['lead_here']);
     $cert = new certificate;
     $isOpenWap = $cert->is_open_sn('fy');
-    if ($isOpenWap==false && $_SESSION['yunqi_login'] && $_SESSION['TOKEN']) {
+    if ($isOpenWap == false && $_SESSION['yunqi_login'] && $_SESSION['TOKEN']) {
         $result = $cert->getsnlistoauth($_SESSION['TOKEN'], array());
-        if ($result['status']=='success') {
+        if ($result['status'] == 'success') {
             $cert->save_snlist($result['data']);
             $isOpenWap = $cert->is_open_sn('fy');
         }
     }
     $tab = !$isOpenWap ? 'open' : 'enter';
     $charset = EC_CHARSET == 'utf-8' ? "utf8" : 'gbk';
-    $sql =  "SELECT * FROM " . $ecs->table('config')." WHERE 1";
+    $sql = "SELECT * FROM " . $ecs->table('config') . " WHERE 1";
     $group_items = $db->getAll($sql);
     $grouplist = get_params();
     foreach ($grouplist as $key => $value) {
@@ -35,7 +36,7 @@ if ($_REQUEST['act']== 'list') {
                 if ($item['code'] == $v['code']) {
                     $config = json_decode($item['config'], 1);
                     foreach ($v['vars'] as $var_k => $var_v) {
-                        $grouplist[$key]['items'][$k]['vars'][$var_k]['value'] =$var_v['code'] == 'cert'?urldecode($config[$var_v['code']]):$config[$var_v['code']];
+                        $grouplist[$key]['items'][$k]['vars'][$var_k]['value'] = $var_v['code'] == 'cert' ? urldecode($config[$var_v['code']]) : $config[$var_v['code']];
                     }
                 }
             }
@@ -45,7 +46,7 @@ if ($_REQUEST['act']== 'list') {
     $smarty->assign('ur_here', $_LANG['mobile_setting']);
     $smarty->assign('group_list', $grouplist);
     $smarty->display('mobile_config.html');
-} elseif ($_REQUEST['act']== 'post') {
+} elseif ($_REQUEST['act'] == 'post') {
     /* 检查权限 */
     admin_priv('mobile_setting');
     $links[] = array('text' => $_LANG['mobile_setting'], 'href' => 'ecmobile_setting.php?act=list');
@@ -60,13 +61,13 @@ if ($_REQUEST['act']== 'list') {
                 $PSize = filesize($cert);
                 $cert_steam = (fread(fopen($cert, "r"), $PSize));
                 $cert_steam = addslashes($cert_steam);
-                $_POST['value']['cert'] =  urlencode($_FILES['value']['name']['cert']);
+                $_POST['value']['cert'] = urlencode($_FILES['value']['name']['cert']);
             } else {
                 sys_msg('证书不能为空', 1, $links);
             }
         }
     }
-    $sql = "SELECT * FROM " . $ecs->table('config')." WHERE `code` = '".$_POST['code']."'";
+    $sql = "SELECT * FROM " . $ecs->table('config') . " WHERE `code` = '" . $_POST['code'] . "'";
     $res = $db->getRow($sql);
     $items = get_items($_POST['code']);
 
@@ -79,9 +80,9 @@ if ($_REQUEST['act']== 'list') {
     $time = date('Y-m-d H:i:s', time());
 
     if ($res) {
-        $sql = "UPDATE ".$ecs->table('config')." SET `updated_at` = '$time',`status` = '$status' ,`config` = '".json_encode($_POST['value'])."' WHERE `code` = '$code'";
+        $sql = "UPDATE " . $ecs->table('config') . " SET `updated_at` = '$time',`status` = '$status' ,`config` = '" . json_encode($_POST['value']) . "' WHERE `code` = '$code'";
     } else {
-        $sql = "INSERT INTO ".$ecs->table('config')." (`name`,`type`,`description`,`code`,`config`,`created_at`,`updated_at`,`status`) VALUES ('$name','$type','$description','$code','$config','$time','$time','$status')";
+        $sql = "INSERT INTO " . $ecs->table('config') . " (`name`,`type`,`description`,`code`,`config`,`created_at`,`updated_at`,`status`) VALUES ('$name','$type','$description','$code','$config','$time','$time','$status')";
     }
     $db->query($sql);
     if ($type == 'payment') {
@@ -89,15 +90,15 @@ if ($_REQUEST['act']== 'list') {
     }
     if ($cert_steam) {
         //处理文件
-        $sql = "SELECT * FROM " . $ecs->table('config')." WHERE `code` = '".$_POST['code']."'";
+        $sql = "SELECT * FROM " . $ecs->table('config') . " WHERE `code` = '" . $_POST['code'] . "'";
         $setting = $db->getRow($sql);
         if ($setting['id']) {
             $id = $setting['id'];
-            $cert_tmp = $db->getRow("SELECT * FROM " . $ecs->table('cert')." WHERE `config_id` = '$id'");
+            $cert_tmp = $db->getRow("SELECT * FROM " . $ecs->table('cert') . " WHERE `config_id` = '$id'");
             if ($cert_tmp) {
-                $db->query("UPDATE ".$ecs->table('cert')." SET `file` = '$cert_steam' WHERE `config_id` = '$id'");
+                $db->query("UPDATE " . $ecs->table('cert') . " SET `file` = '$cert_steam' WHERE `config_id` = '$id'");
             } else {
-                $db->query("INSERT INTO ".$ecs->table('cert')." (`config_id`,`file`) VALUES ($id,'$cert_steam')");
+                $db->query("INSERT INTO " . $ecs->table('cert') . " (`config_id`,`file`) VALUES ($id,'$cert_steam')");
             }
         }
     }

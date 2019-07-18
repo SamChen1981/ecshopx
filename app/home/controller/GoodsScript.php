@@ -1,13 +1,14 @@
 <?php
 
+namespace app\home\controller;
+
 /**
  * 生成商品列表
  */
 
-define('IN_ECS', true);
+
 define('INIT_NO_USERS', true);
 
-require(dirname(__FILE__) . '/includes/init.php');
 
 if ((DEBUG_MODE & 2) != 2) {
     $smarty->caching = true;
@@ -29,18 +30,18 @@ $cache_id = sprintf('%X', crc32($_SERVER['QUERY_STRING']));
 $tpl = ROOT_PATH . DATA_DIR . '/goods_script.html';
 if (!$smarty->is_cached($tpl, $cache_id)) {
     $time = gmtime();
-    $sql='';
+    $sql = '';
     /* 根据参数生成查询语句 */
     if ($type == '') {
-        $sitename = !empty($_GET['sitename']) ?  $_GET['sitename'] : '';
-        $_from = (!empty($_GET['charset']) && $_GET['charset'] != 'UTF8')? urlencode(ecs_iconv('UTF-8', 'GBK', $sitename)) : urlencode(@$sitename);
+        $sitename = !empty($_GET['sitename']) ? $_GET['sitename'] : '';
+        $_from = (!empty($_GET['charset']) && $_GET['charset'] != 'UTF8') ? urlencode(ecs_iconv('UTF-8', 'GBK', $sitename)) : urlencode(@$sitename);
         $goods_url = $ecs->url() . 'affiche.php?ad_id=-1&amp;from=' . $_from . '&amp;goods_id=';
 
-        $sql  = 'SELECT goods_id, goods_name, market_price, goods_thumb, RAND() AS rnd, ' .
-                    "IF(is_promote = 1 AND '$time' >= promote_start_date AND ".
-                    "'$time' <= promote_end_date, promote_price, shop_price) AS goods_price " .
-                'FROM ' . $ecs->table('goods') . ' AS g ' .
-                "WHERE is_delete = '0' AND is_on_sale = '1' AND is_alone_sale = '1' ";
+        $sql = 'SELECT goods_id, goods_name, market_price, goods_thumb, RAND() AS rnd, ' .
+            "IF(is_promote = 1 AND '$time' >= promote_start_date AND " .
+            "'$time' <= promote_end_date, promote_price, shop_price) AS goods_price " .
+            'FROM ' . $ecs->table('goods') . ' AS g ' .
+            "WHERE is_delete = '0' AND is_on_sale = '1' AND is_alone_sale = '1' ";
         if (!empty($_GET['cat_id'])) {
             $sql .= ' AND ' . get_children(intval($_GET['cat_id']));
         }
@@ -55,7 +56,7 @@ if (!$smarty->is_cached($tpl, $cache_id)) {
                     $sql .= ' ORDER BY rnd';
                 } else {
                     if ($_GET['intro_type'] == 'is_promote') {
-                        $sql  .= " AND promote_start_date <= '$time' AND promote_end_date >= '$time'";
+                        $sql .= " AND promote_start_date <= '$time' AND promote_end_date >= '$time'";
                     }
                     $sql .= " AND " . $_GET['intro_type'] . " = 1 ORDER BY add_time DESC";
                 }
@@ -64,9 +65,9 @@ if (!$smarty->is_cached($tpl, $cache_id)) {
     } elseif ($type == 'collection') {
         $uid = (int)$_GET['u'];
         $goods_url = $ecs->url() . "goods.php?u=$uid&id=";
-        $sql = "SELECT g.goods_id, g.goods_name, g.market_price, g.goods_thumb, IF(g.is_promote = 1 AND '$time' >= g.promote_start_date AND ".
-           "'$time' <= g.promote_end_date, g.promote_price, g.shop_price) AS goods_price FROM " . $ecs->table('goods') . " g LEFT JOIN " . $ecs->table('collect_goods') . " c ON g.goods_id = c.goods_id " .
-               " WHERE c.user_id = '$uid'";
+        $sql = "SELECT g.goods_id, g.goods_name, g.market_price, g.goods_thumb, IF(g.is_promote = 1 AND '$time' >= g.promote_start_date AND " .
+            "'$time' <= g.promote_end_date, g.promote_price, g.shop_price) AS goods_price FROM " . $ecs->table('goods') . " g LEFT JOIN " . $ecs->table('collect_goods') . " c ON g.goods_id = c.goods_id " .
+            " WHERE c.user_id = '$uid'";
     }
     $sql .= " LIMIT " . (!empty($_GET['goods_num']) ? intval($_GET['goods_num']) : 10);
     $res = $db->query($sql);
@@ -81,10 +82,10 @@ if (!$smarty->is_cached($tpl, $cache_id)) {
             } else {
                 $tmp_goods_name = htmlentities($goods['goods_name'], ENT_QUOTES, EC_CHARSET);
             }
-            $goods['goods_name']  = ecs_iconv(EC_CHARSET, $charset, $tmp_goods_name);
+            $goods['goods_name'] = ecs_iconv(EC_CHARSET, $charset, $tmp_goods_name);
             $goods['goods_price'] = ecs_iconv(EC_CHARSET, $charset, $goods['goods_price']);
         }
-        $goods['goods_name']  = $GLOBALS['_CFG']['goods_name_length'] > 0 ? sub_str($goods['goods_name'], $GLOBALS['_CFG']['goods_name_length']) : $goods['goods_name'];
+        $goods['goods_name'] = $GLOBALS['_CFG']['goods_name_length'] > 0 ? sub_str($goods['goods_name'], $GLOBALS['_CFG']['goods_name_length']) : $goods['goods_name'];
         $goods['goods_thumb'] = get_image_path($goods['goods_id'], $goods['goods_thumb'], true);
         $goods_list[] = $goods;
     }

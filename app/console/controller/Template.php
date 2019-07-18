@@ -1,12 +1,13 @@
 <?php
 
+namespace app\console\controller;
+
 /**
  * 管理中心模版管理程序
  */
 
-define('IN_ECS', true);
 
-require(dirname(__FILE__) . '/includes/init.php');
+
 require_once('includes/lib_template.php');
 
 /*------------------------------------------------------ */
