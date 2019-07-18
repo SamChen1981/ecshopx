@@ -3,7 +3,7 @@
 /**
  * ECSHOP 订单管理语言文件
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -89,6 +89,7 @@ $_LANG['pay_name'] = '支付方式';
 $_LANG['address'] = '地址';
 $_LANG['order_time'] = '下单时间';
 $_LANG['detail'] = '查看';
+$_LANG['retry'] = '重试';
 $_LANG['phone'] = '电话';
 $_LANG['group_buy'] = '（团购）';
 $_LANG['error_get_goods_info'] = '获取订单商品信息错误';
@@ -176,6 +177,7 @@ $_LANG['label_total_weight'] = '商品总重量：';
 
 $_LANG['label_goods_amount'] = '商品总金额：';
 $_LANG['label_discount'] = '折扣：';
+$_LANG['label_goods_discount_fee'] = '商品折扣：';
 $_LANG['label_tax'] = '发票税额：';
 $_LANG['label_shipping_fee'] = '配送费用：';
 $_LANG['label_insure_fee'] = '保价费用：';

@@ -3,7 +3,7 @@
 /**
  * ECSHOP 管理中心优惠活动管理
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -309,8 +309,8 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
     $favourable = array(
         'act_id'        => intval($_POST['id']),
         'act_name'      => $act_name,
-        'start_time'    => local_strtotime($_POST['start_time']),
-        'end_time'      => local_strtotime($_POST['end_time']),
+        'start_time'    => local_strtotime_new($_POST['start_time']),
+        'end_time'      => local_strtotime_new($_POST['end_time']),
         'user_rank'     => isset($_POST['user_rank']) ? join(',', $_POST['user_rank']) : '0',
         'act_range'     => intval($_POST['act_range']),
         'act_range_ext' => intval($_POST['act_range']) == 0 ? '' : join(',', $_POST['act_range_ext']),

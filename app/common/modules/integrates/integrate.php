@@ -3,7 +3,7 @@
 /**
  * ECSHOP 整合插件类的基类
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com
  * ----------------------------------------------------------------------------
  * 这是一个免费开源的软件；这意味着您可以在不用于商业目的的前提下对程序代码
@@ -93,7 +93,7 @@ class integrate
      * @param       string  $db_pass    数据库密码
      * @return      void
      */
-    function integrate($cfg)
+    function __construct($cfg)
     {
         $this->charset = isset($cfg['db_charset']) ? $cfg['db_charset'] : 'UTF8';
         $this->prefix = isset($cfg['prefix']) ? $cfg['prefix'] : '';
@@ -109,7 +109,7 @@ class integrate
         {
             $this->db_name = $GLOBALS['ecs']->db_name;
             $this->prefix = $GLOBALS['ecs']->prefix;
-            $this->db = &$GLOBALS['db'];
+            $this->db = $GLOBALS['db'];
         }
         else
         {
@@ -390,6 +390,8 @@ class integrate
                 $GLOBALS['db']->query($sql);
                 $sql = "DELETE FROM " . $GLOBALS['ecs']->table('account_log') . " WHERE " . db_create_in($col, 'user_id'); //删除用户日志
                 $GLOBALS['db']->query($sql);
+                $sql = "DELETE FROM " . $GLOBALS['ecs']->table('sns') . " WHERE " . db_create_in($col, 'user_id'); //删除ecs_sns
+                $GLOBALS['db']->query($sql);
             }
         }
 
@@ -568,8 +570,8 @@ class integrate
         {
             /* 摧毁cookie */
             $time = time() - 3600;
-            setcookie("ECS[user_id]",  '', $time, $this->cookie_path);            
-            setcookie("ECS[password]", '', $time, $this->cookie_path);
+            setcookie("ECS[user_id]",  '', $time, $this->cookie_path, NULL, NULL, TRUE);            
+            setcookie("ECS[password]", '', $time, $this->cookie_path, NULL, NULL, TRUE);
 
         }
         elseif ($remember)
@@ -577,13 +579,13 @@ class integrate
             /* 设置cookie */
             $time = time() + 3600 * 24 * 15;
 
-            setcookie("ECS[username]", $username, $time, $this->cookie_path, $this->cookie_domain);
+            setcookie("ECS[username]", $username, $time, $this->cookie_path, $this->cookie_domain, NULL, TRUE);
             $sql = "SELECT user_id, password FROM " . $GLOBALS['ecs']->table('users') . " WHERE user_name='$username' LIMIT 1";
             $row = $GLOBALS['db']->getRow($sql);
             if ($row)
             {
-                setcookie("ECS[user_id]", $row['user_id'], $time, $this->cookie_path, $this->cookie_domain);
-                setcookie("ECS[password]", $row['password'], $time, $this->cookie_path, $this->cookie_domain);
+                setcookie("ECS[user_id]", $row['user_id'], $time, $this->cookie_path, $this->cookie_domain, NULL, TRUE);
+                setcookie("ECS[password]", $row['password'], $time, $this->cookie_path, $this->cookie_domain, NULL, TRUE);
             }
         }
     }

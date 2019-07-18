@@ -3,7 +3,7 @@
 /**
  * ECSHOP 管理中心起始页语言文件
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -64,6 +64,7 @@ $_LANG['is_hot'] = '热销';
 $_LANG['is_promote'] = '特价';
 $_LANG['all_type'] = '全部推荐';
 $_LANG['sort_order'] = '推荐排序';
+$_LANG['virtual_sales'] = '虚拟销量';
 
 $_LANG['goods_name'] = '商品名称';
 $_LANG['goods_sn'] = '货号';
@@ -114,6 +115,7 @@ $_LANG['lab_market_price'] = '市场售价：';
 $_LANG['lab_user_price'] = '会员价格：';
 $_LANG['lab_promote_price'] = '促销价：';
 $_LANG['lab_promote_date'] = '促销日期：';
+$_LANG['lab_virtual_sales'] = '虚拟销量：';
 $_LANG['lab_picture'] = '上传商品图片：';
 $_LANG['lab_thumb'] = '上传商品缩略图：';
 $_LANG['auto_thumb'] = '自动生成商品缩略图';
@@ -121,9 +123,22 @@ $_LANG['lab_keywords'] = '商品关键词：';
 $_LANG['lab_goods_brief'] = '商品简单描述：';
 $_LANG['lab_seller_note'] = '商家备注：';
 $_LANG['lab_goods_type'] = '商品类型：';
+$_LANG['Preview'] = '预览';
 $_LANG['lab_picture_url'] = '商品图片外部URL';
 $_LANG['lab_thumb_url'] = '商品缩略图外部URL';
-
+$_LANG['tip_imgSize'] = '单张图片不能大于2m';
+$_LANG['tip_param_error'] = '参数错误!';
+$_LANG['tip_upload_component'] = '上传组件不支持您的浏览器!';
+$_LANG['tip_upload_error'] = '上传失败!';
+$_LANG['tip_file'] = '文件:';
+$_LANG['tip_errocode'] = '错误码:';
+$_LANG['tip_filehaschoose'] = '该文件已经被选择了!';
+$_LANG['tip_fileNumer_exceedslimit'] = '上传文件数量超过限制!';
+$_LANG['tip_fileSize_exceedslimit'] = '文件大小超过限制!';
+$_LANG['tip_allSize_exceedslimit'] = '所有文件总大小超过限制!';
+$_LANG['tip_fileType_error'] = '文件类型不正确或者是空文件!';
+$_LANG['tip_unknow_error'] = '未知错误!';
+$_LANG['tip_upload_completed'] = '上传完成';
 $_LANG['lab_goods_weight'] = '商品重量：';
 $_LANG['unit_g'] = '克';
 $_LANG['unit_kg'] = '千克';
@@ -136,9 +151,8 @@ $_LANG['lab_intro'] = '加入推荐：';
 $_LANG['lab_is_on_sale'] = '上架：';
 $_LANG['lab_is_alone_sale'] = '能作为普通商品销售：';
 $_LANG['lab_is_free_shipping'] = '是否为免运费商品';
-
 $_LANG['compute_by_mp'] = '按市场价计算';
-
+$_LANG['label_account_bind'] = '账户绑定';
 $_LANG['notice_goods_sn'] = '如果您不输入商品货号，系统将自动生成一个唯一的货号。';
 $_LANG['notice_integral'] = '(此处需填写金额)购买该商品时最多可以使用积分的金额';
 $_LANG['notice_give_integral'] = '购买该商品时赠送消费积分数,-1表示按商品价格赠送';
@@ -160,6 +174,8 @@ $_LANG['invalid_img_url'] = '商品相册中第%s个图片格式不正确!';
 $_LANG['goods_img_too_big'] = '商品图片文件太大了（最大值：%s），无法上传。';
 $_LANG['goods_thumb_too_big'] = '商品缩略图文件太大了（最大值：%s），无法上传。';
 $_LANG['img_url_too_big'] = '商品相册中第%s个图片文件太大了（最大值：%s），无法上传。';
+$_LANG['img_resolution_fail'] = '图片解析失败。';
+$_LANG['img_upload_fail'] = '图片上传失败。';
 
 $_LANG['integral_market_price'] = '取整数';
 $_LANG['upload_images'] = '上传图片';
@@ -261,6 +277,7 @@ $_LANG['batch_card_add'] = '批量补货';
 $_LANG['add_replenish'] = '添加虚拟卡卡密';
 
 $_LANG['goods_number_error'] = '商品库存数量错误';
+$_LANG['virtual_sales_error'] = '商品虚拟销售数量错误';
 
 /*------------------------------------------------------ */
 //-- 货品
@@ -288,4 +305,5 @@ $_LANG['exist_same_goods_attr'] = '货品规格属性重复';
 $_LANG['cannot_goods_number'] = '此商品存在货品，不能修改商品库存';
 $_LANG['not_exist_goods_attr'] = '此商品不存在规格，请为其添加规格';
 $_LANG['goods_sn_exists'] = '您输入的货号已存在，请换一个';
+
 ?>

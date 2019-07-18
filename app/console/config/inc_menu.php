@@ -3,7 +3,7 @@
 /**
  * ECSHOP 管理中心菜单数组
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -130,6 +130,7 @@ $modules['13_backup']['03_db_optimize']             = 'database.php?act=optimize
 $modules['13_backup']['04_sql_query']               = 'sql.php?act=main';
 //$modules['13_backup']['05_synchronous']             = 'integrate.php?act=sync';
 $modules['13_backup']['convert']                    = 'convert.php?act=main';
+$modules['13_backup']['clear']                      = 'database.php?act=clear';
 
 
 //$modules['14_sms']['02_sms_my_info']                = 'sms.php?act=display_my_info';

@@ -3,7 +3,7 @@
 /**
  * ECSHOP 支付宝插件
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -12,12 +12,11 @@
  * $Author: douqinghua $
  * $Id: alipay.php 17217 2011-01-19 06:29:08Z douqinghua $
  */
-
+require(ROOT_PATH . 'includes/safety.php');
 if (!defined('IN_ECS'))
 {
     die('Hacking attempt');
 }
-
 $payment_lang = ROOT_PATH . 'languages/' .$GLOBALS['_CFG']['lang']. '/payment/alipay.php';
 
 if (file_exists($payment_lang))
@@ -48,7 +47,7 @@ if (isset($set_modules) && $set_modules == TRUE)
     $modules[$i]['author']  = 'ECSHOP TEAM';
 
     /* 网址 */
-    $modules[$i]['website'] = 'http://www.alipay.com';
+    $modules[$i]['website'] = 'https://www.alipay.com';
 
     /* 版本号 */
     $modules[$i]['version'] = '1.0.2';
@@ -69,6 +68,10 @@ if (isset($set_modules) && $set_modules == TRUE)
  */
 class alipay
 {
+    function __construct()
+    {
+        $this->alipay();
+    }
 
     /**
      * 构造函数
@@ -80,11 +83,6 @@ class alipay
      */
     function alipay()
     {
-    }
-
-    function __construct()
-    {
-        $this->alipay();
     }
 
     /**
@@ -177,7 +175,7 @@ class alipay
         $payment  = get_payment($_GET['code']);
         $seller_email = rawurldecode($_GET['seller_email']);
         $order_sn = str_replace($_GET['subject'], '', $_GET['out_trade_no']);
-        $order_sn = trim($order_sn);
+        $order_sn = trim(addslashes($order_sn));
 
         /* 检查数字签名是否正确 */
         ksort($_GET);

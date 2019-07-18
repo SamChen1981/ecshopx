@@ -3,7 +3,7 @@
 /**
  * ECSHOP 数据库导出类
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -28,7 +28,9 @@ if (!defined('IN_ECS'))
  */
 function dump_escape_string($str)
 {
-    return cls_mysql::escape_string($str);
+    global $db;
+     /* 取得参数 */
+    return cls_mysql::escape_string($str,$db);
 }
 
 /**
@@ -69,27 +71,13 @@ class cls_sql_dump
      *
      * @return void
      */
-    function cls_sql_dump(&$db, $max_size=0)
+    function __construct(&$db, $max_size =0)
     {
-        $this->db = &$db;
+        $this->db = $db;
         if ($max_size > 0 )
         {
             $this->max_size = $max_size;
         }
-
-    }
-
-    /**
-     *  类的构造函数
-     *
-     * @access  public
-     * @param
-     *
-     * @return void
-     */
-    function __construct(&$db, $max_size =0)
-    {
-        $this->cls_sql_dump($db, $max_size);
     }
 
     /**
@@ -350,7 +338,7 @@ class cls_sql_dump
      *
      * @return  array       $arr        信息数组
      */
-    function get_head($path)
+    static function get_head($path)
     {
         /* 获取sql文件头部信息 */
         $sql_info = array('date'=>'', 'mysql_ver'=> '', 'php_ver'=>0, 'ecs_ver'=>'', 'vol'=>0);
@@ -475,7 +463,7 @@ class cls_sql_dump
      *
      * @return      string      $str    随机名称
      */
-    function get_random_name()
+    static function get_random_name()
     {
         $str = date('Ymd');
 

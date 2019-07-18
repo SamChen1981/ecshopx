@@ -3,7 +3,7 @@
 /**
  * ECSHOP YeePay易宝语言文件
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -20,5 +20,5 @@ $_LANG['ypszx_desc']    = 'YeePay易宝神州行支付是只要是中国移动�
         '<input type="button" name="Submit" value="立即注册" onclick="window.open(\'https://www.yeepay.com/selfservice/AgentService.action?p0_Cmd=AgentRegister&p1_MerId=10000383855&hmac=bd9e7b0f85bddedb105eebb136632772\')" />';
 $_LANG['yp_account'] = '商户编号';
 $_LANG['yp_key']     = '商户密钥';
-$_LANG['pay_button'] = '立即使用YeePay易宝支付';
+$_LANG['pay_button'] = '立即支付';
 ?>

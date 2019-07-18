@@ -3,7 +3,7 @@
 /**
  * ECSHOP 程序说明
  * ===========================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -12,7 +12,6 @@
  * $Author: liubo $
  * $Id: affiliate_ck.php 17217 2011-01-19 06:29:08Z liubo $
  */
-
 define('IN_ECS', true);
 require(dirname(__FILE__) . '/includes/init.php');
 
@@ -27,7 +26,8 @@ $separate_on = $affiliate['on'];
 //-- 分成页
 /*------------------------------------------------------ */
 if ($_REQUEST['act'] == 'list')
-{
+{    
+    isset($_GET[auid]) && $_GET[auid] = intval($_GET[auid]);
     $logdb = get_affiliate_ck();
     $smarty->assign('full_page',  1);
     $smarty->assign('ur_here', $_LANG['affiliate_ck']);
@@ -38,7 +38,8 @@ if ($_REQUEST['act'] == 'list')
     $smarty->assign('page_count',   $logdb['page_count']);
     if (!empty($_GET['auid']))
     {
-        $smarty->assign('action_link',  array('text' => $_LANG['back_note'], 'href'=>"users.php?act=edit&id=$_GET[auid]"));
+        settype($_GET['auid'], "integer");
+        $smarty->assign('action_link',  array('text' => $_LANG['back_note'], 'href'=>"users.php?act=edit&id=".intval($_GET['auid'])));
     }
     assign_query_info();
     $smarty->display('affiliate_ck_list.htm');
@@ -48,7 +49,8 @@ if ($_REQUEST['act'] == 'list')
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'query')
 {
-    $logdb = get_affiliate_ck();
+    isset($_GET[auid]) && $_GET[auid] = intval($_GET[auid]);
+    $logdb = get_affiliate_ck() ;
     $smarty->assign('logdb',        $logdb['logdb']);
     $smarty->assign('on', $separate_on);
     $smarty->assign('filter',       $logdb['filter']);
@@ -70,8 +72,8 @@ elseif ($_REQUEST['act'] == 'del')
     if (empty($stat))
     {
         $sql = "UPDATE " . $GLOBALS['ecs']->table('order_info') .
-               " SET is_separate = 2" .
-               " WHERE order_id = '$oid'";
+               " SET is_separate = 2,lastmodify = '".gmtime() .
+               "' WHERE order_id = '$oid'";
         $db->query($sql);
     }
     $links[] = array('text' => $_LANG['affiliate_ck'], 'href' => 'affiliate_ck.php?act=list');
@@ -144,6 +146,10 @@ elseif ($_REQUEST['act'] == 'separate')
         {
             //推荐注册分成
             $num = count($affiliate['item']);
+
+            //最新推荐分成只支持三级  
+            $num > 3 and $num = 3;
+
             for ($i=0; $i < $num; $i++)
             {
                 $affiliate['item'][$i]['level_point'] = (float)$affiliate['item'][$i]['level_point'];
@@ -196,8 +202,8 @@ elseif ($_REQUEST['act'] == 'separate')
             }
         }
         $sql = "UPDATE " . $GLOBALS['ecs']->table('order_info') .
-               " SET is_separate = 1" .
-               " WHERE order_id = '$oid'";
+               " SET is_separate = 1,lastmodify='".gmtime() .
+               "' WHERE order_id = '$oid'";
         $db->query($sql);
     }
     $links[] = array('text' => $_LANG['affiliate_ck'], 'href' => 'affiliate_ck.php?act=list');
@@ -221,9 +227,10 @@ function get_affiliate_ck()
         $sqladd = ' AND o.order_sn LIKE \'%' . trim($_REQUEST['order_sn']) . '%\'';
         $filter['order_sn'] = $_REQUEST['order_sn'];
     }
-    if (isset($_GET['auid']))
+    if (isset($_GET['auid']) && $_GET['auid'] > 0)
     {
-        $sqladd = ' AND a.user_id=' . $_GET['auid'];
+        $_GET['auid'] = intval($_GET['auid']);
+        $sqladd = ' AND a.user_id=' . intval($_GET['auid']);
     }
 
     if(!empty($affiliate['on']))

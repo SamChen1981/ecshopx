@@ -3,7 +3,7 @@
 /**
  * ECSHOP 用户相关函数库
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -384,6 +384,36 @@ function update_user_account($surplus)
     $GLOBALS['db']->query($sql);
 
     return $surplus['rec_id'];
+}
+
+/**
+ * 检查充值的金额是否与会员资金管理ID相符
+ *
+ * @access  public
+ * @param   string   $rec_id      会员资金管理ID
+ * @param   float    $money       充值的金额
+ * @return  true
+ */
+function check_account_money($rec_id, $user_id, $money)
+{
+    if(is_numeric($rec_id))
+    {
+        $sql = 'SELECT amount FROM ' . $GLOBALS['ecs']->table('user_account') .
+              " WHERE id = '$rec_id' and user_id='$user_id'";
+        $amount = $GLOBALS['db']->getOne($sql);
+    }
+    else
+    {
+        return false;
+    }
+    if ($money == $amount)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 /**
@@ -805,7 +835,16 @@ function get_user_prompt ($user_id)
     }
 
     /* 排序 */
-    $cmp = create_function('$a, $b', 'if($a["add_time"] == $b["add_time"]){return 0;};return $a["add_time"] < $b["add_time"] ? 1 : -1;');
+    // $cmp = create_function('$a, $b', 'if($a["add_time"] == $b["add_time"]){return 0;};return $a["add_time"] < $b["add_time"] ? 1 : -1;');
+    // var_dump($cmp,$a);exit;
+    //php7.2 create_function 废弃
+    $cmp = function($a,$b){
+        if($a["add_time"] == $b["add_time"]){
+            return 0;
+        }
+        return $a["add_time"] < $b["add_time"] ? 1 : -1;
+    };
+
     usort($prompt, $cmp);
 
     /* 格式化时间 */

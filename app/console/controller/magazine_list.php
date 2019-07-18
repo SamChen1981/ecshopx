@@ -3,7 +3,7 @@
 /**
  * ECSHOP 程序说明
  * ===========================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -69,7 +69,7 @@ elseif ($_REQUEST['act'] == 'add')
     {
         $magazine_name = trim($_POST['magazine_name']);
         $magazine_content = trim($_POST['magazine_content']);
-        $magazine_content = str_replace('src=\"','src=\"http://'.$_SERVER['HTTP_HOST'],$magazine_content);
+        $magazine_content = str_replace('src=\"','src=\"'.defined('FORCE_SSL_ADMIN') ? "https://" : "http://".$_SERVER['HTTP_HOST'],$magazine_content);
         $time = gmtime();
         $sql = "INSERT INTO " . $ecs->table('mail_templates') . " (template_code, is_html,template_subject, template_content, last_modify, type) VALUES('" . md5($magazine_name.$time) . "',1, '$magazine_name', '$magazine_content', '$time', 'magazine')";
         $db->query($sql);
@@ -96,7 +96,7 @@ elseif ($_REQUEST['act'] == 'edit')
     {
         $magazine_name = trim($_POST['magazine_name']);
         $magazine_content = trim($_POST['magazine_content']);
-        $magazine_content = str_replace('src=\"','src=\"http://'.$_SERVER['HTTP_HOST'],$magazine_content);
+        $magazine_content = str_replace('src=\"','src=\"'.defined('FORCE_SSL_ADMIN') ? "https://" : "http://".$_SERVER['HTTP_HOST'],$magazine_content);
         $time = gmtime();
         $db->query("UPDATE " . $ecs->table('mail_templates') . " SET is_html = 1, template_subject = '$magazine_name', template_content = '$magazine_content', last_modify = '$time' WHERE type = 'magazine' AND template_id = '$id'");
         $links[] = array('text' => $_LANG['magazine_list'], 'href' => 'magazine_list.php?act=list');

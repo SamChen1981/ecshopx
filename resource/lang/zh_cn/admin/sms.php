@@ -2,7 +2,7 @@
 /**
  * ECSHOP 短信模块语言文件
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -20,7 +20,7 @@ $_LANG['email'] = '电子邮箱';
 $_LANG['password'] = '登录密码';
 $_LANG['domain'] = '网店域名';
 $_LANG['register_new'] = '注册新账号';
-$_LANG['error_tips'] = '请在商店设置->短信设置，先注册短信服务并正确配置短信服务！';
+$_LANG['error_tips'] = '请用云起账号登陆后台，进行设置！';
 $_LANG['enable_old'] = '启用已有账号';
 
 /* 短信特服信息 */
@@ -39,11 +39,16 @@ $_LANG['phone'] = '接收手机号码';
 $_LANG['user_rand'] = '按用户等级发送短消息';
 $_LANG['phone_notice'] = '多个手机号码用半角逗号分开';
 $_LANG['msg'] = '消息内容';
-$_LANG['msg_notice'] = '最长67字符，签名已经默认，不需要添加签名。（如未设置签名点击 <a href="sms.php?act=sms_sign">设置</a>）';
+$_LANG['msg_notice'] = '每条短信最长67字符，签名已经默认，不需要添加签名。（如未设置签名点击 <a href="sms.php?act=sms_sign">设置</a>）';
+$_LANG['msg_forbidden'] = '内容里请不要出现"test"或者"测试"这样的字眼，否则可能会被运营商拦截';
 $_LANG['send_date'] = '定时发送时间';
 $_LANG['send_date_notice'] = '格式为YYYY-MM-DD HH:II。为空表示立即发送。';
 $_LANG['back_send_history'] = '返回发送历史列表';
 $_LANG['back_charge_history'] = '返回充值历史列表';
+$_LANG['sms_preview'] = '短信预览';
+$_LANG['notice0'] = '已输入';
+$_LANG['notice1'] = '个字符，约';
+$_LANG['notice2'] = '条短信长度 短信内容的实际长度以最终发出的结果为准';
 
 /* 记录查询界面 */
 $_LANG['start_date'] = '开始日期';
@@ -135,6 +140,7 @@ $_LANG['js_languages']['username_format_error'] = '用户名格式不对。';
 $_LANG['js_languages']['domain_empty_error'] = '域名不能为空。';
 $_LANG['js_languages']['domain_format_error'] = '域名格式不对。';
 $_LANG['js_languages']['send_empty_error'] = '发送手机号与发送等级至少填写一项！';
+$_LANG['js_languages']['sms_empty_error'] = '短信内容长度不为空';
 //--发送
 $_LANG['js_languages']['phone_empty_error'] = '请填写手机号。';
 $_LANG['js_languages']['phone_format_error'] = '手机号码格式不对。';

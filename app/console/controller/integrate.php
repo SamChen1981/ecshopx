@@ -3,7 +3,7 @@
 /**
  * ECSHOP 第三方程序会员数据整合插件管理程序
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -88,7 +88,7 @@ if ($_REQUEST['act'] == 'install')
 //        else
 //        {
               $cfg = $modules[0]['default'];
-              $cfg['integrate_url'] = "http://";
+              $cfg['integrate_url'] = defined('FORCE_SSL_ADMIN') ? "https://" : "http://";
 //        }
 
         /* 判断 */
@@ -106,7 +106,7 @@ if ($_REQUEST['act'] == 'install')
 
 if ($_REQUEST['act'] == 'view_install_log')
 {
-    $code = empty($_GET['code']) ? '' : trim($_GET['code']);
+    $code = empty($_GET['code']) ? '' : trim(addslashes($_GET['code']));
     if (empty($code) || file_exists(ROOT_PATH . DATA_DIR . '/integrate_' . $code . '_log.php' ))
     {
         sys_msg($_LANG['lost_intall_log'], 1);
@@ -522,10 +522,15 @@ if ($_REQUEST['act'] == 'check_user')
 
 if ($_REQUEST['act'] == 'import_user')
 {
+    $json = new JSON();
+    /*  20170926 阿里检测的时候不看程序是否断掉、是否注释 只管检测代码  所以问题还是要解决掉 或者删除掉  --已解决
+    //20170614 漏洞名称：ecshop后台getshell 漏洞描述ecshop没有对会员注册处的username过滤，保存重的用户信息时，可以直接写入shell
+    // ucenter整合已被屏蔽掉了 所以下面这块儿不会走了 如果后续需要 可以考虑esacpeshellarg函数处理 暂时没有办法测试 直接die掉了 
+    // die($json->encode(array('error' => 1, 'message' => 'ucenter整合已被屏蔽掉，如有疑问联系ecshop官方客服')));
+    */
     $cfg = $_SESSION['cfg'];
     include_once(ROOT_PATH . 'includes/cls_json.php');
     $ucdb = new cls_mysql($cfg['db_host'], $cfg['db_user'], $cfg['db_pass'], $cfg['db_name'], $cfg['db_charset']);
-    $json = new JSON();
     $result = array('error' => 0, 'message' => '');
     $query = $db->query("SHOW TABLE STATUS LIKE '" . $GLOBALS['prefix'] . 'users' . "'");
     $data = $db->fetch_array($query);
@@ -544,7 +549,7 @@ if ($_REQUEST['act'] == 'import_user')
     {
         $salt = rand(100000, 999999);
         $password = md5($data['password'].$salt);
-        $data['username'] = addslashes($data['user_name']);
+        $data['username'] = trim(addslashes($data['user_name']));
         $lastuid = $data['user_id'] + $maxuid;
         $uc_userinfo = $ucdb->getRow("SELECT `uid`, `password`, `salt` FROM ".$cfg['db_pre']."members WHERE `username`='$data[username]'");
         if(!$uc_userinfo)
@@ -598,7 +603,7 @@ if ($_REQUEST['act'] == 'import_user')
     // 保存重复的用户信息
     if (!empty($repeat_user))
     {
-        @file_put_contents(ROOT_PATH . 'data/repeat_user.php', $json->encode($repeat_user));
+        @file_put_contents(ROOT_PATH.'data/repeat_user.php','<?php die();?>'.$json->encode($repeat_user));
     }
     $result['error'] = 0;
     $result['message'] = $_LANG['import_user_success'];
@@ -1020,7 +1025,7 @@ if ($_REQUEST['act'] == 'points_set')
 {
     $rule_index = empty($_GET['rule_index']) ? '' : trim($_GET['rule_index']);
 
-    $user = &init_users();
+    $user = init_users();
     $points = $user->get_points_name(); //获取商城可用积分
 
     if (empty($points))

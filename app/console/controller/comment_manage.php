@@ -3,7 +3,7 @@
 /**
  * ECSHOP 用户评论管理程序
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -12,10 +12,9 @@
  * $Author: liubo $
  * $Id: comment_manage.php 17217 2011-01-19 06:29:08Z liubo $
 */
-
 define('IN_ECS', true);
-
 require(dirname(__FILE__) . '/includes/init.php');
+
 
 /* act操作项的初始化 */
 if (empty($_REQUEST['act']))
@@ -327,14 +326,18 @@ if ($_REQUEST['act'] == 'batch')
  */
 function get_comment_list()
 {
+    global $db;
     /* 查询条件 */
     $filter['keywords']     = empty($_REQUEST['keywords']) ? 0 : trim($_REQUEST['keywords']);
     if (isset($_REQUEST['is_ajax']) && $_REQUEST['is_ajax'] == 1)
     {
         $filter['keywords'] = json_str_iconv($filter['keywords']);
     }
-    $filter['sort_by']      = empty($_REQUEST['sort_by']) ? 'add_time' : trim($_REQUEST['sort_by']);
-    $filter['sort_order']   = empty($_REQUEST['sort_order']) ? 'DESC' : trim($_REQUEST['sort_order']);
+
+    $sort = array('comment_id','user_name','comment_type','id_value','ip_address','add_time');
+    $filter['sort_by'] = in_array($_REQUEST['sort_by'], $sort) ? mysqli_real_escape_string($db->link_id, trim($_REQUEST['sort_by'])) : 'add_time';
+    $filter['sort_order']   = empty($_REQUEST['sort_order']) ? 'DESC' : mysqli_real_escape_string($db->link_id, trim($_REQUEST['sort_order']));
+
 
     $where = (!empty($filter['keywords'])) ? " AND content LIKE '%" . mysql_like_quote($filter['keywords']) . "%' " : '';
 
@@ -347,8 +350,8 @@ function get_comment_list()
     /* 获取评论数据 */
     $arr = array();
     $sql  = "SELECT * FROM " .$GLOBALS['ecs']->table('comment'). " WHERE parent_id = 0 $where " .
-            " ORDER BY $filter[sort_by] $filter[sort_order] ".
-            " LIMIT ". $filter['start'] .", $filter[page_size]";
+            " ORDER BY ".$filter['sort_by']." ".$filter['sort_order'] .
+            " LIMIT ". $filter['start'] ."," .$filter['page_size'];
     $res  = $GLOBALS['db']->query($sql);
 
     while ($row = $GLOBALS['db']->fetchRow($res))

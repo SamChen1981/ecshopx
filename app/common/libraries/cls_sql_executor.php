@@ -4,7 +4,7 @@
  * ECSHOP SQL语句执行类。在调用该类方法之前，请参看相应方法的说明。
  *
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -157,6 +157,7 @@ class sql_executor
         {
             $query_items = $this->parse_sql_file($sql_file);
 
+
             /* 如果解析失败，则跳过 */
             if (!$query_items)
             {
@@ -252,7 +253,7 @@ class sql_executor
         }
         /* 处理ALTER TABLE语句，此时程序将对表的结构进行修改 */
         elseif ($this->auto_match && preg_match('/^\s*ALTER\s+TABLE\s*/i', $query_item))
-        {
+        {   
             if (!$this->alter_table($query_item))
             {
                 return false;
@@ -260,7 +261,7 @@ class sql_executor
         }
         /* 处理其它修改操作，如数据添加、更新、删除等 */
         else
-        {
+        {   
             if (!$this->do_other($query_item))
             {
                 return false;
@@ -876,10 +877,10 @@ class sql_executor
      */
     function handle_error($query_item)
     {
-        $mysql_error = 'ERROR NO: ' . $this->db->errno()
+        $mysqli_error = 'ERROR NO: ' . $this->db->errno()
                     . "\r\nERROR MSG: " . $this->db->error();
 
-        $error_str = "SQL Error:\r\n " . $mysql_error
+        $error_str = "SQL Error:\r\n " . $mysqli_error
                 . "\r\n\r\n"
                 . "Query String:\r\n ". $query_item
                 . "\r\n\r\n"

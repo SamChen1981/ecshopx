@@ -2,7 +2,7 @@
 /**
  * ECSHOP 商品批量上传、修改
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -653,10 +653,11 @@ elseif ($_REQUEST['act'] == 'edit')
             $_goods_attr_array = explode('|', $value['goods_attr']);
             if (is_array($_goods_attr_array))
             {
-                $_temp = '';
+                $_temp = [];
                 foreach ($_goods_attr_array as $_goods_attr_value)
                 {
-                     $_temp[] = $goods_attr[$_goods_attr_value];
+                    if( !$_goods_attr_value ) continue;
+                    $_temp[] = $goods_attr[$_goods_attr_value];
                 }
                 $value['goods_attr'] = implode('，', $_temp);
             }
@@ -918,7 +919,7 @@ elseif ($_REQUEST['act'] == 'download')
 
 elseif ($_REQUEST['act'] == 'get_goods')
 {
-    $filter = &new stdclass;
+    $filter = new stdclass;
 
     $filter->cat_id = intval($_GET['cat_id']);
     $filter->brand_id = intval($_GET['brand_id']);

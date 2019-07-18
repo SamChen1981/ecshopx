@@ -3,7 +3,7 @@
 /**
  * ECSHOP 商品详情
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -31,6 +31,22 @@ $smarty->assign('affiliate', $affiliate);
 
 $goods_id = isset($_REQUEST['id'])  ? intval($_REQUEST['id']) : 0;
 
+$ua = strtolower($_SERVER['HTTP_USER_AGENT']);
+
+$uachar = "/(nokia|sony|ericsson|mot|samsung|sgh|lg|philips|panasonic|alcatel|lenovo|cldc|midp|mobile)/i";
+
+if(($ua == '' || preg_match($uachar, $ua))&& !strpos(strtolower($_SERVER['REQUEST_URI']),'wap'))
+{
+    $Loaction = 'h5/#product?id='.$goods_id;
+
+    if (!empty($Loaction))
+    {
+        ecs_header("Location: $Loaction\n");
+
+        exit;
+    }
+
+}
 /*------------------------------------------------------ */
 //-- 改变属性、数量时重新计算商品价格
 /*------------------------------------------------------ */
@@ -266,11 +282,11 @@ if (!empty($_COOKIE['ECS']['history']))
         array_pop($history);
     }
 
-    setcookie('ECS[history]', implode(',', $history), gmtime() + 3600 * 24 * 30);
+    setcookie('ECS[history]', implode(',', $history), gmtime() + 3600 * 24 * 30, NULL, NULL, NULL, TRUE);
 }
 else
 {
-    setcookie('ECS[history]', $goods_id, gmtime() + 3600 * 24 * 30);
+    setcookie('ECS[history]', $goods_id, gmtime() + 3600 * 24 * 30, NULL, NULL, NULL, TRUE);
 }
 
 

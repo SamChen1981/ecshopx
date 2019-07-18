@@ -3,7 +3,7 @@
 /**
  * ECSHOP 前台公用函数库
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -1100,7 +1100,7 @@ function visit_stats()
     $time = gmtime();
     /* 检查客户端是否存在访问统计的cookie */
     $visit_times = (!empty($_COOKIE['ECS']['visit_times'])) ? intval($_COOKIE['ECS']['visit_times']) + 1 : 1;
-    setcookie('ECS[visit_times]', $visit_times, $time + 86400 * 365, '/');
+    setcookie('ECS[visit_times]', $visit_times, $time + 86400 * 365, '/', NULL, NULL, TRUE);
 
     $browser  = get_user_browser();
     $os       = get_os();
@@ -1148,7 +1148,7 @@ function visit_stats()
                 'referer_domain, referer_path, access_url, access_time' .
             ') VALUES (' .
                 "'$ip', '$visit_times', '$browser', '$os', '$lang', '$area', ".
-                "'" . htmlspecialchars(addslashes($domain)) ."', '" . htmlspecialchars(addslashes($path)) ."', '" . htmlspecialchars(addslashes(PHP_SELF)) ."', '" . $time . "')";
+                "'" . addslashes($domain) ."', '" . addslashes($path) ."', '" . htmlspecialchars(addslashes(PHP_SELF)) ."', '" . $time . "')";
     $GLOBALS['db']->query($sql);
 }
 
@@ -1326,7 +1326,8 @@ function get_tags($goods_id = 0, $user_id = 0)
  */
 function get_dyna_libs($theme, $tmp)
 {
-    $ext = end(explode('.', $tmp));
+    $tmp_arr = explode('.', $tmp);
+    $ext = end($tmp_arr);
     $tmp = basename($tmp,".$ext");
     $sql = 'SELECT region, library, sort_order, id, number, type' .
             ' FROM ' . $GLOBALS['ecs']->table('template') .
@@ -1538,6 +1539,11 @@ function parse_rate_value($str, &$operate)
  */
 function recalculate_price()
 {
+    $where = "session_id = '" . SESS_ID . "'";
+    if ($_SESSION['user_id'])
+    {
+        $where = "user_id = '".intval($_SESSION['user_id'])."'";
+    }
     /* 取得有可能改变价格的商品：除配件和赠品之外的商品 */
     $sql = 'SELECT c.rec_id, c.goods_id, c.goods_attr_id, g.promote_price, g.promote_start_date, c.goods_number,'.
                 "g.promote_end_date, IFNULL(mp.user_price, g.shop_price * '$_SESSION[discount]') AS member_price ".
@@ -1545,7 +1551,7 @@ function recalculate_price()
             'LEFT JOIN ' . $GLOBALS['ecs']->table('goods') . ' AS g ON g.goods_id = c.goods_id '.
             "LEFT JOIN " . $GLOBALS['ecs']->table('member_price') . " AS mp ".
                     "ON mp.goods_id = g.goods_id AND mp.user_rank = '" . $_SESSION['user_rank'] . "' ".
-            "WHERE session_id = '" .SESS_ID. "' AND c.parent_id = 0 AND c.is_gift = 0 AND c.goods_id > 0 " .
+            "WHERE ". $where ." AND c.parent_id = 0 AND c.is_gift = 0 AND c.goods_id > 0 " .
             "AND c.rec_type = '" . CART_GENERAL_GOODS . "' AND c.extension_code <> 'package_buy'";
 
             $res = $GLOBALS['db']->getAll($sql);
@@ -1559,14 +1565,14 @@ function recalculate_price()
 
 
         $goods_sql = "UPDATE " .$GLOBALS['ecs']->table('cart'). " SET goods_price = '$goods_price' ".
-                     "WHERE goods_id = '" . $row['goods_id'] . "' AND session_id = '" . SESS_ID . "' AND rec_id = '" . $row['rec_id'] . "'";
+                     "WHERE goods_id = '" . $row['goods_id'] . "' AND ". $where ." AND rec_id = '" . $row['rec_id'] . "'";
 
         $GLOBALS['db']->query($goods_sql);
     }
 
     /* 删除赠品，重新选择 */
     $GLOBALS['db']->query('DELETE FROM ' . $GLOBALS['ecs']->table('cart') .
-        " WHERE session_id = '" . SESS_ID . "' AND is_gift > 0");
+        " WHERE ". $where ." AND is_gift > 0");
 }
 
 /**
@@ -1740,11 +1746,11 @@ function set_affiliate()
             {
                 $c = 1;
             }
-            setcookie('ecshop_affiliate_uid', intval($_GET['u']), gmtime() + 3600 * $config['config']['expire'] * $c);
+            setcookie('ecshop_affiliate_uid', intval($_GET['u']), gmtime() + 3600 * $config['config']['expire'] * $c, NULL, NULL, NULL, TRUE);
         }
         else
         {
-            setcookie('ecshop_affiliate_uid', intval($_GET['u']), gmtime() + 3600 * 24); // 过期时间为 1 天
+            setcookie('ecshop_affiliate_uid', intval($_GET['u']), gmtime() + 3600 * 24, NULL, NULL, NULL, TRUE); // 过期时间为 1 天
         }
     }
 }
@@ -1769,7 +1775,7 @@ function get_affiliate()
         }
         else
         {
-            setcookie('ecshop_affiliate_uid', '', 1);
+            setcookie('ecshop_affiliate_uid', '', 1, NULL, NULL, NULL, TRUE);
         }
     }
 
@@ -2042,7 +2048,7 @@ function license_info()
             $host = $_SERVER['HTTP_HOST'];
         }
         $url_domain=url_domain();
-        $host = 'http://' . $host .$url_domain ;
+        $host = defined('FORCE_SSL_LOGIN') ? 'https://' : 'http://' . $host .$url_domain ;
         $license = '<a href="http://www.ecshop.com/license.php?product=ecshop_b2c&url=' . urlencode($host) . '" target="_blank"
 >&nbsp;&nbsp;Licensed</a>';
         return $license;
@@ -2066,6 +2072,67 @@ function url_domain()
     }
 
     return $root;
+}
+
+//更新离线购物车
+function update_cart_offline(){
+    if (!$_SESSION['user_id'])
+    {
+        return false;
+    }
+    $user_id = intval($_SESSION['user_id']);
+
+    //获取离线购物车
+    $sql = "SELECT * ".
+            " FROM " .$GLOBALS['ecs']->table('cart').
+            " WHERE session_id = '". SESS_ID ."' AND user_id=0";
+    $offline_carts = $GLOBALS['db']->getAll($sql); 
+
+    if( !$offline_carts ){ //无需合并
+        return true;
+    }
+
+    //获取会员购物车数据
+    $sql = "SELECT * ".
+            " FROM " .$GLOBALS['ecs']->table('cart').
+            " WHERE user_id = '". $user_id ."'";
+    $online_carts = $GLOBALS['db']->getAll($sql); 
+
+    if( !$online_carts ){ //离线转在线
+        $sql = "UPDATE " . $GLOBALS['ecs']->table('cart') . " SET user_id = '$user_id' WHERE session_id = '" .SESS_ID."'";
+        $GLOBALS['db']->query($sql);
+    }
+
+    //合并购物车相同的商品
+    $offcart = array();
+    foreach($offline_carts as $offkey=>$offval){
+        if( !$offval['goods_id'] || !$offval['goods_number'] ) continue;
+        $key = $offval['goods_id'].'_'.$offval['product_id'];
+        $offcart[$key] = $offval;
+    }
+    
+    foreach($online_carts as $onkey=>$onval){
+        if( !$onval['goods_id'] || !$onval['goods_number'] ) continue;
+        $key = $onval['goods_id'].'_'.$onval['product_id'];
+        if( $offcart[$key] ){
+            $sql = "UPDATE " . $GLOBALS['ecs']->table('cart') . " SET goods_number=goods_number+". $offcart[$key]['goods_number'] ." WHERE rec_id='".$onval['rec_id']."'";
+            $GLOBALS['db']->query($sql);
+            $sql = "DELETE FROM " . $GLOBALS['ecs']->table('cart') . " WHERE rec_id = '" . $offcart[$key]['rec_id'] . "'";
+            $GLOBALS['db']->query($sql);
+            unset($offcart[$key]);
+        }
+    }
+    //不重复的商品转成在线购物车
+    if( count($offcart) > 0 ){
+        $offcart = array_values($offcart); //初始化数组的key
+        $rec_id = array();
+        for($i=count($offcart);$i>=0;$rec_id[]=$offcart[$i]['rec_id'],$i--);
+        $rec_id = array_unique(array_filter($rec_id));
+        $sql = "UPDATE " . $GLOBALS['ecs']->table('cart') . " SET user_id = '$user_id' WHERE rec_id IN (".implode(',', $rec_id).")";
+        $GLOBALS['db']->query($sql);
+    }
+
+    return true;
 }
 
 ?>

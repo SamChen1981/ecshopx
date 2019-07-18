@@ -3,7 +3,7 @@
 /**
  * ECSHOP 商品销售排行
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -95,7 +95,7 @@ else
     $smarty->assign('page_count',       $goods_order_data['page_count']);
     $smarty->assign('filter',           $goods_order_data['filter']);
     $smarty->assign('full_page',        1);
-    $smarty->assign('sort_goods_num',   '<img src="images/sort_desc.gif">');
+    $smarty->assign('sort_goods_num',   '<img src="images/sort_desc.png">');
     $smarty->assign('start_date',       local_date('Y-m-d', $_REQUEST['start_date']));
     $smarty->assign('end_date',         local_date('Y-m-d', $_REQUEST['end_date']));
     $smarty->assign('action_link',      array('text' => $_LANG['download_sale_sort'], 'href' => '#download' ));

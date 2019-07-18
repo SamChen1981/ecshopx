@@ -3,7 +3,7 @@
 /**
  * ECSHOP 购物流程
  * ============================================================================
- * 版权所有 2005-2010 上海商派网络科技有限公司，并保留所有权利。
+ * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -52,6 +52,7 @@ $smarty->assign('data_dir',    DATA_DIR);       // 数据目录
 /*------------------------------------------------------ */
 if ($_REQUEST['step'] == 'add_to_cart')
 {
+    add_log("add_to_cart begin=".__LINE__."=POST:",$_POST);
     include_once('includes/cls_json.php');
     $_POST['goods']=strip_tags(urldecode($_POST['goods']));
     $_POST['goods'] = json_str_iconv($_POST['goods']);
@@ -76,7 +77,7 @@ if ($_REQUEST['step'] == 'add_to_cart')
     }
 
     $goods = $json->decode($_POST['goods']);
-
+    add_log("add_to_cart==".__LINE__." =goods:",$goods);
     /* 检查：如果商品有规格，而post的数据没有规格，把商品的规格属性通过JSON传到前台 */
     if (empty($goods->spec) AND empty($goods->quick))
     {
@@ -86,7 +87,7 @@ if ($_REQUEST['step'] == 'add_to_cart')
         'LEFT JOIN ' . $GLOBALS['ecs']->table('attribute') . ' AS a ON a.attr_id = g.attr_id ' .
         "WHERE a.attr_type != 0 AND g.goods_id = '" . $goods->goods_id . "' " .
         'ORDER BY a.sort_order, g.attr_price, g.goods_attr_id';
-
+        add_log("add_to_cart==".__LINE__." =no spec and no quick sql:".$sql);
         $res = $GLOBALS['db']->getAll($sql);
 
         if (!empty($res))
@@ -189,6 +190,12 @@ elseif ($_REQUEST['step'] == 'login')
 {
     include_once('languages/'. $_CFG['lang']. '/user.php');
 
+    $where = "session_id = '" . SESS_ID . "'";
+    if ($_SESSION['user_id'])
+    {
+        $where = "user_id = '".intval($_SESSION['user_id'])."'";
+    }
+
     /*
      * 用户登录注册
      */
@@ -197,8 +204,9 @@ elseif ($_REQUEST['step'] == 'login')
         $smarty->assign('anonymous_buy', $_CFG['anonymous_buy']);
 
         /* 检查是否有赠品，如果有提示登录后重新选择赠品 */
-        $sql = "SELECT COUNT(*) FROM " . $ecs->table('cart') .
-                " WHERE session_id = '" . SESS_ID . "' AND is_gift > 0";
+        // $sql = "SELECT COUNT(*) FROM " . $ecs->table('cart') .
+        //         " WHERE session_id = '" . SESS_ID . "' AND is_gift > 0";
+        $sql = "SELECT COUNT(*) FROM " . $ecs->table('cart') . " WHERE ". $where ." AND is_gift > 0";
         if ($db->getOne($sql) > 0)
         {
             $smarty->assign('need_rechoose_gift', 1);
@@ -244,11 +252,12 @@ elseif ($_REQUEST['step'] == 'login')
             $_POST['password']=isset($_POST['password']) ? trim($_POST['password']) : '';
             if ($user->login($_POST['username'], $_POST['password'],isset($_POST['remember'])))
             {
+                update_cart_offline(); //离线购物车绑定会员id
                 update_user_info();  //更新用户信息
                 recalculate_price(); // 重新计算购物车中的商品价格
 
                 /* 检查购物车中是否有商品 没有商品则跳转到首页 */
-                $sql = "SELECT COUNT(*) FROM " . $ecs->table('cart') . " WHERE session_id = '" . SESS_ID . "' ";
+                $sql = "SELECT COUNT(*) FROM " . $ecs->table('cart') . " WHERE ". $where;
                 if ($db->getOne($sql) > 0)
                 {
                     ecs_header("Location: flow.php?step=checkout\n");
@@ -287,6 +296,11 @@ elseif ($_REQUEST['step'] == 'login')
 
             if (register(trim($_POST['username']), trim($_POST['password']), trim($_POST['email'])))
             {
+                include_once(ROOT_PATH . 'includes/cls_matrix.php');
+                $matrix = new matrix;
+                if($matrix->get_bind_info('ecos.taocrm')){
+                    $matrix->createMember($_SESSION['user_id'],'ecos.taocrm');
+                }
                 /* 用户注册成功 */
                 ecs_header("Location: flow.php?step=consignee\n");
                 exit;
@@ -455,10 +469,15 @@ elseif ($_REQUEST['step'] == 'checkout')
         $_SESSION['flow_order']['extension_code'] = '';
     }
 
+    $where = "session_id = '" . SESS_ID . "'";
+    if ($_SESSION['user_id'])
+    {
+        $where = "user_id = '".intval($_SESSION['user_id'])."'";
+    }
+
     /* 检查购物车中是否有商品 */
     $sql = "SELECT COUNT(*) FROM " . $ecs->table('cart') .
-        " WHERE session_id = '" . SESS_ID . "' " .
-        "AND parent_id = 0 AND is_gift = 0 AND rec_type = '$flow_type'";
+        " WHERE ". $where ." AND parent_id = 0 AND is_gift = 0 AND rec_type = '$flow_type'";
 
     if ($db->getOne($sql) == 0)
     {
@@ -527,7 +546,7 @@ elseif ($_REQUEST['step'] == 'checkout')
      * 计算订单的费用
      */
     $total = order_fee($order, $cart_goods, $consignee);
-
+    
     $smarty->assign('total', $total);
     $smarty->assign('shopping_money', sprintf($_LANG['shopping_money'], $total['formated_goods_price']));
     $smarty->assign('market_price_desc', sprintf($_LANG['than_market_price'], $total['formated_market_price'], $total['formated_saving'], $total['save_rate']));
@@ -540,7 +559,7 @@ elseif ($_REQUEST['step'] == 'checkout')
     $cod_disabled      = true;
 
     // 查看购物车中是否全为免运费商品，若是则把运费赋为零
-    $sql = 'SELECT count(*) FROM ' . $ecs->table('cart') . " WHERE `session_id` = '" . SESS_ID. "' AND `extension_code` != 'package_buy' AND `is_shipping` = 0";
+    $sql = 'SELECT count(*) FROM ' . $ecs->table('cart') . " WHERE ". $where ." AND `extension_code` != 'package_buy' AND `is_shipping` = 0";
     $shipping_count = $db->getOne($sql);
 
     foreach ($shipping_list AS $key => $val)
@@ -617,7 +636,7 @@ elseif ($_REQUEST['step'] == 'checkout')
     }
 
     // 给货到付款的手续费加<span id>，以便改变配送的时候动态显示
-    $payment_list = available_payment_list(1, $cod_fee);
+    $payment_list = available_payment_list(1, $cod_fee, false, '0');
     if(isset($payment_list))
     {
         foreach ($payment_list as $key => $payment)
@@ -647,8 +666,13 @@ elseif ($_REQUEST['step'] == 'checkout')
                     }
                 }
             }
+            if($payment['pay_code']=='yunqi'){
+                $yunqi_payment = $payment_list[$key];
+                unset($payment_list[$key]);
+            }
         }
     }
+    $yunqi_payment and array_unshift($payment_list, $yunqi_payment);
     $smarty->assign('payment_list', $payment_list);
 
     /* 取得包装与贺卡 */
@@ -876,7 +900,7 @@ elseif ($_REQUEST['step'] == 'select_payment')
 
     /* 对商品信息赋值 */
     $cart_goods = cart_goods($flow_type); // 取得商品列表，计算合计
-
+    
     if (empty($cart_goods) || !check_consignee_info($consignee, $flow_type))
     {
         $result['error'] = $_LANG['no_goods_in_cart'];
@@ -1320,15 +1344,22 @@ elseif ($_REQUEST['step'] == 'check_integral')
 /*------------------------------------------------------ */
 elseif ($_REQUEST['step'] == 'done')
 {
+    add_log("pc create order begin==POST:",$_POST);
     include_once('includes/lib_clips.php');
     include_once('includes/lib_payment.php');
 
+    $where = "session_id = '" . SESS_ID . "'";
+    if ($_SESSION['user_id'])
+    {
+        $where = "user_id = '".intval($_SESSION['user_id'])."'";
+    }
+
     /* 取得购物类型 */
     $flow_type = isset($_SESSION['flow_type']) ? intval($_SESSION['flow_type']) : CART_GENERAL_GOODS;
-
+    add_log("pc create order ==flow_type:".$flow_type."==user_id:".intval($_SESSION['user_id']));
     /* 检查购物车中是否有商品 */
     $sql = "SELECT COUNT(*) FROM " . $ecs->table('cart') .
-        " WHERE session_id = '" . SESS_ID . "' " .
+        " WHERE ". $where .
         "AND parent_id = 0 AND is_gift = 0 AND rec_type = '$flow_type'";
     if ($db->getOne($sql) == 0)
     {
@@ -1396,11 +1427,16 @@ elseif ($_REQUEST['step'] == 'done')
         'need_insure'     => isset($_POST['need_insure']) ? intval($_POST['need_insure']) : 0,
         'user_id'         => $_SESSION['user_id'],
         'add_time'        => gmtime(),
+        'lastmodify'      => gmtime(),
         'order_status'    => OS_UNCONFIRMED,
         'shipping_status' => SS_UNSHIPPED,
         'pay_status'      => PS_UNPAYED,
         'agency_id'       => get_agency_by_regions(array($consignee['country'], $consignee['province'], $consignee['city'], $consignee['district']))
         );
+
+    if (isset($_CFG['use_how_oos']) && $_CFG['use_how_oos'] == '0'){
+        $order['how_oos'] = '';
+    }
 
     /* 扩展信息 */
     if (isset($_SESSION['flow_type']) && intval($_SESSION['flow_type']) != CART_GENERAL_GOODS)
@@ -1474,7 +1510,7 @@ elseif ($_REQUEST['step'] == 'done')
 
     /* 订单中的商品 */
     $cart_goods = cart_goods($flow_type);
-
+    add_log("pc create order ==cart_goods==",$cart_goods);
     if (empty($cart_goods))
     {
         show_message($_LANG['no_goods_in_cart'], $_LANG['back_home'], './', 'warning');
@@ -1503,7 +1539,7 @@ elseif ($_REQUEST['step'] == 'done')
     }
     if(isset($is_real_good))
     {
-        $sql="SELECT shipping_id FROM " . $ecs->table('shipping') . " WHERE shipping_id=".$order['shipping_id'] ." AND enabled =1"; 
+        $sql="SELECT shipping_id FROM " . $ecs->table('shipping') . " WHERE shipping_id=".$order['shipping_id'] ." AND enabled =1";
         if(!$db->getOne($sql))
         {
            show_message($_LANG['flow_no_shipping']);
@@ -1637,6 +1673,7 @@ elseif ($_REQUEST['step'] == 'done')
     do
     {
         $order['order_sn'] = get_order_sn(); //获取新订单号
+        add_log("pc create order ==insert order ==",$order);
         $GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('order_info'), $order, 'INSERT');
 
         $error_no = $GLOBALS['db']->errno();
@@ -1658,7 +1695,8 @@ elseif ($_REQUEST['step'] == 'done')
             " SELECT '$new_order_id', goods_id, goods_name, goods_sn, product_id, goods_number, market_price, ".
                 "goods_price, goods_attr, is_real, extension_code, parent_id, is_gift, goods_attr_id".
             " FROM " .$ecs->table('cart') .
-            " WHERE session_id = '".SESS_ID."' AND rec_type = '$flow_type'";
+            " WHERE ". $where ." AND rec_type = '$flow_type'";
+    add_log("pc create order end ==insert order_goods sql:".$sql);
     $db->query($sql);
     /* 修改拍卖活动状态 */
     if ($order['extension_code']=='auction')
@@ -1666,15 +1704,29 @@ elseif ($_REQUEST['step'] == 'done')
         $sql = "UPDATE ". $ecs->table('goods_activity') ." SET is_finished='2' WHERE act_id=".$order['extension_id'];
         $db->query($sql);
     }
-
+    
     /* 处理余额、积分、红包 */
     if ($order['user_id'] > 0 && $order['surplus'] > 0)
     {
         log_account_change($order['user_id'], $order['surplus'] * (-1), 0, 0, 0, sprintf($_LANG['pay_order'], $order['order_sn']));
+        //订单支付后，创建订单到淘打
+        include_once("includes/cls_matrix.php");
+        $matrix = new matrix();
+        $bind_info = $matrix->get_bind_info(array('taodali'));
+        if($bind_info){
+            $matrix->createOrder($order['order_sn'],'taodali');
+        }
     }
     if ($order['user_id'] > 0 && $order['integral'] > 0)
     {
         log_account_change($order['user_id'], 0, 0, 0, $order['integral'] * (-1), sprintf($_LANG['pay_order'], $order['order_sn']));
+        //订单支付后，创建订单到淘打
+        include_once("includes/cls_matrix.php");
+        $matrix = new matrix();
+        $bind_info = $matrix->get_bind_info(array('taodali'));
+        if($bind_info){
+            $matrix->createOrder($order['order_sn'],'taodali');
+        }
     }
 
 
@@ -1718,7 +1770,7 @@ elseif ($_REQUEST['step'] == 'done')
         $sql = "SELECT goods_id, goods_name, goods_number AS num FROM ".
                $GLOBALS['ecs']->table('cart') .
                 " WHERE is_real = 0 AND extension_code = 'virtual_card'".
-                " AND session_id = '".SESS_ID."' AND rec_type = '$flow_type'";
+                " AND ". $where ." AND rec_type = '$flow_type'";
 
         $res = $GLOBALS['db']->getAll($sql);
 
@@ -1776,9 +1828,24 @@ elseif ($_REQUEST['step'] == 'done')
         $payment = payment_info($order['pay_id']);
 
         include_once('includes/modules/payment/' . $payment['pay_code'] . '.php');
-
         $pay_obj    = new $payment['pay_code'];
+        //为天宫支付传递商品名
+        $sql = "SELECT goods_name FROM " . $ecs->table('order_goods') . " WHERE order_id =" . $order['order_id'];
+        $res = $db->query($sql);
+        while ($aaa[] = $db->fetchRow($res))
+        {
+            $bbb = array_values($aaa);
+        }
+        foreach($bbb as $v)
+        {
+            $ccc[] = $v['goods_name'];
+        }
+        $goods_name = implode(',',$ccc);
+        $order['goods_name'] = $goods_name;
+        //天工结束
 
+        //云起收银
+        $payment['pay_code']='yunqi' and  $order['yunqi_paymethod'] = $_POST['yunqi_paymethod'];
         $pay_online = $pay_obj->get_code($order, unserialize_config($payment['pay_config']));
 
         $order['pay_desc'] = $payment['pay_desc'];
@@ -1796,10 +1863,16 @@ elseif ($_REQUEST['step'] == 'done')
     $smarty->assign('goods_list', $cart_goods);
     $smarty->assign('order_submit_back', sprintf($_LANG['order_submit_back'], $_LANG['back_home'], $_LANG['goto_user_center'])); // 返回提示
 
+    // 对接erp将订单推送到erp
+    include_once(ROOT_PATH . 'includes/cls_matrix.php');
+    $matrix = new matrix;
+    $matrix->createOrder($order['order_sn']);
+
     user_uc_call('add_feed', array($order['order_id'], BUY_GOODS)); //推送feed到uc
     unset($_SESSION['flow_consignee']); // 清除session中保存的收货人信息
     unset($_SESSION['flow_order']);
     unset($_SESSION['direct_shopping']);
+
 }
 
 /*------------------------------------------------------ */
@@ -1833,6 +1906,12 @@ elseif ($_REQUEST['step'] == 'drop_goods')
 /* 把优惠活动加入购物车 */
 elseif ($_REQUEST['step'] == 'add_favourable')
 {
+
+    $where = "session_id = '" . SESS_ID . "'";
+    if ($_SESSION['user_id'])
+    {
+        $where = "user_id = '".intval($_SESSION['user_id'])."'";
+    }
     /* 取得优惠活动信息 */
     $act_id = intval($_POST['act_id']);
     $favourable = favourable_info($act_id);
@@ -1866,7 +1945,7 @@ elseif ($_REQUEST['step'] == 'add_favourable')
         /* 检查是否已在购物车 */
         $sql = "SELECT goods_name" .
                 " FROM " . $ecs->table('cart') .
-                " WHERE session_id = '" . SESS_ID . "'" .
+                " WHERE ". $where .
                 " AND rec_type = '" . CART_GENERAL_GOODS . "'" .
                 " AND is_gift = '$act_id'" .
                 " AND goods_id " . db_create_in($_POST['gift']);
@@ -1908,16 +1987,23 @@ elseif ($_REQUEST['step'] == 'add_favourable')
 elseif ($_REQUEST['step'] == 'clear')
 {
     $sql = "DELETE FROM " . $ecs->table('cart') . " WHERE session_id='" . SESS_ID . "'";
+    if ($_SESSION['user_id'])
+    {
+        $sql .= " OR user_id='".intval($_SESSION['user_id'])."'";
+    }
     $db->query($sql);
 
     ecs_header("Location:./\n");
 }
 elseif ($_REQUEST['step'] == 'drop_to_collect')
 {
+
+    $where = "session_id = '" . SESS_ID . "'";
     if ($_SESSION['user_id'] > 0)
     {
+        $where = "user_id = '".intval($_SESSION['user_id'])."'";
         $rec_id = intval($_GET['id']);
-        $goods_id = $db->getOne("SELECT  goods_id FROM " .$ecs->table('cart'). " WHERE rec_id = '$rec_id' AND session_id = '" . SESS_ID . "' ");
+        $goods_id = $db->getOne("SELECT  goods_id FROM " .$ecs->table('cart'). " WHERE rec_id = '$rec_id' AND ".$where);
         $count = $db->getOne("SELECT goods_id FROM " . $ecs->table('collect_goods') . " WHERE user_id = '$_SESSION[user_id]' AND goods_id = '$goods_id'");
         if (empty($count))
         {
@@ -2085,10 +2171,38 @@ elseif ($_REQUEST['step'] == 'add_package_to_cart')
     $result['confirm_type'] = !empty($_CFG['cart_confirm']) ? $_CFG['cart_confirm'] : 2;
     die($json->encode($result));
 }
+elseif ($_REQUEST['step'] == 'repurchase') {
+    include_once('includes/cls_json.php');
+    $order_id = intval($_POST['order_id']);
+    $order_id = json_str_iconv($order_id);
+    $user_id = $_SESSION['user_id'];
+    $json  = new JSON;
+    $order = $db->getOne('SELECT count(*) FROM ' . $ecs->table('order_info') . ' WHERE order_id = ' . $order_id . ' and user_id = ' . $user_id);
+    if (!$order) {
+        $result = array('error' => 1, 'message' => $_LANG['repurchase_fail']);
+        die($json->encode($result));
+    }
+
+    $db->query('DELETE FROM ' .$ecs->table('cart') . " WHERE rec_type = " . CART_REPURCHASE);
+    $order_goods = $db->getAll("SELECT goods_id, goods_number, goods_attr_id, parent_id FROM " . $ecs->table('order_goods') . " WHERE order_id = " . $order_id);
+    $result = array('error' => 0, 'message' => '');
+    foreach ($order_goods as $goods) {
+        $spec = empty($goods['goods_attr_id']) ? array() : explode(',', $goods['goods_attr_id']);
+        if (!addto_cart($goods['goods_id'], $goods['goods_number'], $spec, $goods['parent_id'], CART_REPURCHASE)) {
+            $result = false;
+            $result = array('error' => 1, 'message' => $_LANG['repurchase_fail']);
+        }
+    }
+    die($json->encode($result));
+}
 else
 {
+
+    $flow_type = isset($_REQUEST['type']) ? $_REQUEST['type'] : CART_GENERAL_GOODS;
+    $flow_type = strip_tags($flow_type);
+    $flow_type = json_str_iconv($flow_type);
     /* 标记购物流程为普通商品 */
-    $_SESSION['flow_type'] = CART_GENERAL_GOODS;
+    $_SESSION['flow_type'] = $flow_type;
 
     /* 如果是一步购物，跳到结算中心 */
     if ($_CFG['one_step_buy'] == '1')
@@ -2098,7 +2212,7 @@ else
     }
 
     /* 取得商品列表，计算合计 */
-    $cart_goods = get_cart_goods();
+    $cart_goods = get_cart_goods($flow_type);
     $smarty->assign('goods_list', $cart_goods['goods_list']);
     $smarty->assign('total', $cart_goods['total']);
 
@@ -2113,6 +2227,9 @@ else
         require_once(ROOT_PATH . 'includes/lib_clips.php');
         $collection_goods = get_collection_goods($_SESSION['user_id']);
         $smarty->assign('collection_goods', $collection_goods);
+        $where = "user_id = '".intval($_SESSION['user_id'])."' ";
+    }else{
+        $where = "session_id = '" . SESS_ID . "' ";
     }
 
     /* 取得优惠活动 */
@@ -2135,13 +2252,20 @@ else
 
     /* 购物车中商品配件列表 */
     //取得购物车中基本件ID
+    // $sql = "SELECT goods_id " .
+    //         "FROM " . $GLOBALS['ecs']->table('cart') .
+    //         " WHERE session_id = '" . SESS_ID . "' " .
+    //         "AND rec_type = '" . $flow_type . "' " .
+    //         "AND is_gift = 0 " .
+    //         "AND extension_code <> 'package_buy' " .
+    //         "AND parent_id = 0 ";
     $sql = "SELECT goods_id " .
-            "FROM " . $GLOBALS['ecs']->table('cart') .
-            " WHERE session_id = '" . SESS_ID . "' " .
-            "AND rec_type = '" . CART_GENERAL_GOODS . "' " .
-            "AND is_gift = 0 " .
-            "AND extension_code <> 'package_buy' " .
-            "AND parent_id = 0 ";
+        "FROM " . $GLOBALS['ecs']->table('cart') . 
+        "WHERE ".$where .
+        "AND rec_type = '" . $flow_type . "' " .
+        "AND is_gift = 0 " .
+        "AND extension_code <> 'package_buy' " .
+        "AND parent_id = 0 ";
     $parent_list = $GLOBALS['db']->getCol($sql);
 
     $fittings_list = get_goods_fittings($parent_list);
@@ -2168,9 +2292,14 @@ $smarty->display('flow.dwt');
  */
 function flow_available_points()
 {
+    $where = "c.session_id = '" . SESS_ID . "'";
+    if ($_SESSION['user_id'])
+    {
+        $where = "c.user_id = '".intval($_SESSION['user_id'])."'";
+    }
     $sql = "SELECT SUM(g.integral * c.goods_number) ".
             "FROM " . $GLOBALS['ecs']->table('cart') . " AS c, " . $GLOBALS['ecs']->table('goods') . " AS g " .
-            "WHERE c.session_id = '" . SESS_ID . "' AND c.goods_id = g.goods_id AND c.is_gift = 0 AND g.integral > 0 " .
+            "WHERE ". $where ." AND c.goods_id = g.goods_id AND c.is_gift = 0 AND g.integral > 0 " .
             "AND c.rec_type = '" . CART_GENERAL_GOODS . "'";
 
     $val = intval($GLOBALS['db']->getOne($sql));
@@ -2187,6 +2316,13 @@ function flow_available_points()
  */
 function flow_update_cart($arr)
 {
+
+    $where = "session_id = '" . SESS_ID . "'";
+    if ($_SESSION['user_id'])
+    {
+        $where = "user_id = '".intval($_SESSION['user_id'])."'";
+    }
+
     /* 处理 */
     foreach ($arr AS $key => $val)
     {
@@ -2198,7 +2334,7 @@ function flow_update_cart($arr)
 
         //查询：
         $sql = "SELECT `goods_id`, `goods_attr_id`, `product_id`, `extension_code` FROM" .$GLOBALS['ecs']->table('cart').
-               " WHERE rec_id='$key' AND session_id='" . SESS_ID . "'";
+               " WHERE rec_id='$key' AND ". $where;
         $goods = $GLOBALS['db']->getRow($sql);
 
         $sql = "SELECT g.goods_name, g.goods_number ".
@@ -2245,10 +2381,10 @@ function flow_update_cart($arr)
         $sql = "SELECT b.goods_number, b.rec_id
                 FROM " .$GLOBALS['ecs']->table('cart') . " a, " .$GLOBALS['ecs']->table('cart') . " b
                 WHERE a.rec_id = '$key'
-                AND a.session_id = '" . SESS_ID . "'
+                AND a.". $where ."
                 AND a.extension_code <> 'package_buy'
                 AND b.parent_id = a.goods_id
-                AND b.session_id = '" . SESS_ID . "'";
+                AND b.".$where;
 
         $offers_accessories_res = $GLOBALS['db']->query($sql);
 
@@ -2262,7 +2398,7 @@ function flow_update_cart($arr)
                 if ($row_num > $val)
                 {
                     $sql = "DELETE FROM " . $GLOBALS['ecs']->table('cart') .
-                            " WHERE session_id = '" . SESS_ID . "' " .
+                            " WHERE ". $where .
                             "AND rec_id = '" . $offers_accessories_row['rec_id'] ."' LIMIT 1";
                     $GLOBALS['db']->query($sql);
                 }
@@ -2275,7 +2411,7 @@ function flow_update_cart($arr)
             {
                 //更新购物车中的商品数量
                 $sql = "UPDATE " .$GLOBALS['ecs']->table('cart').
-                        " SET goods_number = '$val' WHERE rec_id='$key' AND session_id='" . SESS_ID . "'";
+                        " SET goods_number = '$val' WHERE rec_id='$key' AND ". $where;
             }
             /* 处理普通商品或非优惠的配件 */
             else
@@ -2285,7 +2421,7 @@ function flow_update_cart($arr)
 
                 //更新购物车中的商品数量
                 $sql = "UPDATE " .$GLOBALS['ecs']->table('cart').
-                        " SET goods_number = '$val', goods_price = '$goods_price' WHERE rec_id='$key' AND session_id='" . SESS_ID . "'";
+                        " SET goods_number = '$val', goods_price = '$goods_price' WHERE rec_id='$key' AND ". $where;
             }
         }
         //订货数量等于0
@@ -2295,20 +2431,20 @@ function flow_update_cart($arr)
             while ($offers_accessories_row = $GLOBALS['db']->fetchRow($offers_accessories_res))
             {
                 $sql = "DELETE FROM " . $GLOBALS['ecs']->table('cart') .
-                        " WHERE session_id = '" . SESS_ID . "' " .
+                        " WHERE ". $where .
                         "AND rec_id = '" . $offers_accessories_row['rec_id'] ."' LIMIT 1";
                 $GLOBALS['db']->query($sql);
             }
 
             $sql = "DELETE FROM " .$GLOBALS['ecs']->table('cart').
-                " WHERE rec_id='$key' AND session_id='" .SESS_ID. "'";
+                " WHERE rec_id='$key' AND ". $where;
         }
 
         $GLOBALS['db']->query($sql);
     }
 
     /* 删除所有赠品 */
-    $sql = "DELETE FROM " . $GLOBALS['ecs']->table('cart') . " WHERE session_id = '" .SESS_ID. "' AND is_gift <> 0";
+    $sql = "DELETE FROM " . $GLOBALS['ecs']->table('cart') . " WHERE ". $where ." AND is_gift <> 0";
     $GLOBALS['db']->query($sql);
 }
 
@@ -2322,6 +2458,11 @@ function flow_update_cart($arr)
  */
 function flow_cart_stock($arr)
 {
+    $where = "session_id = '" . SESS_ID . "'";
+    if ($_SESSION['user_id'])
+    {
+        $where = "user_id = '".intval($_SESSION['user_id'])."'";
+    }
     foreach ($arr AS $key => $val)
     {
         $val = intval(make_semiangle($val));
@@ -2331,7 +2472,7 @@ function flow_cart_stock($arr)
         }
 
         $sql = "SELECT `goods_id`, `goods_attr_id`, `extension_code` FROM" .$GLOBALS['ecs']->table('cart').
-               " WHERE rec_id='$key' AND session_id='" . SESS_ID . "'";
+               " WHERE rec_id='$key' AND ". $where;
         $goods = $GLOBALS['db']->getRow($sql);
 
         $sql = "SELECT g.goods_name, g.goods_number, c.product_id ".
@@ -2385,6 +2526,12 @@ function flow_cart_stock($arr)
  */
 function flow_drop_cart_goods($id)
 {
+    $where = "session_id = '" . SESS_ID . "'";
+    if ($_SESSION['user_id'])
+    {
+        $where = "user_id = '".intval($_SESSION['user_id'])."'";
+    }
+
     /* 取得商品id */
     $sql = "SELECT * FROM " .$GLOBALS['ecs']->table('cart'). " WHERE rec_id = '$id'";
     $row = $GLOBALS['db']->getRow($sql);
@@ -2394,7 +2541,7 @@ function flow_drop_cart_goods($id)
         if ($row['extension_code'] == 'package_buy')
         {
             $sql = "DELETE FROM " . $GLOBALS['ecs']->table('cart') .
-                    " WHERE session_id = '" . SESS_ID . "' " .
+                    " WHERE ". $where .
                     "AND rec_id = '$id' LIMIT 1";
         }
 
@@ -2419,7 +2566,7 @@ function flow_drop_cart_goods($id)
             $_del_str = trim($_del_str, ',');
 
             $sql = "DELETE FROM " . $GLOBALS['ecs']->table('cart') .
-                    " WHERE session_id = '" . SESS_ID . "' " .
+                    " WHERE ". $where .
                     "AND (rec_id IN ($_del_str) OR parent_id = '$row[goods_id]' OR is_gift <> 0)";
         }
 
@@ -2427,7 +2574,7 @@ function flow_drop_cart_goods($id)
         else
         {
             $sql = "DELETE FROM " . $GLOBALS['ecs']->table('cart') .
-                    " WHERE session_id = '" . SESS_ID . "' " .
+                    " WHERE ". $where .
                     "AND rec_id = '$id' LIMIT 1";
         }
 
@@ -2445,12 +2592,17 @@ function flow_drop_cart_goods($id)
  */
 function flow_clear_cart_alone()
 {
+    $where = "session_id = '" . SESS_ID . "'";
+    if ($_SESSION['user_id'])
+    {
+        $where = "user_id = '".intval($_SESSION['user_id'])."'";
+    }
     /* 查询：购物车中所有不可以单独销售的配件 */
     $sql = "SELECT c.rec_id, gg.parent_id
             FROM " . $GLOBALS['ecs']->table('cart') . " AS c
                 LEFT JOIN " . $GLOBALS['ecs']->table('group_goods') . " AS gg ON c.goods_id = gg.goods_id
                 LEFT JOIN" . $GLOBALS['ecs']->table('goods') . " AS g ON c.goods_id = g.goods_id
-            WHERE c.session_id = '" . SESS_ID . "'
+            WHERE c.". $where ."
             AND c.extension_code <> 'package_buy'
             AND gg.parent_id > 0
             AND g.is_alone_sale = 0";
@@ -2469,7 +2621,7 @@ function flow_clear_cart_alone()
     /* 查询：购物车中所有商品 */
     $sql = "SELECT DISTINCT goods_id
             FROM " . $GLOBALS['ecs']->table('cart') . "
-            WHERE session_id = '" . SESS_ID . "'
+            WHERE ". $where ."
             AND extension_code <> 'package_buy'";
     $res = $GLOBALS['db']->query($sql);
     $cart_good = array();
@@ -2506,7 +2658,7 @@ function flow_clear_cart_alone()
 
     /* 删除 */
     $sql = "DELETE FROM " . $GLOBALS['ecs']->table('cart') ."
-            WHERE session_id = '" . SESS_ID . "'
+            WHERE ". $where ."
             AND rec_id IN ($del_rec_id)";
     $GLOBALS['db']->query($sql);
 }
@@ -2652,10 +2804,15 @@ function act_range_desc($favourable)
  */
 function cart_favourable()
 {
+    $where = "session_id = '" . SESS_ID . "'";
+    if ($_SESSION['user_id'])
+    {
+        $where = "user_id = '".intval($_SESSION['user_id'])."'";
+    }
     $list = array();
     $sql = "SELECT is_gift, COUNT(*) AS num " .
             "FROM " . $GLOBALS['ecs']->table('cart') .
-            " WHERE session_id = '" . SESS_ID . "'" .
+            " WHERE ". $where .
             " AND rec_type = '" . CART_GENERAL_GOODS . "'" .
             " AND is_gift > 0" .
             " GROUP BY is_gift";
@@ -2728,11 +2885,16 @@ function add_favourable_to_cart($act_id, $act_name, $amount)
  */
 function cart_favourable_amount($favourable)
 {
+    $where = "session_id = '" . SESS_ID . "'";
+    if ($_SESSION['user_id'])
+    {
+        $where = "user_id = '".intval($_SESSION['user_id'])."'";
+    }
     /* 查询优惠范围内商品总额的sql */
     $sql = "SELECT SUM(c.goods_price * c.goods_number) " .
             "FROM " . $GLOBALS['ecs']->table('cart') . " AS c, " . $GLOBALS['ecs']->table('goods') . " AS g " .
             "WHERE c.goods_id = g.goods_id " .
-            "AND c.session_id = '" . SESS_ID . "' " .
+            "AND c.". $where .
             "AND c.rec_type = '" . CART_GENERAL_GOODS . "' " .
             "AND c.is_gift = 0 " .
             "AND c.goods_id > 0 ";

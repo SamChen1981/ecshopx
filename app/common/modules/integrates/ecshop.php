@@ -3,7 +3,7 @@
 /**
  * ECSHOP 会员数据处理类
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com
  * ----------------------------------------------------------------------------
  * 这是一个免费开源的软件；这意味着您可以在不用于商业目的的前提下对程序代码
@@ -61,7 +61,7 @@ class ecshop extends integrate
      */
     function ecshop($cfg)
     {
-        parent::integrate(array());
+        parent::__construct(array());
         $this->user_table = 'users';
         $this->field_id = 'user_id';
         $this->ec_salt = 'ec_salt';

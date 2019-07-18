@@ -29,14 +29,14 @@ function userEdit()
     msg += no_select_question + '\n';
   }
 
-  for (i = 7; i < frm.elements.length - 2; i++)	// 从第七项开始循环检查是否为必填项
+  for (i = 7; i < frm.elements.length - 2; i++) // 从第七项开始循环检查是否为必填项
   {
-	needinput = document.getElementById(frm.elements[i].name + 'i') ? document.getElementById(frm.elements[i].name + 'i') : '';
+  needinput = document.getElementById(frm.elements[i].name + 'i') ? document.getElementById(frm.elements[i].name + 'i') : '';
 
-	if (needinput != '' && frm.elements[i].value.length == 0)
-	{
-	  msg += '- ' + needinput.innerHTML + msg_blank + '\n';
-	}
+  if (needinput != '' && frm.elements[i].value.length == 0)
+  {
+    msg += '- ' + needinput.innerHTML + msg_blank + '\n';
+  }
   }
 
   if (msg.length > 0)
@@ -343,9 +343,23 @@ function check_conform_password( conform_password )
 function is_registered( username )
 {
     var submit_disabled = false;
-	var unlen = username.replace(/[^\x00-\xff]/g, "**").length;
-
-    if ( username == '' )
+  var unlen = username.replace(/[^\x00-\xff]/g, "**").length;
+    var myreg = /^(((13[0-9]{1})|(14[0-9]{1})|(15[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
+    var num = /^[0-9]*$/;
+    if(!myreg.test(username) && num.test(username)){
+      document.getElementById('username_notice').innerHTML = '* 不能为纯数字';
+      var submit_disabled = true;
+    }
+    if(myreg.test(username)){
+      document.getElementById('vcode').style.display = '';
+      document.getElementById('sms').style.display = '';
+    }else if(captch ==1){
+      document.getElementById('sms').style.display = 'none';
+    }else{
+      document.getElementById('vcode').style.display = 'none';
+      document.getElementById('sms').style.display = 'none';
+    }
+  if ( username == '' )
     {
         document.getElementById('username_notice').innerHTML = msg_un_blank;
         var submit_disabled = true;
@@ -445,7 +459,7 @@ function register()
   var mobile_phone = frm.elements['extend_field5'] ? Utils.trim(frm.elements['extend_field5'].value) : '';
   var passwd_answer = frm.elements['passwd_answer'] ? Utils.trim(frm.elements['passwd_answer'].value) : '';
   var sel_question =  frm.elements['sel_question'] ? Utils.trim(frm.elements['sel_question'].value) : '';
-
+  var sms_code = frm.elements['sms_code'] ? Utils.trim(frm.elements['sms_code'].value) : '';
 
   var msg = "";
   // 检查输入
@@ -484,7 +498,7 @@ function register()
   }
   if (/ /.test(password) == true)
   {
-	msg += passwd_balnk + '\n';
+  msg += passwd_balnk + '\n';
   }
   if (confirm_password != password )
   {
@@ -535,16 +549,19 @@ function register()
     msg += no_select_question + '\n';
   }
 
-  for (i = 4; i < frm.elements.length - 4; i++)	// 从第五项开始循环检查是否为必填项
+  for (i = 4; i < frm.elements.length - 4; i++) // 从第五项开始循环检查是否为必填项
   {
-	needinput = document.getElementById(frm.elements[i].name + 'i') ? document.getElementById(frm.elements[i].name + 'i') : '';
+  needinput = document.getElementById(frm.elements[i].name + 'i') ? document.getElementById(frm.elements[i].name + 'i') : '';
 
-	if (needinput != '' && frm.elements[i].value.length == 0)
-	{
-	  msg += '- ' + needinput.innerHTML + msg_blank + '\n';
-	}
+  if (needinput != '' && frm.elements[i].value.length == 0)
+  {
+    msg += '- ' + needinput.innerHTML + msg_blank + '\n';
   }
-
+  }
+  var myreg = /^(((13[0-9]{1})||(14[0-9]{1})(15[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
+  if(myreg.test(username) && !sms_code){
+     msg += '- ' + '短信验证码不能为空' + '\n';
+  }
   if (msg.length > 0)
   {
     alert(msg);
@@ -823,6 +840,176 @@ function changeType(obj)
   }
 }
 
+function validate_vcode(code){
+  var filter = new Object;
+  filter.code    = code;
+  Ajax.call('user.php?is_ajax=1&act=ajax_validate_vcode', filter, validate_vcode_result, 'GET', 'JSON')
+}
+function validate_vcode_result(result){
+  var vcode_tip = document.getElementById("vcode_tip");
+  var sms_get = document.getElementById("get_sms");
+  var vcode = document.getElementById("vcode");
+  if(result.content =='succ'){
+    sms_get.removeAttribute("disabled");
+    vcode.style.display ='none';
+    sms_get.style.backgroundColor = '#FF7142';
+  }else{
+    sms_get.setAttribute("disabled","disabled");
+    vcode_tip.style.display = '';
+    vcode_tip.innerHTML = '* 验证码错误';
+    vcode_tip.style.color = 'red';
+  }
+}
+function send_sms(type)
+{
+  if(wait == 120){
+    var btn = document.getElementById("get_sms");
+    btn.value = '发送中';
+    var filter = new Object;
+    filter.mobile = document.getElementById("username").value;
+    Ajax.call('user.php?act=ajax_validate_sms', filter, send_result, 'POST', 'JSON');
+  }
+}
+function send_sms(){
+  if(wait == 120){
+    var btn = document.getElementById("get_sms");
+    btn.value = '发送中';
+    var filter = new Object;
+    filter.mobile = document.getElementById("username").value;
+    Ajax.call('user.php?act=ajax_validate_sms', filter, send_result, 'POST', 'JSON');
+  }
+}
+function send_result(result)
+{
+  var btn = document.getElementById("get_sms");
+  if (result.content == 'succ'){
+    document.getElementById("sms_tip").style.display='none';
+    time(btn);
+  }else{
+    btn.value = '重新发送';
+    document.getElementById("sms_tip").style.display='';
+    document.getElementById("sms_tip").innerHTML='* '+result.content;
+  }
+}
+var wait = 120;
+function time(btn){
+  if (wait===0) {
+    btn.value = "获取验证码";
+    document.getElementById("vcode_input").value = '';
+    document.getElementById("vcode").style.display='';
+    document.getElementById("captcha").src='captcha.php?'+Math.random();
+    wait = 120;
+  }else{
+    btn.setAttribute("disabled","disabled");
+    btn.style.backgroundColor="#d2d2d2";
+    btn.style.cursor="default";
+
+    if(wait == 120){
+      btn.value ="发送成功";
+    }else{
+      btn.value = wait + "秒后重试";
+    }
+
+    wait = wait-1;
+    setTimeout(function(){
+      time(btn);
+    },1000);
+  }
+}
+function rep_validate_code(code){
+  var filter = new Object;
+  filter.code    = code;
+  Ajax.call('user.php?is_ajax=1&act=ajax_validate_vcode', filter, rep_validate_code_result, 'GET', 'JSON')
+}
+function rep_validate_code_result(result){
+  var vcode_tip = document.getElementById("vcode_tip_reg");
+  var sms_get = document.getElementById("get_sms_rep");
+  var vcode = document.getElementById("vcode_rep");
+  if(result.content =='succ'){
+    vcode.style.display='none';
+    vcode_tip.style.display ='none';
+    sms_get.removeAttribute("disabled");
+    sms_get.style.backgroundColor = '#FF7142';
+  }else{
+    sms_get.setAttribute("disabled","disabled");
+    vcode_tip.style.display = '';
+    vcode_tip.innerHTML = '* 验证码错误';
+    vcode_tip.style.color = 'red';
+  }
+}
+function rep_send_sms(){
+  if(wait == 120){
+    var filter = new Object;
+    filter.mobile = document.getElementById("username").value;
+    var reg = /^1[34578]\d{9}$/;
+    if (!reg.test(filter.mobile))
+    {
+      alert(mobile_phone_invalid);
+      return false;
+    }
+    var btn = document.getElementById("get_sms_rep");
+    btn.value = '发送中';
+    /* 找回密码要验证当前手机号是否是注册的 */
+    filter.action = document.forms['sms_repassword'].elements['act'].value;
+    /* 已经输入过验证码 输入内容验证不通过 不用重新输入验证码  
+    比如手机号输入错误 返回提示后 不刷新页面 验证码是不显示出来让会员重新输入 不重新输入 会员输入正确手机号后 会报验证码错误*/
+    if (document.getElementById("sms_tip_rep").style.display != 'none') {
+      filter.no_need_vcode = 'true';
+    }
+    Ajax.call('user.php?act=ajax_validate_sms', filter, send_result_rep, 'POST', 'JSON');
+  }
+}
+function send_result_rep(result){
+  var btn = document.getElementById("get_sms_rep");
+  if (result.content == 'succ'){
+    document.getElementById("sms_tip_rep").style.display='none';
+    time_rep(btn);
+  }else{
+    btn.value = '重新发送';
+    document.getElementById("sms_tip_rep").style.display='';
+    document.getElementById("sms_tip_rep").innerHTML='* '+result.content;
+  }
+}
+function time_rep(btn){
+  if (wait===0) {
+    btn.value = "获取验证码";
+    document.getElementById("vcode_input_rep").value = '';
+    document.getElementById("vcode_rep").style.display='';
+    document.getElementById("captcha_rep").src='captcha.php?'+Math.random();
+    wait = 120;
+  }else{
+    btn.setAttribute("disabled","disabled");
+    btn.style.backgroundColor="#d2d2d2";
+    btn.style.cursor="default";
+
+    if(wait == 120){
+      btn.value ="发送成功";
+    }else{
+      btn.value = wait + "秒后重试";
+    }
+
+    wait = wait-1;
+    setTimeout(function(){
+      time_rep(btn);
+    },1000);
+  }
+}
+function check_sms_form(){
+  var username = document.getElementById('username').value;
+  var sms_code = document.getElementById('sms_code').value;
+  var msg = '';
+  if(!username){
+    msg += '手机号不能为空' + '\n';
+  }
+  if(!sms_code){
+    msg += '短信验证码不能为空' + '\n';
+  }
+  if(msg.length > 0){
+    alert(msg);
+    return false;
+  }
+  return true;
+}
 function calResult()
 {
   var amount = document.getElementById("ECS_AMOUNT").value;

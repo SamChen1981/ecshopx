@@ -3,7 +3,7 @@
 /**
  * ECSHOP 管理中心商品相关函数
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -370,7 +370,7 @@ function handle_gallery_image($goods_id, $image_files, $image_descs, $image_urls
                 @unlink('../' . $img_original);
             }
         }
-        elseif (!empty($image_urls[$key]) && ($image_urls[$key] != $GLOBALS['_LANG']['img_file']) && ($image_urls[$key] != 'http://') && copy(trim($image_urls[$key]), ROOT_PATH . 'temp/' . basename($image_urls[$key])))
+        elseif (!empty($image_urls[$key]) && ($image_urls[$key] != $GLOBALS['_LANG']['img_file']) && ($image_urls[$key] != 'http://' || $image_urls[$key] != 'https://') && copy(trim($image_urls[$key]), ROOT_PATH . 'temp/' . basename($image_urls[$key])))
         {
             $image_url = trim($image_urls[$key]);
 
@@ -908,10 +908,11 @@ function goods_list($is_delete, $real_goods=1, $conditions = '')
         /* 分页大小 */
         $filter = page_and_size($filter);
 
-        $sql = "SELECT goods_id, goods_name, goods_type, goods_sn, shop_price, is_on_sale, is_best, is_new, is_hot, sort_order, goods_number, integral, " .
+        $sql = "SELECT goods_id, goods_name, goods_type, goods_sn, virtual_sales, shop_price, is_on_sale, is_best, is_new, is_hot, sort_order, goods_number, integral, " .
                     " (promote_price > 0 AND promote_start_date <= '$today' AND promote_end_date >= '$today') AS is_promote ".
                     " FROM " . $GLOBALS['ecs']->table('goods') . " AS g WHERE is_delete='$is_delete' $where" .
                     " ORDER BY $filter[sort_by] $filter[sort_order] ".
+                    " ,goods_id DESC ".
                     " LIMIT " . $filter['start'] . ",$filter[page_size]";
 
         $filter['keyword'] = stripslashes($filter['keyword']);
@@ -1107,7 +1108,7 @@ function product_list($goods_id, $conditions = '')
         $_goods_attr_array = explode('|', $value['goods_attr']);
         if (is_array($_goods_attr_array))
         {
-            $_temp = '';
+            $_temp = array();
             foreach ($_goods_attr_array as $_goods_attr_value)
             {
                  $_temp[] = $goods_attr[$_goods_attr_value];

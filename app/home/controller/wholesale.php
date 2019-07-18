@@ -3,7 +3,7 @@
 /**
  * ECSHOP 批发前台文件
  * ============================================================================
- * 版权所有 2005-2010 上海商派网络科技有限公司，并保留所有权利。
+ * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -74,7 +74,7 @@ if ($_REQUEST['act'] == 'list')
         $default_display_type = $_CFG['show_order_type'] == '0' ? 'list' : 'text';
         $display  = (isset($_REQUEST['display']) && in_array(trim(strtolower($_REQUEST['display'])), array('list', 'text'))) ? trim($_REQUEST['display']) : (isset($_COOKIE['ECS']['display']) ? $_COOKIE['ECS']['display'] : $default_display_type);
         $display  = in_array($display, array('list', 'text')) ? $display : 'text';
-        setcookie('ECS[display]', $display, gmtime() + 86400 * 7);
+        setcookie('ECS[display]', $display, gmtime() + 86400 * 7, NULL, NULL, NULL, TRUE);
 
         /* 取得每页记录数 */
         $size = isset($_CFG['page_size']) && intval($_CFG['page_size']) > 0 ? intval($_CFG['page_size']) : 10;

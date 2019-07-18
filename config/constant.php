@@ -44,6 +44,7 @@ define('CART_GROUP_BUY_GOODS',      1); // 团购商品
 define('CART_AUCTION_GOODS',        2); // 拍卖商品
 define('CART_SNATCH_GOODS',         3); // 夺宝奇兵
 define('CART_EXCHANGE_GOODS',       4); // 积分商城
+define('CART_REPURCHASE',           5); // 再次购买
 
 /* 订单状态 */
 define('OS_UNCONFIRMED',            0); // 未确认
@@ -214,6 +215,11 @@ define('SEND_LIST', 0);
 define('SEND_USER', 1);
 define('SEND_RANK', 2);
 
+/* 支付方式类型 */
+define('PAY_TYPE_PC', 0);
+define('PAY_TYPE_H5', 1);
+define('PAY_TYPE_APP', 2);
+define('PAY_TYPE_XCX', 3);
 /* license接口 */
 define('LICENSE_VERSION', '1.0');
 

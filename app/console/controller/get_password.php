@@ -3,7 +3,7 @@
 /**
  * ECSHOP 找回管理员密码
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -92,7 +92,7 @@ else
         }
 
         /* 管理员用户名和邮件地址是否匹配，并取得原密码 */
-        $sql = 'SELECT user_id, password FROM ' .$ecs->table('admin_user').
+        $sql = 'SELECT user_id, password, add_time FROM ' .$ecs->table('admin_user').
                " WHERE user_name = '$admin_username' AND email = '$admin_email'";
         $admin_info = $db->getRow($sql);
 
@@ -100,7 +100,7 @@ else
         {
             /* 生成验证的code */
             $admin_id = $admin_info['user_id'];
-            $code     = md5($admin_id . $admin_info['password']);
+            $code     = md5($admin_id . $admin_info['password'] . $admin_info['add_time']);
 
             /* 设置重置邮件模板所需要的内容信息 */
             $template    = get_mail_template('send_password');
@@ -149,10 +149,10 @@ else
         }
 
         /* 以用户的原密码，与code的值匹配 */
-        $sql = 'SELECT password FROM ' .$ecs->table('admin_user'). " WHERE user_id = '$adminid'";
-        $password = $db->getOne($sql);
+        $sql = 'SELECT password, add_time FROM ' .$ecs->table('admin_user'). " WHERE user_id = '$adminid'";
+        $au = $db->getRow($sql);
 
-        if (md5($adminid . $password) <> $code)
+        if (md5($adminid . $au['password'] . $au['add_time']) <> $code)
         {
             //此链接不合法
             $link[0]['text'] = $_LANG['back'];

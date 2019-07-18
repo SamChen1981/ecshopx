@@ -3,7 +3,7 @@
 /**
  * ECSHOP 订单统计
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -18,6 +18,7 @@ define('IN_ECS', true);
 require(dirname(__FILE__) . '/includes/init.php');
 require_once(ROOT_PATH . 'includes/lib_order.php');
 require_once(ROOT_PATH . 'languages/' .$_CFG['lang']. '/admin/statistic.php');
+require_once(ROOT_PATH . 'languages/' .$_CFG['lang']. '/admin/order.php');
 
 $smarty->assign('lang', $_LANG);
 
@@ -70,8 +71,8 @@ if ($_REQUEST['act'] == 'list')
     /* 时间参数 */
     if (isset($_POST['start_date']) && !empty($_POST['end_date']))
     {
-        $start_date = local_strtotime($_POST['start_date']);
-        $end_date = local_strtotime($_POST['end_date']);
+        $start_date = local_strtotime_new($_POST['start_date']);
+        $end_date = local_strtotime_new($_POST['end_date']);
         if ($start_date == $end_date)
         {
             $end_date   =   $start_date + 86400;
@@ -94,17 +95,17 @@ if ($_REQUEST['act'] == 'list')
         {
             if (!empty($tmp[$i]))
             {
-                $tmp_time = local_strtotime($tmp[$i] . '-1');
+                $tmp_time = local_strtotime_new($tmp[$i] . '-1');
                 $start_date_arr[] = $tmp_time;
-                $end_date_arr[]   = local_strtotime($tmp[$i] . '-' . date('t', $tmp_time));
+                $end_date_arr[]   = local_strtotime_new($tmp[$i] . '-' . date('t', $tmp_time));
             }
         }
     }
     else
     {
-        $tmp_time = local_strtotime(local_date('Y-m-d'));
-        $start_date_arr[] = local_strtotime(local_date('Y-m') . '-1');
-        $end_date_arr[]   = local_strtotime(local_date('Y-m') . '-31');;
+        $tmp_time = local_strtotime_new(local_date('Y-m-d'));
+        $start_date_arr[] = local_strtotime_new(local_date('Y-m') . '-1');
+        $end_date_arr[]   = local_strtotime_new(local_date('Y-m') . '-31');;
     }
 
     /* 按月份交叉查询 */
@@ -112,19 +113,29 @@ if ($_REQUEST['act'] == 'list')
     {
         /* 订单概况 */
         $order_general_xml = "<chart caption='$_LANG[order_circs]' shownames='1' showvalues='0' decimals='0' outCnvBaseFontSize='12' baseFontSize='12' >";
-        $order_general_xml .= "<categories><category label='$_LANG[confirmed]' />" .
-                                "<category label='$_LANG[succeed]' />" .
-                                "<category label='$_LANG[unconfirmed]' />" .
-                                "<category label='$_LANG[invalid]' /></categories>";
+        $order_general_xml .= "<categories><category label='{$_LANG['cs'][OS_UNCONFIRMED]}' />" .
+                                "<category label='{$_LANG['cs'][CS_AWAIT_PAY]}' />" .
+                                "<category label='{$_LANG['cs'][CS_AWAIT_SHIP]}' />" .
+                                "<category label='{$_LANG['cs'][CS_FINISHED]}' />" .
+                                "<category label='{$_LANG['cs'][PS_PAYING]}' />" .
+                                "<category label='{$_LANG['cs'][OS_CANCELED]}' />" .
+                                "<category label='{$_LANG['cs'][OS_INVALID]}' />" .
+                                "<category label='{$_LANG['cs'][OS_RETURNED]}' />" .
+                                "<category label='{$_LANG['cs'][OS_SHIPPED_PART]}' /></categories>";
         foreach($start_date_arr AS $k => $val)
         {
             $seriesName = local_date('Y-m',$val);
             $order_info = get_orderinfo($start_date_arr[$k], $end_date_arr[$k]);
             $order_general_xml .= "<dataset seriesName='$seriesName' color='$color_array[$k]' showValues='0'>";
-            $order_general_xml .= "<set value='$order_info[confirmed_num]' />";
-            $order_general_xml .= "<set value='$order_info[succeed_num]' />";
             $order_general_xml .= "<set value='$order_info[unconfirmed_num]' />";
+            $order_general_xml .= "<set value='$order_info[await_pay_num]' />";
+            $order_general_xml .= "<set value='$order_info[await_ship_num]' />";
+            $order_general_xml .= "<set value='$order_info[finished_num]' />";
+            $order_general_xml .= "<set value='$order_info[paying_num]' />";
+            $order_general_xml .= "<set value='$order_info[canceled_num]' />";
             $order_general_xml .= "<set value='$order_info[invalid_num]' />";
+            $order_general_xml .= "<set value='$order_info[returned_num]' />";
+            $order_general_xml .= "<set value='$order_info[shipped_payt_num]' />";
             $order_general_xml .= "</dataset>";
         }
         $order_general_xml .= "</chart>";
@@ -146,11 +157,11 @@ if ($_REQUEST['act'] == 'list')
              $pay_res = $db->query($sql);
              while ($pay_item = $db->FetchRow($pay_res))
              {
-                $payment[$pay_item['pay_name']] = null;
+                 $payment[strip_tags($pay_item['pay_name'])] = null;
 
                 $paydate = local_date('Y-m', $pay_item['pay_time']);
 
-                $payment_count[$pay_item['pay_name']][$paydate] = $pay_item['order_num'];
+                 $payment_count[strip_tags($pay_item['pay_name'])][$paydate] = $pay_item['order_num'];
              }
         }
 
@@ -237,13 +248,15 @@ if ($_REQUEST['act'] == 'list')
 
         $order_general_xml = "<graph caption='".$_LANG['order_circs']."' decimalPrecision='2' showPercentageValues='0' showNames='1' showValues='1' showPercentageInLabel='0' pieYScale='45' pieBorderAlpha='40' pieFillAlpha='70' pieSliceDepth='15' pieRadius='100' outCnvBaseFontSize='13' baseFontSize='12'>";
 
-        $order_general_xml .= "<set value='" .$order_info['confirmed_num']. "' name='" . $_LANG['confirmed'] . "' color='".$color_array[5]."' />";
-
-        $order_general_xml .= "<set value='" .$order_info['succeed_num']."' name='" . $_LANG['succeed'] . "' color='".$color_array[0]."' />";
-
-        $order_general_xml .= "<set value='" .$order_info['unconfirmed_num']. "' name='" . $_LANG['unconfirmed'] . "' color='".$color_array[1]."'  />";
-
-        $order_general_xml .= "<set value='" .$order_info['invalid_num']. "' name='" . $_LANG['invalid'] . "' color='".$color_array[4]."' />";
+        $order_general_xml .= "<set value='" .$order_info['unconfirmed_num']. "' name='" . $_LANG['cs'][OS_UNCONFIRMED] . "' color='".$color_array[5]."' />";
+        $order_general_xml .= "<set value='" .$order_info['await_pay_num']."' name='" . $_LANG['cs'][CS_AWAIT_PAY] . "' color='".$color_array[0]."' />";
+        $order_general_xml .= "<set value='" .$order_info['await_ship_num']. "' name='" . $_LANG['cs'][CS_AWAIT_SHIP] . "' color='".$color_array[1]."'  />";
+        $order_general_xml .= "<set value='" .$order_info['finished_num']. "' name='" . $_LANG['cs'][CS_FINISHED] . "' color='".$color_array[4]."' />";
+        $order_general_xml .= "<set value='" .$order_info['paying_num']. "' name='" . $_LANG['cs'][PS_PAYING] . "' color='".$color_array[1]."' />";
+        $order_general_xml .= "<set value='" .$order_info['canceled_num']. "' name='" . $_LANG['cs'][OS_CANCELED] . "' color='".$color_array[2]."' />";
+        $order_general_xml .= "<set value='" .$order_info['invalid_num']. "' name='" . $_LANG['cs'][OS_INVALID]  . "' color='".$color_array[3]."' />";
+        $order_general_xml .= "<set value='" .$order_info['returned_num']. "' name='" . $_LANG['cs'][OS_RETURNED] . "' color='".$color_array[6]."' />";
+        $order_general_xml .= "<set value='" .$order_info['shipped_payt_num']. "' name='" . $_LANG['cs'][OS_SHIPPED_PART] . "' color='".$color_array[4]."' />";
         $order_general_xml .= "</graph>";
 
         /* 支付方式 */
@@ -251,14 +264,14 @@ if ($_REQUEST['act'] == 'list')
 
         $sql = 'SELECT i.pay_id, p.pay_name, COUNT(i.order_id) AS order_num ' .
            'FROM ' .$ecs->table('payment'). ' AS p, ' .$ecs->table('order_info'). ' AS i '.
-           "WHERE p.pay_id = i.pay_id " . order_query_sql('finished') .
+            "WHERE p.pay_id = i.pay_id " . order_query_sql('await_ship','i.') .
            "AND i.add_time >= '$start_date' AND i.add_time <= '$end_date' ".
            "GROUP BY i.pay_id ORDER BY order_num DESC";
         $pay_res= $db->query($sql);
 
         while ($pay_item = $db->FetchRow($pay_res))
         {
-            $pay_xml .= "<set value='".$pay_item['order_num']."' name='".$pay_item['pay_name']."' color='".$color_array[mt_rand(0,7)]."'/>";
+            $pay_xml .= "<set value='".$pay_item['order_num']."' name='".strip_tags($pay_item['pay_name'])."' color='".$color_array[mt_rand(0,7)]."'/>";
         }
         $pay_xml .= "</graph>";
 
@@ -330,8 +343,10 @@ elseif ($act = 'download')
     /* 订单概况 */
     $order_info = get_orderinfo($start_date, $end_date);
     $data = $_LANG['order_circs'] . "\n";
-    $data .= "$_LANG[confirmed] \t $_LANG[succeed] \t $_LANG[unconfirmed] \t $_LANG[invalid] \n";
-    $data .= "$order_info[confirmed_num] \t $order_info[succeed_num] \t $order_info[unconfirmed_num] \t $order_info[invalid_num]\n";
+    $data .= "{$_LANG['cs'][OS_UNCONFIRMED]} \t {$_LANG['cs'][CS_AWAIT_PAY]} \t {$_LANG['cs'][CS_AWAIT_SHIP]} \t {$_LANG['cs'][CS_FINISHED]} \t {$_LANG['cs'][PS_PAYING]} \t {$_LANG['cs'][OS_CANCELED]} \t {$_LANG['cs'][OS_INVALID]} \t {$_LANG['cs'][OS_RETURNED]} \t {$_LANG['cs'][OS_SHIPPED_PART]}\n";
+
+    $data .= "$order_info[unconfirmed_num] \t $order_info[await_pay_num] \t $order_info[await_ship_num] \t $order_info[finished_num] \t $order_info[paying_num] \t $order_info[canceled_num] \t $order_info[invalid_num] \t $order_info[returned_num]\t $order_info[shipped_payt_num]\n";
+
     $data .= "\n$_LANG[pay_method]\n";
 
     /* 支付方式 */
@@ -343,7 +358,7 @@ elseif ($act = 'download')
     $pay_res= $db->getAll($sql);
     foreach ($pay_res AS $val)
     {
-        $data .= $val['pay_name'] . "\t";
+        $data .= strip_tags($val['pay_name']) . "\t";
     }
     $data .= "\n";
     foreach ($pay_res AS $val)
@@ -386,33 +401,93 @@ elseif ($act = 'download')
   */
  function get_orderinfo($start_date, $end_date)
  {
-    $order_info = array();
+     //    订单状态说明
+     //    OS_UNCONFIRMED = '待确认';
+     //    CS_AWAIT_PAY = '待付款';
+     //    CS_AWAIT_SHIP = '待发货';
+     //    CS_FINISHED = '已完成';
+     //    PS_PAYING = '付款中';
+     //    OS_CANCELED = '取消';
+     //    OS_INVALID = '无效';
+     //    OS_RETURNED = '退货';
+     //    OS_SHIPPED_PART = '部分发货';
 
-    /* 未确认订单数 */
-    $sql = 'SELECT COUNT(*) AS unconfirmed_num FROM ' .$GLOBALS['ecs']->table('order_info').
-           " WHERE order_status = '" .OS_UNCONFIRMED. "' AND add_time >= '$start_date'".
-           " AND add_time < '" . ($end_date + 86400) . "'";
+     $order_info = array();
+     $find_data = array(
+        'unconfirmed_num'=> OS_UNCONFIRMED,
+        'await_pay_num'=> CS_AWAIT_PAY,
+        'await_ship_num'=> CS_AWAIT_SHIP,
+        'finished_num'=> CS_FINISHED,
+        'paying_num'=> PS_PAYING,
+        'canceled_num'=> OS_CANCELED,
+        'invalid_num'=> OS_INVALID,
+        'returned_num'=> OS_RETURNED,
+        'shipped_payt_num'=> OS_SHIPPED_PART,
+    );
+    $end_date = $end_date + 86400;
 
-    $order_info['unconfirmed_num'] = $GLOBALS['db']->getOne($sql);
-
-    /* 已确认订单数 */
-    $sql = 'SELECT COUNT(*) AS confirmed_num FROM ' .$GLOBALS['ecs']->table('order_info').
-           " WHERE order_status = '" .OS_CONFIRMED. "' AND shipping_status NOT ". db_create_in(array(SS_SHIPPED, SS_RECEIVED)) . " AND pay_status NOT" . db_create_in(array(PS_PAYED, PS_PAYING)) ." AND add_time >= '$start_date'".
-           " AND add_time < '" . ($end_date + 86400) . "'";
-    $order_info['confirmed_num'] = $GLOBALS['db']->getOne($sql);
-
-    /* 已成交订单数 */
-    $sql = 'SELECT COUNT(*) AS succeed_num FROM ' .$GLOBALS['ecs']->table('order_info').
-           " WHERE 1 " . order_query_sql('finished') .
-           " AND add_time >= '$start_date' AND add_time < '" . ($end_date + 86400) . "'";
-    $order_info['succeed_num'] = $GLOBALS['db']->getOne($sql);
-
-    /* 无效或已取消订单数 */
-    $sql = "SELECT COUNT(*) AS invalid_num FROM " .$GLOBALS['ecs']->table('order_info').
-           " WHERE order_status > '" .OS_CONFIRMED. "'".
-           " AND add_time >= '$start_date' AND add_time < '" . ($end_date + 86400) . "'";
-    $order_info['invalid_num'] = $GLOBALS['db']->getOne($sql);
+    foreach($find_data as $key=>$val){
+        $order_info[$key] = order_stats($val,$start_date,$end_date);
+    }
     return $order_info;
  }
+
+
+
+/**
+ *  统计订单状态
+ *
+ * @access  public
+ * @param
+ *
+ * @return void
+ */
+function order_stats($order_status,$start_date,$end_time)
+{
+    $sql = 'SELECT count(o.order_id) as counts FROM '.$GLOBALS['ecs']->table('order_info') ." as o where 1 ";
+    $where = "";
+
+    switch($order_status)
+    {
+        case CS_AWAIT_PAY :
+            $where .= order_query_sql('await_pay');
+            break;
+
+        case CS_AWAIT_SHIP :
+            $where .= order_query_sql('await_ship');
+            break;
+
+        case CS_FINISHED :
+            $where .= order_query_sql('finished');
+            break;
+
+        case PS_PAYING :
+            if ($order_status != -1)
+            {
+                $where .= " AND o.pay_status = '$order_status' ";
+            }
+            break;
+        case OS_SHIPPED_PART :
+            if ($order_status != -1)
+            {
+                $where .= " AND o.shipping_status  = $order_status-2 ";
+            }
+            break;
+        default:
+            if ($order_status != -1)
+            {
+                $where .= " AND o.order_status = '$order_status' ";
+            }
+    }
+
+    if(empty($where)){
+        die('未找到数据');
+    }
+
+    $where .= " AND add_time>$start_date AND add_time<$end_time";
+    $sql = $sql .$where;
+    return $GLOBALS['db']->getOne($sql);
+}
+
 
 ?>

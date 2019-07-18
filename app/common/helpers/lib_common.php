@@ -3,7 +3,7 @@
 /**
  * ECSHOP 公用函数库
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -11,12 +11,15 @@
  * ============================================================================
  * $Author: liubo $
  * $Id: lib_common.php 17217 2011-01-19 06:29:08Z liubo $
-*/
+ */
 
 if (!defined('IN_ECS'))
 {
     die('Hacking attempt');
 }
+
+/*  开启全局的Cookie的HttpOnly属性  2017-09-28 17:20:20  */
+@ini_set("session.cookie_httponly", 1);
 
 /**
  * 创建像这样的查询: "IN('a','b')";
@@ -174,7 +177,7 @@ function region_result($parent, $sel_name, $type)
 function get_regions($type = 0, $parent = 0)
 {
     $sql = 'SELECT region_id, region_name FROM ' . $GLOBALS['ecs']->table('region') .
-            " WHERE region_type = '$type' AND parent_id = '$parent'";
+        " WHERE region_type = '$type' AND parent_id = '$parent'";
 
     return $GLOBALS['db']->GetAll($sql);
 }
@@ -212,7 +215,7 @@ function get_shipping_config($area_id)
  * @access  public
  * @return  object
  */
-function &init_users()
+function init_users()
 {
     $set_modules = false;
     static $cls = null;
@@ -255,15 +258,15 @@ function cat_list($cat_id = 0, $selected = 0, $re_type = true, $level = 0, $is_s
             $res = $GLOBALS['db']->getAll($sql);
 
             $sql = "SELECT cat_id, COUNT(*) AS goods_num " .
-                    " FROM " . $GLOBALS['ecs']->table('goods') .
-                    " WHERE is_delete = 0 AND is_on_sale = 1 " .
-                    " GROUP BY cat_id";
+                " FROM " . $GLOBALS['ecs']->table('goods') .
+                " WHERE is_delete = 0 AND is_on_sale = 1 " .
+                " GROUP BY cat_id";
             $res2 = $GLOBALS['db']->getAll($sql);
 
             $sql = "SELECT gc.cat_id, COUNT(*) AS goods_num " .
-                    " FROM " . $GLOBALS['ecs']->table('goods_cat') . " AS gc , " . $GLOBALS['ecs']->table('goods') . " AS g " .
-                    " WHERE g.goods_id = gc.goods_id AND g.is_delete = 0 AND g.is_on_sale = 1 " .
-                    " GROUP BY gc.cat_id";
+                " FROM " . $GLOBALS['ecs']->table('goods_cat') . " AS gc , " . $GLOBALS['ecs']->table('goods') . " AS g " .
+                " WHERE g.goods_id = gc.goods_id AND g.is_delete = 0 AND g.is_on_sale = 1 " .
+                " GROUP BY gc.cat_id";
             $res3 = $GLOBALS['db']->getAll($sql);
 
             $newres = array();
@@ -274,7 +277,7 @@ function cat_list($cat_id = 0, $selected = 0, $re_type = true, $level = 0, $is_s
                 {
                     if($v['cat_id'] == $vs['cat_id'])
                     {
-                    $newres[$v['cat_id']] = $v['goods_num'] + $vs['goods_num'];
+                        $newres[$v['cat_id']] = $v['goods_num'] + $vs['goods_num'];
                     }
                 }
             }
@@ -373,6 +376,7 @@ function cat_list($cat_id = 0, $selected = 0, $re_type = true, $level = 0, $is_s
     {
         foreach ($options AS $key => $value)
         {
+            $options[$key]['step'] = $value['level'] * 4;
             $options[$key]['url'] = build_uri('category', array('cid' => $value['cat_id']), $value['cat_name']);
         }
 
@@ -663,17 +667,17 @@ function get_brands($cat = 0, $app = 'brand')
     static $static_page_libs = null;
     if ($static_page_libs == null)
     {
-            $static_page_libs = $page_libs;
+        $static_page_libs = $page_libs;
     }
 
     $children = ($cat > 0) ? ' AND ' . get_children($cat) : '';
 
     $sql = "SELECT b.brand_id, b.brand_name, b.brand_logo, b.brand_desc, COUNT(*) AS goods_num, IF(b.brand_logo > '', '1', '0') AS tag ".
-            "FROM " . $GLOBALS['ecs']->table('brand') . "AS b, ".
-                $GLOBALS['ecs']->table('goods') . " AS g ".
-            "WHERE g.brand_id = b.brand_id $children AND is_show = 1 " .
-            " AND g.is_on_sale = 1 AND g.is_alone_sale = 1 AND g.is_delete = 0 ".
-            "GROUP BY b.brand_id HAVING goods_num > 0 ORDER BY tag DESC, b.sort_order ASC";
+        "FROM " . $GLOBALS['ecs']->table('brand') . "AS b, ".
+        $GLOBALS['ecs']->table('goods') . " AS g ".
+        "WHERE g.brand_id = b.brand_id $children AND is_show = 1 " .
+        " AND g.is_on_sale = 1 AND g.is_alone_sale = 1 AND g.is_delete = 0 ".
+        "GROUP BY b.brand_id HAVING goods_num > 0 ORDER BY tag DESC, b.sort_order ASC";
     if (isset($static_page_libs[$template]['/library/brands.lbi']))
     {
         $num = get_library_number("brands");
@@ -772,7 +776,7 @@ function get_promotion_info($goods_id = '')
     else
     {
         $sql = "SELECT cat_id, brand_id FROM " . $GLOBALS['ecs']->table('goods') .
-           "WHERE goods_id = '$goods_id'";
+            "WHERE goods_id = '$goods_id'";
         $row = $GLOBALS['db']->getRow($sql);
         $category_id = $row['cat_id'];
         $brand_id = $row['brand_id'];
@@ -909,10 +913,10 @@ function order_action($order_sn, $order_status, $shipping_status, $pay_status, $
     }
 
     $sql = 'INSERT INTO ' . $GLOBALS['ecs']->table('order_action') .
-                ' (order_id, action_user, order_status, shipping_status, pay_status, action_place, action_note, log_time) ' .
-            'SELECT ' .
-                "order_id, '$username', '$order_status', '$shipping_status', '$pay_status', '$place', '$note', '" .gmtime() . "' " .
-            'FROM ' . $GLOBALS['ecs']->table('order_info') . " WHERE order_sn = '$order_sn'";
+        ' (order_id, action_user, order_status, shipping_status, pay_status, action_place, action_note, log_time) ' .
+        'SELECT ' .
+        "order_id, '$username', '$order_status', '$shipping_status', '$pay_status', '$place', '$note', '" .gmtime() . "' " .
+        'FROM ' . $GLOBALS['ecs']->table('order_info') . " WHERE order_sn = '$order_sn'";
     $GLOBALS['db']->query($sql);
 }
 
@@ -927,11 +931,11 @@ function price_format($price, $change_price = true)
 {
     if($price==='')
     {
-     $price=0;
+        $price=0;
     }
     if ($change_price && defined('ECS_ADMIN') === false)
     {
-        switch ($GLOBALS['_CFG']['price_format'])
+        switch ( isset($GLOBALS['_CFG']['price_format']) )
         {
             case 0:
                 $price = number_format($price, 2, '.', '');
@@ -945,7 +949,8 @@ function price_format($price, $change_price = true)
                 }
                 break;
             case 2: // 不四舍五入，保留1位
-                $price = substr(number_format($price, 2, '.', ''), 0, -1);
+                // $price = substr(number_format($price, 2, '.', ''), 0, -1);
+                $price = number_format($price, 2, '.', '');
                 break;
             case 3: // 直接取整
                 $price = intval($price);
@@ -955,7 +960,7 @@ function price_format($price, $change_price = true)
                 break;
             case 5: // 先四舍五入，不保留小数
                 $price = round($price);
-                break;
+                break; 
         }
     }
     else
@@ -980,14 +985,14 @@ function get_virtual_goods($order_id, $shipping = false)
     if ($shipping)
     {
         $sql = 'SELECT goods_id, goods_name, send_number AS num, extension_code FROM '.
-           $GLOBALS['ecs']->table('order_goods') .
-           " WHERE order_id = '$order_id' AND extension_code > ''";
+            $GLOBALS['ecs']->table('order_goods') .
+            " WHERE order_id = '$order_id' AND extension_code > ''";
     }
     else
     {
         $sql = 'SELECT goods_id, goods_name, (goods_number - send_number) AS num, extension_code FROM '.
-           $GLOBALS['ecs']->table('order_goods') .
-           " WHERE order_id = '$order_id' AND is_real = 0 AND (goods_number - send_number) > 0 AND extension_code > '' ";
+            $GLOBALS['ecs']->table('order_goods') .
+            " WHERE order_id = '$order_id' AND is_real = 0 AND (goods_number - send_number) > 0 AND extension_code > '' ";
     }
     $res = $GLOBALS['db']->getAll($sql);
 
@@ -1067,15 +1072,15 @@ function virtual_card_shipping ($goods, $order_sn, &$msg, $process = 'other')
         return false;
     }
 
-     /* 取出卡片信息 */
-     $sql = "SELECT card_id, card_sn, card_password, end_date, crc32 FROM ".$GLOBALS['ecs']->table('virtual_card')." WHERE goods_id = '$goods[goods_id]' AND is_saled = 0  LIMIT " . $goods['num'];
-     $arr = $GLOBALS['db']->getAll($sql);
+    /* 取出卡片信息 */
+    $sql = "SELECT card_id, card_sn, card_password, end_date, crc32 FROM ".$GLOBALS['ecs']->table('virtual_card')." WHERE goods_id = '$goods[goods_id]' AND is_saled = 0  LIMIT " . $goods['num'];
+    $arr = $GLOBALS['db']->getAll($sql);
 
-     $card_ids = array();
-     $cards = array();
+    $card_ids = array();
+    $cards = array();
 
-     foreach ($arr as $virtual_card)
-     {
+    foreach ($arr as $virtual_card)
+    {
         $card_info = array();
 
         /* 卡号和密码解密 */
@@ -1098,13 +1103,13 @@ function virtual_card_shipping ($goods, $order_sn, &$msg, $process = 'other')
         $card_info['end_date'] = date($GLOBALS['_CFG']['date_format'], $virtual_card['end_date']);
         $card_ids[] = $virtual_card['card_id'];
         $cards[] = $card_info;
-     }
+    }
 
-     /* 标记已经取出的卡片 */
+    /* 标记已经取出的卡片 */
     $sql = "UPDATE ".$GLOBALS['ecs']->table('virtual_card')." SET ".
-           "is_saled = 1 ,".
-           "order_sn = '$order_sn' ".
-           "WHERE " . db_create_in($card_ids, 'card_id');
+        "is_saled = 1 ,".
+        "order_sn = '$order_sn' ".
+        "WHERE " . db_create_in($card_ids, 'card_id');
     if (!$GLOBALS['db']->query($sql, 'SILENT'))
     {
         $msg .= $GLOBALS['db']->error();
@@ -1219,11 +1224,11 @@ function virtual_card_result($order_sn, $goods)
 function get_snatch_result($id)
 {
     $sql = 'SELECT u.user_id, u.user_name, u.email, lg.bid_price, lg.bid_time, count(*) as num' .
-            ' FROM ' . $GLOBALS['ecs']->table('snatch_log') . ' AS lg '.
-            ' LEFT JOIN ' . $GLOBALS['ecs']->table('users') . ' AS u ON lg.user_id = u.user_id'.
-            " WHERE lg.snatch_id = '$id'".
-            ' GROUP BY lg.bid_price' .
-            ' ORDER BY num ASC, lg.bid_price ASC, lg.bid_time ASC LIMIT 1';
+        ' FROM ' . $GLOBALS['ecs']->table('snatch_log') . ' AS lg '.
+        ' LEFT JOIN ' . $GLOBALS['ecs']->table('users') . ' AS u ON lg.user_id = u.user_id'.
+        " WHERE lg.snatch_id = '$id'".
+        ' GROUP BY lg.bid_price' .
+        ' ORDER BY num ASC, lg.bid_price ASC, lg.bid_time ASC LIMIT 1';
     $rec = $GLOBALS['db']->GetRow($sql);
 
     if ($rec)
@@ -1234,8 +1239,8 @@ function get_snatch_result($id)
         /* 活动信息 */
         $sql = 'SELECT ext_info " .
                " FROM ' . $GLOBALS['ecs']->table('goods_activity') .
-               " WHERE act_id= '$id' AND act_type=" . GAT_SNATCH.
-               " LIMIT 1";
+            " WHERE act_id= '$id' AND act_type=" . GAT_SNATCH.
+            " LIMIT 1";
         $row = $GLOBALS['db']->getOne($sql);
         $info = unserialize($row);
 
@@ -1252,10 +1257,10 @@ function get_snatch_result($id)
 
         /* 检查订单 */
         $sql = "SELECT COUNT(*)" .
-                " FROM " . $GLOBALS['ecs']->table('order_info') .
-                " WHERE extension_code = 'snatch'" .
-                " AND extension_id = '$id'" .
-                " AND order_status " . db_create_in(array(OS_CONFIRMED, OS_UNCONFIRMED));
+            " FROM " . $GLOBALS['ecs']->table('order_info') .
+            " WHERE extension_code = 'snatch'" .
+            " AND extension_id = '$id'" .
+            " AND order_status " . db_create_in(array(OS_CONFIRMED, OS_UNCONFIRMED));
 
         $rec['order_count'] = $GLOBALS['db']->getOne($sql);
     }
@@ -1484,16 +1489,16 @@ function build_uri($app, $params, $append = '', $page = 0, $keywords = '', $size
     }
 
     $args = array('cid'   => 0,
-                  'gid'   => 0,
-                  'bid'   => 0,
-                  'acid'  => 0,
-                  'aid'   => 0,
-                  'sid'   => 0,
-                  'gbid'  => 0,
-                  'auid'  => 0,
-                  'sort'  => '',
-                  'order' => '',
-                );
+        'gid'   => 0,
+        'bid'   => 0,
+        'acid'  => 0,
+        'aid'   => 0,
+        'sid'   => 0,
+        'gbid'  => 0,
+        'auid'  => 0,
+        'sort'  => '',
+        'order' => '',
+    );
 
     extract(array_merge($args, $params));
 
@@ -1871,12 +1876,39 @@ function log_account_change($user_id, $user_money = 0, $frozen_money = 0, $rank_
 
     /* 更新用户信息 */
     $sql = "UPDATE " . $GLOBALS['ecs']->table('users') .
-            " SET user_money = user_money + ('$user_money')," .
-            " frozen_money = frozen_money + ('$frozen_money')," .
-            " rank_points = rank_points + ('$rank_points')," .
-            " pay_points = pay_points + ('$pay_points')" .
-            " WHERE user_id = '$user_id' LIMIT 1";
+        " SET user_money = user_money + ('$user_money')," .
+        " frozen_money = frozen_money + ('$frozen_money')," .
+        " rank_points = rank_points + ('$rank_points')," .
+        " pay_points = pay_points + ('$pay_points')" .
+        " WHERE user_id = '$user_id' LIMIT 1";
     $GLOBALS['db']->query($sql);
+}
+
+
+/**
+ * 记录非预存款支付变动
+ * @param   int     $user_id        用户id
+ * @param   int     $order_id       order_id
+ * @param   string  $order_sn       order_sn
+ * @param   float   $money          支付金额
+ * @param   string  $pay_type       支付类型
+ * @param   string  $pay_time       支付时间
+ * @param   string  $change_desc    变动说明
+ * @return  void
+ */
+function log_account_other_change($user_id, $order_id, $order_sn, $money = 0, $pay_type = '', $pay_time = '', $change_desc = '')
+{
+    /* 插入帐户变动记录 */
+    $account_other_log = array(
+        'user_id'       =>  $user_id,
+        'order_id'      =>  $order_id,
+        'order_sn'      =>  $order_sn,
+        'money'         =>  $money,
+        'pay_type'      =>  $pay_type,
+        'pay_time'      =>  $pay_time ? $pay_time : gmtime(),
+        'change_desc'   =>  $change_desc
+    );
+    $GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('account_other_log'), $account_other_log, 'INSERT');
 }
 
 
@@ -1900,11 +1932,11 @@ function article_cat_list($cat_id = 0, $selected = 0, $re_type = true, $level = 
         if ($data === false)
         {
             $sql = "SELECT c.*, COUNT(s.cat_id) AS has_children, COUNT(a.article_id) AS aricle_num ".
-               ' FROM ' . $GLOBALS['ecs']->table('article_cat') . " AS c".
-               " LEFT JOIN " . $GLOBALS['ecs']->table('article_cat') . " AS s ON s.parent_id=c.cat_id".
-               " LEFT JOIN " . $GLOBALS['ecs']->table('article') . " AS a ON a.cat_id=c.cat_id".
-               " GROUP BY c.cat_id ".
-               " ORDER BY parent_id, sort_order ASC";
+                ' FROM ' . $GLOBALS['ecs']->table('article_cat') . " AS c".
+                " LEFT JOIN " . $GLOBALS['ecs']->table('article_cat') . " AS s ON s.parent_id=c.cat_id".
+                " LEFT JOIN " . $GLOBALS['ecs']->table('article') . " AS a ON a.cat_id=c.cat_id".
+                " GROUP BY c.cat_id ".
+                " ORDER BY parent_id, sort_order ASC";
             $res = $GLOBALS['db']->getAll($sql);
             write_static_cache('art_cat_pid_releate', $res);
         }
@@ -2236,9 +2268,9 @@ function get_volume_price_list($goods_id, $price_type = '1')
     $temp_index   = '0';
 
     $sql = "SELECT `volume_number` , `volume_price`".
-           " FROM " .$GLOBALS['ecs']->table('volume_price'). "".
-           " WHERE `goods_id` = '" . $goods_id . "' AND `price_type` = '" . $price_type . "'".
-           " ORDER BY `volume_number`";
+        " FROM " .$GLOBALS['ecs']->table('volume_price'). "".
+        " WHERE `goods_id` = '" . $goods_id . "' AND `price_type` = '" . $price_type . "'".
+        " ORDER BY `volume_number`";
 
     $res = $GLOBALS['db']->getAll($sql);
 
@@ -2287,12 +2319,12 @@ function get_final_price($goods_id, $goods_num = '1', $is_spec_price = false, $s
     //取得商品促销价格列表
     /* 取得商品信息 */
     $sql = "SELECT g.promote_price, g.promote_start_date, g.promote_end_date, ".
-                "IFNULL(mp.user_price, g.shop_price * '" . $_SESSION['discount'] . "') AS shop_price ".
-           " FROM " .$GLOBALS['ecs']->table('goods'). " AS g ".
-           " LEFT JOIN " . $GLOBALS['ecs']->table('member_price') . " AS mp ".
-                   "ON mp.goods_id = g.goods_id AND mp.user_rank = '" . $_SESSION['user_rank']. "' ".
-           " WHERE g.goods_id = '" . $goods_id . "'" .
-           " AND g.is_delete = 0";
+        "IFNULL(mp.user_price, g.shop_price * '" . $_SESSION['discount'] . "') AS shop_price ".
+        " FROM " .$GLOBALS['ecs']->table('goods'). " AS g ".
+        " LEFT JOIN " . $GLOBALS['ecs']->table('member_price') . " AS mp ".
+        "ON mp.goods_id = g.goods_id AND mp.user_rank = '" . $_SESSION['user_rank']. "' ".
+        " WHERE g.goods_id = '" . $goods_id . "'" .
+        " AND g.is_delete = 0";
     $goods = $GLOBALS['db']->getRow($sql);
 
     /* 计算商品的促销价格 */
@@ -2446,8 +2478,8 @@ function get_package_info($id)
     $now = gmtime();
 
     $sql = "SELECT act_id AS id,  act_name AS package_name, goods_id , goods_name, start_time, end_time, act_desc, ext_info".
-           " FROM " . $GLOBALS['ecs']->table('goods_activity') .
-           " WHERE act_id='$id' AND act_type = " . GAT_PACKAGE;
+        " FROM " . $GLOBALS['ecs']->table('goods_activity') .
+        " WHERE act_id='$id' AND act_type = " . GAT_PACKAGE;
 
     $package = $db->GetRow($sql);
 
@@ -2473,15 +2505,15 @@ function get_package_info($id)
     }
 
     $sql = "SELECT pg.package_id, pg.goods_id, pg.goods_number, pg.admin_id, ".
-           " g.goods_sn, g.goods_name, g.market_price, g.goods_thumb, g.is_real, ".
-           " IFNULL(mp.user_price, g.shop_price * '$_SESSION[discount]') AS rank_price " .
-           " FROM " . $GLOBALS['ecs']->table('package_goods') . " AS pg ".
-           "   LEFT JOIN ". $GLOBALS['ecs']->table('goods') . " AS g ".
-           "   ON g.goods_id = pg.goods_id ".
-           " LEFT JOIN " . $GLOBALS['ecs']->table('member_price') . " AS mp ".
-                "ON mp.goods_id = g.goods_id AND mp.user_rank = '$_SESSION[user_rank]' ".
-           " WHERE pg.package_id = " . $id. " ".
-           " ORDER BY pg.package_id, pg.goods_id";
+        " g.goods_sn, g.goods_name, g.market_price, g.goods_thumb, g.is_real, ".
+        " IFNULL(mp.user_price, g.shop_price * '$_SESSION[discount]') AS rank_price " .
+        " FROM " . $GLOBALS['ecs']->table('package_goods') . " AS pg ".
+        "   LEFT JOIN ". $GLOBALS['ecs']->table('goods') . " AS g ".
+        "   ON g.goods_id = pg.goods_id ".
+        " LEFT JOIN " . $GLOBALS['ecs']->table('member_price') . " AS mp ".
+        "ON mp.goods_id = g.goods_id AND mp.user_rank = '$_SESSION[user_rank]' ".
+        " WHERE pg.package_id = " . $id. " ".
+        " ORDER BY pg.package_id, pg.goods_id";
 
     $goods_res = $GLOBALS['db']->getAll($sql);
 
@@ -2635,14 +2667,14 @@ function get_good_products($goods_id, $conditions = '')
 
             $_goods_id = "goods_id = '" . intval($goods_id) . "'";
 
-        break;
+            break;
 
         case 'string':
         case 'array':
 
             $_goods_id = db_create_in($goods_id, 'goods_id');
 
-        break;
+            break;
     }
 
     /* 取货品 */
@@ -2778,5 +2810,262 @@ if (!function_exists('array_combine')) {
         return $combined;
     }
 }
+
+/**
+ * 获取云起短信和物流token
+ * @return  string      token
+ */
+function get_yunqi_code(){
+    return get_certificate_info('yunqi_code');
+}
+
+/**
+ * 删除云起短信和物流token
+ * @return  string      token
+ */
+function delete_yunqi_code(){
+    $sql = "select value from ".$GLOBALS['ecs']->table('shop_config')." where code='certificate'";
+    $row = $GLOBALS['db']->getOne($sql);
+    if(!$row) return false;
+    $certificate = unserialize($row);
+    unset($certificate['yunqi_code']);
+    $update_sql = "update ".$GLOBALS['ecs']->table('shop_config')." set value='".serialize($certificate)."' where code='certificate'";
+    return $GLOBALS['db']->query($update_sql);
+}
+
+/**
+ * 获取云起证书信息
+ * @param   string  $key
+ * @return  string
+ */
+function get_certificate_info($key,$code='certificate'){
+    $sql = "select value from ".$GLOBALS['ecs']->table('shop_config')." where code='".$code."'";
+    $row = $GLOBALS['db']->getOne($sql);
+    if(!$row) return false;
+    $certificate = unserialize($row);
+    return isset($certificate[$key])?$certificate[$key]:false;
+}
+
+/**
+ * 获取iframe签名
+ * @param   string  $product
+ * @return  string
+ */
+function iframe_source_encode($product)
+{
+    $source[] = base64_encode($product);
+    $source[] = get_certificate_info("passport_uid");
+    $source[] = get_certificate_info("yunqi_code");
+    $source[] = time();
+    $source[] = urlencode($GLOBALS['ecs']->url());
+    return base64_encode(implode('|',$source));
+}
+
+
+/**
+ * 创建env配置文件
+
+ */
+
+function create_env($arr,$file='appserver')
+{
+    global $err, $_LANG;
+    $replace = array();
+    $url = $_SERVER['HTTP_HOST'];
+    if($file == 'appserver'){
+        $path_arr = explode('/',ROOT_PATH);
+        $count = count($path_arr)-2;
+        $path_arr[$count] = 'appserver';
+        $path_tmp = implode('/',$path_arr);
+        $path = $path_tmp.'.env';
+        $path_example = $path_tmp.'.env.example';
+        if (file_exists($path)) {
+            $file = file_get_contents($path);
+        }elseif(file_exists($path_example)){
+            $file = file_get_contents($path_example);
+        }else{
+            return true;
+        }
+        if($arr['SHOP_URL']){
+            $domain_url = str_replace('www.','',$url);
+            $api_url = defined('FORCE_SSL_LOGIN') ? 'https://api.' : 'http://api.'.$domain_url;
+            $arr['TERMS_URL'] = $api_url . '/v2/article.6';
+            $arr['ABOUT_URL'] = $api_url . '/v2/article.80';
+            $arr['SHARE_URL'] = $arr['SHOP_H5'];
+            $arr['DOMAIN_URL'] = $domain_url;
+        }
+        foreach ($arr as $k => $v) {
+            $replace['#'.$k.'.*#i'] = $k.'='.$v;
+        }
+
+
+        if (file_put_contents($path, preg_replace(array_keys($replace), array_values($replace), $file))) {
+            return true;
+        }else{
+            $err->add($_LANG['write_env_config_file_failed']);
+            return false;
+        }
+    }
+    if($file == 'h5'){
+        // $path = ROOT_PATH.$file.'/config/config.app.js';
+        $path = ROOT_PATH.$file.'/static/config.js';
+        // $path_example =  ROOT_PATH.$file.'/config/config.app.sample.js';
+        $path_example =  ROOT_PATH.$file.'/static/config.sample.js';
+        if (file_exists($path)) {
+            $file = file_get_contents($path);
+        }elseif(file_exists($path_example)){
+            $file = file_get_contents($path_example);
+        }else{
+            return true;
+        }
+        $api_url = str_replace('www.','',$url);
+        $api_url = defined('FORCE_SSL_LOGIN') ? 'https://api.' : 'http://api.'.$api_url;
+        $new_file = preg_replace("/'API_HOST.*/i", "'API_HOST': '".$api_url."',", $file);
+        if (file_put_contents($path, $new_file)){
+            return true;
+        }else{
+            $err->add($_LANG['write_env_config_file_failed']);
+            return false;
+        }
+    }
+}
+
+
+/**
+ * 创建env配置文件
+
+ */
+
+function test_api()
+{
+    global $err, $_LANG;    
+
+    $api_url = get_h5_api_host();    
+
+    $headers = array(            
+            'Content-Type' => 'application/json;charset=utf-8'            
+        );
+
+    $data = array();
+    if (strpos($headers["Content-Type"], "/json") !== false) {
+        $json = json_encode($data);
+    }
+
+    // Build headers list in HTTP format
+    $headersList = array_map(function($key, $val) { return "$key: $val";},
+                             array_keys($headers),
+                             $headers);
+
+    $req = curl_init($api_url);
+    curl_setopt($req, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($req, CURLOPT_SSL_VERIFYHOST, false);
+    curl_setopt($req, CURLOPT_HTTPHEADER, $headersList);
+    curl_setopt($req, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($req, CURLOPT_TIMEOUT, 60);
+    // curl_setopt($req, CURLINFO_HEADER_OUT, true);
+     curl_setopt($req, CURLOPT_URL,
+                                $api_url ."?". http_build_query($data));
+   
+   
+    $resp     = curl_exec($req);
+    $respCode = curl_getinfo($req, CURLINFO_HTTP_CODE);
+    $respType = curl_getinfo($req, CURLINFO_CONTENT_TYPE);
+    $error    = curl_error($req);
+    $errno    = curl_errno($req);
+    curl_close($req);
+    /** type of error:
+      *  - curl connection error
+      *  - http status error 4xx, 5xx
+      *  - rest api error
+      */
+    if ($errno > 0) {
+            return false;
+    }
+    if($respCode != 200){
+        return false;
+    }
+    
+    if (strpos($respType, "text/html") !== false) {
+         $err->add($_LANG['test_appserver_failed']);
+    }
+
+    $data = json_decode($resp, true);
+    if (isset($data["error"])) {
+        $code = isset($data["code"]) ? $data["code"] : 400;
+        $err->add($_LANG['test_appserver_failed']);
+    }
+    return true;
+    
+}
+
+/**
+ *  获取h5/config/config.app.js文件中配置的API_HOST
+ *  @return  string|boolean
+ */
+function get_h5_api_host()
+{
+    $h5Config = file_get_contents(ROOT_PATH . "h5/static/config.js");
+    if (preg_match("/'API_HOST': '(.*)'/i", $h5Config, $matches)) {
+        return $matches[1];
+    } else {
+        return false;
+    }
+}
+function createQrCode($url){
+    if($url=="") return false;
+    return QRCODE_URL.urlencode($url);
+}
+
+function createShortUrl($url){
+    if(!$url) return false;
+    // $short_url = file_get_contents(SHORT_URL.urlencode($url));
+    // return $short_url?$short_url:$url;
+
+    $params = json_encode(array('url'=>$url));
+    $ch = curl_init ();
+    curl_setopt ( $ch, CURLOPT_URL, SHORT_URL );
+    curl_setopt ( $ch, CURLOPT_POST, 1 );
+    curl_setopt ( $ch, CURLOPT_HEADER, 0 );
+    curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );
+    curl_setopt ( $ch, CURLOPT_POSTFIELDS, $params );
+    curl_setopt ( $ch, CURLOPT_SSL_VERIFYPEER, false);
+    $result = curl_exec ( $ch );
+    curl_close ( $ch );
+    $result = json_decode($getDB,1);
+    return ($result['Code']==0 && $result['ShortUrl']) ? trim($result['ShortUrl']) : $url;
+}
+
+/**
+* 保存支付方式
+*/
+function save_payment($code,$name,$description,$config,$status,$type=PAY_TYPE_PC){
+    $data = [
+        'pay_code' => $code,
+        'pay_name' => $name,
+        'pay_desc' => $description,
+        'pay_config' => $config,
+        'enabled' => $status,
+        'is_online' => 1,
+        'type' => $type,
+    ];
+    $sql = "SELECT * FROM ".$GLOBALS['ecs']->table('payment')." WHERE pay_code='".$code."'";
+    $row = $GLOBALS['db']->getRow($sql);
+    if($row){
+        return $GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('payment'), $data, 'UPDATE', "pay_id = '$row[pay_id]'");
+    }else{
+        return $GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('payment'), $data, 'INSERT');
+    }
+}
+
+function add_log($msg,$data=null){
+    if ( @constant( "DEBUG_API" ) ) {
+        if(!is_dir(LOG_DIR)){
+            mkdir(LOG_DIR,0777);
+        }
+        error_log(date("c")."\t".$msg."\t".stripslashes(json_encode($data))."\t\n",3,LOG_DIR."/order_".date("Y-m-d").".log");
+    }
+}
+
+
 
 ?>

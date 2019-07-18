@@ -3,7 +3,7 @@
 /**
  * ECSHOP 管理中心模版管理程序
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -30,10 +30,12 @@ if ($_REQUEST['act'] == 'list')
 
     /* 获得当前的模版的信息 */
     $curr_template = $_CFG['template'];
+
     $curr_style = $_CFG['stylename'];
 
     /* 获得可用的模版 */
     $available_templates = array();
+
     $template_dir        = @opendir(ROOT_PATH . 'themes/');
     while ($file = readdir($template_dir))
     {
@@ -84,6 +86,7 @@ if ($_REQUEST['act'] == 'list')
     $smarty->assign('template_style', $templates_style);
     $smarty->assign('curr_template',       get_template_info($curr_template, $curr_style));
     $smarty->assign('available_templates', $available_templates);
+    $smarty->assign('theme_online_url', YUNQI_SERVICE_URL . 'cid=40&source='.iframe_source_encode('ecshop'));
     $smarty->display('templates_list.htm');
 }
 
@@ -571,22 +574,22 @@ if ($_REQUEST['act'] == 'install')
 /*------------------------------------------------------ */
 //-- 备份模版
 /*------------------------------------------------------ */
-
 if ($_REQUEST['act'] == 'backup')
 {
     check_authz_json('backup_setting');
-    include_once('includes/cls_phpzip.php');
-    $tpl= $_CFG['template'];
-    //$tpl = trim($_REQUEST['tpl_name']);
-
-    $filename = '../temp/backup/' . $tpl . '_' . date('Ymd') . '.zip';
-
-    $zip = new PHPZip;
-    $done = $zip->zip('../themes/' . $tpl . '/', $filename);
+    include_once('includes/cls_mdl_tar.php');
+    $template = $_CFG['template'];
+    $folder = $template;
+    @chdir('..' . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . $template);
+    $filename = ROOT_PATH . 'temp' . DIRECTORY_SEPARATOR . 'backup' .DIRECTORY_SEPARATOR . $template . '_' . date('Ymd') . '.tgz';
+    $tar = new mdl_tar();
+    $tar->filename = $filename;
+    compression($tar, '.');
+    $done = $tar->saveTar();
 
     if ($done)
     {
-        make_json_result($filename);
+        make_json_result('..' . DIRECTORY_SEPARATOR . 'temp' . DIRECTORY_SEPARATOR . 'backup' . DIRECTORY_SEPARATOR . $template . '_' . date('Ymd') . '.tgz');
     }
     else
     {
@@ -760,11 +763,15 @@ if ($_REQUEST['act'] == 'restore_backup')
 
             foreach ($data as $file => $regions)
             {
-                $pattern = '/(?:<!--\\s*TemplateBeginEditable\\sname="('. implode('|',array_keys($regions)) .')"\\s*-->)(?:.*?)(?:<!--\\s*TemplateEndEditable\\s*-->)/se';
+                $pattern = '/(?:<!--\\s*TemplateBeginEditable\\sname="('. implode('|',array_keys($regions)) .')"\\s*-->)(?:.*?)(?:<!--\\s*TemplateEndEditable\\s*-->)/s';
                 $temple_file = ROOT_PATH . 'themes/' . $_CFG['template'] . '/' . $file . '.dwt';
                 $template_content = file_get_contents($temple_file);
                 $match = array();
-                $template_content = preg_replace($pattern, "'<!-- TemplateBeginEditable name=\"\\1\" -->\r\n' . \$regions['\\1'] . '\r\n<!-- TemplateEndEditable -->';", $template_content);
+                if (!function_exists('version_compare') || version_compare(phpversion(), '5.3.0', '<')) {
+                    $template_content = preg_replace($pattern, "'<!-- TemplateBeginEditable name=\"\\1\" -->\r\n' . \$regions['\\1'] . '\r\n<!-- TemplateEndEditable -->';", $template_content);
+                } else {
+                    include(ROOT_PATH . 'includes' . DIRECTORY_SEPARATOR . 'patch' . DIRECTORY_SEPARATOR . 'includes_admin_template_restore_backup.php');
+                }
                 file_put_contents($temple_file, $template_content);
             }
 
@@ -782,6 +789,46 @@ if ($_REQUEST['act'] == 'restore_backup')
         }
     }
     sys_msg($_LANG['restore_backup_ok'],0,array(array('text'=>$_LANG['backup_setting'], 'href'=>'template.php?act=backup_setting')));
+}
+
+/*------------------------------------------------------ */
+//-- 上传主题(限制2M)
+/*------------------------------------------------------ */
+if ($_REQUEST['act'] == 'upload') {
+    admin_priv('upload');
+    include_once('includes/cls_mdl_tar.php');
+    if (!empty($_FILES) && $_FILES['file']['size'] < 2097152) {
+        $pathinfo = pathinfo($_FILES['file']['name']);
+        if ($pathinfo['extension'] == 'tgz') {
+            $template = $pathinfo['filename'];
+            $theme_name = $pathinfo['basename'];
+            $folder = ROOT_PATH . 'themes' . DIRECTORY_SEPARATOR  . $pathinfo['filename'];
+            while (file_exists($folder)) {
+                $folder .= '_new';
+            }
+            @mkdir($folder);
+            move_uploaded_file($_FILES["file"]["tmp_name"], $folder . DIRECTORY_SEPARATOR . $theme_name);
+            $tar = new mdl_tar();
+            $tar->openTAR($folder . DIRECTORY_SEPARATOR . $theme_name, $folder);
+            decompression($tar, $folder);
+            $tar->closeTAR();
+            unlink($folder . DIRECTORY_SEPARATOR . $theme_name);
+        }
+    }
+    return true;
+}
+
+if ($_REQUEST['act'] == 'delete') {
+    admin_priv('delete');
+    $template = trim($_GET['tpl_name']);
+    $curr_template = $_CFG['template'];
+    $template = str_replace(['..', '/', '\/'], ['', '', ''], $template);
+    $folder = ROOT_PATH . 'themes' . '/' . $template;
+    if ($template != $curr_template && file_exists($folder) && delete_tree($folder)) {
+        make_json_result('');
+    } else {
+        make_json_error('');
+    }
 }
 
 function array_sort($a, $b)
@@ -928,5 +975,91 @@ function read_style_and_tpl($tpl_name, $tpl_style)
     $style_info['tpl_style'] = $tpl_style_list;
 
     return $style_info;
+}
+
+/**
+ * 压缩文件
+ * @param  mdl_tar Object   &$tar   压缩容器
+ * @param  string           $dir    压缩文件的路径
+ */
+function compression(&$tar, $dir)
+{
+    $handle = @opendir($dir);
+    if ($handle)
+    {
+        while (($file = readdir($handle)) !== false)
+        {
+            if ($file != '.' && $file != '..' && $file != '.svn')
+            {
+                $cur_path = $dir . '/' . $file;
+                if (is_dir($cur_path))
+                {
+                    compression($tar, $cur_path);
+                    $tar->addDirectory($cur_path);
+                }
+                else
+                {
+                    $tar->addFile($cur_path, file_get_contents($cur_path));
+                }
+            }
+        }
+        @closedir($handle);
+    }
+}
+
+/**
+ * 删除文件夹
+ * @param  [string] $dir 文件路径
+ * @return bool     删除文件夹结果
+ */
+function delete_tree($dir)
+{
+    $handle = @opendir($dir);
+    if ($handle)
+    {
+        while (($file = readdir($handle)) !== false)
+        {
+            if ($file != '.' && $file != '..')
+            {
+                $cur_path = $dir . DIRECTORY_SEPARATOR . $file;
+                if (is_dir($cur_path))
+                {
+                    delete_tree($cur_path);
+                }
+                else
+                {
+                    @unlink($cur_path);
+                }
+            }
+        }
+        @closedir($handle);
+    }
+    return @rmdir($dir);
+}
+
+/**
+ * 解压文件
+ * @param  mdl_tar Object   &$tar   压缩数据
+ * @param  string           $dir    解压文件的路径
+ */
+function decompression($tar, $folder)
+{
+    foreach ($tar->files as $file) {
+        $information = $tar->getFile($file['name']);
+        $content = $tar->getContents($information);
+        $route = preg_split('/\/|\\\/', $file['name']);
+        array_pop($route);
+        $dir = '';
+        foreach ($route as $value) {
+            $dir .= $value . '/';
+            if (!file_exists($folder . '/' . $dir)) {
+                @mkdir($folder . '/' . $dir);
+            }
+        }
+        // 上传的模板文件中php文件替换成txt文件 防止植入木马文件
+        $file['name'] = str_replace('.php', '.txt', $file['name']);
+        file_put_contents($folder . '/' . $file['name'], $content);
+    }
+    return true;
 }
 ?>

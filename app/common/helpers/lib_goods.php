@@ -3,7 +3,7 @@
 /**
  * ECSHOP 商品相关函数库
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -315,6 +315,7 @@ function get_recommend_goods($type = '', $cats = '')
             $goods[$idx]['name']         = $row['goods_name'];
             $goods[$idx]['brief']        = $row['goods_brief'];
             $goods[$idx]['brand_name']   = isset($goods_data['brand'][$row['goods_id']]) ? $goods_data['brand'][$row['goods_id']] : '';
+            $goods[$idx]['cum_sales']= get_cum_sales($row['goods_id']);
             $goods[$idx]['goods_style_name']   = add_style($row['goods_name'],$row['goods_name_style']);
 
             $goods[$idx]['short_name']   = $GLOBALS['_CFG']['goods_name_length'] > 0 ?
@@ -515,7 +516,7 @@ function get_goods_info($goods_id)
             "GROUP BY g.goods_id";
     $row = $GLOBALS['db']->getRow($sql);
 
-    if ($row !== false)
+    if (isset($row['goods_id']))
     {
         /* 用户评论级别取整 */
         $row['comment_rank']  = ceil($row['comment_rank']) == 0 ? 5 : ceil($row['comment_rank']);
@@ -593,6 +594,9 @@ function get_goods_info($goods_id)
         /* 修正商品图片 */
         $row['goods_img']   = get_image_path($goods_id, $row['goods_img']);
         $row['goods_thumb'] = get_image_path($goods_id, $row['goods_thumb'], true);
+
+        /* 获取商品销量 */
+        $row['cum_sales']   = get_cum_sales($row['goods_id']);
 
         return $row;
     }
@@ -727,7 +731,7 @@ function get_goods_gallery($goods_id)
 {
     $sql = 'SELECT img_id, img_url, thumb_url, img_desc' .
         ' FROM ' . $GLOBALS['ecs']->table('goods_gallery') .
-        " WHERE goods_id = '$goods_id' LIMIT " . $GLOBALS['_CFG']['goods_gallery_number'];
+        " WHERE goods_id = '$goods_id' order by sort_order LIMIT " . $GLOBALS['_CFG']['goods_gallery_number'];
     $row = $GLOBALS['db']->getAll($sql);
     /* 格式化相册图片路径 */
     foreach($row as $key => $gallery_img)
@@ -1016,6 +1020,7 @@ function group_buy_info($group_buy_id, $current_num = 0)
     }
     $group_buy['price_ladder'] = $price_ladder;
 
+
     /* 统计信息 */
     $stat = group_buy_stat($group_buy_id, $group_buy['deposit']);
     $group_buy = array_merge($group_buy, $stat);
@@ -1023,6 +1028,7 @@ function group_buy_info($group_buy_id, $current_num = 0)
     /* 计算当前价 */
     $cur_price  = $price_ladder[0]['price']; // 初始化
     $cur_amount = $stat['valid_goods'] + $current_num; // 当前数量
+
     foreach ($price_ladder as $amount_price)
     {
         if ($cur_amount >= $amount_price['amount'])
@@ -1037,10 +1043,12 @@ function group_buy_info($group_buy_id, $current_num = 0)
     $group_buy['cur_price'] = $cur_price;
     $group_buy['formated_cur_price'] = price_format($cur_price, false);
 
+
     /* 最终价 */
     $group_buy['trans_price'] = $group_buy['cur_price'];
     $group_buy['formated_trans_price'] = $group_buy['formated_cur_price'];
     $group_buy['trans_amount'] = $group_buy['valid_goods'];
+
 
     /* 状态 */
     $group_buy['status'] = group_buy_status($group_buy);
@@ -1502,5 +1510,21 @@ function get_products_info($goods_id, $spec_goods_attr_id)
         $return_array = $GLOBALS['db']->getRow($sql);
     }
     return $return_array;
+}
+
+
+/**
+ *  获取商品的累计销量
+ * @param       string      $goods_id
+ * @return      int
+ */
+function get_cum_sales($goods_id)
+{
+    $sql = "SELECT sum(goods_number) FROM " . $GLOBALS['ecs']->table('order_goods') . " AS g ,".$GLOBALS['ecs']->table('order_info') . " AS o WHERE o.order_id = g.order_id and g.goods_id = " . $goods_id ;
+    // $sql = "SELECT sum(goods_number) FROM " . $GLOBALS['ecs']->table('order_goods') . " AS g ,".$GLOBALS['ecs']->table('order_info') . " AS o WHERE o.order_id = g.order_id and g.goods_id = " . $goods_id . " and o.order_status = 5";
+    $cum_sales = $GLOBALS['db']->getOne($sql);
+    $sql_goods = "SELECT virtual_sales FROM " . $GLOBALS['ecs']->table('goods') . " WHERE goods_id = '$goods_id'";
+    $cum_sales += $GLOBALS['db']->getOne($sql_goods);
+    return $cum_sales;
 }
 ?>

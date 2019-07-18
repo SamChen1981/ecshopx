@@ -3,7 +3,7 @@
 /**
  * ECSHOP 管理中心公用函数库
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -373,7 +373,7 @@ function get_article_list($filter)
  */
 function get_yes_no($var)
 {
-    return empty($var) ? '<img src="images/no.gif" border="0" />' : '<img src="images/yes.gif" border="0" />';
+    return empty($var) ? '<img src="images/no.svg" width="20">' : '<img src="images/yes.svg" width="20">';
 }
 
 /**
@@ -594,7 +594,7 @@ function make_json_error($msg)
 function sort_flag($filter)
 {
     $flag['tag']    = 'sort_' . preg_replace('/^.*\./', '', $filter['sort_by']);
-    $flag['img']    = '<img src="images/' . ($filter['sort_order'] == "DESC" ? 'sort_desc.gif' : 'sort_asc.gif') . '"/>';
+    $flag['img']    = '<img src="images/' . ($filter['sort_order'] == "DESC" ? 'sort_desc.png' : 'sort_asc.png') . '"/>';
 
     return $flag;
 }
@@ -705,9 +705,12 @@ function set_filter($filter, $sql, $param_str = '')
     {
         $filterfile .= $param_str;
     }
-    setcookie('ECSCP[lastfilterfile]', sprintf('%X', crc32($filterfile)), time() + 600);
-    setcookie('ECSCP[lastfilter]',     urlencode(serialize($filter)), time() + 600);
-    setcookie('ECSCP[lastfiltersql]',  base64_encode($sql), time() + 600);
+    // setcookie('ECSCP[lastfilterfile]', sprintf('%X', crc32($filterfile)), time() + 600, NULL, NULL, NULL, TRUE);
+    // setcookie('ECSCP[lastfilter]',     urlencode(serialize($filter)), time() + 600, NULL, NULL, NULL, TRUE);
+    // setcookie('ECSCP[lastfiltersql]',  base64_encode($sql), time() + 600, NULL, NULL, NULL, TRUE);
+    $_SESSION['ECSCP']['lastfilterfile'] = sprintf('%X', crc32($filterfile));
+    $_SESSION['ECSCP']['lastfilter'] = urlencode(serialize($filter));
+    $_SESSION['ECSCP']['lastfiltersql'] = base64_encode($sql);
 }
 
 /**
@@ -722,12 +725,13 @@ function get_filter($param_str = '')
     {
         $filterfile .= $param_str;
     }
-    if (isset($_GET['uselastfilter']) && isset($_COOKIE['ECSCP']['lastfilterfile'])
-        && $_COOKIE['ECSCP']['lastfilterfile'] == sprintf('%X', crc32($filterfile)))
+    if (isset($_GET['uselastfilter']) && isset($_SESSION['ECSCP']['lastfilterfile'])
+        && $_SESSION['ECSCP']['lastfilterfile'] == sprintf('%X', crc32($filterfile)))
     {
         return array(
-            'filter' => unserialize(urldecode($_COOKIE['ECSCP']['lastfilter'])),
-            'sql'    => base64_decode($_COOKIE['ECSCP']['lastfiltersql'])
+            'filter' => unserialize(urldecode($_SESSION['ECSCP']['lastfilter'])),
+            // 'sql'    => base64_decode($_COOKIE['ECSCP']['lastfiltersql'])
+            'sql'    => base64_decode($_SESSION['ECSCP']['lastfiltersql'])
         );
     }
     else

@@ -3,7 +3,7 @@
 /**
  * ECSHOP 积分商城
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -55,7 +55,7 @@ if ($_REQUEST['act'] == 'list')
     $order   = (isset($_REQUEST['order']) && in_array(trim(strtoupper($_REQUEST['order'])), array('ASC', 'DESC')))                              ? trim($_REQUEST['order']) : $default_sort_order_method;
     $display = (isset($_REQUEST['display']) && in_array(trim(strtolower($_REQUEST['display'])), array('list', 'grid', 'text'))) ? trim($_REQUEST['display'])  : (isset($_COOKIE['ECS']['display']) ? $_COOKIE['ECS']['display'] : $default_display_type);
     $display  = in_array($display, array('list', 'grid', 'text')) ? $display : 'text';
-    setcookie('ECS[display]', $display, gmtime() + 86400 * 7);
+    setcookie('ECS[display]', $display, gmtime() + 86400 * 7, NULL, NULL, NULL, TRUE);
 
     /* 页面的缓存ID */
     $cache_id = sprintf('%X', crc32($cat_id . '-' . $display . '-' . $sort  .'-' . $order  .'-' . $page . '-' . $size . '-' . $_SESSION['user_rank'] . '-' .

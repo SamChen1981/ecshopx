@@ -3,7 +3,7 @@
 /**
  * ECSHOP 会员管理程序
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -39,14 +39,17 @@ if ($_REQUEST['act'] == 'list')
     $smarty->assign('action_link',  array('text' => $_LANG['04_users_add'], 'href'=>'users.php?act=add'));
 
     $user_list = user_list();
-
+    include_once(ROOT_PATH.'includes/cls_certificate.php');
+    $cert = new certificate();
+    $is_bind_crm = $cert->is_bind_sn('ecos.taocrm','bind_type');
+    $smarty->assign('is_bind_crm',  $is_bind_crm);
     $smarty->assign('user_list',    $user_list['user_list']);
     $smarty->assign('filter',       $user_list['filter']);
     $smarty->assign('record_count', $user_list['record_count']);
     $smarty->assign('page_count',   $user_list['page_count']);
     $smarty->assign('full_page',    1);
-    $smarty->assign('sort_user_id', '<img src="images/sort_desc.gif">');
-
+    $smarty->assign('sort_user_id', '<img src="images/sort_desc.png">');
+    $smarty->assign('pageHtml','users_list.htm');
     assign_query_info();
     $smarty->display('users_list.htm');
 }
@@ -62,7 +65,6 @@ elseif ($_REQUEST['act'] == 'query')
     $smarty->assign('filter',       $user_list['filter']);
     $smarty->assign('record_count', $user_list['record_count']);
     $smarty->assign('page_count',   $user_list['page_count']);
-
     $sort_flag  = sort_flag($user_list['filter']);
     $smarty->assign($sort_flag['tag'], $sort_flag['img']);
 
@@ -113,7 +115,7 @@ elseif ($_REQUEST['act'] == 'insert')
     $rank = empty($_POST['user_rank']) ? 0 : intval($_POST['user_rank']);
     $credit_line = empty($_POST['credit_line']) ? 0 : floatval($_POST['credit_line']);
 
-    $users =& init_users();
+    $users = init_users();
 
     if (!$users->add_user($username, $password, $email))
     {
@@ -217,7 +219,7 @@ elseif ($_REQUEST['act'] == 'edit')
 
     $row = $db->GetRow($sql);
     $row['user_name'] = addslashes($row['user_name']);
-    $users  =& init_users();
+    $users  = init_users();
     $user   = $users->get_user_info($row['user_name']);
 
     $sql = "SELECT u.user_id, u.sex, u.birthday, u.pay_points, u.rank_points, u.user_rank , u.user_money, u.frozen_money, u.credit_line, u.parent_id, u2.user_name as parent_username, u.qq, u.msn,
@@ -302,6 +304,10 @@ elseif ($_REQUEST['act'] == 'edit')
         //推荐注册分成
         $affdb = array();
         $num = count($affiliate['item']);
+
+        //最新推荐分成只支持三级  
+        $num > 3 and $num = 3;
+
         $up_uid = "'$_GET[id]'";
         for ($i = 1 ; $i <=$num ;$i++)
         {
@@ -352,7 +358,7 @@ elseif ($_REQUEST['act'] == 'update')
     $rank = empty($_POST['user_rank']) ? 0 : intval($_POST['user_rank']);
     $credit_line = empty($_POST['credit_line']) ? 0 : floatval($_POST['credit_line']);
 
-    $users  =& init_users();
+    $users  = init_users();
 
     if (!$users->edit_user(array('username'=>$username, 'password'=>$password, 'email'=>$email, 'gender'=>$sex, 'bday'=>$birthday ), 1))
     {
@@ -440,7 +446,7 @@ elseif ($_REQUEST['act'] == 'batch_remove')
         $usernames = implode(',',addslashes_deep($col));
         $count = count($col);
         /* 通过插件来删除用户 */
-        $users =& init_users();
+        $users = init_users();
         $users->remove_user($col);
 
         admin_log($usernames, 'batch_remove', 'users');
@@ -476,7 +482,7 @@ elseif ($_REQUEST['act'] == 'edit_username')
         return;
     }
 
-    $users =& init_users();
+    $users = init_users();
 
     if ($users->edit_user($id, $username))
     {
@@ -507,7 +513,7 @@ elseif ($_REQUEST['act'] == 'edit_email')
     $id = empty($_REQUEST['id']) ? 0 : intval($_REQUEST['id']);
     $email = empty($_REQUEST['val']) ? '' : json_str_iconv(trim($_REQUEST['val']));
 
-    $users =& init_users();
+    $users = init_users();
 
     $sql = "SELECT user_name FROM " . $ecs->table('users') . " WHERE user_id = '$id'";
     $username = $db->getOne($sql);
@@ -545,7 +551,7 @@ elseif ($_REQUEST['act'] == 'remove')
     $sql = "SELECT user_name FROM " . $ecs->table('users') . " WHERE user_id = '" . $_GET['id'] . "'";
     $username = $db->getOne($sql);
     /* 通过插件来删除用户 */
-    $users =& init_users();
+    $users = init_users();
     $users->remove_user($username); //已经删除用户所有数据
 
     /* 记录管理员操作 */

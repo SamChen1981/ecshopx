@@ -1,4 +1,3 @@
-function t_eval ()
-{
-   return eval("("+ document.getCookie(this.CookieName) +")");
+function t_eval(self){
+   return eval("("+ document.getCookie(self.CookieName) +")");
 }

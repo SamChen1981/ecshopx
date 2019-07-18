@@ -3,7 +3,7 @@
 /**
  * ECSHOP 支付响应页面
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -27,9 +27,12 @@ if (empty($pay_code) && !empty($_REQUEST['v_pmode']) && !empty($_REQUEST['v_pstr
     $pay_code = 'cappay';
 }
 
-if(isset($_POST['MerRemark'])  && $_POST['MerRemark']=='epay')
-{
-    $pay_code ='epay';
+//pc微信扫码的判断
+if(empty($pay_code)){
+    $xml = file_get_contents('php://input');
+    if(strpos($xml, '<xml><appid>' )!== false && strpos($xml, 'openid') !== false){
+        $pay_code = 'wxpaynative';
+    }
 }
 
 //获取快钱神州行支付方式
@@ -37,7 +40,26 @@ if (empty($pay_code) && ($_REQUEST['ext1'] == 'shenzhou') && ($_REQUEST['ext2'] 
 {
     $pay_code = 'shenzhou';
 }
+//获取天工支付方式
+if(empty($pay_code))
+{
+    if( $_GET['metadata'] == 'tiangong')
+    {
+        $pay_code = 'tiangong';
+    }
+    if( $_GET['metadata'] == 'tiangongwx')
+    {
+        $pay_code = 'tiangongwx';
+    }
 
+    if( $_GET['metadata'] == 'yunqiwx')
+    {
+        $pay_code = 'yunqi';
+    }
+    if (isset($_REQUEST['Version']) && $_REQUEST['Version'] == '20140728') {
+        $pay_code = 'chinapay';
+    }
+}
 /* 参数是否为空 */
 if (empty($pay_code))
 {
@@ -66,8 +88,8 @@ else
     }
     else
     {
-        $plugin_file = 'includes/modules/payment/' . $pay_code . '.php';
 
+        $plugin_file = dirname(__FILE__).'/includes/modules/payment/' . $pay_code . '.php';
         /* 检查插件文件是否存在，如果存在则验证支付是否成功，否则则返回失败信息 */
         if (file_exists($plugin_file))
         {

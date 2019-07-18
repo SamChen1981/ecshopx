@@ -13,7 +13,7 @@
  *  define('ROOT_PATH',                     '网站根目录')
  *
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -103,13 +103,14 @@ class cls_image
 
         if (!$this->check_img_type($upload['type']))
         {
+
             $this->error_msg = $GLOBALS['_LANG']['invalid_upload_image_type'];
             $this->error_no  =  ERR_INVALID_IMAGE_TYPE;
             return false;
         }
 
         /* 允许上传的文件类型 */
-        $allow_file_types = '|GIF|JPG|JEPG|PNG|BMP|SWF|';
+        $allow_file_types = '|GIF|JPG|JEPG|PNG|BMP|SWF|png|jpg|jpeg|gif|';
         if (!check_file_type($upload['tmp_name'], $img_name, $allow_file_types))
         {
             $this->error_msg = $GLOBALS['_LANG']['invalid_upload_image_type'];
@@ -578,7 +579,7 @@ class cls_image
      * @author: weber liu
      * @return string
      */
-    function random_filename()
+    static function random_filename()
     {
         $str = '';
         for($i = 0; $i < 9; $i++)
@@ -597,7 +598,7 @@ class cls_image
      *
      * @return  string      文件名
      */
-    function unique_name($dir)
+    static function unique_name($dir)
     {
         $filename = '';
         while (empty($filename))
@@ -620,7 +621,7 @@ class cls_image
      *
      * @return  string      文件后缀名
      */
-    function get_filetype($path)
+    static function get_filetype($path)
     {
         $pos = strrpos($path, '.');
         if ($pos !== false)
@@ -675,7 +676,7 @@ class cls_image
      * @access      public
      * @return      int         可能的值为0，1，2
      */
-    function gd_version()
+    static function gd_version()
     {
         static $version = -1;
 

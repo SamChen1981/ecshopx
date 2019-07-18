@@ -3,7 +3,7 @@
 /**
  * UCenter 会员数据处理类
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com
  * ----------------------------------------------------------------------------
  * 这是一个免费开源的软件；这意味着您可以在不用于商业目的的前提下对程序代码
@@ -124,7 +124,7 @@ class ucenter extends integrate
      *
      * @return void
      */
-    function login($username, $password)
+    function login($username, $password, $remember = null)
     {
         list($uid, $uname, $pwd, $email, $repeat) = uc_call("uc_user_login", array($username, $password));
         $uname = addslashes($uname);
@@ -207,7 +207,7 @@ class ucenter extends integrate
     }
 
     /*添加用户*/
-    function add_user($username, $password, $email)
+    function add_user($username, $password, $email, $gender = -1, $bday = 0, $reg_date = 0, $md5password = '')
     {
         /* 检测用户名 */
         if ($this->check_user($username))
@@ -458,27 +458,27 @@ class ucenter extends integrate
      *
      * @return void
      */
-    function set_cookie($username='')
+    function set_cookie($username='', $remember = null)
     {
         if (empty($username))
         {
             /* 摧毁cookie */
             $time = time() - 3600;
-            setcookie("ECS[user_id]",  '', $time, $this->cookie_path);            
-            setcookie("ECS[password]", '', $time, $this->cookie_path);
+            setcookie("ECS[user_id]",  '', $time, $this->cookie_path, NULL, NULL, TRUE);            
+            setcookie("ECS[password]", '', $time, $this->cookie_path, NULL, NULL, TRUE);
         }
         else
         {
             /* 设置cookie */
             $time = time() + 3600 * 24 * 30;
 
-            setcookie("ECS[username]", stripslashes($username), $time, $this->cookie_path, $this->cookie_domain);
+            setcookie("ECS[username]", stripslashes($username), $time, $this->cookie_path, $this->cookie_domain, NULL, TRUE);
             $sql = "SELECT user_id, password FROM " . $GLOBALS['ecs']->table('users') . " WHERE user_name='$username' LIMIT 1";
             $row = $GLOBALS['db']->getRow($sql);
             if ($row)
             {
-                setcookie("ECS[user_id]", $row['user_id'], $time, $this->cookie_path, $this->cookie_domain);
-                setcookie("ECS[password]", $row['password'], $time, $this->cookie_path, $this->cookie_domain);
+                setcookie("ECS[user_id]", $row['user_id'], $time, $this->cookie_path, $this->cookie_domain, NULL, TRUE);
+                setcookie("ECS[password]", $row['password'], $time, $this->cookie_path, $this->cookie_domain, NULL, TRUE);
             }
         }
     }
@@ -593,6 +593,8 @@ class ucenter extends integrate
             $sql = "DELETE FROM " . $GLOBALS['ecs']->table('tag') . " WHERE " . db_create_in($col, 'user_id'); //删除用户标记
             $GLOBALS['db']->query($sql);
             $sql = "DELETE FROM " . $GLOBALS['ecs']->table('account_log') . " WHERE " . db_create_in($col, 'user_id'); //删除用户日志
+            $GLOBALS['db']->query($sql);
+            $sql = "DELETE FROM " . $GLOBALS['ecs']->table('sns') . " WHERE " . db_create_in($col, 'user_id'); //删除ecs_sns
             $GLOBALS['db']->query($sql);
         }
 

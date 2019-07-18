@@ -3,7 +3,7 @@
 /**
  * ECSHOP 网店信息管理页面
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -12,9 +12,7 @@
  * $Author: liubo $
  * $Id: shopinfo.php 17217 2011-01-19 06:29:08Z liubo $
 */
-
 define('IN_ECS', true);
-
 require(dirname(__FILE__) . '/includes/init.php');
 require_once(ROOT_PATH . "includes/fckeditor/fckeditor.php");
 
@@ -51,6 +49,7 @@ if ($_REQUEST['act'] =='add')
 {
     /* 权限判断 */
     admin_priv('shopinfo_manage');
+    $_REQUEST['id'] = intval($_REQUEST['id']);
 
     /* 创建 html editor */
     create_html_editor('FCKeditor1');
@@ -69,6 +68,7 @@ if ($_REQUEST['act'] == 'insert')
 {
     /* 权限判断 */
     admin_priv('shopinfo_manage');
+    $_REQUEST['id'] = intval($_REQUEST['id']);
 
     /* 判断是否重名 */
     $is_only = $exc->is_only('title', $_POST['title']);
@@ -103,6 +103,7 @@ if ($_REQUEST['act'] == 'edit')
 {
     /* 权限判断 */
     admin_priv('shopinfo_manage');
+    $_REQUEST['id'] = intval($_REQUEST['id']);
 
     /* 取得文章数据 */
     $sql = "SELECT article_id, title, content FROM ".$ecs->table('article')."WHERE article_id =".$_REQUEST['id'];
@@ -121,6 +122,7 @@ if ($_REQUEST['act'] == 'update')
 {
     /* 权限判断 */
     admin_priv('shopinfo_manage');
+    $_REQUEST['id'] = intval($_REQUEST['id']);
 
     /* 检查重名 */
     if ($_POST['title'] != $_POST['old_title'])

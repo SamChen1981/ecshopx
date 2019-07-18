@@ -3,7 +3,7 @@
 /**
  * ECSHOP 验证码图片类
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -80,12 +80,11 @@ class captcha
      * 构造函数
      *
      * @access  public
-     * @param   string  $folder     背景图片所在目录
-     * @param   integer $width      图片宽度
-     * @param   integer $height     图片高度
-     * @return  bool
+     * @param
+     *
+     * @return void
      */
-    function captcha($folder = '', $width = 145, $height = 20)
+    function __construct($folder = '', $width = 145, $height = 20)
     {
         if (!empty($folder))
         {
@@ -107,20 +106,6 @@ class captcha
             return (((imagetypes() & IMG_GIF) > 0) || ((imagetypes() & IMG_JPG)) > 0 );
         }
     }
-
-    /**
-     * 构造函数
-     *
-     * @access  public
-     * @param
-     *
-     * @return void
-     */
-    function __construct($folder = '', $width = 145, $height = 20)
-    {
-        $this->captcha($folder, $width, $height);
-    }
-
 
     /**
      * 检查给出的验证码是否和session中的一致

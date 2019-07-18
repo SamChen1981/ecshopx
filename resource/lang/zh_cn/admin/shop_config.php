@@ -2,7 +2,7 @@
 /**
  * ECSHOP 管理中心商店设置语言文件
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -78,6 +78,7 @@ $_LANG['cfg_name']['member_email_validate'] = '是否开启会员邮件验证';
 $_LANG['cfg_name']['send_verify_email'] = '用户注册时自动发送验证邮件';
 $_LANG['cfg_name']['message_board'] = '是否启用留言板功能';
 $_LANG['cfg_name']['message_check'] = '用户留言是否需要审核';
+$_LANG['cfg_name']['logistics_trace'] = '是否开启物流追踪';
 //$_LANG['cfg_name']['use_package'] = '是否使用包装';
 //$_LANG['cfg_name']['use_card'] = '是否使用贺卡';
 $_LANG['cfg_name']['use_integral'] = '是否使用积分';
@@ -139,9 +140,10 @@ $_LANG['test_mail_title'] = '测试邮件';
 $_LANG['cfg_name']['email_content']  = '您好！这是一封检测邮件服务器设置的测试邮件。收到此邮件，意味着您的邮件服务器设置正确！您可以进行其它邮件发送的操作了！';
 $_LANG['cfg_name']['sms'] = '短信设置';
 $_LANG['cfg_name']['sms_shop_mobile'] = '商家的手机号码';
-$_LANG['cfg_name']['sms_order_placed'] = '客户下订单时是否给商家发短信';
-$_LANG['cfg_name']['sms_order_payed'] = '客户付款时是否给商家发短信';
-$_LANG['cfg_name']['sms_order_shipped'] = '商家发货时是否给客户发短信';
+$_LANG['cfg_name']['sms_order_placed'] = '商家接收新订单';
+$_LANG['cfg_name']['sms_order_payed'] = '消费者支付订单时发商家';
+$_LANG['cfg_name']['sms_order_payed_to_customer'] = '消费者支付订单时发消费者';
+$_LANG['cfg_name']['sms_order_shipped'] = '商家给消费者发货时';
 $_LANG['cfg_name']['attr_related_number'] = '属性关联的商品数量';
 $_LANG['cfg_name']['top10_time'] = '排行统计的时间';
 $_LANG['cfg_name']['goods_gallery_number'] = '商品详情页相册图片数量';
@@ -170,6 +172,7 @@ $_LANG['cfg_desc']['comments_number'] = '显示在商品详情页的用户评论
 $_LANG['cfg_desc']['shop_title'] = '商店的标题将显示在浏览器的标题栏';
 $_LANG['cfg_desc']['smtp_host'] = '邮件服务器主机地址。如果本机可以发送邮件则设置为localhost';
 $_LANG['cfg_desc']['smtp_user'] = '发送邮件所需的认证帐号，如果没有就为空着';
+$_LANG['cfg_desc']['smtp_from_name'] = '发送的邮件来源名，默认为ECMobile';
 $_LANG['cfg_desc']['bought_goods'] = '显示多少个购买此商品的人还买过哪些商品';
 $_LANG['cfg_desc']['currency_format'] = '显示商品价格的格式，%s将被替换为相应的价格数字。';
 $_LANG['cfg_desc']['image_height'] = '如果您的服务器支持GD，在您上传商品图片的时候将自动将图片缩小到指定的尺寸。';
@@ -278,6 +281,8 @@ $_LANG['cfg_range']['comment_check']['0'] = '不需要审核';
 $_LANG['cfg_range']['comment_check']['1'] = '需要审核';
 $_LANG['cfg_range']['message_check']['0'] = '不需要审核';
 $_LANG['cfg_range']['message_check']['1'] = '需要审核';
+$_LANG['cfg_range']['logistics_trace']['0'] = '不需要开启';
+$_LANG['cfg_range']['logistics_trace']['1'] = '需要开启';
 $_LANG['cfg_range']['comment_factor']['0'] = '所有用户';
 $_LANG['cfg_range']['comment_factor']['1'] = '仅登录用户';
 $_LANG['cfg_range']['comment_factor']['2'] = '有过一次以上购买行为用户';
@@ -325,6 +330,8 @@ $_LANG['cfg_range']['sms_order_placed']['1'] = '发短信';
 $_LANG['cfg_range']['sms_order_placed']['0'] = '不发短信';
 $_LANG['cfg_range']['sms_order_payed']['1'] = '发短信';
 $_LANG['cfg_range']['sms_order_payed']['0'] = '不发短信';
+$_LANG['cfg_range']['sms_order_payed_to_customer']['1'] = '发短信';
+$_LANG['cfg_range']['sms_order_payed_to_customer']['0'] = '不发短信';
 $_LANG['cfg_range']['sms_order_shipped']['1'] = '发短信';
 $_LANG['cfg_range']['sms_order_shipped']['0'] = '不发短信';
 $_LANG['cfg_range']['cron_method']['0'] = '否';
@@ -412,6 +419,7 @@ $_LANG['cfg_name']['mail_charset'] = '邮件编码';
 $_LANG['cfg_name']['smtp_ssl'] = '邮件服务器是否要求加密连接(SSL)';
 $_LANG['cfg_range']['smtp_ssl'][0] = '否';
 $_LANG['cfg_range']['smtp_ssl'][1] = '是';
+$_LANG['cfg_name']['smtp_from_name'] = '邮件来源名';
 
 $_LANG['mail_settings_note'] = '如果您的服务器支持 Mail 函数（具体信息请咨询您的空间提供商）。我们建议您使用系统的 Mail 函数。<br />当您的服务器不支持 Mail 函数的时候您也可以选用 SMTP 作为邮件服务器。';
 
@@ -446,4 +454,6 @@ $_LANG['back_mail_settings'] = '返回邮件服务器设置';
 $_LANG['mail_settings'] = '邮件服务器设置';
 
 $_LANG['sms_url'] = '<a href="'.$url.'" target="_blank">点此注册手机短信服务</a>';
+$_LANG['open_logistics_trace_fail'] = '启用物流追踪失败';
+$_LANG['preview_template'] = '预览模板';
 ?>

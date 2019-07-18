@@ -3,7 +3,7 @@
 /**
  * ECSHOP 管理中心共用语言文件
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -15,7 +15,7 @@
 
 $_LANG['app_name'] = 'ECSHOP';
 $_LANG['cp_home'] = 'ECSHOP 管理中心';
-$_LANG['copyright'] = '版权所有 &copy; 2005-2012 上海商派网络科技有限公司，并保留所有权利。';
+$_LANG['copyright'] = '版权所有 &copy; 2005-'. date('Y') .' 上海商派软件有限公司，并保留所有权利。';
 $_LANG['query_info'] = '共执行 %d 个查询，用时 %s 秒';
 $_LANG['memory_info'] = '，内存占用 %0.3f MB';
 $_LANG['gzip_enabled'] = '，Gzip 已启用';
@@ -69,6 +69,7 @@ $_LANG['button_submit'] = ' 确定 ';
 $_LANG['button_save'] = ' 保存 ';
 $_LANG['button_reset'] = ' 重置 ';
 $_LANG['button_search'] = ' 搜索 ';
+$_LANG['advanced_search'] = '高级搜索';
 
 $_LANG['priv_error'] = '对不起,您没有执行此项操作的权限!';
 $_LANG['drop_confirm'] = '您确认要删除这条记录吗?';
@@ -129,6 +130,7 @@ $_LANG['gram'] = '克';
 $_LANG['kilogram'] = '千克';
 
 /* 菜单分类部分 */
+$_LANG['01_certificate_manage'] = '云服务中心';
 $_LANG['02_cat_and_goods'] = '商品管理';
 $_LANG['03_promotion'] = '促销管理';
 $_LANG['04_order'] = '订单管理';
@@ -144,6 +146,7 @@ $_LANG['13_backup'] = '数据库管理';
 $_LANG['14_sms'] = '短信管理';
 $_LANG['15_rec'] = '推荐管理';
 $_LANG['16_email_manage'] = '邮件群发管理';
+$_LANG['18_lead_manage'] = '移动端管理';
 
 /* 商品管理 */
 $_LANG['01_goods_list'] = '商品列表';
@@ -285,6 +288,7 @@ $_LANG['03_db_optimize'] = '数据表优化';
 $_LANG['04_sql_query'] = 'SQL查询';
 $_LANG['05_synchronous'] = '同步数据';
 $_LANG['convert'] = '转换数据';
+$_LANG['clear'] = '体验数据清除';
 
 /* 短信管理 */
 $_LANG['02_sms_my_info'] = '账号信息';

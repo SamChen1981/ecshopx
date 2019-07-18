@@ -3,7 +3,7 @@
 /**
  * ECSHOP 会员中心
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -30,12 +30,12 @@ $back_act='';
 
 // 不需要登录的操作或自己验证是否登录（如ajax处理）的act
 $not_login_arr =
-array('login','act_login','register','act_register','act_edit_password','get_password','send_pwd_email','password', 'signin', 'add_tag', 'collect', 'return_to_cart', 'logout', 'email_list', 'validate_email', 'send_hash_mail', 'order_query', 'is_registered', 'check_email','clear_history','qpassword_name', 'get_passwd_question', 'check_answer');
+array('sms_get_password','ajax_validate_sms','ajax_validate_vcode','login','act_login','register','act_register','act_edit_password','get_password','send_pwd_email','password', 'signin', 'add_tag', 'collect', 'return_to_cart', 'logout', 'email_list', 'validate_email', 'send_hash_mail', 'order_query', 'is_registered', 'check_email','clear_history','qpassword_name', 'get_passwd_question', 'check_answer');
 
 /* 显示页面的action列表 */
-$ui_arr = array('register', 'login', 'profile', 'order_list', 'order_detail', 'address_list', 'collection_list',
+$ui_arr = array('sms_get_password','register','account_bind', 'login', 'profile', 'order_list', 'order_detail', 'address_list', 'collection_list',
 'message_list', 'tag_list', 'get_password', 'reset_password', 'booking_list', 'add_booking', 'account_raply',
-'account_deposit', 'account_log', 'account_detail', 'act_account', 'pay', 'default', 'bonus', 'group_buy', 'group_buy_detail', 'affiliate', 'comment_list','validate_email','track_packages', 'transform_points','qpassword_name', 'get_passwd_question', 'check_answer');
+'account_deposit', 'account_log', 'account_detail', 'act_account', 'pay', 'default', 'bonus', 'group_buy', 'group_buy_detail', 'affiliate', 'comment_list','validate_email','track_packages', 'transform_points','qpassword_name', 'get_passwd_question', 'check_answer','delivery_info');
 
 /* 未登录处理 */
 if (empty($_SESSION['user_id']))
@@ -89,7 +89,6 @@ if (in_array($action, $ui_arr))
     $smarty->assign('action',     $action);
     $smarty->assign('lang',       $_LANG);
 }
-
 //用户中心欢迎页
 if ($action == 'default')
 {
@@ -113,9 +112,8 @@ if ($action == 'register')
 {
     if ((!isset($back_act)||empty($back_act)) && isset($GLOBALS['_SERVER']['HTTP_REFERER']))
     {
-        $back_act = strpos($GLOBALS['_SERVER']['HTTP_REFERER'], 'user.php') ? './index.php' : $GLOBALS['_SERVER']['HTTP_REFERER'];
+        $_SESSION['back_act'] = strpos($GLOBALS['_SERVER']['HTTP_REFERER'], 'user.php') ? './index.php' : $GLOBALS['_SERVER']['HTTP_REFERER'];
     }
-
     /* 取出注册扩展字段 */
     $sql = 'SELECT * FROM ' . $ecs->table('reg_fields') . ' WHERE type < 2 AND display = 1 ORDER BY dis_order, id';
     $extend_info_list = $db->getAll($sql);
@@ -133,7 +131,6 @@ if ($action == 'register')
 
     /* 增加是否关闭注册 */
     $smarty->assign('shop_reg_closed', $_CFG['shop_reg_closed']);
-//    $smarty->assign('back_act', $back_act);
     $smarty->display('user_passport.dwt');
 }
 
@@ -161,10 +158,9 @@ elseif ($action == 'act_register')
         $other['mobile_phone'] = isset($_POST['extend_field5']) ? $_POST['extend_field5'] : '';
         $sel_question = empty($_POST['sel_question']) ? '' : compile_str($_POST['sel_question']);
         $passwd_answer = isset($_POST['passwd_answer']) ? compile_str(trim($_POST['passwd_answer'])) : '';
+        $sms_code = isset($_POST['sms_code'])?trim($_POST['sms_code']):'';
 
-
-        $back_act = isset($_POST['back_act']) ? trim($_POST['back_act']) : '';
-
+        $back_act = isset($_SESSION['back_act']) ? trim($_SESSION['back_act']) : '';
         if(empty($_POST['agreement']))
         {
             show_message($_LANG['passport_js']['agreement']);
@@ -172,6 +168,10 @@ elseif ($action == 'act_register')
         if (strlen($username) < 3)
         {
             show_message($_LANG['passport_js']['username_shorter']);
+        }
+        if (is_numeric($username) && !preg_match("/^(((13[0-9]{1})|(14[0-9]{1})|(15[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/", $username))
+        {
+            show_message($_LANG['passport_js']['username_invalid']);
         }
 
         if (strlen($password) < 6)
@@ -184,21 +184,17 @@ elseif ($action == 'act_register')
             show_message($_LANG['passwd_balnk']);
         }
 
-        /* 验证码检查 */
-        if ((intval($_CFG['captcha']) & CAPTCHA_REGISTER) && gd_version() > 0)
-        {
-            if (empty($_POST['captcha']))
-            {
-                show_message($_LANG['invalid_captcha'], $_LANG['sign_up'], 'user.php?act=register', 'error');
-            }
-
-            /* 检查验证码 */
-            include_once('includes/cls_captcha.php');
-
-            $validator = new captcha();
-            if (!$validator->check_word($_POST['captcha']))
-            {
-                show_message($_LANG['invalid_captcha'], $_LANG['sign_up'], 'user.php?act=register', 'error');
+        //短信验证码检查
+        if(preg_match("/^1[34578]{1}\d{9}$/",$username)){
+            if($sms_code != '' && $sms_code == $_SESSION[$username.'-sms_code']){
+                // 短信验证码十分钟内有效
+                if (time() - $_SESSION[$username.'-send_time'] > 600) {
+                    show_message('短信验证码已过期', '返回上一页', 'user.php?act=register', 'error');
+                }
+                $other['mobile_phone'] = $username;
+                $_SESSION[$username.'-sms_code'] ='false';
+            }else{
+                show_message('短信验证码错误', $_LANG['sign_up'], 'user.php?act=register', 'error');
             }
         }
 
@@ -238,6 +234,11 @@ elseif ($action == 'act_register')
                 send_regiter_hash($_SESSION['user_id']);
             }
             $ucdata = empty($user->ucdata)? "" : $user->ucdata;
+            include_once(ROOT_PATH . 'includes/cls_matrix.php');
+            $matrix = new matrix;
+            if($matrix->get_bind_info('ecos.taocrm')){
+                $matrix->createMember($_SESSION['user_id'],'ecos.taocrm');
+            }
             show_message(sprintf($_LANG['register_success'], $username . $ucdata), array($_LANG['back_up_page'], $_LANG['profile_lnk']), array($back_act, 'user.php'), 'info');
         }
         else
@@ -245,10 +246,36 @@ elseif ($action == 'act_register')
             $err->show($_LANG['sign_up'], 'user.php?act=register');
         }
     }
-}
+
+    //ajax验证验证码
+}elseif($action == 'ajax_validate_vcode'){
+    /* 验证码检查 */
+
+    if ((intval($_CFG['captcha']) || CAPTCHA_REGISTER) && gd_version() > 0)
+    {
+        require('admin/includes/lib_main.php');
+        $code = str_replace('\\','',$_REQUEST['JSON']);
+        $code = json_decode($code,1);
+        $code = $code['code'];
+        if(!$code){
+            make_json_result('failed');exit;
+        }
+
+        /* 检查验证码 */
+        include_once('includes/cls_captcha.php');
+        $validator = new captcha();
+        if ($validator->check_word($code)){
+            $_SESSION['v_code'] = 'true';
+            make_json_result('succ');exit;
+        }else{
+            make_json_result('failed');exit;
+        }
+    }
+
+
 
 /* 验证用户注册邮件 */
-elseif ($action == 'validate_email')
+}elseif ($action == 'validate_email')
 {
     $hash = empty($_GET['hash']) ? '' : trim($_GET['hash']);
     if ($hash)
@@ -321,8 +348,7 @@ elseif ($action == 'login')
         $GLOBALS['smarty']->assign('enabled_captcha', 1);
         $GLOBALS['smarty']->assign('rand', mt_rand());
     }
-
-    $smarty->assign('back_act', $back_act);
+    $_SESSION['back_act'] = $back_act;
     $smarty->display('user_passport.dwt');
 }
 
@@ -331,7 +357,12 @@ elseif ($action == 'act_login')
 {
     $username = isset($_POST['username']) ? trim($_POST['username']) : '';
     $password = isset($_POST['password']) ? trim($_POST['password']) : '';
-    $back_act = isset($_POST['back_act']) ? trim($_POST['back_act']) : '';
+    $back_act = isset($_SESSION['back_act']) ? trim($_SESSION['back_act']) : '';
+    // 登录密码不能为空
+    if (empty($password)) 
+    {
+        show_message($_LANG['passport_js']['password_empty'], $_LANG['relogin_lnk'], 'user.php', 'error');
+    }
 
 
     $captcha = intval($_CFG['captcha']);
@@ -355,6 +386,7 @@ elseif ($action == 'act_login')
 
     if ($user->login($username, $password,isset($_POST['remember'])))
     {
+        update_cart_offline(); //离线购物车绑定会员id
         update_user_info();
         recalculate_price();
 
@@ -405,6 +437,7 @@ elseif ($action == 'signin')
 
     if ($user->login($username, $password))
     {
+        update_cart_offline(); //离线购物车绑定会员id
         update_user_info();  //更新用户信息
         recalculate_price(); // 重新计算购物车中的商品价格
         $smarty->assign('user_info', get_user_info());
@@ -433,7 +466,6 @@ elseif ($action == 'logout')
     {
         $back_act = strpos($GLOBALS['_SERVER']['HTTP_REFERER'], 'user.php') ? './index.php' : $GLOBALS['_SERVER']['HTTP_REFERER'];
     }
-
     $user->logout();
     $ucdata = empty($user->ucdata)? "" : $user->ucdata;
     show_message($_LANG['logout'] . $ucdata, array($_LANG['back_up_page'], $_LANG['back_home_lnk']), array($back_act, 'index.php'), 'info');
@@ -740,7 +772,6 @@ elseif ($action == 'reset_password')
 elseif ($action == 'act_edit_password')
 {
     include_once(ROOT_PATH . 'includes/lib_passport.php');
-
     $old_password = isset($_POST['old_password']) ? trim($_POST['old_password']) : null;
     $new_password = isset($_POST['new_password']) ? trim($_POST['new_password']) : '';
     $user_id      = isset($_POST['uid'])  ? intval($_POST['uid']) : $user_id;
@@ -750,22 +781,21 @@ elseif ($action == 'act_edit_password')
     {
         show_message($_LANG['passport_js']['password_shorter']);
     }
-
     $user_info = $user->get_profile_by_id($user_id); //论坛记录
 
     if (($user_info && (!empty($code) && md5($user_info['user_id'] . $_CFG['hash_code'] . $user_info['reg_time']) == $code)) || ($_SESSION['user_id']>0 && $_SESSION['user_id'] == $user_id && $user->check_user($_SESSION['user_name'], $old_password)))
     {
-		
+        
         if ($user->edit_user(array('username'=> (empty($code) ? $_SESSION['user_name'] : $user_info['user_name']), 'old_password'=>$old_password, 'password'=>$new_password), empty($code) ? 0 : 1))
         {
-			$sql="UPDATE ".$ecs->table('users'). "SET `ec_salt`='0' WHERE user_id= '".$user_id."'";
-			$db->query($sql);
+            $sql="UPDATE ".$ecs->table('users'). "SET `ec_salt`='0' WHERE user_id= '".$user_id."'";
+            $db->query($sql);
             $user->logout();
             show_message($_LANG['edit_password_success'], $_LANG['relogin_lnk'], 'user.php?act=login', 'info');
         }
         else
         {
-            show_message($_LANG['edit_password_failure'], $_LANG['back_page_up'], '', 'info');
+            show_message($_LANG['edit_password_failure'].'1', $_LANG['back_page_up'], '', 'info');
         }
     }
     else
@@ -806,6 +836,11 @@ elseif ($action == 'order_list')
     $orders = get_user_orders($user_id, $pager['size'], $pager['start']);
     $merge  = get_user_merge($user_id);
 
+    include_once(ROOT_PATH . 'includes/cls_certificate.php');
+    $cert = new certificate();
+    $cert->is_bind_sn('erp','goods_name')?$smarty->assign('no_bind_erp',  0):$smarty->assign('no_bind_erp',  1);
+
+    $smarty->assign('open_logistics_trace',is_open_logistics_trace());
     $smarty->assign('merge',  $merge);
     $smarty->assign('pager',  $pager);
     $smarty->assign('orders', $orders);
@@ -864,7 +899,7 @@ elseif ($action == 'order_detail')
     /* 未发货，未付款时允许更换支付方式 */
     if ($order['order_amount'] > 0 && $order['pay_status'] == PS_UNPAYED && $order['shipping_status'] == SS_UNSHIPPED)
     {
-        $payment_list = available_payment_list(false, 0, true);
+        $payment_list = available_payment_list(false, 0, true,'0');
 
         /* 过滤掉当前支付方式和余额支付方式 */
         if(is_array($payment_list))
@@ -884,11 +919,100 @@ elseif ($action == 'order_detail')
     $order['order_status'] = $_LANG['os'][$order['order_status']];
     $order['pay_status'] = $_LANG['ps'][$order['pay_status']];
     $order['shipping_status'] = $_LANG['ss'][$order['shipping_status']];
-
     $smarty->assign('order',      $order);
     $smarty->assign('goods_list', $goods_list);
     $smarty->display('user_transaction.dwt');
 }
+
+elseif($action=='get_yunqi_online'){
+    $order_id = $_POST['order_id'];
+    if(!$order_id){
+        echo json_encode(array('status'=>false,'msg'=>'入参错误'));exit;
+    }
+    include_once(ROOT_PATH.'includes/lib_clips.php');
+    include_once(ROOT_PATH.'includes/lib_payment.php');
+    include_once(ROOT_PATH . 'includes/lib_transaction.php');
+    /* 订单详情 */
+    $order = get_order_detail($order_id, $_SESSION['user_id']);
+    //支付方式信息
+    $payment_info = array();
+    $payment_info = payment_info($order['pay_id']);
+    $order['yunqi_paymethod'] = $_POST['yunqi_paymethod']?$_POST['yunqi_paymethod']:'alipay';
+    
+    if (!empty($payment_info))
+    {
+        /* 调用相应的支付方式文件 */
+        include_once(ROOT_PATH . 'includes/modules/payment/yunqi.php');
+        /* 取得在线支付方式的支付按钮 */
+        $pay_obj    = new $payment_info['pay_code'];
+        $pay_online = $pay_obj->get_code($order, array());
+        echo json_encode(array('status'=>true,'pay_online'=>$pay_online));exit;
+    }else{
+        echo json_encode(array('status'=>false,'msg'=>'支付方式为空'));exit;
+    }
+}
+
+elseif($action=='get_yunqi_online_balance'){
+    //变量初始化
+    $surplus_id = isset($_POST['rec_id'])  ? intval($_POST['rec_id'])  : 0;
+    $payment_id = isset($_POST['pid']) ? intval($_POST['pid']) : 0;
+    if(!$surplus_id || !$payment_id){
+        echo json_encode(array('status'=>false,'msg'=>'入参错误'));exit;
+    }
+    include_once(ROOT_PATH.'includes/lib_clips.php');
+    include_once(ROOT_PATH.'includes/lib_payment.php');
+    include_once(ROOT_PATH.'includes/lib_order.php');
+    include_once(ROOT_PATH . 'includes/lib_transaction.php');
+    //获取单条会员帐目信息
+    $order = array();
+    $order = get_surplus_info($surplus_id);
+    
+    //支付方式的信息
+    $payment_info = array();
+    $payment_info = payment_info($payment_id);
+    $order['yunqi_paymethod'] = $_POST['yunqi_paymethod']?$_POST['yunqi_paymethod']:'alipay';
+    /* 如果当前支付方式没有被禁用，进行支付的操作 */
+    if (!empty($payment_info))
+    {
+        //取得支付信息，生成支付代码
+        $payment = unserialize_config($payment_info['pay_config']);
+
+        //生成伪订单号
+        $order['order_sn'] = $surplus_id;
+
+        //获取需要支付的log_id
+        $order['log_id'] = get_paylog_id($surplus_id, $pay_type = PAY_SURPLUS);
+
+        $order['user_name']      = $_SESSION['user_name'];
+        $order['surplus_amount'] = $order['amount'];
+
+        //计算支付手续费用
+        $payment_info['pay_fee'] = pay_fee($payment_id, $order['surplus_amount'], 0);
+
+        //计算此次预付款需要支付的总金额
+        $order['order_amount']   = $order['surplus_amount'] + $payment_info['pay_fee'];
+
+        //如果支付费用改变了，也要相应的更改pay_log表的order_amount
+        $order_amount = $db->getOne("SELECT order_amount FROM " .$ecs->table('pay_log')." WHERE log_id = '$order[log_id]'");
+        if ($order_amount <> $order['order_amount'])
+        {
+            $db->query("UPDATE " .$ecs->table('pay_log').
+                       " SET order_amount = '$order[order_amount]' WHERE log_id = '$order[log_id]'");
+        }
+
+        /* 调用相应的支付方式文件 */
+        include_once(ROOT_PATH . 'includes/modules/payment/' . $payment_info['pay_code'] . '.php');
+
+        /* 取得在线支付方式的支付按钮 */
+        $pay_obj = new $payment_info['pay_code'];
+        $pay_online = $pay_obj->get_code($order, $payment);
+        echo json_encode(array('status'=>true,'pay_online'=>$pay_online));exit;
+
+    }else{
+        echo json_encode(array('status'=>false,'msg'=>'支付方式为空'));exit;
+    }
+}
+
 
 /* 取消订单 */
 elseif ($action == 'cancel_order')
@@ -900,6 +1024,11 @@ elseif ($action == 'cancel_order')
 
     if (cancel_order($order_id, $user_id))
     {
+        // 通知erp取消订单
+        include_once(ROOT_PATH . 'includes/cls_matrix.php');
+        $matrix = new matrix();
+        $matrix->set_dead_order($order_id);
+
         ecs_header("Location: user.php?act=order_list\n");
         exit;
     }
@@ -960,7 +1089,10 @@ elseif ($action == 'address_list')
 
     $smarty->display('user_transaction.dwt');
 }
-
+/* 绑定账户*/
+elseif ($action == 'account_bind'){
+    $smarty->display('account_bind.dwt');
+}
 /* 添加/编辑收货地址的处理 */
 elseif ($action == 'act_edit_address')
 {
@@ -1148,6 +1280,12 @@ elseif ($action == 'act_add_message')
 
     if (add_message($message))
     {
+        // 通知erp订单留言
+        // if (isset($_POST['order_id']) && $_POST['order_id']) {
+        //     include_once(ROOT_PATH . 'includes/cls_matrix.php');
+        //     $matrix = new matrix();
+        //     $matrix->update_order_buyer_message($message);
+        // }
         show_message($_LANG['add_message_success'], $_LANG['message_list_lnk'], 'user.php?act=message_list&order_id=' . $message['order_id'],'info');
     }
     else
@@ -1430,7 +1568,8 @@ elseif ($action == 'act_account')
             'process_type' => isset($_POST['surplus_type']) ? intval($_POST['surplus_type']) : 0,
             'payment_id'   => isset($_POST['payment_id'])   ? intval($_POST['payment_id'])   : 0,
             'user_note'    => isset($_POST['user_note'])    ? trim($_POST['user_note'])      : '',
-            'amount'       => $amount
+            'amount'       => $amount,
+            'yunqi_paymethod'=>isset($_POST['yunqi_paymethod'])?$_POST['yunqi_paymethod']:'alipay',
     );
 
     /* 退款申请的处理 */
@@ -1478,6 +1617,10 @@ elseif ($action == 'act_account')
 
         if ($surplus['rec_id'] > 0)
         {
+            //检查金额是否有改变，如果有改变，不可以修改
+            if(!check_account_money($surplus['rec_id'],$user_id,$amount)){
+                show_message($_LANG['check_account_money_fail']);
+            }
             //更新会员账目明细
             $surplus['rec_id'] = update_user_account($surplus);
         }
@@ -1495,6 +1638,7 @@ elseif ($action == 'act_account')
         $order['order_sn']       = $surplus['rec_id'];
         $order['user_name']      = $_SESSION['user_name'];
         $order['surplus_amount'] = $amount;
+        $order['process_type'] = 0;
 
         //计算支付手续费用
         $payment_info['pay_fee'] = pay_fee($surplus['payment_id'], $order['surplus_amount'], 0);
@@ -1504,7 +1648,7 @@ elseif ($action == 'act_account')
 
         //记录支付log
         $order['log_id'] = insert_pay_log($surplus['rec_id'], $order['order_amount'], $type=PAY_SURPLUS, 0);
-
+        $order['yunqi_paymethod'] = $surplus['yunqi_paymethod'];
         /* 调用相应的支付方式文件 */
         include_once(ROOT_PATH . 'includes/modules/payment/' . $payment_info['pay_code'] . '.php');
 
@@ -1938,6 +2082,18 @@ elseif ($action == 'act_edit_surplus')
     $change_desc = sprintf($_LANG['pay_order_by_surplus'], $order['order_sn']);
     log_account_change($user['user_id'], (-1) * $surplus, 0, 0, 0, $change_desc);
 
+    // 更新pay_log表
+    if ($order['order_amount']>0) {
+        $GLOBALS['db']->query("UPDATE ".$GLOBALS['ecs']->table('pay_log')." SET order_amount='".$order['order_amount']."' WHERE order_id='".$order_id."' AND order_type=0 and is_paid=0");
+    }elseif ($order['order_amount'] == 0) {
+        $GLOBALS['db']->query("UPDATE ".$GLOBALS['ecs']->table('pay_log')." SET order_amount='".$order['order_amount']."',is_paid=1 WHERE order_id='".$order_id."' AND order_type=0 and is_paid=0");
+    }
+
+    // 支付后通知erp
+    include_once(ROOT_PATH . 'includes/cls_matrix.php');
+    $matrix = new matrix;
+    $matrix->createOrder($order['order_sn']);
+
     /* 跳转 */
     ecs_header('Location: user.php?act=order_detail&order_id=' . $order_id . "\n");
     exit;
@@ -2031,6 +2187,15 @@ elseif ($action == 'save_order_address')
         );
     if (save_order_address($address, $user_id))
     {
+        $order_sn = $db->getOne("SELECT order_sn FROM ".$ecs->table('order_info')." WHERE order_id='{$address['order_id']}'");
+        if ($order_sn) {
+            $sql = "UPDATE " . $ecs->table('order_info') .
+           " SET lastmodify=".gmtime()."  WHERE order_id = ".$address['order_id'];
+            $db->query($sql);
+            include_once(ROOT_PATH . 'includes/cls_matrix.php');
+            $matrix = new matrix;
+            $matrix->createOrder($order_sn);
+        }
         ecs_header('Location: user.php?act=order_detail&order_id=' .$address['order_id']. "\n");
         exit;
     }
@@ -2092,6 +2257,10 @@ elseif ($action == 'affiliate')
             //推荐注册分成
             $affdb = array();
             $num = count($affiliate['item']);
+            
+            // 最新推荐分成只支持三级  
+            $num > 3 and $num = 3;
+
             $up_uid = "'$user_id'";
             $all_uid = "'$user_id'";
             for ($i = 1 ; $i <=$num ;$i++)
@@ -2221,6 +2390,14 @@ elseif ($action == 'affiliate')
         {
             $pager['array'][$i] = $i;
         }
+        
+        //生成二维码
+        $share_url = $ecs->url()."?u={$user_id}";
+        $_share_url = createQrCode($share_url);
+
+        // 短链接
+        $short_url = createShortUrl($share_url);
+        
 
         $smarty->assign('url_format', $url_format);
         $smarty->assign('pager', $pager);
@@ -2247,7 +2424,14 @@ elseif ($action == 'affiliate')
         $goods['shop_price'] = price_format($goods['shop_price']);
 
         $smarty->assign('goods', $goods);
+        //生成二维码
+        $share_url = $ecs->url()."goods.php?id={$goodsid}&u={$user_id}";
+        $_share_url = createQrCode($share_url);
+        // 短链接
+        $short_url = createShortUrl($share_url);
     }
+    $smarty->assign('share_url', $_share_url);
+    $smarty->assign('short_url', $short_url);
 
     $smarty->assign('shopname', $_CFG['shop_name']);
     $smarty->assign('userid', $user_id);
@@ -2424,26 +2608,12 @@ else if ($action == 'track_packages')
     $sql = "SELECT order_id,order_sn,invoice_no,shipping_id FROM " .$ecs->table('order_info').
             " WHERE user_id = '$user_id' AND shipping_status = '" . SS_SHIPPED . "'";
     $res = $db->query($sql);
+
     $record_count = 0;
     while ($item = $db->fetch_array($res))
     {
-        $shipping   = get_shipping_object($item['shipping_id']);
-
-        if (method_exists ($shipping, 'query'))
-        {
-            $query_link = $shipping->query($item['invoice_no']);
-        }
-        else
-        {
-            $query_link = $item['invoice_no'];
-        }
-
-        if ($query_link != $item['invoice_no'])
-        {
-            $item['query_link'] = $query_link;
-            $orders[]  = $item;
-            $record_count += 1;
-        }
+        $orders[]  = $item;
+        $record_count += 1;
     }
     $pager  = get_pager('user.php', array('act' => $action), $record_count, $page);
     $smarty->assign('pager',  $pager);
@@ -2751,6 +2921,150 @@ elseif ($action == 'act_transform_ucenter_points')
 /* 清除商品浏览历史 */
 elseif ($action == 'clear_history')
 {
-    setcookie('ECS[history]',   '', 1);
+    setcookie('ECS[history]',   '', 1, NULL, NULL, NULL, TRUE);
+}
+/* 物流信息 */
+elseif ($action == 'delivery_info'){
+    $_GET['order_sn'] = trim($_GET['order_sn']);
+    $order_sn = empty($_GET['order_sn']) ? '' : addslashes($_GET['order_sn']);
+
+    if (empty($order_sn))
+    {
+        show_message($_LANG['invalid_order_sn'], '', 'user.php?act=order_list');
+    }
+
+    $sql = "SELECT order_id ".
+           " FROM " . $ecs->table('order_info').
+           " WHERE order_sn = '$order_sn' and user_id = ".$_SESSION['user_id']." and shipping_status = ".SS_SHIPPED." LIMIT 1";
+    $row = $db->getRow($sql);
+    if (empty($row))
+    {
+        show_message($_LANG['invalid_order_sn'], '', 'user.php?act=order_list');
+    }
+    include_once(ROOT_PATH . 'includes/lib_order.php');
+    $smarty->assign('logistics_info', get_logistics_trace($order_sn, 0, $_CFG['lang']));
+    $smarty->display('delivery_info.dwt');
+}
+/* ajax 物流信息 */
+elseif ($action == 'ajax_delivery_info') {
+    include_once('includes/cls_json.php');
+    $json = new JSON;
+
+    $_POST['order_sn'] = trim($_POST['order_sn']);
+    $order_sn = empty($_POST['order_sn']) ? '' : addslashes($_POST['order_sn']);
+
+    $result = array('error'=>0, 'message'=>'', 'content'=>'', 'order_sn'=>$order_sn);
+
+    if (empty($order_sn))
+    {
+        $result['error'] = 1;
+        $result['message'] = $_LANG['invalid_order_sn'];
+        die($json->encode($result));
+    }
+
+    $sql = "SELECT order_sn,shipping_name,invoice_no ".
+           " FROM " . $ecs->table('order_info').
+           " WHERE order_sn = '$order_sn' and user_id = ".$_SESSION['user_id']." and shipping_status = ".SS_SHIPPED." LIMIT 1";
+    $row = $db->getRow($sql);
+    if (empty($row))
+    {
+        $result['error'] = 1;
+        $result['message'] = $_LANG['invalid_order_sn'];
+        die($json->encode($result));
+    }
+    include_once(ROOT_PATH . 'includes/lib_order.php');
+    $smarty->assign('order_info',    $row);
+    $smarty->assign('logistics_info', get_logistics_trace($order_sn, 2, $_CFG['lang']));
+    $result['content'] = $smarty->fetch('library/delivery_info.lbi');
+
+    die($json->encode($result));
+
+}elseif($action == 'ajax_validate_sms'){
+    require('admin/includes/lib_main.php');
+    $time= time();
+    $date = date('Ymd',$time);
+    $pre_date = date('Ymd',$time-64000);
+//    $ip = $_SERVER["REMOTE_ADDR"];
+    $ip = ($_SERVER["HTTP_VIA"]) ? $_SERVER["HTTP_X_FORWARDED_FOR"] : $_SERVER["REMOTE_ADDR"];
+    if(file_exists(__FILE__.$pre_date.".txt"))unlink(__FILE__.$pre_date.".txt");//删除昨日记录
+    if(file_exists(__FILE__.$date.".txt")){
+        $send_limit_ip = file_get_contents(__FILE__.$date.".txt");
+        $data = unserialize($send_limit_ip);
+        if(isset($data[$ip]) && $data[$ip]>9){
+            make_json_result('当前IP已超当日限制');exit;
+        }
+    }
+    if(isset($_SESSION['last_send']) && $time<((int)$_SESSION['last_send']+120)){
+        make_json_result(($_SESSION['last_send']+120-$time).'秒后再试');exit;
+    }
+    $post_data = json_decode(str_replace('\\','',$_POST['JSON']),1);
+    //判断是否经过验证码验证
+    if((!isset($_SESSION['v_code']) || $_SESSION['v_code']!='true') && !isset($post_data['no_need_vcode']) ){
+        make_json_result('v_code fail');exit;
+    }
+    $_SESSION['v_code'] = 'false';
+    $mobile = $post_data['mobile'] ? trim($post_data['mobile']) : false;
+    $is_send = 'fail';
+    if(preg_match('/^1\d{10}$/', $mobile)){
+        // 找回密码验证输入的手机号是否已注册
+        if (isset($post_data['action']) && $post_data['action'] == 'sms_get_password') {
+            $is_reg = $user->check_user($mobile);
+            if (!$is_reg) {
+                make_json_result($_LANG['phone_number_reg_check_fail']);
+                exit();
+            }
+        }
+        $sms_code = mt_rand(100000,999999);
+        include_once('includes/cls_sms.php');
+        $sms =new sms();
+        $_SESSION[$mobile.'-sms_code'] = $sms_code;
+        $is_send = $sms->send($mobile,'您本次的验证码为：'.$sms_code.'，十分钟内有效，请不要把验证码泄露给其他人，如非本人操作可不用理会');
+        $is_send = $is_send?'succ':'fail';
+    } else {
+        make_json_result('phone number is incorrect');exit;
+    }
+    //短信发送限制
+    if($is_send == 'succ'){
+        $_SESSION['last_send'] = $time;
+        $_SESSION[$mobile.'-send_time'] = $time;
+        $data = isset($data)?$data:array();
+        $data[$ip] = isset($data[$ip])?($data[$ip])+1:1;
+        file_put_contents(__FILE__.$date.".txt",serialize($data));
+    }
+    make_json_result($is_send);exit;
+}elseif($action == 'sms_get_password'){
+    include_once(ROOT_PATH . 'includes/lib_passport.php');
+
+    if ($_POST['sms_code'] != '' && $_POST['username'] != '')
+    {
+        $sms_code = trim($_POST['sms_code']);
+        $username  = $_POST['username'];
+        //判断短信验证码
+        if($sms_code == $_SESSION[$username.'-sms_code']){
+            // 短信验证码十分钟内有效
+            if (time() - $_SESSION[$username.'-send_time'] > 600) {
+                show_message('短信验证码已过期', '返回上一页', 'user.php?act=sms_get_password', 'info');
+            }
+            $user_info = $user->get_profile_by_name($username);
+            // 判断会员是否存在
+            if (!$user_info['user_id']) {
+                show_message(sprintf($_LANG['username_inexistent'], $username), $_LANG['back_page_up'], 'user.php?act=sms_get_password', 'info');
+            }
+            $_SESSION['user_id'] = $user_info['user_id'];
+            $_SESSION['change_password'] = 'true';
+            $user->set_cookie($username);
+            $user->set_session($username);
+            $smarty->assign('action', 'reset_password_rep');
+            $smarty->assign('uid', $user_info['user_id']);
+            $smarty->display('user_passport.dwt');
+        }else{
+            show_message('短信验证码错误', '返回上一页', 'user.php?act=sms_get_password', 'info');
+        }
+    }
+    else
+    {
+        //显示用户名和email表单
+        $smarty->display('user_passport.dwt');
+    }
 }
 ?>

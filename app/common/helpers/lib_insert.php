@@ -3,7 +3,7 @@
 /**
  * ECSHOP 动态内容函数库
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -60,9 +60,22 @@ function insert_query_info()
     $online_count = $GLOBALS['db']->getOne("SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('sessions'));
 
     /* 加入触发cron代码 */
-    $cron_method = empty($GLOBALS['_CFG']['cron_method']) ? '<img src="api/cron.php?t=' . gmtime() . '" alt="" style="width:0px;height:0px;" />' : '';
+    $cron_method = (!empty($GLOBALS['_CFG']['cron_method']) && $GLOBALS['_CFG']['cron_method']==1) ? '<img src="api/cron.php?t=' . gmtime() . '" alt="" style="width:0px;height:0px;" />' : '';
 
     return sprintf($GLOBALS['_LANG']['query_info'], $GLOBALS['db']->queryCount, $query_time, $online_count) . $gzip_enabled . $memory_usage . $cron_method;
+}
+/**
+ * 获得查询次数以及查询时间
+ *
+ * @access  public
+ * @return  string
+ */
+function insert_cron()
+{
+    /* 加入触发cron代码 */
+    $cron_method = (!empty($GLOBALS['_CFG']['cron_method']) && $GLOBALS['_CFG']['cron_method']==1) ? '<img src="api/cron.php?t=' . gmtime() . '" alt="" style="width:0px;height:0px;" />' : '';
+
+    return $cron_method;
 }
 
 /**
@@ -104,9 +117,14 @@ function insert_history()
  */
 function insert_cart_info()
 {
+    $where = "session_id = '" . SESS_ID . "'";
+    if ($_SESSION['user_id'])
+    {
+        $where = "user_id = '".intval($_SESSION['user_id'])."'";
+    }
     $sql = 'SELECT SUM(goods_number) AS number, SUM(goods_price * goods_number) AS amount' .
            ' FROM ' . $GLOBALS['ecs']->table('cart') .
-           " WHERE session_id = '" . SESS_ID . "' AND rec_type = '" . CART_GENERAL_GOODS . "'";
+           " WHERE ". $where ." AND rec_type = '" . CART_GENERAL_GOODS . "'";
     $row = $GLOBALS['db']->GetRow($sql);
 
     if ($row)
@@ -137,6 +155,8 @@ function insert_ads($arr)
 {
     static $static_res = NULL;
 
+    $arr['num'] = intval($arr['num']);
+    $arr['id'] = intval($arr['id']);
     $time = gmtime();
     if (!empty($arr['num']) && $arr['num'] != 1)
     {
@@ -267,6 +287,8 @@ function insert_comments($arr)
 
     $GLOBALS['smarty']->caching = false;
     $GLOBALS['smarty']->force_compile = true;
+    $arr['id'] = intval($arr['id']);
+    $arr['type'] = addslashes($arr['type']);
 
     /* 验证码相关设置 */
     if ((intval($GLOBALS['_CFG']['captcha']) & CAPTCHA_COMMENT) && gd_version() > 0)
@@ -305,6 +327,7 @@ function insert_bought_notes($arr)
 
     $GLOBALS['smarty']->caching = false;
     $GLOBALS['smarty']->force_compile = true;
+    $arr['id'] = intval($arr['id']);
 
     /* 商品购买记录 */
     $sql = 'SELECT u.user_name, og.goods_number, oi.add_time, IF(oi.order_status IN (2, 3, 4), 0, 1) AS order_status ' .

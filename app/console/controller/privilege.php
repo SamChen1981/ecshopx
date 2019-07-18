@@ -3,7 +3,7 @@
 /**
  * ECSHOP 管理员信息以及权限管理程序
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -14,9 +14,7 @@
 */
 
 define('IN_ECS', true);
-
 require(dirname(__FILE__) . '/includes/init.php');
-
 /* act操作项的初始化 */
 if (empty($_REQUEST['act']))
 {
@@ -26,7 +24,6 @@ else
 {
     $_REQUEST['act'] = trim($_REQUEST['act']);
 }
-
 /* 初始化 $exc 对象 */
 $exc = new exchange($ecs->table("admin_user"), $db, 'user_id', 'user_name');
 
@@ -35,13 +32,22 @@ $exc = new exchange($ecs->table("admin_user"), $db, 'user_id', 'user_name');
 /*------------------------------------------------------ */
 if ($_REQUEST['act'] == 'logout')
 {
+    if($_SESSION['yunqi_login']==true) yunqi_logout();
     /* 清除cookie */
-    setcookie('ECSCP[admin_id]',   '', 1);
-    setcookie('ECSCP[admin_pass]', '', 1);
+    setcookie('ECSCP[admin_id]',   '', 1, NULL, NULL, NULL, TRUE);
+    setcookie('ECSCP[admin_pass]', '', 1, NULL, NULL, NULL, TRUE);
 
     $sess->destroy_session();
+    $url = $GLOBALS['ecs']->url()."admin/privilege.php?act=login";
+    echo "<script>window.top.location.replace('".$url."');</script>"; 
+}
 
-    $_REQUEST['act'] = 'login';
+//获取3.0授权信息
+if ($_REQUEST['act'] == 'login_extend'){
+    $callback = $GLOBALS['ecs']->url()."admin/privilege.php?act=login&type=yunqi";
+    $iframe_url = $cert->get_authorize_url($callback);
+    $smarty->assign('iframe_url',$iframe_url);
+    $smarty->display('login_extend.html');
 }
 
 /*------------------------------------------------------ */
@@ -52,14 +58,134 @@ if ($_REQUEST['act'] == 'login')
     header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
     header("Cache-Control: no-cache, must-revalidate");
     header("Pragma: no-cache");
+    
+    if($_REQUEST['type']=='yunqi'){
+        $ecs = $GLOBALS['ecs'];
+        $db = $GLOBALS['db'];
+        header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+        header("Cache-Control: no-cache, must-revalidate");
+        header("Pragma: no-cache");        
+        if(isset($_GET['code']) && $_GET['code']){
+            $code = $_GET['code'];
+            $res = $cert->get_token($code);
+            if($res['token'] and $res['params']){
+                if (isset($res['params']['data']) && $res['params']['data']) {
+                    foreach ($res['params']['data'] as $d_key => $d_value) {
+                        $res['params'][$d_key] = $d_value;
+                    }
+                    unset($res['params']['data']);
+                }
+                $sql = "SELECT user_id, user_name, password, last_login, action_list, last_login,suppliers_id,ec_salt,passport_uid".
+                    " FROM " . $ecs->table('admin_user') .
+                    " WHERE passport_uid = '" . $res['params']['passport_uid']."'";
+                $admin_row = $db->getRow($sql);
+                if($certificate['passport_uid']!=$res['params']['passport_uid'] || $admin_row['passport_uid']!=$res['params']['passport_uid']){
+                    $_SESSION['login_err'] = '您好，您的账号尚未激活,请使用本地账号登录!'; 
+                    yunqi_logout();
+                }
+                if ($admin_row){
+                    // 检查是否为供货商的管理员 所属供货商是否有效
+                    if (!empty($admin_row['suppliers_id'])){
+                        $supplier_is_check = suppliers_list_info(' is_check = 1 AND suppliers_id = ' . $admin_row['suppliers_id']);
+                        if (empty($supplier_is_check))
+                        {
+                            sys_msg($_LANG['login_disable'], 1);
+                        }
+                    }
+                    // 登录成功
+                    set_admin_session($admin_row['user_id'], $admin_row['user_name'], $admin_row['action_list'], $admin_row['last_login']);
+                    $_SESSION['suppliers_id'] = $admin_row['suppliers_id'];
+                    $_SESSION['yunqi_login'] = true;
+                    $_SESSION['TOKEN'] = $res['token'];
+                    if(empty($row['ec_salt']))
+                    {
+                        $ec_salt=rand(1,9999);
+                        $new_possword=md5(md5($user['password']).$ec_salt);
+                         $db->query("UPDATE " .$ecs->table('admin_user').
+                             " SET ec_salt='" . $ec_salt . "', password='" .$new_possword . "'".
+                             " WHERE user_id='".$row['user_id']."'");
+                    }
 
-    if ((intval($_CFG['captcha']) & CAPTCHA_ADMIN) && gd_version() > 0)
-    {
-        $smarty->assign('gd_version', gd_version());
-        $smarty->assign('random',     mt_rand());
+                    if($admin_row['action_list'] == 'all' && empty($admin_row['last_login']))
+                    {
+                        $_SESSION['shop_guide'] = true;
+                    }
+
+                    // 更新最后登录时间和IP
+                    $db->query("UPDATE " .$ecs->table('admin_user').
+                             " SET last_login='" . gmtime() . "', last_ip='" . real_ip() . "'".
+                             " WHERE user_id in ('$_SESSION[admin_id]','".$row['user_id']."')");
+
+                    //检查证书，短信物流token
+                    $cert->check_certi($res);
+                    //验证授权
+                    if($certificate['certificate_id']&&$certificate['token']&&$certificate['node_id']){
+                        $info = $cert->check_oauth_certificate($res['token']);
+
+                        //3.6key获取授权失败，改用3.0key获取
+                        if($info['status'] == 'success' && !isset($info['data']['service']['authorize_code']) && !isset($_COOKIE['use_oldkey'])){
+                            setcookie('use_oldkey','true',time()+7200, NULL, NULL, NULL, TRUE);
+                            $url = $GLOBALS['ecs']->url()."admin/privilege.php?act=login_extend";
+                            echo "<script>window.top.location.replace('".$url."');</script>";exit;
+                        }
+                        setcookie('use_oldkey','true',time()-1, NULL, NULL, NULL, TRUE);
+
+                        if($info['status']=='success' && isset($info['data']['service']['authorize_code']) && ($info['data']['service']['authorize_code'] == 'NCH' || $info['data']['service']['authorize_code'] == 'NDE')){
+                            $_SESSION['authorization'] = true;
+                            $_SESSION['authorize_name'] = $info['data']['service']['authorize_name'];
+                        }
+
+                        $auth_sql = 'SELECT code FROM ' . $ecs->table('shop_config') . ' WHERE code = "authorize"';
+                        if ($info['status']=='success' && isset($info['data']['service']['authorize_code']) && ($info['data']['service']['authorize_code'] == 'NCH' || $info['data']['service']['authorize_code'] == 'NDE' )) {
+                            $auth_conf = array(
+                                'authorization' => 'true',
+                                'authorize_code' => $info['data']['service']['authorize_code'],
+                                'authorize_name' => $info['data']['service']['authorize_name'],
+                            );
+                            if(!$db->getRow($auth_sql)){
+                                $db->query("INSERT " . $ecs->table('shop_config') . " set parent_id=2, code='authorize', type='hidden', value='" . serialize($auth_conf) . "'");
+                            }else{
+                                $db->query("UPDATE " . $ecs->table('shop_config') . " SET value='" . serialize($auth_conf) . "' WHERE code = 'authorize'");
+                            }
+                        }
+                    }
+                    // 清除购物车中过期的数据
+                    clear_cart();
+                    exit('<script>top.location.href="./index.php"</script>');
+                    // ecs_header("Location: ./index.php\n");exit;
+                }
+            }
+        }else{
+            
+        }
+    }else{
+        if ((intval($_CFG['captcha']) & CAPTCHA_ADMIN) && gd_version() > 0){
+            $smarty->assign('gd_version', gd_version());
+            $smarty->assign('random',     mt_rand());
+        }
+        if (isset($_SESSION['login_err']) && $_SESSION['login_err']) {
+            $smarty->assign('login_err',$_SESSION['login_err']);
+            unset($_SESSION['login_err']);
+        }
+        $smarty->assign('certi',$certificate);
+        
+        $activate_callback = $GLOBALS['ecs']->url()."admin/certificate.php?act=get_certificate&type=index";
+        $activate_iframe_url = $cert->get_authorize_url($activate_callback);
+        $smarty->assign('activate_iframe_url',$activate_iframe_url);
+        
+        $callback = $GLOBALS['ecs']->url()."admin/privilege.php?act=login&type=yunqi";
+        $iframe_url = $cert->get_authorize_url($callback);
+        $smarty->assign('iframe_url',$iframe_url);
+        $smarty->assign('now_year',date('Y'));
+
+        $yunqi_bg = getYunqiAd('ecshop_login_bg'); //ekaidian_login_bg
+        if( isset($yunqi_bg[0]['picpath']) && !empty($yunqi_bg[0]['picpath']) ){
+            $smarty->assign('yunqi_bg',$yunqi_bg[0]['picpath']);
+            $smarty->assign('yunqi_ad_link',$yunqi_bg[0]['link']);
+        }
+
+        $smarty->display('login.htm');
     }
-
-    $smarty->display('login.htm');
 }
 
 /*------------------------------------------------------ */
@@ -87,18 +213,19 @@ elseif ($_REQUEST['act'] == 'signin')
     if(!empty($ec_salt))
     {
          /* 检查密码是否正确 */
-         $sql = "SELECT user_id, user_name, password, last_login, action_list, last_login,suppliers_id,ec_salt".
+         $sql = "SELECT user_id, user_name, password, add_time, action_list, last_login,suppliers_id,ec_salt,passport_uid".
             " FROM " . $ecs->table('admin_user') .
             " WHERE user_name = '" . $_POST['username']. "' AND password = '" . md5(md5($_POST['password']).$ec_salt) . "'";
     }
     else
     {
          /* 检查密码是否正确 */
-         $sql = "SELECT user_id, user_name, password, last_login, action_list, last_login,suppliers_id,ec_salt".
+         $sql = "SELECT user_id, user_name, password, add_time, action_list, last_login,suppliers_id,ec_salt,passport_uid".
             " FROM " . $ecs->table('admin_user') .
             " WHERE user_name = '" . $_POST['username']. "' AND password = '" . md5($_POST['password']) . "'";
     }
     $row = $db->getRow($sql);
+
     if ($row)
     {
         // 检查是否为供货商的管理员 所属供货商是否有效
@@ -110,18 +237,23 @@ elseif ($_REQUEST['act'] == 'signin')
                 sys_msg($_LANG['login_disable'], 1);
             }
         }
-
+        //如果是云起认证，则使用云起账号登录
+        if($row['passport_uid']){
+            $yunqi_login = $ecs->url."privilege.php?act=login&type=yunqi";
+            header("Location: ".$yunqi_login);exit;
+        }
+        //end
         // 登录成功
         set_admin_session($row['user_id'], $row['user_name'], $row['action_list'], $row['last_login']);
         $_SESSION['suppliers_id'] = $row['suppliers_id'];
-		if(empty($row['ec_salt']))
-	    {
-			$ec_salt=rand(1,9999);
-			$new_possword=md5(md5($_POST['password']).$ec_salt);
+        if(empty($row['ec_salt']))
+        {
+            $ec_salt=rand(1,9999);
+            $new_possword=md5(md5($_POST['password']).$ec_salt);
              $db->query("UPDATE " .$ecs->table('admin_user').
                  " SET ec_salt='" . $ec_salt . "', password='" .$new_possword . "'".
                  " WHERE user_id='$_SESSION[admin_id]'");
-		}
+        }
 
         if($row['action_list'] == 'all' && empty($row['last_login']))
         {
@@ -136,9 +268,14 @@ elseif ($_REQUEST['act'] == 'signin')
         if (isset($_POST['remember']))
         {
             $time = gmtime() + 3600 * 24 * 365;
-            setcookie('ECSCP[admin_id]',   $row['user_id'],                            $time);
-            setcookie('ECSCP[admin_pass]', md5($row['password'] . $_CFG['hash_code']), $time);
+            setcookie('ECSCP[admin_id]',   $row['user_id'],                            $time, NULL, NULL, NULL, TRUE);
+            setcookie('ECSCP[admin_pass]', md5($row['password'] . $_CFG['hash_code'] . $row['add_time']), $time, NULL, NULL, NULL, TRUE);
         }
+
+        //修复后台登录频繁退出的问题
+        $time = gmtime() + 3600 * 24 * 365;
+        setcookie('ECSCP[admin_id]', $row['user_id'], $time);
+        setcookie('ECSCP[admin_pass]', md5($row['password'] . $_CFG['hash_code']), $time);
 
         // 清除购物车中过期的数据
         clear_cart();
@@ -212,11 +349,11 @@ elseif ($_REQUEST['act'] == 'insert')
     /* 判断管理员是否已经存在 */
     if (!empty($_POST['user_name']))
     {
-        $is_only = $exc->is_only('user_name', $_POST['user_name']);
+        $is_only = $exc->is_only('user_name', stripslashes($_POST['user_name']));
 
         if (!$is_only)
         {
-            sys_msg(sprintf($_LANG['user_name_exist'], $_POST['user_name']), 1);
+            sys_msg(sprintf($_LANG['user_name_exist'], stripslashes($_POST['user_name'])), 1);
         }
     }
 
@@ -383,16 +520,16 @@ elseif ($_REQUEST['act'] == 'update' || $_REQUEST['act'] == 'update_self')
         /* 查询旧密码并与输入的旧密码比较是否相同 */
         $sql = "SELECT password FROM ".$ecs->table('admin_user')." WHERE user_id = '$admin_id'";
         $old_password = $db->getOne($sql);
-		$sql ="SELECT ec_salt FROM ".$ecs->table('admin_user')." WHERE user_id = '$admin_id'";
+        $sql ="SELECT ec_salt FROM ".$ecs->table('admin_user')." WHERE user_id = '$admin_id'";
         $old_ec_salt= $db->getOne($sql);
-		if(empty($old_ec_salt))
-	    {
-			$old_ec_password=md5($_POST['old_password']);
-		}
-		else
-	    {
-			$old_ec_password=md5(md5($_POST['old_password']).$old_ec_salt);
-		}
+        if(empty($old_ec_salt))
+        {
+            $old_ec_password=md5($_POST['old_password']);
+        }
+        else
+        {
+            $old_ec_password=md5(md5($_POST['old_password']).$old_ec_salt);
+        }
         if ($old_password <> $old_ec_password)
         {
            $link[] = array('text' => $_LANG['go_back'], 'href'=>'javascript:history.back(-1)');
@@ -669,7 +806,9 @@ elseif ($_REQUEST['act'] == 'remove')
     $id = intval($_GET['id']);
 
     /* 获得管理员用户名 */
-    $admin_name = $db->getOne('SELECT user_name FROM '.$ecs->table('admin_user')." WHERE user_id='$id'");
+    $admin_user_info = $db->getRow('SELECT user_name,passport_uid FROM '.$ecs->table('admin_user')." WHERE user_id='$id'");
+
+    $admin_name = $admin_user_info['user_name'];
 
     /* demo这个管理员不允许删除 */
     if ($admin_name == 'demo')
@@ -680,6 +819,10 @@ elseif ($_REQUEST['act'] == 'remove')
     /* ID为1的不允许删除 */
     if ($id == 1)
     {
+        make_json_error($_LANG['remove_cannot']);
+    }
+
+    if($admin_user_info['passport_uid']){
         make_json_error($_LANG['remove_cannot']);
     }
 
@@ -701,6 +844,20 @@ elseif ($_REQUEST['act'] == 'remove')
 
     ecs_header("Location: $url\n");
     exit;
+}
+
+
+/*------------------------------------------------------ */
+//-- 根据用户名检测用户是否是云起管理员
+/*------------------------------------------------------ */
+elseif ($_REQUEST['act'] == 'is_yunqi_admin')
+{
+    $result = 'local';
+    $_POST['username'] = isset($_POST['username']) ? trim($_POST['username']) : '';
+    $sql="SELECT `passport_uid` FROM ". $ecs->table('admin_user') ."WHERE user_name = '" . $_POST['username']."'";
+    $rs =$db->getOne($sql);
+    !empty($rs) and $result = 'yunqi';
+    make_json_result($result);
 }
 
 /* 获取管理员列表 */
@@ -744,6 +901,35 @@ function get_role_list()
             'FROM ' .$GLOBALS['ecs']->table('role');
     $list = $GLOBALS['db']->getAll($sql);
     return $list;
+}
+
+function yunqi_logout(){
+    include_once(ROOT_PATH . 'includes/cls_certificate.php');
+    $cert = new certificate();
+    $url = $cert->logout_url();
+    header("location: $url");
+    
+}
+
+function getYunqiAd($ident){
+    if( !$ident ) return false;
+    $config['key'] = 'eucgr5fe';
+    $config['secret'] = '6rwvbx7gnokqflwa4vfg';
+    $config['site'] = 'https://openapi.ishopex.cn';
+    $config['oauth'] = 'https://openapi.shopex.cn/oauth';
+    $params['ad_ident'] = $ident;
+    include_once(ROOT_PATH."admin/includes/oauth/oauth2.php");
+    $prism = new oauth2($config);
+    $type = 'api/yunqiaccount/csm/adgetapi';
+    $r = $prism->request()->get('api/platform/timestamp');
+    $time = $r->parsed();
+    $prism->request()->timeout = 1;
+    $rall = $prism->request()->post($type, $params,$time);
+    $results = $rall->parsed();
+    if($results['status'] != 'succ'){
+        return false;
+    }
+    return $results['data'];
 }
 
 ?>

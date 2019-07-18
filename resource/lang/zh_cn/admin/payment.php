@@ -3,7 +3,7 @@
 /**
  * ECSHOP 管理中心支付方式管理语言文件
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -44,4 +44,11 @@ $_LANG['ctenpay_url']       = 'http://union.tenpay.com/mch/mch_register_b2c.shtm
 $_LANG['ctenpayc2c_url']    = 'https://www.tenpay.com/mchhelper/mch_register_c2c.shtml?sp_suggestuser=542554970';
 $_LANG['tenpay']  = '即时到账';
 $_LANG['tenpayc2c'] = '中介担保';
+$_LANG['detail_account'] = '查看账户';
+
+$_LANG['cert_invalid_file'] = '上传的证书文件格式不正确';
+$_LANG['fail_upload'] = '文件上传失败';
+$_LANG['lack_cert_file'] = '缺少证书文件';
+$_LANG['pfx_pwd_null']                  = '密码不能为空';
+
 ?>

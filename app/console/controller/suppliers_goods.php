@@ -3,14 +3,14 @@
 /**
  * ECSHOP 供货商商品管理程序
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
  * 使用；不允许对程序代码以任何形式任何目的的再发布。
  * ============================================================================
  * $Author: liubo $
- * $Id: goods.php 16345 2009-06-24 09:36:23Z liubo $
+ * $Id: suppliers_goods.php 16345 2009-06-24 09:36:23Z liubo $
 */
 
 define('IN_ECS', true);
@@ -34,7 +34,7 @@ if ($_REQUEST['act'] == 'list' || $_REQUEST['act'] == 'trash')
 
     $handler_list = array();
     $handler_list['virtual_card'][] = array('url'=>'virtual_card.php?act=card', 'title'=>$_LANG['card'], 'img'=>'icon_send_bonus.gif');
-    $handler_list['virtual_card'][] = array('url'=>'virtual_card.php?act=replenish', 'title'=>$_LANG['replenish'], 'img'=>'icon_add.gif');
+    $handler_list['virtual_card'][] = array('url'=>'virtual_card.php?act=replenish', 'title'=>$_LANG['replenish'], 'img'=>'icon_add.svg');
     $handler_list['virtual_card'][] = array('url'=>'virtual_card.php?act=batch_card_add', 'title'=>$_LANG['batch_card_add'], 'img'=>'icon_output.gif');
 
     if ($_REQUEST['act'] == 'list' && isset($handler_list[$code]))
@@ -1050,7 +1050,7 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
     }
 
     /* 记录上一次选择的分类和品牌 */
-    setcookie('ECSCP[last_choose]', $catgory_id . '|' . $brand_id, gmtime() + 86400);
+    setcookie('ECSCP[last_choose]', $catgory_id . '|' . $brand_id, gmtime() + 86400, NULL, NULL, NULL, TRUE);
     /* 清空缓存 */
     clear_cache_files();
 
@@ -1215,7 +1215,7 @@ elseif ($_REQUEST['act'] == 'show_image')
     }
     else
     {
-        if (strpos($_GET['img_url'], 'http://') === 0)
+        if (strpos($_GET['img_url'], 'http://') === 0 || strpos($_GET['img_url'], 'https://') === 0)
         {
             $img_url = $_GET['img_url'];
         }
@@ -1426,7 +1426,7 @@ elseif ($_REQUEST['act'] == 'query')
 
     $handler_list = array();
     $handler_list['virtual_card'][] = array('url'=>'virtual_card.php?act=card', 'title'=>$_LANG['card'], 'img'=>'icon_send_bonus.gif');
-    $handler_list['virtual_card'][] = array('url'=>'virtual_card.php?act=replenish', 'title'=>$_LANG['replenish'], 'img'=>'icon_add.gif');
+    $handler_list['virtual_card'][] = array('url'=>'virtual_card.php?act=replenish', 'title'=>$_LANG['replenish'], 'img'=>'icon_add.svg');
     $handler_list['virtual_card'][] = array('url'=>'virtual_card.php?act=batch_card_add', 'title'=>$_LANG['batch_card_add'], 'img'=>'icon_output.gif');
 
     if (isset($handler_list[$code]))

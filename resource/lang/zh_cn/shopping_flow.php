@@ -3,7 +3,7 @@
 /**
  * ECSHOP 购物流程相关语言
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -67,6 +67,7 @@ $_LANG['password_js']['show_div_exit'] = '关闭';
 $_LANG['goods_fittings'] = '商品相关配件';
 $_LANG['parent_name'] = '相关商品：';
 $_LANG['remark_package'] = '礼包';
+$_LANG['repurchase_fail'] = '不可以再次购买';
 
 /* 优惠活动 */
 $_LANG['favourable_name'] = '活动名称：';
@@ -107,10 +108,11 @@ $_LANG['flow_js']['district_not_null'] = '请您选择收货人所在区域！';
 $_LANG['flow_js']['invalid_email'] = '您输入的邮件地址不是一个合法的邮件地址。';
 $_LANG['flow_js']['address_not_null'] = '收货人的详细地址不能为空！';
 $_LANG['flow_js']['tele_not_null'] = '电话不能为空！';
+$_LANG['flow_js']['tele_or_mob_not_null'] = '电话或手机至少填写一项！';
 $_LANG['flow_js']['shipping_not_null'] = '请您选择配送方式！';
 $_LANG['flow_js']['payment_not_null'] = '请您选择支付方式！';
 $_LANG['flow_js']['goodsattr_style'] = 1;
-$_LANG['flow_js']['tele_invaild'] = '电话号码不有效的号码';
+$_LANG['flow_js']['tele_invaild'] = '电话号码不是有效的号码';
 $_LANG['flow_js']['zip_not_num'] = '邮政编码只能填写数字';
 $_LANG['flow_js']['mobile_invaild'] = '手机号码不是合法号码';
 

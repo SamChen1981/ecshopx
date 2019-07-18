@@ -3,7 +3,7 @@
 /**
  * ECSHOP 管理中心起始页语言文件
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -119,9 +119,22 @@ $_LANG['lab_keywords'] = '商品关键词：';
 $_LANG['lab_goods_brief'] = '商品简单描述：';
 $_LANG['lab_seller_note'] = '商家备注：';
 $_LANG['lab_goods_type'] = '商品类型：';
+$_LANG['Preview'] = '预览';
 $_LANG['lab_picture_url'] = '商品图片外部URL';
 $_LANG['lab_thumb_url'] = '商品缩略图外部URL';
-
+$_LANG['tip_imgSize'] = '单张图片不能大于2m';
+$_LANG['tip_param_error'] = '参数错误!';
+$_LANG['tip_upload_component'] = '上传组件不支持您的浏览器!';
+$_LANG['tip_upload_error'] = '上传失败!';
+$_LANG['tip_file'] = '文件:';
+$_LANG['tip_errocode'] = '错误码:';
+$_LANG['tip_filehaschoose'] = '该文件已经被选择了!';
+$_LANG['tip_fileNumer_exceedslimit'] = '上传文件数量超过限制!';
+$_LANG['tip_fileSize_exceedslimit'] = '文件大小超过限制!';
+$_LANG['tip_allSize_exceedslimit'] = '所有文件总大小超过限制!';
+$_LANG['tip_fileType_error'] = '文件类型不正确或者是空文件!';
+$_LANG['tip_unknow_error'] = '未知错误!';
+$_LANG['tip_upload_completed'] = '上传完成';
 $_LANG['lab_goods_weight'] = '商品重量：';
 $_LANG['unit_g'] = '克';
 $_LANG['unit_kg'] = '千克';
@@ -133,9 +146,8 @@ $_LANG['lab_rank_integral'] = '赠送等级积分数：';
 $_LANG['lab_intro'] = '加入推荐：';
 $_LANG['lab_is_on_sale'] = '上架：';
 $_LANG['lab_is_alone_sale'] = '能作为普通商品销售：';
-
 $_LANG['compute_by_mp'] = '按市场价计算';
-
+$_LANG['label_account_bind'] = '账户绑定';
 $_LANG['notice_goods_sn'] = '如果您不输入商品货号，系统将自动生成一个唯一的货号。';
 $_LANG['notice_integral'] = '购买该商品时最多可以使用多少钱的积分';
 $_LANG['notice_give_integral'] = '购买该商品时赠送消费积分数,-1表示按商品价格赠送';
@@ -248,5 +260,6 @@ $_LANG['batch_card_add'] = '批量补货';
 $_LANG['add_replenish'] = '添加虚拟卡卡密';
 
 $_LANG['goods_number_error'] = '商品库存数量错误';
+$_LANG['virtual_sales_error'] = '商品虚拟销售数量错误';
 
 ?>

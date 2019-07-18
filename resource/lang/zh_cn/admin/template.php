@@ -3,7 +3,7 @@
 /**
  * ECSHOP 管理中心模板管理语言文件
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -14,8 +14,8 @@
 */
 
 $_LANG['template_manage'] = '模板管理';
-$_LANG['current_template'] = '当前模板';
-$_LANG['available_templates'] = '可用模板';
+$_LANG['current_template'] = '当前使用的模板';
+$_LANG['available_templates'] = '已安装';
 $_LANG['select_template'] = '请选择一个模板：';
 $_LANG['select_library'] = '请选择一个库项目：';
 $_LANG['library_name'] = '库项目';
@@ -139,7 +139,7 @@ $_LANG['restore_backup_ok'] = '恢复备份成功';
 /* JS 语言项 */
 $_LANG['js_languages']['setupConfirm'] = '启用新的模板将覆盖原来的模板。\n您确定要启用选定的模板吗？';
 $_LANG['js_languages']['reinstall'] = '重新安装当前模板';
-$_LANG['backup'] = '备份当前模板';
+$_LANG['backup'] = '下载模板';
 $_LANG['js_languages']['selectPlease'] = '请选择...';
 $_LANG['js_languages']['removeConfirm'] = '您确定要删除选定的内容吗？';
 $_LANG['js_languages']['empty_content'] = '对不起，库项目的内容不能为空。';

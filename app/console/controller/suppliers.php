@@ -3,7 +3,7 @@
 /**
  * ECSHOP 管理中心供货商管理
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -39,7 +39,7 @@ if ($_REQUEST['act'] == 'list')
     $smarty->assign('filter',       $result['filter']);
     $smarty->assign('record_count', $result['record_count']);
     $smarty->assign('page_count',   $result['page_count']);
-    $smarty->assign('sort_suppliers_id', '<img src="images/sort_desc.gif">');
+    $smarty->assign('sort_suppliers_id', '<img src="images/sort_desc.png">');
 
     /* 显示模板 */
     assign_query_info();

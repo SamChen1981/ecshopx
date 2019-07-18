@@ -3,7 +3,7 @@
 /**
  * ECSHOP Google sitemap 类
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -88,7 +88,7 @@ class google_sitemap_item
      *@param    string  $changefreq 更新频率的单位 (always, hourly, daily, weekly, monthly, yearly, never)
      *@param    string  $priority   更新频率 0-1
      */
-    function google_sitemap_item($loc, $lastmod = '', $changefreq = '', $priority = '')
+    function __construct($loc, $lastmod = '', $changefreq = '', $priority = '')
     {
         $this->loc = $loc;
         $this->lastmod = $lastmod;

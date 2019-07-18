@@ -3,7 +3,7 @@
 /**
  * ECSHOP 配送方式管理程序
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -237,7 +237,8 @@ elseif ($_REQUEST['act'] == 'print_upload')
         {
             $name .= chr(mt_rand(97, 122));
         }
-        $name .= '.' . end(explode('.', $_FILES['bg']['name']));
+		$bg_name_arr = explode('.', $_FILES['bg']['name']);
+        $name .= '.' . end($bg_name_arr);
         $target = ROOT_PATH . '/images/receipt/' . $name;
 
         if (move_upload_file($_FILES['bg']['tmp_name'], $target))
@@ -481,7 +482,7 @@ elseif ($_REQUEST['act'] == 'edit_order')
  */
 function get_site_root_url()
 {
-    return 'http://' . $_SERVER['HTTP_HOST'] . str_replace('/' . ADMIN_PATH . '/shipping.php', '', PHP_SELF);
+    return defined('FORCE_SSL_LOGIN') ? 'https://' : 'http://' . $_SERVER['HTTP_HOST'] . str_replace('/' . ADMIN_PATH . '/shipping.php', '', PHP_SELF);
 
 }
 

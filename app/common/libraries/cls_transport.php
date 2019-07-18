@@ -4,7 +4,7 @@
  * ECSHOP 服务器之间数据传输器。采集到的信息包括HTTP头和HTTP体，
  * 并以一维数组的形式返回，如：array('header' => 'bar', 'body' => 'foo')。
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -63,7 +63,7 @@ class transport
      * @param   boolean     $use_curl
      * @return  void
      */
-    function __construct($time_limit = -1, $connect_timeout = -1, $stream_timeout = -1, $use_curl = false)
+    function __construct($time_limit = -1, $connect_timeout = -1, $stream_timeout = -1, $use_curl = true)
     {
         $this->transport($time_limit, $connect_timeout, $stream_timeout, $use_curl);
     }
@@ -122,14 +122,30 @@ class transport
         $temp_str = '';
 
         /* 格式化将要发要送的参数 */
-        if ($params && is_array($params))
-        {
-            foreach ($params AS $key => $value)
-            {
-                $temp_str .= '&' . $key . '=' . $value;
+        // if ($params && is_array($params))
+        // {
+        //     foreach ($params AS $key => $value)
+        //     {
+        //         $temp_str .= '&' . $key . '=' . $value;
+        //     }
+        //     $params = preg_replace('/^&/', '', $temp_str);
+        // }
+
+        /* 格式化将要发要送的参数 */
+        $postdata = '';
+        if ($params && is_array($params)){
+            reset($params);
+            while(list($key,$val) = each($params)) {
+                if (is_array($val) || is_object($val)) {
+                    while (list($cur_key, $cur_val) = each($val)) {
+                        $postdata .= urlencode($key)."[]=".urlencode($cur_val)."&";
+                    }
+                } else
+                    $postdata .= urlencode($key)."=".urlencode($val)."&";
             }
-            $params = preg_replace('/^&/', '', $temp_str);
+            $params = $postdata;
         }
+
 
         /* 如果fsockopen存在，且用户不指定使用curl，则调用use_socket函数 */
         if ($fsock_exists && !$this->use_curl)
@@ -365,7 +381,7 @@ class transport
         // make sure parse_url() recognizes the URL correctly.
         if (strpos($raw_url, '://') === false)
         {
-          $raw_url = 'http://' . $raw_url;
+          $raw_url = defined('FORCE_SSL_LOGIN') ? 'https://' : 'http://' . $raw_url;
         }
 
         // split request into array

@@ -3,7 +3,7 @@
 /**
  * ECSHOP 数据库管理
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -618,6 +618,52 @@ if ($_REQUEST['act'] == 'run_optimize')
     }
 
     sys_msg(sprintf($_LANG['optimize_ok'], $_POST['num']), 0, array(array('text'=>$_LANG['go_back'], 'href'=>'database.php?act=optimize')));
+}
+
+/**
+* 删除体验数据
+*/
+if($_REQUEST['act']=='clear'){
+    admin_priv('db_clear');
+    $smarty->assign('ur_here', $_LANG['clear']);
+    $smarty->assign('yunqi_login',$_SESSION['yunqi_login']);
+    $smarty->display('clear.htm');
+}
+
+/**
+* 删除体验数据
+*/
+if($_REQUEST['act']=='cleardata'){
+    admin_priv('db_clear');
+    include_once(ROOT_PATH."includes/lib_passport.php");
+    $data['username'] = isset($_POST['username']) ? trim($_POST['username']) : '';
+    $data['password'] = isset($_POST['password']) ? trim($_POST['password']) : '';
+    if((!$data['username'] or !$data['password']) && !$_SESSION['yunqi_login']) sys_msg($_LANG['manage_required']);
+    $msg = '';
+    if($_SESSION['yunqi_login'] or tryLogin($data,$msg)){
+        $GLOBALS['db']->query("truncate table ".$GLOBALS['ecs']->table('goods'));
+        $GLOBALS['db']->query("truncate table ".$GLOBALS['ecs']->table('goods_attr'));
+        $GLOBALS['db']->query("truncate table ".$GLOBALS['ecs']->table('goods_cat'));
+        $GLOBALS['db']->query("truncate table ".$GLOBALS['ecs']->table('order_info'));
+        $GLOBALS['db']->query("truncate table ".$GLOBALS['ecs']->table('order_goods'));
+        $GLOBALS['db']->query("truncate table ".$GLOBALS['ecs']->table('delivery_goods'));
+        $GLOBALS['db']->query("truncate table ".$GLOBALS['ecs']->table('delivery_order'));
+        $GLOBALS['db']->query("truncate table ".$GLOBALS['ecs']->table('back_order'));
+        $GLOBALS['db']->query("truncate table ".$GLOBALS['ecs']->table('order_action'));
+        $GLOBALS['db']->query("truncate table ".$GLOBALS['ecs']->table('category'));
+        $GLOBALS['db']->query("truncate table ".$GLOBALS['ecs']->table('users'));
+        $GLOBALS['db']->query("truncate table ".$GLOBALS['ecs']->table('user_account'));
+        $GLOBALS['db']->query("truncate table ".$GLOBALS['ecs']->table('user_address'));
+        $GLOBALS['db']->query("truncate table ".$GLOBALS['ecs']->table('user_bonus'));
+        $GLOBALS['db']->query("truncate table ".$GLOBALS['ecs']->table('user_feed'));
+        $GLOBALS['db']->query("truncate table ".$GLOBALS['ecs']->table('user_rank'));
+        $GLOBALS['db']->query("truncate table ".$GLOBALS['ecs']->table('comment'));
+        $GLOBALS['db']->query("truncate table ".$GLOBALS['ecs']->table('account_log'));
+
+        sys_msg($_LANG['clear_success']);
+    }else{
+        sys_msg($msg);
+    }
 }
 
 /**

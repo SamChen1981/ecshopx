@@ -3,7 +3,7 @@
 /**
  * ECSHOP 基础函数库
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -82,6 +82,14 @@ function real_ip()
         return $realip;
     }
 
+    if(isset($_COOKIE['real_ipd']) && !empty($_COOKIE['real_ipd'])){
+
+        $realip = $_COOKIE['real_ipd'];  
+
+        return $realip;
+
+    }
+
     if (isset($_SERVER))
     {
         if (isset($_SERVER['HTTP_X_FORWARDED_FOR']))
@@ -135,7 +143,7 @@ function real_ip()
 
     preg_match("/[\d\.]{7,15}/", $realip, $onlineip);
     $realip = !empty($onlineip[0]) ? $onlineip[0] : '0.0.0.0';
-
+    setcookie("real_ipd", $realip, time()+36000, "/");  
     return $realip;
 }
 
@@ -1021,7 +1029,19 @@ function ecs_iconv($source_lang, $target_lang, $source_string = '')
     return $chs->Convert($source_lang, $target_lang, $source_string);
 }
 
-function ecs_geoip($ip)
+function ecs_geoip($ip){
+    $area = 'unknown';
+    $content = @file_get_contents('http://ip.ws.126.net/ipquery?ip='.$ip);
+    $content = iconv('gbk', 'utf-8', $content);
+    preg_match('/lo=\"(.*)\".*lc=\"(.*)\"/u', $content,$matches);
+    if($matches){
+        $area = $matches[1].$matches[2];
+    }
+    return $area;
+}
+
+
+function ecs_geoip_bak($ip)
 {
     static $fp = NULL, $offset = array(), $index = NULL;
 
@@ -1225,7 +1245,8 @@ function to_utf8_iconv($str)
  */
 function get_file_suffix($file_name, $allow_type = array())
 {
-    $file_suffix = strtolower(array_pop(explode('.', $file_name)));
+    $file_name_arr = explode('.', $file_name);
+    $file_suffix = strtolower(array_pop($file_name_arr));
     if (empty($allow_type))
     {
         return $file_suffix;

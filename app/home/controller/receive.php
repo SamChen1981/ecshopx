@@ -3,7 +3,7 @@
 /**
  * ECSHOP 处理收回确认的页面
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -45,7 +45,7 @@ elseif ($order['consignee'] != $consignee)
 else
 {
     /* 修改订单发货状态为“确认收货” */
-    $sql = "UPDATE " . $ecs->table('order_info') . " SET shipping_status = '" . SS_RECEIVED . "' WHERE order_id = '$order_id'";
+    $sql = "UPDATE " . $ecs->table('order_info') . " SET shipping_status = '" . SS_RECEIVED . "',lastmodify='".time()."' WHERE order_id = '$order_id'";
     $db->query($sql);
 
     /* 记录日志 */

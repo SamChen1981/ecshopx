@@ -3,7 +3,7 @@
 /**
  * ECSHOP 红包类型的处理
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -182,12 +182,12 @@ if ($_REQUEST['act'] == 'add')
     $smarty->assign('form_act',     'insert');
     $smarty->assign('cfg_lang',     $_CFG['lang']);
 
-    $next_month = local_strtotime('+1 months');
+    $next_month = local_strtotime_new('+1 months');
     $bonus_arr['send_start_date']   = local_date('Y-m-d');
     $bonus_arr['use_start_date']    = local_date('Y-m-d');
     $bonus_arr['send_end_date']     = local_date('Y-m-d', $next_month);
     $bonus_arr['use_end_date']      = local_date('Y-m-d', $next_month);
-
+    $bonus_arr['send_type']         = 0;
     $smarty->assign('bonus_arr',    $bonus_arr);
 
     assign_query_info();
@@ -215,10 +215,10 @@ if ($_REQUEST['act'] == 'insert')
     }
 
     /* 获得日期信息 */
-    $send_startdate = local_strtotime($_POST['send_start_date']);
-    $send_enddate   = local_strtotime($_POST['send_end_date']);
-    $use_startdate  = local_strtotime($_POST['use_start_date']);
-    $use_enddate    = local_strtotime($_POST['use_end_date']);
+    $send_startdate = local_strtotime_new($_POST['send_start_date']);
+    $send_enddate   = local_strtotime_new($_POST['send_end_date']);
+    $use_startdate  = local_strtotime_new($_POST['use_start_date']);
+    $use_enddate    = local_strtotime_new($_POST['use_end_date']);
 
     /* 插入数据库。 */
     $sql = "INSERT INTO ".$ecs->table('bonus_type')." (type_name, type_money,send_start_date,send_end_date,use_start_date,use_end_date,send_type,min_amount,min_goods_amount)
@@ -281,10 +281,10 @@ if ($_REQUEST['act'] == 'edit')
 if ($_REQUEST['act'] == 'update')
 {
     /* 获得日期信息 */
-    $send_startdate = local_strtotime($_POST['send_start_date']);
-    $send_enddate   = local_strtotime($_POST['send_end_date']);
-    $use_startdate  = local_strtotime($_POST['use_start_date']);
-    $use_enddate    = local_strtotime($_POST['use_end_date']);
+    $send_startdate = local_strtotime_new($_POST['send_start_date']);
+    $send_enddate   = local_strtotime_new($_POST['send_end_date']);
+    $use_startdate  = local_strtotime_new($_POST['use_start_date']);
+    $use_enddate    = local_strtotime_new($_POST['use_end_date']);
 
     /* 对数据的处理 */
     $type_name   = !empty($_POST['type_name'])  ? trim($_POST['type_name'])    : '';

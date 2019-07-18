@@ -3,7 +3,7 @@
 /**
  * ECSHOP  云服务接口
  * ============================================================================
- * 版权所有 2005-2010 上海商派网络科技有限公司，并保留所有权利。
+ * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -16,7 +16,7 @@
 define('IN_ECS', true);
 
 require(dirname(__FILE__) . '/includes/init.php');
-require(ROOT_PATH . 'includes/cls_transport.php');
+require_once(ROOT_PATH . 'includes/cls_transport.php');
 require(ROOT_PATH . 'includes/cls_json.php');
 
 require(ROOT_PATH . 'includes/shopex_json.php');
@@ -35,7 +35,7 @@ $data['mysql_ver'] = $db->version();
 $data['shop_url'] = urlencode($ecs->url());
 $data['admin_url'] = urlencode($ecs->url().ADMIN_PATH);
 $data['sess_id'] = $GLOBALS['sess']->get_session_id();
-$data['stamp'] = mktime();
+$data['stamp'] = time();
 $data['ent_id'] = $_CFG['ent_id'];
 $data['ent_ac'] = $_CFG['ent_ac'];
 $data['ent_sign'] = $_CFG['ent_sign'];
@@ -57,7 +57,8 @@ if($act =='menu_api')
     {
         $t = new transport;
        $apiget = "ver= $data[version] &ecs_lang= $data[ecs_lang] &charset= $data[charset]&ent_id=$data[ent_id]& certificate_id=$data[certificate_id]";
-        $api_comment = $t->request('http://cloud.ecshop.com/menu_api.php', $apiget);
+        // $api_comment = $t->request('https://cloud-ecshop.xyunqi.com/menu_api.php', $apiget);
+        $api_comment = $t->request('https://cloud-ecshop.xyunqi.com/menu_api.php', $apiget);
         $api_str = $api_comment["body"];
         if (!empty($api_str))
         {
@@ -89,6 +90,17 @@ if($act =='menu_api')
         make_json_result($api_data['content']);
     }
 }
+elseif($act == 'load_crontab')
+{
+    include_once(ROOT_PATH . 'includes/cls_matrix.php');
+    include_once(ROOT_PATH.'includes/cls_certificate.php');
+    $cert = new certificate();
+    $matrix = new matrix();
+    if($cert->is_bind_sn('ecos.taocrm','bind_type')){
+        $matrix->push_history_order();//推送历史订单到crm
+        $matrix->push_history_member();//推送历史会员到crm
+    }
+}
 elseif($act == 'cloud_remind')
 {
     $api_data = read_static_cache('cloud_remind');
@@ -97,7 +109,8 @@ elseif($act == 'cloud_remind')
     {
         $t = new transport('-1',5);
         $apiget = "ver=$data[version]&ecs_lang=$data[ecs_lang]&charset=$data[charset]&certificate_id=$data[certificate_id]&ent_id=$data[ent_id]";
-        $api_comment = $t->request('http://cloud.ecshop.com/cloud_remind.php', $apiget);
+        // $api_comment = $t->request('https://cloud-ecshop.xyunqi.com/cloud_remind.php', $apiget);
+        $api_comment = $t->request('https://cloud-ecshop.xyunqi.com/cloud_remind.php', $apiget);
         $api_str=    $api_comment["body"];
         $json = new Services_JSON;
         $api_arr = @$json->decode($api_str,1);
@@ -107,7 +120,7 @@ elseif($act == 'cloud_remind')
             {
                 $api_arr['content'] = urldecode($api_arr['content']);
                 $message =explode('|',$api_arr['content']);
-                $api_arr['content']='<li  class="cloud_close">'.$message['0'].'<img onclick="cloud_close('.$message['1'].')" src="images/no.gif"></li>';
+                $api_arr['content']='<li  class="cloud_close">'.$message['0'].'<img onclick="cloud_close('.$message['1'].')" src="images/no.svg" width="20"></li>';
                 if ($data['charset'] != 'UTF-8')
                 {
                     $api_arr['content'] = ecs_iconv('UTF-8',$data['charset'],$api_arr['content']);
@@ -137,7 +150,8 @@ elseif($act == 'close_remind')
     $remind_id=$_REQUEST['remind_id'];
     $t = new transport('-1',5);
     $apiget = "ver= $data[version] &ecs_lang= $data[ecs_lang] &charset= $data[charset] &certificate_id=$data[certificate_id]&ent_id=$data[ent_id]&remind_id=$remind_id";
-    $api_comment = $t->request('http://cloud.ecshop.com/cloud_remind.php', $apiget);
+    // $api_comment = $t->request('https://cloud-ecshop.xyunqi.com/cloud_remind.php', $apiget);
+    $api_comment = $t->request('https://cloud-ecshop.xyunqi.com/cloud_remind.php', $apiget);
 
     $api_str = $api_comment["body"];
     $json = new Services_JSON;
@@ -155,7 +169,8 @@ elseif($act == 'close_remind')
             if (admin_priv('all','',false))
             {
                 $apiget.="&act=close_remind&ent_ac=$data[ent_ac]";
-                $result=$t->request('http://cloud.ecshop.com/cloud_remind.php', $apiget);
+                // $result=$t->request('https://cloud-ecshop.xyunqi.com/cloud_remind.php', $apiget);
+                $result=$t->request('https://cloud-ecshop.xyunqi.com/cloud_remind.php', $apiget);
                 $api_str = $result["body"];
                 //var_dump($api_str);
                 $api_arr = array();
@@ -181,7 +196,7 @@ elseif($act == 'close_remind')
             {
                 $message =explode('|',$api_arr['content']);
 
-                $api_arr['content']='<li  class="cloud_close">'.$message['0'].'&nbsp;&nbsp;&nbsp;&nbsp;'.$_LANG['cloud_no_priv'].'<img onclick="cloud_close( '.$message['1'].')" src="images/no.gif"></li>';
+                $api_arr['content']='<li  class="cloud_close">'.$message['0'].'&nbsp;&nbsp;&nbsp;&nbsp;'.$_LANG['cloud_no_priv'].'<img onclick="cloud_close( '.$message['1'].')" src="images/no.svg" width="20"></li>';
 
                 make_json_result($api_arr['content']);
             }
@@ -225,7 +240,8 @@ else
     {
         $query .= '&'.$v.'='.$data[$v];
     }
-    ecs_header("Location: http://cloud.ecshop.com/api.php?act=".$act.$query."\n");
+    // ecs_header("Location: https://cloud-ecshop.xyunqi.com/api.php?act=".$act.$query."\n");
+    ecs_header("Location: https://cloud-ecshop.xyunqi.com/api.php?act=".$act.$query."\n");
     exit();
 }
 

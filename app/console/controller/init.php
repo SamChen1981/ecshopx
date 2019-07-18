@@ -3,7 +3,7 @@
 /**
  * ECSHOP 管理中心公用文件
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -12,11 +12,25 @@
  * $Author: liubo $
  * $Id: init.php 17217 2011-01-19 06:29:08Z liubo $
 */
-
+require_once(str_replace('/admin/includes','/includes',str_replace('\\', '/', dirname(__FILE__))) . '/safety.php');
 if (!defined('IN_ECS'))
 {
     die('Hacking attempt');
 }
+
+/* https 检测https */
+if( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ){
+    define('FORCE_SSL_LOGIN', true);
+    define('FORCE_SSL_ADMIN', true);
+}else{
+    if( isset($_SERVER['HTTP_ORIGIN']) && substr($_SERVER['HTTP_ORIGIN'],0,5)=='https'){
+        $_SERVER['HTTPS'] = 'on';
+        define('FORCE_SSL_LOGIN', true);
+        define('FORCE_SSL_ADMIN', true);
+    }
+}
+
+/* https 登陆失败 */
 
 define('ECS_ADMIN', true);
 
@@ -29,11 +43,11 @@ if (__FILE__ == '')
 
 /* 初始化设置 */
 @ini_set('memory_limit',          '64M');
-@ini_set('session.cache_expire',  180);
+@ini_set('session.cache_expire',  600);
 @ini_set('session.use_trans_sid', 0);
 @ini_set('session.use_cookies',   1);
 @ini_set('session.auto_start',    0);
-@ini_set('display_errors',        1);
+@ini_set('display_errors',        0);
 
 if (DIRECTORY_SEPARATOR == '\\')
 {
@@ -78,7 +92,6 @@ else
 {
     define('PHP_SELF', $_SERVER['SCRIPT_NAME']);
 }
-
 require(ROOT_PATH . 'includes/inc_constant.php');
 require(ROOT_PATH . 'includes/cls_ecshop.php');
 require(ROOT_PATH . 'includes/cls_error.php');
@@ -152,7 +165,7 @@ if ($_REQUEST['act'] == 'captcha')
 {
     include(ROOT_PATH . 'includes/cls_captcha.php');
 
-    $img = new captcha('../data/captcha/');
+    $img = new captcha('../data/captcha/',104,36);
     @ob_end_clean(); //清除之前出现的多余输入
     $img->generate_image();
 
@@ -184,12 +197,13 @@ clearstatcache();
 /* 如果有新版本，升级 */
 if (!isset($_CFG['ecs_version']))
 {
-    $_CFG['ecs_version'] = 'v2.0.5';
+    $_CFG['ecs_version'] = 'v4.0.0';
 }
 
 if (preg_replace('/(?:\.|\s+)[a-z]*$/i', '', $_CFG['ecs_version']) != preg_replace('/(?:\.|\s+)[a-z]*$/i', '', VERSION)
         && file_exists('../upgrade/index.php'))
 {
+    // echo "<pre>";var_dump($_CFG['ecs_version'],VERSION,preg_replace('/(?:\.|\s+)[a-z]*$/i', '', $_CFG['ecs_version']),preg_replace('/(?:\.|\s+)[a-z]*$/i', '', VERSION));exit;
     // 转到升级文件
     ecs_header("Location: ../upgrade/index.php\n");
 
@@ -236,7 +250,8 @@ if(isset($_GET['ent_id']) && isset($_GET['ent_ac']) &&  isset($_GET['ent_sign'])
         $t = new transport('-1',5);
         $apiget = "act=ent_sign&ent_id= $ent_id & certificate_id=$certificate_id";
 
-        $t->request('http://cloud.ecshop.com/api.php', $apiget);
+        // $t->request('https://cloud-ecshop.xyunqi.com/api.php', $apiget);
+        $t->request('https://cloud-ecshop.xyunqi.com/api.php', $apiget);
         $db->query('UPDATE '.$ecs->table('shop_config') . ' SET value = "'. $ent_id .'" WHERE code = "ent_id"');
         $db->query('UPDATE '.$ecs->table('shop_config') . ' SET value = "'. $ent_ac .'" WHERE code = "ent_ac"');
         $db->query('UPDATE '.$ecs->table('shop_config') . ' SET value = "'. $ent_sign .'" WHERE code = "ent_sign"');
@@ -249,13 +264,13 @@ if(isset($_GET['ent_id']) && isset($_GET['ent_ac']) &&  isset($_GET['ent_sign'])
 /* 验证管理员身份 */
 if ((!isset($_SESSION['admin_id']) || intval($_SESSION['admin_id']) <= 0) &&
     $_REQUEST['act'] != 'login' && $_REQUEST['act'] != 'signin' &&
-    $_REQUEST['act'] != 'forget_pwd' && $_REQUEST['act'] != 'reset_pwd' && $_REQUEST['act'] != 'check_order')
+    $_REQUEST['act'] != 'forget_pwd' && $_REQUEST['act'] != 'reset_pwd' && $_REQUEST['act'] != 'check_order' && $_REQUEST['act'] != 'yq_login' && $_REQUEST['act'] != 'is_yunqi_admin' && $_REQUEST['act'] != 'get_certificate')
 {
     /* session 不存在，检查cookie */
     if (!empty($_COOKIE['ECSCP']['admin_id']) && !empty($_COOKIE['ECSCP']['admin_pass']))
     {
         // 找到了cookie, 验证cookie信息
-        $sql = 'SELECT user_id, user_name, password, action_list, last_login ' .
+        $sql = 'SELECT user_id, user_name, password, add_time, action_list, last_login ' .
                 ' FROM ' .$ecs->table('admin_user') .
                 " WHERE user_id = '" . intval($_COOKIE['ECSCP']['admin_id']) . "'";
         $row = $db->GetRow($sql);
@@ -263,8 +278,8 @@ if ((!isset($_SESSION['admin_id']) || intval($_SESSION['admin_id']) <= 0) &&
         if (!$row)
         {
             // 没有找到这个记录
-            setcookie($_COOKIE['ECSCP']['admin_id'],   '', 1);
-            setcookie($_COOKIE['ECSCP']['admin_pass'], '', 1);
+            setcookie($_COOKIE['ECSCP']['admin_id'],   '', 1, NULL, NULL, NULL, TRUE);
+            setcookie($_COOKIE['ECSCP']['admin_pass'], '', 1, NULL, NULL, NULL, TRUE);
 
             if (!empty($_REQUEST['is_ajax']))
             {
@@ -280,7 +295,7 @@ if ((!isset($_SESSION['admin_id']) || intval($_SESSION['admin_id']) <= 0) &&
         else
         {
             // 检查密码是否正确
-            if (md5($row['password'] . $_CFG['hash_code']) == $_COOKIE['ECSCP']['admin_pass'])
+            if (md5($row['password'] . $_CFG['hash_code'] . $row['add_time']) == $_COOKIE['ECSCP']['admin_pass'])
             {
                 !isset($row['last_time']) && $row['last_time'] = '';
                 set_admin_session($row['user_id'], $row['user_name'], $row['action_list'], $row['last_time']);
@@ -292,8 +307,8 @@ if ((!isset($_SESSION['admin_id']) || intval($_SESSION['admin_id']) <= 0) &&
             }
             else
             {
-                setcookie($_COOKIE['ECSCP']['admin_id'],   '', 1);
-                setcookie($_COOKIE['ECSCP']['admin_pass'], '', 1);
+                setcookie($_COOKIE['ECSCP']['admin_id'],   '', 1, NULL, NULL, NULL, TRUE);
+                setcookie($_COOKIE['ECSCP']['admin_pass'], '', 1, NULL, NULL, NULL, TRUE);
 
                 if (!empty($_REQUEST['is_ajax']))
                 {
@@ -383,4 +398,15 @@ else
     ob_start();
 }
 
+/* 云起认证 */
+include_once(ROOT_PATH."includes/cls_certificate.php");
+$cert = new certificate();
+$certificate = $cert->get_shop_certificate();
+if(!$certificate['certificate_id']){
+    $callback = $ecs->url()."admin/certificate.php?act=get_certificate&type=index";
+    $iframe_url = $cert->get_authorize_url($callback);
+    $smarty->assign('iframe_url',$iframe_url);
+}
+$smarty->assign('certi',$certificate);
+/* 云起认证 */
 ?>

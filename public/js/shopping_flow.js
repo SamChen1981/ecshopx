@@ -597,25 +597,26 @@ function checkConsignee(frm)
     msg.push(zip_not_num);
   }
 
-  if (Utils.isEmpty(frm.elements['tel'].value))
+  if (Utils.isEmpty(frm.elements['tel'].value) && Utils.isEmpty(frm.elements['mobile'].value))
   {
     err = true;
-    msg.push(tele_not_null);
+    msg.push(tele_or_mob_not_null);
   }
   else
   {
-    if (!Utils.isTel(frm.elements['tel'].value))
+    if (frm.elements['tel'] && frm.elements['tel'].value.length > 0 && !Utils.isTel(frm.elements['tel'].value))
     {
       err = true;
       msg.push(tele_invaild);
     }
+    if (frm.elements['mobile'] && frm.elements['mobile'].value.length > 0 && (!Utils.isTel(frm.elements['mobile'].value)))
+    {
+      err = true;
+      msg.push(mobile_invaild);
+    }
   }
 
-  if (frm.elements['mobile'] && frm.elements['mobile'].value.length > 0 && (!Utils.isTel(frm.elements['mobile'].value)))
-  {
-    err = true;
-    msg.push(mobile_invaild);
-  }
+  
 
   if (err)
   {

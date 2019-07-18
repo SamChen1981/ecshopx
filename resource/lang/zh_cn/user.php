@@ -3,7 +3,7 @@
 /**
  * ECSHOP 用户中心语言项
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -75,6 +75,7 @@ $_LANG['back_page_up'] = '返回上一页';
 $_LANG['back_account_log'] = '返回帐户明细列表';
 $_LANG['amount_gt_zero'] = '请在“金额”栏输入大于0的数字';
 $_LANG['select_payment_pls'] = '请选择支付方式';
+$_LANG['check_account_money_fail'] = '修改的金额与充值金额不相等，不能进行修改';
 
 //JS语言项
 $_LANG['account_js']['surplus_amount_empty'] = '请输入您要操作的金额数量！';
@@ -286,6 +287,9 @@ $_LANG['business_message'] = '发送/查看商家留言';
 $_LANG['pay_order_by_surplus'] = '追加使用余额支付订单：%s';
 $_LANG['return_surplus_on_cancel'] = '取消订单 %s，退回支付订单时使用的预付款';
 $_LANG['return_integral_on_cancel'] = '取消订单 %s，退回支付订单时使用的积分';
+$_LANG['repurchase'] = '再次购买';
+$_LANG['delivery_info'] = '查看物流';
+$_LANG['delivery_status'] = '查询状态';
 
 /* 订单状态 */
 $_LANG['os'][OS_UNCONFIRMED] = '未确认';
@@ -336,6 +340,7 @@ $_LANG['order_postscript'] = '订单附言';
 $_LANG['order_number'] = '订单号';
 $_LANG['consignment'] = '发货单';
 $_LANG['shopping_money'] = '商品总价';
+$_LANG['goods_discount_fee'] = '商品折扣';
 $_LANG['invalid_order_id'] = '订单号错误';
 $_LANG['shipping'] = '配送方式';
 $_LANG['payment'] = '支付方式';
@@ -344,6 +349,7 @@ $_LANG['use_card'] = '使用贺卡';
 $_LANG['order_total_fee'] = '订单总金额';
 $_LANG['order_money_paid'] = '已付款金额';
 $_LANG['order_amount'] = '应付款金额';
+$_LANG['order_refund'] = '应退款金额';
 $_LANG['accessories'] = '配件';
 $_LANG['largess'] = '赠品';
 $_LANG['use_more_surplus'] = '追加使用余额';
@@ -417,6 +423,7 @@ $_LANG['logout'] = '您已经成功的退出了。';
 $_LANG['username_empty'] = '用户名为空';
 $_LANG['username_invalid'] = '用户名 %s 含有敏感字符';
 $_LANG['username_exist'] = '用户名 %s 已经存在';
+$_LANG['username_inexistent'] = '用户名 %s 不存在';
 $_LANG['username_not_allow'] = '用户名 %s 不允许注册';
 $_LANG['confirm_register'] = '确认注册';
 
@@ -433,6 +440,7 @@ $_LANG['passwd_question'] = '密码提示问题';
 $_LANG['sel_question'] = '请选择密码提示问题';
 $_LANG['passwd_answer'] = '密码问题答案';
 $_LANG['passwd_balnk'] = '密码中不能包含空格';
+$_LANG['phone_number_reg_check_fail'] = '手机号输入错误或未注册';
 
 /* 用户中心默认页面 */
 $_LANG['welcome_to'] = '欢迎您回到';
@@ -597,6 +605,9 @@ $_LANG['affiliate_num'] = '人数';
 
 $_LANG['affiliate_view'] = '效果';
 $_LANG['affiliate_code'] = '代码';
+
+$_LANG['affiliate_qrcode'] = '二维码';
+$_LANG['affiliate_qrcode_share_text'] = '微信扫一扫，快速分享！';
 
 $_LANG['register_affiliate'] = '推荐会员ID %s ( %s ) 注册送积分';
 $_LANG['register_points'] = '注册送积分';

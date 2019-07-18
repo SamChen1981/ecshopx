@@ -3,7 +3,7 @@
 /**
  * ECSHOP 用户交易相关函数库
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -287,7 +287,7 @@ function get_user_orders($user_id, $num = 10, $start = 0)
     $arr    = array();
 
     $sql = "SELECT order_id, order_sn, order_status, shipping_status, pay_status, add_time, " .
-           "(goods_amount + shipping_fee + insure_fee + pay_fee + pack_fee + card_fee + tax - discount) AS total_fee ".
+           "(goods_amount + shipping_fee + insure_fee + pay_fee + pack_fee + card_fee + tax - discount - goods_discount_fee) AS total_fee ".
            " FROM " .$GLOBALS['ecs']->table('order_info') .
            " WHERE user_id = '$user_id' ORDER BY add_time DESC";
     $res = $GLOBALS['db']->SelectLimit($sql, $num, $start);
@@ -324,7 +324,7 @@ function get_user_orders($user_id, $num = 10, $start = 0)
         }
         else
         {
-            $row['handler'] = '<span style="color:red">'.$GLOBALS['_LANG']['os'][$row['order_status']] .'</span>';
+            $row['handler'] = '<span style="color:#565656">'.$GLOBALS['_LANG']['os'][$row['order_status']] .'</span>';
         }
 
         $row['shipping_status'] = ($row['shipping_status'] == SS_SHIPPED_ING) ? SS_PREPARING : $row['shipping_status'];
@@ -334,6 +334,7 @@ function get_user_orders($user_id, $num = 10, $start = 0)
                        'order_sn'       => $row['order_sn'],
                        'order_time'     => local_date($GLOBALS['_CFG']['time_format'], $row['add_time']),
                        'order_status'   => $row['order_status'],
+                       'shipping_status'=> $row['shipping_status'],
                        'total_fee'      => price_format($row['total_fee'], false),
                        'handler'        => $row['handler']);
     }
@@ -403,7 +404,7 @@ function cancel_order($order_id, $user_id = 0)
     }
 
     //将用户订单设置为取消
-    $sql = "UPDATE ".$GLOBALS['ecs']->table('order_info') ." SET order_status = '".OS_CANCELED."' WHERE order_id = '$order_id'";
+    $sql = "UPDATE ".$GLOBALS['ecs']->table('order_info') ." SET order_status = '".OS_CANCELED."',lastmodify = '".gmtime()."' WHERE order_id = '$order_id'";
     if ($GLOBALS['db']->query($sql))
     {
         /* 记录log */
@@ -488,7 +489,7 @@ function affirm_received($order_id, $user_id = 0)
     /* 修改订单发货状态为“确认收货” */
     else
     {
-        $sql = "UPDATE " . $GLOBALS['ecs']->table('order_info') . " SET shipping_status = '" . SS_RECEIVED . "' WHERE order_id = '$order_id'";
+        $sql = "UPDATE " . $GLOBALS['ecs']->table('order_info') . " SET shipping_status = '" . SS_RECEIVED . "',lastmodify='".gmtime()."' WHERE order_id = '$order_id'";
         if ($GLOBALS['db']->query($sql))
         {
             /* 记录日志 */
@@ -499,6 +500,52 @@ function affirm_received($order_id, $user_id = 0)
         else
         {
             die($GLOBALS['db']->errorMsg());
+        }
+    }
+
+}
+
+/**
+ * 自动确认一个用户订单
+ *
+ * @access  public
+ * @param   int         $order_id       订单ID
+ * @param   int         $user_id        用户ID
+ *
+ * @return  bool        $bool
+ */
+function affirm_received_auto($order_id,&$msg)
+{
+    /* 查询订单信息，检查状态 */
+    $sql = "SELECT user_id, order_sn , order_status, shipping_status, pay_status FROM ".$GLOBALS['ecs']->table('order_info') ." WHERE order_id = '$order_id'";
+
+    $order = $GLOBALS['db']->GetRow($sql);
+    /* 检查订单 */
+    if ($order['shipping_status'] == SS_RECEIVED)
+    {
+        $msg = $GLOBALS['_LANG']['order_already_received'];
+        return false;
+    }
+    elseif ($order['shipping_status'] != SS_SHIPPED)
+    {
+        $msg = $GLOBALS['_LANG']['order_invalid'];
+        return false;
+    }
+    /* 修改订单发货状态为“确认收货” */
+    else
+    {
+        $sql = "UPDATE " . $GLOBALS['ecs']->table('order_info') . " SET shipping_status = '" . SS_RECEIVED . "',lastmodify='".gmtime()."' WHERE order_id = '$order_id'";
+        if ($GLOBALS['db']->query($sql))
+        {
+            /* 记录日志 */
+            order_action($order['order_sn'], $order['order_status'], SS_RECEIVED, $order['pay_status'], 'system', 'system');
+
+            return true;
+        }
+        else
+        {
+            $msg = $GLOBALS['db']->errorMsg();
+            return false;
         }
     }
 
@@ -629,19 +676,6 @@ function get_order_detail($order_id, $user_id = 0)
         return false;
     }
 
-    /* 对发货号处理 */
-    if (!empty($order['invoice_no']))
-    {
-         $shipping_code = $GLOBALS['db']->GetOne("SELECT shipping_code FROM ".$GLOBALS['ecs']->table('shipping') ." WHERE shipping_id = '$order[shipping_id]'");
-         $plugin = ROOT_PATH.'includes/modules/shipping/'. $shipping_code. '.php';
-         if (file_exists($plugin))
-        {
-              include_once($plugin);
-              $shipping = new $shipping_code;
-              $order['invoice_no'] = $shipping->query($order['invoice_no']);
-        }
-    }
-
     /* 只有未确认才允许用户修改订单地址 */
     if ($order['order_status'] == OS_UNCONFIRMED)
     {
@@ -678,9 +712,15 @@ function get_order_detail($order_id, $user_id = 0)
             $payment = unserialize_config($payment_info['pay_config']);
 
             //获取需要支付的log_id
-            $order['log_id']    = get_paylog_id($order['order_id'], $pay_type = PAY_ORDER);
+            // pc扫码支付，重新生成支付log_id
+            if($payment_info['pay_code'] == 'wxpaynative'){
+                $order['log_id'] = insert_pay_log($order['order_id'],$order['order_amount'],PAY_ORDER);
+            }else{
+                $order['log_id']    = get_paylog_id($order['order_id'], $pay_type = PAY_ORDER);
+            }
             $order['user_name'] = $_SESSION['user_name'];
             $order['pay_desc']  = $payment_info['pay_desc'];
+            $order['pay_code'] = $payment_info['pay_code'];
 
             /* 调用相应的支付方式文件 */
             include_once(ROOT_PATH . 'includes/modules/payment/' . $payment_info['pay_code'] . '.php');
@@ -1018,6 +1058,9 @@ function return_to_cart($order_id)
  */
 function save_order_address($address, $user_id)
 {
+    if (!isset($address['lastmodify']) || !$address['lastmodify']) {
+        $address['lastmodify'] = gmtime();
+    }
     $GLOBALS['err']->clean();
     /* 数据验证 */
     empty($address['consignee']) and $GLOBALS['err']->add($GLOBALS['_LANG']['consigness_empty']);

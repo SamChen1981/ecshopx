@@ -3,7 +3,7 @@
 /**
  * ECSHOP 综合流量统计
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -94,7 +94,7 @@ if ($_REQUEST['act'] == 'view')
 
         while ($val = $db->fetchRow($res))
         {
-            $val['access_date'] = gmdate('m-d',$val['access_time'] +  $timezone * 3600);
+            $val['access_date'] = gmdate('m-d',$val['access_time'] +  intval($timezone) * 3600);
             $general_xml .= "<set name='$val[access_date]' value='$val[access_count]' color='" .chart_color($key). "' />";
             if ($val['access_count'] > $max)
             {
@@ -251,6 +251,10 @@ if ($_REQUEST['act'] == 'view')
         {
             $from = empty($val['referer_domain']) ? $_LANG['input_url'] : $val['referer_domain'];
 
+            if ((strpos($from,'"') !== false ) || (strpos($from,"'") !== false )) {
+                // 会有非域名数据出现，直接过滤掉
+                continue;
+            }
             $from_xml .= "<set name='".str_replace(array('http://', 'https://'), array('', ''), $from) . "' value='$val[access_count]' color='" . chart_color($key). "' />";
 
             $key++;
@@ -345,8 +349,8 @@ if ($_REQUEST['act'] == 'view')
 
     if (!$is_multi)
     {
-        $filename = gmdate($_CFG['date_format'], $start_date + $timezone * 3600) . '_' .
-                    gmdate($_CFG['date_format'], $end_date + $timezone * 3600);
+        $filename = gmdate($_CFG['date_format'], intval($start_date) + intval($timezone) * 3600) . '_' .
+                    gmdate($_CFG['date_format'], intval($end_date) + intval($timezone) * 3600);
 
         $smarty->assign('action_link',  array('text' => $_LANG['down_flow_stats'],
           'href'=>'flow_stats.php?act=download&filename=' . $filename .

@@ -3,7 +3,7 @@
 /**
  * ECSHOP 支付方式管理程序
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -36,7 +36,9 @@ if ($_REQUEST['act'] == 'list')
 
     /* 取得插件文件中的支付方式 */
     $modules = read_modules('../includes/modules/payment');
-    for ($i = 0; $i < count($modules); $i++)
+    $yunqi_payment = array();
+    $modules_count = count($modules);
+    for ($i = 0; $i < $modules_count; $i++)
     {
         $code = $modules[$i]['code'];
         $modules[$i]['pay_code'] = $modules[$i]['code'];
@@ -64,18 +66,48 @@ if ($_REQUEST['act'] == 'list')
        {
             $tenpayc2c = $modules[$i];
        }
+       if ($modules[$i]['pay_code'] == 'yunqi')
+       {
+            $yunqi_payment = $modules[$i];
+            unset($modules[$i]);
+       }
     }
 
+
+
     include_once(ROOT_PATH.'includes/lib_compositor.php');
+    $yunqi_payment and array_unshift($modules, $yunqi_payment);
 
     assign_query_info();
-
+    $smarty->assign('certi',$certificate);
     $smarty->assign('ur_here', $_LANG['02_payment_list']);
     $smarty->assign('modules', $modules);
     $smarty->assign('tenpayc2c', $tenpayc2c);
+    $smarty->assign('account_url',TEEGON_PASSPORT_URL);
     $smarty->display('payment_list.htm');
 }
 
+/*------------------------------------------------------ */
+//-- 获取云起收银账号
+/*------------------------------------------------------ */
+elseif($_REQUEST['act']=='check_yunqi'){
+   //获取云起收银账号
+    include_once(ROOT_PATH.'includes/cls_certificate.php');
+    $cert = new certificate();
+    $yunqi_account = $cert->get_yunqi_account();
+    if(!$yunqi_account || !$yunqi_account['status']){
+        $yqaccount_result = $cert->yqaccount_appget();
+        if($yqaccount_result['status']=='success'){
+            $cert->set_yunqi_account(array('appkey'=>$yqaccount_result['data']['appkey'],'appsecret'=>$yqaccount_result['data']['appsecret'],'status'=>true));
+            echo json_encode(array('status'=>true));exit;
+        }else{
+            echo json_encode(array('status'=>false));exit;
+        }
+    }else{
+        echo json_encode(array('status'=>true));exit;
+    }
+    //获取云起收银账号end 
+}
 /*------------------------------------------------------ */
 //-- 安装支付方式 ?act=install&code=".$code."
 /*------------------------------------------------------ */
@@ -216,10 +248,13 @@ elseif ($_REQUEST['act'] == 'edit')
         $store = unserialize($pay['pay_config']);
         /* 取出已经设置属性的code */
         $code_list = array();
-        foreach ($store as $key=>$value)
-        {
-            $code_list[$value['name']] = $value['value'];
+        if($store){
+           foreach ($store as $key=>$value)
+            {
+                $code_list[$value['name']] = $value['value'];
+            }
         }
+        
         $pay['pay_config'] = array();
 
         /* 循环插件中所有属性 */
@@ -248,6 +283,20 @@ elseif ($_REQUEST['act'] == 'edit')
 
     }
 
+    //天工收银配置
+    /*  兼容老的站点和移动端 以shop_config表里的那条为准 */
+    if($pay['pay_code']=='yunqi'){
+        $teegon_data = $cert->get_yunqi_account();
+        $pay['pay_config'][0]['name'] = 'appkey';
+        $pay['pay_config'][0]['label'] =$_LANG['appkey'];
+        $pay['pay_config'][0]['type'] = 'text';
+        $pay['pay_config'][0]['value'] = $teegon_data['appkey'];
+        $pay['pay_config'][1]['name'] = 'appsecret';
+        $pay['pay_config'][1]['label'] = $_LANG['appsecret'];
+        $pay['pay_config'][1]['type'] = 'text';
+        $pay['pay_config'][1]['value'] = $teegon_data['appsecret'];
+
+    }
     /* 如果以前没设置支付费用，编辑时补上 */
     if (!isset($pay['pay_fee']))
     {
@@ -275,7 +324,6 @@ elseif ($_REQUEST['act'] == 'edit')
 elseif (isset($_POST['Submit']))
 {
     admin_priv('payment');
-
     /* 检查输入 */
     if (empty($_POST['pay_name']))
     {
@@ -301,6 +349,139 @@ elseif (isset($_POST['Submit']))
             );
         }
     }
+    // 如果是银联且签名方式选择的是证书方式 证书文件处理
+    if ($_POST['pay_code'] == 'upop' && $pay_config[0]['value'] == '0') {
+        $upop_cert_path = '';
+        if ($_FILES['upop_cert']['size'] > 0) {
+            $pathinfo = pathinfo($_FILES['upop_cert']['name']);
+            if ($pathinfo['extension'] != 'pfx') {
+                sys_msg($_LANG['cert_invalid_file'], 1);
+            }
+            $destination = 'cert/' . $_FILES['upop_cert']['name'];
+            if (move_upload_file($_FILES['upop_cert']['tmp_name'], ROOT_PATH . $destination)) {
+                $upop_cert_path = $destination;
+            } else {
+                sys_msg($_LANG['fail_upload'], 1);
+            }
+        }
+        foreach ($pay_config as $key => &$value) {
+            if ($value['name'] == 'upop_cert') {
+                if ($upop_cert_path) {
+                    $value['value'] = $upop_cert_path;
+                } else {
+                    if (empty($value['value'])) {
+                        sys_msg($_LANG['lack_cert_file'], 1);
+                    }
+                }
+            }
+        }
+    }
+    // 如果是银联在线 私钥公钥文件处理
+    if ($_POST['pay_code'] == 'chinapay') {
+        $pfx_path = $cer_path = '';
+
+        // echo "<pre>";print_r($_FILES);//exit();
+        if ($_FILES['chinapay_pfx']['size'] > 0) {
+            $pathinfo = pathinfo($_FILES['chinapay_pfx']['name']);
+            if ($pathinfo['extension'] != 'pfx') {
+                sys_msg($_LANG['cert_invalid_file'], 1);
+            }
+            $destination = 'cert/' . $_FILES['chinapay_pfx']['name'];
+            if (move_upload_file($_FILES['chinapay_pfx']['tmp_name'], ROOT_PATH . $destination)) {
+                $pfx_path = $destination;
+            } else {
+                sys_msg($_LANG['fail_upload'], 1);
+            }
+        }
+        if ($_FILES['chinapay_cer']['size'] > 0) {
+            $pathinfo = pathinfo($_FILES['chinapay_cer']['name']);
+            if ($pathinfo['extension'] != 'cer') {
+                sys_msg($_LANG['cert_invalid_file'], 1);
+            }
+            $destination = 'cert/' . $_FILES['chinapay_cer']['name'];
+            if (move_upload_file($_FILES['chinapay_cer']['tmp_name'], ROOT_PATH . $destination)) {
+                $cer_path = $destination;
+            } else {
+                sys_msg($_LANG['fail_upload'], 1);
+            }
+        }
+        foreach ($pay_config as $key => $value) {
+            if ($value['name'] == 'chinapay_pfx') {
+                if ($pfx_path) {
+                    $pay_config[$key]['value'] = $pfx_path;
+                } else {
+                    if (empty($value['value'])) {
+                        sys_msg($_LANG['lack_cert_file'], 1);
+                    }
+                }
+            }elseif ($value['name'] == 'chinapay_cer') {
+                if ($cer_path) {
+                    $pay_config[$key]['value'] = $cer_path;
+                } else {
+                    if (empty($value['value'])) {
+                        sys_msg($_LANG['lack_cert_file'], 1);
+                    }
+                }
+            }elseif ($value['name'] = 'chinapay_pfx_pwd') {
+                if ($pay_config[$key]['value']) {
+                    $pfx_pwd = $value['value'];
+                }
+            }
+        }
+        if (!$pfx_pwd) {
+            sys_msg($_LANG['pfx_pwd_null'], 1);
+        }
+
+        // 重新编写 security.properties 配置文件
+        $security = array(
+            'sign.file='.ROOT_PATH.$pfx_path.PHP_EOL,
+            'sign.file.password='.$pfx_pwd.PHP_EOL,
+            'sign.cert.type=PKCS12'.PHP_EOL,
+            'sign.invalid.fields=Signature,CertId'.PHP_EOL,
+            'verify.file='.ROOT_PATH.$cer_path.PHP_EOL,
+            'signature.field=Signature'.PHP_EOL,
+            'log4j.name=cpLog',
+        );
+        $filename = ROOT_PATH.'cert/security.properties';
+        if (file_exists($filename)) {
+            unlink($filename);
+        }
+        $fh = fopen($filename, "a");
+        foreach ($security as $infos) {
+            fwrite($fh, $infos);
+        }
+        fclose($fh);
+
+        $path_properties = ROOT_PATH.'cert/path.properties';
+        if (!file_exists($path_properties)) {
+            $fhpp = fopen($path_properties, "a");
+            fwrite($fhpp, 'query_url=https://payment.chinapay.com/CTITS/service/rest/forward/syn/000000000060/0/0/0/0/0'.PHP_EOL);
+            fwrite($fhpp, 'pay_url=https://payment.chinapay.com/CTITS/service/rest/page/nref/000000000017/0/0/0/0/0'.PHP_EOL);
+            fwrite($fhpp, 'refund_url=https://payment.chinapay.com/CTITS/service/rest/forward/syn/000000000060/0/0/0/0/0');
+            fclose($fhpp);
+        }
+    }
+    // echo "<pre>";print_r($pay_config);print_r($_FILES); exit();
+    /*  兼容老的站点和移动端 */
+    if ($_POST['pay_code'] == 'yunqi') {
+        include_once(ROOT_PATH.'includes/cls_certificate.php');
+        $cert = new certificate();
+        foreach ($pay_config as $key => $value) {
+            if ($value['name'] == 'appkey') {
+                $appkey = $value['value'];
+            }
+            if ($value['name'] == 'appsecret') {
+                $appsecret = $value['value'];
+            }
+
+        }
+        if ($appkey && $appsecret) {
+            $status = true;
+        } else {
+            $status = false;
+        }
+        $cert->set_yunqi_account(array('appkey' => $appkey, 'appsecret' => $appsecret, 'status' => $status));
+    }
     $pay_config = serialize($pay_config);
     /* 取得和验证支付手续费 */
     $pay_fee    = empty($_POST['pay_fee'])?0:$_POST['pay_fee'];
@@ -309,6 +490,7 @@ elseif (isset($_POST['Submit']))
     $link[] = array('text' => $_LANG['back_list'], 'href' => 'payment.php?act=list');
     if ($_POST['pay_id'])
     {
+
         /* 编辑 */
         $sql = "UPDATE " . $ecs->table('payment') .
                "SET pay_name = '$_POST[pay_name]'," .
@@ -341,6 +523,7 @@ elseif (isset($_POST['Submit']))
         }
         else
         {
+
             /* 该支付方式没有安装过, 将该支付方式的信息添加到数据库 */
             $sql = "INSERT INTO " . $ecs->table('payment') . " (pay_code, pay_name, pay_desc, pay_config, is_cod, pay_fee, enabled, is_online)" .
                    "VALUES ('$_POST[pay_code]', '$_POST[pay_name]', '$_POST[pay_desc]', '$pay_config', '$_POST[is_cod]', '$pay_fee', 1, '$_POST[is_online]')";
@@ -366,6 +549,11 @@ elseif ($_REQUEST['act'] == 'uninstall')
            "SET enabled = '0' " .
            "WHERE pay_code = '$_REQUEST[code]' LIMIT 1";
     $db->query($sql);
+
+    if ($_REQUEST['code'] == 'yunqi') {
+        $dSql = "DELETE FROM ".$GLOBALS['ecs']->table('shop_config')." WHERE code='yunqi_account'";
+        $db->query($dSql);
+    }
 
     /* 记录日志 */
     admin_log($_REQUEST['code'], 'uninstall', 'payment');

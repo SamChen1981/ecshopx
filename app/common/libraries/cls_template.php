@@ -3,7 +3,7 @@
 /**
  * ECSHOP 模版类
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -25,7 +25,7 @@ class cls_template
     var $force_compile  = false;
 
     var $_var           = array();
-    var $_echash        = '554fcae493e564ee0dc75bdf2ebf94ca';
+    var $_echash        = '45ea207d7a2b68c49582d2d22adf953a';
     var $_foreach       = array();
     var $_current_file  = '';
     var $_expires       = 0;
@@ -296,8 +296,13 @@ class cls_template
             {
                  $source= str_replace('%%%SMARTYSP'.$curr_sp.'%%%', '<?php echo \''.str_replace("'", "\'", $sp_match[1][$curr_sp]).'\'; ?>'."\n", $source);
             }
-         }
-         return preg_replace("/{([^\}\{\n]*)}/e", "\$this->select('\\1');", $source);
+        }
+        
+        if (!function_exists('version_compare') || version_compare(phpversion(), '5.3.0', '<')) {
+            return preg_replace("/{([^\}\{\n]*)}/e", "\$this->select('\\1');", $source);
+        } else {
+            return include(ROOT_PATH . 'includes' . DIRECTORY_SEPARATOR . 'patch' . DIRECTORY_SEPARATOR . 'includes_cls_template_fetch_str.php');
+        }
     }
 
     /**
@@ -419,7 +424,8 @@ class cls_template
         }
         else
         {
-            $tag_sel = array_shift(explode(' ', $tag));
+            $tag_arr = explode(' ', $tag);
+            $tag_sel = array_shift($tag_arr);
             switch ($tag_sel)
             {
                 case 'if':
@@ -489,8 +495,11 @@ class cls_template
 
                 case 'insert' :
                     $t = $this->get_para(substr($tag, 7), false);
-
-                    $out = "<?php \n" . '$k = ' . preg_replace("/(\'\\$[^,]+)/e" , "stripslashes(trim('\\1','\''));", var_export($t, true)) . ";\n";
+                    if (!function_exists('version_compare') || version_compare(phpversion(), '5.3.0', '<')) {
+                        $out = "<?php \n" . '$k = ' . preg_replace("/(\'\\$[^,]+)/e" , "stripslashes(trim('\\1','\''));", var_export($t, true)) . ";\n";
+                    } else {
+                        include(ROOT_PATH . 'includes' . DIRECTORY_SEPARATOR . 'patch' . DIRECTORY_SEPARATOR . 'includes_cls_template_select.php');
+                    }
                     $out .= 'echo $this->_echash . $k[\'name\'] . \'|\' . serialize($k) . $this->_echash;' . "\n?>";
 
                     return $out;
@@ -549,7 +558,11 @@ class cls_template
     {
         if (strrpos($val, '[') !== false)
         {
-            $val = preg_replace("/\[([^\[\]]*)\]/eis", "'.'.str_replace('$','\$','\\1')", $val);
+            if (!function_exists('version_compare') || version_compare(phpversion(), '5.3.0', '<')) {
+                $val = preg_replace("/\[([^\[\]]*)\]/eis", "'.'.str_replace('$','\$','\\1')", $val);
+            } else {
+                include(ROOT_PATH . 'includes' . DIRECTORY_SEPARATOR . 'patch' . DIRECTORY_SEPARATOR . 'includes_cls_template_get_val.php');
+            }
         }
 
         if (strrpos($val, '|') !== false)
@@ -1066,9 +1079,13 @@ class cls_template
         if ($file_type == '.dwt')
         {
             /* 将模板中所有library替换为链接 */
-            $pattern     = '/<!--\s#BeginLibraryItem\s\"\/(.*?)\"\s-->.*?<!--\s#EndLibraryItem\s-->/se';
-            $replacement = "'{include file='.strtolower('\\1'). '}'";
-            $source      = preg_replace($pattern, $replacement, $source);
+            if (!function_exists('version_compare') || version_compare(phpversion(), '5.3.0', '<')) {
+                $pattern     = '/<!--\s#BeginLibraryItem\s\"\/(.*?)\"\s-->.*?<!--\s#EndLibraryItem\s-->/se';
+                $replacement = "'{include file='.strtolower('\\1'). '}'";
+                $source      = preg_replace($pattern, $replacement, $source);
+            } else {
+                include(ROOT_PATH . 'includes' . DIRECTORY_SEPARATOR . 'patch' . DIRECTORY_SEPARATOR . 'includes_cls_template_smarty_prefilter_preCompile.php');
+            }
 
             /* 检查有无动态库文件，如果有为其赋值 */
             $dyna_libs = get_dyna_libs($GLOBALS['_CFG']['template'], $this->_current_file);
