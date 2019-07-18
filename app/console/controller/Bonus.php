@@ -587,9 +587,8 @@ if ($_REQUEST['act'] == 'gen_excel') {
 //-- 搜索商品
 /*------------------------------------------------------ */
 if ($_REQUEST['act'] == 'get_goods_list') {
-        $json = new JSON;
 
-    $filters = $json->decode($_GET['JSON']);
+    $filters = json_decode($_GET['JSON']);
 
     $arr = get_goods_list($filters);
     $opt = array();
@@ -607,12 +606,11 @@ if ($_REQUEST['act'] == 'get_goods_list') {
 //-- 添加发放红包的商品
 /*------------------------------------------------------ */
 if ($_REQUEST['act'] == 'add_bonus_goods') {
-        $json = new JSON;
 
     check_authz_json('bonus_manage');
 
-    $add_ids = $json->decode($_GET['add_ids']);
-    $args = $json->decode($_GET['JSON']);
+    $add_ids = json_decode($_GET['add_ids']);
+    $args = json_decode($_GET['JSON']);
     $type_id = $args[0];
 
     foreach ($add_ids as $key => $val) {
@@ -637,13 +635,12 @@ if ($_REQUEST['act'] == 'add_bonus_goods') {
 //-- 删除发放红包的商品
 /*------------------------------------------------------ */
 if ($_REQUEST['act'] == 'drop_bonus_goods') {
-        $json = new JSON;
 
     check_authz_json('bonus_manage');
 
-    $drop_goods = $json->decode($_GET['drop_ids']);
+    $drop_goods = json_decode($_GET['drop_ids']);
     $drop_goods_ids = db_create_in($drop_goods);
-    $arguments = $json->decode($_GET['JSON']);
+    $arguments = json_decode($_GET['JSON']);
     $type_id = $arguments[0];
 
     $db->query("UPDATE " . $ecs->table('goods') . " SET bonus_type_id = 0 " .

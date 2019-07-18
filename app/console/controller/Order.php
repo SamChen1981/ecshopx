@@ -3721,7 +3721,6 @@ elseif ($_REQUEST['act'] == 'operate_post') {
     $links[] = array('text' => $_LANG['order_info'], 'href' => 'order.php?act=info&order_id=' . $order_id);
     sys_msg($_LANG['act_ok'] . $msg, 0, $links);
 } elseif ($_REQUEST['act'] == 'json') {
-        $json = new JSON();
 
     $func = $_REQUEST['func'];
     if ($func == 'get_goods_info') {
@@ -3761,7 +3760,7 @@ elseif ($_REQUEST['act'] == 'operate_post') {
         }
         $goods['attr_list'] = array_values($goods['attr_list']);
 
-        echo $json->encode($goods);
+        echo json_encode($goods);
     }
 }
 
@@ -3772,7 +3771,6 @@ elseif ($_REQUEST['act'] == 'ajax_merge_order') {
     /* 检查权限 */
     admin_priv('order_os_edit');
 
-        $json = new JSON();
 
     $from_order_sn = empty($_POST['from_order_sn']) ? '' : json_str_iconv(substr($_POST['from_order_sn'], 1));
     $to_order_sn = empty($_POST['to_order_sn']) ? '' : json_str_iconv(substr($_POST['to_order_sn'], 1));
@@ -3785,7 +3783,7 @@ elseif ($_REQUEST['act'] == 'ajax_merge_order') {
         $result['error'] = 1;
         $result['message'] = $m_result;
     }
-    die($json->encode($result));
+    die(json_encode($result));
 }
 
 /*------------------------------------------------------ */
@@ -3828,7 +3826,6 @@ elseif ($_REQUEST['act'] == 'remove_order') {
 //-- 根据关键字和id搜索用户
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'search_users') {
-        $json = new JSON();
 
     $id_name = empty($_GET['id_name']) ? '' : json_str_iconv(trim($_GET['id_name']));
 
@@ -3849,14 +3846,13 @@ elseif ($_REQUEST['act'] == 'search_users') {
         $result['message'] = 'NO KEYWORDS!';
     }
 
-    die($json->encode($result));
+    die(json_encode($result));
 }
 
 /*------------------------------------------------------ */
 //-- 根据关键字搜索商品
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'search_goods') {
-        $json = new JSON();
 
     $keyword = empty($_GET['keyword']) ? '' : json_str_iconv(trim($_GET['keyword']));
 
@@ -3881,7 +3877,7 @@ elseif ($_REQUEST['act'] == 'search_goods') {
         $result['error'] = 1;
         $result['message'] = 'NO KEYWORDS';
     }
-    die($json->encode($result));
+    die(json_encode($result));
 }
 
 /*------------------------------------------------------ */

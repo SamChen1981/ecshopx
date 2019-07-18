@@ -268,9 +268,8 @@ elseif ($_REQUEST['act'] == 'remove') {
 /*------------------------------------------------------ */
 
 elseif ($_REQUEST['act'] == 'search_goods') {
-        $json = new JSON;
 
-    $filters = $json->decode($_GET['JSON']);
+    $filters = json_decode($_GET['JSON']);
 
     $arr = get_goods_list($filters);
 

@@ -527,8 +527,7 @@ elseif ($_REQUEST['act'] == 'search_goods') {
     check_authz_json('whole_sale');
 
 
-    $json = new JSON;
-    $filter = $json->decode($_GET['JSON']);
+        $filter = json_decode($_GET['JSON']);
     $arr = get_goods_list($filter);
     if (empty($arr)) {
         $arr[0] = array(
@@ -545,7 +544,6 @@ elseif ($_REQUEST['act'] == 'search_goods') {
 /*------------------------------------------------------ */
 
 elseif ($_REQUEST['act'] == 'get_goods_info') {
-        $json = new JSON();
 
     $goods_id = intval($_REQUEST['goods_id']);
     $goods_attr_list = array_values(get_goods_attr($goods_id));
@@ -562,7 +560,7 @@ elseif ($_REQUEST['act'] == 'get_goods_info') {
         }
     }
 
-    echo $json->encode($goods_attr_list);
+    echo json_encode($goods_attr_list);
 }
 
 /*

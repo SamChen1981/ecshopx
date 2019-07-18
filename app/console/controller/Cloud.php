@@ -48,7 +48,7 @@ if ($act == 'menu_api') {
         $api_str = $api_comment["body"];
         if (!empty($api_str)) {
             $json = new Services_JSON;
-            $api_arr = @$json->decode($api_str, 1);
+            $api_arr = @json_decode($api_str, 1);
             if (!empty($api_arr) && $api_arr['error'] == 0 && md5($api_arr['content']) == $api_arr['hash']) {
                 $api_arr['content'] = urldecode($api_arr['content']);
                 if ($data['charset'] != 'UTF-8') {
@@ -83,7 +83,7 @@ if ($act == 'menu_api') {
         $api_comment = $t->request('https://cloud-ecshop.xyunqi.com/cloud_remind.php', $apiget);
         $api_str = $api_comment["body"];
         $json = new Services_JSON;
-        $api_arr = @$json->decode($api_str, 1);
+        $api_arr = @json_decode($api_str, 1);
         if (!empty($api_str)) {
             if (!empty($api_arr) && $api_arr['error'] == 0 && md5($api_arr['content']) == $api_arr['hash']) {
                 $api_arr['content'] = urldecode($api_arr['content']);
@@ -114,7 +114,7 @@ if ($act == 'menu_api') {
     $api_str = $api_comment["body"];
     $json = new Services_JSON;
     $api_arr = array();
-    $api_arr = @$json->decode($api_str, 1);
+    $api_arr = @json_decode($api_str, 1);
     if (!empty($api_str)) {
         if (!empty($api_arr) && $api_arr['error'] == 0 && md5($api_arr['content']) == $api_arr['hash']) {
             $api_arr['content'] = urldecode($api_arr['content']);
@@ -128,7 +128,7 @@ if ($act == 'menu_api') {
                 $api_str = $result["body"];
                 //var_dump($api_str);
                 $api_arr = array();
-                $api_arr = @$json->decode($api_str, 1);
+                $api_arr = @json_decode($api_str, 1);
                 $api_arr['content'] = urldecode($api_arr['content']);
                 if ($data['charset'] != 'UTF-8') {
                     $api_arr['content'] = ecs_iconv('UTF-8', $data['charset'], $api_arr['content']);

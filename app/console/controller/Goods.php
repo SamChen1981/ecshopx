@@ -1601,9 +1601,8 @@ elseif ($_REQUEST['act'] == 'drop_image') {
 //-- 搜索商品，仅返回名称及ID
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'get_goods_list') {
-        $json = new JSON;
 
-    $filters = $json->decode($_GET['JSON']);
+    $filters = json_decode($_GET['JSON']);
 
     $arr = get_goods_list($filters);
     $opt = array();
@@ -1621,12 +1620,11 @@ elseif ($_REQUEST['act'] == 'get_goods_list') {
 //-- 把商品加入关联
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'add_link_goods') {
-        $json = new JSON;
 
     check_authz_json('goods_manage');
 
-    $linked_array = $json->decode($_GET['add_ids']);
-    $linked_goods = $json->decode($_GET['JSON']);
+    $linked_array = json_decode($_GET['add_ids']);
+    $linked_goods = json_decode($_GET['JSON']);
     $goods_id = $linked_goods[0];
     $is_double = $linked_goods[1] == true ? 0 : 1;
 
@@ -1660,13 +1658,12 @@ elseif ($_REQUEST['act'] == 'add_link_goods') {
 //-- 删除关联商品
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'drop_link_goods') {
-        $json = new JSON;
 
     check_authz_json('goods_manage');
 
-    $drop_goods = $json->decode($_GET['drop_ids']);
+    $drop_goods = json_decode($_GET['drop_ids']);
     $drop_goods_ids = db_create_in($drop_goods);
-    $linked_goods = $json->decode($_GET['JSON']);
+    $linked_goods = json_decode($_GET['JSON']);
     $goods_id = $linked_goods[0];
     $is_signle = $linked_goods[1];
 
@@ -1708,12 +1705,11 @@ elseif ($_REQUEST['act'] == 'drop_link_goods') {
 /*------------------------------------------------------ */
 
 elseif ($_REQUEST['act'] == 'add_group_goods') {
-        $json = new JSON;
 
     check_authz_json('goods_manage');
 
-    $fittings = $json->decode($_GET['add_ids']);
-    $arguments = $json->decode($_GET['JSON']);
+    $fittings = json_decode($_GET['add_ids']);
+    $arguments = json_decode($_GET['JSON']);
     $goods_id = $arguments[0];
     $price = $arguments[1];
 
@@ -1741,12 +1737,11 @@ elseif ($_REQUEST['act'] == 'add_group_goods') {
 /*------------------------------------------------------ */
 
 elseif ($_REQUEST['act'] == 'drop_group_goods') {
-        $json = new JSON;
 
     check_authz_json('goods_manage');
 
-    $fittings = $json->decode($_GET['drop_ids']);
-    $arguments = $json->decode($_GET['JSON']);
+    $fittings = json_decode($_GET['drop_ids']);
+    $arguments = json_decode($_GET['JSON']);
     $goods_id = $arguments[0];
     $price = $arguments[1];
 
@@ -1775,9 +1770,8 @@ elseif ($_REQUEST['act'] == 'drop_group_goods') {
 /*------------------------------------------------------ */
 
 elseif ($_REQUEST['act'] == 'get_article_list') {
-        $json = new JSON;
 
-    $filters = (array)$json->decode(json_str_iconv($_GET['JSON']));
+    $filters = (array)json_decode(json_str_iconv($_GET['JSON']));
 
     $where = " WHERE cat_id > 0 ";
     if (!empty($filters['title'])) {
@@ -1802,12 +1796,11 @@ elseif ($_REQUEST['act'] == 'get_article_list') {
 /*------------------------------------------------------ */
 
 elseif ($_REQUEST['act'] == 'add_goods_article') {
-        $json = new JSON;
 
     check_authz_json('goods_manage');
 
-    $articles = $json->decode($_GET['add_ids']);
-    $arguments = $json->decode($_GET['JSON']);
+    $articles = json_decode($_GET['add_ids']);
+    $arguments = json_decode($_GET['JSON']);
     $goods_id = $arguments[0];
 
     foreach ($articles as $val) {
@@ -1833,12 +1826,11 @@ elseif ($_REQUEST['act'] == 'add_goods_article') {
 //-- 删除关联文章
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'drop_goods_article') {
-        $json = new JSON;
 
     check_authz_json('goods_manage');
 
-    $articles = $json->decode($_GET['drop_ids']);
-    $arguments = $json->decode($_GET['JSON']);
+    $articles = json_decode($_GET['drop_ids']);
+    $arguments = json_decode($_GET['JSON']);
     $goods_id = $arguments[0];
 
     $sql = "DELETE FROM " . $ecs->table('goods_article') . " WHERE " . db_create_in($articles, "article_id") . " AND goods_id = '$goods_id'";

@@ -85,9 +85,8 @@ if ($_REQUEST['act'] == 'add' || $_REQUEST['act'] == 'edit') {
         create_html_editor('topic_intro', $topic['intro']);
 
 
-        $json = new JSON;
-        $topic['data'] = addcslashes($topic['data'], "'");
-        $topic['data'] = $json->encode(@unserialize($topic['data']));
+                $topic['data'] = addcslashes($topic['data'], "'");
+        $topic['data'] = json_encode(@unserialize($topic['data']));
         $topic['data'] = addcslashes($topic['data'], "'");
 
         if (empty($topic['topic_img']) && empty($topic['htmls'])) {
@@ -201,8 +200,7 @@ if ($_REQUEST['act'] == 'add' || $_REQUEST['act'] == 'edit') {
     $start_time = local_strtotime($_POST['start_time']);
     $end_time = local_strtotime($_POST['end_time']);
 
-    $json = new JSON;
-    $tmp_data = $json->decode($_POST['topic_data']);
+        $tmp_data = json_decode($_POST['topic_data']);
     $data = serialize($tmp_data);
     $base_style = $_POST['base_style'];
     $keywords = $_POST['keywords'];
@@ -224,9 +222,8 @@ if ($_REQUEST['act'] == 'add' || $_REQUEST['act'] == 'edit') {
     $links[] = array('href' => 'topic.php', 'text' => $_LANG['back_list']);
     sys_msg($_LANG['succed'], 0, $links);
 } elseif ($_REQUEST['act'] == 'get_goods_list') {
-        $json = new JSON;
 
-    $filters = $json->decode($_GET['JSON']);
+    $filters = json_decode($_GET['JSON']);
 
     $arr = get_goods_list($filters);
     $opt = array();

@@ -324,7 +324,6 @@ elseif ($action == 'act_login') {
     }
 } /* 处理 ajax 的登录请求 */
 elseif ($action == 'signin') {
-        $json = new JSON;
 
     $username = !empty($_POST['username']) ? json_str_iconv(trim($_POST['username'])) : '';
     $password = !empty($_POST['password']) ? trim($_POST['password']) : '';
@@ -336,7 +335,7 @@ elseif ($action == 'signin') {
         if (empty($captcha)) {
             $result['error'] = 1;
             $result['content'] = $_LANG['invalid_captcha'];
-            die($json->encode($result));
+            die(json_encode($result));
         }
 
         /* 检查验证码 */
@@ -346,7 +345,7 @@ elseif ($action == 'signin') {
         if (!$validator->check_word($_POST['captcha'])) {
             $result['error'] = 1;
             $result['content'] = $_LANG['invalid_captcha'];
-            die($json->encode($result));
+            die(json_encode($result));
         }
     }
 
@@ -367,7 +366,7 @@ elseif ($action == 'signin') {
         $result['error'] = 1;
         $result['content'] = $_LANG['login_failure'];
     }
-    die($json->encode($result));
+    die(json_encode($result));
 } /* 退出会员中心 */
 elseif ($action == 'logout') {
     if ((!isset($back_act) || empty($back_act)) && isset($GLOBALS['_SERVER']['HTTP_REFERER'])) {
@@ -1482,20 +1481,18 @@ elseif ($action == 'add_tag') {
         }
     }
 
-    $json = new JSON;
 
-    echo $json->encode($result);
+    echo json_encode($result);
     exit;
 } /* 添加收藏商品(ajax) */
 elseif ($action == 'collect') {
-        $json = new JSON();
-    $result = array('error' => 0, 'message' => '');
+            $result = array('error' => 0, 'message' => '');
     $goods_id = $_GET['id'];
 
     if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] == 0) {
         $result['error'] = 1;
         $result['message'] = $_LANG['login_please'];
-        die($json->encode($result));
+        die(json_encode($result));
     } else {
         /* 检查是否已经存在于用户的收藏夹 */
         $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('collect_goods') .
@@ -1503,7 +1500,7 @@ elseif ($action == 'collect') {
         if ($GLOBALS['db']->GetOne($sql) > 0) {
             $result['error'] = 1;
             $result['message'] = $GLOBALS['_LANG']['collect_existed'];
-            die($json->encode($result));
+            die(json_encode($result));
         } else {
             $time = gmtime();
             $sql = "INSERT INTO " . $GLOBALS['ecs']->table('collect_goods') . " (user_id, goods_id, add_time)" .
@@ -1512,11 +1509,11 @@ elseif ($action == 'collect') {
             if ($GLOBALS['db']->query($sql) === false) {
                 $result['error'] = 1;
                 $result['message'] = $GLOBALS['db']->errorMsg();
-                die($json->encode($result));
+                die(json_encode($result));
             } else {
                 $result['error'] = 0;
                 $result['message'] = $GLOBALS['_LANG']['collect_success'];
-                die($json->encode($result));
+                die(json_encode($result));
             }
         }
     }
@@ -1562,21 +1559,20 @@ elseif ($action == 'merge_order') {
 } /* 将指定订单中商品添加到购物车 */
 elseif ($action == 'return_to_cart') {
         include_once(ROOT_PATH . 'includes/lib_transaction.php');
-    $json = new JSON();
 
     $result = array('error' => 0, 'message' => '', 'content' => '');
     $order_id = isset($_POST['order_id']) ? intval($_POST['order_id']) : 0;
     if ($order_id == 0) {
         $result['error'] = 1;
         $result['message'] = $_LANG['order_id_empty'];
-        die($json->encode($result));
+        die(json_encode($result));
     }
 
     if ($user_id == 0) {
         /* 用户没有登录 */
         $result['error'] = 1;
         $result['message'] = $_LANG['login_please'];
-        die($json->encode($result));
+        die(json_encode($result));
     }
 
     /* 检查订单是否属于该用户 */
@@ -1584,12 +1580,12 @@ elseif ($action == 'return_to_cart') {
     if (empty($order_user)) {
         $result['error'] = 1;
         $result['message'] = $_LANG['order_exist'];
-        die($json->encode($result));
+        die(json_encode($result));
     } else {
         if ($order_user != $user_id) {
             $result['error'] = 1;
             $result['message'] = $_LANG['no_priv'];
-            die($json->encode($result));
+            die(json_encode($result));
         }
     }
 
@@ -1598,11 +1594,11 @@ elseif ($action == 'return_to_cart') {
     if ($message === true) {
         $result['error'] = 0;
         $result['message'] = $_LANG['return_to_cart_success'];
-        die($json->encode($result));
+        die(json_encode($result));
     } else {
         $result['error'] = 1;
         $result['message'] = $_LANG['order_exist'];
-        die($json->encode($result));
+        die(json_encode($result));
     }
 } /* 编辑使用余额支付的处理 */
 elseif ($action == 'act_edit_surplus') {
@@ -2101,7 +2097,6 @@ elseif ($action == 'email_list') {
 } /* ajax 发送验证邮件 */
 elseif ($action == 'send_hash_mail') {
         include_once(ROOT_PATH . 'includes/lib_passport.php');
-    $json = new JSON();
 
     $result = array('error' => 0, 'message' => '', 'content' => '');
 
@@ -2109,18 +2104,18 @@ elseif ($action == 'send_hash_mail') {
         /* 用户没有登录 */
         $result['error'] = 1;
         $result['message'] = $_LANG['login_please'];
-        die($json->encode($result));
+        die(json_encode($result));
     }
 
     if (send_regiter_hash($user_id)) {
         $result['message'] = $_LANG['validate_mail_ok'];
-        die($json->encode($result));
+        die(json_encode($result));
     } else {
         $result['error'] = 1;
         $result['message'] = $GLOBALS['err']->last_message();
     }
 
-    die($json->encode($result));
+    die(json_encode($result));
 } elseif ($action == 'track_packages') {
     include_once(ROOT_PATH . 'includes/lib_transaction.php');
     include_once(ROOT_PATH . 'includes/lib_order.php');
@@ -2145,7 +2140,6 @@ elseif ($action == 'send_hash_mail') {
 } elseif ($action == 'order_query') {
     $_GET['order_sn'] = trim(substr($_GET['order_sn'], 1));
     $order_sn = empty($_GET['order_sn']) ? '' : addslashes($_GET['order_sn']);
-        $json = new JSON();
 
     $result = array('error' => 0, 'message' => '', 'content' => '');
 
@@ -2153,7 +2147,7 @@ elseif ($action == 'send_hash_mail') {
         if (time() - $_SESSION['last_order_query'] <= 10) {
             $result['error'] = 1;
             $result['message'] = $_LANG['order_query_toofast'];
-            die($json->encode($result));
+            die(json_encode($result));
         }
     }
     $_SESSION['last_order_query'] = time();
@@ -2161,7 +2155,7 @@ elseif ($action == 'send_hash_mail') {
     if (empty($order_sn)) {
         $result['error'] = 1;
         $result['message'] = $_LANG['invalid_order_sn'];
-        die($json->encode($result));
+        die(json_encode($result));
     }
 
     $sql = "SELECT order_id, order_status, shipping_status, pay_status, " .
@@ -2173,7 +2167,7 @@ elseif ($action == 'send_hash_mail') {
     if (empty($row)) {
         $result['error'] = 1;
         $result['message'] = $_LANG['invalid_order_sn'];
-        die($json->encode($result));
+        die(json_encode($result));
     }
 
     $order_query = array();
@@ -2201,7 +2195,7 @@ elseif ($action == 'send_hash_mail') {
     }
     $smarty->assign('order_query', $order_query);
     $result['content'] = $smarty->fetch('library/order_query.lbi');
-    die($json->encode($result));
+    die(json_encode($result));
 } elseif ($action == 'transform_points') {
     $rule = array();
     if (!empty($_CFG['points_rule'])) {
@@ -2425,7 +2419,6 @@ elseif ($action == 'delivery_info') {
     $smarty->display('delivery_info.dwt');
 } /* ajax 物流信息 */
 elseif ($action == 'ajax_delivery_info') {
-        $json = new JSON;
 
     $_POST['order_sn'] = trim($_POST['order_sn']);
     $order_sn = empty($_POST['order_sn']) ? '' : addslashes($_POST['order_sn']);
@@ -2435,7 +2428,7 @@ elseif ($action == 'ajax_delivery_info') {
     if (empty($order_sn)) {
         $result['error'] = 1;
         $result['message'] = $_LANG['invalid_order_sn'];
-        die($json->encode($result));
+        die(json_encode($result));
     }
 
     $sql = "SELECT order_sn,shipping_name,invoice_no " .
@@ -2445,14 +2438,14 @@ elseif ($action == 'ajax_delivery_info') {
     if (empty($row)) {
         $result['error'] = 1;
         $result['message'] = $_LANG['invalid_order_sn'];
-        die($json->encode($result));
+        die(json_encode($result));
     }
     include_once(ROOT_PATH . 'includes/lib_order.php');
     $smarty->assign('order_info', $row);
     $smarty->assign('logistics_info', get_logistics_trace($order_sn, 2, $_CFG['lang']));
     $result['content'] = $smarty->fetch('library/delivery_info.lbi');
 
-    die($json->encode($result));
+    die(json_encode($result));
 } elseif ($action == 'ajax_validate_sms') {
     require('admin/includes/lib_main.php');
     $time = time();

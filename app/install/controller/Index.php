@@ -161,14 +161,13 @@ case 'get_db_list':
     $db_user    = isset($_POST['db_user']) ? trim($_POST['db_user']) : '';
     $db_pass    = isset($_POST['db_pass']) ? trim($_POST['db_pass']) : '';
 
-        $json = new JSON();
 
     $databases  = get_db_list($db_host, $db_port, $db_user, $db_pass);
     if ($databases === false) {
-        echo $json->encode(implode(',', $err->get_all()));
+        echo json_encode(implode(',', $err->get_all()));
     } else {
         $result = array('msg'=> 'OK', 'list'=>implode(',', $databases));
-        echo $json->encode($result);
+        echo json_encode($result);
     }
 
     break;
@@ -209,8 +208,7 @@ case 'create_config_file':
 
 case 'setup_ucenter':
 
-        $json = new JSON();
-    $result = array('error' => 0, 'message' => '');
+            $result = array('error' => 0, 'message' => '');
 
     $app_type   = 'ECSHOP';
     $app_name   = 'ECSHOP 网店';
@@ -232,7 +230,7 @@ case 'setup_ucenter':
     if ($dns_error) {
         $result['error'] = 2;
         $result['message'] = '';//$_LANG['ucenter_data_error'];
-        die($json->encode($result));
+        die(json_encode($result));
     }
     $ucfounderpw = trim($_POST['ucfounderpw']);
     $app_tagtemplates = 'apptagtemplates[template]='.urlencode('<a href="{url}" target="_blank">{goods_name}</a>').'&'.
@@ -270,7 +268,7 @@ case 'setup_ucenter':
             $result['message'] = $_LANG['ucenter_config_error'];
         }
     }
-    die($json->encode($result));
+    die(json_encode($result));
 
     break;
 

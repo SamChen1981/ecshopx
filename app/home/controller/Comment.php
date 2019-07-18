@@ -15,7 +15,6 @@ if (!isset($_REQUEST['cmt']) && !isset($_REQUEST['act'])) {
 }
 $_REQUEST['cmt'] = isset($_REQUEST['cmt']) ? json_str_iconv($_REQUEST['cmt']) : '';
 
-$json = new JSON;
 $result = array('error' => 0, 'message' => '', 'content' => '');
 
 if (empty($_REQUEST['act'])) {
@@ -23,7 +22,7 @@ if (empty($_REQUEST['act'])) {
      * act 参数为空
      * 默认为添加评论内容
      */
-    $cmt = $json->decode($_REQUEST['cmt']);
+    $cmt = json_decode($_REQUEST['cmt']);
     $cmt->page = 1;
     $cmt->id = !empty($cmt->id) ? intval($cmt->id) : 0;
     $cmt->type = !empty($cmt->type) ? intval($cmt->type) : 0;
@@ -209,7 +208,7 @@ if ($result['error'] == 0) {
     $result['content'] = $smarty->fetch("library/comments_list.lbi");
 }
 
-echo $json->encode($result);
+echo json_encode($result);
 
 /*------------------------------------------------------ */
 //-- PRIVATE FUNCTION

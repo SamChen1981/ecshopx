@@ -558,8 +558,7 @@ elseif ($_REQUEST['act'] == 'get_goods_fields') {
     header("Content-Type: application/unknown");
     die($zip->file());
 } elseif ($_REQUEST['act'] == 'get_goods_list') {
-        $json = new JSON;
-    $filters = $json->decode($_REQUEST['JSON']);
+            $filters = json_decode($_REQUEST['JSON']);
     $arr = get_goods_list($filters);
     $opt = array();
 

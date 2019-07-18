@@ -505,7 +505,6 @@ function get_charset_list()
 function make_json_response($content = '', $error = "0", $message = '', $append = array())
 {
 
-    $json = new JSON;
 
     $res = array('error' => $error, 'message' => $message, 'content' => $content);
 
@@ -515,7 +514,7 @@ function make_json_response($content = '', $error = "0", $message = '', $append 
         }
     }
 
-    $val = $json->encode($res);
+    $val = json_encode($res);
 
     exit($val);
 }

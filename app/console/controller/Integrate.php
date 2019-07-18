@@ -337,7 +337,6 @@ if ($_REQUEST['act'] == 'check_user') {
     $code = $_SESSION['code'];
         include_once(ROOT_PATH . "includes/modules/integrates/" . $code . ".php");
     $cls_user = new $code($_SESSION['cfg']);
-    $json = new JSON();
 
     $start = empty($_GET['start']) ? 0 : intval($_GET['start']);
     $size = empty($_GET['size']) ? 100 : intval($_GET['size']);
@@ -419,15 +418,14 @@ if ($_REQUEST['act'] == 'check_user') {
             $result['href'] = "integrate.php?act=sync";
         }
     }
-    die($json->encode($result));
+    die(json_encode($result));
 }
 
 if ($_REQUEST['act'] == 'import_user') {
-    $json = new JSON();
-    /*  20170926 阿里检测的时候不看程序是否断掉、是否注释 只管检测代码  所以问题还是要解决掉 或者删除掉  --已解决
+        /*  20170926 阿里检测的时候不看程序是否断掉、是否注释 只管检测代码  所以问题还是要解决掉 或者删除掉  --已解决
     //20170614 漏洞名称：ecshop后台getshell 漏洞描述ecshop没有对会员注册处的username过滤，保存重的用户信息时，可以直接写入shell
     // ucenter整合已被屏蔽掉了 所以下面这块儿不会走了 如果后续需要 可以考虑esacpeshellarg函数处理 暂时没有办法测试 直接die掉了
-    // die($json->encode(array('error' => 1, 'message' => 'ucenter整合已被屏蔽掉，如有疑问联系ecshop官方客服')));
+    // die(json_encode(array('error' => 1, 'message' => 'ucenter整合已被屏蔽掉，如有疑问联系ecshop官方客服')));
     */
     $cfg = $_SESSION['cfg'];
         $ucdb = new cls_mysql($cfg['db_host'], $cfg['db_user'], $cfg['db_pass'], $cfg['db_name'], $cfg['db_charset']);
@@ -490,11 +488,11 @@ if ($_REQUEST['act'] == 'import_user') {
     }
     // 保存重复的用户信息
     if (!empty($repeat_user)) {
-        @file_put_contents(ROOT_PATH . 'data/repeat_user.php', '<?php die();?>' . $json->encode($repeat_user));
+        @file_put_contents(ROOT_PATH . 'data/repeat_user.php', '<?php die();?>' . json_encode($repeat_user));
     }
     $result['error'] = 0;
     $result['message'] = $_LANG['import_user_success'];
-    die($json->encode($result));
+    die(json_encode($result));
 }
 
 /*------------------------------------------------------ */
@@ -678,8 +676,7 @@ if ($_REQUEST['act'] == 'task') {
         $size = intval($_GET['size']);
     }
 
-        $json = new JSON();
-    $result = array('message' => '', 'error' => 0, 'content' => '', 'id' => '', 'end' => 0, 'size' => $size);
+            $result = array('message' => '', 'error' => 0, 'content' => '', 'id' => '', 'end' => 0, 'size' => $size);
 
     if ($_SESSION['task']['del']['start'] < $_SESSION['task']['del']['total']) {
         /* 执行操作 */
@@ -697,7 +694,7 @@ if ($_REQUEST['act'] == 'task') {
             $result['content'] = sprintf($_LANG['task_run'], $_SESSION['task']['del']['start'], $_SESSION['task']['del']['total']);
         }
 
-        die($json->encode($result));
+        die(json_encode($result));
     } elseif ($_SESSION['task']['rename']['start'] < $_SESSION['task']['rename']['total']) {
         /* 查找要改名用户 */
         $arr = $db->getCol("SELECT user_name FROM " . $ecs->table('users') . " WHERE flag = 2 LIMIT " . $_SESSION['task']['del']['start'] . ',' . $result['size']);
@@ -712,7 +709,7 @@ if ($_REQUEST['act'] == 'task') {
             $_SESSION['task']['rename']['start'] += $result['size'];
             $result['content'] = sprintf($_LANG['task_run'], $_SESSION['task']['rename']['start'], $_SESSION['task']['rename']['total']);
         }
-        die($json->encode($result));
+        die(json_encode($result));
     } elseif ($_SESSION['task']['sync']['start'] < $_SESSION['task']['sync']['total']) {
         $code = $_SESSION['code'];
         include_once(ROOT_PATH . "includes/modules/integrates/" . $code . ".php");
@@ -735,7 +732,7 @@ if ($_REQUEST['act'] == 'task') {
             $_SESSION['task']['sync']['start'] += $result['size'];
             $result['content'] = sprintf($_LANG['task_run'], $_SESSION['task']['sync']['start'], $_SESSION['task']['sync']['total']);
         }
-        die($json->encode($result));
+        die(json_encode($result));
     } else {
         /* 记录合并用户 */
 
@@ -764,7 +761,7 @@ if ($_REQUEST['act'] == 'task') {
         unset($_SESSION['domain']);
         $sql = "UPDATE " . $ecs->table('users') . " set flag = 0, alias = '' WHERE flag > 0";
         $db->query($sql);
-        die($json->encode($result));
+        die(json_encode($result));
     }
 }
 
@@ -772,8 +769,7 @@ if ($_REQUEST['act'] == 'task') {
 //-- 保存UCenter设置
 /*------------------------------------------------------ */
 if ($_REQUEST['act'] == 'setup_ucenter') {
-            $json = new JSON();
-    $result = array('error' => 0, 'message' => '');
+                $result = array('error' => 0, 'message' => '');
 
     $app_type = 'ECSHOP';
     $app_name = $db->getOne('SELECT value FROM ' . $ecs->table('shop_config') . " WHERE code = 'shop_name'");
@@ -794,7 +790,7 @@ if ($_REQUEST['act'] == 'setup_ucenter') {
     if ($dns_error) {
         $result['error'] = 2;
         $result['message'] = '';
-        die($json->encode($result));
+        die(json_encode($result));
     }
 
     $ucfounderpw = trim($_POST['ucfounderpw']);
@@ -832,7 +828,7 @@ if ($_REQUEST['act'] == 'setup_ucenter') {
         }
     }
 
-    die($json->encode($result));
+    die(json_encode($result));
 }
 
 /* 显示整合成功信息 */

@@ -355,12 +355,11 @@ elseif ($_REQUEST['act'] == 'remove') {
 //-- 将商品加入关联
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'add_link_goods') {
-        $json = new JSON;
 
     check_authz_json('article_manage');
 
-    $add_ids = $json->decode($_GET['add_ids']);
-    $args = $json->decode($_GET['JSON']);
+    $add_ids = json_decode($_GET['add_ids']);
+    $args = json_decode($_GET['JSON']);
     $article_id = $args[0];
 
     if ($article_id == 0) {
@@ -390,12 +389,11 @@ elseif ($_REQUEST['act'] == 'add_link_goods') {
 //-- 将商品删除关联
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'drop_link_goods') {
-        $json = new JSON;
 
     check_authz_json('article_manage');
 
-    $drop_goods = $json->decode($_GET['drop_ids']);
-    $arguments = $json->decode($_GET['JSON']);
+    $drop_goods = json_decode($_GET['drop_ids']);
+    $arguments = json_decode($_GET['JSON']);
     $article_id = $arguments[0];
 
     if ($article_id == 0) {
@@ -423,9 +421,8 @@ elseif ($_REQUEST['act'] == 'drop_link_goods') {
 //-- 搜索商品
 /*------------------------------------------------------ */
 if ($_REQUEST['act'] == 'get_goods_list') {
-        $json = new JSON;
 
-    $filters = $json->decode($_GET['JSON']);
+    $filters = json_decode($_GET['JSON']);
 
     $arr = get_goods_list($filters);
     $opt = array();

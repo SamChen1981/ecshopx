@@ -21,5 +21,4 @@ $arr['type'] = $type;
 $arr['target'] = !empty($_REQUEST['target']) ? stripslashes(trim($_REQUEST['target'])) : '';
 $arr['target'] = htmlspecialchars($arr['target']);
 
-$json = new JSON;
-echo $json->encode($arr);
+echo json_encode($arr);

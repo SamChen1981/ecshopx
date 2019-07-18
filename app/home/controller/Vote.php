@@ -44,9 +44,8 @@ if (vote_already_submited($vote_id, $ip_address)) {
     $res['message'] = $_LANG['vote_success'];
 }
 
-$json = new JSON;
 
-echo $json->encode($res);
+echo json_encode($res);
 
 /*------------------------------------------------------ */
 //-- PRIVATE FUNCTION

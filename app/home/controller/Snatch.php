@@ -94,8 +94,7 @@ if ($_REQUEST['act'] == 'new_price_list') {
 
 /* 用户出价处理 */
 if ($_REQUEST['act'] == 'bid') {
-        $json = new JSON();
-    $result = array('error' => 0, 'content' => '');
+            $result = array('error' => 0, 'content' => '');
 
     $price = isset($_POST['price']) ? floatval($_POST['price']) : 0;
     $price = round($price, 2);
@@ -104,7 +103,7 @@ if ($_REQUEST['act'] == 'bid') {
     if (empty($_SESSION['user_id'])) {
         $result['error'] = 1;
         $result['content'] = $_LANG['not_login'];
-        die($json->encode($result));
+        die(json_encode($result));
     }
 
     /* 获取活动基本信息用于校验 */
@@ -123,20 +122,20 @@ if ($_REQUEST['act'] == 'bid') {
     if (empty($row)) {
         $result['error'] = 1;
         $result['content'] = $db->error();
-        die($json->encode($result));
+        die(json_encode($result));
     }
 
     if ($row['end_time'] < gmtime()) {
         $result['error'] = 1;
         $result['content'] = $_LANG['snatch_is_end'];
-        die($json->encode($result));
+        die(json_encode($result));
     }
 
     /* 检查出价是否合理 */
     if ($price < $row['start_price'] || $price > $row['end_price']) {
         $result['error'] = 1;
         $result['content'] = sprintf($GLOBALS['_LANG']['not_in_range'], $row['start_price'], $row['end_price']);
-        die($json->encode($result));
+        die(json_encode($result));
     }
 
     /* 检查用户是否已经出同一价格 */
@@ -144,7 +143,7 @@ if ($_REQUEST['act'] == 'bid') {
     if ($GLOBALS['db']->getOne($sql) > 0) {
         $result['error'] = 1;
         $result['content'] = sprintf($GLOBALS['_LANG']['also_bid'], price_format($price, false));
-        die($json->encode($result));
+        die(json_encode($result));
     }
 
     /* 检查用户积分是否足够 */
@@ -153,7 +152,7 @@ if ($_REQUEST['act'] == 'bid') {
     if ($row['cost_points'] > $pay_points) {
         $result['error'] = 1;
         $result['content'] = $_LANG['lack_pay_points'];
-        die($json->encode($result));
+        die(json_encode($result));
     }
 
     log_account_change($_SESSION['user_id'], 0, 0, 0, 0 - $row['cost_points'], sprintf($_LANG['snatch_log'], $row['snatch_name'])); //扣除用户积分
@@ -164,7 +163,7 @@ if ($_REQUEST['act'] == 'bid') {
     $smarty->assign('myprice', get_myprice($id));
     $smarty->assign('id', $id);
     $result['content'] = $smarty->fetch('library/snatch.lbi');
-    die($json->encode($result));
+    die(json_encode($result));
 }
 
 /*------------------------------------------------------ */

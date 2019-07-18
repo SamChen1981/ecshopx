@@ -1343,9 +1343,8 @@ function data_back($info, $msg = '', $post, $result = 'success')
         die('<?xml version="1.0" encoding="UTF-8"?>' . array2xml($data_arr));
     } else {
         /* json方式 */
-        $json = new JSON;
-        // error_log(print_R(json_encode($data_arr),1)."\n",3,"/tmp/chen_".date('Y-m-d',time()).".log");
-        die($json->encode($data_arr));    //把生成的返回字符串打印出来
+                // error_log(print_R(json_encode($data_arr),1)."\n",3,"/tmp/chen_".date('Y-m-d',time()).".log");
+        die(json_encode($data_arr));    //把生成的返回字符串打印出来
     }
 }
 

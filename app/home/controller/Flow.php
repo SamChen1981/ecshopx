@@ -55,14 +55,13 @@ if ($_REQUEST['step'] == 'add_to_cart') {
     }
 
     $result = array('error' => 0, 'message' => '', 'content' => '', 'goods_id' => '');
-    $json = new JSON;
 
     if (empty($_POST['goods'])) {
         $result['error'] = 1;
-        die($json->encode($result));
+        die(json_encode($result));
     }
 
-    $goods = $json->decode($_POST['goods']);
+    $goods = json_decode($_POST['goods']);
     add_log("add_to_cart==" . __LINE__ . " =goods:", $goods);
     /* 检查：如果商品有规格，而post的数据没有规格，把商品的规格属性通过JSON传到前台 */
     if (empty($goods->spec) and empty($goods->quick)) {
@@ -97,7 +96,7 @@ if ($_REQUEST['step'] == 'add_to_cart') {
             $result['parent'] = $goods->parent;
             $result['message'] = $spe_array;
 
-            die($json->encode($result));
+            die(json_encode($result));
         }
     }
 
@@ -140,7 +139,7 @@ if ($_REQUEST['step'] == 'add_to_cart') {
     }
 
     $result['confirm_type'] = !empty($_CFG['cart_confirm']) ? $_CFG['cart_confirm'] : 2;
-    die($json->encode($result));
+    die(json_encode($result));
 } elseif ($_REQUEST['step'] == 'link_buy') {
     $goods_id = intval($_GET['goods_id']);
 
@@ -637,8 +636,7 @@ if ($_REQUEST['step'] == 'add_to_cart') {
     /*------------------------------------------------------ */
     //-- 改变配送方式
     /*------------------------------------------------------ */
-        $json = new JSON;
-    $result = array('error' => '', 'content' => '', 'need_insure' => 0);
+            $result = array('error' => '', 'content' => '', 'need_insure' => 0);
 
     /* 取得购物类型 */
     $flow_type = isset($_SESSION['flow_type']) ? intval($_SESSION['flow_type']) : CART_GENERAL_GOODS;
@@ -683,15 +681,14 @@ if ($_REQUEST['step'] == 'add_to_cart') {
         $result['content'] = $smarty->fetch('library/order_total.lbi');
     }
 
-    echo $json->encode($result);
+    echo json_encode($result);
     exit;
 } elseif ($_REQUEST['step'] == 'select_insure') {
     /*------------------------------------------------------ */
     //-- 选定/取消配送的保价
     /*------------------------------------------------------ */
 
-        $json = new JSON;
-    $result = array('error' => '', 'content' => '', 'need_insure' => 0);
+            $result = array('error' => '', 'content' => '', 'need_insure' => 0);
 
     /* 取得购物类型 */
     $flow_type = isset($_SESSION['flow_type']) ? intval($_SESSION['flow_type']) : CART_GENERAL_GOODS;
@@ -732,15 +729,14 @@ if ($_REQUEST['step'] == 'add_to_cart') {
         $result['content'] = $smarty->fetch('library/order_total.lbi');
     }
 
-    echo $json->encode($result);
+    echo json_encode($result);
     exit;
 } elseif ($_REQUEST['step'] == 'select_payment') {
     /*------------------------------------------------------ */
     //-- 改变支付方式
     /*------------------------------------------------------ */
 
-        $json = new JSON;
-    $result = array('error' => '', 'content' => '', 'need_insure' => 0, 'payment' => 1);
+            $result = array('error' => '', 'content' => '', 'need_insure' => 0, 'payment' => 1);
 
     /* 取得购物类型 */
     $flow_type = isset($_SESSION['flow_type']) ? intval($_SESSION['flow_type']) : CART_GENERAL_GOODS;
@@ -783,15 +779,14 @@ if ($_REQUEST['step'] == 'add_to_cart') {
         $result['content'] = $smarty->fetch('library/order_total.lbi');
     }
 
-    echo $json->encode($result);
+    echo json_encode($result);
     exit;
 } elseif ($_REQUEST['step'] == 'select_pack') {
     /*------------------------------------------------------ */
     //-- 改变商品包装
     /*------------------------------------------------------ */
 
-        $json = new JSON;
-    $result = array('error' => '', 'content' => '', 'need_insure' => 0);
+            $result = array('error' => '', 'content' => '', 'need_insure' => 0);
 
     /* 取得购物类型 */
     $flow_type = isset($_SESSION['flow_type']) ? intval($_SESSION['flow_type']) : CART_GENERAL_GOODS;
@@ -832,15 +827,14 @@ if ($_REQUEST['step'] == 'add_to_cart') {
         $result['content'] = $smarty->fetch('library/order_total.lbi');
     }
 
-    echo $json->encode($result);
+    echo json_encode($result);
     exit;
 } elseif ($_REQUEST['step'] == 'select_card') {
     /*------------------------------------------------------ */
     //-- 改变贺卡
     /*------------------------------------------------------ */
 
-        $json = new JSON;
-    $result = array('error' => '', 'content' => '', 'need_insure' => 0);
+            $result = array('error' => '', 'content' => '', 'need_insure' => 0);
 
     /* 取得购物类型 */
     $flow_type = isset($_SESSION['flow_type']) ? intval($_SESSION['flow_type']) : CART_GENERAL_GOODS;
@@ -881,7 +875,7 @@ if ($_REQUEST['step'] == 'add_to_cart') {
         $result['content'] = $smarty->fetch('library/order_total.lbi');
     }
 
-    echo $json->encode($result);
+    echo json_encode($result);
     exit;
 } elseif ($_REQUEST['step'] == 'change_surplus') {
     /*------------------------------------------------------ */
@@ -926,8 +920,7 @@ if ($_REQUEST['step'] == 'add_to_cart') {
         }
     }
 
-    $json = new JSON();
-    die($json->encode($result));
+        die(json_encode($result));
 } elseif ($_REQUEST['step'] == 'change_integral') {
     /*------------------------------------------------------ */
     //-- 改变积分
@@ -976,8 +969,7 @@ if ($_REQUEST['step'] == 'add_to_cart') {
         }
     }
 
-    $json = new JSON();
-    die($json->encode($result));
+        die(json_encode($result));
 } elseif ($_REQUEST['step'] == 'change_bonus') {
     /*------------------------------------------------------ */
     //-- 改变红包
@@ -1023,15 +1015,13 @@ if ($_REQUEST['step'] == 'add_to_cart') {
         $result['content'] = $smarty->fetch('library/order_total.lbi');
     }
 
-    $json = new JSON();
-    die($json->encode($result));
+        die(json_encode($result));
 } elseif ($_REQUEST['step'] == 'change_needinv') {
     /*------------------------------------------------------ */
     //-- 改变发票的设置
     /*------------------------------------------------------ */
         $result = array('error' => '', 'content' => '');
-    $json = new JSON();
-    $_GET['inv_type'] = !empty($_GET['inv_type']) ? json_str_iconv(urldecode($_GET['inv_type'])) : '';
+        $_GET['inv_type'] = !empty($_GET['inv_type']) ? json_str_iconv(urldecode($_GET['inv_type'])) : '';
     $_GET['invPayee'] = !empty($_GET['invPayee']) ? json_str_iconv(urldecode($_GET['invPayee'])) : '';
     $_GET['inv_content'] = !empty($_GET['inv_content']) ? json_str_iconv(urldecode($_GET['inv_content'])) : '';
 
@@ -1046,7 +1036,7 @@ if ($_REQUEST['step'] == 'add_to_cart') {
 
     if (empty($cart_goods) || !check_consignee_info($consignee, $flow_type)) {
         $result['error'] = $_LANG['no_goods_in_cart'];
-        die($json->encode($result));
+        die(json_encode($result));
     } else {
         /* 取得购物流程设置 */
         $smarty->assign('config', $_CFG);
@@ -1769,8 +1759,7 @@ elseif ($_REQUEST['step'] == 'validate_bonus') {
 
         $result['content'] = $smarty->fetch('library/order_total.lbi');
     }
-    $json = new JSON();
-    die($json->encode($result));
+        die(json_encode($result));
 }
 /*------------------------------------------------------ */
 //-- 添加礼包到购物车
@@ -1779,14 +1768,13 @@ elseif ($_REQUEST['step'] == 'add_package_to_cart') {
         $_POST['package_info'] = json_str_iconv($_POST['package_info']);
 
     $result = array('error' => 0, 'message' => '', 'content' => '', 'package_id' => '');
-    $json = new JSON;
 
     if (empty($_POST['package_info'])) {
         $result['error'] = 1;
-        die($json->encode($result));
+        die(json_encode($result));
     }
 
-    $package = $json->decode($_POST['package_info']);
+    $package = json_decode($_POST['package_info']);
 
     /* 如果是一步购物，先清空购物车 */
     if ($_CFG['one_step_buy'] == '1') {
@@ -1815,16 +1803,15 @@ elseif ($_REQUEST['step'] == 'add_package_to_cart') {
         }
     }
     $result['confirm_type'] = !empty($_CFG['cart_confirm']) ? $_CFG['cart_confirm'] : 2;
-    die($json->encode($result));
+    die(json_encode($result));
 } elseif ($_REQUEST['step'] == 'repurchase') {
         $order_id = intval($_POST['order_id']);
     $order_id = json_str_iconv($order_id);
     $user_id = $_SESSION['user_id'];
-    $json = new JSON;
-    $order = $db->getOne('SELECT count(*) FROM ' . $ecs->table('order_info') . ' WHERE order_id = ' . $order_id . ' and user_id = ' . $user_id);
+        $order = $db->getOne('SELECT count(*) FROM ' . $ecs->table('order_info') . ' WHERE order_id = ' . $order_id . ' and user_id = ' . $user_id);
     if (!$order) {
         $result = array('error' => 1, 'message' => $_LANG['repurchase_fail']);
-        die($json->encode($result));
+        die(json_encode($result));
     }
 
     $db->query('DELETE FROM ' . $ecs->table('cart') . " WHERE rec_type = " . CART_REPURCHASE);
@@ -1837,7 +1824,7 @@ elseif ($_REQUEST['step'] == 'add_package_to_cart') {
             $result = array('error' => 1, 'message' => $_LANG['repurchase_fail']);
         }
     }
-    die($json->encode($result));
+    die(json_encode($result));
 } else {
     $flow_type = isset($_REQUEST['type']) ? $_REQUEST['type'] : CART_GENERAL_GOODS;
     $flow_type = strip_tags($flow_type);

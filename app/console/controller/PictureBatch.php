@@ -21,8 +21,7 @@ if (empty($_GET['is_ajax'])) {
     $smarty->assign('brand_list', get_brand_list());
     $smarty->display('picture_batch.htm');
 } elseif (!empty($_GET['get_goods'])) {
-        $json = new JSON();
-    $brand_id = intval($_GET['brand_id']);
+            $brand_id = intval($_GET['brand_id']);
     $cat_id = intval($_GET['cat_id']);
     $goods_where = '';
 
@@ -35,10 +34,9 @@ if (empty($_GET['is_ajax'])) {
 
     $sql = 'SELECT `goods_id`, `goods_name` FROM ' . $ecs->table('goods') . ' AS g WHERE 1 ' . $goods_where . ' LIMIT 50';
 
-    die($json->encode($db->getAll($sql)));
+    die(json_encode($db->getAll($sql)));
 } else {
-        $json = new JSON();
-    $proc_thumb = (isset($GLOBALS['shop_id']) && $GLOBALS['shop_id'] > 0);
+            $proc_thumb = (isset($GLOBALS['shop_id']) && $GLOBALS['shop_id'] > 0);
     $do_album = empty($_GET['do_album']) ? 0 : 1;
     $do_icon = empty($_GET['do_icon']) ? 0 : 1;
     $goods_id = trim($_GET['goods_id']);
@@ -108,7 +106,7 @@ if (empty($_GET['is_ajax'])) {
                 'new_time' => $_LANG['wait'],
                 'cur_id' => 'time_1'));
 
-        die($json->encode($result));
+        die(json_encode($result));
     } else {
         $result = array('error' => 0, 'message' => '', 'content' => '', 'done' => 2, 'do_album' => $do_album, 'do_icon' => $do_icon, 'goods_id' => $goods_id, 'brand_id' => $brand_id, 'cat_id' => $cat_id);
         $result['thumb'] = empty($_GET['thumb']) ? 0 : 1;
@@ -156,7 +154,7 @@ if (empty($_GET['is_ajax'])) {
                 $result['message'] = ($do_album) ? '' : $_LANG['done'];
                 /* 清除缓存 */
                 clear_cache_files();
-                die($json->encode($result));
+                die(json_encode($result));
             }
         } elseif ($result['module_no'] == 1 && $result['do_album'] == 1) {
             //商品相册
@@ -201,7 +199,7 @@ if (empty($_GET['is_ajax'])) {
             $result['content'] = implode('<br />', $err_msg);
         }
 
-        die($json->encode($result));
+        die(json_encode($result));
     }
 }
 

@@ -150,8 +150,7 @@ elseif ($_REQUEST['act'] == 'search_goods') {
     check_authz_json('tag_manage');
 
 
-    $json = new JSON;
-    $filter = $json->decode($_GET['JSON']);
+        $filter = json_decode($_GET['JSON']);
     $arr = get_goods_list($filter);
     if (empty($arr)) {
         $arr[0] = array(
@@ -196,7 +195,6 @@ elseif ($_REQUEST['act'] == 'batch_drop') {
 elseif ($_REQUEST['act'] == 'remove') {
     check_authz_json('tag_manage');
 
-        $json = new JSON;
 
     $id = intval($_GET['id']);
 
