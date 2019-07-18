@@ -2,10 +2,6 @@
 
 namespace app\common\libraries;
 
-define('APPNAME', 'ECSHOP');
-define('VERSION', 'v4.0.5');
-define('RELEASE', '20190703');
-
 /**
  * 基础类
  */

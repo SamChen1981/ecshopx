@@ -1,5 +1,15 @@
 <?php
 
+define('APPNAME', 'ECSHOP');
+define('VERSION', 'v4.0.5');
+define('RELEASE', '20190703');
+define('EC_CHARSET', 'utf-8');
+define('ADMIN_PATH', 'admin');
+define('AUTH_KEY', 'this is a key');
+define('OLD_AUTH_KEY', '');
+define('API_TIME', '');
+define('STORE_KEY', '');
+
 /* 图片处理相关常数 */
 define('ERR_INVALID_IMAGE', 1);
 define('ERR_NO_GD', 2);
