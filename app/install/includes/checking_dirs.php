@@ -8,6 +8,9 @@ if (!defined('IN_ECS'))
 $checking_dirs = array(
                     /* 取消检测uc_client */
                     //'uc_client/data',
+                    'h5',
+                    '../appserver',
+                    '../appserver/storage',
                     'cert',
                     'images',
                     'images/upload',

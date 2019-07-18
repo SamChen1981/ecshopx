@@ -3,7 +3,7 @@
 /**
  * ECSHOP 安装程序 之 模型
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -84,7 +84,7 @@ function get_system_info()
     $system_info[] = array($_LANG['php_ver'], PHP_VERSION);
 
     /* 检查MYSQL支持情况 */
-    $mysql_enabled = function_exists('mysql_connect') ? $_LANG['support'] : $_LANG['not_support'];
+    $mysql_enabled = function_exists('mysqli_connect') ? $_LANG['support'] : $_LANG['not_support'];
     $system_info[] = array($_LANG['does_support_mysql'], $mysql_enabled);
 
     /* 检查图片处理函数库 */
@@ -95,7 +95,7 @@ function get_system_info()
         if (PHP_VERSION >= '4.3' && function_exists('gd_info'))
         {
             $gd_info = gd_info();
-            $jpeg_enabled = ($gd_info['JPG Support']        === true) ? $_LANG['support'] : $_LANG['not_support'];
+            $jpeg_enabled = ($gd_info['JPEG Support']        === true) ? $_LANG['support'] : $_LANG['not_support'];
             $gif_enabled  = ($gd_info['GIF Create Support'] === true) ? $_LANG['support'] : $_LANG['not_support'];
             $png_enabled  = ($gd_info['PNG Support']        === true) ? $_LANG['support'] : $_LANG['not_support'];
         }
@@ -159,8 +159,7 @@ function get_db_list($db_host, $db_port, $db_user, $db_pass)
     $databases = array();
     $filter_dbs = array('information_schema', 'mysql');
     $db_host = construct_db_host($db_host, $db_port);
-    $conn = @mysql_connect($db_host, $db_user, $db_pass);
-
+    $conn = @mysqli_connect($db_host, $db_user, $db_pass);
     if ($conn === false)
     {
         $err->add($_LANG['connect_failed']);
@@ -168,10 +167,10 @@ function get_db_list($db_host, $db_port, $db_user, $db_pass)
     }
     keep_right_conn($conn);
 
-    $result = mysql_query('SHOW DATABASES', $conn);
+    $result = mysqli_query($conn, 'SHOW DATABASES');
     if ($result !== false)
     {
-        while (($row = mysql_fetch_assoc($result)) !== false)
+        while ($row = mysqli_fetch_assoc($result)))
         {
             if (in_array($row['Database'], $filter_dbs))
             {
@@ -185,7 +184,7 @@ function get_db_list($db_host, $db_port, $db_user, $db_pass)
         $err->add($_LANG['query_failed']);
         return false;
     }
-    @mysql_close($conn);
+    @mysqli_close($conn);
 
     return $databases;
 }
@@ -245,7 +244,7 @@ function create_database($db_host, $db_port, $db_user, $db_pass, $db_name)
 {
     global $err, $_LANG;
     $db_host = construct_db_host($db_host, $db_port);
-    $conn = @mysql_connect($db_host, $db_user, $db_pass);
+    $conn = @mysqli_connect($db_host, $db_user, $db_pass);
 
     if ($conn === false)
     {
@@ -254,18 +253,18 @@ function create_database($db_host, $db_port, $db_user, $db_pass, $db_name)
         return false;
     }
 
-    $mysql_version = mysql_get_server_info($conn);
+    $mysql_version = mysqli_get_server_info($conn);
     keep_right_conn($conn, $mysql_version);
-    if (mysql_select_db($db_name, $conn) === false)
+    if (mysqli_select_db($conn, $db_name) === false)
     {
         $sql = $mysql_version >= '4.1' ? "CREATE DATABASE $db_name DEFAULT CHARACTER SET " . EC_DB_CHARSET : "CREATE DATABASE $db_name";
-        if (mysql_query($sql, $conn) === false)
+        if (mysqli_query($conn, $sql) === false)
         {
             $err->add($_LANG['cannt_create_database']);
             return false;
         }
     }
-    @mysql_close($conn);
+    @mysqli_close($conn);
 
     return true;
 }
@@ -282,16 +281,16 @@ function keep_right_conn($conn, $mysql_version='')
 {
     if ($mysql_version === '')
     {
-        $mysql_version = mysql_get_server_info($conn);
+        $mysql_version = mysqli_get_server_info($conn);
     }
 
     if ($mysql_version >= '4.1')
     {
-        mysql_query('SET character_set_connection=' . EC_DB_CHARSET . ', character_set_results=' . EC_DB_CHARSET . ', character_set_client=binary', $conn);
+        mysqli_query($conn, 'SET character_set_connection=' . EC_DB_CHARSET . ', character_set_results=' . EC_DB_CHARSET . ', character_set_client=binary');
 
         if ($mysql_version > '5.0.1')
         {
-            mysql_query("SET sql_mode=''", $conn);
+            mysqli_query($conn, "SET sql_mode=''");
         }
     }
 }
@@ -760,7 +759,7 @@ function get_spt_code()
     $db = new cls_mysql($db_host, $db_user, $db_pass, $db_name);
     $ecs = new ECS($db_name, $prefix);
     $hash_code = $db->getOne("SELECT value FROM " . $ecs->table('shop_config') . " WHERE code='hash_code'");
-    $spt = '<script type="text/javascript" src="http://api.ecshop.com/record.php?';
+    $spt = '<script type="text/javascript" src="https://api-ecshop.xyunqi.com/record.php?';
     $spt .= "url=" .urlencode($ecs->url()). "&mod=install&version=" .VERSION. "&hash_code=" . $hash_code . "&charset=" .EC_CHARSET. "&language=" . $GLOBALS['installer_lang'] . "\"></script>";
 
     return $spt;

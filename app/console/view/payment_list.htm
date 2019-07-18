@@ -50,6 +50,7 @@
         {else}
           <a href="javascript:confirm_redirect(lang_removeconfirm, 'payment.php?act=uninstall&code={$module.code}')">{$lang.uninstall}</a>
           <a href="payment.php?act=edit&code={$module.code}">{$lang.edit}</a>
+          {if $module.code eq "yunqi"}<a href="{$account_url}" target="_blank">{$lang.detail_account}</a>{/if}
         {/if}
 
       {else}
@@ -57,14 +58,13 @@
           <a href="payment.php?act=install&code={$module.code}">{$lang.install}{$lang.tenpay} </a><br />
                {if $tenpayc2c.install eq "1"}
             <a href="javascript:confirm_redirect(lang_removeconfirm, 'payment.php?act=uninstall&code=tenpayc2c')">{$lang.uninstall}{$lang.tenpayc2c}</a>
-        <a href="payment.php?act=edit&code=tenpayc2c">{$lang.edit}</a>
-
+              <a href="payment.php?act=edit&code=tenpayc2c">{$lang.edit}</a>
               {else}
               <a href="payment.php?act=install&code=tenpayc2c">{$lang.install}{$lang.tenpayc2c}</a>
               {/if}
 
            {else}
-           <a href="payment.php?act=install&code={$module.code}">{$lang.install}</a>
+             <a href="payment.php?act=install&code={$module.code}">{$lang.install}</a>
            {/if}
 
       {/if}
@@ -84,5 +84,15 @@ onload = function()
 }
 {/literal}
 //-->
+function check_yunqi(){
+  Ajax.call('payment.php?is_ajax=1&act=check_yunqi','', set_yunqi, 'GET', 'JSON');
+}
+function set_yunqi(result){
+  if(result.status==true){
+    window.location.href="payment.php?act=install&code=yunqi";
+  }else{
+	get_certificate();
+  }
+}
 </script>
 {include file="pagefooter.htm"}

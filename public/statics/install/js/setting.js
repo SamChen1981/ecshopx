@@ -220,7 +220,7 @@ function doOthers() {
 function goToDone() {
     stopNotice();
     window.setTimeout(function () {
-        location.href = "./index.php?lang=" + getAddressLang() + "&step=done";
+        location.href = "./index.php?lang=" + getAddressLang() + "&step=done&type=yunqi";
     }, 1000);
 }
 

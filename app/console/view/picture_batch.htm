@@ -116,7 +116,7 @@ function add_search_goods(obj)
     }
     var goods_div = document.createElement("div");
     goods_div.id = 'goods_' + goods_id;
-    goods_div.innerHTML = '<input type="hidden" name="multi_goods_id[]" value="' + goods_id + '">' + goods_name + '&nbsp;&nbsp;<img style="cursor: pointer;" onclick="del_search_goods(\'' + 'goods_' + goods_id + '\');" src="images/no.gif"/>';
+    goods_div.innerHTML = '<input type="hidden" name="multi_goods_id[]" value="' + goods_id + '">' + goods_name + '&nbsp;&nbsp;<img style="cursor: pointer;" onclick="del_search_goods(\'' + 'goods_' + goods_id + '\');" src="images/no.svg" width="20">';
     document.getElementById('goods_list').appendChild(goods_div);
 }
 function del_search_goods(gid)

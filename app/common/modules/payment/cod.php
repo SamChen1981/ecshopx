@@ -69,6 +69,19 @@ class cod
 {
     function __construct()
     {
+        $this->cod();
+    }
+
+    /**
+     * 构造函数
+     *
+     * @access  public
+     * @param
+     *
+     * @return void
+     */
+    function cod()
+    {
     }
 
     /**

@@ -70,6 +70,19 @@ class tenpay
 {
     function __construct()
     {
+        $this->tenpay();
+    }
+
+    /**
+     * 构造函数
+     *
+     * @access  public
+     * @param
+     *
+     * @return void
+     */
+    function tenpay()
+    {
     }
 
     /**

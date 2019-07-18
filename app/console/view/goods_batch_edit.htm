@@ -40,7 +40,7 @@
       <input name="goods_number[{$goods.goods_id}]" type="text" value="{$goods.goods_number}" size="8" style="text-align:right" {if $goods.is_real eq 0}readonly="readonly"{/if} />    </td>
     <td><select name="brand_id[{$goods.goods_id}]"><option value="0" {if $goods.brand_id eq 0}selected{/if}>{$lang.select_please}</option>{html_options options=$brand_list selected=$goods.brand_id}</select></td>
   </tr>
-    {if product_exists}
+    {if $product_exists}
       {foreach from=$product_list[$goods.goods_id] item=products}
       <tr align="center">
         <td class="first-cell" scope="row">{$products.product_sn}</td>

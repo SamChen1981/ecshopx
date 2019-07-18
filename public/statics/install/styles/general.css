@@ -19,7 +19,7 @@ body {
   margin: 0px;
   padding: 0px;
   text-align:center;
-  background: #ddeef2;
+  background: #dce9f1;
 }
 
 p{
@@ -45,7 +45,7 @@ h4 {
 }
 
 #setting h3,#checking h3 {
-  background:#80BDCB;
+  background:#41a5e1;
   margin:1px;
   padding:5px 15px;
   color: #FFF;
@@ -54,7 +54,7 @@ h4 {
 
 #logos {
   margin:0 auto;
-  background:#298296;
+  background:#41a5e1;
 }
 
 #logos-inside {
@@ -64,20 +64,25 @@ h4 {
 }
 
 #lang-menu {
-  height:21px;
-  padding-top:3px;
   margin:0 0 20px 0;
-  background:url(../../admin/images/th_bg.gif) repeat-x top center;
+  background:#f5f5f5;
   color:#333;
   border-bottom:1px solid #bbdde5;
 }
 
 #lang-menu-inside {
+  line-height:50px;
+  color:#515151;
   text-align:right;
   display: block;
-  width:900px;
-  margin:0 auto;
-
+  padding-right:100px;
+}
+#lang-menu-inside label{
+  vertical-align:middle;
+}
+#lang-menu-inside input{
+  vertical-align:middle;
+  margin:0;
 }
 
 #wrapper {

@@ -132,7 +132,7 @@
       <td><input type="text" name="cfg[db_name]" value="{$cfg.db_name}" />{$lang.require_field}</td>
     </tr>
     <tr>
-      <td class="label"><a href="javascript:showNotice('noticeGoodsSN');" title="{$lang.form_notice}"><img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.lable_db_chartset}</td>
+      <td class="label"><a href="javascript:showNotice('noticeGoodsSN');" title="{$lang.form_notice}"><img src="images/notice.svg" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.lable_db_chartset}</td>
       <td><select name="cfg[db_charset]">{html_options options=$set_list selected=$cfg.db_charset}</select><input type="checkbox" name="cfg[is_latin1]" value="1" {if $cfg.is_latin1}checked="checked"{/if} />{$lang.lable_is_latin1}{$lang.require_field}
       <span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="noticeGoodsSN">{$lang.notice_latin1}</span>
       </td>

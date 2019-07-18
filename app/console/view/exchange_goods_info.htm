@@ -11,7 +11,7 @@
       <input type="button" value="{$lang.button_search}" class="button" onclick="searchGoods()" {if $form_action eq 'update'} disabled="true" {/if}></td>
     </tr>
     <tr>
-      <td class="label"><a href="javascript:showNotice('noticegoodsid');" title="{$lang.form_notice}"><img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.goodsid}</td>
+      <td class="label"><a href="javascript:showNotice('noticegoodsid');" title="{$lang.form_notice}"><img src="images/notice.svg" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.goodsid}</td>
       <td>
         <select name="goods_id">
         {$goods.option}
@@ -20,7 +20,7 @@
        <br /><span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="noticegoodsid">{$lang.notice_goodsid}</span></td>
     </tr>
     <tr>
-      <td class="label"><a href="javascript:showNotice('noticepackagePrice');" title="{$lang.form_notice}"><img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.integral}</td>
+      <td class="label"><a href="javascript:showNotice('noticepackagePrice');" title="{$lang.form_notice}"><img src="images/notice.svg" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.integral}</td>
       <td><input type="text" name="exchange_integral" maxlength="60" size="20" value="{$goods.exchange_integral}" />{$lang.require_field}<br /><span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="noticepackagePrice">{$lang.notice_integral}</span></td>
     </tr>
     <tr>

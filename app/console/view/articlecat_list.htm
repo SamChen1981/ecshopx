@@ -34,7 +34,7 @@
       {$cat.cat_desc|escape}
     </td>
     <td width="10%" align="right" class="nowrap" valign="top"><span onclick="listTable.edit(this, 'edit_sort_order', {$cat.cat_id})">{$cat.sort_order}</span></td>
-    <td width="10%" class="nowrap" valign="top"><img src="images/{if $cat.show_in_nav eq '1'}yes{else}no{/if}.gif" onclick="listTable.toggle(this, 'toggle_show_in_nav', {$cat.cat_id})" /></td>
+    <td width="10%" class="nowrap" valign="top"><img src="images/{if $cat.show_in_nav eq '1'}yes{else}no{/if}.svg" width="20" onclick="listTable.toggle(this, 'toggle_show_in_nav', {$cat.cat_id})" /></td>
     <td width="24%" align="right" class="nowrap" valign="top">
       <a href="articlecat.php?act=edit&amp;id={$cat.cat_id}">{$lang.edit}</a>
       {if $cat.cat_type neq 2 and $cat.cat_type neq 3 and $cat.cat_type neq 4}|

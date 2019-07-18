@@ -37,7 +37,26 @@ $_LANG['label_user_surplus'] = '资金管理';
 $_LANG['label_track_packages'] = '跟踪包裹';
 $_LANG['label_transform_points'] = '积分兑换';
 $_LANG['label_logout'] = '退出';
-
+$_LANG['label_account_bind'] = '账户绑定';
+$_LANG['bind_wechat'] = '绑定微信';
+$_LANG['bind_wechat_acc'] = '绑定微信账户';
+$_LANG['bind_oldAccount'] = '绑定老账户';
+$_LANG['Unbind'] = '解除绑定';
+$_LANG['sweep_bind_wechat'] = '扫一扫，绑定微信号';
+$_LANG['expand'] = '展开';
+$_LANG['collapse'] = '收起';
+$_LANG['confirm_unbind'] = '您确定要解除绑定吗？';
+$_LANG['use_shopex_acc'] = '解除绑定后请用ECshop账号';
+$_LANG['login'] = '登录';
+$_LANG['confirm'] = '确认';
+$_LANG['cancel'] = '取消';
+$_LANG['unbind_success'] = '解绑成功';
+$_LANG['has_bind'] = '已绑定';
+$_LANG['un_bind'] = '解绑';
+$_LANG['associate_wechat'] = '您正在使用ecshop账号关联微信账号';
+$_LANG['mind_account'] = '请您牢记该ECshop账号';
+$_LANG['unbind_des'] = '解绑后需要使用此账号进行登录，解绑后的账号仍可正常使用，订单等信息不会丢失，忘记密码请在登录页找回密码';
+$_LANG['associate_des'] = '该账号下关联微信账号将全部解绑';
 /* 会员余额(预付款) */
 $_LANG['add_surplus_log'] = '查看帐户明细';
 $_LANG['view_application'] = '查看申请记录';

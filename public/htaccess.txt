@@ -17,6 +17,7 @@ RewriteRule ^feed-type([^-]+)\.xml$       feed\.php\?type=$1 [L]
 RewriteRule ^feed\.xml$                 feed\.php [L]
 
 RewriteRule ^category-([0-9]+)-b([0-9]+)-min([0-9]+)-max([0-9]+)-attr([^-]*)-([0-9]+)-(.+)-([a-zA-Z]+)(.*)\.html$  category\.php\?id=$1&brand=$2&price_min=$3&price_max=$4&filter_attr=$5&page=$6&sort=$7&order=$8 [QSA,L]
+RewriteRule ^category-([0-9]+)-min([0-9]+)-max([0-9]+)-attr([^-]*)-([0-9]+)-(.+)-([a-zA-Z]+)(.*)\.html$  category\.php\?id=$1&price_min=$2&price_max=$3&filter_attr=$4&page=$5&sort=$6&order=$7 [QSA,L]
 RewriteRule ^category-([0-9]+)-b([0-9]+)-min([0-9]+)-max([0-9]+)-attr([^-]*)(.*)\.html$                            category\.php\?id=$1&brand=$2&price_min=$3&price_max=$4&filter_attr=$5 [QSA,L]
 RewriteRule ^category-([0-9]+)-b([0-9]+)-([0-9]+)-(.+)-([a-zA-Z]+)(.*)\.html$                                      category\.php\?id=$1&brand=$2&page=$3&sort=$4&order=$5 [QSA,L]
 RewriteRule ^category-([0-9]+)-b([0-9]+)-([0-9]+)(.*)\.html$                                                       category\.php\?id=$1&brand=$2&page=$3  [QSA,L]

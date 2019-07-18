@@ -24,10 +24,10 @@
     <td align="right"><span {if $rank.special_rank != 1} onclick="listTable.edit(this, 'edit_min_points', {$rank.rank_id})" {/if} >{$rank.min_points}</span></td>
     <td align="right"><span {if $rank.special_rank != 1} onclick="listTable.edit(this, 'edit_max_points', {$rank.rank_id})" {/if} >{$rank.max_points}</span></td>
     <td align="right"><span onclick="listTable.edit(this, 'edit_discount', {$rank.rank_id})">{$rank.discount}</span></td>
-    <td align="center"><img src="images/{if $rank.special_rank}yes{else}no{/if}.gif" onclick="listTable.toggle(this, 'toggle_special', {$rank.rank_id})" /></td>
-    <td align="center"><img src="images/{if $rank.show_price}yes{else}no{/if}.gif" onclick="listTable.toggle(this, 'toggle_showprice', {$rank.rank_id})" /></td>
+    <td align="center"><img src="images/{if $rank.special_rank}yes{else}no{/if}.svg" width="20" onclick="listTable.toggle(this, 'toggle_special', {$rank.rank_id})" /></td>
+    <td align="center"><img src="images/{if $rank.show_price}yes{else}no{/if}.svg" width="20" onclick="listTable.toggle(this, 'toggle_showprice', {$rank.rank_id})" /></td>
     <td align="center">
-    <a href="javascript:;" onclick="listTable.remove({$rank.rank_id}, '{$lang.drop_confirm}')" title="{$lang.remove}"><img src="images/icon_drop.gif" border="0" height="16" width="16"></a></td>
+    <a href="javascript:;" onclick="listTable.remove({$rank.rank_id}, '{$lang.drop_confirm}')" title="{$lang.remove}"><img src="images/icon_drop.svg" border="0" height="16" width="16"></a></td>
   </tr>
   {/foreach}
   </table>

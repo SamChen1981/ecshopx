@@ -18,8 +18,8 @@
     <td class="first-cell" >{$list.role_name}</td>
     <td class="first-cell" >{$list.role_describe}</td>
     <td align="center">
-      <a href="role.php?act=edit&id={$list.role_id}" title="{$lang.edit}"><img src="images/icon_edit.gif" border="0" height="16" width="16"></a>&nbsp;&nbsp;
-      <a href="javascript:;" onclick="listTable.remove({$list.role_id}, '{$lang.drop_confirm}')" title="{$lang.remove}"><img src="images/icon_drop.gif" border="0" height="16" width="16"></a></td>
+      <a href="role.php?act=edit&id={$list.role_id}" title="{$lang.edit}">{$lang.edit}</a>&nbsp;&nbsp;
+      <a href="javascript:;" onclick="listTable.remove({$list.role_id}, '{$lang.drop_confirm}')" title="{$lang.remove}">{$lang.remove}</a></td>
   </tr>
   {/foreach}
 </table>

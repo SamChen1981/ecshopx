@@ -13,12 +13,14 @@
   <tr>
     <td class="label">{$lang.label_start_time}</td>
     <td><input name="start_time" type="text" id="start_time" value="{$favourable.start_time}" readonly="readonly" />
-        <input name="selbtn1" type="button" id="selbtn1" onclick="return showCalendar('start_time', '%Y-%m-%d %H:%M', '24', false, 'selbtn1');" value="{$lang.btn_select}" class="button" /></td>
+      <button name="selbtn1" type="button" id="selbtn1" onclick="return showCalendar('start_time', '%Y-%m-%d %H:%M', '24', false, 'selbtn1');" class="cal"><img src="images/cal.png" alt=""></button>
+      </td>
   </tr>
   <tr>
     <td class="label">{$lang.label_end_time}</td>
     <td><input name="end_time" type="text" id="end_time" value="{$favourable.end_time}" readonly="readonly" />
-        <input name="selbtn2" type="button" id="selbtn2" onclick="return showCalendar('end_time', '%Y-%m-%d %H:%M', '24', false, 'selbtn2');" value="{$lang.btn_select}" class="button" /></td>
+      <button name="selbtn2" type="button" id="selbtn2" onclick="return showCalendar('end_time', '%Y-%m-%d %H:%M', '24', false, 'selbtn2');" class="cal"><img src="images/cal.png" alt=""></button>
+      </td>
   </tr>
   <tr>
     <td class="label">{$lang.label_user_rank}</td>
@@ -53,7 +55,7 @@
   </tr>
   <tr>
     <td class="label"><a href="javascript:showNotice('NoticeActType');" title="{$lang.form_notice}">
-        <img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.label_act_type}</td>
+        <img src="images/notice.svg" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.label_act_type}</td>
     <td><select name="act_type" id="act_type" onchange="changeType(this.value)">
       <option value="0" {if $favourable.act_type eq 0}selected="selected"{/if}>{$lang.fat_goods}</option>
       <option value="1" {if $favourable.act_type eq 1}selected="selected"{/if}>{$lang.fat_price}</option>

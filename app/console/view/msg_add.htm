@@ -4,7 +4,7 @@
 <div>
 {foreach from=$msg_list item=msg}
 <div style="margin-bottom:10px;border:1px solid #ccc;background:white;">
-<div style="border-bottom: 1px solid #eee;position:relative;"><strong>{$msg.msg_title|escape:"html"}</strong><a href="user_msg.php?act=remove_msg&order_id={$order_id}&user_id={$user_id}&msg_id={$msg.msg_id}" style="position:absolute ;right:5px" onclick="if (!confirm('{$lang.confirm_delete}')) return false;"><img src="images/icon_drop.gif"  border="0" /></a></div>
+<div style="border-bottom: 1px solid #eee;position:relative;"><strong>{$msg.msg_title|escape:"html"}</strong><a href="user_msg.php?act=remove_msg&order_id={$order_id}&user_id={$user_id}&msg_id={$msg.msg_id}" style="position:absolute ;right:5px" onclick="if (!confirm('{$lang.confirm_delete}')) return false;"><img src="images/icon_drop.svg"  border="0" width="16" height="16"></a></div>
 <div>{$msg.msg_content|escape:"html"|nl2br}</div>
 {if $msg.message_img}
 <div align="right">

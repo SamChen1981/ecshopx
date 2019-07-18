@@ -23,7 +23,7 @@
 </div>
 <!--当前位置 end-->
 <div class="blank"></div>
-<div class="block clearfix">
+<div class="block clearfix userpage">
   <!--left start-->
   <div class="AreaL">
     <div class="box">
@@ -178,26 +178,40 @@
        <!-- {if $action eq 'order_list'} -->
        <h5><span>{$lang.label_order}</span></h5>
        <div class="blank"></div>
-       <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="#dddddd">
-          <tr align="center">
-            <td bgcolor="#ffffff">{$lang.order_number}</td>
-            <td bgcolor="#ffffff">{$lang.order_addtime}</td>
-            <td bgcolor="#ffffff">{$lang.order_money}</td>
-            <td bgcolor="#ffffff">{$lang.order_status}</td>
-            <td bgcolor="#ffffff">{$lang.handle}</td>
-          </tr>
-          <!--{foreach from=$orders item=item}-->
-          <tr>
-            <td align="center" bgcolor="#ffffff"><a href="user.php?act=order_detail&order_id={$item.order_id}" class="f6">{$item.order_sn}</a></td>
-            <td align="center" bgcolor="#ffffff">{$item.order_time}</td>
-            <td align="right" bgcolor="#ffffff">{$item.total_fee}</td>
-            <td align="center" bgcolor="#ffffff">{$item.order_status}</td>
-            <td align="center" bgcolor="#ffffff"><font class="f6">{$item.handler}</font></td>
-          </tr>
-          <!--{/foreach}-->
+       <table width="100%" border="0" cellpadding="5" cellspacing="1">
+          <thead bgcolor="#757575" style="color:#fff">
+            <tr align="center">
+              <td>{$lang.order_number}</td>
+              <td>{$lang.order_addtime}</td>
+              <td>{$lang.order_money}</td>
+              <td>{$lang.order_status}</td>
+              <td>{$lang.handle}</td>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- {foreach from=$orders item=item} -->
+            <tr align="center">
+              <td><a href="user.php?act=order_detail&order_id={$item.order_id}" class="f6">{$item.order_sn}</a></td>
+              <td>{$item.order_time}</td>
+              <td>{$item.total_fee}</td>
+              <td style="position:relative">{$item.order_status}
+              <!-- {if $open_logistics_trace and ($item.shipping_status == 1 or $item.shipping_status == 2)} -->
+              <br>
+              <div onmouseover="showPop(this,{$item.order_sn});" onmouseout="hidePop(this);">
+                <a href="user.php?act=delivery_info&order_sn={$item.order_sn}" class="link-blue">{$lang.delivery_info}</a>
+                <div id="delivery_detail_{$item.order_sn}" class="list-pop hide">
+                </div>
+              </div>
+              <!-- {/if} -->
+              </td>
+              <td><font class="f6">{$item.handler}</font><br><a href="javascript:;" onclick="repurchase({$item.order_id})">{$lang.repurchase}</a></td>
+            </tr>
+            <!-- {/foreach} -->
+          </tbody>
           </table>
         <div class="blank5"></div>
        <!-- #BeginLibraryItem "/library/pages.lbi" --><!-- #EndLibraryItem -->
+       <!-- {if $no_bind_erp == 1} -->
        <div class="blank5"></div>
        <h5><span>{$lang.merge_order}</span></h5>
        <div class="blank"></div>
@@ -232,6 +246,7 @@
             </tr>
           </table>
         </form>
+        <!-- {/if} -->
        <!--{/if}-->
       <!--#订单列表界面 end-->
        <!--#包裹状态查询界面 start-->
@@ -246,7 +261,7 @@
         <!--{foreach from=$orders item=item}-->
         <tr>
           <td align="center" bgcolor="#ffffff"><a href="user.php?act=order_detail&order_id={$item.order_id}">{$item.order_sn}</a></td>
-          <td align="center" bgcolor="#ffffff">{$item.query_link}</td>
+          <td align="center" bgcolor="#ffffff"><a href="user.php?act=delivery_info&order_sn={$item.order_sn}">{$lang.delivery_status}</a></td>
         </tr>
         <!--{/foreach}-->
       </table>
@@ -265,7 +280,7 @@
       <!--{/if}-->
     <!--#包裹状态查询界面 end-->
      <!-- ==========订单详情页面,包括：订单状态，商品列表，费用总计，收货人信息，支付方式，其它信息========== -->
-      <!--{if $action eq order_detail} -->
+      <!--{if $action eq "order_detail"} -->
         <h5><span>{$lang.order_status}</span></h5>
         <div class="blank"></div>
          <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="#dddddd">
@@ -286,7 +301,24 @@
         </tr>
         <tr>
           <td align="right" bgcolor="#ffffff">{$lang.detail_pay_status}：</td>
-          <td align="left" bgcolor="#ffffff">{$order.pay_status}&nbsp;&nbsp;&nbsp;&nbsp;{if $order.order_amount gt 0}{$order.pay_online}{/if}{$order.pay_time}</td>
+          <td align="left" bgcolor="#ffffff">{$order.pay_status}&nbsp;&nbsp;&nbsp;&nbsp;{if $order.order_amount gt 0}
+            <!-- {if $order.pay_code=='yunqi'} -->
+                <strong>{$payment.pay_name} <i  id="payMethod">支付宝</i></strong>
+                <br>
+                <span class="item">
+                    <input type="radio" id="alipay" name="yunqi_paymethod" value="alipay" checked onclick="checkIpt(this);">
+                    <label for="paybal" class="alipay-image"></label>
+                  </span>
+                  <span class="item">
+                    <input type="radio" id="wxpay" name="yunqi_paymethod" value="wxpay" onclick="checkIpt(this);">
+                    <label for="wechat" class="wechat-image"></label>
+                  </span>
+                <div id="yunqi_online">{$order.pay_online}</div>
+
+            <!-- {else} -->
+            {$order.pay_online}
+            <!-- {/if} -->
+            {/if}{$order.pay_time}</td>
         </tr>
         <tr>
           <td align="right" bgcolor="#ffffff">{$lang.detail_shipping_status}：</td>
@@ -295,7 +327,7 @@
         <!-- {if $order.invoice_no}-->
         <tr>
           <td align="right" bgcolor="#ffffff">{$lang.consignment}：</td>
-          <td align="left" bgcolor="#ffffff">{$order.invoice_no}</td>
+          <td align="left" bgcolor="#ffffff"><a href="user.php?act=delivery_info&order_sn={$order.order_sn}" target="_blank">{$order.invoice_no}</a></td>
         </tr>
         <!--{/if}-->
         <!--{if $order.to_buyer}-->
@@ -458,17 +490,6 @@
                 <td align="right" bgcolor="#ffffff">{$lang.backup_phone}：</td>
                 <td align="left" bgcolor="#ffffff"><input name="mobile" type="text"  class="inputBg" value="{$order.mobile|escape}" size="25" /></td>
               </tr>
-              <!-- {if $order.exist_real_goods} -->
-              <!-- 只有虚拟商品处理-->
-              <tr>
-                <td align="right" bgcolor="#ffffff">{$lang.sign_building}：</td>
-                <td align="left" bgcolor="#ffffff"><input name="sign_building" class="inputBg" type="text" value="{$order.sign_building|escape}" size="25" />
-                </td>
-                <td align="right" bgcolor="#ffffff">{$lang.deliver_goods_time}：</td>
-                <td align="left" bgcolor="#ffffff"><input name="best_time" type="text" class="inputBg" value="{$order.best_time|escape}" size="25" />
-                </td>
-              </tr>
-              <!-- {/if}-->
               <tr>
                 <td colspan="4" align="center" bgcolor="#ffffff"><input type="hidden" name="act" value="save_order_address" />
                   <input type="hidden" name="order_id" value="{$order.order_id}" />
@@ -666,12 +687,35 @@
               <td bgcolor="#ffffff" width="17%">{$lang.pay_fee}</td>
             </tr>
             <!-- {foreach from=$payment item=list} -->
+            <!-- {if $list.pay_code!='yunqi'} -->
             <tr>
               <td bgcolor="#ffffff" align="left">
               <input type="radio" name="payment_id" value="{$list.pay_id}" />{$list.pay_name}</td>
               <td bgcolor="#ffffff" align="left">{$list.pay_desc}</td>
               <td bgcolor="#ffffff" align="center">{$list.pay_fee}</td>
             </tr>
+            <!-- {else} -->
+            <tr>
+              <td rowspan=2 valign="middle" bgcolor="#ffffff">
+                <input type="radio" id="yunqi_payment" name="payment_id" value="{$list.pay_id}" />{$list.pay_name}<strong><i style="display:inline-block;width: 70px ;text-align: center" id="payMethod">（支付宝）</i></strong> </td>
+                <td valign="top" bgcolor="#ffffff">{$list.pay_desc}</td>
+              
+              <td align="right" bgcolor="#ffffff" valign="top">{$list.format_pay_fee}</td>
+            </tr>
+            <tr>
+              <td align="left" bgcolor="#ffffff" valign="top" colspan=3>
+
+                  <span class="item">
+                    <input type="radio" id="alipay" name="yunqi_paymethod" value="alipay" checked onclick="checkIptList(this);">
+                    <label for="paybal" class="alipay-image"></label>
+                  </span>
+                  <span class="item">
+                    <input type="radio" id="wxpay" name="yunqi_paymethod" value="wxpay" onclick="checkIptList(this);">
+                    <label for="wechat" class="wechat-image"></label>
+                  </span>
+              </td>
+            </tr>
+            <!-- {/if} -->
             <!-- {/foreach} -->
             <tr>
         <td bgcolor="#ffffff" colspan="3"  align="center">
@@ -704,7 +748,24 @@
             <td bgcolor="#ffffff">{$payment.pay_desc}</td>
           </tr>
           <tr>
+            <!-- {if $payment.pay_code=='yunqi'} -->
+            <td align="left" bgcolor="#ffffff" colspan="2">
+                <strong> <i  id="payMethod">支付宝</i></strong>
+                <br>
+                <span class="item">
+                    <input type="radio" id="alipay" name="yunqi_paymethod" value="alipay" {if $order.yunqi_paymethod=='alipay'} checked {/if} onclick="checkIpt(this,2);">
+                    <label for="paybal" class="alipay-image"></label>
+                  </span>
+                  <span class="item">
+                    <input type="radio" id="wxpay" name="yunqi_paymethod" value="wxpay" {if $order.yunqi_paymethod=='wxpay'} checked {/if} onclick="checkIpt(this,2);">
+                    <label for="wechat" class="wechat-image"></label>
+                  </span>
+                <div id="yunqi_online">{$payment.pay_button}</div>
+              </td>
+            <!-- {else} -->
             <td colspan="2" bgcolor="#ffffff">{$payment.pay_button}</td>
+            <!-- {/if} -->
+            
           </tr>
         </table>
         <!-- {/if} -->
@@ -832,15 +893,9 @@
                 <tr>
                   <td align="right" bgcolor="#ffffff">{$lang.phone}：</td>
                   <td align="left" bgcolor="#ffffff"><input name="tel" type="text" class="inputBg" id="tel_{$sn}" value="{$consignee.tel|escape}" />
-                  {$lang.require_field}</td>
+                  </td>
                   <td align="right" bgcolor="#ffffff">{$lang.backup_phone}：</td>
                   <td align="left" bgcolor="#ffffff"><input name="mobile" type="text" class="inputBg" id="mobile_{$sn}" value="{$consignee.mobile|escape}" /></td>
-                </tr>
-                <tr>
-                  <td align="right" bgcolor="#ffffff">{$lang.sign_building}：</td>
-                  <td align="left" bgcolor="#ffffff"><input name="sign_building" type="text" class="inputBg" id="sign_building_{$sn}" value="{$consignee.sign_building|escape}" /></td>
-                  <td align="right" bgcolor="#ffffff">{$lang.deliver_goods_time}：</td>
-                  <td align="left" bgcolor="#ffffff"><input name="best_time" type="text"  class="inputBg" id="best_time_{$sn}" value="{$consignee.best_time|escape}" /></td>
                 </tr>
                 <tr>
                   <td align="right" bgcolor="#ffffff">&nbsp;</td>
@@ -1070,5 +1125,70 @@
 {foreach from=$lang.clips_js item=item key=key}
 var {$key} = "{$item}";
 {/foreach}
+function showPop(item,order_sn){
+ var slb = item.lastElementChild;
+ slb.style.display = 'block';
+  try
+  {
+    if (order_sn)
+    {
+      Ajax.call('user.php?act=ajax_delivery_info', "order_sn=" + order_sn , deliveryResponse, "POST", "JSON");
+    }
+  }
+  catch (e) { alert(e); }
+}
+function hidePop(item){
+ var slb = item.lastElementChild;
+ slb.style.display = 'none';
+}
+
+function deliveryResponse(result){
+
+  if (result.error == 0)
+  {
+    var div = document.getElementById('delivery_detail_' + result.order_sn);
+    try
+    {
+      div.innerHTML = result.content;
+    }
+    catch (e) { alert(e); }
+  }
+}
+function checkIpt(item,type=1){
+  var val = item.value;
+  var method = document.getElementById('payMethod');
+  if(val == 'wxpay'){
+    method.innerHTML = '微&nbsp;&nbsp;&nbsp;信';
+  }else{
+    method.innerHTML = '支付宝';
+  }
+  if(type==1){
+    var post = 'order_id={$order.order_id}&yunqi_paymethod='+val;
+    Ajax.call('user.php?is_ajax=1&act=get_yunqi_online',post, yunqi_online, 'POST', 'JSON');
+  }else{
+    var post = 'rec_id={$order.order_sn}&pid={$payment.pay_id}&yunqi_paymethod='+val;
+    Ajax.call('user.php?is_ajax=1&act=get_yunqi_online_balance',post, yunqi_online, 'POST', 'JSON');
+  }
+  
+}
+function yunqi_online(result){
+  var yunqi_online = document.getElementById('yunqi_online');
+  if(result.status==true){
+    yunqi_online.innerHTML = result.pay_online;
+  }else{
+    alert(result.msg);
+  }
+}
+
+function checkIptList(item){
+  var val = item.value;
+  var method = document.getElementById('payMethod');
+  if(val == 'wxpay'){
+    method.innerHTML = '微&nbsp;&nbsp;&nbsp;信';
+  }else{
+    method.innerHTML = '支付宝';
+  }
+  document.getElementById('yunqi_payment').click();
+}
 </script>
 </html>

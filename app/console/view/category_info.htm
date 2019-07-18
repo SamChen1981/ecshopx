@@ -56,7 +56,7 @@
         </td>
       </tr>
       <tr>
-        <td class="label"><a href="javascript:showNotice('noticeFilterAttr');" title="{$lang.form_notice}"><img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.notice_style}"></a>{$lang.filter_attr}:</td>
+        <td class="label"><a href="javascript:showNotice('noticeFilterAttr');" title="{$lang.form_notice}"><img src="images/notice.svg" width="16" height="16" border="0" alt="{$lang.notice_style}"></a>{$lang.filter_attr}:</td>
         <td>
           <script type="text/javascript">
           var arr = new Array();
@@ -119,14 +119,14 @@
         </td>
       </tr>
       <tr>
-        <td class="label"><a href="javascript:showNotice('noticeGrade');" title="{$lang.form_notice}"><img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.notice_style}"></a>{$lang.grade}:</td>
+        <td class="label"><a href="javascript:showNotice('noticeGrade');" title="{$lang.form_notice}"><img src="images/notice.svg" width="16" height="16" border="0" alt="{$lang.notice_style}"></a>{$lang.grade}:</td>
         <td>
           <input type="text" name="grade" value="{$cat_info.grade|default:0}" size="40" /> <br />
           <span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="noticeGrade">{$lang.notice_grade}</span>
         </td>
       </tr>
       <tr>
-        <td class="label"><a href="javascript:showNotice('noticeGoodsSN');" title="{$lang.form_notice}"><img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.notice_style}"></a>{$lang.cat_style}:</td>
+        <td class="label"><a href="javascript:showNotice('noticeGoodsSN');" title="{$lang.form_notice}"><img src="images/notice.svg" width="16" height="16" border="0" alt="{$lang.notice_style}"></a>{$lang.cat_style}:</td>
         <td>
           <input type="text" name="style" value="{$cat_info.style|escape}" size="40" /> <br />
           <span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="noticeGoodsSN">{$lang.notice_style}</span>
@@ -146,8 +146,8 @@
       </tr>
       </table>
       <div class="button-div">
-        <input type="submit" value="{$lang.button_submit}" />
-        <input type="reset" value="{$lang.button_reset}" />
+        <input type="submit" class="btn" value="{$lang.button_submit}" />
+        <input type="reset" class="btn btn-def" value="{$lang.button_reset}" />
       </div>
     <input type="hidden" name="act" value="{$form_act}" />
     <input type="hidden" name="old_cat_name" value="{$cat_info.cat_name}" />

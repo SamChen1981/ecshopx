@@ -16,7 +16,7 @@
         <td>{html_radios name="enabled" options=$lang.arr_goods_status checked=$goods_type.enabled}</td>
       </tr>
       <tr>
-        <td class="label"><a href="javascript:showNotice('noticeAttrGroups');" title="{$lang.form_notice}"><img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a> {$lang.attr_groups}:</td>
+        <td class="label"><a href="javascript:showNotice('noticeAttrGroups');" title="{$lang.form_notice}"><img src="images/notice.svg" width="16" height="16" border="0" alt="{$lang.form_notice}"></a> {$lang.attr_groups}:</td>
         <td>
           <textarea name="attr_group" rows="5" cols="40">{$goods_type.attr_group|escape}</textarea><br />
           <span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="noticeAttrGroups">{$lang.notice_attr_groups}</span>

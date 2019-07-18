@@ -128,7 +128,7 @@ if ($_REQUEST['act']=='list_all')
     $smarty->assign('record_count', $msg_list['record_count']);
     $smarty->assign('page_count',   $msg_list['page_count']);
     $smarty->assign('full_page',    1);
-    $smarty->assign('sort_msg_id', '<img src="images/sort_desc.gif">');
+    $smarty->assign('sort_msg_id', '<img src="images/sort_desc.png">');
 
     $smarty->assign('ur_here',      $_LANG['08_unreply_msg']);
     $smarty->assign('full_page',    1);

@@ -86,6 +86,20 @@ class captcha
      */
     function __construct($folder = '', $width = 145, $height = 20)
     {
+        $this->captcha($folder, $width, $height);
+    }
+
+    /**
+     * 构造函数
+     *
+     * @access  public
+     * @param   string  $folder     背景图片所在目录
+     * @param   integer $width      图片宽度
+     * @param   integer $height     图片高度
+     * @return  bool
+     */
+    function captcha($folder = '', $width = 145, $height = 20)
+    {
         if (!empty($folder))
         {
             $this->folder = $folder;

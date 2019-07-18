@@ -2,16 +2,16 @@
 {include file="pageheader.htm"}
 <div class="form-div">
   <form name="TimeInterval" action="visit_sold.php?act=list" method="post" style="margin:0px">
-    {$lang.goods_cat}
+    {$lang.goods_cat}:
     <select name="cat_id">
       <option value="0">{$lang.select_please}</option>{$cat_list}
-    </select>
-    {$lang.goods_brand}
+    </select>&nbsp;&nbsp;
+    {$lang.goods_brand}:
     <select name="brand_id">
       <option value="0">{$lang.select_please}</caption>
       {html_options options=$brand_list selected=$brand_id}
-    </select>
-    {$lang.show_num}
+    </select>&nbsp;&nbsp;
+    {$lang.show_num}:
     <input name="show_num" type="text" size="8" value="{$show_num}" />
     <input type="hidden" name="order_type" value="{$order_type}" />
     <input type="submit" name="submit" value="{$lang.query}" class="button" />

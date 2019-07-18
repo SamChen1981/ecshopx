@@ -20,9 +20,9 @@
   <tr>
     <td align="center">
     {if $card.card_img}
-        <a href = "../data/cardimg/{$card.card_img}" target="_brank"><img src="images/picflag.gif" width="16" height="16" border="0" alt="" /></a>
+        <a href = "../data/cardimg/{$card.card_img}" target="_brank"><img src="images/image.svg" width="16" height="16" border="0" alt="" /></a>
     {else}
-        <img src="images/picnoflag.gif" width="16" height="16" border="0" alt="" />
+        <img src="images/noimage.svg" width="16" height="16" border="0" alt="" />
     {/if}
     </td>
     <td align="left"><span onclick="listTable.edit(this, 'edit_card_name', {$card.card_id})">{$card.card_name|escape:"html"}</a></td>
@@ -30,8 +30,8 @@
     <td align="right"><span onclick="listTable.edit(this, 'edit_free_money', {$card.card_id})">{$card.free_money}</a></td>
     <td align="left">{if $card.card_desc}{$card.card_desc|truncate:50|escape:"html"}{else}N/A{/if}</td>
     <td align="center" nowrap="true" valign="top">
-        <a href="?act=edit&amp;id={$card.card_id}" title="{$lang.edit}"><img src="images/icon_edit.gif" border="0" height="16" width="16"></a>
-        <a href="javascript:;" onclick="listTable.remove({$card.card_id}, '{$lang.drop_confirm}')" title="{$lang.remove}"><img src="images/icon_drop.gif" border="0" height="16" width="16"></a>
+        <a href="?act=edit&amp;id={$card.card_id}" title="{$lang.edit}">{$lang.edit}</a>
+        <a href="javascript:;" onclick="listTable.remove({$card.card_id}, '{$lang.drop_confirm}')" title="{$lang.remove}">{$lang.remove}</a>
       </td>
   </tr>
     {foreachelse}

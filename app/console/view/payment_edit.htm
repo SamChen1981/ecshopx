@@ -1,7 +1,7 @@
 <!-- $Id: payment_edit.htm 14401 2008-04-15 02:41:32Z zhuwenyuan $ -->
 {include file="pageheader.htm"}
 {insert_scripts files="../js/utils.js,validator.js"}
-<form action="payment.php" method="post">
+<form action="payment.php" method="post" enctype="multipart/form-data">
 <div class="main-div">
 <table cellspacing="1" cellpadding="3" width="100%">
   <tr>
@@ -15,25 +15,39 @@
   {foreach from=$pay.pay_config item=config key=key}
   <tr>
     <td class="label">
-      {if $config.desc}
-      <a href="javascript:showNotice('notice{$config.name}');" title="{$lang.form_notice}"><img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>
+      {if $config.desc && $pay.pay_code!='yunqi'}
+      <a href="javascript:showNotice('notice{$config.name}');" title="{$lang.form_notice}"><img src="images/notice.svg" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>
       {/if}
-      <span class="label">{$config.label}
+      {if $pay.pay_code == 'upop'}
+        {if $config.name == 'upop_cert'}
+        <span class="label" id="upop_cert">{$config.label}
+        {elseif $config.name == 'upop_cert_pwd'}
+        <span class="label" id="upop_cert_pwd">{$config.label}
+        {else}
+        <span class="label">{$config.label}
+        {/if}
+      {else}
+        <span class="label">{$config.label}
+      {/if}
     </td>
     <td>
       <!-- {if $config.type == "text"} -->
-      <input name="cfg_value[]" type="{$config.type}" value="{$config.value}" size="40" />
+      <input name="cfg_value[]" type="{$config.type}" value="{$config.value}" size="40" /><br />
       <!-- {elseif $config.type == "textarea"} -->
-      <textarea name="cfg_value[]" cols="80" rows="5">{$config.value}</textarea>
+      <textarea name="cfg_value[]" cols="80" rows="5">{$config.value}</textarea><br />
       <!-- {elseif $config.type == "select"} -->
-      <select name="cfg_value[]">{html_options options=$config.range selected=$config.value}</select>
+      <select id="config_select" name="cfg_value[]">{html_options options=$config.range selected=$config.value}</select><br />
+      <!-- {elseif $config.type == "file"} -->
+          <input type="hidden" name="cfg_value[]" value="{$config.value}">
+          <input type="file" id="config_file" name="{$config.name}">
       <!-- {/if} -->
       <input name="cfg_name[]" type="hidden" value="{$config.name}" />
       <input name="cfg_type[]" type="hidden" value="{$config.type}" />
       <input name="cfg_lang[]" type="hidden" value="{$config.lang}" />
       {if $config.desc}
-      <br /><span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="notice{$config.name}">{$config.desc}</span>
+      <span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="notice{$config.name}">{$config.desc}</span>
       {/if}
+      
       <!--the tenpay code -->
       {if $key eq "0"}
       {if $smarty.get.code eq "tenpay"}<input align=""type="button" value="{$lang.ctenpay}" onclick="javascript:window.open('{$lang.ctenpay_url}')"/>
@@ -80,6 +94,36 @@ onload = function()
 {
     // 开始检查订单
     startCheckOrder();
+    var pay_code = '{$pay.pay_code}';
+    if (pay_code == 'upop') {
+      var configSelect = document.getElementById('config_select');
+      var selectedIndex = config_select.selectedIndex;
+      var optionsVal = configSelect.options[selectedIndex].value;
+      // alert(optionsVal);
+      var configFile = document.getElementById('config_file');
+      var upopCert = document.getElementById('upop_cert');
+      var upopCertPwd = document.getElementById('upop_cert_pwd');
+      // 密钥方式隐藏证书文件
+      if (optionsVal == 1) {
+        configFile.style.display = 'none';
+        upopCert.style.display = 'none';
+        upopCertPwd.innerText = '商户密钥';
+      }
+      configSelect.onchange=function(){
+        var selectedIndex = config_select.selectedIndex;
+        var optionsVal = configSelect.options[selectedIndex].value;
+        // alert(optionsVal);
+        if (optionsVal == 1) {
+          configFile.style.display = 'none';
+          upopCert.style.display = 'none';
+          upopCertPwd.innerText = '商户密钥';
+        } else {
+          configFile.style.display = 'inline';
+          upopCert.style.display = 'inline';
+          upopCertPwd.innerHTML = '签名证书密码';
+        }
+      }
+    }
 }
 {/literal}
 //-->

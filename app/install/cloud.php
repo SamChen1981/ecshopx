@@ -1,13 +1,13 @@
 <?php
 
 /**
- * ECSHOP 浜戞湇鍔℃帴鍙
+ * ECSHOP 云服务接口
  * ============================================================================
- * * 鐗堟潈鎵€鏈 2005-2012 涓婃捣鍟嗘淳缃戠粶绉戞妧鏈夐檺鍏?徃锛屽苟淇濈暀鎵€鏈夋潈鍒┿€
- * 缃戠珯鍦板潃: http://www.ecshop.com锛
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
+ * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
- * 杩欎笉鏄?竴涓?嚜鐢辫蒋浠讹紒鎮ㄥ彧鑳藉湪涓嶇敤浜庡晢涓氱洰鐨勭殑鍓嶆彁涓嬪?绋嬪簭浠ｇ爜杩涜?淇?敼鍜
- * 浣跨敤锛涗笉鍏佽?瀵圭▼搴忎唬鐮佷互浠讳綍褰㈠紡浠讳綍鐩?殑鐨勫啀鍙戝竷銆
+ * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
+ * 使用；不允许对程序代码以任何形式任何目的的再发布。
  * ============================================================================
  * $Author: liubo $
  * $Id: cloud.php 17217 2011-01-19 06:29:08Z liubo $
@@ -28,7 +28,6 @@ $data['patch'] = file_get_contents(ROOT_PATH."admin/patch_num");
 $data['ecs_lang'] = !empty($_SESSION['ecs_lang']) ? $_SESSION['ecs_lang'] : 'zh_cn';
 $data['release'] = RELEASE;
 $step = isset($_REQUEST['step']) ? trim($_REQUEST['step']) : '';
-
 $step_arr = array('welcome','check','setting_ui','done','active');
 
 if (!in_array($step,$step_arr))
@@ -54,6 +53,7 @@ if (file_exists($installer_lang_package_path))
 
 if ($step == 'welcome')
 {
+    $apiget = str_replace('welcome', 'welcome_yunqi', $apiget);
     $content = api_request($apiget);
     if ($content)
     {
@@ -126,7 +126,7 @@ elseif ($step == 'active')
 function api_request($apiget)
 {
     global $t,$ecs_charset;
-    $api_comment = $t->request('http://cloud.ecshop.com/install_api.php', $apiget);
+    $api_comment = $t->request('https://cloud-ecshop.xyunqi.com/install_api.php', $apiget);
     $api_str = $api_comment["body"];
     include_once(ROOT_PATH . 'includes/cls_json.php');
     $json = new JSON;

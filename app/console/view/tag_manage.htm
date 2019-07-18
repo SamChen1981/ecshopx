@@ -28,8 +28,8 @@
     <td align="left"><span><a href="../goods.php?id={$tag.goods_id}" target="_blank">{$tag.goods_name}</a></span></td>
     <td align="center">
       <span>
-      <a href="tag_manage.php?act=edit&amp;id={$tag.tag_id}" title="{$lang.edit}"><img src="images/icon_edit.gif" border="0" height="16" width="16" /></a>
-      <a href="javascript:;" onclick="listTable.remove({$tag.tag_id}, '{$lang.drop_confirm}')" title="{$lang.remove}"><img src="images/icon_drop.gif" border="0" height="16" width="16"></a></span>
+      <a href="tag_manage.php?act=edit&amp;id={$tag.tag_id}" title="{$lang.edit}">{$lang.edit}</a>
+      <a href="javascript:;" onclick="listTable.remove({$tag.tag_id}, '{$lang.drop_confirm}')" title="{$lang.remove}">{$lang.remove}</a></span>
     </td>
   </tr>
   {foreachelse}

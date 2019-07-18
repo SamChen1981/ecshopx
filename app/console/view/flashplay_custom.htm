@@ -21,10 +21,10 @@
       <td>{$item.ad_name}</td>
       <td align="left">{$item.type_name}</td>
       <td align="left">{$item.add_time}</td>
-      <td align="center"><a href="javascript:custom_status({$item.ad_id}, {$item.ad_status});void(0);" title="{$lang.custom_change_img}"><img src="images/{if $item.ad_status eq 0}no.gif{else}yes.gif{/if}" width="16" height="16" border="0" /></a></td>
+      <td align="center"><a href="javascript:custom_status({$item.ad_id}, {$item.ad_status});void(0);" title="{$lang.custom_change_img}"><img src="images/{if $item.ad_status eq 0}no.svg{else}yes.svg{/if}" width="20"></a></td>
       <td align="center">
-        <a href="flashplay.php?act=custom_edit&id={$item.ad_id}" title="{$lang.edit}"><img src="images/icon_edit.gif" width="16" height="16" border="0" /></a>
-        <a href="flashplay.php?act=custom_del&id={$item.ad_id}" onclick="return check_del();" title="{$lang.custom_drop_img}"><img src="images/icon_drop.gif" width="16" height="16" border="0" /></a>
+        <a href="flashplay.php?act=custom_edit&id={$item.ad_id}" title="{$lang.edit}">{$lang.edit}</a>
+        <a href="flashplay.php?act=custom_del&id={$item.ad_id}" onclick="return check_del();" title="{$lang.custom_drop_img}">{$lang.custom_drop_img}</a>
       </td>
     </tr>
     {/foreach}

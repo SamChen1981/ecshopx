@@ -6,7 +6,7 @@
 
 <div class="form-div">
   <form action="javascript:searchActivity()" name="searchForm">
-    <img src="images/icon_search.gif" width="26" height="22" border="0" alt="SEARCH" />
+    <img src="images/icon_search.svg" width="26" height="22" border="0" alt="SEARCH" />
     {$lang.goods_name} <input type="text" name="keyword" size="30" />
     <input type="submit" value="{$lang.button_search}" class="button" />
   </form>
@@ -33,10 +33,10 @@
       <td><input value="{$wholesale.act_id}" name="checkboxes[]" type="checkbox">{$wholesale.act_id}</td>
       <td>{$wholesale.goods_name|escape:html}</td>
       <td>{$wholesale.rank_names}</td>
-      <td align="center"><img src="images/{if $wholesale.enabled}yes{else}no{/if}.gif" onclick="listTable.toggle(this, 'toggle_enabled', {$wholesale.act_id})" /></td>
+      <td align="center"><img src="images/{if $wholesale.enabled}yes{else}no{/if}.svg" width="20" onclick="listTable.toggle(this, 'toggle_enabled', {$wholesale.act_id})" /></td>
       <td align="center">
-        <a href="wholesale.php?act=edit&amp;id={$wholesale.act_id}" title="{$lang.edit}"><img src="images/icon_edit.gif" border="0" height="16" width="16" /></a>
-        <a href="javascript:;" onclick="listTable.remove({$wholesale.act_id},'{$lang.drop_confirm}')" title="{$lang.remove}"><img src="images/icon_drop.gif" border="0" height="16" width="16" /></a>      </td>
+        <a href="wholesale.php?act=edit&amp;id={$wholesale.act_id}" title="{$lang.edit}">{$lang.edit}</a>
+        <a href="javascript:;" onclick="listTable.remove({$wholesale.act_id},'{$lang.drop_confirm}')" title="{$lang.remove}">{$lang.remove}</a>      </td>
     </tr>
     {foreachelse}
     <tr><td class="no-records" colspan="10">{$lang.no_records}</td></tr>

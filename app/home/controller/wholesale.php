@@ -335,7 +335,7 @@ elseif ($_REQUEST['act'] == 'submit_order')
     /* 检查购物车中是否有商品 */
     if (count($_SESSION['wholesale_goods']) == 0)
     {
-        show_message($_LANG['no_goods_in_cart']);
+        show_message($_LANG['no_goods_in_cart']."d");
     }
 
     /* 检查备注信息 */

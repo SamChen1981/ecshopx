@@ -4,7 +4,7 @@
 <div class="list-div" style="margin-bottom: 5px">
   <table id="general-table" align="center" width="100%" cellpadding="3" cellspacing="1" border="0">
   <tr>
-    <td colspan="2" width="100%"><a href="javascript:showNotice('noticeGoodsSN');" title="{$lang.form_notice}"><img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a><strong>请选择模板的模式：</strong><input type="radio" name="model" id="model_1" value="1" {if $shipping.print_model == 1}checked="checked"{/if} onclick="javascript:model_change('1');">代码模式&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="model" id="model_2" value="2" {if $shipping.print_model == 2}checked="checked"{/if} onclick="javascript:model_change('2');">所见即所得模式<br/><span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="noticeGoodsSN">选择“代码模式”可以切换到以前版本。建议您使用“所见即所得模式”。所有模式选择后，同样在打印模板中生效。</span></td>
+    <td colspan="2" width="100%"><a href="javascript:showNotice('noticeGoodsSN');" title="{$lang.form_notice}"><img src="images/notice.svg" width="16" height="16" border="0" alt="{$lang.form_notice}"></a><strong>请选择模板的模式：</strong><input type="radio" name="model" id="model_1" value="1" {if $shipping.print_model == 1}checked="checked"{/if} onclick="javascript:model_change('1');">代码模式&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="model" id="model_2" value="2" {if $shipping.print_model == 2}checked="checked"{/if} onclick="javascript:model_change('2');">所见即所得模式<br/><span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="noticeGoodsSN">选择“代码模式”可以切换到以前版本。建议您使用“所见即所得模式”。所有模式选择后，同样在打印模板中生效。</span></td>
   </tr>
   <tr>
     <th colspan="2" width="100%">编辑模板</th>

@@ -12,7 +12,7 @@
   <div id="tabbody-div">
     <form enctype="multipart/form-data" name="theForm" action="?act=post" method="post">
     {foreach from=$group_list item=group name="body_group"}
-    <table width="90%" id="{$group.code}-table" {if $smarty.foreach.body_group.iteration neq 1}style="display:none"{/if}>
+    <table width="90%" id="{$group.code}-table" class="gk-table" {if $smarty.foreach.body_group.iteration neq 1}style="display:none"{/if}>
       {foreach from=$group.vars item=var key=key}
       {include file="shop_config_form.htm"}
       {/foreach}

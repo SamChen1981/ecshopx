@@ -89,7 +89,7 @@ else
     $smarty->assign('full_page',        1);
     $smarty->assign('start_date',     local_date('Y-m-d', $start_date));
     $smarty->assign('end_date',       local_date('Y-m-d', $end_date));
-    $smarty->assign('sort_order_num',   '<img src="images/sort_desc.gif">');
+    $smarty->assign('sort_order_num',   '<img src="images/sort_desc.png">');
     /* 页面显示 */
     assign_query_info();
     $smarty->display('users_order.htm');

@@ -1,9 +1,11 @@
 <!-- $Id: goods_info.htm 17126 2010-04-23 10:30:26Z liuhui $ -->
 {include file="pageheader.htm"}
+<script src="../admin/js/jquery.min.js"></script>
+
 {insert_scripts files="../js/utils.js,selectzone.js,colorselector.js"}
 <script type="text/javascript" src="../js/calendar.php?lang={$cfg_lang}"></script>
 <link href="../js/calendar/calendar.css" rel="stylesheet" type="text/css" />
-
+<link href="styles/upload.css" rel="stylesheet" type="text/css" />
 {if $warning}
 <ul style="padding:0; margin: 0; list-style-type:none; color: #CC0000;">
   <li style="border: 1px solid #CC0000; background: #FFFFCC; padding: 10px; margin-bottom: 5px;" >{$warning}</li>
@@ -28,11 +30,11 @@
 
     <!-- tab body -->
     <div id="tabbody-div">
-      <form enctype="multipart/form-data" action="" method="post" name="theForm" >
+      <form enctype="multipart/form-data" action="" method="post" name="theForm" id="test">
         <!-- 鏈€澶ф枃浠堕檺鍒 -->
         <input type="hidden" name="MAX_FILE_SIZE" value="2097152" />
         <!-- 閫氱敤淇℃伅 -->
-        <table width="90%" id="general-table" align="center">
+        <table width="90%" id="general-table" align="center" class="gk-table">
           <tr>
             <td class="label">{$lang.lab_goods_name}</td>
             <td><input type="text" name="goods_name" value="{$goods.goods_name|escape}" style="float:left;color:{$goods_name_color};" size="30" /><div style="background-color:{$goods_name_color};float:left;margin-left:2px;" id="font_color" onclick="ColorSelecter.Show(this);"><img src="images/color_selecter.gif" style="margin-top:-1px;" /></div><input type="hidden" id="goods_name_color" name="goods_name_color" value="{$goods_name_color}" />&nbsp;
@@ -44,20 +46,20 @@
           </tr>
           <tr>
             <td class="label">
-            <a href="javascript:showNotice('noticeGoodsSN');" title="{$lang.form_notice}"><img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a> {$lang.lab_goods_sn} </td>
+            <a href="javascript:showNotice('noticeGoodsSN');" title="{$lang.form_notice}"><img src="images/notice.svg" width="16" height="16" border="0" alt="{$lang.form_notice}"></a> {$lang.lab_goods_sn} </td>
             <td><input type="text" name="goods_sn" value="{$goods.goods_sn|escape}" size="20" onblur="checkGoodsSn(this.value,'{$goods.goods_id}')" /><span id="goods_sn_notice"></span><br />
             <span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="noticeGoodsSN">{$lang.notice_goods_sn}</span></td>
           </tr>
           <tr>
             <td class="label">{$lang.lab_goods_cat}</td>
-            <td><select name="cat_id" onchange="hideCatDiv()" ><option value="0">{$lang.select_please}</option>{$cat_list}</select>
+            <td><select name="cat_id" onchange="hideCatDiv()"><option value="0">{$lang.select_please}</option>{$cat_list}</select>
               {if $is_add}
-              <a href="javascript:void(0)" onclick="rapidCatAdd()" title="{$lang.rapid_add_cat}" class="special">{$lang.rapid_add_cat}</a>
+              <button type="button" class="btn btn-def " onclick="rapidCatAdd()">{$lang.rapid_add_cat}</button>
               <span id="category_add" style="display:none;">
-              <input class="text" size="10" name="addedCategoryName" />
-               <a href="javascript:void(0)" onclick="addCategory()" title="{$lang.button_submit}" class="special" >{$lang.button_submit}</a>
-               <a href="javascript:void(0)" onclick="return goCatPage()" title="{$lang.category_manage}" class="special" >{$lang.category_manage}</a>
-               <a href="javascript:void(0)" onclick="hideCatDiv()" title="{$lang.hide}" class="special" ><<</a>
+              <input type="text" class="text" size="10" name="addedCategoryName" />
+               <button type="button" class="btn btn-def " onclick="addCategory()" title="{$lang.button_submit}">{$lang.button_submit}</button>
+               <button type="button" class="btn btn-def " onclick="return goCatPage()" title="{$lang.category_manage}">{$lang.category_manage}</button>
+               <button type="button" class="btn btn-def " onclick="hideCatDiv()" title="{$lang.hide}"><<</button>
                </span>
                {/if}
                {$lang.require_field}
@@ -66,7 +68,7 @@
           <tr>
             <td class="label">{$lang.lab_other_cat}</td>
             <td>
-              <input type="button" value="{$lang.add}" onclick="addOtherCat(this.parentNode)" class="button" />
+              <input type="button" value="{$lang.add}" onclick="addOtherCat(this.parentNode)" class="button btn-def" />
               {foreach from=$goods.other_cat item=cat_id}
               <select name="other_cat[]"><option value="0">{$lang.select_please}</option>{$other_cat_list.$cat_id}</select>
               {/foreach}
@@ -76,12 +78,12 @@
             <td class="label">{$lang.lab_goods_brand}</td>
             <td><select name="brand_id" onchange="hideBrandDiv()" ><option value="0">{$lang.select_please}{html_options options=$brand_list selected=$goods.brand_id}</select>
               {if $is_add}
-              <a href="javascript:void(0)" title="{$lang.rapid_add_brand}" onclick="rapidBrandAdd()" class="special" >{$lang.rapid_add_brand}</a>
+              <button type="button" class="btn btn-def " onclick="rapidBrandAdd()">{$lang.rapid_add_brand}</button>
               <span id="brand_add" style="display:none;">
-              <input class="text" size="15" name="addedBrandName" />
-               <a href="javascript:void(0)" onclick="addBrand()" class="special" >{$lang.button_submit}</a>
-               <a href="javascript:void(0)" onclick="return goBrandPage()" title="{$lang.brand_manage}" class="special" >{$lang.brand_manage}</a>
-               <a href="javascript:void(0)" onclick="hideBrandDiv()" title="{$lang.hide}" class="special" ><<</a>
+              <input type="text" class="text" size="15" name="addedBrandName" />
+               <button type="button" class="btn btn-def " onclick="addBrand()" title="{$lang.button_submit}">{$lang.button_submit}</button>
+               <button type="button" class="btn btn-def " onclick="return goBrandPage()" title="{$lang.brand_manage}">{$lang.brand_manage}</button>
+               <button type="button" class="btn btn-def " onclick="hideBrandDiv()" title="{$lang.hide}"><<</button>
                </span>
                {/if}
             </td>
@@ -98,12 +100,12 @@
           <tr>
             <td class="label">{$lang.lab_shop_price}</td>
             <td><input type="text" name="shop_price" value="{$goods.shop_price}" size="20" onblur="priceSetted()"/>
-            <input type="button" value="{$lang.compute_by_mp}" onclick="marketPriceSetted()" />
+            <input type="button" class="btn btn-def" value="{$lang.compute_by_mp}" onclick="marketPriceSetted()" />
             {$lang.require_field}</td>
           </tr>
           {if $user_rank_list}
           <tr>
-            <td class="label"><a href="javascript:showNotice('noticeUserPrice');" title="{$lang.form_notice}"><img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.lab_user_price}</td>
+            <td class="label"><a href="javascript:showNotice('noticeUserPrice');" title="{$lang.form_notice}"><img src="images/notice.svg" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.lab_user_price}</td>
             <td>
               {foreach from=$user_rank_list item=user_rank}
               {$user_rank.rank_name}<span id="nrank_{$user_rank.rank_id}"></span><input type="text" id="rank_{$user_rank.rank_id}" name="user_price[]" value="{$member_price_list[$user_rank.rank_id]|default:-1}" onkeyup="if(parseInt(this.value)<-1){this.value='-1';};set_price_note({$user_rank.rank_id})" size="8" />
@@ -117,7 +119,7 @@
 
           <!--鍟嗗搧浼樻儬浠锋牸-->
           <tr>
-            <td class="label"><a href="javascript:showNotice('volumePrice');" title="{$lang.form_notice}"><img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.lab_volume_price}</td>
+            <td class="label"><a href="javascript:showNotice('volumePrice');" title="{$lang.form_notice}"><img src="images/notice.svg" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.lab_volume_price}</td>
             <td>
               <table width="100%" id="tbody-volume" align="center">
                 {foreach from=$volume_price_list item=volume_price name="volume_price_tab"}
@@ -142,21 +144,26 @@
           <tr>
             <td class="label">{$lang.lab_market_price}</td>
             <td><input type="text" name="market_price" value="{$goods.market_price}" size="20" />
-              <input type="button" value="{$lang.integral_market_price}" onclick="integral_market_price()" />
+              <input type="button" class="btn btn-def" value="{$lang.integral_market_price}" onclick="integral_market_price()" />
             </td>
           </tr>
           <tr>
-            <td class="label"><a href="javascript:showNotice('giveIntegral');" title="{$lang.form_notice}"><img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a> {$lang.lab_give_integral}</td>
+            <td class="label">{$lang.lab_virtual_sales}</td>
+            <td><input type="text" name="virtual_sales" value="{$goods.virtual_sales}" size="20" />
+            </td>
+          </tr>
+          <tr>
+            <td class="label"><a href="javascript:showNotice('giveIntegral');" title="{$lang.form_notice}"><img src="images/notice.svg" width="16" height="16" border="0" alt="{$lang.form_notice}"></a> {$lang.lab_give_integral}</td>
             <td><input type="text" name="give_integral" value="{$goods.give_integral}" size="20" />
             <br /><span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="giveIntegral">{$lang.notice_give_integral}</span></td>
           </tr>
           <tr>
-            <td class="label"><a href="javascript:showNotice('rankIntegral');" title="{$lang.form_notice}"><img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a> {$lang.lab_rank_integral}</td>
+            <td class="label"><a href="javascript:showNotice('rankIntegral');" title="{$lang.form_notice}"><img src="images/notice.svg" width="16" height="16" border="0" alt="{$lang.form_notice}"></a> {$lang.lab_rank_integral}</td>
             <td><input type="text" name="rank_integral" value="{$goods.rank_integral}" size="20" />
             <br /><span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="rankIntegral">{$lang.notice_rank_integral}</span></td>
           </tr>
           <tr>
-            <td class="label"><a href="javascript:showNotice('noticPoints');" title="{$lang.form_notice}"><img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a> {$lang.lab_integral}</td>
+            <td class="label"><a href="javascript:showNotice('noticPoints');" title="{$lang.form_notice}"><img src="images/notice.svg" width="16" height="16" border="0" alt="{$lang.form_notice}"></a> {$lang.lab_integral}</td>
             <td><input type="text" name="integral" value="{$goods.integral}" size="20" onblur="parseint_integral()";/>
               <br /><span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="noticPoints">{$lang.notice_integral}</span>
             </td>
@@ -167,34 +174,49 @@
           </tr>
           <tr id="promote_4">
             <td class="label" id="promote_5">{$lang.lab_promote_date}</td>
-            <td id="promote_6">
-              <input name="promote_start_date" type="text" id="promote_start_date" size="12" value='{$goods.promote_start_date}' readonly="readonly" /><input name="selbtn1" type="button" id="selbtn1" onclick="return showCalendar('promote_start_date', '%Y-%m-%d', false, false, 'selbtn1');" value="{$lang.btn_select}" class="button"/> - <input name="promote_end_date" type="text" id="promote_end_date" size="12" value='{$goods.promote_end_date}' readonly="readonly" /><input name="selbtn2" type="button" id="selbtn2" onclick="return showCalendar('promote_end_date', '%Y-%m-%d', false, false, 'selbtn2');" value="{$lang.btn_select}" class="button"/>
+            <td id="promote_6" class="cal-group">
+              <input name="promote_start_date" type="text" id="promote_start_date" size="12" value='{$goods.promote_start_date}' readonly="readonly"><button type="button" class="cal" name="selbtn1" id="selbtn1" onclick="return showCalendar('promote_start_date', '%Y-%m-%d', false, false, 'selbtn1');"><img src="images/cal.png" alt=""></button> - <input name="promote_end_date" type="text" id="promote_end_date" size="12" value='{$goods.promote_end_date}' readonly="readonly" /><button type="button" class="cal" name="selbtn2" id="selbtn2" onclick="return showCalendar('promote_end_date', '%Y-%m-%d', false, false, 'selbtn2');"><img src="images/cal.png" alt=""></button>
             </td>
           </tr>
           <tr>
             <td class="label">{$lang.lab_picture}</td>
             <td>
-              <input type="file" name="goods_img" size="35" />
-              {if $goods.goods_img}
-                <a href="goods.php?act=show_image&img_url={$goods.goods_img}" target="_blank"><img src="images/yes.gif" border="0" /></a>
-              {else}
-                <img src="images/no.gif" />
-              {/if}
+              <div class="upImg">
+                
+     
+                  
+                   <div class="img-inner">
+                    {if $goods.goods_img}
+                        <img src="../{$goods.goods_img}" alt="">
+                    {else}
+                    <span class="add">+</span>
+                    {/if}
+
+                  </div>
+                  <input type="file" name="goods_img" size="35" class="up-ipt" accept="image/png,image/gif,image/jpg,image/jpeg,image/bmp"/>
+                 
+              </div>
               <br /><input type="text" size="40" value="{$lang.lab_picture_url}" style="color:#aaa;" onfocus="if (this.value == '{$lang.lab_picture_url}'){this.value='http://';this.style.color='#000';}" name="goods_img_url"/>
             </td>
           </tr>
           <tr id="auto_thumb_1">
             <td class="label"> {$lang.lab_thumb}</td>
             <td id="auto_thumb_3">
-              <input type="file" name="goods_thumb" size="35" />
-              {if $goods.goods_thumb}
-                <a href="goods.php?act=show_image&img_url={$goods.goods_thumb}" target="_blank"><img src="images/yes.gif" border="0" /></a>
-              {else}
-                <img src="images/no.gif" />
-              {/if}
+              <div class="upImg">
+                <div class="img-inner">
+                  {if $goods.goods_img}
+                        <img src="../{$goods.goods_thumb}" alt="">
+                    {else}
+                    <span class="add">+</span>
+                    {/if}
+                 </div>
+                <input type="file" size="35" name="goods_thumbs" class="up-ipt" accept="image/png,image/gif,image/jpg,image/jpeg,image/bmp"/>
+         
+              </div>
               <br /><input type="text" size="40" value="{$lang.lab_thumb_url}" style="color:#aaa;" onfocus="if (this.value == '{$lang.lab_thumb_url}'){this.value='http://';this.style.color='#000';}" name="goods_thumb_url"/>
               {if $gd > 0}
               <br /><label for="auto_thumb"><input type="checkbox" id="auto_thumb" name="auto_thumb" checked="true" value="1" onclick="handleAutoThumb(this.checked)" />{$lang.auto_thumb}</label>{/if}
+
             </td>
           </tr>
         </table>
@@ -216,7 +238,7 @@
           {/if}
           {if $cfg.use_storage}
           <tr>
-            <td class="label"><a href="javascript:showNotice('noticeStorage');" title="{$lang.form_notice}"><img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a> {$lang.lab_goods_number}</td>
+            <td class="label"><a href="javascript:showNotice('noticeStorage');" title="{$lang.form_notice}"><img src="images/notice.svg" width="16" height="16" border="0" alt="{$lang.form_notice}"></a> {$lang.lab_goods_number}</td>
 <!--            <td><input type="text" name="goods_number" value="{$goods.goods_number}" size="20" {if $code neq '' || $goods._attribute neq ''}readonly="readonly"{/if} /><br />-->
             <td><input type="text" name="goods_number" value="{$goods.goods_number}" size="20" /><br />
             <span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="noticeStorage">{$lang.notice_storage}</span></td>
@@ -252,7 +274,7 @@
           </tr>
           <tr>
             <td class="label">
-            <a href="javascript:showNotice('noticeSellerNote');" title="{$lang.form_notice}"><img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a> {$lang.lab_seller_note} </td>
+            <a href="javascript:showNotice('noticeSellerNote');" title="{$lang.form_notice}"><img src="images/notice.svg" width="16" height="16" border="0" alt="{$lang.form_notice}"></a> {$lang.lab_seller_note} </td>
             <td><textarea name="seller_note" cols="40" rows="3">{$goods.seller_note}</textarea><br />
             <span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="noticeSellerNote">{$lang.notice_seller_note}</span></td>
           </tr>
@@ -262,7 +284,7 @@
         {if $goods_type_list}
         <table width="90%" id="properties-table" style="display:none" align="center">
           <tr>
-              <td class="label"><a href="javascript:showNotice('noticeGoodsType');" title="{$lang.form_notice}"><img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.lab_goods_type}</td>
+              <td class="label"><a href="javascript:showNotice('noticeGoodsType');" title="{$lang.form_notice}"><img src="images/notice.svg" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.lab_goods_type}</td>
               <td>
                 <select name="goods_type" onchange="getAttrList({$goods.goods_id})">
                   <option value="0">{$lang.sel_goods_type}</option>
@@ -277,29 +299,40 @@
         {/if}
 
         <!-- 鍟嗗搧鐩稿唽 -->
-        <table width="90%" id="gallery-table" style="display:none" align="center">
+        <table width="90%" id="gallery-table" class="aaa" style="display:none" align="center">
           <!-- 鍥剧墖鍒楄〃 -->
           <tr>
+            <td class="up-title">{$lang.lab_picture}</td>
             <td>
-              {foreach from=$img_list item=img key=i}
-              <div id="gallery_{$img.img_id}" style="float:left; text-align:center; border: 1px solid #DADADA; margin: 4px; padding:2px;">
-                <a href="javascript:;" onclick="if (confirm('{$lang.drop_img_confirm}')) dropImg('{$img.img_id}')">[-]</a><br />
-                <a href="goods.php?act=show_image&img_url={$img.img_url}" target="_blank">
-                <img src="../{if $img.thumb_url}{$img.thumb_url}{else}{$img.img_url}{/if}" {if $thumb_width neq 0}width="{$thumb_width}"{/if} {if $thumb_height neq 0}height="{$thumb_height}"{/if} border="0" />
-                </a><br />
-                <input type="text" value="{$img.img_desc|escape}" size="15" name="old_img_desc[{$img.img_id}]" />
+              <div class="upload-ul clearfix">
+                  <input type="hidden" name="img_sn">
+                  <ul class="pic-list">
+                  {foreach from=$img_list item=img key=i}
+                  <li id="gallery_{$img.img_id}" class="diyUploadHover list" data-imgid="{$img.img_id}">
+                    <div class="viewThumb">
+                        <input type="hidden" name="img_url[]">
+                        <p class="diyControl"><span class="diyLeft"><i></i></span><span class="diyCancel" onclick="if (confirm('{$lang.drop_img_confirm}')) dropImg('{$img.img_id}')"><i></i></span><span class="diyRight"><i></i></span></p>
+                        <img  src="../{if $img.thumb_url}{$img.thumb_url}{else}{$img.img_url}{/if}"/>
+                    </div>
+                    <!-- <input type="text" value="{$img.img_desc|escape}" size="15" name="old_img_desc[{$img.img_id}]" placeholder="{$lang.lab_thumb_url}" /><span class="fill-img">{$lang.Preview}</span> -->
+                  </li>
+                  {/foreach}
+              </ul>
+                  <div class="upload-pick list">
+                      <div class="webuploader-container clearfix" id="goodsUpload"></div>
+                  </div>
               </div>
-              {/foreach}
             </td>
           </tr>
           <tr><td>&nbsp;</td></tr>
           <!-- 涓婁紶鍥剧墖 -->
           <tr>
             <td>
-              <a href="javascript:;" onclick="addImg(this)">[+]</a>
+              <!-- <a href="javascript:;" onclick="addImg(this)">[+]</a>
               {$lang.img_desc} <input type="text" name="img_desc[]" size="20" />
               {$lang.img_url} <input type="file" name="img_url[]" />
-              <input type="text" size="40" value="{$lang.img_file}" style="color:#aaa;" onfocus="if (this.value == '{$lang.img_file}'){this.value='http://';this.style.color='#000';}" name="img_file[]"/>
+              <input type="text" size="40" value="{$lang.img_file}" style="color:#aaa;" onfocus="if (this.value == '{$lang.img_file}'){this.value='http://';this.style.color='#000';}" name="img_file[]"/> -->
+              <!-- <input type="file" name="img_file[]" accept="image/jpg,image/png,image/gif" multiple="multiple" > -->
             </td>
           </tr>
         </table>
@@ -309,7 +342,7 @@
           <!-- 鍟嗗搧鎼滅储 -->
           <tr>
             <td colspan="3">
-              <img src="images/icon_search.gif" width="26" height="22" border="0" alt="SEARCH" />
+              <img src="images/icon_search.svg" width="26" height="22" border="0" alt="SEARCH" />
               <select name="cat_id1"><option value="0">{$lang.all_category}{$cat_list}</select>
               <select name="brand_id1"><option value="0">{$lang.all_brand}{html_options options=$brand_list}</select>
               <input type="text" name="keyword1" />
@@ -350,7 +383,7 @@
           <!-- 鍟嗗搧鎼滅储 -->
           <tr>
             <td colspan="3">
-              <img src="images/icon_search.gif" width="26" height="22" border="0" alt="SEARCH" />
+              <img src="images/icon_search.svg" width="26" height="22" border="0" alt="SEARCH" />
               <select name="cat_id2"><option value="0">{$lang.all_category}{$cat_list}</select>
               <select name="brand_id2"><option value="0">{$lang.all_brand}{html_options options=$brand_list}</select>
               <input type="text" name="keyword2" />
@@ -365,7 +398,7 @@
           </tr>
           <tr>
             <td width="42%">
-              <select name="source_select2" size="20" style="width:100%" onchange="sz2.priceObj.value = this.options[this.selectedIndex].id" ondblclick="sz2.addItem(false, 'add_group_goods', goodsId, this.form.elements['price2'].value)">
+              <select name="source_select2" size="20" multiple style="width:100%" onchange="sz2.priceObj.value = this.options[this.selectedIndex].id" ondblclick="sz2.addItem(false, 'add_group_goods', goodsId, this.form.elements['price2'].value)">
               </select>
             </td>
             <td align="center">
@@ -389,7 +422,7 @@
           <!-- 鏂囩珷鎼滅储 -->
           <tr>
             <td colspan="3">
-              <img src="images/icon_search.gif" width="26" height="22" border="0" alt="SEARCH" />
+              <img src="images/icon_search.svg" width="26" height="22" border="0" alt="SEARCH" />
               {$lang.article_title} <input type="text" name="article_title" />
               <input type="button" value="{$lang.button_search}" onclick="searchArticle()" class="button" />
             </td>
@@ -435,7 +468,8 @@
 </div>
 <!-- end goods form -->
 {insert_scripts files="validator.js,tab.js"}
-
+<script src="../admin/js/webuploader.min.js"></script>
+<script src="../admin/js/diyUpload.js"></script>
 <script language="JavaScript">
   var goodsId = '{$goods.goods_id}';
   var elements = document.forms['theForm'].elements;
@@ -504,7 +538,14 @@
       {
          if(validator.passed())
          {
-         document.forms['theForm'].submit();
+            if($('#gallery-table').is(':visible')){
+              var sortArr = [];
+              $('.pic-list > li').each(function(){
+                  sortArr.push($(this).attr('data-imgid'));
+              })
+              $('input[name=img_sn]').val(sortArr);
+            }
+            document.forms['theForm'].submit();
          }
       }
   }
@@ -683,9 +724,11 @@
   }
 
   function handleAutoThumb(checked)
-  {
-      document.forms['theForm'].elements['goods_thumb'].disabled = checked;
+  {  
+    if(document.querySelector('.goods_thumb')){
+      document.forms['theForm'].elements['goods_thumbs'].disabled = checked;
       document.forms['theForm'].elements['goods_thumb_url'].disabled = checked;
+    }
   }
 
   /**
@@ -1117,6 +1160,104 @@
       }
     }
   }
+  
+
+  //上传图片
+  $(function(){
+    // 主图上传
+    $(".up-ipt").change(function(e) {
+          var file = this.files[0];
+              imgUrl = window.URL.createObjectURL(file),
+              imgNode = '<img src="'+ imgUrl +'"/>',
+              tips = '{$lang.tip_imgSize}';
+          if(file.size > 2 * 1024 * 1024){
+            alert(tips)
+            return
+          }
+          $(this).parent().find('.img-inner').html(imgNode);
+    });
+   
+    //相册上传
+    var maxUpNum = 10,
+        imgId = [];
+    lab_thumb_url = '{$lang.lab_thumb_url}',
+    Preview = '{$lang.Preview}',
+    tip_upload_completed = '{$lang.tip_upload_completed}',
+    tip_unknow_error = '{$lang.tip_unknow_error}',
+    tip_fileType_error = '{$lang.tip_fileType_error}',
+    tip_allSize_exceedslimit = '{$lang.tip_allSize_exceedslimit}',
+    tip_fileSize_exceedslimit = '{$lang.tip_fileSize_exceedslimit}',
+    tip_fileNumer_exceedslimit = '{$lang.tip_fileNumer_exceedslimit}',
+    tip_filehaschoose = '{$lang.tip_filehaschoose}',
+    tip_upload_error = '{$lang.tip_upload_error}',
+    tip_file = '{$lang.tip_file}',
+    tip_errocode = '{$lang.tip_errocode}',
+    tip_upload_component = '{$lang.tip_upload_component}',
+    tip_param_error = '{$lang.tip_param_error}';
+    delete(Object.prototype.toJSONString);
+    $('#goodsUpload').diyUpload({
+      url:'goods.php?act=ajax_upload_image',
+      success:function( data ) { 
+        var sn = data.content.img_id;
+        imgId.push(sn);
+        $('input[name=img_sn]').val(imgId);
+      },
+      error:function( err ) { },
+      buttonText : '',
+      accept: {
+        title: "Images",
+        extensions: 'gif,jpg,jpeg,bmp,png'
+      },
+      formData: {
+        goods_id: goodsId
+      },
+      thumb:{
+        width:1000,
+        height:1000,
+        quality:100,
+        allowMagnify:false,
+        crop:false,
+        type:"image/jpeg"
+      },
+      compress:null,
+      fileNumLimit:maxUpNum,//最大上传的文件数量, 
+      fileSizeLimit:100000 * 1024,//总文件大小
+      fileSingleSizeLimit:10000 * 1024 //单个文件大小(单位字节)
+    });
+    //左移事件;
+    function leftLi ($leftli, $li) {
+        $li.insertBefore($leftli);
+    }
+
+    //右移事件;
+    function rightLi ($rightli, $li) {
+        $li.insertAfter($rightli);
+    }
+    //绑定左移事件;
+    var uploadUl = $('.upload-ul');
+      uploadUl.find('.diyLeft').on('click',function(){
+          leftLi($(this).parents('.diyUploadHover').prev(), $(this).parents('.diyUploadHover'));
+      });
+
+      //绑定右移事件;
+      uploadUl.find('.diyRight').on('click',function(){
+          rightLi($(this).parents('.diyUploadHover').next(), $(this).parents('.diyUploadHover') );
+      });
+     //图片相册外链图片加入预览
+     $('.upload-ul .list').on('click','.fill-img',function(){
+        var imgsrc = $.trim($(this).prev('input').val()),
+            $parent = $(this).parent();
+        if(imgsrc != ''){
+          $parent.find('img').attr('src',imgsrc);
+          $parent.find('.viewThumb > input').val(imgsrc);
+        }
+
+     })
+  });
+
+
   {/literal}
+
+
 </script>
 {include file="pagefooter.htm"}

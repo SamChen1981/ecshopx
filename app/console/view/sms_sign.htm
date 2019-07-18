@@ -5,7 +5,7 @@
 <!-- 品牌搜索 -->
 <div class="form-div">
 <form  name="searchForm" method="post">   
-     {$lang.add_sign} <input type="text" name="sms_sign" size="15" />
+     {$lang.add_sign} <input type="text" name="sms_sign" size="15" placeholder="无需添加【】" />
     <input type="hidden" name="act" size="15" value="sms_sign_add" />
     <input type="submit" value="{$lang.add}" class="button" />
 	{$lang.new_default_sign}：{$default_sign}
@@ -18,7 +18,7 @@
 <div class="form-div">
 <form  name="searchForm" method="post">
      {$lang.default_sign}: {$sms_sign.value}
-	 {$lang.edited}:<input type="text" name="new_sms_sign" size="15" />
+	 {$lang.edited}:<input type="text" name="new_sms_sign" size="15" placeholder="无需添加【】" />
 
     <input type="hidden" name="extend_no" size="15" value="{$sms_sign.key}" />
     <input type="submit" value="{$lang.edit}" class="button"  name="sms_sign_update"/>

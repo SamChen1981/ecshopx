@@ -70,6 +70,19 @@ class tenpayc2c
 {
     function __construct()
     {
+        $this->tenpayc2c();
+    }
+
+    /**
+     * 构造函数
+     *
+     * @access  public
+     * @param
+     *
+     * @return void
+     */
+    function tenpayc2c()
+    {
     }
 
     /**

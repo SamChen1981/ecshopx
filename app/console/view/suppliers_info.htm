@@ -14,7 +14,7 @@
   </tr>
   <tr>
     <td class="label">
-    <a href="javascript:showNotice('noticeAdmins');" title="{$lang.form_notice}"><img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.label_admins}</td>
+    <a href="javascript:showNotice('noticeAdmins');" title="{$lang.form_notice}"><img src="images/notice.svg" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.label_admins}</td>
     <td>{foreach from=$suppliers.admin_list item=admin}
       <input type="checkbox" name="admins[]" value="{$admin.user_id}" {if $admin.type eq "this"}checked="checked"{/if} />
       {$admin.user_name}{if $admin.type eq "other"}(*){/if}&nbsp;&nbsp;

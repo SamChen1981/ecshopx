@@ -17,7 +17,8 @@ define('IN_ECS', true);
 
 require(dirname(__FILE__) . '/includes/init.php');
 require_once(ROOT_PATH . 'includes/cls_sms.php');
-require_once(ROOT_PATH . 'includes/prism-php/lib/client.php');
+require_once(ROOT_PATH . "admin/includes/oauth/oauth2.php");
+
 
 
 
@@ -52,6 +53,9 @@ switch ($action)
             }
             assign_query_info();
             $smarty->assign('send_rank',   $send_rank);
+            $sql="SELECT * FROM ". $ecs->table('shop_config') . "WHERE  code='default_sms_sign'";
+            $row=$db->getRow($sql);
+            $smarty->assign('default_sms_sign', $row['value']);
             $smarty->display('sms_send_ui.htm');
         }
         else
@@ -135,18 +139,18 @@ switch ($action)
                     $content_t= iconv('gb2312','utf-8',$content_y);
                 }
 
-                $url = 'https://openapi.shopex.cn';
-                $key = 'qufoxtpr';
-                $secret = 't66moqjixb2nntiy2io2';
-                $c = new prism_client($url, $key, $secret);
-                $params=array(
-                'shopexid'=>$_CFG['ent_id'],
-                'passwd'=>$_CFG['ent_ac'],
-                'content'=>$content_t,
-                'content-type'=>'application/x-www-form-urlencoded'
-                );
-                $result=$c->post('api/addcontent/new',$params);
-                $result=json_decode($result,true);
+                $openapi_key = array('key'=>OPENAPI_KEY,'secret'=>OPENAPI_SECRET,'site'=>OPENAPI_SITE,'oauth'=>OPENAPI_OAUTH);
+                $oauth = new oauth2($openapi_key);
+                // 添加短信签名
+                $content_t = str_replace(array('【','】'), '', $content_t);
+                $api_url = OAUTH_API_PATH."/addcontent/newbytoken";
+                $params = array();
+                $params['shopexid'] = get_certificate_info('passport_uid');
+                $params['token'] = get_certificate_info('yunqi_code');
+                $params['content'] = sprintf("【%s】",$content_t);
+                $rall = $oauth->request($_SESSION['TOKEN'])->post($api_url,$params);
+                $result = $rall->parsed();
+
                 if($result['res']=='succ' && !empty($result['data']['extend_no']))
                 {
                     $extend_no=$result['data']['extend_no'];
@@ -163,6 +167,7 @@ switch ($action)
                 }
                 else
                 {
+                    if ( $result['code'] == 1004 ) delete_yunqi_code();
                     $error_smg=$result['data'];
                     if(EC_CHARSET != 'utf-8')
                     {
@@ -201,10 +206,6 @@ switch ($action)
             {
                 $sms_sign=unserialize($row['value']);
                 $smarty->assign('sms_sign', $sms_sign);
-                $data=array();
-                $data['shopexid']=$_CFG['ent_id'];
-                $data['passwd']=$_CFG['ent_ac'];
-                
                 $extend_no=$_POST['extend_no']; 
 
                 $content_t=$content_y=$sms_sign[$_CFG['ent_id']][$extend_no];
@@ -219,19 +220,20 @@ switch ($action)
                     $content_t= iconv('gb2312','utf-8',$content_y);
                     $new_content_t= iconv('gb2312','utf-8',$new_content_y);
                 }
-                $url = 'https://openapi.shopex.cn';
-                $key = 'qufoxtpr';
-                $secret = 't66moqjixb2nntiy2io2';
-                $c = new prism_client($url, $key, $secret);
-                $params=array(
-                'shopexid'=>$_CFG['ent_id'],
-                'passwd'=>$_CFG['ent_ac'],
-                'old_content'=>$content_t,
-                'new_content'=>$new_content_t,
-                'content-type'=>'application/x-www-form-urlencoded'
-                );
-                $result=$c->post('api/addcontent/update',$params);
-                $result=json_decode($result,true);
+
+                $openapi_key = array('key'=>OPENAPI_KEY,'secret'=>OPENAPI_SECRET,'site'=>OPENAPI_SITE,'oauth'=>OPENAPI_OAUTH);
+                $oauth = new oauth2($openapi_key);
+                // 更新短信签名
+                $content_t = str_replace(array('【','】'), '', $content_t);
+                $new_content_t = str_replace(array('【','】'), '', $new_content_t);
+                $api_url = OAUTH_API_PATH."/addcontent/updatebytoken";
+                $params = array();
+                $params['shopexid'] = get_certificate_info('passport_uid');
+                $params['token'] = get_certificate_info('yunqi_code');
+                $params['old_content'] = sprintf("【%s】",$content_t);
+                $params['new_content'] = sprintf("【%s】",$new_content_t);
+                $rall = $oauth->request($_SESSION['TOKEN'])->post($api_url,$params);
+                $result = $rall->parsed();
 
                 if($result['res']=='succ' && !empty($result['data']['new_extend_no']))
                 {
@@ -252,6 +254,7 @@ switch ($action)
                 }
                 else
                 {
+                    if ( $result['code'] == 1004 ) delete_yunqi_code();
                     $error_smg=$result['data'];
                     if(EC_CHARSET != 'utf-8')
                     {

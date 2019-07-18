@@ -4,10 +4,10 @@
 <link href="../js/calendar/calendar.css" rel="stylesheet" type="text/css" />
 <div class="form-div">
   <form action="" method="post" id="selectForm" name="selectForm">
-    {$lang.start_date}&nbsp;&nbsp;
-    <input name="start_date" value="{$start_date}" style="width:80px;" onclick="return showCalendar(this, '%Y-%m-%d', false, false, this);" />
-    {$lang.end_date}&nbsp;&nbsp;
-    <input name="end_date" value="{$end_date}" style="width:80px;" onclick="return showCalendar(this, '%Y-%m-%d', false, false, this);" />
+    {$lang.start_date}:
+    <input type="text" name="start_date" value="{$start_date}" size="12" readonly onclick="return showCalendar(this, '%Y-%m-%d', false, false, this);">&nbsp;&nbsp;
+    {$lang.end_date}:
+    <input type="text" name="end_date" value="{$end_date}" size="12" readonly onclick="return showCalendar(this, '%Y-%m-%d', false, false, this);">
     <input type="submit" name="submit" value="{$lang.access_query}" class="button" />
   </form>
     <form action="" method="post" id="selectForm" name="selectForm">
@@ -16,7 +16,7 @@
     {if $k > 0}
     &nbsp;+&nbsp;
     {/if}
-    <input name="year_month[]" value="{$start_date}" style="width:60px;" onclick="return showCalendar(this, '%Y-%m', false, false, this);" />
+    <input type="text" name="year_month[]" value="{$start_date}" style="width:60px;" onclick="return showCalendar(this, '%Y-%m', false, false, this);" />
     <!--{/foreach}--><input type="hidden" name="is_multi" value="1" />
     <input type="submit" name="submit" value="{$lang.access_query}" class="button" />
   </form>

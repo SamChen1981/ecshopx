@@ -26,6 +26,21 @@ $_LANG['number'] = '数量';
 $_LANG['display'] = '显示';
 $_LANG['select_plz'] = '请选择...';
 $_LANG['button_restore'] = '还原到上一修改';
+$_LANG['version_desc'] = '版本号';
+$_LANG['developer'] = '开发者';
+$_LANG['upload_template'] = '上传模板';
+$_LANG['batch_upload_template'] = '批量上传模板';
+$_LANG['browse_local_template'] = '浏览本地模板文件';
+$_LANG['cannot_open_template_select'] = '无法打开模板选择窗口？';
+$_LANG['click'] = '点击';
+$_LANG['the_upload_template'] = '本次上传的模板';
+$_LANG['sure'] = '确定';
+$_LANG['auto_decomp_install'] = '自动解压安装';
+$_LANG['del_template_confirm'] = '是否确认删除该模板？';
+$_LANG['del_success'] = '删除成功';
+$_LANG['del_fail'] = '删除失败';
+$_LANG['upload_success'] = '上传成功！';
+$_LANG['upload_format_error'] = '您选择的文件格式不正确，请上传tgz文件';
 
 /* 提示信息 */
 $_LANG['library_not_written'] = '库文件 %s 没有修改权限，该库文件将无法修改';

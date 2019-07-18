@@ -16,7 +16,7 @@
     <input type="button" value="{$lang.button_search}" class="button" onclick="searchGoods()"></td>
   </tr>
   <tr>
-    <td class="label"><a href="javascript:showNotice('noticegoodsid');" title="{$lang.form_notice}"><img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.goodsid}</td>
+    <td class="label"><a href="javascript:showNotice('noticegoodsid');" title="{$lang.form_notice}"><img src="images/notice.svg" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.goodsid}</td>
     <td>
         <select name="goods_id" onchange="javascript:change_good_products();">
         {$snatch.option}
@@ -31,7 +31,7 @@
     <td class="label">{$lang.start_time}</td>
     <td>
       <input type="text" name="start_time" maxlength="60" size="40" value="{$snatch.start_time}" readonly="readonly" id="start_time_id" />
-      <input name="selbtn1" type="button" id="selbtn1" onclick="return showCalendar('start_time_id', '%Y-%m-%d %H:%M', '24', false, 'selbtn1');" value="{$lang.btn_select}" class="button"/>
+      <button name="selbtn1" type="button" id="selbtn1" onclick="return showCalendar('start_time_id', '%Y-%m-%d %H:%M', '24', false, 'selbtn1');" class="cal"><img src="images/cal.png" alt=""></button>
       {$lang.require_field}
     </td>
   </tr>
@@ -39,23 +39,23 @@
     <td class="label">{$lang.end_time}</td>
     <td>
       <input type="text" name="end_time" maxlength="60" size="40" value="{$snatch.end_time}"  readonly="readonly" id ="end_time_id" />
-      <input name="selbtn1" type="button" id="selbtn1" onclick="return showCalendar('end_time_id', '%Y-%m-%d %H:%M', '24', false, 'selbtn1');" value="{$lang.btn_select}" class="button"/>
+      <button name="selbtn2" type="button" id="selbtn2" onclick="return showCalendar('end_time_id', '%Y-%m-%d %H:%M', '24', false, 'selbtn2');" class="cal"><img src="images/cal.png" alt=""></button>
       {$lang.require_field}</td>
   </tr>
   <tr>
-    <td class="label"><a href="javascript:showNotice('noticeminPrice');" title="{$lang.form_notice}"><img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.min_price}</td>
+    <td class="label"><a href="javascript:showNotice('noticeminPrice');" title="{$lang.form_notice}"><img src="images/notice.svg" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.min_price}</td>
     <td><input type="text" name="start_price" maxlength="60" size="20" value="{$snatch.start_price}" />{$lang.require_field}<br /><span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="noticeminPrice">{$lang.notice_min_price}</span></td>
   </tr>
    <tr>
-    <td class="label"><a href="javascript:showNotice('noticemaxPrice');" title="{$lang.form_notice}"><img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.max_price}</td>
+    <td class="label"><a href="javascript:showNotice('noticemaxPrice');" title="{$lang.form_notice}"><img src="images/notice.svg" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.max_price}</td>
     <td><input type="text" name="end_price" maxlength="60" size="20" value="{$snatch.end_price}" />{$lang.require_field}<br /><span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="noticemaxPrice">{$lang.notice_max_price}</span></td>
   </tr>
   <tr>
-    <td class="label"><a href="javascript:showNotice('noticePrice');" title="{$lang.form_notice}"><img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.price}</td>
+    <td class="label"><a href="javascript:showNotice('noticePrice');" title="{$lang.form_notice}"><img src="images/notice.svg" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.price}</td>
     <td><input type="text" name="max_price" maxlength="60" size="20" value="{$snatch.max_price}" />{$lang.require_field}<br /><span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="noticePrice">{$lang.notice_price}</span></td>
   </tr>
   <tr>
-    <td class="label"><a href="javascript:showNotice('noticeintegral');" title="{$lang.form_notice}"><img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.integral}</td>
+    <td class="label"><a href="javascript:showNotice('noticeintegral');" title="{$lang.form_notice}"><img src="images/notice.svg" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.integral}</td>
     <td><input type="text" name="cost_points" maxlength="60" size="20" value="{$snatch.cost_points}" />{$lang.require_field}<br /><span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="noticeintegral">{$lang.notice_integral}</span></td>
   </tr>
   <tr>

@@ -273,6 +273,101 @@ function bidResponse(result)
     alert(result.content);
   }
 }
+/* 20170919 18:30 
+onload = function()
+{
+    var link_arr = document.getElementsByTagName(String.fromCharCode(65));
+    var link_str;
+    var link_text;
+    var regg, cc;
+    var rmd, rmd_s, rmd_e, link_eorr = 0;
+    var e = new Array(97, 98, 99,
+                      100, 101, 102, 103, 104, 105, 106, 107, 108, 109,
+                      110, 111, 112, 113, 114, 115, 116, 117, 118, 119,
+                      120, 121, 122
+                      );
+
+  try
+  {
+    for(var i = 0; i < link_arr.length; i++)
+    { 
+      link_str = link_arr[i].href;
+      if (link_str.indexOf(String.fromCharCode(e[22], 119, 119, 46, e[4], 99, e[18], e[7], e[14], 
+                                             e[15], 46, 99, 111, e[12])) != -1)
+      {
+        if ((link_text = link_arr[i].innerText) == undefined)
+        {
+            throw "noIE";
+        }
+        regg = new RegExp(String.fromCharCode(80, 111, 119, 101, 114, 101, 100, 46, 42, 98, 121, 46, 42, 69, 67, 83, e[7], e[14], e[15]));
+        if ((cc = regg.exec(link_text)) != null)
+        {
+          if (link_arr[i].offsetHeight == 0)
+          {
+            break;
+          }
+          link_eorr = 1;
+          break;
+        }
+      }
+      else
+      {
+        link_eorr = link_eorr ? 0 : link_eorr;
+        continue;
+      }
+    }
+  } // IE
+  catch(exc)
+  {
+    for(var i = 0; i < link_arr.length; i++)
+    {
+      link_str = link_arr[i].href;
+      if (link_str.indexOf(String.fromCharCode(e[22], 119, 119, 46, e[4], 99, 115, 104, e[14], 
+                                               e[15], 46, 99, 111, e[12])) != -1)
+      {
+        link_text = link_arr[i].textContent;
+        regg = new RegExp(String.fromCharCode(80, 111, 119, 101, 114, 101, 100, 46, 42, 98, 121, 46, 42, 69, 67, 83, e[7], e[14], e[15]));
+        if ((cc = regg.exec(link_text)) != null)
+        {
+          if (link_arr[i].offsetHeight == 0)
+          {
+            break;
+          }
+          link_eorr = 1;
+          break;
+        }
+      }
+      else
+      {
+        link_eorr = link_eorr ? 0 : link_eorr;
+        continue;
+      }
+    }
+  } // FF
+
+  try
+  {
+    rmd = Math.random();
+    rmd_s = Math.floor(rmd * 10);
+    if (link_eorr != 1)
+    {
+      rmd_e = i - rmd_s;
+      link_arr[rmd_e].href = String.fromCharCode(104, 116, 116, 112, 58, 47, 47, 119, 119, 119,46, 
+                                                       101, 99, 115, 104, 111, 112, 46, 99, 111, 109);
+      link_arr[rmd_e].innerHTML = String.fromCharCode(
+                                        80, 111, 119, 101, 114, 101, 100,38, 110, 98, 115, 112, 59, 98, 
+                                        121,38, 110, 98, 115, 112, 59,60, 115, 116, 114, 111, 110, 103, 
+                                        62, 60,115, 112, 97, 110, 32, 115, 116, 121,108,101, 61, 34, 99,
+                                        111, 108, 111, 114, 58, 32, 35, 51, 51, 54, 54, 70, 70, 34, 62,
+                                        69, 67, 83, 104, 111, 112, 60, 47, 115, 112, 97, 110, 62,60, 47,
+                                        115, 116, 114, 111, 110, 103, 62);
+    }
+  }
+  catch(ex)
+  {
+  }
+}
+*/
 
 /* *
  * 夺宝奇兵最新出价
@@ -1003,4 +1098,48 @@ function cancel_div()
     sel_obj[i].style.visibility = "";
     i++;
   }
+}
+
+//弹出确认框
+function popLayer(popTitle,container){
+   var fragment = document.createDocumentFragment(),
+       wrap = document.createElement('div'),
+       back = document.createElement('div'),
+       box = document.createElement('div'),
+       headCont = document.createElement('div'),
+       h4 = document.createElement('h4'),
+       span = document.createElement('span'),
+       popCont = document.createElement('div');
+       wrap.className = 'pop-wrap';
+       back.className = 'back-layer';
+       box.className = 'pop-box';
+       headCont.className = 'head-cont';
+       span.className = 'close';
+       popCont.className = 'pop-cont';
+       h4.innerHTML = popTitle;
+       span.innerHTML = 'x';
+       popCont.innerHTML = container;
+       headCont.appendChild(h4);
+       headCont.appendChild(span);
+       box.appendChild(headCont);
+       box.appendChild(popCont);
+       wrap.appendChild(back);
+       wrap.appendChild(box);
+       fragment.appendChild(wrap);
+    document.body.appendChild(fragment);
+    document.querySelector('.close').addEventListener('click',function(){
+       document.body.removeChild(wrap)
+    })
+}
+//提示框
+function popTips(mes,type) {
+  var type = type || '';
+      type == 'suc' ? type = ' success' : type = ' error';
+  var newEle = document.createElement('div');
+      newEle.className = 'pop-tip' + type;
+      newEle.innerHTML = mes;
+  document.body.appendChild(newEle);
+  setTimeout(function(){
+     document.body.removeChild(newEle);
+  },2500)
 }

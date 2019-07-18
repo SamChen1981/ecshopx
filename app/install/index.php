@@ -3,7 +3,7 @@
 /**
  * ECSHOP 安装程序 之 控制器
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -43,7 +43,7 @@ else
 
 /* 初始化流程控制变量 */
 $step = isset($_REQUEST['step']) ? $_REQUEST['step'] : 'welcome';
-if (file_exists(ROOT_PATH . 'data/install.lock') && $step != 'active')
+if (file_exists(ROOT_PATH . 'data/install.lock') && $step != 'done')
 {
     $step = 'error';
     $err->add($_LANG['has_locked_installer']);
@@ -92,7 +92,7 @@ case 'check' :
     if ($dir_checking['result'] === 'ERROR'
             || !empty($template_checking)
             || !empty($rename_priv)
-            || !function_exists('mysql_connect'))
+            || !function_exists('mysqli_connect'))
     {
         $disabled = 'disabled="true"';
     }
@@ -213,8 +213,23 @@ case 'create_config_file' :
     $prefix     = isset($_POST['db_prefix'])    ?   trim($_POST['db_prefix']) : '';
     $timezone   = isset($_POST['timezone'])     ?   trim($_POST['timezone']) : 'Asia/Shanghai';
 
+    $data = array(
+        'SHOP_DB_HOST' => $db_host,
+        'SHOP_DB_PORT' => $db_port,
+        'SHOP_DB_DATABASE' => $db_name,
+        'SHOP_DB_USERNAME' => $db_user,
+        'SHOP_DB_PASSWORD' => $db_pass,
+        'SHOP_DB_PREFIX' => $prefix,
+        'SHOP_URL' => defined('FORCE_SSL_LOGIN') ? 'https://' : 'http://' . $_SERVER['HTTP_HOST'],
+        'SHOP_H5' => defined('FORCE_SSL_LOGIN') ? 'https://' : 'http://' . $_SERVER['HTTP_HOST'].'/h5',
+        'TOKEN_SECRET' => md5(time() . mt_rand(0,1000))
+        );
+
     $result = create_config_file($db_host, $db_port, $db_user, $db_pass, $db_name, $prefix,  $timezone);
-    if ($result === false)
+    $result_api = create_env($data,'appserver');
+    $result_h5 = create_env($data,'h5');
+
+    if ($result === false || $result_api === false || $result_h5 ===false)
     {
         echo implode(',', $err->get_all());
     }
@@ -222,6 +237,7 @@ case 'create_config_file' :
     {
         echo 'OK';
     }
+
 
     break;
 
@@ -394,22 +410,38 @@ case 'do_others' :
     break;
 
 case 'done' :
-    $result = deal_aftermath();
-    if ($result === false)
-    {
-        $err_msg = implode(',', $err->get_all());
-        $smarty->assign('err_msg', $err_msg);
-        $smarty->display('error.php');
+    if (file_exists(ROOT_PATH . 'data/install.lock')) { 
+        $step = 'error'; 
+        $err->add($_LANG['has_locked_installer']); 
+        $err_msg = implode(',', $err->get_all()); $smarty->assign('err_msg', $err_msg); 
+        $smarty->display('error.php'); 
+        break;
     }
-    else
-    {
-        @unlink(ROOT_PATH .'data/config_temp.php');
-        $spt_code = get_spt_code();
-        $_SESSION['done']['spt_code'] = $spt_code;
-        $smarty->assign('spt_code', spt_code);
-        $smarty->display('done.php');
+    if (!file_exists(ROOT_PATH . 'data/install.lock')){
+        $result = deal_aftermath();
+        clear_all_files();
+    }else{
+        $result = true;
     }
-
+    if( $_REQUEST['type']=='yunqi'){
+        $url = url()."/yunqi_check.php?act=yunqi_check";
+        header("Location: ".$url);exit;
+    }else{
+       if ($result === false)
+        {
+            $err_msg = implode(',', $err->get_all());
+            $smarty->assign('err_msg', $err_msg);
+            $smarty->display('error.php');
+        }
+        else
+        {
+            @unlink(ROOT_PATH .'data/config_temp.php');
+            $spt_code = get_spt_code();
+            $_SESSION['done']['spt_code'] = $spt_code;
+            $smarty->assign('spt_code', spt_code);
+            $smarty->display('done.php');
+        }
+    }
     break;
 
 case 'active' :
@@ -418,7 +450,7 @@ case 'active' :
     {
         $path .= '/';
     }
-    $admin_url = 'http://'.$_SERVER['HTTP_HOST'].$path.'admin';
+    $admin_url = defined('FORCE_SSL_LOGIN') ? 'https://' : 'http://' . $_SERVER['HTTP_HOST'].$path.'admin';
     $link_url = base64_encode($admin_url);
     $_SESSION['active']['installer_lang'] = $installer_lang;
     $_SESSION['active']['admin_url'] = $admin_url;

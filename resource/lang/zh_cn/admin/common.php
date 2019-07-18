@@ -258,7 +258,7 @@ $_LANG['suppliers_list'] = '供货商列表';
 
 /* 系统设置 */
 $_LANG['01_shop_config'] = '商店设置';
-$_LANG['shop_authorized'] = '授权证书';
+// $_LANG['shop_authorized'] = '授权证书';
 $_LANG['shp_webcollect'] = '网罗天下';
 $_LANG['02_payment_list'] = '支付方式';
 $_LANG['03_shipping_list'] = '配送方式';
@@ -354,5 +354,18 @@ $_LANG['alipay_look'] = '<a href=\"https://www.alipay.com/himalayas/practicality
 
 $_LANG['04_sms_sign'] = '短信签名';
 
+/* 云服务中心 */
+$_LANG['certificate'] = '授权绑定';
+$_LANG['service_market'] = '服务市场';
+$_LANG['sms_resource'] = '短信平台';
+/*云起物流*/
+$_LANG['logistic_tracking'] = '云起物流';
 
+/* 移动版全民分销开通引导页 */
+$_LANG['banner_mobile'] = '移动端广告配置';
+$_LANG['lead'] = 'H5店铺二维码';
+$_LANG['mobile_setting'] = 'APP应用配置';
+$_LANG['h5_setting'] = 'H5应用配置';
+$_LANG['wxa_setting'] = '小程序应用配置';
+$_LANG['leancloud'] = 'APP推送管理';
 ?>

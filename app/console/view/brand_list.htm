@@ -28,7 +28,7 @@
       <td>{$brand.site_url}</td>
       <td align="left">{$brand.brand_desc|truncate:36}</td>
       <td align="right"><span onclick="javascript:listTable.edit(this, 'edit_sort_order', {$brand.brand_id})">{$brand.sort_order}</span></td>
-      <td align="center"><img src="images/{if $brand.is_show}yes{else}no{/if}.gif" onclick="listTable.toggle(this, 'toggle_show', {$brand.brand_id})" /></td>
+      <td align="center"><img src="images/{if $brand.is_show}yes{else}no{/if}.svg" width="20" onclick="listTable.toggle(this, 'toggle_show', {$brand.brand_id})" /></td>
       <td align="center">
         <a href="brand.php?act=edit&id={$brand.brand_id}" title="{$lang.edit}">{$lang.edit}</a> |
         <a href="javascript:;" onclick="listTable.remove({$brand.brand_id}, '{$lang.drop_confirm}')" title="{$lang.edit}">{$lang.remove}</a> 

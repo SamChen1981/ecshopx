@@ -15,13 +15,13 @@
   <tr>
     <td class="label">
       <a href="javascript:showNotice('Type_money_a');" title="{$lang.form_notice}">
-      <img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.type_money}</td>
+      <img src="images/notice.svg" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.type_money}</td>
     <td>
     <input type="text" name="type_money" value="{$bonus_arr.type_money}" size="20" />
     <br /><span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="Type_money_a">{$lang.type_money_notic}</span>    </td>
   </tr>
   <tr>
-    <td class="label"><a href="javascript:showNotice('NoticeMinGoodsAmount');" title="{$lang.form_notice}"> <img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}" /></a>{$lang.min_goods_amount}</td>
+    <td class="label"><a href="javascript:showNotice('NoticeMinGoodsAmount');" title="{$lang.form_notice}"> <img src="images/notice.svg" width="16" height="16" border="0" alt="{$lang.form_notice}" /></a>{$lang.min_goods_amount}</td>
     <td><input name="min_goods_amount" type="text" id="min_goods_amount" value="{$bonus_arr.min_goods_amount}" size="20" />
     <br /><span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="NoticeMinGoodsAmount">{$lang.notice_min_goods_amount}</span> </td>
   </tr>
@@ -36,7 +36,7 @@
   <tr id="1" style="display:none">
     <td class="label">
       <a href="javascript:showNotice('Order_money_a');" title="{$lang.form_notice}">
-      <img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.min_amount}</td>
+      <img src="images/notice.svg" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.min_amount}</td>
     <td>
       <input name="min_amount" type="text" id="min_amount" value="{$bonus_arr.min_amount}" size="20" />
       <br /><span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="Order_money_a">{$lang.order_money_notic}</span>    </td>
@@ -44,29 +44,32 @@
   <tr>
     <td class="label">
       <a href="javascript:showNotice('Send_start_a');" title="{$lang.form_notice}">
-      <img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.send_startdate}</td>
+      <img src="images/notice.svg" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.send_startdate}</td>
     <td>
-      <input name="send_start_date" type="text" id="send_start_date" size="22" value='{$bonus_arr.send_start_date}' readonly="readonly" /><input name="selbtn1" type="button" id="selbtn1" onclick="return showCalendar('send_start_date', '%Y-%m-%d', false, false, 'selbtn1');" value="{$lang.btn_select}" class="button"/>
-      <br /><span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="Send_start_a">{$lang.send_startdate_notic}</span>    </td>
+      <input name="send_start_date" type="text" id="send_start_date" size="12" value='{$bonus_arr.send_start_date}' readonly="readonly"><button name="selbtn1" type="button" id="selbtn1" onclick="return showCalendar('send_start_date', '%Y-%m-%d', false, false, 'selbtn1');" class="cal"><img src="images/cal.png" alt="calendar"></button>
+      <br /><span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="Send_start_a">{$lang.send_startdate_notic}</span>
+    </td>
   </tr>
   <tr>
     <td class="label">{$lang.send_enddate}</td>
     <td>
-      <input name="send_end_date" type="text" id="send_end_date" size="22" value='{$bonus_arr.send_end_date}' readonly="readonly" /><input name="selbtn2" type="button" id="selbtn2" onclick="return showCalendar('send_end_date', '%Y-%m-%d', false, false, 'selbtn2');" value="{$lang.btn_select}" class="button"/>    </td>
+      <input name="send_end_date" type="text" id="send_end_date" size="12" value='{$bonus_arr.send_end_date}' readonly="readonly" /><button name="selbtn2" type="button" id="selbtn2" onclick="return showCalendar('send_end_date', '%Y-%m-%d', false, false, 'selbtn2');" class="cal"><img src="images/cal.png" alt=""></button>
+    </td>
   </tr>
   <tr>
     <td class="label">
 	  <a href="javascript:showNotice('Use_start_a');" title="{$lang.form_notice}">
-      <img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>
+      <img src="images/notice.svg" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>
 	{$lang.use_startdate}</td>
     <td>
-      <input name="use_start_date" type="text" id="use_start_date" size="22" value='{$bonus_arr.use_start_date}' readonly="readonly" /><input name="selbtn3" type="button" id="selbtn3" onclick="return showCalendar('use_start_date', '%Y-%m-%d', false, false, 'selbtn3');" value="{$lang.btn_select}" class="button"/>
-	  <br /><span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="Use_start_a">{$lang.use_startdate_notic}</span>    </td>
+      <input name="use_start_date" type="text" id="use_start_date" size="12" value='{$bonus_arr.use_start_date}' readonly="readonly" /><button name="selbtn3" type="button" id="selbtn3" onclick="return showCalendar('use_start_date', '%Y-%m-%d', false, false, 'selbtn3');" class="cal"><img src="images/cal.png" alt=""></button>
+	  <br /><span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="Use_start_a">{$lang.use_startdate_notic}</span>
+  </td>
   </tr>
   <tr>
     <td class="label">{$lang.use_enddate}</td>
     <td>
-      <input name="use_end_date" type="text" id="use_end_date" size="22" value='{$bonus_arr.use_end_date}' readonly="readonly" /><input name="selbtn4" type="button" id="selbtn4" onclick="return showCalendar('use_end_date', '%Y-%m-%d', false, false, 'selbtn4');" value="{$lang.btn_select}" class="button"/>    </td>
+      <input name="use_end_date" type="text" id="use_end_date" size="12" value='{$bonus_arr.use_end_date}' readonly="readonly" /><button name="selbtn4" type="button" id="selbtn4" onclick="return showCalendar('use_end_date', '%Y-%m-%d', false, false, 'selbtn4');" class="cal"><img src="images/cal.png" alt=""></button>    </td>
   </tr>
   <tr>
     <td class="label">&nbsp;</td>

@@ -3,7 +3,7 @@
 /**
  * ECSHOP 系统环境检测函数库
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -36,14 +36,21 @@ function check_dirs_priv($checking_dirs)
 
     foreach ($checking_dirs AS $dir)
     {
-        if (!file_exists(ROOT_PATH . $dir))
+        $path = ROOT_PATH;
+        // if(strstr($dir,'appserver')){
+        //     $path_arr = explode('/',ROOT_PATH);
+        //     $count = count($path_arr)-2;
+        //     $name = $path_arr[$count].'/';
+        //     $path = str_replace($name,'',ROOT_PATH);
+        // }
+        if (!file_exists($path . $dir))
         {
             $msgs['result'] = 'ERROR';
             $msgs['detail'][] = array($dir, $_LANG['not_exists']);
             continue;
         }
 
-        if (file_mode_info(ROOT_PATH . $dir) < 2)
+        if (file_mode_info($path . $dir) < 2)
         {
             $msgs['result'] = 'ERROR';
             $msgs['detail'][] = array($dir, $_LANG['cannt_write']);

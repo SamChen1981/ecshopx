@@ -5,10 +5,10 @@
 {insert_scripts files="../js/utils.js,listtable.js"}
 <div class="form-div">
   <form name="TimeInterval"  action="javascript:getList()" style="margin:0px">
-  {$lang.start_date}&nbsp;
-    <input name="start_date" type="text" id="start_date" size="15" value='{$start_date}' readonly="readonly" /><input name="selbtn1" type="button" id="selbtn1" onclick="return showCalendar('start_date', '%Y-%m-%d', false, false, 'selbtn1');" value="{$lang.btn_select}" class="button"/>&nbsp;&nbsp;
-    {$lang.end_date}&nbsp;
-    <input name="end_date" type="text" id="end_date" size="15" value='{$end_date}' readonly="readonly" /><input name="selbtn2" type="button" id="selbtn2" onclick="return showCalendar('end_date', '%Y-%m-%d', false, false, 'selbtn2');" value="{$lang.btn_select}" class="button"/>&nbsp;&nbsp;
+  {$lang.start_date}:
+    <input name="start_date" type="text" id="start_date" size="15" value='{$start_date}' readonly="readonly" onclick="return showCalendar('start_date', '%Y-%m-%d', false, false, this);" >&nbsp;&nbsp;
+    {$lang.end_date}:
+    <input name="end_date" type="text" id="end_date" size="15" value='{$end_date}' readonly="readonly" onclick="return showCalendar('end_date', '%Y-%m-%d', false, false, this);">
     <input type="submit" name="submit" value="{$lang.query}" class="button" />
   </form>
 </div>

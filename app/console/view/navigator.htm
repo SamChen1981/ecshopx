@@ -13,16 +13,16 @@
 	<td align="center"><!-- {if $val.id} -->{$val.name}<!-- {else} -->&nbsp;<!-- {/if} --></td>
   <td align="center">
    <!-- {if $val.id} -->
-   <img src="images/{if $val.ifshow eq '1'}yes{else}no{/if}.gif" onclick="listTable.toggle(this, 'toggle_ifshow', {$val.id})" />
+   <img src="images/{if $val.ifshow eq '1'}yes{else}no{/if}.svg" width="20" onclick="listTable.toggle(this, 'toggle_ifshow', {$val.id})" />
    <!-- {/if} --></td>
   <td align="center">
    <!-- {if $val.id} -->
-    <img src="images/{if $val.opennew eq '1'}yes{else}no{/if}.gif" onclick="listTable.toggle(this, 'toggle_opennew', {$val.id})" />
+    <img src="images/{if $val.opennew eq '1'}yes{else}no{/if}.svg" width="20" onclick="listTable.toggle(this, 'toggle_opennew', {$val.id})" />
    <!-- {/if} --></td>
   <td align="center"><!-- {if $val.id} --><span onclick="listTable.edit(this, 'edit_sort_order', {$val.id})">{$val.vieworder}</span><!-- {/if} --></td>
   <td align="center"><!-- {if $val.id} -->{$lang[$val.type]}<!-- {/if} --></td>
-  <td align="center"><!-- {if $val.id} --><a href="navigator.php?act=edit&id={$val.id}" title="{$lang.edit}"><img src="images/icon_edit.gif" width="16" height="16" border="0" /></a>
-  <a href="navigator.php?act=del&id={$val.id}" onclick="return confirm('{$lang.ckdel}');" title="{$lang.ckdel}"><img src="images/no.gif" width="16" height="16" border="0" /><!-- {/if} --></a>
+  <td align="center"><!-- {if $val.id} --><a href="navigator.php?act=edit&id={$val.id}" title="{$lang.edit}">{$lang.edit}</a>
+  <a href="navigator.php?act=del&id={$val.id}" onclick="return confirm('{$lang.ckdel}');" title="{$lang.ckdel}">{$lang.ckdel}<!-- {/if} --></a>
   </td>
 </tr>
 {foreachelse}

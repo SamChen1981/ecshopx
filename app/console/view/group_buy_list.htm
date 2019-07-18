@@ -5,9 +5,8 @@
 {insert_scripts files="../js/utils.js,listtable.js"}
 <div class="form-div">
   <form action="javascript:searchGroupBuy()" name="searchForm">
-    <img src="images/icon_search.gif" width="26" height="22" border="0" alt="SEARCH" />
     {$lang.goods_name} <input type="text" name="keyword" size="30" />
-    <input type="submit" value="{$lang.button_search}" class="button" />
+    <button type="submit" class="btn">{$lang.button_search}</button>
   </form>
 </div>
 
@@ -15,7 +14,6 @@
 <!-- start group_buy list -->
 <div class="list-div" id="listDiv">
 {/if}
-
   <table cellpadding="3" cellspacing="1">
     <tr>
       <th>
@@ -49,9 +47,9 @@
       <td align="right">{$group_buy.valid_order}</td>
       <td align="right">{$group_buy.cur_price}</td>
       <td align="center">
-        <a href="order.php?act=list&amp;group_buy_id={$group_buy.act_id}"><img src="images/icon_view.gif" title="{$lang.view_order}" border="0" height="16" width="16" /></a>
-        <a href="group_buy.php?act=edit&amp;id={$group_buy.act_id}" title="{$lang.edit}"><img src="images/icon_edit.gif" border="0" height="16" width="16" /></a>
-        <a href="javascript:;" onclick="listTable.remove({$group_buy.act_id},'{$lang.drop_confirm}')" title="{$lang.remove}"><img src="images/icon_drop.gif" border="0" height="16" width="16" /></a>
+        <a href="order.php?act=list&amp;group_buy_id={$group_buy.act_id}">{$lang.view_order}</a>
+        <a href="group_buy.php?act=edit&amp;id={$group_buy.act_id}" title="{$lang.edit}">{$lang.edit}</a>
+        <a href="javascript:;" onclick="listTable.remove({$group_buy.act_id},'{$lang.drop_confirm}')" title="{$lang.remove}">{$lang.remove}</a>
       </td>
     </tr>
     {foreachelse}

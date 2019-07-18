@@ -1,4 +1,4 @@
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
 <div class="box" id='history_div'>
  <div class="box_1">
   <h3><span>{$lang.view_history}</span></h3>
@@ -7,7 +7,7 @@
   </div>
  </div>
 </div>
-<div class="blank5"></div>
+ <div class="clear10"></div>
 <script type="text/javascript">
 if (document.getElementById('history_list').innerHTML.replace(/\s/g,'').length<1)
 {

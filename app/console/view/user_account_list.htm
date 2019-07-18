@@ -4,7 +4,7 @@
 {insert_scripts files="../js/utils.js,listtable.js"}
 <div class="form-div">
   <form action="javascript:searchUser()" name="searchForm">
-    <img src="images/icon_search.gif" width="25" height="22" border="0" alt="SEARCH" />
+    <!-- <img src="images/icon_search.gif" width="25" height="22" border="0" alt="SEARCH" /> -->
     {$lang.user_id} <input type="text" name="keyword" size="10" />
       <select name="process_type">
         <option value="-1">{$lang.process_type}</option>
@@ -51,10 +51,10 @@
     <td align="center">{$item.admin_user}
     <td align="center">
     {if $item.is_paid}
-    <a href="user_account.php?act=edit&id={$item.id}" title="{$lang.surplus}"><img src="images/icon_edit.gif" border="0" height="16" width="16" /></a>
+    <a href="user_account.php?act=edit&id={$item.id}" title="{$lang.surplus}">{$lang.surplus}</a>
     {else}
-    <a href="user_account.php?act=check&id={$item.id}" title="{$lang.check}"><img src="images/icon_view.gif" border="0" height="16" width="16" />
-    <a href="javascript:;" onclick="listTable.remove({$item.id}, '{$lang.drop_confirm}')" title="{$lang.drop}" ><img src="images/icon_drop.gif" border="0" height="16" width="16" /></a>
+    <a href="user_account.php?act=check&id={$item.id}" title="{$lang.check}">{$lang.check}</a>
+    <a href="javascript:;" onclick="listTable.remove({$item.id}, '{$lang.drop_confirm}')" title="{$lang.drop}" >{$lang.drop}</a>
     {/if}
     </td>
   </tr>

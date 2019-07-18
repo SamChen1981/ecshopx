@@ -154,4 +154,21 @@ $_LANG['send_history']    = '发送记录';
 $_LANG['charge_history']  = '充值记录 ';
 $_LANG['sms_sign'] 	      = '短信签名';
 
+//云服务中心管理
+
+$_LANG['certificate'] = '授权绑定';
+$_LANG['service_market'] = '服务市场';
+$_LANG['sms_resource'] = '短信平台';
+$_LANG['logistic_tracking'] = '云起物流';
+
+//移动版全民分销开通引导页管理
+
+$_LANG['banner_mobile'] = '移动端广告配置';
+$_LANG['lead'] = '店铺二维码';
+$_LANG['mobile_setting'] = 'APP应用配置';
+$_LANG['h5_setting'] = 'H5应用配置';
+$_LANG['wxa_setting'] = '小程序应用配置';
+$_LANG['leancloud'] = 'APP推送管理';
+
+
 ?>

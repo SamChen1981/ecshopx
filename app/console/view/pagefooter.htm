@@ -40,7 +40,7 @@ document.onmousemove=function(e)
   if (typeof(obj.onclick) == 'function' && obj.onclick.toString().indexOf('listTable.edit') != -1)
   {
     obj.title = '{$lang.span_edit_help}';
-    obj.style.cssText = 'background: #278296;';
+    obj.style.cssText = 'background-color: #eee;';
     obj.onmouseout = function(e)
     {
       this.style.cssText = '';

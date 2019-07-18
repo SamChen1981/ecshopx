@@ -41,7 +41,7 @@
   </tr>
   <tr>
     <td><div align="right"><strong>{$lang.label_invoice_no}</strong></div></td>
-    <td colspan="3">{if $delivery_order.status neq 1}<input name="invoice_no" type="text" value="{$delivery_order.invoice_no}" {if $delivery_order.status eq 0} readonly="readonly" {/if}>{else}{$delivery_order.invoice_no}{/if}</td>
+    <td colspan="3">{if $delivery_order.status neq 1}<input name="invoice_no" type="text" value="{$delivery_order.invoice_no}" {if $delivery_order.status eq 0 || $node_info} readonly="readonly" {/if}>{else}{$delivery_order.invoice_no}{/if}</td>
   </tr>
   
   <tr>
@@ -119,11 +119,11 @@
   {if $delivery_order.status neq 1}
   <tr>
     <td><div align="right"><strong>{$lang.label_action_note}</strong></div></td>
-  <td colspan="5"><textarea name="action_note" cols="80" rows="3"></textarea></td>
+  <td colspan="5"><textarea name="action_note" cols="80" rows="3" {if $node_info}disabled{/if}></textarea></td>
   </tr>
   <tr>
     <td><div align="right"><strong>{$lang.label_operable_act}</strong></div></td>
-    <td colspan="6" align="left">{if $delivery_order.status eq 2}<input name="delivery_confirmed" type="submit" value="{$lang.op_ship}" class="button"/>&nbsp;&nbsp;{else}<input name="unship" type="submit" value="{$lang.op_cancel_ship}" class="button" />{/if}
+    <td colspan="6" align="left">{if $delivery_order.status eq 2}<input name="delivery_confirmed" type="submit" value="{$lang.op_ship}" class="button" {if $node_info}disabled{/if}/>&nbsp;&nbsp;{else}<input name="unship" type="submit" value="{$lang.op_cancel_ship}" class="button" {if $node_info}disabled{/if} />{/if}
         <input name="order_id" type="hidden" value="{$delivery_order.order_id}">
         <input name="delivery_id" type="hidden" value="{$delivery_order.delivery_id}">
         <input name="act" type="hidden" value="{$action_act}">

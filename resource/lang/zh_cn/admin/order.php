@@ -403,4 +403,19 @@ $_LANG['label_return_time'] = '退货时间';
 $_LANG['tips_back_del'] = '退货单删除成功！';
 
 $_LANG['goods_num_err'] = '库存不足，请重新选择！';
+
+
+/* ERP绑定 */
+$_LANG['erp_enter']='进入';
+$_LANG['erp_processing_orders']='订单处理';
+$_LANG['erp_bind_desc'] = '您已开通ERP，请授权绑定';
+$_LANG['erp_bind'] = '去绑定';
+$_LANG['erp_bind_Auth'] = '授权绑定';
+$_LANG['erp_open_desc'] = '已有99%的用户使用ERP处理订单';
+$_LANG['erp_open'] = '去开通';
+$_LANG['erp_open_details'] = '了解详情开通';
+$_LANG['erp_no_longer_prompt'] = '知道了,不再提示';
+$_LANG['erp_reminder'] = '温馨提示';
+
+
 ?>

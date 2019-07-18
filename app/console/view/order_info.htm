@@ -69,7 +69,7 @@
       <div align="center">
         <input name="prev" type="button" class="button" onClick="location.href='order.php?act=info&order_id={$prev_id}';" value="{$lang.prev}" {if !$prev_id}disabled{/if} />
         <input name="next" type="button" class="button" onClick="location.href='order.php?act=info&order_id={$next_id}';" value="{$lang.next}" {if !$next_id}disabled{/if} />
-        <input type="button" onclick="window.open('order.php?act=info&order_id={$order.order_id}&print=1')" class="button" value="{$lang.print_order}" />
+        <input type="button" onclick="window.open('order.php?act=info&order_id={$order.order_id}&print=1')" class="button" value="{$lang.print_order}"  {if $node_info}disabled{/if}/>
     </div></td>
   </tr>
   <tr>
@@ -83,31 +83,31 @@
   </tr>
   <tr>
     <td><div align="right"><strong>{$lang.label_user_name}</strong></div></td>
-    <td>{$order.user_name|default:$lang.anonymous} {if $order.user_id > 0}[ <a href="" onclick="staticbar();return false;">{$lang.display_buyer}</a> ] [ <a href="user_msg.php?act=add&order_id={$order.order_id}&user_id={$order.user_id}">{$lang.send_message}</a> ]{/if}</td>
+    <td>{$order.user_name|default:$lang.anonymous} {if $order.user_id > 0}[ <a href="" onclick="staticbar();return false;">{$lang.display_buyer}</a> ] {if !$node_info}[ <a href="user_msg.php?act=add&order_id={$order.order_id}&user_id={$order.user_id}" >{$lang.send_message}</a> ]{/if}{/if}</td>
     <td><div align="right"><strong>{$lang.label_order_time}</strong></div></td>
     <td>{$order.formated_add_time}</td>
   </tr>
   <tr>
     <td><div align="right"><strong>{$lang.label_payment}</strong></div></td>
-    <td>{if $order.pay_id > 0}{$order.pay_name}{else}{$lang.require_field}{/if}<a href="order.php?act=edit&order_id={$order.order_id}&step=payment" class="special">{$lang.edit}</a>
-    ({$lang.action_note}: <span onclick="listTable.edit(this, 'edit_pay_note', {$order.order_id})">{if $order.pay_note}{$order.pay_note}{else}N/A{/if}</span>)</td>
+    <td>{if $order.pay_id > 0}{$order.pay_name}{else}{$lang.require_field}{/if}{if !$node_info}<a href="order.php?act=edit&order_id={$order.order_id}&step=payment" class="btn btn-def">{$lang.edit}</a>{/if}
+    ({$lang.action_note}: {if $node_info}{if $order.pay_note}{$order.pay_note}{else}N/A{/if}{else}<span onclick="listTable.edit(this, 'edit_pay_note', {$order.order_id})">{if $order.pay_note}{$order.pay_note}{else}N/A{/if}</span>{/if})</td>
     <td><div align="right"><strong>{$lang.label_pay_time}</strong></div></td>
     <td>{$order.pay_time}</td>
   </tr>
   <tr>
     <td><div align="right"><strong>{$lang.label_shipping}</strong></div></td>
-    <td>{if $exist_real_goods}{if $order.shipping_id > 0}{$order.shipping_name}{else}{$lang.require_field}{/if}<a href="order.php?act=edit&order_id={$order.order_id}&step=shipping" class="special">{$lang.edit}</a>&nbsp;&nbsp;<input type="button" onclick="window.open('order.php?act=info&order_id={$order.order_id}&shipping_print=1')" class="button" value="{$lang.print_shipping}"> {if $order.insure_fee > 0}（{$lang.label_insure_fee}{$order.formated_insure_fee}）{/if}{/if}</td>
+    <td>{if $exist_real_goods}{if $order.shipping_id > 0}{$order.shipping_name}{else}{$lang.require_field}{/if}{if !$node_info}<a href="order.php?act=edit&order_id={$order.order_id}&step=shipping" class="btn btn-def">{$lang.edit}</a>&nbsp;&nbsp;<input type="button" onclick="window.open('order.php?act=info&order_id={$order.order_id}&shipping_print=1')" class="button" value="{$lang.print_shipping}"> {/if}{if $order.insure_fee > 0}（{$lang.label_insure_fee}{$order.formated_insure_fee}）{/if}{/if}</td>
     <td><div align="right"><strong>{$lang.label_shipping_time}</strong></div></td>
     <td>{$order.shipping_time}</td>
   </tr>
   <tr>
     <td><div align="right"><strong>{$lang.label_invoice_no}</strong></div></td>
-    <td>{if $order.shipping_id>0 and $order.shipping_status>0}<span>{if $order.invoice_no}{$order.invoice_no}{else}N/A{/if}</span><a href="order.php?act=edit&order_id={$order.order_id}&step=shipping" class="special">{$lang.edit}</a>{/if}</td>
+    <td>{if $order.shipping_id>0 and $order.shipping_status>0}<span>{if $order.invoice_no}{$order.invoice_no}{else}N/A{/if}</span>{if !$node_info}<a href="order.php?act=edit&order_id={$order.order_id}&step=shipping" class="btn btn-def">{$lang.edit}</a>{/if}{/if}</td>
     <td><div align="right"><strong>{$lang.from_order}</strong></div></td>
     <td>{$order.referer}</td>
   </tr>
   <tr>
-    <th colspan="4">{$lang.other_info}<a href="order.php?act=edit&order_id={$order.order_id}&step=other" class="special">{$lang.edit}</a></th>
+    <th colspan="4">{$lang.other_info}{if !$node_info}<a href="order.php?act=edit&order_id={$order.order_id}&step=other" class="btn btn-def">{$lang.edit}</a>{/if}</th>
     </tr>
   <tr>
     <td><div align="right"><strong>{$lang.label_inv_type}</strong></div></td>
@@ -146,7 +146,7 @@
     <td colspan="3">{$order.to_buyer}</td>
   </tr>
   <tr>
-    <th colspan="4">{$lang.consignee_info}<a href="order.php?act=edit&order_id={$order.order_id}&step=consignee" class="special">{$lang.edit}</a></th>
+    <th colspan="4">{$lang.consignee_info}{if !$node_info}<a href="order.php?act=edit&order_id={$order.order_id}&step=consignee" class="btn btn-def">{$lang.edit}</a>{/if}</th>
     </tr>
   <tr>
     <td><div align="right"><strong>{$lang.label_consignee}</strong></div></td>
@@ -178,7 +178,7 @@
 <div class="list-div" style="margin-bottom: 5px">
 <table width="100%" cellpadding="3" cellspacing="1">
   <tr>
-    <th colspan="8" scope="col">{$lang.goods_info}<a href="order.php?act=edit&order_id={$order.order_id}&step=goods" class="special">{$lang.edit}</a></th>
+    <th colspan="8" scope="col">{$lang.goods_info}{if !$node_info}<a href="order.php?act=edit&order_id={$order.order_id}&step=goods" class="btn btn-def">{$lang.edit}</a>{/if}</th>
     </tr>
   <tr>
     <td scope="col"><div align="center"><strong>{$lang.goods_name_brand}</strong></div></td>
@@ -234,11 +234,11 @@
 <div class="list-div" style="margin-bottom: 5px">
 <table width="100%" cellpadding="3" cellspacing="1">
   <tr>
-    <th>{$lang.fee_info}<a href="order.php?act=edit&order_id={$order.order_id}&step=money" class="special">{$lang.edit}</a></th>
+    <th>{$lang.fee_info}{if !$node_info}<a href="order.php?act=edit&order_id={$order.order_id}&step=money" class="btn btn-def">{$lang.edit}</a>{/if}</th>
   </tr>
   <tr>
     <td><div align="right">{$lang.label_goods_amount}<strong>{$order.formated_goods_amount}</strong>
-- {$lang.label_discount}<strong>{$order.formated_discount}</strong>     + {$lang.label_tax}<strong>{$order.formated_tax}</strong>
+- {$lang.label_discount}<strong>{$order.formated_discount}</strong> - {$lang.label_goods_discount_fee}<strong>{$order.formated_goods_discount_fee}</strong>     + {$lang.label_tax}<strong>{$order.formated_tax}</strong>
       + {$lang.label_shipping_fee}<strong>{$order.formated_shipping_fee}</strong>
       + {$lang.label_insure_fee}<strong>{$order.formated_insure_fee}</strong>
       + {$lang.label_pay_fee}<strong>{$order.formated_pay_fee}</strong>
@@ -256,7 +256,7 @@
   <tr>
     <td><div align="right"> = {if $order.order_amount >= 0}{$lang.label_money_dues}<strong>{$order.formated_order_amount}</strong>
       {else}{$lang.label_money_refund}<strong>{$order.formated_money_refund}</strong>
-      <input name="refund" type="button" value="{$lang.refund}" onclick="location.href='order.php?act=process&func=load_refund&anonymous={if $order.user_id <= 0}1{else}0{/if}&order_id={$order.order_id}&refund_amount={$order.money_refund}'" />
+     {if !$node_info} <input name="refund" type="button" value="{$lang.refund}" onclick="location.href='order.php?act=process&func=load_refund&anonymous={if $order.user_id <= 0}1{else}0{/if}&order_id={$order.order_id}&refund_amount={$order.money_refund}'" />{/if}
       {/if}{if $order.extension_code eq "group_buy"}<br />{$lang.notice_gb_order_amount}{/if}</div></td>
   </tr>
 </table>
@@ -269,40 +269,40 @@
   </tr>
   <tr>
     <td><div align="right"><strong>{$lang.label_action_note}</strong></div></td>
-  <td colspan="5"><textarea name="action_note" cols="80" rows="3"></textarea></td>
+  <td colspan="5"><textarea name="action_note" cols="80" rows="3" {if $node_info}disabled{/if} ></textarea></td>
     </tr>
   <tr>
     <td><div align="right"></div>
       <div align="right"><strong>{$lang.label_operable_act}</strong> </div></td>
     <td colspan="5">{if $operable_list.confirm}
-      <input name="confirm" type="submit" value="{$lang.op_confirm}" class="button" />
+      <input name="confirm" type="submit" value="{$lang.op_confirm}" class="button" {if $node_info}disabled{/if} />
         {/if} {if $operable_list.pay}
-        <input name="pay" type="submit" value="{$lang.op_pay}" class="button" />
+        <input name="pay" type="submit" value="{$lang.op_pay}" class="button" {if $node_info}disabled{/if} />
         {/if} {if $operable_list.unpay}
-        <input name="unpay" type="submit" class="button" value="{$lang.op_unpay}" />
+        <input name="unpay" type="submit" class="button" value="{$lang.op_unpay}" {if $node_info}disabled{/if} />
         {/if} {if $operable_list.prepare}
-        <input name="prepare" type="submit" value="{$lang.op_prepare}" class="button" />
+        <input name="prepare" type="submit" value="{$lang.op_prepare}" class="button" {if $node_info}disabled{/if} />
         {/if} {if $operable_list.split}
-        <input name="ship" type="submit" value="{$lang.op_split}" class="button" />
+        <input name="ship" type="submit" value="{$lang.op_split}" class="button" {if $node_info}disabled{/if} />
         {/if} {if $operable_list.unship}
-        <input name="unship" type="submit" value="{$lang.op_unship}" class="button" />
+        <input name="unship" type="submit" value="{$lang.op_unship}" class="button" {if $node_info}disabled{/if} />
         {/if} {if $operable_list.receive}
-        <input name="receive" type="submit" value="{$lang.op_receive}" class="button" />
+        <input name="receive" type="submit" value="{$lang.op_receive}" class="button" {if $node_info}disabled{/if} />
         {/if} {if $operable_list.cancel}
-        <input name="cancel" type="submit" value="{$lang.op_cancel}" class="button" />
+        <input name="cancel" type="submit" value="{$lang.op_cancel}" class="button" {if $node_info}disabled{/if} />
         {/if} {if $operable_list.invalid}
-        <input name="invalid" type="submit" value="{$lang.op_invalid}" class="button" />
+        <input name="invalid" type="submit" value="{$lang.op_invalid}" class="button" {if $node_info}disabled{/if} />
         {/if} {if $operable_list.return}
-        <input name="return" type="submit" value="{$lang.op_return}" class="button" />
+        <input name="return" type="submit" value="{$lang.op_return}" class="button" {if $node_info}disabled{/if} />
         {/if} {if $operable_list.to_delivery}
-        <input name="to_delivery" type="submit" value="{$lang.op_to_delivery}" class="button"/>
+        <input name="to_delivery" type="submit" value="{$lang.op_to_delivery}" class="button" {if $node_info}disabled{/if}/>
         <input name="order_sn" type="hidden" value="{$order.order_sn}" />
-        {/if} <input name="after_service" type="submit" value="{$lang.op_after_service}" class="button" />{if $operable_list.remove}
-        <input name="remove" type="submit" value="{$lang.remove}" class="button" onClick="return window.confirm('{$lang.js_languages.remove_confirm}');" />
+        {/if} <input name="after_service" type="submit" value="{$lang.op_after_service}" class="button" {if $node_info}disabled{/if} />{if $operable_list.remove}
+        <input name="remove" type="submit" value="{$lang.remove}" class="button" onClick="return window.confirm('{$lang.js_languages.remove_confirm}');" {if $node_info}disabled{/if}/>
         {/if}
         {if $order.extension_code eq "group_buy"}{$lang.notice_gb_ship}{/if}
         {if $agency_list}
-        <input name="assign" type="submit" value="{$lang.op_assign}" class="button" onclick="return assignTo(document.forms['theForm'].elements['agency_id'].value)" />
+        <input name="assign" type="submit" value="{$lang.op_assign}" class="button" onclick="return assignTo(document.forms['theForm'].elements['agency_id'].value)" {if $node_info}disabled{/if} />
         <select name="agency_id"><option value="0">{$lang.select_please}</option>
         {foreach from=$agency_list item=agency}
         <option value="{$agency.agency_id}" {if $agency.agency_id eq $order.agency_id}selected{/if}>{$agency.agency_name}</option>

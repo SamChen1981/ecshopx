@@ -1,11 +1,15 @@
 {if $full_page}
 <!-- $Id: sale_order.htm 14216 2008-03-10 02:27:21Z testyang $ -->
 {include file="pageheader.htm"}
+<script type="text/javascript" src="../js/calendar.php?lang={$cfg_lang}"></script>
+<link href="../js/calendar/calendar.css" rel="stylesheet" type="text/css" />
 {insert_scripts files="../js/utils.js,listtable.js"}
 <div class="form-div">
   <form name="TimeInterval"  action="javascript:getList()" style="margin:0px">
-    {$lang.start_date}&nbsp;{html_select_date field_order="YMD" prefix="start_date" time=$start_date start_year="-10" end_year="+1" display_days=true month_format="%m"}&nbsp;&nbsp;
-    {$lang.end_date}&nbsp;{html_select_date field_order="YMD" prefix="end_date" time=$end_date start_year="-10" end_year="+1" display_days=true month_format="%m"}
+    {$lang.start_date}:
+    <input type="text" name="start_date" value="{$start_date}" size="12" onclick="return showCalendar(this, '%Y-%m-%d', false, false, this);">
+    {$lang.end_date}:
+    <input name="end_date" type="text" id="end_date" size="12" value='{$end_date}' readonly="readonly" onclick="return showCalendar('end_date', '%Y-%m-%d', false, false, this);">
     <input type="submit" name="submit" value="{$lang.query}" class="button" />
   </form>
 </div>

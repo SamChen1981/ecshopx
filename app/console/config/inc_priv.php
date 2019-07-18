@@ -75,7 +75,7 @@ if (!defined('IN_ECS'))
 
 //商店设置权限
     $purview['01_shop_config']       = 'shop_config';
-    $purview['shop_authorized']       = 'shop_authorized';
+    // $purview['shop_authorized']       = 'shop_authorized';
     $purview['shp_webcollect']            = 'webcollect_manage';
     $purview['02_payment_list']      = 'payment';
     $purview['03_shipping_list']     = array('ship_manage','shiparea_manage');
@@ -135,11 +135,13 @@ if (!defined('IN_ECS'))
     $purview['clear']                = 'clear';
 
 //短信管理
+    $purview['14_sms']               = 'sms_manage';
     $purview['02_sms_my_info']       = 'my_info';
     $purview['03_sms_send']          = 'sms_send';
     $purview['04_sms_charge']        = 'sms_charge';
     $purview['05_sms_send_history']  = 'send_history';
     $purview['06_sms_charge_history']= 'charge_history';
+    $purview['04_sms_sign']          = 'sms_sign';
 
 //推荐管理
     $purview['affiliate']            = 'affiliate';
@@ -150,5 +152,21 @@ if (!defined('IN_ECS'))
     $purview['email_list']           = 'email_list';
     $purview['magazine_list']        = 'magazine_list';
     $purview['view_sendlist']        = 'view_sendlist';
+
+// 云服务中心
+    $purview['01_certificate_manage']= 'certificate_manage';
+    $purview['certificate']          = 'certificate';
+    $purview['service_market']       = 'service_market';
+    $purview['sms_resource']         = 'sms_resource';
+    $purview['logistic_tracking']    = 'logistic_tracking';
+
+// 移动端管理
+    $purview['18_lead_manage']       = 'lead_manage';
+    $purview['banner_mobile']        = 'banner_mobile';
+    $purview['lead']                 = 'lead';
+    $purview['mobile_setting']       = 'mobile_setting';
+    $purview['h5_setting']           = 'h5_setting';
+    $purview['wxa_setting']          = 'wxa_setting';
+    $purview['leancloud']            = 'leancloud';
 
 ?>

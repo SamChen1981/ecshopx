@@ -8,7 +8,7 @@
     <tr>
       <td  class="label">
         <a href="javascript:showNotice('NameNotic');" title="{$lang.form_notice}">
-        <img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.ad_name}</td>
+        <img src="images/notice.svg" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.ad_name}</td>
       <td>
         <input type="text" name="ad_name" value="{$ads.ad_name}" size="35" />
         <br /><span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="NameNotic">{$lang.ad_name_notic}</span>
@@ -42,13 +42,13 @@
     <tr>
       <td  class="label">{$lang.start_date}</td>
       <td>
-        <input name="start_time" type="text" id="start_time" size="22" value='{$ads.start_time}' readonly="readonly" /><input name="selbtn1" type="button" id="selbtn1" onclick="return showCalendar('start_time', '%Y-%m-%d', false, false, 'selbtn1');" value="{$lang.btn_select}" class="button"/>
+        <input name="start_time" type="text" id="start_time" size="22" value='{$ads.start_time}' readonly="readonly" /><button name="selbtn1" type="button" id="selbtn1" onclick="return showCalendar('start_time', '%Y-%m-%d', false, false, 'selbtn1');" class="cal"><img src="images/cal.png" alt=""></button>
       </td>
     </tr>
     <tr>
       <td class="label">{$lang.end_date}</td>
       <td>
-        <input name="end_time" type="text" id="end_time" size="22" value='{$ads.end_time}' readonly="readonly" /><input name="selbtn2" type="button" id="selbtn2" onclick="return showCalendar('end_time', '%Y-%m-%d', false, false, 'selbtn2');" value="{$lang.btn_select}" class="button"/>
+        <input name="end_time" type="text" id="end_time" size="22" value='{$ads.end_time}' readonly="readonly"><button name="selbtn2" type="button" id="selbtn2" onclick="return showCalendar('end_time', '%Y-%m-%d', false, false, 'selbtn2');" class="cal"><img src="images/cal.png" alt=""></button>
       </td>
     </tr>
   {if $ads.media_type eq 0 OR $action eq "add"}
@@ -62,7 +62,7 @@
     <tr>
       <td  class="label">
         <a href="javascript:showNotice('AdCodeImg');" title="{$lang.form_notice}">
-        <img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.upfile_img}</td>
+        <img src="images/notice.svg" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.upfile_img}</td>
       <td>
         <input type='file' name='ad_img' size='35' />
         <br /><span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="AdCodeImg">{$lang.ad_code_img}</span>
@@ -79,7 +79,7 @@
     <tr>
       <td  class="label">
         <a href="javascript:showNotice('AdCodeFlash');" title="{$lang.form_notice}">
-        <img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.upfile_flash}</td>
+        <img src="images/notice.svg" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.upfile_flash}</td>
       <td>
         <input type='file' name='upfile_flash' size='35' />
         <br /><span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="AdCodeFlash">{$lang.ad_code_flash}</span>

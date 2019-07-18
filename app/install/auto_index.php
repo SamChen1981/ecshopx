@@ -3,7 +3,7 @@
 /**
  * ECSHOP 自动安装程序
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -58,7 +58,7 @@ if (file_exists(ROOT_PATH . 'data/install.lock'))
     if ($dir_checking['result'] === 'ERROR'
             || !empty($template_checking)
             || !empty($rename_priv)
-            || !function_exists('mysql_connect'))
+            || !function_exists('mysqli_connect'))
     {
         data_back('安装目录的某些权限不够');
     }

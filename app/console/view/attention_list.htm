@@ -11,10 +11,10 @@
 </form>
 </div>
 <div class="form-div">
-<form action="attention_list.php" method="post">
+<form action="attention_list.php" method="post" class="form-horizontal">
   {$lang.batch_note}
   <input type="hidden" name="act" value="batch_addtolist" />
-  <input name="date" type="text" id="date" size="10" value='' readonly="readonly" /><input name="selbtn1" type="button" id="selbtn1" onclick="return showCalendar('date', '%Y-%m-%d', false, false, 'selbtn1');" value="{$lang.btn_select}" class="button"/>
+  <input name="date" type="text" id="date" size="10" value='' readonly="readonly"><button name="selbtn1" type="button" id="selbtn1" onclick="return showCalendar('date', '%Y-%m-%d', false, false, 'selbtn1');" class="cal"><img src="images/cal.png" alt=""></button>
    <select name="pri" id="pri"><option value='0'>{$lang.pri.0}</option><option value='1'>{$lang.pri.1}</option></select>
   <input type="submit" value="{$lang.attention_addtolist}" class="button" />
 </form>

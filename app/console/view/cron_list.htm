@@ -30,7 +30,7 @@
 
     <td align="center">
       {if $module.install == "1"}
-        <img src="images/{if $module.enable eq 1}yes{else}no{/if}.gif" onclick="listTable.toggle(this, 'toggle_show', '{$module.code}')" />
+        <img src="images/{if $module.enable eq 1}yes{else}no{/if}.svg" width="20" onclick="listTable.toggle(this, 'toggle_show', '{$module.code}')" />
       {else}－{/if}</td>
     <td align="center" valign="top">
       {if $module.install == "1"}

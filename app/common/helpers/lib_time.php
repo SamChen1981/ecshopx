@@ -3,7 +3,7 @@
 /**
  * ECSHOP 时间函数
  * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
@@ -25,7 +25,8 @@ if (!defined('IN_ECS'))
  */
 function gmtime()
 {
-    return (time() - date('Z'));
+    // return (time() - date('Z'));
+    return time();
 }
 
 /**
@@ -95,7 +96,9 @@ function local_date($format, $time = NULL)
         return '';
     }
 
-    $time += ($timezone * 3600);
+    if (function_exists('date_default_timezone_get') && date_default_timezone_get() == 'UTC') {
+        $time += ($timezone * 3600);
+    }
 
     return date($format, $time);
 }
@@ -140,6 +143,18 @@ function local_strtotime($str)
 
     return $time;
 
+}
+
+/**
+ *  将一个用户自定义时区的日期转为GMT时间戳
+ *
+ * @access  public
+ * @param   string      $str
+ * @return  integer
+ */
+function local_strtotime_new($str)
+{
+    return strtotime($str);
 }
 
 /**

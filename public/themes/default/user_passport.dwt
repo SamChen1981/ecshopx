@@ -32,7 +32,7 @@
         <table width="100%" border="0" align="left" cellpadding="3" cellspacing="5">
           <tr>
             <td width="15%" align="right">{$lang.label_username}</td>
-            <td width="85%"><input name="username" type="text" size="25" class="inputBg" /></td>
+            <td width="85%"><input name="username" type="text" size="25" class="inputBg" placeholder="请输入用户名/手机号" /></td>
           </tr>
           <tr>
             <td align="right">{$lang.label_password}</td>
@@ -54,11 +54,10 @@
             <td>&nbsp;</td>
             <td align="left">
             <input type="hidden" name="act" value="act_login" />
-            <input type="hidden" name="back_act" value="{$back_act}" />
             <input type="submit" name="submit" value="" class="us_Submit" />
             </td>
           </tr>
-	  <tr><td></td><td><a href="user.php?act=qpassword_name" class="f3">{$lang.get_password_by_question}</a>&nbsp;&nbsp;&nbsp;<a href="user.php?act=get_password" class="f3">{$lang.get_password_by_mail}</a></td></tr>
+	  <tr><td></td><td class="f3">找回密码：（<a href="user.php?act=qpassword_name" class="f3">密码问题</a>&nbsp;<a href="user.php?act=get_password" class="f3">邮件</a>&nbsp;<a href="user.php?act=sms_get_password" class="f3">短信验证</a>）</td></tr>
       </table>
     </form>
   </div>
@@ -163,13 +162,27 @@
         </tr>
 	<!-- {/if} -->
 	<!-- {/foreach} -->
-      <!-- 判断是否启用验证码{if $enabled_captcha} -->
-      <tr>
+      <tr id="vcode" style="display: none">
       <td align="right">{$lang.comment_captcha}</td>
-      <td><input type="text" size="8" name="captcha" class="inputBg" />
-      <img src="captcha.php?{$rand}" alt="captcha" style="vertical-align: middle;cursor: pointer;" onClick="this.src='captcha.php?'+Math.random()" /> </td>
+      <td><input id="vcode_input" type="text" size="8" name="captcha" class="inputBg" onchange="validate_vcode(this.value);"/>
+      <img id="captcha" src="captcha.php?{$rand}" alt="captcha" style="vertical-align: middle;cursor: pointer;" onClick="this.src='captcha.php?'+Math.random()" />
+        <span style="color:#FF0000;display: none" id="vcode_tip"></span>
+      </td>
       </tr>
-      <!--{/if}-->
+        <tr id="sms" style="display: none">
+          <td align="right">短信验证码</td>
+          <td>
+            <input type="text" name="sms_code" value=""size="8" class="inputBg">
+            <input id="get_sms" type="button" style="align-content: center;width:80px;height:22px;background:#d2d2d2;color:#fff;cursor:pointer" class="inputBg" onclick="send_sms()" value="获取验证码" disabled="disabled"/>
+            <span style="color:#FF0000;display: none" id="sms_tip"></span>
+          </td>
+        </tr>
+        <script type="text/javascript">
+          var captch = "{$enabled_captcha}";
+          if(captch == 1){
+            document.getElementById("vcode").style.display='';
+          }
+        </script>
         <tr>
           <td>&nbsp;</td>
           <td><label>
@@ -180,7 +193,6 @@
           <td>&nbsp;</td>
           <td align="left">
           <input name="act" type="hidden" value="act_register" >
-          <input type="hidden" name="back_act" value="{$back_act}" />
           <input name="Submit" type="submit" value="" class="us_Submit_reg">
           </td>
         </tr>
@@ -340,7 +352,94 @@
   </div>
 </div>
 <!--{/if}-->
+<!--*通过短信验证码找回密码界面 -->
+<!--{if $action eq 'sms_get_password'} -->
+<div class="usBox">
+  <div class="usBox_2 clearfix">
+    <form action="user.php" method="post" name="sms_repassword" onsubmit="return check_sms_form()">
+      <br />
+      <table width="70%" border="0" align="center">
+        <tr>
+          <td colspan="2" height="40px;" align="center"><strong>短信找回密码</strong></td>
+        </tr>
+        <tr>
+          <td width="40%" align="right">手机号：</td>
+          <td width="60%"><input type="text" id="username" name="username" size="20" class="inputBg"></td>
+        </tr>
+        <tr id="vcode_rep">
+          <td align="right">{$lang.comment_captcha}：</td>
+          <td><input type="text" size="8" id="vcode_input_rep" name="code" class="inputBg" onchange="rep_validate_code(this.value);"/>
+            <img src="captcha.php?{$rand}" id="captcha_rep" alt="captcha" style="vertical-align: middle;cursor: pointer;" onClick="this.src='captcha.php?'+Math.random()" />
+            <span style="color:#FF0000;display: none" id="vcode_tip_reg">13</span>
+          </td>
+        </tr>
+        <tr id="sms_123">
+          <td align="right">短信验证码：</td>
+          <td>
+            <input type="text" name="sms_code" id="sms_code" value="" size="8" class="inputBg">
+            <input id="get_sms_rep" type="button" style="align-content: center;width:80px;height:22px;background:#d2d2d2;color:#fff;cursor:pointer" class="inputBg" onclick="rep_send_sms()" value="获取验证码" disabled="disabled"/>
+            <span style="color:#FF0000;display: none" id="sms_tip_rep"></span>
+          </td>
+        </tr>
+        <tr>
+          <td></td>
+          <td><input type="hidden" name="act" value="sms_get_password" />
+            <input type="submit" name="submit" value="{$lang.submit}" class="bnt_blue" style="border:none;" />
+            <input name="button" type="button" onclick="history.back()" value="{$lang.back_page_up}" style="border:none;" class="bnt_blue_1" />
+          </td>
+        </tr>
+      </table>
+      <br />
+    </form>
+  </div>
+</div>
+<!--{/if}-->
 <!--#找回密码界面 end-->
+<!--*通过短信验证码重置密码 -->
+<!--{if $action eq 'reset_password_rep'} -->
+<div class="usBox">
+  <div class="usBox_2 clearfix">
+    <form action="user.php" method="post">
+      <br />
+      <table width="70%" border="0" align="center">
+        <tr>
+          <td colspan="2" height="40px;" align="center"><strong>重置密码</strong></td>
+        </tr>
+        <tr>
+          <td width="40%" align="right">新密码</td>
+          <td width="60%"><input type="password" id="" name="new_password" size="20" class="inputBg" onblur="check_password(this.value);" onkeyup="checkIntensity(this.value)"></td>
+        </tr>
+        <tr>
+          <td align="right">{$lang.label_password_intensity}</td>
+          <td>
+            <table width="145" border="0" cellspacing="0" cellpadding="1">
+              <tr align="center">
+                <td width="33%" id="pwd_lower">{$lang.pwd_lower}</td>
+                <td width="33%" id="pwd_middle">{$lang.pwd_middle}</td>
+                <td width="33%" id="pwd_high">{$lang.pwd_high}</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td width="40%" align="right">确认密码</td>
+          <td width="60%"><input type="password" id="" name="confirm_password" size="20" class="inputBg"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>
+            <input type="hidden" name="act" value="act_edit_password" />
+            <input type="hidden" name="uid" value="{$uid}" />
+            <input type="submit" name="submit" value="{$lang.submit}" class="bnt_blue" style="border:none;" />
+          </td>
+        </tr>
+      </table>
+      <br />
+    </form>
+  </div>
+</div>
+<!--{/if}-->
+<!--#通过短信验证码重置密码 end-->
 <div class="blank"></div>
 <!-- #BeginLibraryItem "/library/page_footer.lbi" --><!-- #EndLibraryItem -->
 </body>

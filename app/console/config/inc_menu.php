@@ -18,6 +18,11 @@ if (!defined('IN_ECS'))
     die('Hacking attempt');
 }
 
+$modules['01_certificate_manage']['certificate']        = 'certificate.php?act=list_edit';//授权，绑定矩阵
+$modules['01_certificate_manage']['service_market']     = 'service_market.php';//服务市场
+$modules['01_certificate_manage']['sms_resource']     = 'sms_resource.php';//短信平台
+$modules['01_certificate_manage']['logistic_tracking']  = 'logistic_tracking.php';//云起物流
+
 $modules['02_cat_and_goods']['01_goods_list']       = 'goods.php?act=list';         // 商品列表
 $modules['02_cat_and_goods']['02_goods_add']        = 'goods.php?act=add';          // 添加商品
 $modules['02_cat_and_goods']['03_category_list']    = 'category.php?act=list';
@@ -37,7 +42,7 @@ $modules['02_cat_and_goods']['52_virtual_card_change'] = 'virtual_card.php?act=c
 $modules['02_cat_and_goods']['goods_auto']             = 'goods_auto.php?act=list';
 
 
-$modules['03_promotion']['02_snatch_list']          = 'snatch.php?act=list';
+//$modules['03_promotion']['02_snatch_list']          = 'snatch.php?act=list';
 $modules['03_promotion']['04_bonustype_list']       = 'bonus.php?act=list';
 $modules['03_promotion']['06_pack_list']            = 'pack.php?act=list';
 $modules['03_promotion']['07_card_list']            = 'card.php?act=list';
@@ -98,7 +103,7 @@ $modules['10_priv_admin']['agency_list']            = 'agency.php?act=list';
 $modules['10_priv_admin']['suppliers_list']         = 'suppliers.php?act=list'; // 供货商
 
 $modules['11_system']['01_shop_config']             = 'shop_config.php?act=list_edit';
-$modules['11_system']['shop_authorized']             = 'license.php?act=list_edit';
+// $modules['11_system']['shop_authorized']             = 'license.php?act=list_edit';
 $modules['11_system']['02_payment_list']            = 'payment.php?act=list';
 $modules['11_system']['03_shipping_list']           = 'shipping.php?act=list';
 $modules['11_system']['04_mail_settings']           = 'shop_config.php?act=mail_settings';
@@ -110,7 +115,7 @@ $modules['11_system']['sitemap']                    = 'sitemap.php';
 $modules['11_system']['check_file_priv']            = 'check_file_priv.php?act=check';
 $modules['11_system']['captcha_manage']             = 'captcha_manage.php?act=main';
 $modules['11_system']['ucenter_setup']              = 'integrate.php?act=setup&code=ucenter';
-$modules['11_system']['flashplay']                  = 'flashplay.php?act=list';
+//$modules['11_system']['flashplay']                  = 'flashplay.php?act=list';
 $modules['11_system']['navigator']                  = 'navigator.php?act=list';
 $modules['11_system']['file_check']                 = 'filecheck.php';
 //$modules['11_system']['fckfile_manage']             = 'fckfile_manage.php?act=list';
@@ -147,4 +152,12 @@ $modules['16_email_manage']['email_list']           = 'email_list.php?act=list';
 $modules['16_email_manage']['magazine_list']        = 'magazine_list.php?act=list';
 $modules['16_email_manage']['attention_list']       = 'attention_list.php?act=list';
 $modules['16_email_manage']['view_sendlist']        = 'view_sendlist.php?act=list';
+
+$modules['18_lead_manage']['banner_mobile']        = 'mobile_setting.php?act=list';//移动端banner设置
+$modules['18_lead_manage']['lead']        = 'lead.php?act=list';//H5店铺二维码
+$modules['18_lead_manage']['leancloud']        = 'leancloud.php?act=list';//云推送管理
+$modules['18_lead_manage']['mobile_setting']        = 'ecmobile_setting.php?act=list';//移动版应用配置
+$modules['18_lead_manage']['h5_setting']        = 'h5_setting.php?act=list';//移动版应用配置
+$modules['18_lead_manage']['wxa_setting']        = 'wxa_setting.php?act=list';//小程序应用配置
+
 ?>

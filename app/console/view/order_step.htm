@@ -9,16 +9,16 @@
 {if $step eq "user"}
 <form name="theForm" action="order.php?act=step_post&step={$step}&order_id={$order_id}&step_act={$step_act}" method="post" onsubmit="return checkUser()">
 <div class="main-div" style="padding: 15px">
-  <label><input type="radio" name="anonymous" value="1" checked /> {$lang.anonymous}</label><br />
-  <label><input type="radio" name="anonymous" value="0" id="user_useridname" /> {$lang.by_useridname}</label>
-  <input name="keyword" type="text" value="" />
-  <input type="button" class="button" name="search" value="{$lang.button_search}" onclick="searchUser();" />
-  <select name="user"></select>
+  <label><input type="radio" name="anonymous" value="1" checked  {if $node_info}disabled{/if}/> {$lang.anonymous}</label><br />
+  <label><input type="radio" name="anonymous" value="0" id="user_useridname" {if $node_info}disabled{/if}/> {$lang.by_useridname}</label>
+  <input name="keyword" type="text" value=""  {if $node_info}disabled{/if}/>
+  <input type="button" class="button" name="search" value="{$lang.button_search}" onclick="searchUser();" {if $node_info}disabled{/if} />
+  <select name="user" {if $node_info}disabled{/if}></select>
   <p>{$lang.notice_user}</p>
 </div>
 <div style="text-align:center">
   <p>
-    <input name="submit" type="submit" class="button" value="{$lang.button_next}" />
+    <input name="submit" type="submit" class="button" value="{$lang.button_next}"  {if $node_info}disabled{/if}/>
     <input type="button" value="{$lang.button_cancel}" class="button" onclick="location.href='order.php?act=process&func=cancel_order&order_id={$order_id}&step_act={$step_act}'" />
   </p>
 </div>
@@ -48,6 +48,7 @@
     </td>
     <td>{$goods.goods_sn}<input name="rec_id[]" type="hidden" value="{$goods.rec_id}" /></td>
     <td><input name="goods_price[]" type="text" style="text-align:right" value="{$goods.goods_price}" size="10" />
+        <input name="goods_num_ini[]" type="hidden" style="text-align:right" value="{$goods.goods_number}" size="10" />
         <input name="goods_id[]" type="hidden" style="text-align:right" value="{$goods.goods_id}" size="10" /></td>
     <td><input name="goods_number[]" type="text" style="text-align:right" value="{$goods.goods_number}" size="6" /></td>
     <td><textarea name="goods_attr[]" cols="30" rows="{$goods.rows}">{$goods.goods_attr}</textarea></td>
@@ -468,7 +469,7 @@ region.isAdmin=true;
     <td colspan="3"><strong>{$lang.shipping_note}</strong></td>
     </tr>
   <tr>
-    <td colspan="3"><a href="javascript:showNotice('noticeinvoiceno');" title="{$lang.form_notice}"><img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a><strong>{$lang.label_invoice_no}</strong><input name="invoice_no" type="text" value="{$order.invoice_no}" size="30"/><br/><span class="notice-span" id="noticeinvoiceno" style="display:block;">{$lang.invoice_no_mall}</span></td>
+    <td colspan="3"><a href="javascript:showNotice('noticeinvoiceno');" title="{$lang.form_notice}"><img src="images/notice.svg" width="16" height="16" border="0" alt="{$lang.form_notice}"></a><strong>{$lang.label_invoice_no}</strong><input name="invoice_no" type="text" value="{$order.invoice_no}" size="30"/><br/><span class="notice-span" id="noticeinvoiceno" style="display:block;">{$lang.invoice_no_mall}</span></td>
   </tr>
 </table>
 </div>

@@ -401,4 +401,62 @@ function admin_registered( $adminname )
     return $res;
 }
 
+
+/**
+ * 云起认证后绑定超管账号
+ *
+ * @access  public
+ * @param   string      $passport_uid passport_uid账号
+ * @return  boolean     成功返回true，失败返回false
+ */
+function set_yunqi_passport($passport_uid)
+{
+    $sql = "select passport_uid from ".$GLOBALS['ecs']->table('admin_user')." where passport_uid != '' ";
+    if($GLOBALS['db']->getOne($sql)) return false;
+    $nav_list = $GLOBALS['db']->getOne("select nav_list from ".$GLOBALS['ecs']->table('admin_user')." where action_list = 'all' ");
+    $sql = "insert into ".$GLOBALS['ecs']->table('admin_user')."(user_name, email, password, add_time, action_list, nav_list, passport_uid,yq_create_time)values('".$passport_uid."','".$passport_uid."','shopex',".time().",'all','".$nav_list."','".$passport_uid."',".time().")";
+    return $GLOBALS['db']->query($sql);
+}
+
+function tryLogin($data,&$error_msg){
+    if(!$data['username'] or !$data['password']){
+        $error_msg = $GLOBALS['_LANG']['manage_required'];
+        return false;
+    }
+
+    $sql="SELECT `ec_salt` FROM ". $GLOBALS['ecs']->table('admin_user') ."WHERE user_name = '" . $data['username']."'";
+    $ec_salt =$GLOBALS['db']->getOne($sql);
+    if(!empty($ec_salt))
+    {
+         /* 检查密码是否正确 */
+         $sql = "SELECT user_id, user_name, password, last_login, action_list, last_login,suppliers_id,ec_salt,passport_uid".
+            " FROM " . $GLOBALS['ecs']->table('admin_user') .
+            " WHERE user_name = '" . $data['username']. "' AND password = '" . md5(md5($data['password']).$ec_salt) . "'";
+    }
+    else
+    {
+         /* 检查密码是否正确 */
+         $sql = "SELECT user_id, user_name, password, last_login, action_list, last_login,suppliers_id,ec_salt,passport_uid".
+            " FROM " . $GLOBALS['ecs']->table('admin_user') .
+            " WHERE user_name = '" . $data['username']. "' AND password = '" . md5($data['password']) . "'";
+    }
+    $row = $GLOBALS['db']->getRow($sql);
+
+    if(!$row){
+        $error_msg = $GLOBALS['_LANG']['login_failure'];
+        return false; 
+    }else{
+        //验证是否是超管
+        if(admin_registered($row['user_name'])){
+            return true;
+        }else{
+            $error_msg = $GLOBALS['_LANG']['manage_required'];
+            return false;
+        }
+        
+    }
+    
+        
+}
+
 ?>
