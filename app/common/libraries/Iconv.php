@@ -1,6 +1,8 @@
 <?php
 
-class Chinese
+namespace app\common\libraries;
+
+class Iconv
 {
     /**
      * 存放 GB <-> UNICODE 对照表的内容
@@ -31,16 +33,16 @@ class Chinese
      * @访问      公开
      */
     public $config = array(
-        'codetable_dir'    => '',                // 存放各种语言互换表的目录
-        'source_lang'      => '',                // 字符的原编码
-        'target_lang'      => '',                // 转换后的编码
-        'GBtoBIG5_table'   => 'gb-big5.table',   // 简体中文转换为繁体中文的对照表
-        'BIG5toGB_table'   => 'big5-gb.table',   // 繁体中文转换为简体中文的对照表
-        'GBtoUTF8_table'   => 'gb_utf8.php',     // 简体中文转换为UTF-8的对照表
+        'codetable_dir' => '',                // 存放各种语言互换表的目录
+        'source_lang' => '',                // 字符的原编码
+        'target_lang' => '',                // 转换后的编码
+        'GBtoBIG5_table' => 'gb-big5.table',   // 简体中文转换为繁体中文的对照表
+        'BIG5toGB_table' => 'big5-gb.table',   // 繁体中文转换为简体中文的对照表
+        'GBtoUTF8_table' => 'gb_utf8.php',     // 简体中文转换为UTF-8的对照表
         'BIG5toUTF8_table' => 'big5_utf8.php'    // 繁体中文转换为UTF-8的对照表
     );
 
-    public $iconv_enabled    = false; // 是否存在 ICONV 模块，默认为否
+    public $iconv_enabled = false; // 是否存在 ICONV 模块，默认为否
     public $mbstring_enabled = false; // 是否存在 MBSTRING 模块，默认为否
 
 
@@ -121,25 +123,25 @@ class Chinese
 
                         switch (strlen($char)) {
                             case 1:
-                                $uchar  = ord($char);
+                                $uchar = ord($char);
                                 break;
 
                             case 2:
-                                $uchar  = (ord($char[0]) & 0x3f) << 6;
-                                $uchar += ord($char[1])  & 0x3f;
+                                $uchar = (ord($char[0]) & 0x3f) << 6;
+                                $uchar += ord($char[1]) & 0x3f;
                                 break;
 
                             case 3:
-                                $uchar  = (ord($char[0]) & 0x1f) << 12;
+                                $uchar = (ord($char[0]) & 0x1f) << 12;
                                 $uchar += (ord($char[1]) & 0x3f) << 6;
-                                $uchar += ord($char[2])  & 0x3f;
+                                $uchar += ord($char[2]) & 0x3f;
                                 break;
 
                             case 4:
-                                $uchar  = (ord($char[0]) & 0x0f) << 18;
+                                $uchar = (ord($char[0]) & 0x0f) << 18;
                                 $uchar += (ord($char[1]) & 0x3f) << 12;
                                 $uchar += (ord($char[2]) & 0x3f) << 6;
-                                $uchar += ord($char[3])  & 0x3f;
+                                $uchar += ord($char[3]) & 0x3f;
                                 break;
                         }
                         $string .= '&#x' . dechex($uchar) . ';';
@@ -151,7 +153,7 @@ class Chinese
                         }
                     } else {
                         $string .= substr($text, 0, 1);
-                        $text    = substr($text, 1);
+                        $text = substr($text, 1);
                     }
                 }
 
@@ -259,13 +261,13 @@ class Chinese
      */
     public function OpenTable()
     {
-        static $gb_utf8_table      = null;
-        static $gb_unicode_table   = null;
-        static $utf8_gb_table      = null;
+        static $gb_utf8_table = null;
+        static $gb_unicode_table = null;
+        static $utf8_gb_table = null;
 
-        static $big5_utf8_table    = null;
+        static $big5_utf8_table = null;
         static $big5_unicode_table = null;
-        static $utf8_big5_table    = null;
+        static $utf8_big5_table = null;
 
         // 假如原编码为简体中文的话
         if ($this->config['source_lang'] == 'GBK') {
@@ -375,7 +377,7 @@ class Chinese
      */
     public function CHSUtoUTF8($c)
     {
-        $str='';
+        $str = '';
 
         if ($c < 0x80) {
             $str .= $c;
@@ -389,7 +391,7 @@ class Chinese
         } elseif ($c < 0x200000) {
             $str .= (0xF0 | $c >> 18);
             $str .= (0x80 | $c >> 12 & 0x3F);
-            $str .= (0x80 | $c >> 6  & 0x3F);
+            $str .= (0x80 | $c >> 6 & 0x3F);
             $str .= (0x80 | $c & 0x3F);
         }
 
@@ -435,17 +437,25 @@ class Chinese
         }
 
         if ($this->config['source_lang'] == 'UTF-8') {
-            $i   = 0;
+            $i = 0;
             $out = '';
             $len = strlen($this->SourceText);
             while ($i < $len) {
                 $c = ord($this->SourceText{$i++});
                 switch ($c >> 4) {
-                    case 0: case 1: case 2: case 3: case 4: case 5: case 6: case 7:
+                    case 0:
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 4:
+                    case 5:
+                    case 6:
+                    case 7:
                         // 0xxxxxxx
                         $out .= $this->SourceText{$i - 1};
                         break;
-                    case 12: case 13:
+                    case 12:
+                    case 13:
                         // 110x xxxx   10xx xxxx
                         $char2 = ord($this->SourceText{$i++});
                         $char3 = @$this->unicode_table[(($c & 0x1F) << 6) | ($char2 & 0x3F)];
@@ -533,7 +543,7 @@ class Chinese
                     $gb = fread($this->ctf, 2);
                 }
 
-                $this->SourceText{$i}     = $gb{0};
+                $this->SourceText{$i} = $gb{0};
                 $this->SourceText{$i + 1} = $gb{1};
 
                 $i++;

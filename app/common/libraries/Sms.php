@@ -1,56 +1,53 @@
 <?php
 
-/**
- * 短信模块 之 模型（类库）
- */
+namespace app\common\libraries;
 
-if (!defined('IN_ECS')) {
-    die('Hacking attempt');
-}
 define('SOURCE_TOKEN', 'b11983d30cb6821158744d5d065d0f70');
 define('SOURCE_ID', '620386');
 require_once(ROOT_PATH . 'includes/cls_transport.php');
 require_once(ROOT_PATH . 'includes/shopex_json.php');
 require_once(ROOT_PATH . "admin/includes/oauth/oauth2.php");
 
-/* 短信模块主类 */
-class sms
+/**
+ * 短信模块主类
+ */
+class Sms
 {
     /**
      * 存放提供远程服务的URL。
      *
      * @access  private
-     * @var     array       $api_urls
+     * @var     array $api_urls
      */
-    public $api_urls   = array(
-                            'info'              =>      'https://api.sms.shopex.cn',
-                            'send'              =>      'https://api.sms.shopex.cn',
-                            'servertime'        =>      'https://webapi.sms.shopex.cn'
-    
+    public $api_urls = array(
+        'info' => 'https://api.sms.shopex.cn',
+        'send' => 'https://api.sms.shopex.cn',
+        'servertime' => 'https://webapi.sms.shopex.cn'
+
     );
     /**
      * 存放MYSQL对象
      *
      * @access  private
-     * @var     object      $db
+     * @var     object $db
      */
-    public $db         = null;
+    public $db = null;
 
     /**
      * 存放ECS对象
      *
      * @access  private
-     * @var     object      $ecs
+     * @var     object $ecs
      */
-    public $ecs        = null;
+    public $ecs = null;
 
     /**
      * 存放transport对象
      *
      * @access  private
-     * @var     object      $t
+     * @var     object $t
      */
-    public $t          = null;
+    public $t = null;
 
     /**
      * 存放程序执行过程中的错误信息，这样做的一个好处是：程序可以支持多语言。
@@ -58,10 +55,10 @@ class sms
      * 为空或0表示动作成功；大于0的数字表示动作失败，该数字代表错误号。
      *
      * @access  public
-     * @var     array       $errors
+     * @var     array $errors
      */
-    public $errors  = array('api_errors'       => array('error_no' => -1, 'error_msg' => ''),
-                         'server_errors'    => array('error_no' => -1, 'error_msg' => ''));
+    public $errors = array('api_errors' => array('error_no' => -1, 'error_msg' => ''),
+        'server_errors' => array('error_no' => -1, 'error_msg' => ''));
 
     /**
      * 构造函数
@@ -88,23 +85,23 @@ class sms
 
         /* 此处最好不要从$GLOBALS数组里引用，防止出错 */
         $this->t = new transport(-1, -1, -1, false);
-        $this->json    = new Services_JSON;
+        $this->json = new Services_JSON;
     }
-   
+
     /* 发送短消息
     *
     * @access  public
     * @param   string  $phone          要发送到哪些个手机号码，传的值是一个数组
     * @param   string  $msg            发送的消息内容
     */
-    public function send($phones, $msg, $send_date = '', $send_num = 1, $sms_type='', $version='1.0')
+    public function send($phones, $msg, $send_date = '', $send_num = 1, $sms_type = '', $version = '1.0')
     {
         if ($sms_type == 'fan-out' && !stripos($msg, '退订回N')) {
             $msg .= '退订回N';
         }
 
         /* 检查发送信息的合法性 */
-        $contents=$this->get_contents($phones, $msg);
+        $contents = $this->get_contents($phones, $msg);
         if (!$contents) {
             $this->errors['server_errors']['error_no'] = 3;//发送的信息有误
             return false;
@@ -123,7 +120,7 @@ class sms
         //         $this->errors['server_errors']['error_no'] = 11;//短信功能没有激活
         //         return false;
         //     }
-            
+
         // }
         /* 获取API URL */
         // $sms_url = $this->get_url('send');
@@ -140,29 +137,29 @@ class sms
             return false;
         }
 
-        $openapi_key = array('key'=>OPENAPI_KEY,'secret'=>OPENAPI_SECRET,'site'=>OPENAPI_SITE,'oauth'=>OPENAPI_OAUTH);
+        $openapi_key = array('key' => OPENAPI_KEY, 'secret' => OPENAPI_SECRET, 'site' => OPENAPI_SITE, 'oauth' => OPENAPI_OAUTH);
         $oauth = new oauth2($openapi_key);
-        $api_url = OAUTH_API_PATH."/smsv2/send";
-        $t_contents=array();
-        if (count($contents)>1) {
-            foreach ($contents as $key=>$val) {
-                $t_contents['0']['phones']=$val['phones'];
-                $t_contents['0']['content']=$val['content'];
-                $send_str['contents']= $this->json->encode($t_contents);
+        $api_url = OAUTH_API_PATH . "/smsv2/send";
+        $t_contents = array();
+        if (count($contents) > 1) {
+            foreach ($contents as $key => $val) {
+                $t_contents['0']['phones'] = $val['phones'];
+                $t_contents['0']['content'] = $val['content'];
+                $send_str['contents'] = $this->json->encode($t_contents);
                 $send_str['shopexid'] = get_certificate_info('passport_uid');
                 $send_str['token'] = get_certificate_info('yunqi_code');
                 $send_str['sendType'] = ($sms_type == 'fan-out') ? 'fan-out' : 'notice';
                 $send_str['source'] = SOURCE_ID;
                 $send_str['certi_app'] = 'sms.newsend';
                 if (@constant('DEBUG_API')) {
-                    error_log(date("c")."\t".stripslashes(var_export($send_str, 1))."\t\n", 3, LOG_DIR."/sms_".date("Y-m-d").".log");
+                    error_log(date("c") . "\t" . stripslashes(var_export($send_str, 1)) . "\t\n", 3, LOG_DIR . "/sms_" . date("Y-m-d") . ".log");
                 }
                 $r = $oauth->request()->get('api/platform/timestamp');
                 $time = $r->parsed();
                 $rall = $oauth->request($_SESSION['TOKEN'])->post($api_url, $send_str, $time);
                 $result = $rall->parsed();
                 if (@constant('DEBUG_API')) {
-                    error_log(date("c")."\t".var_export($result, 1)."\t\n", 3, LOG_DIR."/sms_".date("Y-m-d").".log");
+                    error_log(date("c") . "\t" . var_export($result, 1) . "\t\n", 3, LOG_DIR . "/sms_" . date("Y-m-d") . ".log");
                 }
 
                 if ($result['res'] == 'fail' && $result['msg'] == 10017) {
@@ -188,21 +185,21 @@ class sms
             }
         } else {
             $send_str['sendType'] = ($sms_type == 'fan-out') ? 'fan-out' : 'notice';
-            $send_str['contents']= $this->json->encode($contents);
+            $send_str['contents'] = $this->json->encode($contents);
             $send_str['shopexid'] = get_certificate_info('passport_uid');
             $send_str['token'] = get_certificate_info('yunqi_code');
-            $send_str['source']=SOURCE_ID;
+            $send_str['source'] = SOURCE_ID;
             $send_str['certi_app'] = 'sms.newsend';
             // 可在config.php中加上define('DEBUG_API','true');
             if (@constant('DEBUG_API')) {
-                error_log(date("c")."\t".stripslashes(var_export($send_str, 1))."\t\n", 3, LOG_DIR."/sms_".date("Y-m-d").".log");
+                error_log(date("c") . "\t" . stripslashes(var_export($send_str, 1)) . "\t\n", 3, LOG_DIR . "/sms_" . date("Y-m-d") . ".log");
             }
             $r = $oauth->request()->get('api/platform/timestamp');
             $time = $r->parsed();
             $rall = $oauth->request($_SESSION['TOKEN'])->post($api_url, $send_str, $time);
             $result = $rall->parsed();
             if (@constant('DEBUG_API')) {
-                error_log(date("c")."\t".var_export($result, 1)."\t\n", 3, LOG_DIR."/sms_".date("Y-m-d").".log");
+                error_log(date("c") . "\t" . var_export($result, 1) . "\t\n", 3, LOG_DIR . "/sms_" . date("Y-m-d") . ".log");
             }
             // $send_str['certi_app']='sms.send';
             // $send_str['entId']=$GLOBALS['_CFG']['ent_id'];
@@ -230,16 +227,14 @@ class sms
             return false;
         }
     }
-   
 
-    
 
     /**
      * 检测启用短信服务需要的信息
      *
      * @access  private
-     * @param   string      $email          邮箱
-     * @param   string      $password       密码
+     * @param string $email 邮箱
+     * @param string $password 密码
      * @return  boolean                     如果启用信息格式合法就返回true，否则返回false。
      */
     public function check_enable_info($email, $password)
@@ -272,6 +267,7 @@ class sms
 
         return true;
     }
+
     public function get_site_info()
     {
         /* 获得当前处于会话状态的管理员的邮箱 */
@@ -286,12 +282,14 @@ class sms
 
         return $sms_site_info;
     }
+
     public function get_site_url()
     {
         $url = $this->ecs->url();
         $url = $url ? $url : '';
         return $url;
     }
+
     /**
      * 获得当前处于会话状态的管理员的邮箱
      *
@@ -309,8 +307,9 @@ class sms
 
         return $email;
     }
+
     //用户短信账户信息获取
-    public function getSmsInfo($certi_app='sms.info', $version='1.0', $format='json')
+    public function getSmsInfo($certi_app = 'sms.info', $version = '1.0', $format = 'json')
     {
         $send_str['certi_app'] = $certi_app;
         $send_str['entId'] = $GLOBALS['_CFG']['ent_id'];
@@ -329,28 +328,28 @@ class sms
             return false;
         }
     }
-    
+
     //检查手机号和发送的内容并生成生成短信队列
     public function get_contents($phones, $msg)
     {
         if (empty($phones) || empty($msg)) {
             return false;
         }
-        $msg.= "【".$GLOBALS['_CFG']['default_sms_sign']."】";
+        $msg .= "【" . $GLOBALS['_CFG']['default_sms_sign'] . "】";
 
-        $phone_key=0;
-        $i=0;
-        $phones=explode(',', $phones);
+        $phone_key = 0;
+        $i = 0;
+        $phones = explode(',', $phones);
         foreach ($phones as $key => $value) {
             // 打平台单次请求每次不超过200个手机号
-            if ($i<200) {
+            if ($i < 200) {
                 $i++;
             } else {
-                $i=0;
+                $i = 0;
                 $phone_key++;
             }
             if ($this->is_mobile($value)) {
-                $phone[$phone_key][]=$value;
+                $phone[$phone_key][] = $value;
             } else {
                 $i--;
             }
@@ -358,11 +357,11 @@ class sms
         if (!empty($phone)) {
             foreach ($phone as $phone_key => $val) {
                 if (EC_CHARSET != 'utf-8') {
-                    $phone_array[$phone_key]['phones']=implode(',', $val);
-                    $phone_array[$phone_key]['content']=iconv('gb2312', 'utf-8', $msg);
+                    $phone_array[$phone_key]['phones'] = implode(',', $val);
+                    $phone_array[$phone_key]['content'] = iconv('gb2312', 'utf-8', $msg);
                 } else {
-                    $phone_array[$phone_key]['phones']=implode(',', $val);
-                    $phone_array[$phone_key]['content']=$msg;
+                    $phone_array[$phone_key]['phones'] = implode(',', $val);
+                    $phone_array[$phone_key]['content'] = $msg;
                 }
             }
             return $phone_array;
@@ -370,27 +369,28 @@ class sms
             return false;
         }
     }
-    
+
     //获得服务器时间
     public function getTime()
     {
         $Tsend_str['certi_app'] = 'sms.servertime';
-        $Tsend_str['version'] = '1.0' ;
-        $Tsend_str['format'] = 'json' ;
+        $Tsend_str['version'] = '1.0';
+        $Tsend_str['format'] = 'json';
         $Tsend_str['certi_ac'] = $this->make_shopex_ac($Tsend_str, 'SMS_TIME');
         $sms_url = $this->get_url('servertime');
         $response = $this->t->request($sms_url, $Tsend_str, 'POST');
-        
+
         $result = $this->json->decode($response['body'], true);
         return $result['info'];
     }
+
     /**
-    * 返回指定键名的URL
-    *
-    * @access  public
-    * @param   string      $key        URL的名字，即数组的键名
-    * @return  string or boolean       如果由形参指定的键名对应的URL值存在就返回该URL，否则返回false。
-    */
+     * 返回指定键名的URL
+     *
+     * @access  public
+     * @param string $key URL的名字，即数组的键名
+     * @return  string or boolean       如果由形参指定的键名对应的URL值存在就返回该URL，否则返回false。
+     */
     public function get_url($key)
     {
         $url = $this->api_urls[$key];
@@ -401,38 +401,41 @@ class sms
 
         return $url;
     }
+
     /**
      * 检测手机号码是否正确
      *
      */
     public function is_mobile($moblie)
     {
-        return  preg_match("/^1[3456789]\d{9}$/", $moblie);
+        return preg_match("/^1[3456789]\d{9}$/", $moblie);
     }
-   
+
     //加密算法
     public function make_shopex_ac($temp_arr, $token)
     {
         ksort($temp_arr);
         $str = '';
-        foreach ($temp_arr as $key=>$value) {
-            if ($key!='certi_ac') {
-                $str.= $value;
+        foreach ($temp_arr as $key => $value) {
+            if ($key != 'certi_ac') {
+                $str .= $value;
             }
         }
-        return strtolower(md5($str.strtolower(md5($token))));
+        return strtolower(md5($str . strtolower(md5($token))));
     }
+
     public function base_encode($str)
     {
         $str = base64_encode($str);
         return strtr($str, $this->pattern());
     }
+
     public function pattern()
     {
         return array(
-        '+'=>'_1_',
-        '/'=>'_2_',
-        '='=>'_3_',
+            '+' => '_1_',
+            '/' => '_2_',
+            '=' => '_3_',
         );
     }
 }

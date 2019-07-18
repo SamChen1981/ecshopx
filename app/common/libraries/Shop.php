@@ -1,41 +1,38 @@
 <?php
 
-/**
- * 基础类
- */
-
-if (!defined('IN_ECS')) {
-    die('Hacking attempt');
-}
+namespace app\common\libraries;
 
 define('APPNAME', 'ECSHOP');
 define('VERSION', 'v4.0.5');
 define('RELEASE', '20190703');
 
-class ECS
+/**
+ * 基础类
+ */
+class Shop
 {
     public $db_name = '';
-    public $prefix  = 'ecs_';
+    public $prefix = 'ecs_';
 
     /**
      * 构造函数
      *
      * @access  public
-     * @param   string      $ver        版本号
+     * @param string $ver 版本号
      *
      * @return  void
      */
     public function __construct($db_name, $prefix)
     {
         $this->db_name = $db_name;
-        $this->prefix  = $prefix;
+        $this->prefix = $prefix;
     }
 
     /**
      * 将指定的表名加上前缀后返回
      *
      * @access  public
-     * @param   string      $str        表名
+     * @param string $str 表名
      *
      * @return  string
      */
@@ -48,7 +45,7 @@ class ECS
      * ECSHOP 密码编译方法;
      *
      * @access  public
-     * @param   string      $pass       需要编译的原始密码
+     * @param string $pass 需要编译的原始密码
      *
      * @return  string
      */
@@ -106,8 +103,8 @@ class ECS
     public function url()
     {
         $curr = strpos(PHP_SELF, ADMIN_PATH . '/') !== false ?
-                preg_replace('/(.*)(' . ADMIN_PATH . ')(\/?)(.)*/i', '\1', dirname(PHP_SELF)) :
-                dirname(PHP_SELF);
+            preg_replace('/(.*)(' . ADMIN_PATH . ')(\/?)(.)*/i', '\1', dirname(PHP_SELF)) :
+            dirname(PHP_SELF);
 
         $root = str_replace('\\', '/', $curr);
 
