@@ -14,14 +14,12 @@ $exc = new exchange($ecs->table('payment'), $db, 'pay_code', 'pay_name');
 //-- 支付方式列表 ?act=list
 /*------------------------------------------------------ */
 
-if ($_REQUEST['act'] == 'list')
-{
+if ($_REQUEST['act'] == 'list') {
     /* 查询数据库中启用的支付方式 */
     $pay_list = array();
     $sql = "SELECT * FROM " . $ecs->table('payment') . " WHERE enabled = '1' ORDER BY pay_order";
     $res = $db->query($sql);
-    while ($row = $db->fetchRow($res))
-    {
+    while ($row = $db->fetchRow($res)) {
         $pay_list[$row['pay_code']] = $row;
     }
 
@@ -29,39 +27,32 @@ if ($_REQUEST['act'] == 'list')
     $modules = read_modules('../includes/modules/payment');
     $yunqi_payment = array();
     $modules_count = count($modules);
-    for ($i = 0; $i < $modules_count; $i++)
-    {
+    for ($i = 0; $i < $modules_count; $i++) {
         $code = $modules[$i]['code'];
         $modules[$i]['pay_code'] = $modules[$i]['code'];
         /* 如果数据库中有，取数据库中的名称和描述 */
-        if (isset($pay_list[$code]))
-        {
+        if (isset($pay_list[$code])) {
             $modules[$i]['name'] = $pay_list[$code]['pay_name'];
             $modules[$i]['pay_fee'] =  $pay_list[$code]['pay_fee'];
             $modules[$i]['is_cod'] = $pay_list[$code]['is_cod'];
             $modules[$i]['desc'] = $pay_list[$code]['pay_desc'];
             $modules[$i]['pay_order'] = $pay_list[$code]['pay_order'];
             $modules[$i]['install'] = '1';
-        }
-        else
-        {
+        } else {
             $modules[$i]['name'] = $_LANG[$modules[$i]['code']];
-            if (!isset($modules[$i]['pay_fee']))
-            {
+            if (!isset($modules[$i]['pay_fee'])) {
                 $modules[$i]['pay_fee'] = 0;
             }
             $modules[$i]['desc'] = $_LANG[$modules[$i]['desc']];
             $modules[$i]['install'] = '0';
         }
-       if ($modules[$i]['pay_code'] == 'tenpayc2c')
-       {
+        if ($modules[$i]['pay_code'] == 'tenpayc2c') {
             $tenpayc2c = $modules[$i];
-       }
-       if ($modules[$i]['pay_code'] == 'yunqi')
-       {
+        }
+        if ($modules[$i]['pay_code'] == 'yunqi') {
             $yunqi_payment = $modules[$i];
             unset($modules[$i]);
-       }
+        }
     }
 
 
@@ -70,41 +61,43 @@ if ($_REQUEST['act'] == 'list')
     $yunqi_payment and array_unshift($modules, $yunqi_payment);
 
     assign_query_info();
-    $smarty->assign('certi',$certificate);
+    $smarty->assign('certi', $certificate);
     $smarty->assign('ur_here', $_LANG['02_payment_list']);
     $smarty->assign('modules', $modules);
     $smarty->assign('tenpayc2c', $tenpayc2c);
-    $smarty->assign('account_url',TEEGON_PASSPORT_URL);
+    $smarty->assign('account_url', TEEGON_PASSPORT_URL);
     $smarty->display('payment_list.htm');
 }
 
 /*------------------------------------------------------ */
 //-- 获取云起收银账号
 /*------------------------------------------------------ */
-elseif($_REQUEST['act']=='check_yunqi'){
-   //获取云起收银账号
+elseif ($_REQUEST['act']=='check_yunqi') {
+    //获取云起收银账号
     include_once(ROOT_PATH.'includes/cls_certificate.php');
     $cert = new certificate();
     $yunqi_account = $cert->get_yunqi_account();
-    if(!$yunqi_account || !$yunqi_account['status']){
+    if (!$yunqi_account || !$yunqi_account['status']) {
         $yqaccount_result = $cert->yqaccount_appget();
-        if($yqaccount_result['status']=='success'){
+        if ($yqaccount_result['status']=='success') {
             $cert->set_yunqi_account(array('appkey'=>$yqaccount_result['data']['appkey'],'appsecret'=>$yqaccount_result['data']['appsecret'],'status'=>true));
-            echo json_encode(array('status'=>true));exit;
-        }else{
-            echo json_encode(array('status'=>false));exit;
+            echo json_encode(array('status'=>true));
+            exit;
+        } else {
+            echo json_encode(array('status'=>false));
+            exit;
         }
-    }else{
-        echo json_encode(array('status'=>true));exit;
+    } else {
+        echo json_encode(array('status'=>true));
+        exit;
     }
-    //获取云起收银账号end 
+    //获取云起收银账号end
 }
 /*------------------------------------------------------ */
 //-- 安装支付方式 ?act=install&code=".$code."
 /*------------------------------------------------------ */
 
-elseif ($_REQUEST['act'] == 'install')
-{
+elseif ($_REQUEST['act'] == 'install') {
     admin_priv('payment');
 
     /* 取相应插件信息 */
@@ -113,12 +106,9 @@ elseif ($_REQUEST['act'] == 'install')
 
     $data = $modules[0];
     /* 对支付费用判断。如果data['pay_fee']为false无支付费用，为空则说明以配送有关，其它可以修改 */
-    if (isset($data['pay_fee']))
-    {
+    if (isset($data['pay_fee'])) {
         $data['pay_fee'] = trim($data['pay_fee']);
-    }
-    else
-    {
+    } else {
         $data['pay_fee']     = 0;
     }
 
@@ -130,28 +120,23 @@ elseif ($_REQUEST['act'] == 'install')
     $pay['is_online']   = $data['is_online'];
     $pay['pay_config']  = array();
 
-    foreach ($data['config'] AS $key => $value)
-    {
+    foreach ($data['config'] as $key => $value) {
         $config_desc = (isset($_LANG[$value['name'] . '_desc'])) ? $_LANG[$value['name'] . '_desc'] : '';
         $pay['pay_config'][$key] = $value +
             array('label' => $_LANG[$value['name']], 'value' => $value['value'], 'desc' => $config_desc);
 
         if ($pay['pay_config'][$key]['type'] == 'select' ||
-            $pay['pay_config'][$key]['type'] == 'radiobox')
-        {
+            $pay['pay_config'][$key]['type'] == 'radiobox') {
             $pay['pay_config'][$key]['range'] = $_LANG[$pay['pay_config'][$key]['name'] . '_range'];
         }
     }
 
     assign_query_info();
 
-    $smarty->assign('action_link',  array('text' => $_LANG['02_payment_list'], 'href' => 'payment.php?act=list'));
+    $smarty->assign('action_link', array('text' => $_LANG['02_payment_list'], 'href' => 'payment.php?act=list'));
     $smarty->assign('pay', $pay);
     $smarty->display('payment_edit.htm');
-}
-
-elseif ($_REQUEST['act'] == 'get_config')
-{
+} elseif ($_REQUEST['act'] == 'get_config') {
     check_authz_json('payment');
 
     $code = $_REQUEST['code'];
@@ -162,32 +147,22 @@ elseif ($_REQUEST['act'] == 'get_config')
     $data = $modules[0]['config'];
     $config = '<table>';
     $range = '';
-    foreach($data AS $key => $value)
-    {
+    foreach ($data as $key => $value) {
         $config .= "<tr><td width=80><span class='label'>";
         $config .= $_LANG[$data[$key]['name']];
         $config .= "</span></td>";
-        if($data[$key]['type'] == 'text')
-        {
-            if($data[$key]['name'] == 'alipay_account')
-            {
+        if ($data[$key]['type'] == 'text') {
+            if ($data[$key]['name'] == 'alipay_account') {
                 $config .= "<td><input name='cfg_value[]' type='text' value='" . $data[$key]['value'] . "' /><a href=\"https://www.alipay.com/himalayas/practicality.htm\" target=\"_blank\">".$_LANG['alipay_look']."</a></td>";
-            }
-            elseif($data[$key]['name'] == 'tenpay_account')
-            {
+            } elseif ($data[$key]['name'] == 'tenpay_account') {
                 $config .= "<td><input name='cfg_value[]' type='text' value='" . $data[$key]['value'] . "' />" . $_LANG['penpay_register'] . "</td>";
+            } else {
+                $config .= "<td><input name='cfg_value[]' type='text' value='" . $data[$key]['value'] . "' /></td>";
             }
-            else
-            {
-            $config .= "<td><input name='cfg_value[]' type='text' value='" . $data[$key]['value'] . "' /></td>";
-            }
-        }
-        elseif($data[$key]['type'] == 'select')
-        {
+        } elseif ($data[$key]['type'] == 'select') {
             $range = $_LANG[$data[$key]['name'] . '_range'];
             $config .= "<td><select name='cfg_value[]'>";
-            foreach($range AS $index => $val)
-            {
+            foreach ($range as $index => $val) {
                 $config .= "<option value='$index'>" . $range[$index] . "</option>";
             }
             $config .= "</select></td>";
@@ -206,24 +181,19 @@ elseif ($_REQUEST['act'] == 'get_config')
 /*------------------------------------------------------ */
 //-- 编辑支付方式 ?act=edit&code={$code}
 /*------------------------------------------------------ */
-elseif ($_REQUEST['act'] == 'edit')
-{
+elseif ($_REQUEST['act'] == 'edit') {
     admin_priv('payment');
 
     /* 查询该支付方式内容 */
-    if (isset($_REQUEST['code']))
-    {
+    if (isset($_REQUEST['code'])) {
         $_REQUEST['code'] = trim($_REQUEST['code']);
-    }
-    else
-    {
+    } else {
         die('invalid parameter');
     }
 
     $sql = "SELECT * FROM " . $ecs->table('payment') . " WHERE pay_code = '$_REQUEST[code]' AND enabled = '1'";
     $pay = $db->getRow($sql);
-    if (empty($pay))
-    {
+    if (empty($pay)) {
         $links[] = array('text' => $_LANG['back_list'], 'href' => 'payment.php?act=list');
         sys_msg($_LANG['payment_not_available'], 0, $links);
     }
@@ -234,14 +204,12 @@ elseif ($_REQUEST['act'] == 'edit')
     $data = $modules[0];
 
     /* 取得配置信息 */
-    if (is_string($pay['pay_config']))
-    {
+    if (is_string($pay['pay_config'])) {
         $store = unserialize($pay['pay_config']);
         /* 取出已经设置属性的code */
         $code_list = array();
-        if($store){
-           foreach ($store as $key=>$value)
-            {
+        if ($store) {
+            foreach ($store as $key=>$value) {
                 $code_list[$value['name']] = $value['value'];
             }
         }
@@ -249,34 +217,28 @@ elseif ($_REQUEST['act'] == 'edit')
         $pay['pay_config'] = array();
 
         /* 循环插件中所有属性 */
-        foreach ($data['config'] as $key => $value)
-        {
+        foreach ($data['config'] as $key => $value) {
             $pay['pay_config'][$key]['desc'] = (isset($_LANG[$value['name'] . '_desc'])) ? $_LANG[$value['name'] . '_desc'] : '';
             $pay['pay_config'][$key]['label'] = $_LANG[$value['name']];
             $pay['pay_config'][$key]['name'] = $value['name'];
             $pay['pay_config'][$key]['type'] = $value['type'];
 
-            if (isset($code_list[$value['name']]))
-            {
+            if (isset($code_list[$value['name']])) {
                 $pay['pay_config'][$key]['value'] = $code_list[$value['name']];
-            }
-            else
-            {
+            } else {
                 $pay['pay_config'][$key]['value'] = $value['value'];
             }
 
             if ($pay['pay_config'][$key]['type'] == 'select' ||
-                $pay['pay_config'][$key]['type'] == 'radiobox')
-            {
+                $pay['pay_config'][$key]['type'] == 'radiobox') {
                 $pay['pay_config'][$key]['range'] = $_LANG[$pay['pay_config'][$key]['name'] . '_range'];
             }
         }
-
     }
 
     //天工收银配置
     /*  兼容老的站点和移动端 以shop_config表里的那条为准 */
-    if($pay['pay_code']=='yunqi'){
+    if ($pay['pay_code']=='yunqi') {
         $teegon_data = $cert->get_yunqi_account();
         $pay['pay_config'][0]['name'] = 'appkey';
         $pay['pay_config'][0]['label'] =$_LANG['appkey'];
@@ -286,24 +248,19 @@ elseif ($_REQUEST['act'] == 'edit')
         $pay['pay_config'][1]['label'] = $_LANG['appsecret'];
         $pay['pay_config'][1]['type'] = 'text';
         $pay['pay_config'][1]['value'] = $teegon_data['appsecret'];
-
     }
     /* 如果以前没设置支付费用，编辑时补上 */
-    if (!isset($pay['pay_fee']))
-    {
-        if (isset($data['pay_fee']))
-        {
+    if (!isset($pay['pay_fee'])) {
+        if (isset($data['pay_fee'])) {
             $pay['pay_fee'] = $data['pay_fee'];
-        }
-        else
-        {
+        } else {
             $pay['pay_fee'] = 0;
         }
     }
 
     assign_query_info();
 
-    $smarty->assign('action_link',  array('text' => $_LANG['02_payment_list'], 'href' => 'payment.php?act=list'));
+    $smarty->assign('action_link', array('text' => $_LANG['02_payment_list'], 'href' => 'payment.php?act=list'));
     $smarty->assign('ur_here', $_LANG['edit'] . $_LANG['payment']);
     $smarty->assign('pay', $pay);
     $smarty->display('payment_edit.htm');
@@ -312,28 +269,23 @@ elseif ($_REQUEST['act'] == 'edit')
 /*------------------------------------------------------ */
 //-- 提交支付方式 post
 /*------------------------------------------------------ */
-elseif (isset($_POST['Submit']))
-{
+elseif (isset($_POST['Submit'])) {
     admin_priv('payment');
     /* 检查输入 */
-    if (empty($_POST['pay_name']))
-    {
+    if (empty($_POST['pay_name'])) {
         sys_msg($_LANG['payment_name'] . $_LANG['empty']);
     }
 
     $sql = "SELECT COUNT(*) FROM " . $ecs->table('payment') .
             " WHERE pay_name = '$_POST[pay_name]' AND pay_code <> '$_POST[pay_code]'";
-    if ($db->GetOne($sql) > 0)
-    {
+    if ($db->GetOne($sql) > 0) {
         sys_msg($_LANG['payment_name'] . $_LANG['repeat'], 1);
     }
 
     /* 取得配置信息 */
     $pay_config = array();
-    if (isset($_POST['cfg_value']) && is_array($_POST['cfg_value']))
-    {
-        for ($i = 0; $i < count($_POST['cfg_value']); $i++)
-        {
+    if (isset($_POST['cfg_value']) && is_array($_POST['cfg_value'])) {
+        for ($i = 0; $i < count($_POST['cfg_value']); $i++) {
             $pay_config[] = array('name'  => trim($_POST['cfg_name'][$i]),
                                   'type'  => trim($_POST['cfg_type'][$i]),
                                   'value' => trim($_POST['cfg_value'][$i])
@@ -405,7 +357,7 @@ elseif (isset($_POST['Submit']))
                         sys_msg($_LANG['lack_cert_file'], 1);
                     }
                 }
-            }elseif ($value['name'] == 'chinapay_cer') {
+            } elseif ($value['name'] == 'chinapay_cer') {
                 if ($cer_path) {
                     $pay_config[$key]['value'] = $cer_path;
                 } else {
@@ -413,7 +365,7 @@ elseif (isset($_POST['Submit']))
                         sys_msg($_LANG['lack_cert_file'], 1);
                     }
                 }
-            }elseif ($value['name'] = 'chinapay_pfx_pwd') {
+            } elseif ($value['name'] = 'chinapay_pfx_pwd') {
                 if ($pay_config[$key]['value']) {
                     $pfx_pwd = $value['value'];
                 }
@@ -464,7 +416,6 @@ elseif (isset($_POST['Submit']))
             if ($value['name'] == 'appsecret') {
                 $appsecret = $value['value'];
             }
-
         }
         if ($appkey && $appsecret) {
             $status = true;
@@ -479,8 +430,7 @@ elseif (isset($_POST['Submit']))
 
     /* 检查是编辑还是安装 */
     $link[] = array('text' => $_LANG['back_list'], 'href' => 'payment.php?act=list');
-    if ($_POST['pay_id'])
-    {
+    if ($_POST['pay_id']) {
 
         /* 编辑 */
         $sql = "UPDATE " . $ecs->table('payment') .
@@ -495,13 +445,10 @@ elseif (isset($_POST['Submit']))
         admin_log($_POST['pay_name'], 'edit', 'payment');
 
         sys_msg($_LANG['edit_ok'], 0, $link);
-    }
-    else
-    {
+    } else {
         /* 安装，检查该支付方式是否曾经安装过 */
         $sql = "SELECT COUNT(*) FROM " . $ecs->table('payment') . " WHERE pay_code = '$_REQUEST[pay_code]'";
-        if ($db->GetOne($sql) > 0)
-        {
+        if ($db->GetOne($sql) > 0) {
             /* 该支付方式已经安装过, 将该支付方式的状态设置为 enable */
             $sql = "UPDATE " . $ecs->table('payment') .
                    "SET pay_name = '$_POST[pay_name]'," .
@@ -511,9 +458,7 @@ elseif (isset($_POST['Submit']))
                    "    enabled = '1' " .
                    "WHERE pay_code = '$_POST[pay_code]' LIMIT 1";
             $db->query($sql);
-        }
-        else
-        {
+        } else {
 
             /* 该支付方式没有安装过, 将该支付方式的信息添加到数据库 */
             $sql = "INSERT INTO " . $ecs->table('payment') . " (pay_code, pay_name, pay_desc, pay_config, is_cod, pay_fee, enabled, is_online)" .
@@ -531,8 +476,7 @@ elseif (isset($_POST['Submit']))
 /*------------------------------------------------------ */
 //-- 卸载支付方式 ?act=uninstall&code={$code}
 /*------------------------------------------------------ */
-elseif ($_REQUEST['act'] == 'uninstall')
-{
+elseif ($_REQUEST['act'] == 'uninstall') {
     admin_priv('payment');
 
     /* 把 enabled 设为 0 */
@@ -557,8 +501,7 @@ elseif ($_REQUEST['act'] == 'uninstall')
 //-- 修改支付方式名称
 /*------------------------------------------------------ */
 
-elseif ($_REQUEST['act'] == 'edit_name')
-{
+elseif ($_REQUEST['act'] == 'edit_name') {
     /* 检查权限 */
     check_authz_json('payment');
 
@@ -567,14 +510,12 @@ elseif ($_REQUEST['act'] == 'edit_name')
     $name = json_str_iconv(trim($_POST['val']));
 
     /* 检查名称是否为空 */
-    if (empty($name))
-    {
+    if (empty($name)) {
         make_json_error($_LANG['name_is_null']);
     }
 
     /* 检查名称是否重复 */
-    if (!$exc->is_only('pay_name', $name, $code))
-    {
+    if (!$exc->is_only('pay_name', $name, $code)) {
         make_json_error($_LANG['name_exists']);
     }
 
@@ -587,8 +528,7 @@ elseif ($_REQUEST['act'] == 'edit_name')
 //-- 修改支付方式描述
 /*------------------------------------------------------ */
 
-elseif ($_REQUEST['act'] == 'edit_desc')
-{
+elseif ($_REQUEST['act'] == 'edit_desc') {
     /* 检查权限 */
     check_authz_json('payment');
 
@@ -605,8 +545,7 @@ elseif ($_REQUEST['act'] == 'edit_desc')
 //-- 修改支付方式排序
 /*------------------------------------------------------ */
 
-elseif ($_REQUEST['act'] == 'edit_order')
-{
+elseif ($_REQUEST['act'] == 'edit_order') {
     /* 检查权限 */
     check_authz_json('payment');
 
@@ -623,27 +562,20 @@ elseif ($_REQUEST['act'] == 'edit_order')
 //-- 修改支付方式费用
 /*------------------------------------------------------ */
 
-elseif ($_REQUEST['act'] == 'edit_pay_fee')
-{
+elseif ($_REQUEST['act'] == 'edit_pay_fee') {
     /* 检查权限 */
     check_authz_json('payment');
 
     /* 取得参数 */
     $code = json_str_iconv(trim($_POST['id']));
     $pay_fee = json_str_iconv(trim($_POST['val']));
-    if (empty($pay_fee))
-    {
+    if (empty($pay_fee)) {
         $pay_fee = 0;
-    }
-    else
-    {
+    } else {
         $pay_fee = make_semiangle($pay_fee); //全角转半角
-        if (strpos($pay_fee, '%') === false)
-        {
+        if (strpos($pay_fee, '%') === false) {
             $pay_fee = floatval($pay_fee);
-        }
-        else
-        {
+        } else {
             $pay_fee = floatval($pay_fee) . '%';
         }
     }
@@ -652,5 +584,3 @@ elseif ($_REQUEST['act'] == 'edit_pay_fee')
     $exc->edit("pay_fee = '$pay_fee'", $code);
     make_json_result(stripcslashes($pay_fee));
 }
-
-?>

@@ -58,13 +58,14 @@ $errorCode=$_GET['errorCode'];
 $signMsg=$_GET['signMsg'];
 
 //功能函数。将变量值不为空的参数组成字符串
-Function appendParam($returnStr,$paramId,$paramValue){
-    if($returnStr!=""){
-        if($paramValue!=""){
+function appendParam($returnStr, $paramId, $paramValue)
+{
+    if ($returnStr!="") {
+        if ($paramValue!="") {
             $returnStr.="&".$paramId."=".$paramValue;
         }
-    }else{
-        If($paramValue!=""){
+    } else {
+        if ($paramValue!="") {
             $returnStr=$paramId."=".$paramValue;
         }
     }
@@ -75,25 +76,25 @@ Function appendParam($returnStr,$paramId,$paramValue){
 //自己生成加密签名串
 ///请务必按照如下顺序和规则组成加密串！
 $$signMsgVal="";
-$signMsgVal=appendParam($signMsgVal,"version",$version);
-$signMsgVal=appendParam($signMsgVal,"signType",$signType);
-$signMsgVal=appendParam($signMsgVal,"merchantMbrCode",$merchantMbrCode);
-$signMsgVal=appendParam($signMsgVal,"requestId",$requestId);
-$signMsgVal=appendParam($signMsgVal,"userId",$userId);
-$signMsgVal=appendParam($signMsgVal,"userEmail",$userEmail);
-$signMsgVal=appendParam($signMsgVal,"userName",urlencode($userName));
-$signMsgVal=appendParam($signMsgVal,"orgName",urlencode($orgName));
-$signMsgVal=appendParam($signMsgVal,"ext1",urlencode($ext1));
-$signMsgVal=appendParam($signMsgVal,"ext2",urlencode($ext2));
-$signMsgVal=appendParam($signMsgVal,"applyResult",$applyResult);
-$signMsgVal=appendParam($signMsgVal,"errorCode",$errorCode);
-$signMsgVal=appendParam($signMsgVal,"key",$key);
+$signMsgVal=appendParam($signMsgVal, "version", $version);
+$signMsgVal=appendParam($signMsgVal, "signType", $signType);
+$signMsgVal=appendParam($signMsgVal, "merchantMbrCode", $merchantMbrCode);
+$signMsgVal=appendParam($signMsgVal, "requestId", $requestId);
+$signMsgVal=appendParam($signMsgVal, "userId", $userId);
+$signMsgVal=appendParam($signMsgVal, "userEmail", $userEmail);
+$signMsgVal=appendParam($signMsgVal, "userName", urlencode($userName));
+$signMsgVal=appendParam($signMsgVal, "orgName", urlencode($orgName));
+$signMsgVal=appendParam($signMsgVal, "ext1", urlencode($ext1));
+$signMsgVal=appendParam($signMsgVal, "ext2", urlencode($ext2));
+$signMsgVal=appendParam($signMsgVal, "applyResult", $applyResult);
+$signMsgVal=appendParam($signMsgVal, "errorCode", $errorCode);
+$signMsgVal=appendParam($signMsgVal, "key", $key);
 
 $mysignMsg=strtoupper(md5($signMsgVal));
 
 
 
-if($mysignMsg==$signMsg){
+if ($mysignMsg==$signMsg) {
 
             /**
              *  商户进行自己的数据库逻辑处理，比如把接收的信息保存到自己的数据库中
@@ -103,19 +104,18 @@ if($mysignMsg==$signMsg){
     $status="1";
 
     $signMsgVal="";
-    $signMsgVal=appendParam($signMsgVal,"version",$version);
-    $signMsgVal=appendParam($signMsgVal,"signType",$signType);
-    $signMsgVal=appendParam($signMsgVal,"merchantMbrCode",$merchantMbrCode);
-    $signMsgVal=appendParam($signMsgVal,"requestId",$requestId);
-    $signMsgVal=appendParam($signMsgVal,"userId",$userId);
-    $signMsgVal=appendParam($signMsgVal,"status",$status);
+    $signMsgVal=appendParam($signMsgVal, "version", $version);
+    $signMsgVal=appendParam($signMsgVal, "signType", $signType);
+    $signMsgVal=appendParam($signMsgVal, "merchantMbrCode", $merchantMbrCode);
+    $signMsgVal=appendParam($signMsgVal, "requestId", $requestId);
+    $signMsgVal=appendParam($signMsgVal, "userId", $userId);
+    $signMsgVal=appendParam($signMsgVal, "status", $status);
     $reParam=$signMsgVal;
-    $signMsgVal=appendParam($signMsgVal,"key",key);
+    $signMsgVal=appendParam($signMsgVal, "key", key);
 
     $signMsg=strtoupper(md5($signMsgVal));
     $reParam .="&signMsg=".$signMsg;
-    echo $reParam; 
-}else{
+    echo $reParam;
+} else {
     echo "验证错误";
 }
-?>

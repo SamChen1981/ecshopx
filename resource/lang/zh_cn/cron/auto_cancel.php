@@ -13,4 +13,3 @@ $_LANG['auto_cancel_day_range']['12'] = '12小时';
 $_LANG['auto_cancel_day_range']['24'] = '24小时';
 $_LANG['auto_cancel_day_range']['48'] = '48小时';
 $_LANG['auto_cancel_reason'] = '系统自动取消';
-?>

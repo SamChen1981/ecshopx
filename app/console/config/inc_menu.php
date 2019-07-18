@@ -4,8 +4,7 @@
  * 管理中心菜单数组
  */
 
-if (!defined('IN_ECS'))
-{
+if (!defined('IN_ECS')) {
     die('Hacking attempt');
 }
 
@@ -150,5 +149,3 @@ $modules['18_lead_manage']['leancloud']        = 'leancloud.php?act=list';//云�
 $modules['18_lead_manage']['mobile_setting']        = 'ecmobile_setting.php?act=list';//移动版应用配置
 $modules['18_lead_manage']['h5_setting']        = 'h5_setting.php?act=list';//移动版应用配置
 $modules['18_lead_manage']['wxa_setting']        = 'wxa_setting.php?act=list';//小程序应用配置
-
-?>

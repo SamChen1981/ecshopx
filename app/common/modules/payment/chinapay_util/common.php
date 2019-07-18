@@ -1,6 +1,7 @@
 <?php
 
-function isEmpty($str){
+function isEmpty($str)
+{
     return $str==null||strlen(trim($str))==0?true:false;
 }
 
@@ -20,33 +21,35 @@ function send_post($url, $post_data)
     return $result;
 }
 
-//µÚÒ»¸öÊÇÔ­´®,µÚ¶ş¸öÊÇ ²¿·İ´®
-function startWith($str, $needle) {
+//ç¬¬ä¸€ä¸ªæ˜¯åŸä¸²,ç¬¬äºŒä¸ªæ˜¯ éƒ¨ä»½ä¸²
+function startWith($str, $needle)
+{
     return strpos($str, $needle) === 0;
 }
 
-//µÚÒ»¸öÊÇÔ­´®,µÚ¶ş¸öÊÇ ²¿·İ´®
-function endWith($haystack, $needle) {
+//ç¬¬ä¸€ä¸ªæ˜¯åŸä¸²,ç¬¬äºŒä¸ªæ˜¯ éƒ¨ä»½ä¸²
+function endWith($haystack, $needle)
+{
     $length = strlen($needle);
-    if($length == 0)
-    {
+    if ($length == 0) {
         return true;
     }
     return (substr($haystack, -$length) === $needle);
 }
 
 /**
- * ×Ö·û´®²¹Î».
- * @param val ×Ö·û´® .
- * @param type rÓÒ²¹Î»l×ó²¹Î» .
- * @param size ²¹×ã³¤¶È .
- * @param delim ²¹Î»ÓÃ×Ö·û´® .
+ * å­—ç¬¦ä¸²è¡¥ä½.
+ * @param val å­—ç¬¦ä¸² .
+ * @param type rå³è¡¥ä½lå·¦è¡¥ä½ .
+ * @param size è¡¥è¶³é•¿åº¦ .
+ * @param delim è¡¥ä½ç”¨å­—ç¬¦ä¸² .
  * @return String .
  */
 function pad($val, $type, $size, $delim)
 {
-    if (empty($val))
+    if (empty($val)) {
         return val;
+    }
     if ("r" == $type) {
         if (strlen($val) >= $size) {
             return substr($val, 0, $size);
@@ -63,10 +66,10 @@ function pad($val, $type, $size, $delim)
 }
 
 /**
- * ÖØ¸´×Ö·û´® .
- * @param type rÓÒ²¹Î»l×ó²¹Î» .
- * @param val ×Ö·û´® .
- * @param len ³¤¶È .
+ * é‡å¤å­—ç¬¦ä¸² .
+ * @param type rå³è¡¥ä½lå·¦è¡¥ä½ .
+ * @param val å­—ç¬¦ä¸² .
+ * @param len é•¿åº¦ .
  * @return .
  */
 function repeat($type, $val, $len)

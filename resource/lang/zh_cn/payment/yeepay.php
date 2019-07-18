@@ -22,4 +22,3 @@ $_LANG['yp_jcard_desc']    = 'YeePay易宝骏网支付插件';
 $_LANG['yp_account'] = '商户编号';
 $_LANG['yp_key']     = '商户密钥';
 $_LANG['pay_button'] = '立即支付';
-?>

@@ -91,4 +91,3 @@ $_LANG['yunqi_account'] = '云起账号';
 $_LANG['back_local_login'] = '返回本地登录';
 $_LANG['ecshop_account'] = 'ECshop账号';
 $_LANG['ecshop_login'] = 'ECshop登录';
-?>

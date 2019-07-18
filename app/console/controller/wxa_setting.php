@@ -14,15 +14,14 @@ $allow_suffix = array('gif', 'jpg', 'png', 'jpeg', 'bmp');
 /*------------------------------------------------------ */
 //-- 移动端应用配置
 /*------------------------------------------------------ */
-if ($_REQUEST['act']== 'list')
-{
+if ($_REQUEST['act']== 'list') {
     /* 检查权限 */
     admin_priv('wxa_setting');
     $smarty->assign('ur_here', $_LANG['wxa_setting']);
     $auth_sql = 'SELECT * FROM ' . $GLOBALS['ecs']->table('shop_config') . ' WHERE code = "authorize"';
     $auth = $GLOBALS['db']->getRow($auth_sql);
     $params = unserialize($auth['value']);
-    if($params['authorize_code'] != 'NDE'){
+    if ($params['authorize_code'] != 'NDE') {
         $url = $params['authorize_code']=='NCH'?'https://account.shopex.cn/order/confirm/goods_2460-946 ':'https://account.shopex.cn/order/confirm/goods_2540-1050 ';
         $smarty->assign('url', $url);
         $smarty->display('accredit.html');
@@ -30,9 +29,9 @@ if ($_REQUEST['act']== 'list')
     }
     $cert = new certificate;
     $isOpenWap = $cert->is_open_sn('fy');
-    if($isOpenWap==false && $_SESSION['yunqi_login'] && $_SESSION['TOKEN'] ){
-        $result = $cert->getsnlistoauth($_SESSION['TOKEN'] ,array());
-        if($result['status']=='success'){
+    if ($isOpenWap==false && $_SESSION['yunqi_login'] && $_SESSION['TOKEN']) {
+        $result = $cert->getsnlistoauth($_SESSION['TOKEN'], array());
+        if ($result['status']=='success') {
             $cert->save_snlist($result['data']);
             $isOpenWap = $cert->is_open_sn('fy');
         }
@@ -42,41 +41,40 @@ if ($_REQUEST['act']== 'list')
     $sql =  "SELECT * FROM " . $ecs->table('config')." WHERE 1";
     $group_items = $db->getAll($sql);
     $grouplist = get_params();
-    foreach($grouplist as $key => $value){
-        foreach($value['items'] as $k => $v){
-            foreach($group_items as $item){
-                if($item['code'] == $v['code']){
-                    $config = json_decode($item['config'],1);
-                    foreach($v['vars'] as $var_k => $var_v){
+    foreach ($grouplist as $key => $value) {
+        foreach ($value['items'] as $k => $v) {
+            foreach ($group_items as $item) {
+                if ($item['code'] == $v['code']) {
+                    $config = json_decode($item['config'], 1);
+                    foreach ($v['vars'] as $var_k => $var_v) {
                         $grouplist[$key]['items'][$k]['vars'][$var_k]['value'] =$config[$var_v['code']];
                     }
                 }
             }
-
         }
     }
 
     assign_query_info();
 
-    $smarty->assign('group_list',$grouplist);
+    $smarty->assign('group_list', $grouplist);
     $smarty->display('wxa_config.html');
-}elseif($_REQUEST['act']== 'post'){
+} elseif ($_REQUEST['act']== 'post') {
     /* 检查权限 */
     admin_priv('mobile_setting');
     $links[] = array('text' => $_LANG['wxa_setting'], 'href' => 'wxa_setting.php?act=list');
 
-    foreach($_POST['value'] as $key => $value){
+    foreach ($_POST['value'] as $key => $value) {
         $_POST['value'][$key] = trim($value);
     }
-    if(!empty($_FILES['value']['name'])){
-        foreach($_FILES['value']['name'] as $k => $v){
-            if($v){
+    if (!empty($_FILES['value']['name'])) {
+        foreach ($_FILES['value']['name'] as $k => $v) {
+            if ($v) {
                 $cert = $_FILES['value']['tmp_name']['cert'];
                 $PSize = filesize($cert);
                 $cert_steam = (fread(fopen($cert, "r"), $PSize));
                 $cert_steam = addslashes($cert_steam);
                 $_POST['value']['cert'] =  $_FILES['value']['name']['cert'];
-            }else{
+            } else {
                 sys_msg('证书不能为空', 1, $links);
             }
         }
@@ -91,27 +89,27 @@ if ($_REQUEST['act']== 'list')
     $description = $items['description'];
     $config = json_encode($_POST['value']);
     $status = $_POST['value']['status'];
-    $time = date('Y-m-d H:i:s',time());
+    $time = date('Y-m-d H:i:s', time());
 
-    if($res){
+    if ($res) {
         $sql = "UPDATE ".$ecs->table('config')." SET `updated_at` = '$time',`status` = '$status' ,`config` = '$config' WHERE `code` = '$code'";
-    }else{
+    } else {
         $sql = "INSERT INTO ".$ecs->table('config')." (`name`,`type`,`description`,`code`,`config`,`created_at`,`updated_at`,`status`) VALUES ('$name','$type','$description','$code','$config','$time','$time','$status')";
     }
     $db->query($sql);
-    if($type == 'payment'){
-       save_payment($code,$name,$description,$config,$status,PAY_TYPE_XCX); 
+    if ($type == 'payment') {
+        save_payment($code, $name, $description, $config, $status, PAY_TYPE_XCX);
     }
-    if($cert_steam){
+    if ($cert_steam) {
         //处理文件
         $sql = "SELECT * FROM " . $ecs->table('config')." WHERE `code` = '".$_POST['code']."'";
         $setting = $db->getRow($sql);
-        if($setting['id']){
+        if ($setting['id']) {
             $id = $setting['id'];
             $cert_tmp = $db->getRow("SELECT * FROM " . $ecs->table('cert')." WHERE `config_id` = '$id'");
-            if($cert_tmp){
+            if ($cert_tmp) {
                 $db->query("UPDATE ".$ecs->table('cert')." SET `file` = '$cert_steam' WHERE `config_id` = '$id'");
-            }else{
+            } else {
                 $db->query("INSERT INTO ".$ecs->table('cert')." (`config_id`,`file`) VALUES ($id,'$cert_steam')");
             }
         }
@@ -119,17 +117,20 @@ if ($_REQUEST['act']== 'list')
     sys_msg($_LANG['attradd_succed'], 0, $links);
 }
 
-function get_items($code){
+function get_items($code)
+{
     $params = get_params();
-    foreach($params as $value){
-        foreach($value['items'] as $val){
-            if($val['code'] == $code)return $val;
+    foreach ($params as $value) {
+        foreach ($value['items'] as $val) {
+            if ($val['code'] == $code) {
+                return $val;
+            }
         }
     }
 }
 
-function get_params(){
-
+function get_params()
+{
     $grouplist = array(
         0 => array(
             'name' => '小程序登陆配置',
@@ -228,5 +229,3 @@ function get_params(){
     );
     return $grouplist;
 }
-
-?>

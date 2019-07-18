@@ -10,18 +10,15 @@ clearstatcache();
 /* ? */
 define('ROOT_PATH', str_replace('install/includes/auto_init.php', '', str_replace('\\', '/', __FILE__)));
 
-if (isset($_SERVER['PHP_SELF']))
-{
+if (isset($_SERVER['PHP_SELF'])) {
     define('PHP_SELF', $_SERVER['PHP_SELF']);
-}
-else
-{
+} else {
     define('PHP_SELF', $_SERVER['SCRIPT_NAME']);
 }
 
 /* 汾? */
-define('EC_CHARSET','utf-8');
-define('EC_DB_CHARSET','utf8');
+define('EC_CHARSET', 'utf-8');
+define('EC_DB_CHARSET', 'utf8');
 
 require(ROOT_PATH . 'includes/lib_base.php');
 require(ROOT_PATH . 'includes/lib_common.php');
@@ -41,5 +38,3 @@ require(ROOT_PATH . 'install/includes/lib_auto_installer.php');
 header('Content-type: text/html; charset='.EC_CHARSET);
 
 @set_time_limit(360);
-
-?>

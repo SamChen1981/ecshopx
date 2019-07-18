@@ -11,29 +11,26 @@ clearstatcache();
 define('ROOT_PATH', str_replace('install/includes/init.php', '', str_replace('\\', '/', __FILE__)));
 
 /* https 检测https */
-if( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ){
+if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
     define('FORCE_SSL_LOGIN', true);
     define('FORCE_SSL_ADMIN', true);
-}else{
-    if( isset($_SERVER['HTTP_ORIGIN']) && substr($_SERVER['HTTP_ORIGIN'],0,5)=='https'){
+} else {
+    if (isset($_SERVER['HTTP_ORIGIN']) && substr($_SERVER['HTTP_ORIGIN'], 0, 5)=='https') {
         $_SERVER['HTTPS'] = 'on';
         define('FORCE_SSL_LOGIN', true);
         define('FORCE_SSL_ADMIN', true);
     }
 }
 
-if (isset($_SERVER['PHP_SELF']))
-{
+if (isset($_SERVER['PHP_SELF'])) {
     define('PHP_SELF', $_SERVER['PHP_SELF']);
-}
-else
-{
+} else {
     define('PHP_SELF', $_SERVER['SCRIPT_NAME']);
 }
 
 /* 定义版本的编码 */
-define('EC_CHARSET','utf-8');
-define('EC_DB_CHARSET','utf8');
+define('EC_CHARSET', 'utf-8');
+define('EC_DB_CHARSET', 'utf8');
 
 require(ROOT_PATH . 'includes/safety.php');
 require(ROOT_PATH . 'includes/lib_base.php');
@@ -54,5 +51,3 @@ require(ROOT_PATH . 'install/includes/lib_installer.php');
 header('Content-type: text/html; charset='.EC_CHARSET);
 
 @set_time_limit(360);
-
-?>

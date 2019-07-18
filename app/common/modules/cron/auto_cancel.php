@@ -4,21 +4,18 @@
  * 订单自动取消
  */
 
-if (!defined('IN_ECS'))
-{
+if (!defined('IN_ECS')) {
     die('Hacking attempt');
 }
 $cron_lang = ROOT_PATH . 'languages/' .$GLOBALS['_CFG']['lang']. '/cron/auto_cancel.php';
-if (file_exists($cron_lang))
-{
+if (file_exists($cron_lang)) {
     global $_LANG;
 
     include_once($cron_lang);
 }
 
 /* 模块的基本信息 */
-if (isset($set_modules) && $set_modules == TRUE)
-{
+if (isset($set_modules) && $set_modules == true) {
     $i = isset($modules) ? count($modules) : 0;
 
     /* 代码 */
@@ -59,11 +56,11 @@ cancel_log("select_count:".$count);
 $page_size = 100;
 $total = ceil($count/$page_size);
 $i = 1;
-while ( $i<= $total) {
+while ($i<= $total) {
     $sql = "SELECT * FROM " .$ecs->table('order_info') ." WHERE ".$where." limit 0,".$page_size;
     $rows = $db->getAll($sql);
     cancel_log("select_sql:".$sql);
-    cancel_log("select_rows:",$rows);
+    cancel_log("select_rows:", $rows);
     foreach ($rows as $key => $order) {
         $order_id = $order['order_id'];
         /* 标记订单为“取消”，记录取消原因 */
@@ -71,17 +68,15 @@ while ( $i<= $total) {
         update_order($order_id, array('order_status' => OS_CANCELED, 'to_buyer' => $cancel_note));
 
         /* 记录log */
-        order_action($order['order_sn'], OS_CANCELED, $order['shipping_status'], PS_UNPAYED, 'system','system');
+        order_action($order['order_sn'], OS_CANCELED, $order['shipping_status'], PS_UNPAYED, 'system', 'system');
 
         /* 如果使用库存，且下订单时减库存，则增加库存 */
-        if ($_CFG['use_storage'] == '1' && $_CFG['stock_dec_time'] == SDT_PLACE)
-        {
+        if ($_CFG['use_storage'] == '1' && $_CFG['stock_dec_time'] == SDT_PLACE) {
             change_order_goods_storage($order_id, false, SDT_PLACE);
         }
 
         /* 发送邮件 */
-        if ($_CFG['send_cancel_email'] == '1')
-        {
+        if ($_CFG['send_cancel_email'] == '1') {
             $tpl = get_mail_template('order_cancel');
             $smarty->assign('order', $order);
             $smarty->assign('shop_name', $_CFG['shop_name']);
@@ -100,7 +95,7 @@ while ( $i<= $total) {
         include_once(ROOT_PATH . 'includes/cls_matrix.php');
         $matrix = new matrix();
         $bind_info = $matrix->get_bind_info(array('ecos.ome'));
-        if($bind_info){
+        if ($bind_info) {
             $matrix->set_dead_order($order_id);
         }
         cancel_log("cancel_order_id:".$order_id);
@@ -108,8 +103,7 @@ while ( $i<= $total) {
     }
 }
 
-function cancel_log($msg,$data=null){
-    error_log(date("c")."\t".$msg."\t".stripslashes(json_encode($data))."\t\n",3,LOG_DIR."/auto_cancel_".date("Y-m-d").".log");
+function cancel_log($msg, $data=null)
+{
+    error_log(date("c")."\t".$msg."\t".stripslashes(json_encode($data))."\t\n", 3, LOG_DIR."/auto_cancel_".date("Y-m-d").".log");
 }
-
-?>

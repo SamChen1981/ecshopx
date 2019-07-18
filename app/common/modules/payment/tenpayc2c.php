@@ -4,23 +4,20 @@
  * 财付通中介担保支付插件
  */
 
-if (!defined('IN_ECS'))
-{
+if (!defined('IN_ECS')) {
     die('Hacking attempt');
 }
 
 $payment_lang = ROOT_PATH . 'languages/' .$GLOBALS['_CFG']['lang']. '/payment/tenpayc2c.php';
 
-if (file_exists($payment_lang))
-{
+if (file_exists($payment_lang)) {
     global $_LANG;
 
     include_once($payment_lang);
 }
 
 /* 模块的基本信息 */
-if (isset($set_modules) && $set_modules == TRUE)
-{
+if (isset($set_modules) && $set_modules == true) {
     $i = isset($modules) ? count($modules) : 0;
 
     /* 代码 */
@@ -59,7 +56,7 @@ if (isset($set_modules) && $set_modules == TRUE)
  */
 class tenpayc2c
 {
-    function __construct()
+    public function __construct()
     {
         $this->tenpayc2c();
     }
@@ -72,7 +69,7 @@ class tenpayc2c
      *
      * @return void
      */
-    function tenpayc2c()
+    public function tenpayc2c()
     {
     }
 
@@ -81,7 +78,7 @@ class tenpayc2c
      * @param   array    $order       订单信息
      * @param   array    $payment     支付方式信息
      */
-    function get_code($order, $payment)
+    public function get_code($order, $payment)
     {
         /* 版本号 */
         $version = '2';
@@ -90,18 +87,12 @@ class tenpayc2c
         $cmdno = '12';
 
         /* 编码标准 */
-        if (!defined('EC_CHARSET'))
-        {
+        if (!defined('EC_CHARSET')) {
             $encode_type = 2;
-        }
-        else
-        {
-            if (EC_CHARSET == 'utf-8')
-            {
+        } else {
+            if (EC_CHARSET == 'utf-8') {
                 $encode_type = 2;
-            }
-            else
-            {
+            } else {
                 $encode_type = 1;
             }
         }
@@ -113,13 +104,10 @@ class tenpayc2c
         $seller = $payment['tenpay_account'];
 
         /* 商品名称 */
-        if (!empty($order['order_id']))
-        {
+        if (!empty($order['order_id'])) {
             //$mch_name = get_goods_name_by_id($order['order_id']);
             $mch_name = $order['order_sn'];
-        }
-        else
-        {
+        } else {
             $mch_name = $GLOBALS['_LANG']['account_voucher'];
         }
 
@@ -174,8 +162,7 @@ class tenpayc2c
 
         $button  = '<br /><form style="text-align:center;" action="https://www.tenpay.com/cgi-bin/med/show_opentrans.cgi " target="_blank" style="margin:0px;padding:0px" >';
 
-        foreach ($parameter AS $key=>$val)
-        {
+        foreach ($parameter as $key=>$val) {
             $button  .= "<input type='hidden' name='$key' value='$val' />";
         }
 
@@ -187,7 +174,7 @@ class tenpayc2c
     /**
      * 响应操作
      */
-    function respond()
+    public function respond()
     {
         /*取返回参数*/
         $cmd_no         = $_GET['cmdno'];
@@ -210,15 +197,13 @@ class tenpayc2c
         //$log_id = str_replace($attach, '', $mch_vno); //取得支付的log_id
 
         /* 如果$retcode大于0则表示支付失败 */
-        if ($retcode > 0)
-        {
+        if ($retcode > 0) {
             //echo '操作失败';
             return false;
         }
 
         /* 检查支付的金额是否相符 */
-        if (!check_money($log_id, $total_fee / 100))
-        {
+        if (!check_money($log_id, $total_fee / 100)) {
             //echo '金额不相等';
             return false;
         }
@@ -226,23 +211,16 @@ class tenpayc2c
         /* 检查数字签名是否正确 */
         $sign_text = "buyer_id=" . $buyer_id . "&cft_tid=" . $cft_tid . "&chnid=" . $chnid . "&cmdno=" . $cmd_no . "&mch_vno=" . $mch_vno . "&retcode=" . $retcode . "&seller=" .$seller . "&status=" . $status . "&total_fee=" . $total_fee . "&trade_price=" . $trade_price . "&transport_fee=" . $transport_fee . "&version=" . $version . "&key=" . $payment['tenpay_key'];
         $sign_md5 = strtoupper(md5($sign_text));
-        if ($sign_md5 != $sign)
-        {
+        if ($sign_md5 != $sign) {
             //echo '签名错误';
             return false;
-        }
-        elseif ($status = 3)
-        {
+        } elseif ($status = 3) {
             /* 改变订单状态为已付款 */
             order_paid($log_id, PS_PAYING);
             return true;
-        }
-        else
-        {
+        } else {
             //为止error
             return false;
         }
     }
 }
-
-?>

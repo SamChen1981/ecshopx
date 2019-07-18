@@ -31,6 +31,3 @@ $_LANG['edit_input_keywords'] = '内容不能为空：';
 
 /*操作结果*/
 $_LANG['push_off'] = '尚未开启云推送';
-
-
-?>

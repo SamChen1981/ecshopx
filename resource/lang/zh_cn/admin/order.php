@@ -407,6 +407,3 @@ $_LANG['erp_open'] = '去开通';
 $_LANG['erp_open_details'] = '了解详情开通';
 $_LANG['erp_no_longer_prompt'] = '知道了,不再提示';
 $_LANG['erp_reminder'] = '温馨提示';
-
-
-?>

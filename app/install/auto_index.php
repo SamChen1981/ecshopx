@@ -11,26 +11,21 @@ require_once('../includes/cls_json.php');
 /* 初始化语言变量 */
 $installer_lang = isset($_REQUEST['lang']) ? trim($_REQUEST['lang']) : 'zh_cn';
 
-if ($installer_lang != 'zh_cn' && $installer_lang != 'zh_tw' && $installer_lang != 'en_us')
-{
+if ($installer_lang != 'zh_cn' && $installer_lang != 'zh_tw' && $installer_lang != 'en_us') {
     $installer_lang = 'zh_cn';
 }
 
 /* 加载安装程序所使用的语言包 */
 $installer_lang_package_path = ROOT_PATH . 'install/languages/' . $installer_lang . '.php';
-if (file_exists($installer_lang_package_path))
-{
+if (file_exists($installer_lang_package_path)) {
     include_once($installer_lang_package_path);
     $smarty->assign('lang', $_LANG);
-}
-else
-{
+} else {
     die('Can\'t find language package!');
 }
 
 /* 初始化流程控制变量 */
-if (file_exists(ROOT_PATH . 'data/install.lock'))
-{
+if (file_exists(ROOT_PATH . 'data/install.lock')) {
     data_back($_LANG['has_locked_installer']);
 }
 
@@ -49,8 +44,7 @@ if (file_exists(ROOT_PATH . 'data/install.lock'))
     if ($dir_checking['result'] === 'ERROR'
             || !empty($template_checking)
             || !empty($rename_priv)
-            || !function_exists('mysqli_connect'))
-    {
+            || !function_exists('mysqli_connect')) {
         data_back('安装目录的某些权限不够');
     }
 
@@ -63,33 +57,27 @@ if (file_exists(ROOT_PATH . 'data/install.lock'))
     $prefix     = isset($_POST['db_prefix'])    ?   trim($_POST['db_prefix']) : 'ecs_';
     $timezone   = isset($_POST['timezone'])     ?   trim($_POST['timezone']) : 'Asia/Shanghai';
 
-    if (empty($db_host) || empty($db_user) || empty($db_pass) || empty($db_name))
-    {
+    if (empty($db_host) || empty($db_user) || empty($db_pass) || empty($db_name)) {
         data_back('缺少必要的参数');
     }
 
-    $result = create_config_file($db_host, $db_port, $db_user, $db_pass, $db_name, $prefix,  $timezone);
-    if ($result === false)
-    {
+    $result = create_config_file($db_host, $db_port, $db_user, $db_pass, $db_name, $prefix, $timezone);
+    if ($result === false) {
         data_back('构建配置文件失败');
     }
 
 
     $result = create_database($db_host, $db_port, $db_user, $db_pass, $db_name);
-    if ($result === false)
-    {
+    if ($result === false) {
         data_back('创建数据库失败');
     }
 
 
     $system_lang = isset($_POST['system_lang']) ? $_POST['system_lang'] : 'zh_cn';
 
-    if (file_exists(ROOT_PATH . 'install/data/data_' . $system_lang . '.sql'))
-    {
+    if (file_exists(ROOT_PATH . 'install/data/data_' . $system_lang . '.sql')) {
         $data_path = ROOT_PATH . 'install/data/data_' . $system_lang . '.sql';
-    }
-    else
-    {
+    } else {
         $data_path = ROOT_PATH . 'install/data/data_zh_cn.sql';
     }
 
@@ -100,8 +88,7 @@ if (file_exists(ROOT_PATH . 'data/install.lock'))
 
     $result = install_data($sql_files);
 
-    if ($result === false)
-    {
+    if ($result === false) {
         data_back('构建数据库内容失败');
     }
 
@@ -111,10 +98,13 @@ if (file_exists(ROOT_PATH . 'data/install.lock'))
     $admin_password2    = isset($_POST['admin_password2'])  ? trim($_POST['admin_password2']) : '549c6dd086d5c7127745';
     $admin_email        = isset($_POST['admin_email'])      ? trim($_POST['admin_email']) : '';
 
-    $result = create_admin_passport($admin_name, $admin_password,
-            $admin_password2, $admin_email);
-    if ($result === false)
-    {
+    $result = create_admin_passport(
+        $admin_name,
+        $admin_password,
+            $admin_password2,
+        $admin_email
+    );
+    if ($result === false) {
         data_back('创建管理员失败');
     }
 
@@ -126,19 +116,15 @@ if (file_exists(ROOT_PATH . 'data/install.lock'))
     $goods_types = empty($install_demo)     ? array() : array('book','book','movie','mobile','notebook','dc','dv','cosmetics','mobile2');
 
     $result = do_others($system_lang, $captcha, $goods_types, $install_demo, $integrate);
-    if ($result === false)
-    {
+    if ($result === false) {
         data_back('其他安装过程错误');
     }
 
 
     $result = deal_aftermath();
-    if ($result === false)
-    {
+    if ($result === false) {
         data_back('善后处理失败');
-    }
-    else
-    {
+    } else {
         @unlink(ROOT_PATH .'data/config_temp.php');
         data_back('install succ', 'true');
     }
@@ -150,5 +136,3 @@ function data_back($msg, $result = 'false')
     $json  = new JSON;
     die($json->encode($data_arr));    //把生成的返回字符串打印出来
 }
-
-?>

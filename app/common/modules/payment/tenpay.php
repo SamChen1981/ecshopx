@@ -4,23 +4,20 @@
  * 财付通插件
  */
 
-if (!defined('IN_ECS'))
-{
+if (!defined('IN_ECS')) {
     die('Hacking attempt');
 }
 
 $payment_lang = ROOT_PATH . 'languages/' .$GLOBALS['_CFG']['lang']. '/payment/tenpay.php';
 
-if (file_exists($payment_lang))
-{
+if (file_exists($payment_lang)) {
     global $_LANG;
 
     include_once($payment_lang);
 }
 
 /* 模块的基本信息 */
-if (isset($set_modules) && $set_modules == TRUE)
-{
+if (isset($set_modules) && $set_modules == true) {
     $i = isset($modules) ? count($modules) : 0;
 
     /* 代码 */
@@ -59,7 +56,7 @@ if (isset($set_modules) && $set_modules == TRUE)
  */
 class tenpay
 {
-    function __construct()
+    public function __construct()
     {
         $this->tenpay();
     }
@@ -72,7 +69,7 @@ class tenpay
      *
      * @return void
      */
-    function tenpay()
+    public function tenpay()
     {
     }
 
@@ -81,7 +78,7 @@ class tenpay
      * @param   array    $order       订单信息
      * @param   array    $payment     支付方式信息
      */
-    function get_code($order, $payment)
+    public function get_code($order, $payment)
     {
         $cmd_no = '1';
 
@@ -99,20 +96,16 @@ class tenpay
         $bank_type = '0';
 
         /* 订单描述，用订单号替代 */
-        if (!empty($order['order_id']))
-        {
+        if (!empty($order['order_id'])) {
             //$desc = get_goods_name_by_id($order['order_id']);
             $desc = $order['order_sn'];
             $attach = '';
-        }
-        else
-        {
+        } else {
             $desc = $GLOBALS['_LANG']['account_voucher'];
             $attach = 'voucher';
         }
         /* 编码标准 */
-        if (!defined('EC_CHARSET') || EC_CHARSET == 'utf-8')
-        {
+        if (!defined('EC_CHARSET') || EC_CHARSET == 'utf-8') {
             $desc = ecs_iconv('utf-8', 'gbk', $desc);
         }
 
@@ -158,8 +151,7 @@ class tenpay
 
         $button  = '<br /><form style="text-align:center;" action="https://www.tenpay.com/cgi-bin/v1.0/pay_gate.cgi" target="_blank" style="margin:0px;padding:0px" >';
 
-        foreach ($parameter AS $key=>$val)
-        {
+        foreach ($parameter as $key=>$val) {
             $button  .= "<input type='hidden' name='$key' value='$val' />";
         }
 
@@ -171,7 +163,7 @@ class tenpay
     /**
      * 响应操作
      */
-    function respond()
+    public function respond()
     {
         /*取返回参数*/
         $cmd_no         = $_GET['cmdno'];
@@ -189,24 +181,19 @@ class tenpay
         $payment    = get_payment('tenpay');
         //$order_sn   = $bill_date . str_pad(intval($sp_billno), 5, '0', STR_PAD_LEFT);
         //$log_id = preg_replace('/0*([0-9]*)/', '\1', $sp_billno); //取得支付的log_id
-        if ($attach == 'voucher')
-        {
+        if ($attach == 'voucher') {
             $log_id = get_order_id_by_sn($sp_billno, "true");
-        }
-        else
-        {
+        } else {
             $log_id = get_order_id_by_sn($sp_billno);
         }
 
         /* 如果pay_result大于0则表示支付失败 */
-        if ($pay_result > 0)
-        {
+        if ($pay_result > 0) {
             return false;
         }
 
         /* 检查支付的金额是否相符 */
-        if (!check_money($log_id, $total_fee / 100))
-        {
+        if (!check_money($log_id, $total_fee / 100)) {
             return false;
         }
 
@@ -217,17 +204,12 @@ class tenpay
                             "&fee_type=" . $fee_type . "&attach=" . $attach .
                             "&key=" . $payment['tenpay_key'];
         $sign_md5 = strtoupper(md5($sign_text));
-        if ($sign_md5 != $sign)
-        {
+        if ($sign_md5 != $sign) {
             return false;
-        }
-        else
-        {
+        } else {
             /* 改变订单状态 */
             order_paid($log_id);
             return true;
         }
     }
 }
-
-?>

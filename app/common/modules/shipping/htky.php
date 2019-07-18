@@ -4,22 +4,19 @@
  * 百世快递 配送方式插件
  */
 
-if (!defined('IN_ECS'))
-{
+if (!defined('IN_ECS')) {
     die('Hacking attempt');
 }
 
 $shipping_lang = ROOT_PATH.'languages/' .$GLOBALS['_CFG']['lang']. '/shipping/htky.php';
-if (file_exists($shipping_lang))
-{
+if (file_exists($shipping_lang)) {
     global $_LANG;
     include_once($shipping_lang);
 }
 
 
 /* 模块的基本信息 */
-if (isset($set_modules) && $set_modules == TRUE)
-{
+if (isset($set_modules) && $set_modules == true) {
     include_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/admin/shipping.php');
 
     $i = (isset($modules)) ? count($modules) : 0;
@@ -67,7 +64,7 @@ class htky
     /**
      * 配置信息参数
      */
-    var $configure;
+    public $configure;
 
     /*------------------------------------------------------ */
     //-- PUBLIC METHODs
@@ -80,10 +77,9 @@ class htky
      *
      * @return null
      */
-    function __construct($cfg=array())
+    public function __construct($cfg=array())
     {
-        foreach ($cfg AS $key=>$val)
-        {
+        foreach ($cfg as $key=>$val) {
             $this->configure[$val['name']] = $val['value'];
         }
     }
@@ -96,25 +92,18 @@ class htky
      * @param   float   $goods_amount   商品件数
      * @return  decimal
      */
-    function calculate($goods_weight, $goods_amount, $goods_number)
+    public function calculate($goods_weight, $goods_amount, $goods_number)
     {
-        if ($this->configure['free_money'] > 0 && $goods_amount >= $this->configure['free_money'])
-        {
+        if ($this->configure['free_money'] > 0 && $goods_amount >= $this->configure['free_money']) {
             return 0;
-        }
-        else
-        {
+        } else {
             @$fee = $this->configure['base_fee'];
             $this->configure['fee_compute_mode'] = !empty($this->configure['fee_compute_mode']) ? $this->configure['fee_compute_mode'] : 'by_weight';
 
-             if ($this->configure['fee_compute_mode'] == 'by_number')
-            {
+            if ($this->configure['fee_compute_mode'] == 'by_number') {
                 $fee = $goods_number * $this->configure['item_fee'];
-            }
-            else
-            {
-                if ($goods_weight > 1)
-                {
+            } else {
+                if ($goods_weight > 1) {
                     $fee += (ceil(($goods_weight - 1))) * $this->configure['step_fee'];
                 }
             }
@@ -130,16 +119,14 @@ class htky
      * @param   string  $invoice_sn     发货单号
      * @return  string  查询窗口的链接地址
      */
-    function query($invoice_sn)
+    public function query($invoice_sn)
     {
         $str = '<form style="margin:0px" methods="post" '.
             'action="http://115.238.100.211:8081/result.aspx" name="queryForm_' .$invoice_sn. '" target="_blank">'.
-            '<input type="hidden" name="wen" value="' .str_replace("<br>","\n",$invoice_sn). '" />'.
+            '<input type="hidden" name="wen" value="' .str_replace("<br>", "\n", $invoice_sn). '" />'.
             '<a href="javascript:document.forms[\'queryForm_' .$invoice_sn. '\'].submit();">' .$invoice_sn. '</a>'.
             '</form>';
 
         return $str;
     }
 }
-
-?>

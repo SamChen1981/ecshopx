@@ -4,8 +4,7 @@
  * 时间函数
  */
 
-if (!defined('IN_ECS'))
-{
+if (!defined('IN_ECS')) {
     die('Hacking attempt');
 }
 
@@ -27,12 +26,9 @@ function gmtime()
  */
 function server_timezone()
 {
-    if (function_exists('date_default_timezone_get'))
-    {
+    if (function_exists('date_default_timezone_get')) {
         return date_default_timezone_get();
-    }
-    else
-    {
+    } else {
         return date('Z') / 3600;
     }
 }
@@ -51,7 +47,7 @@ function server_timezone()
  *
  * @return void
  */
-function local_mktime($hour = NULL , $minute= NULL, $second = NULL,  $month = NULL,  $day = NULL,  $year = NULL)
+function local_mktime($hour = null, $minute= null, $second = null, $month = null, $day = null, $year = null)
 {
     $timezone = isset($_SESSION['timezone']) ? $_SESSION['timezone'] : $GLOBALS['_CFG']['timezone'];
 
@@ -74,16 +70,13 @@ function local_mktime($hour = NULL , $minute= NULL, $second = NULL,  $month = NU
  * @return  string
  */
 
-function local_date($format, $time = NULL)
+function local_date($format, $time = null)
 {
     $timezone = isset($_SESSION['timezone']) ? $_SESSION['timezone'] : $GLOBALS['_CFG']['timezone'];
 
-    if ($time === NULL)
-    {
+    if ($time === null) {
         $time = gmtime();
-    }
-    elseif ($time <= 0)
-    {
+    } elseif ($time <= 0) {
         return '';
     }
 
@@ -106,8 +99,7 @@ function gmstr2time($str)
 {
     $time = strtotime($str);
 
-    if ($time > 0)
-    {
+    if ($time > 0) {
         $time -= date('Z');
     }
 
@@ -133,7 +125,6 @@ function local_strtotime($str)
     $time = strtotime($str) - $timezone * 3600;
 
     return $time;
-
 }
 
 /**
@@ -155,7 +146,7 @@ function local_strtotime_new($str)
  *
  * @return  array
  */
-function local_gettime($timestamp = NULL)
+function local_gettime($timestamp = null)
 {
     $tmp = local_getdate($timestamp);
     return $tmp[0];
@@ -168,13 +159,12 @@ function local_gettime($timestamp = NULL)
  *
  * @return  array
  */
-function local_getdate($timestamp = NULL)
+function local_getdate($timestamp = null)
 {
     $timezone = isset($_SESSION['timezone']) ? $_SESSION['timezone'] : $GLOBALS['_CFG']['timezone'];
 
     /* 如果时间戳为空，则获得服务器的当前时间 */
-    if ($timestamp === NULL)
-    {
+    if ($timestamp === null) {
         $timestamp = time();
     }
 
@@ -183,5 +173,3 @@ function local_getdate($timestamp = NULL)
 
     return getdate($local_time);
 }
-
-?>

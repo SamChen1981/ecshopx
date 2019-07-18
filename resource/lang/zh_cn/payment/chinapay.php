@@ -17,5 +17,3 @@ $_LANG['chinapay_cer_desc']             = '后缀为cer的文件';
 
 $_LANG['chinapay_button']               = '立即支付';
 $_LANG['chinapay_txn_id']               = '银联交易号';
-
-?>

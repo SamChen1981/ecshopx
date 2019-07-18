@@ -4,24 +4,21 @@
  * 银联在线支付
  */
 
-if (!defined('IN_ECS'))
-{
+if (!defined('IN_ECS')) {
     die('Hacking attempt');
 }
 
 // 包含配置文件
 $payment_lang = ROOT_PATH . 'languages/' .$GLOBALS['_CFG']['lang']. '/payment/chinapay.php';
 
-if (file_exists($payment_lang))
-{
+if (file_exists($payment_lang)) {
     global $_LANG;
 
     include_once($payment_lang);
 }
 
 /* 模块的基本信息 */
-if (isset($set_modules) && $set_modules == TRUE)
-{
+if (isset($set_modules) && $set_modules == true) {
     $i = isset($modules) ? count($modules) : 0;
 
     /* 代码 */
@@ -61,7 +58,7 @@ if (isset($set_modules) && $set_modules == TRUE)
  * chinapay 20140728
  * signMethod 默认使用01 证书方式
  * 如果需要用sha256方式的签名密钥 signMethod配置11（配置业务邮件发送的密钥 ，测试环境固定88888888）
- * 由于银联的version、signMethod多种搭配 ecshop银联支付的后台配置暂时不做太多的配置选择 否则客户配置时可能会十分凌乱 有需要可以单独修改当前页的配置 
+ * 由于银联的version、signMethod多种搭配 ecshop银联支付的后台配置暂时不做太多的配置选择 否则客户配置时可能会十分凌乱 有需要可以单独修改当前页的配置
  */
 class CHINAPAY
 {
@@ -75,10 +72,11 @@ class CHINAPAY
      * @param   array   $payment    支付方式信息
      */
 
-    function get_code($order, $payment){
+    public function get_code($order, $payment)
+    {
         $params = array(
             'MerId'             =>  $payment['MerId'], //商户号
-            'MerOrderNo'        =>  substr(time(),-5).$order['order_sn'].$this->separator.$order['log_id'], //订单号
+            'MerOrderNo'        =>  substr(time(), -5).$order['order_sn'].$this->separator.$order['log_id'], //订单号
             'OrderAmt'          =>  $order['order_amount'] * 100, //订单金额 ,单位：分
             'TranDate'          =>  date('Ymd'), //交易日期 8位数字，为订单提交日期
             'TranTime'          =>  date('His'), //交易时间 6位数字，为订单提交时间
@@ -114,16 +112,19 @@ class CHINAPAY
         $front_pay_url = $settings->get("pay_url");
         
         $button = "<input type='submit' value='" . $GLOBALS['_LANG']['chinapay_button'] . "' />";
-        $html = $this->create_html($params,$front_pay_url,$button);
+        $html = $this->create_html($params, $front_pay_url, $button);
         return $html;
     }
 
     /**
      * 响应操作
      */
-    function respond(){
+    public function respond()
+    {
         $this->logInfo('respond:'.json_encode($_POST));
-        if (isset($_POST['code'])) unset($_POST['code']);
+        if (isset($_POST['code'])) {
+            unset($_POST['code']);
+        }
 
         $this->payment = get_payment('chinapay');
 
@@ -139,26 +140,24 @@ class CHINAPAY
             return false;
         }
         $order_sn_arr = explode($this->separator, $arr_ret['MerOrderNo']);
-        $order_sn    = substr($order_sn_arr['0'],5,13);
+        $order_sn    = substr($order_sn_arr['0'], 5, 13);
         $pay_id = intval($order_sn_arr['1']);
         $payment_amount = intval($arr_ret['OrderAmt']);
       
         // 检查商户账号是否一致。
-        if ($this->payment['MerId'] != $arr_ret['MerId'])
-        {
-            $this->logInfo( 'local_MerId:' . $this->payment['MerId'] . ', merId:' . $arr_ret['MerId'] );
+        if ($this->payment['MerId'] != $arr_ret['MerId']) {
+            $this->logInfo('local_MerId:' . $this->payment['MerId'] . ', merId:' . $arr_ret['MerId']);
             return false;
         }
         // 检查价格是否一致
-        if (!check_money($pay_id, $payment_amount/100))
-        {
+        if (!check_money($pay_id, $payment_amount/100)) {
             $this->logInfo('pay_id:' . $pay_id . ' 金额不一致, ' .  $payment_amount/100);
             return false;
         }
         
-        $action_note = 'pay_status:' 
+        $action_note = 'pay_status:'
                 . $arr_ret['OrderStatus'].';'
-                . $GLOBALS['_LANG']['chinapay_txn_id'] . ':' 
+                . $GLOBALS['_LANG']['chinapay_txn_id'] . ':'
                 . $arr_ret['MerOrderNo'];
 
         // 完成订单。
@@ -166,10 +165,10 @@ class CHINAPAY
 
         //告诉用户交易完成
         return true;
-
     }
 
-    function create_html($params,$front_pay_url,$button){
+    public function create_html($params, $front_pay_url, $button)
+    {
         $html = <<<eot
     <br />
     <form style="text-align:center;" id="pay_form" name="pay_form" action="{$front_pay_url}" method="post" target="_blank">
@@ -189,9 +188,10 @@ eot;
     /**
      * 签名
      * @param  array $params
-     * @return 
+     * @return
      */
-    function sign(&$params){
+    public function sign(&$params)
+    {
         include_once('chinapay_util/common.php');
         include_once('chinapay_util/SecssUtil.class.php');
         define(cardResveredKey, 'cardResvered'); //银行的demo里没有给出定义（调用常量但是没有定义）
@@ -249,7 +249,8 @@ eot;
      * @param   array   $params  应答数组
      * @return  boolean
      */
-    function validate($params) {
+    public function validate($params)
+    {
         if (strpos($params['Signature'], '%2F') !== false) {
             $params['Signature'] = urldecode($params['Signature']);
         }
@@ -269,34 +270,31 @@ eot;
     }
 
 
-    function logInfo($data = ''){
-        error_log(date("c")."\t".print_r($data, 1)."\t\n", 3, LOG_DIR."/chinapay_".date("Y-m-d",time()).".log");
+    public function logInfo($data = '')
+    {
+        error_log(date("c")."\t".print_r($data, 1)."\t\n", 3, LOG_DIR."/chinapay_".date("Y-m-d", time()).".log");
     }
 
-/** respond 
-Array
-(
-    [TranType] => 0001
-    [OrderStatus] => 0000
-    [TranDate] => 20181206
-    [AcqDate] => 20181206
-    [RemoteAddr] => 180.169.8.10
-    [CurryNo] => CNY
-    [MerOrderNo] => 955672018120604254987654360
-    [OrderAmt] => 1
-    [Signature] => CA2GdllDoNJiQeIg5wM95z7y4sjtw6rQ2DhKVE5aoWPEwzUNbFK9+Z5nUlle//uXlk/EP8XVPsc71B5JCKyfcLyxhpw74EqL5jHvT7P81P9E3nVUFfWYrU2cAqWmuIjEnY2znnFfE9zVO1UwrWj0H8yardnKN7WMSm90EJtt7Ck=
-    [BusiType] => 0001
-    [CompleteTime] => 192559
-    [BankInstNo] => 700000000000017
-    [AcqSeqId] => 0000001129186911
-    [TranTime] => 192607
-    [MerId] => 739411805290003
-    [Version] => 20140728
-    [CompleteDate] => 20181206
-)
- */
-
-
-
+    /** respond
+    Array
+    (
+        [TranType] => 0001
+        [OrderStatus] => 0000
+        [TranDate] => 20181206
+        [AcqDate] => 20181206
+        [RemoteAddr] => 180.169.8.10
+        [CurryNo] => CNY
+        [MerOrderNo] => 955672018120604254987654360
+        [OrderAmt] => 1
+        [Signature] => CA2GdllDoNJiQeIg5wM95z7y4sjtw6rQ2DhKVE5aoWPEwzUNbFK9+Z5nUlle//uXlk/EP8XVPsc71B5JCKyfcLyxhpw74EqL5jHvT7P81P9E3nVUFfWYrU2cAqWmuIjEnY2znnFfE9zVO1UwrWj0H8yardnKN7WMSm90EJtt7Ck=
+        [BusiType] => 0001
+        [CompleteTime] => 192559
+        [BankInstNo] => 700000000000017
+        [AcqSeqId] => 0000001129186911
+        [TranTime] => 192607
+        [MerId] => 739411805290003
+        [Version] => 20140728
+        [CompleteDate] => 20181206
+    )
+     */
 }
-?>

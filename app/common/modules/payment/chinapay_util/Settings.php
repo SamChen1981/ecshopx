@@ -2,15 +2,15 @@
 
 class Settings
 {
-    var $_settings = array();
+    public $_settings = array();
 
     /**
-     * ��ȡĳЩ���õ�ֵ
+     * 获取某些设置的值
      *
-     * @param unknown_type $var            
+     * @param unknown_type $var
      * @return unknown
      */
-    function get($var)
+    public function get($var)
     {
         $var = explode('.', $var);
         $result = $this->_settings;
@@ -23,10 +23,8 @@ class Settings
         return $result;
     }
 
-    function load()
+    public function load()
     {
         trigger_error('Not yet implemented', E_USER_ERROR);
     }
 }
-
-?>

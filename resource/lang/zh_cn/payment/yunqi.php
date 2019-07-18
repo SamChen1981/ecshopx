@@ -12,4 +12,3 @@ $_LANG['pay_button'] = '立即支付';
 $_LANG['appkey'] = '安全校验码（Client_id）';
 $_LANG['appsecret'] = '安全密钥（Client_secret）';
 $_LANG['appkey_desc'] = '<a href="'.TEEGON_PASSPORT_URL.'" target="_blank">进入天工官网“开发配置”核对密钥</a>';
-

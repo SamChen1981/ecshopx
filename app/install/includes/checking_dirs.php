@@ -1,7 +1,6 @@
 <?php
 
-if (!defined('IN_ECS'))
-{
+if (!defined('IN_ECS')) {
     die('Hacking attempt');
 }
 
@@ -32,5 +31,3 @@ $checking_dirs = array(
                     'temp/query_caches',
                     'temp/static_caches'
                     );
-
-?>

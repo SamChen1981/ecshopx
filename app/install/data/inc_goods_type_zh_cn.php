@@ -240,5 +240,3 @@ $attributes['mobile2'] = array("attr"=>"INSERT INTO `".$prefix."attribute` (`att
                                 (NULL, {cat_id}, '浏览器', 0, 0, '', 0, 0, 0, 2),
                                 (NULL, {cat_id}, '配件', 1, 2, '线控耳机\r\n蓝牙耳机\r\n数据线', 0, 0, 0, 0);",
                         "cat"=>"INSERT INTO `".$prefix."goods_type` (`cat_id`, `cat_name`, `enabled`) VALUES (NULL, '精品手机', 1);");
-
-?>

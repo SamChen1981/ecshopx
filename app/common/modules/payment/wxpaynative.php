@@ -10,15 +10,13 @@
  * ============================================================================
  */
 
-if (!defined('IN_ECS'))
-{
+if (!defined('IN_ECS')) {
     die('Hacking attempt');
 }
 
 $payment_lang = ROOT_PATH . 'languages/' .$GLOBALS['_CFG']['lang']. '/payment/wxpaynative.php';
 
-if (file_exists($payment_lang))
-{
+if (file_exists($payment_lang)) {
     global $_LANG;
 
     include_once($payment_lang);
@@ -26,8 +24,7 @@ if (file_exists($payment_lang))
 
 
 /* 模块的基本信息 */
-if (isset($set_modules) && $set_modules == TRUE)
-{
+if (isset($set_modules) && $set_modules == true) {
     $i = isset($modules) ? count($modules) : 0;
 
     /* 代码 */
@@ -64,9 +61,8 @@ if (isset($set_modules) && $set_modules == TRUE)
 
 class wxpaynative
 {
-
-    var $parameters; // cft 参数
-    var $payment; // 配置信息
+    public $parameters; // cft 参数
+    public $payment; // 配置信息
 
     /**
      * 生成支付代码
@@ -98,7 +94,7 @@ class wxpaynative
 
         $javascript='<style>#paymentDiv{width:760px}#wxPhone{float:left;width:445px;height:479px;padding-left:50px;background:url('.$payment_path.'wxscan.png) 50px 0 no-repeat}#qrcode{display:block;float:left;margin-top:30px}#qrcode img{height:215px;width:215px;}.qrcode-inner{background:#00BA2A;padding:20px;}.wxscan-title{background:url('.$payment_path.'wxpay-ic.png) 50px 0 no-repeat;font-size: 24px;text-indent:50px;margin-bottom:0;padding:15px 0;color:#333;margin:10px 0}</style> ';
 
-        if(!$code_url){
+        if (!$code_url) {
             $button = '<div id="paymentDiv"><div style="text-align:center" id="qrcode"><p class="wxscan-title">微信支付</p><div class="qrcode-inner"><img src=""></div></div><div id="wxPhone"></div></div>';
             $this->logInfo("error::get_code::code_url为空");
             return $javascript.$button;
@@ -150,28 +146,26 @@ function qrcodeResponse(result){
     }
 
 
-    public function respond() {
+    public function respond()
+    {
         $this->payment = get_payment('wxpaynative');
 
-        if(!empty($_GET["check"])){
-
-         
+        if (!empty($_GET["check"])) {
             $log_id = intval($_GET['log_id']);
             $result=$this->_checkStatus($log_id);
-            if(!empty($_GET["redirect"])){
+            if (!empty($_GET["redirect"])) {
                 $this->logInfo(__LINE__."==result=".json_encode($result));
-                if($result["error"]>0){
+                if ($result["error"]>0) {
                     $this->logInfo(__LINE__."=return false");
                     return false;
-                }else{
+                } else {
                     $this->logInfo(__LINE__."=return true");
                     return true;
                 }
-            }else{
+            } else {
                 die(json_encode($result));
             }
-        }else{
-
+        } else {
             $xml = file_get_contents('php://input');
             $this->logInfo("respond_wxpaynative_xml:".$xml);
             $postdata=$this->xmlToArray($xml);
@@ -182,7 +176,7 @@ function qrcodeResponse(result){
             $this->logInfo("respond_wxpaynative_sign sign:{$sign},   wxsign:{$wxsign}, result_code:{$postdata['result_code']}, out_trade_no:{$postdata['out_trade_no']}, attach:{$postdata['attach']}");
             if ($wxsign == $sign) {
                 // 交易成功
-                if ($postdata['result_code'] == 'SUCCESS' && $postdata['return_code'] == 'SUCCESS')  {
+                if ($postdata['result_code'] == 'SUCCESS' && $postdata['return_code'] == 'SUCCESS') {
                     // order_sn
                     $order_sn = str_replace($postdata['attach'], '', $postdata['out_trade_no']);
                     order_paid($order_sn, 2);
@@ -201,8 +195,11 @@ function qrcodeResponse(result){
     }
 
 
-    private function _checkStatus($log_id){
-        if(!$log_id) return array("error"=>1,"message"=>"参数错误");
+    private function _checkStatus($log_id)
+    {
+        if (!$log_id) {
+            return array("error"=>1,"message"=>"参数错误");
+        }
         $sql = "SELECT is_paid,order_type,order_id FROM ".$GLOBALS['ecs']->table('pay_log')." where log_id = '$log_id'";
         $pay_log = $GLOBALS['db']->getRow($sql);
         
@@ -210,7 +207,7 @@ function qrcodeResponse(result){
             case PAY_ORDER:
                 $order_sql = "SELECT order_sn FROM " .$GLOBALS['ecs']->table('order_info'). " where order_id='".$pay_log['order_id']."'";
                 $order_info = $GLOBALS['db']->getRow($order_sql);
-                if(!$order_info){
+                if (!$order_info) {
                     return array("message"=>"通信出错：订单不存在","error"=>2);
                 }
                 $order_sn = $order_info['order_sn'];
@@ -218,7 +215,7 @@ function qrcodeResponse(result){
             case PAY_SURPLUS:
                 $account_sql = "SELECT id FROM ".$GLOBALS['ecs']->table('user_account')." WHERE id=".$pay_log['order_id'];
                 $account_info = $GLOBALS['db']->getRow($account_sql);
-                if(!$account_info){
+                if (!$account_info) {
                     return array("message"=>"通信出错：订单不存在","error"=>2);
                 }
                 $order_sn = $account_info['id'];
@@ -229,22 +226,22 @@ function qrcodeResponse(result){
                 break;
         }
         $is_paid = $pay_log['is_paid'];
-        if($is_paid>0){
+        if ($is_paid>0) {
             return array("message"=>"交易成功","error"=>0);
         }
       
         $outTradeNo = $order_sn.$log_id;
 
-        $this->setParameter("out_trade_no",$outTradeNo);
+        $this->setParameter("out_trade_no", $outTradeNo);
         $data=$this->createXml();
         $url="https://api.mch.weixin.qq.com/pay/orderquery";
-        $res=$this->postXmlCurl($data,$url);
+        $res=$this->postXmlCurl($data, $url);
         $result=$this->xmlToArray($res);
 
         $this->logInfo($data);
         $this->logInfo($result);
 
-        if(empty($result)){
+        if (empty($result)) {
             return array("message"=>"通信出错：".$result['return_msg'],"error"=>2);
         }
 
@@ -258,20 +255,18 @@ function qrcodeResponse(result){
             order_paid($order_sn, 2);
             $this->logInfo("交易成功");
             return array("message"=>"交易成功","error"=>0);
-        }elseif($result['trade_state'] == 'NOTPAY' || $result['trade_state'] == 'USERPAYING'){
+        } elseif ($result['trade_state'] == 'NOTPAY' || $result['trade_state'] == 'USERPAYING') {
             return array("message"=>$result["trade_state_desc"],"error"=>3);
-        }else{
-
+        } else {
             return array("message"=>$result["trade_state_desc"],"error"=>100);
         }
-
     }
 
-    public function getCodeUrl(){
+    public function getCodeUrl()
+    {
         $url = "https://api.mch.weixin.qq.com/pay/unifiedorder";
 
         if ($this->parameters["out_trade_no"] == null) {
-
             $this->logInfo("缺少统一支付接口必填参数out_trade_no");
         } elseif ($this->parameters["body"] == null) {
             $this->logInfo("缺少统一支付接口必填参数body");
@@ -281,7 +276,7 @@ function qrcodeResponse(result){
             $this->logInfo("缺少统一支付接口必填参数notify_url");
         } elseif ($this->parameters["trade_type"] == null) {
             $this->logInfo("缺少统一支付接口必填参数trade_type");
-        } elseif ($this->parameters["trade_type"] == "JSAPI" && $this->parameters["openid"] == NULL) {
+        } elseif ($this->parameters["trade_type"] == "JSAPI" && $this->parameters["openid"] == null) {
             $this->logInfo("统一支付接口中，缺少必填参数openid！trade_type为JSAPI时，openid为必填参数！");
         }
         $this->parameters["appid"] = $this->payment['wxpaynative_appid']; // 公众账号ID
@@ -294,7 +289,7 @@ function qrcodeResponse(result){
 
         $xml=$this->arrayToXml($this->parameters);
         $this->logInfo("xml::$xml");
-        $response =$this->postXmlCurl($xml,$url) ;
+        $response =$this->postXmlCurl($xml, $url) ;
         $result = $this->xmlToArray($response);
         $this->logInfo("result:".json_encode($result));
         $code_url = $result["code_url"];
@@ -304,7 +299,8 @@ function qrcodeResponse(result){
 
 
     // 产生随机字符串，不长于32位
-    public function createNoncestr($length = 32){
+    public function createNoncestr($length = 32)
+    {
         $chars = "abcdefghijklmnopqrstuvwxyz0123456789";
         $str = "";
         for ($i = 0; $i < $length; $i ++) {
@@ -313,24 +309,25 @@ function qrcodeResponse(result){
         return $str;
     }
 
-    public function setParameter($parameter, $parameterValue){
+    public function setParameter($parameter, $parameterValue)
+    {
         $this->parameters[$this->trimString($parameter)] = $this->trimString($parameterValue);
     }
 
-    public function trimString($value){
+    public function trimString($value)
+    {
         $ret = null;
-        if (null != $value)
-        {
+        if (null != $value) {
             $ret = $value;
-            if (strlen($ret) == 0)
-            {
+            if (strlen($ret) == 0) {
                 $ret = null;
             }
         }
         return $ret;
     }
 
-    public function getSign($Obj){
+    public function getSign($Obj)
+    {
         foreach ($Obj as $k => $v) {
             $Parameters[$k] = $v;
         }
@@ -361,35 +358,35 @@ function qrcodeResponse(result){
     }
 
     // 将xml转为array
-    public function xmlToArray($xml){
+    public function xmlToArray($xml)
+    {
         //将XML转为array
         $array_data = json_decode(json_encode(simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA)), true);
         return $array_data;
     }
 
     // 将array转为xml
-    public function arrayToXml($arr){
+    public function arrayToXml($arr)
+    {
         $xml = "<xml>";
-        foreach ($arr as $key=>$val)
-        {
-            if (is_numeric($val))
-            {
+        foreach ($arr as $key=>$val) {
+            if (is_numeric($val)) {
                 $xml.="<".$key.">".$val."</".$key.">";
-
-            }
-            else
+            } else {
                 $xml.="<".$key."><![CDATA[".$val."]]></".$key.">";
+            }
         }
         $xml.="</xml>";
         return $xml;
     }
 
     // 生成xml
-    public function createXml(){
+    public function createXml()
+    {
 
         //检测必填参数
-        if($this->parameters["out_trade_no"] == null &&
-            $this->parameters["transaction_id"] == null){
+        if ($this->parameters["out_trade_no"] == null &&
+            $this->parameters["transaction_id"] == null) {
             return false;
         }
 
@@ -398,43 +395,40 @@ function qrcodeResponse(result){
         $this->parameters["nonce_str"] = $this->createNoncestr();//随机字符串
         $this->parameters["sign"] = $this->getSign($this->parameters);//签名
         return  $this->arrayToXml($this->parameters);
-
     }
 
     // 提交xml到对应的接口url
-    public function postXmlCurl($xml,$url,$second=30)
+    public function postXmlCurl($xml, $url, $second=30)
     {
         //初始化curl
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_TIMEOUT, $second);
-        curl_setopt($ch,CURLOPT_URL, $url);
-        curl_setopt($ch,CURLOPT_SSL_VERIFYPEER,FALSE);
-        curl_setopt($ch,CURLOPT_SSL_VERIFYHOST,FALSE);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         //设置header
-        curl_setopt($ch, CURLOPT_HEADER, FALSE);
+        curl_setopt($ch, CURLOPT_HEADER, false);
         //要求结果为字符串且输出到屏幕上
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         //post提交方式
-        curl_setopt($ch, CURLOPT_POST, TRUE);
+        curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $xml);
         //运行curl
         $data = curl_exec($ch);
         //返回结果
 
-        if(!$data){
+        if (!$data) {
             $error = curl_errno($ch);
             $this->logInfo("error_no:$error error:".curl_error($ch));
-
         }
         curl_close($ch);
         return $data;
     }
 
-    public function logInfo($data = ''){
-        if ( @constant('DEBUG_API') ) {
-            error_log(date("c")."\t".print_r($data, 1)."\t\n", 3, LOG_DIR."/wxpaynative_".date("Y-m-d",time()).".log");
+    public function logInfo($data = '')
+    {
+        if (@constant('DEBUG_API')) {
+            error_log(date("c")."\t".print_r($data, 1)."\t\n", 3, LOG_DIR."/wxpaynative_".date("Y-m-d", time()).".log");
         }
     }
-
 }
-

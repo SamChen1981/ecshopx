@@ -9,12 +9,9 @@ define('IN_ECS', true);
 /* 代码 */
 require(dirname(__FILE__) . '/includes/init.php');
 
-if($GLOBALS['_CFG']['certificate_id']  == '')
-{
+if ($GLOBALS['_CFG']['certificate_id']  == '') {
     $certi_id='error';
-}
-else
-{
+} else {
     $certi_id=$GLOBALS['_CFG']['certificate_id'];
 }
 
@@ -27,43 +24,35 @@ $url = 'https://service.shopex.cn/sms/index.php?certificate_id='.$certi_id.'&ses
 /*------------------------------------------------------ */
 //-- 列表编辑 ?act=list_edit
 /*------------------------------------------------------ */
-if ($_REQUEST['act'] == 'list_edit')
-{
+if ($_REQUEST['act'] == 'list_edit') {
     /* 检查权限 */
     admin_priv('shop_config');
 
     /* 可选语言 */
     $dir = opendir('../languages');
     $lang_list = array();
-    while (@$file = readdir($dir))
-    {
-        if ($file != '.' && $file != '..' &&  $file != '.svn' && $file != '_svn' && is_dir('../languages/' .$file))
-        {
+    while (@$file = readdir($dir)) {
+        if ($file != '.' && $file != '..' &&  $file != '.svn' && $file != '_svn' && is_dir('../languages/' .$file)) {
             $lang_list[] = $file;
         }
     }
     @closedir($dir);
 
-    $smarty->assign('lang_list',    $lang_list);
-    $smarty->assign('ur_here',      $_LANG['01_shop_config']);
-    $smarty->assign('group_list',   get_settings(null, array('5')));
-    $smarty->assign('countries',    get_regions());
+    $smarty->assign('lang_list', $lang_list);
+    $smarty->assign('ur_here', $_LANG['01_shop_config']);
+    $smarty->assign('group_list', get_settings(null, array('5')));
+    $smarty->assign('countries', get_regions());
 
-    if (strpos(strtolower($_SERVER['SERVER_SOFTWARE']), 'iis') !== false)
-    {
+    if (strpos(strtolower($_SERVER['SERVER_SOFTWARE']), 'iis') !== false) {
         $rewrite_confirm = $_LANG['rewrite_confirm_iis'];
-    }
-    else
-    {
+    } else {
         $rewrite_confirm = $_LANG['rewrite_confirm_apache'];
     }
     $smarty->assign('rewrite_confirm', $rewrite_confirm);
 
-    if ($_CFG['shop_country'] > 0)
-    {
+    if ($_CFG['shop_country'] > 0) {
         $smarty->assign('provinces', get_regions(1, $_CFG['shop_country']));
-        if ($_CFG['shop_province'])
-        {
+        if ($_CFG['shop_province']) {
             $smarty->assign('cities', get_regions(2, $_CFG['shop_province']));
         }
     }
@@ -77,24 +66,29 @@ if ($_REQUEST['act'] == 'list_edit')
     $demo_data['order_amount'] = '65.00';
     $demo_data['delivery_time'] = '4月30号';
     $demo_data['sms_sign'] = $GLOBALS['_CFG']['shop_name'];
-    foreach ($demo_data as $k=>$v) $demo_data[$k] = sprintf("<font color='red'>%s</font>",$v);
+    foreach ($demo_data as $k=>$v) {
+        $demo_data[$k] = sprintf("<font color='red'>%s</font>", $v);
+    }
     require_once(ROOT_PATH . 'languages/' .$_CFG['lang']. '/common.php');
     require_once(ROOT_PATH . 'languages/' .$_CFG['lang']. '/shopping_flow.php');
     require_once(ROOT_PATH . 'languages/' .$_CFG['lang']. '/admin/order.php');
     $demo_sms_info['sms_order_placed'] = sprintf($_LANG['order_placed_sms'], $demo_data['name'], $demo_data['mobile']);
     $demo_sms_info['sms_order_payed'] = sprintf($_LANG['order_payed_sms'], $demo_data['order_sn'], $demo_data['name'], $demo_data['mobile']);
     $demo_sms_info['sms_order_payed_to_customer'] = sprintf($_LANG['order_payed_to_customer_sms'], $demo_data['order_sn'], $demo_data['order_amount']);
-    $demo_sms_info['sms_order_shipped'] = sprintf($_LANG['order_shipped_sms'], $demo_data['order_sn'],
-                $demo_data['delivery_time'], $demo_data['sms_sign']);
-    $smarty->assign('demo_sms_info',$demo_sms_info);
+    $demo_sms_info['sms_order_shipped'] = sprintf(
+        $_LANG['order_shipped_sms'],
+        $demo_data['order_sn'],
+                $demo_data['delivery_time'],
+        $demo_data['sms_sign']
+    );
+    $smarty->assign('demo_sms_info', $demo_sms_info);
     $smarty->display('shop_config.htm');
 }
 
 /*------------------------------------------------------ */
 //-- 邮件服务器设置
 /*------------------------------------------------------ */
-elseif ($_REQUEST['act'] == 'mail_settings')
-{
+elseif ($_REQUEST['act'] == 'mail_settings') {
     /* 检查权限 */
     admin_priv('shop_config');
 
@@ -102,7 +96,7 @@ elseif ($_REQUEST['act'] == 'mail_settings')
 
     assign_query_info();
 
-    $smarty->assign('ur_here',      $_LANG['mail_settings']);
+    $smarty->assign('ur_here', $_LANG['mail_settings']);
     $smarty->assign('cfg', $arr[5]['vars']);
     $smarty->display('shop_config_mail_settings.htm');
 }
@@ -110,8 +104,7 @@ elseif ($_REQUEST['act'] == 'mail_settings')
 /*------------------------------------------------------ */
 //-- 提交   ?act=post
 /*------------------------------------------------------ */
-elseif ($_REQUEST['act'] == 'post')
-{
+elseif ($_REQUEST['act'] == 'post') {
     $type = empty($_POST['type']) ? '' : $_POST['type'];
 
     /* 检查权限 */
@@ -126,14 +119,11 @@ elseif ($_REQUEST['act'] == 'post')
     $arr = array();
     $sql = 'SELECT id, value FROM ' . $ecs->table('shop_config');
     $res= $db->query($sql);
-    while($row = $db->fetchRow($res))
-    {
+    while ($row = $db->fetchRow($res)) {
         $arr[$row['id']] = $row['value'];
     }
-    foreach ($_POST['value'] AS $key => $val)
-    {
-        if($arr[$key] != $val)
-        {
+    foreach ($_POST['value'] as $key => $val) {
+        if ($arr[$key] != $val) {
             $sql = "UPDATE " . $ecs->table('shop_config') . " SET value = '" . trim($val) . "' WHERE id = '" . $key . "'";
             $db->query($sql);
         }
@@ -146,15 +136,15 @@ elseif ($_REQUEST['act'] == 'post')
         'MAIL_USERNAME' => isset($_POST['value']['503'])      ?   trim($_POST['value']['503']) : '',
         'MAIL_PASSWORD' => isset($_POST['value']['504'])      ?   trim($_POST['value']['504']) : '',
         'MAIL_FROM_ADDRESS' => isset($_POST['value']['505'])      ?   trim($_POST['value']['505']) : '',
-        'MAIL_ENCRYPTION' => ( isset($_POST['value']['508']) &&  $_POST['value']['508'] )     ?   'ssl' : 'tls',
+        'MAIL_ENCRYPTION' => (isset($_POST['value']['508']) &&  $_POST['value']['508'])     ?   'ssl' : 'tls',
         'MAIL_FROM_NAME' => isset($_POST['value']['509'])      ?   trim($_POST['value']['509']) : '',
         );
-    $is_succ = create_env($arr,'appserver');
+    $is_succ = create_env($arr, 'appserver');
 
-    if( isset($_POST['value']['247']) and $_POST['value']['247'] ){
+    if (isset($_POST['value']['247']) and $_POST['value']['247']) {
         include_once(ROOT_PATH . 'includes/cls_certificate.php');
         $cert = new certificate();
-        if( false == $cert->open_logistics_trace() ){
+        if (false == $cert->open_logistics_trace()) {
             $links[] = array('text' => $_LANG['back_shop_config'], 'href' => 'shop_config.php?act=list_edit');
             sys_msg($_LANG['open_logistics_trace_fail'], 0, $links);
         }
@@ -164,63 +154,45 @@ elseif ($_REQUEST['act'] == 'post')
     $file_var_list = array();
     $sql = "SELECT * FROM " . $ecs->table('shop_config') . " WHERE parent_id > 0 AND type = 'file'";
     $res = $db->query($sql);
-    while ($row = $db->fetchRow($res))
-    {
+    while ($row = $db->fetchRow($res)) {
         $file_var_list[$row['code']] = $row;
     }
 
-    foreach ($_FILES AS $code => $file)
-    {
+    foreach ($_FILES as $code => $file) {
         /* 判断用户是否选择了文件 */
-        if ((isset($file['error']) && $file['error'] == 0) || (!isset($file['error']) && $file['tmp_name'] != 'none'))
-        {
+        if ((isset($file['error']) && $file['error'] == 0) || (!isset($file['error']) && $file['tmp_name'] != 'none')) {
             /* 检查上传的文件类型是否合法 */
-            if (!check_file_type($file['tmp_name'], $file['name'], $allow_file_types))
-            {
+            if (!check_file_type($file['tmp_name'], $file['name'], $allow_file_types)) {
                 sys_msg(sprintf($_LANG['msg_invalid_file'], $file['name']));
-            }
-            else
-            {
-                if ($code == 'shop_logo')
-                {
+            } else {
+                if ($code == 'shop_logo') {
                     include_once('includes/lib_template.php');
                     $info = get_template_info($_CFG['template']);
 
                     $file_name = str_replace('{$template}', $_CFG['template'], $file_var_list[$code]['store_dir']) . $info['logo'];
-                }
-                elseif ($code == 'watermark')
-                {
-					$file_name_arr = explode('.', $file['name']);
+                } elseif ($code == 'watermark') {
+                    $file_name_arr = explode('.', $file['name']);
                     $ext = array_pop($file_name_arr);
                     $file_name = $file_var_list[$code]['store_dir'] . 'watermark.' . $ext;
-                    if (file_exists($file_var_list[$code]['value']))
-                    {
+                    if (file_exists($file_var_list[$code]['value'])) {
                         @unlink($file_var_list[$code]['value']);
                     }
-                }
-                elseif($code == 'wap_logo')
-                {
-					$file_name_arr = explode('.', $file['name']);
+                } elseif ($code == 'wap_logo') {
+                    $file_name_arr = explode('.', $file['name']);
                     $ext = array_pop($file_name_arr);
                     $file_name = $file_var_list[$code]['store_dir'] . 'wap_logo.' . $ext;
-                    if (file_exists($file_var_list[$code]['value']))
-                    {
+                    if (file_exists($file_var_list[$code]['value'])) {
                         @unlink($file_var_list[$code]['value']);
                     }
-                }
-                else
-                {
+                } else {
                     $file_name = $file_var_list[$code]['store_dir'] . $file['name'];
                 }
 
                 /* 判断是否上传成功 */
-                if (move_upload_file($file['tmp_name'], $file_name))
-                {
+                if (move_upload_file($file['tmp_name'], $file_name)) {
                     $sql = "UPDATE " . $ecs->table('shop_config') . " SET value = '$file_name' WHERE code = '$code'";
                     $db->query($sql);
-                }
-                else
-                {
+                } else {
                     sys_msg(sprintf($_LANG['msg_upload_failed'], $file['name'], $file_var_list[$code]['store_dir']));
                 }
             }
@@ -228,13 +200,10 @@ elseif ($_REQUEST['act'] == 'post')
     }
 
     /* 处理发票类型及税率 */
-    if (!empty($_POST['invoice_rate']))
-    {
-        foreach ($_POST['invoice_rate'] as $key => $rate)
-        {
+    if (!empty($_POST['invoice_rate'])) {
+        foreach ($_POST['invoice_rate'] as $key => $rate) {
             $rate = round(floatval($rate), 2);
-            if ($rate < 0)
-            {
+            if ($rate < 0) {
                 $rate = 0;
             }
             $_POST['invoice_rate'][$key] = $rate;
@@ -273,13 +242,10 @@ elseif ($_REQUEST['act'] == 'post')
     $spt .= "&charset=".EC_CHARSET;
     $spt .= '"></script>';
 
-    if ($type == 'mail_setting')
-    {
+    if ($type == 'mail_setting') {
         $links[] = array('text' => $_LANG['back_mail_settings'], 'href' => 'shop_config.php?act=mail_settings');
         sys_msg($_LANG['mail_save_success'].$spt, 0, $links);
-    }
-    else
-    {
+    } else {
         $links[] = array('text' => $_LANG['back_shop_config'], 'href' => 'shop_config.php?act=list_edit');
         sys_msg($_LANG['save_success'].$spt, 0, $links);
     }
@@ -288,8 +254,7 @@ elseif ($_REQUEST['act'] == 'post')
 /*------------------------------------------------------ */
 //-- 发送测试邮件
 /*------------------------------------------------------ */
-elseif ($_REQUEST['act'] == 'send_test_email')
-{
+elseif ($_REQUEST['act'] == 'send_test_email') {
     /* 检查权限 */
     check_authz_json('shop_config');
 
@@ -305,12 +270,9 @@ elseif ($_REQUEST['act'] == 'send_test_email')
     $_CFG['smtp_mail']    = trim($_POST['reply_email']);
     $_CFG['mail_charset'] = trim($_POST['mail_charset']);
 
-    if (send_mail('', $email, $_LANG['test_mail_title'], $_LANG['cfg_name']['email_content'], 0))
-    {
+    if (send_mail('', $email, $_LANG['test_mail_title'], $_LANG['cfg_name']['email_content'], 0)) {
         make_json_result('', $_LANG['sendemail_success'] . $email);
-    }
-    else
-    {
+    } else {
         make_json_error(join("\n", $err->_message));
     }
 }
@@ -318,8 +280,7 @@ elseif ($_REQUEST['act'] == 'send_test_email')
 /*------------------------------------------------------ */
 //-- 删除上传文件
 /*------------------------------------------------------ */
-elseif ($_REQUEST['act'] == 'del')
-{
+elseif ($_REQUEST['act'] == 'del') {
     /* 检查权限 */
     check_authz_json('shop_config');
 
@@ -341,7 +302,6 @@ elseif ($_REQUEST['act'] == 'del')
     clear_all_files();
 
     sys_msg($_LANG['save_success'], 0);
-
 }
 
 /**
@@ -354,8 +314,7 @@ elseif ($_REQUEST['act'] == 'del')
  */
 function update_configure($key, $val='')
 {
-    if (!empty($key))
-    {
+    if (!empty($key)) {
         $sql = "UPDATE " . $GLOBALS['ecs']->table('shop_config') . " SET value='$val' WHERE code='$key'";
 
         return $GLOBALS['db']->query($sql);
@@ -379,18 +338,14 @@ function get_settings($groups=null, $excludes=null)
     $config_groups = '';
     $excludes_groups = '';
 
-    if (!empty($groups))
-    {
-        foreach ($groups AS $key=>$val)
-        {
+    if (!empty($groups)) {
+        foreach ($groups as $key=>$val) {
             $config_groups .= " AND (id='$val' OR parent_id='$val')";
         }
     }
 
-    if (!empty($excludes))
-    {
-        foreach ($excludes AS $key=>$val)
-        {
+    if (!empty($excludes)) {
+        foreach ($excludes as $key=>$val) {
             $excludes_groups .= " AND (parent_id<>'$val' AND id<>'$val')";
         }
     }
@@ -402,35 +357,26 @@ function get_settings($groups=null, $excludes=null)
 
     /* 整理数据 */
     $group_list = array();
-    foreach ($item_list AS $key => $item)
-    {
+    foreach ($item_list as $key => $item) {
         $pid = $item['parent_id'];
         $item['name'] = isset($_LANG['cfg_name'][$item['code']]) ? $_LANG['cfg_name'][$item['code']] : $item['code'];
         $item['desc'] = isset($_LANG['cfg_desc'][$item['code']]) ? $_LANG['cfg_desc'][$item['code']] : '';
 
-        if ($item['code'] == 'sms_shop_mobile')
-        {
+        if ($item['code'] == 'sms_shop_mobile') {
             $item['url'] = 1;
         }
-        if ($pid == 0)
-        {
+        if ($pid == 0) {
             /* 分组 */
-            if ($item['type'] == 'group')
-            {
+            if ($item['type'] == 'group') {
                 $group_list[$item['id']] = $item;
             }
-        }
-        else
-        {
+        } else {
             /* 变量 */
-            if (isset($group_list[$pid]))
-            {
-                if ($item['store_range'])
-                {
+            if (isset($group_list[$pid])) {
+                if ($item['store_range']) {
                     $item['store_options'] = explode(',', $item['store_range']);
 
-                    foreach ($item['store_options'] AS $k => $v)
-                    {
+                    foreach ($item['store_options'] as $k => $v) {
                         $item['display_options'][$k] = isset($_LANG['cfg_range'][$item['code']][$v]) ?
                                 $_LANG['cfg_range'][$item['code']][$v] : $v;
                     }
@@ -438,10 +384,7 @@ function get_settings($groups=null, $excludes=null)
                 $group_list[$pid]['vars'][] = $item;
             }
         }
-
     }
 
     return $group_list;
 }
-
-?>

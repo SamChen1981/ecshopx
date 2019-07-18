@@ -4,8 +4,7 @@
  * LICENSE 相关函数类
  */
 
-if (!defined('IN_ECS'))
-{
+if (!defined('IN_ECS')) {
     die('Hacking attempt');
 }
 
@@ -20,7 +19,8 @@ class certificate
      *
      * @return void
      */
-    function __construct(){
+    public function __construct()
+    {
         include_once(ROOT_PATH."admin/includes/oauth/oauth2.php");
         $openapi_key = array('key'=>OPENAPI_KEY,'secret'=>OPENAPI_SECRET,'site'=>OPENAPI_SITE,'oauth'=>OPENAPI_OAUTH);
         $openapi_key_old = array('key'=>OPENAPI_KEY_OLD,'secret'=>OPENAPI_SECRET_OLD,'site'=>OPENAPI_SITE,'oauth'=>OPENAPI_OAUTH);
@@ -36,7 +36,7 @@ class certificate
      *
      * @return  array
      */
-    function get_shop_certificate()
+    public function get_shop_certificate()
     {
         // 取出网店 certificate
         $sql = "select code,value from ".$GLOBALS['ecs']->table('shop_config')." where code='certificate'";
@@ -48,19 +48,20 @@ class certificate
     /**
     * 设置 certificate 信息
     */
-    function set_shop_certificate($data){
+    public function set_shop_certificate($data)
+    {
         $certificate = $this->get_shop_certificate();
         $codes = array('certificate_id','token','node_id','passport_uid','use_yunqi_login','yunqi_code','use_yunqi_authority','yunqiexp_active');
-        foreach($codes as $k=>$code){
-            if($data[$code]){
-                    $certificate[$code] = $data[$code];
+        foreach ($codes as $k=>$code) {
+            if ($data[$code]) {
+                $certificate[$code] = $data[$code];
             }
         }
         $sql = "select code,value from ".$GLOBALS['ecs']->table('shop_config')." where code ='certificate'";
         $row = $GLOBALS['db']->getRow($sql);
-        if($row){
+        if ($row) {
             $sql = "UPDATE ".$GLOBALS['ecs']->table('shop_config')." set value='".serialize($certificate)."' where code='certificate'";
-        }else{
+        } else {
             $sql = "insert into ".$GLOBALS['ecs']->table('shop_config')." set parent_id=2,code='certificate',type='hidden',value='".serialize($certificate)."'";
         }
         $GLOBALS['db']->query($sql);
@@ -72,21 +73,23 @@ class certificate
     * @param  array $data
     * @return bool
     */
-    function set_yunqi_account($data){
+    public function set_yunqi_account($data)
+    {
         // $data['status'] = true;
         if ($this->get_yunqi_account()) {
             $sql = "UPDATE ".$GLOBALS['ecs']->table('shop_config')." set parent_id=2, type='hidden', value='".serialize($data)."' WHERE code='yunqi_account'";
-        }else{
+        } else {
             $sql = "insert into ".$GLOBALS['ecs']->table('shop_config')." set parent_id=2,code='yunqi_account',type='hidden',value='".serialize($data)."'";
         }
-        $GLOBALS['db']->query($sql,SILENT);
+        $GLOBALS['db']->query($sql, SILENT);
     }
 
     /**
     * 功能： 获取云起收银账号
     * @return array
     */
-    function get_yunqi_account(){
+    public function get_yunqi_account()
+    {
         $sql = "select value from ".$GLOBALS['ecs']->table('shop_config')." where code='yunqi_account'";
         $row = $GLOBALS['db']->getOne($sql);
         return $row?unserialize($row):false;
@@ -96,10 +99,11 @@ class certificate
     * 功能： 删除证书
     * @return array
     */
-    function delete_cert(&$msg){
+    public function delete_cert(&$msg)
+    {
         $sql = "select passport_uid from ".$GLOBALS['ecs']->table('admin_user')." where passport_uid is not null or passport_uid!=''";
         $passport_uid = $GLOBALS['db']->getOne($sql);
-        if(!$passport_uid || $passport_uid!=$_SESSION['admin_name']){
+        if (!$passport_uid || $passport_uid!=$_SESSION['admin_name']) {
             $msg = '请使用激活的云起账号登录后再进行删除操作';
             return false;
         }
@@ -115,21 +119,19 @@ class certificate
      * @param   string     证书token
      * @return  string
      */
-    function make_shopex_ac($post_params, $token='')
+    public function make_shopex_ac($post_params, $token='')
     {
-        if (!is_array($post_params))
-        {
+        if (!is_array($post_params)) {
             return;
         }
         ksort($post_params);
-        if($token==''){
+        if ($token=='') {
             $certificate = $this->get_shop_certificate();
             $token = $certificate['token'];
         }
         $str = '';
-        foreach($post_params as $key=>$value){
-            if($key != 'certi_ac')
-            {
+        foreach ($post_params as $key=>$value) {
+            if ($key != 'certi_ac') {
                 $str .= $value;
             }
         }
@@ -142,7 +144,8 @@ class certificate
      * @param   string     $token
      * @return  array
      */
-     function get_oauth_certificate($token){
+    public function get_oauth_certificate($token)
+    {
         $r = $this->oauth->request()->get('api/platform/timestamp');
         $time = $r->parsed();
         $type = OAUTH_API_PATH.'/auth/license.add';
@@ -151,28 +154,29 @@ class certificate
         $params['certi_session'] = STORE_KEY;
         $params['certi_validate_url'] = $base_url."yunqi_check.php?type=validate";
         $params['shop_version'] = '1.0';
-        $rall = $this->oauth->request($token)->post($type,$params,$time);
+        $rall = $this->oauth->request($token)->post($type, $params, $time);
         $response = $rall->parsed();
         return $response;
-     }
+    }
 
-     /**
-     * 功能：oauth根据token验证证书
-     *
-     * @param   string     $token
-     * @return  array
-     */
-     function check_oauth_certificate($token){
+    /**
+    * 功能：oauth根据token验证证书
+    *
+    * @param   string     $token
+    * @return  array
+    */
+    public function check_oauth_certificate($token)
+    {
         $type = OAUTH_API_PATH.'/auth/license.check';
         $certificate = $this->get_shop_certificate();
         $params['license_id'] = $certificate['certificate_id'];
         $params['certi_url'] = $GLOBALS['ecs']->url();
         $params['certi_session'] = STORE_KEY;
-        $params['ac'] = $this->make_shopex_ac($params,$certificate['token']);
-        $rall = $this->oauth->request($token)->post($type,$params);
+        $params['ac'] = $this->make_shopex_ac($params, $certificate['token']);
+        $rall = $this->oauth->request($token)->post($type, $params);
         $response = $rall->parsed();
         return $response;
-     }
+    }
 
     /**
     * 功能：oauth根据token获取物流和短信的永久token
@@ -180,12 +184,13 @@ class certificate
     * @param   strint     $token
     * @return  array
     */
-    function get_yunqi_code($token){
+    public function get_yunqi_code($token)
+    {
         $r = $this->oauth->request()->get('api/platform/timestamp');
         $time = $r->parsed();
         $type = OAUTH_API_PATH.'/auth/auth.gettoken';
         $params['product_code'] = PRODUCT_CODE;
-        $rall = $this->oauth->request($token)->post($type,$params,$time);
+        $rall = $this->oauth->request($token)->post($type, $params, $time);
         $response = $rall->parsed();
         return $response;
     }
@@ -196,37 +201,41 @@ class certificate
     * @param   string     $code
     * @return  string
     */
-    function get_token($code){
+    public function get_token($code)
+    {
         return $this->oauth->get_token($code);
     }
 
-    function logout_url($callback=''){
+    public function logout_url($callback='')
+    {
         !$callback and $callback = $GLOBALS['ecs']->url()."admin/privilege.php?act=logout&type=yunqi";
         return $this->oauth->logout_url($callback);
     }
 
-     /**
-     * 功能：oauth的登录地址
-     *
-     * @param   string     $callback
-     * @return  string
-     */
-     function get_authorize_url($callback){
+    /**
+    * 功能：oauth的登录地址
+    *
+    * @param   string     $callback
+    * @return  string
+    */
+    public function get_authorize_url($callback)
+    {
         return $this->oauth->authorize_url($callback)."&view=auth_ecshop";
-     }
+    }
 
     /**
      * 功能：中心授权地址
      *
      * @return  string
      */
-    function get_authority_url($single_page='detail'){
-        $certificate = $this->get_shop_certificate();     
+    public function get_authority_url($single_page='detail')
+    {
+        $certificate = $this->get_shop_certificate();
         $params = array(
             'license_id' => $certificate['certificate_id'],
             'client_id' => OPENAPI_KEY
         );
-        $ac = $this->make_shopex_ac($params,$certificate['token']);
+        $ac = $this->make_shopex_ac($params, $certificate['token']);
         $url = AUTH_USER_URL.'/?c=auth&m='.$single_page.'&license_id='.$certificate['certificate_id'].'&ac='.$ac.'&client_id='.OPENAPI_KEY;
         return $url;
     }
@@ -234,11 +243,12 @@ class certificate
     /**
     * 功能：矩阵申请绑定节点接口
     *
-    * @param   array     $params   
+    * @param   array     $params
     * @param   string    $node_type 绑定类型
     * @return  array
     */
-    function applyNodeBind($params,$node_type='shopex'){
+    public function applyNodeBind($params, $node_type='shopex')
+    {
         $base_url = $GLOBALS['ecs']->url();
         $post = array(
                 'app'=>'app.applyNodeBind',
@@ -251,7 +261,7 @@ class certificate
                 'to_token'=>$params['to_token'],
                 'shop_name'=>$params['shop_name']
             );
-        $post['certi_ac'] = $this->make_shopex_ac($post,$params['token']);
+        $post['certi_ac'] = $this->make_shopex_ac($post, $params['token']);
         return $this->read_shopex_applyNodeBind($post);
     }
 
@@ -261,10 +271,11 @@ class certificate
     * @param   array     $post
     * @return  array
     */
-    function read_shopex_applyNodeBind($post){
+    public function read_shopex_applyNodeBind($post)
+    {
         $url = MATRIX_HOST."/api.php";
-        $response = $this->transport->request($url,$post);
-        return json_decode($response['body'],1);
+        $response = $this->transport->request($url, $post);
+        return json_decode($response['body'], 1);
     }
 
     /**
@@ -274,11 +285,12 @@ class certificate
     * @param   array      $params
     * @return  array
     */
-    function getsnlistoauth($token,$params){
+    public function getsnlistoauth($token, $params)
+    {
         $r = $this->oauth->request()->get('api/platform/timestamp');
         $time = $r->parsed();
         $type = OAUTH_API_PATH.'/online/getsnlistoauth';
-        $rall = $this->oauth->request($token)->post($type,$params,$time);
+        $rall = $this->oauth->request($token)->post($type, $params, $time);
         $response = $rall->parsed();
         return $response;
     }
@@ -288,30 +300,33 @@ class certificate
     *
     * @param   array     $data
     */
-    function save_snlist($data){
-        foreach($data as $value){
+    public function save_snlist($data)
+    {
+        foreach ($data as $value) {
             $_data[] = $value['goods_code'];
         }
-        $_data['time'] = date("Y-m-d",time());
+        $_data['time'] = date("Y-m-d", time());
         $sql = "insert into ".$GLOBALS['ecs']->table('shop_config')." set parent_id=2,code='snlist',type='hidden',value='".json_encode($_data)."'";
-        $GLOBALS['db']->query($sql,'SILENT');
+        $GLOBALS['db']->query($sql, 'SILENT');
     }
 
-    function get_snlist(){
+    public function get_snlist()
+    {
         $row = $this->shop_config('snlist');
         return $row['value'];
     }
 
-    function shop_config($code){
-        if(is_array($code)){
+    public function shop_config($code)
+    {
+        if (is_array($code)) {
             $where  =  " where code in (".implode(',', $code).")";
-        }else{
+        } else {
             $where  = " where code = '".$code."'";
         }
         $sql = "select code,value from ".$GLOBALS['ecs']->table('shop_config').$where;
-        if(is_array($code)){
+        if (is_array($code)) {
             return $GLOBALS['db']->getAll($sql);
-        }else{
+        } else {
             return $GLOBALS['db']->getRow($sql);
         }
     }
@@ -322,18 +337,23 @@ class certificate
     * @param   string     $goods_name  产品名：erp
      * @return  bool
     */
-    function is_open_sn($goods_name){
+    public function is_open_sn($goods_name)
+    {
         $sql = "select `value` from ".$GLOBALS['ecs']->table('shop_config')." where code='snlist'";
         $row = $GLOBALS['db']->getRow($sql);
-        if(empty($row)) return false;
-        $snlist = json_decode($row['value'],1);
+        if (empty($row)) {
+            return false;
+        }
+        $snlist = json_decode($row['value'], 1);
 
         $sql = "select `value` from ".$GLOBALS['ecs']->table('shop_config')." where code='snlist_code'";
         $row = $GLOBALS['db']->getRow($sql);
-        if(empty($row)) return false;
-        $snlist_code = json_decode($row['value'],1);
+        if (empty($row)) {
+            return false;
+        }
+        $snlist_code = json_decode($row['value'], 1);
 
-        if(in_array($snlist_code[$goods_name],$snlist)){
+        if (in_array($snlist_code[$goods_name], $snlist)) {
             return true;
         }
         return false;
@@ -346,14 +366,19 @@ class certificate
      * @param   string     $name  产品名or绑定类型
      * @return  bool
      */
-    function is_bind_sn($name,$type='bind_type'){
+    public function is_bind_sn($name, $type='bind_type')
+    {
         $sql = "select `value` from ".$GLOBALS['ecs']->table('shop_config')." where code='bind_list'";
         $row = $GLOBALS['db']->getRow($sql);
-        if(empty($row)) return false;
-        $bind_list=json_decode($row['value'],1);
+        if (empty($row)) {
+            return false;
+        }
+        $bind_list=json_decode($row['value'], 1);
         $bind_type = $name;
-        if($type=='goods_name') $bind_type = $this->bind_sn($goods_name);
-        if(in_array($bind_type,$bind_list)){
+        if ($type=='goods_name') {
+            $bind_type = $this->bind_sn($goods_name);
+        }
+        if (in_array($bind_type, $bind_list)) {
             return true;
         }
         return false;
@@ -365,7 +390,8 @@ class certificate
      * @param   string     $goods_name  产品名：erp
      * @return  string     bind_type 矩阵绑定类型
      */
-    function bind_sn($goods_name){
+    public function bind_sn($goods_name)
+    {
         $bind_sn = array(
                 'taoda'=>'taodali',
                 'erp'=>'ecos.ome',
@@ -374,9 +400,10 @@ class certificate
         return $bind_sn[$goods_name];
     }
 
-    function oauth_set_callback($code,&$res){
+    public function oauth_set_callback($code, &$res)
+    {
         $res = $this->get_token($code);
-        if($res['token'] and $res['params']){
+        if ($res['token'] and $res['params']) {
             if (isset($res['params']['data']) && $res['params']['data']) {
                 foreach ($res['params']['data'] as $d_key => $d_value) {
                     $res['params'][$d_key] = $d_value;
@@ -394,34 +421,35 @@ class certificate
     /**
      * 功能：检查是否有证书，获取开通的产品列表，获取短信物流token
      */
-    function check_certi($res){
+    public function check_certi($res)
+    {
         //检查证书
         $certificate = $this->get_shop_certificate();
         //获取证书,设置证书
-        if((!$certificate['certificate_id'] || !$certificate['token'] || !$certificate['node_id']) && $_SERVER['HTTP_HOST']!='localhost'){
+        if ((!$certificate['certificate_id'] || !$certificate['token'] || !$certificate['node_id']) && $_SERVER['HTTP_HOST']!='localhost') {
             $response = $this->get_oauth_certificate($res['token']);
             $response['status']=='success' and $rs = $this->set_shop_certificate($response['data']);
         }
         //设置passport_uid
-        if(!$certificate['passport_uid']){
+        if (!$certificate['passport_uid']) {
             $data['passport_uid'] = $res['params']['passport_uid'];
-            $this->set_shop_certificate($data); 
+            $this->set_shop_certificate($data);
         }
         //获取云起开通的产品列表
         $snlist = $this->get_snlist();
-        if(!isset($snlist['time']) ||$snlist['time'] != date("Y-m-d",time())){
-            $result = $this->getsnlistoauth($res['token'],array());
+        if (!isset($snlist['time']) ||$snlist['time'] != date("Y-m-d", time())) {
+            $result = $this->getsnlistoauth($res['token'], array());
             $result['status']=='success' and $this->save_snlist($result['data']);
         }
         //end
         //获取短信物流token
-        if(!$certificate['yunqi_code']){
+        if (!$certificate['yunqi_code']) {
             $code_result = $this->get_yunqi_code($res['token']);
             $code_result['status']=='success' and $this->set_shop_certificate(array('yunqi_code'=>$code_result['data']['token']));
         }
         //获取短信物流token end
         //激活云起物流
-        if(!$certificate['yunqiexp_active']){
+        if (!$certificate['yunqiexp_active']) {
             $yunqiexp_result = $this->yqexp_exp_active();
             $yunqiexp_result['status']=='success' and $this->set_shop_certificate(array('yunqiexp_active'=>true));
         }
@@ -439,17 +467,15 @@ class certificate
         //获取云起收银账号 end
     }
 
-    function install_yqpayment(){
+    public function install_yqpayment()
+    {
         include_once(ROOT_PATH.'includes/lib_payment.php');
         $payment = get_payment('yunqi');
         $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('payment') . " WHERE pay_code = 'yunqi'";
 
-        if ($GLOBALS['db']->GetOne($sql) > 0)
-        {
+        if ($GLOBALS['db']->GetOne($sql) > 0) {
             return true;
-        }
-        else
-        {
+        } else {
             $payment_lang = ROOT_PATH . 'languages/' .$GLOBALS['_CFG']['lang']. '/payment/yunqi.php';
             include_once($payment_lang);
             $payment['pay_name'] = $GLOBALS['_LANG']['yunqi'];
@@ -465,8 +491,11 @@ class certificate
     /**
     * 功能：云起物流 查询
     */
-    function yqexp_exp_get($data){
-        if($this->open_logistics_trace()===false) return array();
+    public function yqexp_exp_get($data)
+    {
+        if ($this->open_logistics_trace()===false) {
+            return array();
+        }
         $certificate = $this->get_shop_certificate();
         $r = $this->oauth->request()->get('api/platform/timestamp');
         $time = $r->parsed();
@@ -478,14 +507,14 @@ class certificate
         $params['method'] = 'express.explogistics';
         $params['expno'] = $data['expno'];
         $params['expcode'] = $data['expcode'];
-        $rall = $this->oauth->request($token)->post($type,$params,$time);
+        $rall = $this->oauth->request($token)->post($type, $params, $time);
         $response = $rall->parsed();
-        if($response['status'] == 'error' and $response['code'] == '400004'){//token失效,删除token
+        if ($response['status'] == 'error' and $response['code'] == '400004') {//token失效,删除token
             delete_yunqi_code();
             $sql = "update ".$GLOBALS['ecs']->table('shop_config')." set value='0' where code='logistics_trace'";
             $GLOBALS['db']->query($sql);
         }
-        if(EC_CHARSET != 'utf-8' and $response['data']['Traces']){
+        if (EC_CHARSET != 'utf-8' and $response['data']['Traces']) {
             foreach ($response['data']['Traces'] as $key => $value) {
                 $response['data']['Traces'][$key]['AcceptStation'] = iconv('utf-8', EC_CHARSET, $value['AcceptStation']);
             }
@@ -496,7 +525,8 @@ class certificate
     /**
     * 功能：云起物流 激活
     */
-    function yqexp_exp_active(){
+    public function yqexp_exp_active()
+    {
         $certificate = $this->get_shop_certificate();
         $r = $this->oauth->request()->get('api/platform/timestamp');
         $time = $r->parsed();
@@ -507,7 +537,7 @@ class certificate
         $params['appid'] = 'kdniao';
         $params['method'] = 'express.expactive';
         $params['siteurl'] = $GLOBALS['ecs']->url();
-        $rall = $this->oauth->request($token)->post($type,$params,$time);
+        $rall = $this->oauth->request($token)->post($type, $params, $time);
         $response = $rall->parsed();
         return $response;
     }
@@ -515,7 +545,8 @@ class certificate
     /**
     * 功能：云起收银 获取账号
     */
-    function yqaccount_appget(){
+    public function yqaccount_appget()
+    {
         $certificate = $this->get_shop_certificate();
         $r = $this->oauth->request()->get('api/platform/timestamp');
         $time = $r->parsed();
@@ -523,40 +554,39 @@ class certificate
         $params['shopexid'] = $certificate['passport_uid'];
         $params['token'] = $certificate['yunqi_code'];
         $params['app'] = 'teegon';
-        $rall = $this->oauth->request($token)->post($type,$params,$time);
+        $rall = $this->oauth->request($token)->post($type, $params, $time);
         $response = $rall->parsed();
-        return $response; 
+        return $response;
     }
 
     /**
     * 功能：绑定矩阵物流追踪
     * @return  bool
     */
-    function open_logistics_trace(){
+    public function open_logistics_trace()
+    {
         return get_certificate_info('yunqiexp_active');
     }
 
-    function get_push_count($type){
+    public function get_push_count($type)
+    {
         $sql = "select * from ".$GLOBALS['ecs']->table('shop_config')." where code='".$type."'";
         $row = $GLOBALS['db']->getRow($sql);
-        if($row){
+        if ($row) {
             return $row['value'];
-        }else{
+        } else {
             return '0';
         }
     }
 
-    function crm_get_count($type){
-        if($type == 'order'){
+    public function crm_get_count($type)
+    {
+        if ($type == 'order') {
             $sql = "select count(*) from ". $GLOBALS['ecs']->table('order_info');
-        }else{
+        } else {
             $sql = "select count(*) from ". $GLOBALS['ecs']->table('users');
         }
         $row = $GLOBALS['db']->getRow($sql);
         return $row['count(*)'];
     }
-
-
-
 }
-?>

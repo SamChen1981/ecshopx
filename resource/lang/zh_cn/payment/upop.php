@@ -19,5 +19,3 @@ $_LANG['upop_sign_method_desc']      = '选择证书方式的话必须上传从c
 
 $_LANG['upop_button']               = '立即支付';
 $_LANG['upop_txn_id']               = '银联交易号';
-
-?>

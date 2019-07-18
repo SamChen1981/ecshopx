@@ -20,13 +20,13 @@ $source_str = implode('|', $data);
 $smarty->assign('resource_url', SMS_RESOURCE_URL . '/index.php?source='.base64_encode($source_str));
 $smarty->display('sms_resource.htm');
 
-function getRandChar($length){
-   $str = null;
-   $strPol = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz";
-   $max = strlen($strPol)-1;
-   for($i=0;$i<$length;$i++){
-    $str.=$strPol[rand(0,$max)];
-   }
-   return $str;
-  }
-?>
+function getRandChar($length)
+{
+    $str = null;
+    $strPol = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz";
+    $max = strlen($strPol)-1;
+    for ($i=0;$i<$length;$i++) {
+        $str.=$strPol[rand(0, $max)];
+    }
+    return $str;
+}

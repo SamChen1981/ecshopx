@@ -447,4 +447,3 @@ $_LANG['mail_settings'] = '邮件服务器设置';
 $_LANG['sms_url'] = '<a href="'.$url.'" target="_blank">点此注册手机短信服务</a>';
 $_LANG['open_logistics_trace_fail'] = '启用物流追踪失败';
 $_LANG['preview_template'] = '预览模板';
-?>

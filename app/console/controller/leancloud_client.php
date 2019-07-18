@@ -1,6 +1,6 @@
 <?php
-class leancloud_client {
-
+class leancloud_client
+{
     const VERSION = '0.2.5';
 
     private static $api = "https://api.leancloud.cn";
@@ -17,7 +17,8 @@ class leancloud_client {
 
     private static $defaultHeaders;
 
-    public static function initialize($appId, $appKey) {
+    public static function initialize($appId, $appKey)
+    {
         self::$appId        = $appId;
         self::$appKey       = $appKey;
 
@@ -28,7 +29,8 @@ class leancloud_client {
         );
     }
 
-    private static function assertInitialized() {
+    private static function assertInitialized()
+    {
         if (!isset(self::$appId) &&
             !isset(self::$appKey)) {
             throw new \RuntimeException("Client is not initialized, " .
@@ -37,20 +39,23 @@ class leancloud_client {
         }
     }
 
-    private static function getVersionString() {
+    private static function getVersionString()
+    {
         return "LeanCloud PHP SDK " . self::VERSION;
     }
 
-    public static function useProduction($flag) {
+    public static function useProduction($flag)
+    {
         self::$useProduction = $flag ? true : false;
     }
 
-    public static function getAPIEndPoint() {
+    public static function getAPIEndPoint()
+    {
         return self::$api . "/"  . self::$apiVersion;
     }
 
-    public static function buildHeaders() {
-
+    public static function buildHeaders()
+    {
         $h = self::$defaultHeaders;
 
         $h['X-LC-Prod'] = self::$useProduction ? 1 : 0;
@@ -63,7 +68,8 @@ class leancloud_client {
         return $h;
     }
 
-    public static function verifySign($appId, $sign) {
+    public static function verifySign($appId, $sign)
+    {
         if (!$appId || ($appId != self::$appId)) {
             return false;
         }
@@ -73,7 +79,8 @@ class leancloud_client {
         return $parts[0] === md5(trim($parts[1]) . $key);
     }
 
-    public static function verifyKey($appId, $key) {
+    public static function verifyKey($appId, $key)
+    {
         if (!$appId || ($appId != self::$appId)) {
             return false;
         }
@@ -82,7 +89,8 @@ class leancloud_client {
         return self::$appKey === $parts[0];
     }
 
-    public static function request($method, $path, $data, $headers=array()) {
+    public static function request($method, $path, $data, $headers=array())
+    {
         self::assertInitialized();
         $url  = self::getAPIEndPoint();
         $url .= $path;
@@ -98,9 +106,13 @@ class leancloud_client {
         }
 
         // Build headers list in HTTP format
-        $headersList = array_map(function($key, $val) { return "$key: $val";},
+        $headersList = array_map(
+            function ($key, $val) {
+                return "$key: $val";
+            },
                                  array_keys($headers),
-                                 $headers);
+                                 $headers
+        );
 
         $req = curl_init($url);
         curl_setopt($req, CURLOPT_SSL_VERIFYPEER, false);
@@ -109,12 +121,15 @@ class leancloud_client {
         curl_setopt($req, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($req, CURLOPT_TIMEOUT, self::$apiTimeout);
         // curl_setopt($req, CURLINFO_HEADER_OUT, true);
-        switch($method) {
+        switch ($method) {
             case "GET":
                 if ($data) {
                     // append GET data as query string
-                    curl_setopt($req, CURLOPT_URL,
-                                $url ."?". http_build_query($data));
+                    curl_setopt(
+                        $req,
+                        CURLOPT_URL,
+                                $url ."?". http_build_query($data)
+                    );
                 }
                 break;
             case "POST":
@@ -124,6 +139,7 @@ class leancloud_client {
             case "PUT":
                 curl_setopt($req, CURLOPT_POSTFIELDS, $json);
                 curl_setopt($req, CURLOPT_CUSTOMREQUEST, $method);
+                // no break
             case "DELETE":
                 curl_setopt($req, CURLOPT_CUSTOMREQUEST, $method);
                 break;
@@ -142,9 +158,11 @@ class leancloud_client {
           *  - rest api error
           */
         if ($errno > 0) {
-            throw new \RuntimeException("CURL connection ($url) error: " .
+            throw new \RuntimeException(
+                "CURL connection ($url) error: " .
                                         "$errno $error",
-                                        $errno);
+                                        $errno
+            );
         }
         if (strpos($respType, "text/html") !== false) {
             self::error("Bad request", 400);
@@ -158,27 +176,48 @@ class leancloud_client {
         return $data;
     }
 
-    public static function get($path, $data=null, $headers=array()) {
-        return self::request("GET", $path, $data,
-                             $headers);
+    public static function get($path, $data=null, $headers=array())
+    {
+        return self::request(
+            "GET",
+            $path,
+            $data,
+                             $headers
+        );
     }
 
-    public static function post($path, $data, $headers=array()) {
-        return self::request("POST", $path, $data,
-                             $headers);
+    public static function post($path, $data, $headers=array())
+    {
+        return self::request(
+            "POST",
+            $path,
+            $data,
+                             $headers
+        );
     }
 
-    public static function put($path, $data, $headers=array()) {
-        return self::request("PUT", $path, $data,
-                             $headers);
+    public static function put($path, $data, $headers=array())
+    {
+        return self::request(
+            "PUT",
+            $path,
+            $data,
+                             $headers
+        );
     }
 
-    public static function delete($path, $headers=array()) {
-        return self::request("DELETE", $path, null,
-                             $headers);
+    public static function delete($path, $headers=array())
+    {
+        return self::request(
+            "DELETE",
+            $path,
+            null,
+                             $headers
+        );
     }
 
-    public static function batch($requests, $headers=array()) {
+    public static function batch($requests, $headers=array())
+    {
         $response = self::post("/batch", array("requests" => $requests), $headers);
         if (count($requests) != count($response)) {
             self::error("Number of resquest and response " .
@@ -195,13 +234,14 @@ class leancloud_client {
      * @param string $boundary Boundary string used for frontier
      * @return string          Multipart encoded string
      */
-    public static function multipartEncode($file, $params, $boundary=null) {
+    public static function multipartEncode($file, $params, $boundary=null)
+    {
         if (!$boundary) {
             $boundary = md5(microtime());
         }
 
         $body = "";
-        forEach($params as $key => $val) {
+        foreach ($params as $key => $val) {
             $body .= <<<EOT
 --{$boundary}
 Content-Disposition: form-data; name="{$key}"
@@ -217,8 +257,10 @@ EOT;
                 $mimeType = $file["mimeType"];
             }
             // escape quotes in file name
-            $filename = filter_var($file["name"],
-                                   FILTER_SANITIZE_MAGIC_QUOTES);
+            $filename = filter_var(
+                $file["name"],
+                                   FILTER_SANITIZE_MAGIC_QUOTES
+            );
 
             $body .= <<<EOT
 --{$boundary}
@@ -249,7 +291,8 @@ EOT;
      * @return array           JSON response from qiniu
      * @throws CloudException, RuntimeException
      */
-    public static function uploadToQiniu($token, $content, $name, $mimeType=null) {
+    public static function uploadToQiniu($token, $content, $name, $mimeType=null)
+    {
         $boundary = md5(microtime());
         $file     = array("name"     => $name,
                           "content"  => $content,
@@ -282,9 +325,11 @@ EOT;
          *  - rest api error
          */
         if ($errno > 0) {
-            throw new \RuntimeException("CURL connection ($url) error: " .
+            throw new \RuntimeException(
+                "CURL connection ($url) error: " .
                                         "$errno $error",
-                                        $errno);
+                                        $errno
+            );
         }
 
         $data = json_decode($resp, true);
@@ -302,7 +347,6 @@ EOT;
                     'error'=>$code, 'data' => $message
                 ]));
         exit;*/
-        error_log(date("c")."\t".print_r(array('error'=>$code, 'data' => $message),1)."\t\n",3,LOG_DIR."/leancloud_client_error_".date("Y-m-d").".log");
+        error_log(date("c")."\t".print_r(array('error'=>$code, 'data' => $message), 1)."\t\n", 3, LOG_DIR."/leancloud_client_error_".date("Y-m-d").".log");
     }
 }
-

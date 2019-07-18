@@ -4,21 +4,18 @@
  * 订单自动确认收货
  */
 
-if (!defined('IN_ECS'))
-{
+if (!defined('IN_ECS')) {
     die('Hacking attempt');
 }
 $cron_lang = ROOT_PATH . 'languages/' .$GLOBALS['_CFG']['lang']. '/cron/auto_confirm.php';
-if (file_exists($cron_lang))
-{
+if (file_exists($cron_lang)) {
     global $_LANG;
 
     include_once($cron_lang);
 }
 
 /* 模块的基本信息 */
-if (isset($set_modules) && $set_modules == TRUE)
-{
+if (isset($set_modules) && $set_modules == true) {
     $i = isset($modules) ? count($modules) : 0;
 
     /* 代码 */
@@ -57,21 +54,20 @@ confirm_log("select_count:".$count);
 $page_size = 1;
 $total = ceil($count/$page_size);
 $i = 1;
-while ( $i<= $total) {
+while ($i<= $total) {
     $sql = "SELECT order_id FROM ".$ecs->table('order_info') ." WHERE ".$where." limit 0,".$page_size;
     confirm_log("select_sql:".$sql);
     $rows = $db->getAll($sql);
-    confirm_log("select_rows:",$rows);
+    confirm_log("select_rows:", $rows);
     foreach ($rows as $key => $order) {
         $order_id = isset($order['order_id']) ? intval($order['order_id']) : 0;
-        affirm_received_auto($order_id,$msg);
+        affirm_received_auto($order_id, $msg);
         confirm_log("finish_order_id:".$order_id."|msg:".$msg);
     }
     $i++;
 }
 
-function confirm_log($msg,$data=null){
-    error_log(date("c")."\t".$msg."\t".stripslashes(json_encode($data))."\t\n",3,LOG_DIR."/auto_confirm_".date("Y-m-d").".log");
+function confirm_log($msg, $data=null)
+{
+    error_log(date("c")."\t".$msg."\t".stripslashes(json_encode($data))."\t\n", 3, LOG_DIR."/auto_confirm_".date("Y-m-d").".log");
 }
-
-?>

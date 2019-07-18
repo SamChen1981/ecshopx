@@ -17,5 +17,3 @@ $_LANG['udpay_button']                  = '立即使用 udpay 支付';
 $_LANG['udpay_txn_id']                  = 'udpay 交易号';
 $_LANG['udpay_orderInfo']               = '您在网汇通注册的公司名称(英文)';
 $_LANG['udpay_errorfile']               = '错误校验文件地址';
-
-?>

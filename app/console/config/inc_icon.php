@@ -4,8 +4,7 @@
  * 权限对照表
  */
 
-if (!defined('IN_ECS'))
-{
+if (!defined('IN_ECS')) {
     die('Hacking attempt');
 }
 
@@ -56,5 +55,3 @@ if (!defined('IN_ECS'))
 
     // 移动端管理
     $icon['18_lead_manage']        = 'lead';
-
-?>
