@@ -1,0 +1,26 @@
+{
+    "name": "shopub/shopub",
+    "description": "the new shop",
+    "type": "project",
+    "keywords": [
+        "shopub",
+        "php"
+    ],
+    "homepage": "http://shopub.cn/",
+    "license": "Apache-2.0",
+    "require": {
+        "php": ">=5.6.0",
+        "topthink/framework": "5.1.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "app\\": "app/"
+        }
+    },
+    "extra": {
+        "think-path": "bootstrap"
+    },
+    "config": {
+        "preferred-install": "dist"
+    }
+}

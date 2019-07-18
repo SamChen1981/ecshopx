@@ -1,0 +1,13 @@
+#!/usr/bin/env php
+<?php
+
+namespace think;
+
+// 加载基础文件
+require __DIR__ . '/bootstrap/base.php';
+
+// 应用初始化
+Container::get('app')->path(__DIR__ . '/app/')->initialize();
+
+// 控制台初始化
+Console::init();
