@@ -1,18 +1,7 @@
 <?php
 
-
 /**
- * ECSHOP 专题前台
- * ============================================================================
- * * 版权所有 2005-2018 上海商派网络科技有限公司，并保留所有权利。
- * 网站地址: http://www.ecshop.com；
- * ----------------------------------------------------------------------------
- * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
- * 使用；不允许对程序代码以任何形式任何目的的再发布。
- * ============================================================================
- * @author:     webboy <laupeng@163.com>
- * @version:    v2.1
- * ---------------------------------------------
+ * 专题前台
  */
 
 define('IN_ECS', true);
@@ -22,10 +11,10 @@ require(dirname(__FILE__) . '/includes/init.php');
 if ((DEBUG_MODE & 2) != 2) {
     $smarty->caching = true;
 }
-$topic_id  = empty($_REQUEST['topic_id']) ? 0 : intval($_REQUEST['topic_id']);
+$topic_id = empty($_REQUEST['topic_id']) ? 0 : intval($_REQUEST['topic_id']);
 
 $sql = "SELECT template FROM " . $ecs->table('topic') .
-        "WHERE topic_id = '$topic_id' and  " . gmtime() . " >= start_time and " . gmtime() . "<= end_time";
+    "WHERE topic_id = '$topic_id' and  " . gmtime() . " >= start_time and " . gmtime() . "<= end_time";
 
 $topic = $db->getRow($sql);
 
@@ -49,7 +38,7 @@ if (!$smarty->is_cached($templates, $cache_id)) {
 
     $goods_id = array();
 
-    foreach ($arr as $key=>$value) {
+    foreach ($arr as $key => $value) {
         foreach ($value as $k => $val) {
             $opt = explode('|', $val);
             $arr[$key][$k] = $opt[1];
@@ -58,12 +47,12 @@ if (!$smarty->is_cached($templates, $cache_id)) {
     }
 
     $sql = 'SELECT g.goods_id, g.goods_name, g.goods_name_style, g.market_price, g.is_new, g.is_best, g.is_hot, g.shop_price AS org_price, ' .
-                "IFNULL(mp.user_price, g.shop_price * '$_SESSION[discount]') AS shop_price, g.promote_price, " .
-                'g.promote_start_date, g.promote_end_date, g.goods_brief, g.goods_thumb , g.goods_img ' .
-                'FROM ' . $GLOBALS['ecs']->table('goods') . ' AS g ' .
-                'LEFT JOIN ' . $GLOBALS['ecs']->table('member_price') . ' AS mp ' .
-                "ON mp.goods_id = g.goods_id AND mp.user_rank = '$_SESSION[user_rank]' " .
-                "WHERE " . db_create_in($goods_id, 'g.goods_id');
+        "IFNULL(mp.user_price, g.shop_price * '$_SESSION[discount]') AS shop_price, g.promote_price, " .
+        'g.promote_start_date, g.promote_end_date, g.goods_brief, g.goods_thumb , g.goods_img ' .
+        'FROM ' . $GLOBALS['ecs']->table('goods') . ' AS g ' .
+        'LEFT JOIN ' . $GLOBALS['ecs']->table('member_price') . ' AS mp ' .
+        "ON mp.goods_id = g.goods_id AND mp.user_rank = '$_SESSION[user_rank]' " .
+        "WHERE " . db_create_in($goods_id, 'g.goods_id');
 
     $res = $GLOBALS['db']->query($sql);
 
@@ -78,16 +67,16 @@ if (!$smarty->is_cached($templates, $cache_id)) {
         }
 
         if ($row['shop_price'] > 0) {
-            $row['shop_price'] =  price_format($row['shop_price']);
+            $row['shop_price'] = price_format($row['shop_price']);
         } else {
             $row['shop_price'] = '';
         }
 
-        $row['url']              = build_uri('goods', array('gid'=>$row['goods_id']), $row['goods_name']);
+        $row['url'] = build_uri('goods', array('gid' => $row['goods_id']), $row['goods_name']);
         $row['goods_style_name'] = add_style($row['goods_name'], $row['goods_name_style']);
-        $row['short_name']       = $GLOBALS['_CFG']['goods_name_length'] > 0 ?
-                                    sub_str($row['goods_name'], $GLOBALS['_CFG']['goods_name_length']) : $row['goods_name'];
-        $row['goods_thumb']      = get_image_path($row['goods_id'], $row['goods_thumb'], true);
+        $row['short_name'] = $GLOBALS['_CFG']['goods_name_length'] > 0 ?
+            sub_str($row['goods_name'], $GLOBALS['_CFG']['goods_name_length']) : $row['goods_name'];
+        $row['goods_thumb'] = get_image_path($row['goods_id'], $row['goods_thumb'], true);
         $row['short_style_name'] = add_style($row['short_name'], $row['goods_name_style']);
 
         foreach ($arr as $key => $value) {
