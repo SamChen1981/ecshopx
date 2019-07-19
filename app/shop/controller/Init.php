@@ -2,6 +2,8 @@
 
 namespace app\shop\controller;
 
+use app\common\libraries\Mysql;
+use app\common\libraries\Shop;
 use think\Controller;
 
 /**
@@ -13,26 +15,19 @@ class Init extends Controller
 {
     protected function initialize()
     {
-        require_once(dirname(__FILE__) . '/safety.php');
-
         define('ROOT_PATH', base_path());
 
         /* https 检测https */
-        if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
+        if (request()->isSsl()) {
             define('FORCE_SSL_LOGIN', true);
             define('FORCE_SSL_ADMIN', true);
-        } else {
-            if (isset($_SERVER['HTTP_ORIGIN']) && substr($_SERVER['HTTP_ORIGIN'], 0, 5) == 'https') {
-                $_SERVER['HTTPS'] = 'on';
-                define('FORCE_SSL_LOGIN', true);
-                define('FORCE_SSL_ADMIN', true);
-            }
         }
 
-
-        $php_self = isset($_SERVER['PHP_SELF']) ? $_SERVER['PHP_SELF'] : $_SERVER['SCRIPT_NAME'];
+        $php_self = parse_name(request()->controller());
         if ('/' == substr($php_self, -1)) {
             $php_self .= 'index.php';
+        } else {
+            $php_self .= '.php';
         }
         define('PHP_SELF', $php_self);
 
@@ -58,14 +53,13 @@ class Init extends Controller
         }
 
         /* 创建 SHOP 对象 */
-        $ecs = new Shop($db_name, $prefix);
+        $ecs = new Shop(config('database.database'), config('database.db_prefix'));
         define('DATA_DIR', $ecs->data_dir());
         define('IMAGE_DIR', $ecs->image_dir());
 
         /* 初始化数据库类 */
-        $db = new cls_mysql($db_host, $db_user, $db_pass, $db_name);
+        $db = new Mysql(config('database.database'), config('database.database'), config('database.database'), config('database.database'));
         $db->set_disable_cache_tables(array($ecs->table('sessions'), $ecs->table('sessions_data'), $ecs->table('cart')));
-        $db_host = $db_user = $db_pass = $db_name = null;
 
         /* 创建错误处理对象 */
         $err = new ecs_error('message.dwt');

@@ -7,7 +7,7 @@ $rules = [
         '\'application\'' => '\'app\''
     ],
     'Loader.php' => [
-        '\'think\'' => '\'artisan\''
+        '\'think\')' => '\'artisan\')'
     ],
 ];
 
