@@ -2,7 +2,7 @@
 
 namespace app\console\controller;
 
-class leancloud_client
+class LeancloudClient
 {
     const VERSION = '0.2.5';
 
