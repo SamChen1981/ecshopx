@@ -9,8 +9,6 @@ class Region extends Init
 {
     public function index()
     {
-
-
         header('Content-type: text/html; charset=' . EC_CHARSET);
 
         $type = !empty($_REQUEST['type']) ? intval($_REQUEST['type']) : 0;

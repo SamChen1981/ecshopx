@@ -9,11 +9,9 @@ class Index extends Init
 {
     public function index()
     {
-
-
         require_once(ROOT_PATH . '/includes/lib_order.php');
         /*------------------------------------------------------ */
-//-- 框架
+        //-- 框架
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == '') {
             $smarty->assign('shop_url', urlencode($ecs->url()));
@@ -21,7 +19,7 @@ class Index extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 顶部框架的内容
+        //-- 顶部框架的内容
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'top') {
             // 获得管理员设置的菜单
@@ -67,7 +65,7 @@ class Index extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 计算器
+        //-- 计算器
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'calculator') {
@@ -75,7 +73,7 @@ class Index extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 左边的框架
+        //-- 左边的框架
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'menu') {
             include_once('includes/inc_menu.php');
@@ -158,7 +156,7 @@ class Index extends Init
 
 
         /*------------------------------------------------------ */
-//-- 清除缓存
+        //-- 清除缓存
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'clear_cache') {
@@ -169,7 +167,7 @@ class Index extends Init
 
 
         /*------------------------------------------------------ */
-//-- 主窗口，起始页
+        //-- 主窗口，起始页
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'main') {
             //开店向导第一步
@@ -534,7 +532,7 @@ class Index extends Init
 
 
         /*------------------------------------------------------ */
-//-- 开店向导第一步
+        //-- 开店向导第一步
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'first') {
@@ -612,7 +610,7 @@ class Index extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 开店向导第二步
+        //-- 开店向导第二步
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'second') {
@@ -778,7 +776,7 @@ class Index extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 开店向导第三步
+        //-- 开店向导第三步
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'third') {
@@ -965,7 +963,7 @@ class Index extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 关于 ECSHOP
+        //-- 关于 ECSHOP
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'about_us') {
@@ -974,7 +972,7 @@ class Index extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 拖动的帧
+        //-- 拖动的帧
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'drag') {
@@ -982,7 +980,7 @@ class Index extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 检查订单
+        //-- 检查订单
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'check_order') {
             if (empty($_SESSION['last_check'])) {
@@ -1011,7 +1009,7 @@ class Index extends Init
         }
 
         /*------------------------------------------------------ */
-//-- Totolist操作
+        //-- Totolist操作
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'save_todolist') {
             $content = json_str_iconv($_POST["content"]);
@@ -1095,7 +1093,7 @@ class Index extends Init
         }
 
         /*------------------------------------------------------ */
-//-- license操作
+        //-- license操作
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'license') {
             $is_ajax = $_GET['is_ajax'];
@@ -1153,7 +1151,7 @@ class Index extends Init
      * license check
      * @return  bool
      */
-    function license_check()
+    public function license_check()
     {
         // return 返回数组
         $return_array = array();
@@ -1173,7 +1171,7 @@ class Index extends Init
         return $return_array;
     }
 
-    function get_appserver_verison()
+    public function get_appserver_verison()
     {
         /*$path_arr = explode('/',ROOT_PATH);
         $count = count($path_arr)-2;
@@ -1187,7 +1185,7 @@ class Index extends Init
         return false;
     }
 
-    function get_h5_version()
+    public function get_h5_version()
     {
         /*$path_arr = explode('/',ROOT_PATH);
         $count = count($path_arr)-1;

@@ -13,10 +13,10 @@ class ExchangeGoods extends Init
 
         /*初始化数据交换对象 */
         $exc = new exchange($ecs->table("exchange_goods"), $db, 'goods_id', 'exchange_integral');
-//$image = new cls_image();
+        //$image = new cls_image();
 
         /*------------------------------------------------------ */
-//-- 商品列表
+        //-- 商品列表
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
             /* 权限判断 */
@@ -44,7 +44,7 @@ class ExchangeGoods extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 翻页，排序
+        //-- 翻页，排序
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'query') {
             check_authz_json('exchange_goods');
@@ -67,7 +67,7 @@ class ExchangeGoods extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 添加商品
+        //-- 添加商品
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'add') {
             /* 权限判断 */
@@ -89,7 +89,7 @@ class ExchangeGoods extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 添加商品
+        //-- 添加商品
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'insert') {
             /* 权限判断 */
@@ -125,7 +125,7 @@ class ExchangeGoods extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑
+        //-- 编辑
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'edit') {
             /* 权限判断 */
@@ -149,7 +149,7 @@ class ExchangeGoods extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑
+        //-- 编辑
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'update') {
             /* 权限判断 */
@@ -173,7 +173,7 @@ class ExchangeGoods extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑使用积分值
+        //-- 编辑使用积分值
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit_exchange_integral') {
             check_authz_json('exchange_goods');
@@ -196,7 +196,7 @@ class ExchangeGoods extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 切换是否兑换
+        //-- 切换是否兑换
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'toggle_exchange') {
             check_authz_json('exchange_goods');
@@ -211,7 +211,7 @@ class ExchangeGoods extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 切换是否兑换
+        //-- 切换是否兑换
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'toggle_hot') {
             check_authz_json('exchange_goods');
@@ -226,7 +226,7 @@ class ExchangeGoods extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 批量删除商品
+        //-- 批量删除商品
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'batch_remove') {
             admin_priv('exchange_goods');
@@ -248,7 +248,7 @@ class ExchangeGoods extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 删除商品
+        //-- 删除商品
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'remove') {
             check_authz_json('exchange_goods');
@@ -266,7 +266,7 @@ class ExchangeGoods extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 搜索商品
+        //-- 搜索商品
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'search_goods') {
@@ -279,7 +279,7 @@ class ExchangeGoods extends Init
     }
 
     /* 获得商品列表 */
-    function get_exchange_goodslist()
+    public function get_exchange_goodslist()
     {
         $result = get_filter();
         if ($result === false) {

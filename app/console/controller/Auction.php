@@ -9,14 +9,12 @@ class Auction extends Init
 {
     public function index()
     {
-
-
         require(ROOT_PATH . 'includes/lib_goods.php');
 
         $exc = new exchange($ecs->table('goods_activity'), $db, 'act_id', 'act_name');
 
         /*------------------------------------------------------ */
-//-- 活动列表页
+        //-- 活动列表页
         /*------------------------------------------------------ */
 
         if ($_REQUEST['act'] == 'list') {
@@ -44,7 +42,7 @@ class Auction extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 分页、排序、查询
+        //-- 分页、排序、查询
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'query') {
@@ -66,7 +64,7 @@ class Auction extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 删除
+        //-- 删除
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'remove') {
             check_authz_json('auction');
@@ -95,7 +93,7 @@ class Auction extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 批量操作
+        //-- 批量操作
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'batch') {
             /* 取得要操作的记录编号 */
@@ -132,7 +130,7 @@ class Auction extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 查看出价记录
+        //-- 查看出价记录
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'view_log') {
@@ -161,7 +159,7 @@ class Auction extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 添加、编辑
+        //-- 添加、编辑
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'add' || $_REQUEST['act'] == 'edit') {
@@ -220,7 +218,7 @@ class Auction extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 添加、编辑后提交
+        //-- 添加、编辑后提交
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update') {
@@ -297,7 +295,7 @@ class Auction extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 处理冻结资金
+        //-- 处理冻结资金
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'settle_money') {
@@ -355,7 +353,7 @@ class Auction extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 搜索商品
+        //-- 搜索商品
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'search_goods') {
@@ -373,7 +371,7 @@ class Auction extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 搜索货品
+        //-- 搜索货品
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'search_products') {
@@ -391,7 +389,7 @@ class Auction extends Init
      * 取得拍卖活动列表
      * @return   array
      */
-    function auction_list()
+    public function auction_list()
     {
         $result = get_filter();
         if ($result === false) {
@@ -456,7 +454,7 @@ class Auction extends Init
      * @param string $text 文字
      * @return  array('href' => $href, 'text' => $text)
      */
-    function list_link($is_add = true, $text = '')
+    public function list_link($is_add = true, $text = '')
     {
         $href = 'auction.php?act=list';
         if (!$is_add) {

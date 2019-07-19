@@ -18,7 +18,7 @@ class TagManage extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 获取标签数据列表
+        //-- 获取标签数据列表
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
             /* 权限判断 */
@@ -44,7 +44,7 @@ class TagManage extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 添加 ,编辑
+        //-- 添加 ,编辑
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'add' || $_REQUEST['act'] == 'edit') {
@@ -75,7 +75,7 @@ class TagManage extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 更新
+        //-- 更新
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update') {
@@ -122,7 +122,7 @@ class TagManage extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 翻页，排序
+        //-- 翻页，排序
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'query') {
@@ -145,7 +145,7 @@ class TagManage extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 搜索
+        //-- 搜索
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'search_goods') {
@@ -165,7 +165,7 @@ class TagManage extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 批量删除标签
+        //-- 批量删除标签
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'batch_drop') {
             admin_priv('tag_manage');
@@ -191,7 +191,7 @@ class TagManage extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 删除标签
+        //-- 删除标签
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'remove') {
@@ -218,7 +218,7 @@ class TagManage extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑标签名称
+        //-- 编辑标签名称
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == "edit_tag_name") {
@@ -243,7 +243,7 @@ class TagManage extends Init
      * @param $id  标签id
      * @return bool
      */
-    function tag_is_only($name, $tag_id, $goods_id = '')
+    public function tag_is_only($name, $tag_id, $goods_id = '')
     {
         if (empty($goods_id)) {
             $db = $GLOBALS['db'];
@@ -269,7 +269,7 @@ class TagManage extends Init
      * @param  $id
      * @return void
      */
-    function edit_tag($name, $id, $goods_id = '')
+    public function edit_tag($name, $id, $goods_id = '')
     {
         $db = $GLOBALS['db'];
         $sql = 'UPDATE ' . $GLOBALS['ecs']->table('tag') . " SET tag_words = '$name'";
@@ -287,7 +287,7 @@ class TagManage extends Init
      * @access  public
      * @return  array
      */
-    function get_tag_list()
+    public function get_tag_list()
     {
         $filter['sort_by'] = empty($_REQUEST['sort_by']) ? 't.tag_id' : trim($_REQUEST['sort_by']);
         $filter['sort_order'] = empty($_REQUEST['sort_order']) ? 'DESC' : trim($_REQUEST['sort_order']);
@@ -317,7 +317,7 @@ class TagManage extends Init
      * return array
      */
 
-    function get_tag_info($tag_id)
+    public function get_tag_info($tag_id)
     {
         $sql = 'SELECT t.tag_id, t.tag_words, t.goods_id, g.goods_name FROM ' . $GLOBALS['ecs']->table('tag') . ' AS t' .
             ' LEFT JOIN ' . $GLOBALS['ecs']->table('goods') . ' AS g ON t.goods_id=g.goods_id' .

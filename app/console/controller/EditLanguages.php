@@ -21,7 +21,7 @@ class EditLanguages extends Init
         admin_priv('lang_edit');
 
         /*------------------------------------------------------ */
-//-- 列表编辑 ?act=list
+        //-- 列表编辑 ?act=list
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
             //从languages目录下获取语言项文件
@@ -75,7 +75,7 @@ class EditLanguages extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑语言项
+        //-- 编辑语言项
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit') {
             /* 语言项的路径 */
@@ -128,7 +128,7 @@ class EditLanguages extends Init
      * @param string $keyword 搜索时指定的关键字
      * @return  array       正确返回语言项列表，错误返回false
      */
-    function get_language_item_list($file_path, $keyword)
+    public function get_language_item_list($file_path, $keyword)
     {
         if (empty($keyword)) {
             return array();
@@ -168,7 +168,7 @@ class EditLanguages extends Init
      * @param array $dst_items 替换后的语言项
      * @return  void        成功就把结果写入文件，失败返回false
      */
-    function set_language_items($file_path, $src_items, $dst_items)
+    public function set_language_items($file_path, $src_items, $dst_items)
     {
         /* 检查文件是否可写（修改） */
         if (file_mode_info($file_path) < 2) {

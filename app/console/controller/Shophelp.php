@@ -9,7 +9,6 @@ class Shophelp extends Init
 {
     public function index()
     {
-
         require_once(ROOT_PATH . "includes/fckeditor/fckeditor.php");
 
         /*初始化数据交换对象 */
@@ -17,7 +16,7 @@ class Shophelp extends Init
         $exc_cat = new exchange($ecs->table("article_cat"), $db, 'cat_id', 'cat_name');
 
         /*------------------------------------------------------ */
-//-- 列出所有文章分类
+        //-- 列出所有文章分类
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list_cat') {
             $smarty->assign('action_link', array('text' => $_LANG['article_add'], 'href' => 'shophelp.php?act=add'));
@@ -30,7 +29,7 @@ class Shophelp extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 分类下的文章
+        //-- 分类下的文章
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list_article') {
             $_REQUEST['cat_id'] = intval($_REQUEST['cat_id']);
@@ -45,7 +44,7 @@ class Shophelp extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 查询分类下的文章
+        //-- 查询分类下的文章
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'query_art') {
             $cat_id = intval($_GET['cat']);
@@ -55,7 +54,7 @@ class Shophelp extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 查询
+        //-- 查询
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'query') {
             $smarty->assign('list', get_shophelp_list());
@@ -64,7 +63,7 @@ class Shophelp extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 添加文章
+        //-- 添加文章
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'add') {
             /* 权限判断 */
@@ -115,7 +114,7 @@ class Shophelp extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑文章
+        //-- 编辑文章
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'edit') {
             /* 权限判断 */
@@ -162,7 +161,7 @@ class Shophelp extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑分类的名称
+        //-- 编辑分类的名称
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit_catname') {
             check_authz_json('shophelp_manage');
@@ -185,7 +184,7 @@ class Shophelp extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑分类的排序
+        //-- 编辑分类的排序
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit_cat_order') {
             check_authz_json('shophelp_manage');
@@ -205,7 +204,7 @@ class Shophelp extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 删除分类
+        //-- 删除分类
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'remove') {
             check_authz_json('shophelp_manage');
@@ -228,7 +227,7 @@ class Shophelp extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 删除分类下的某文章
+        //-- 删除分类下的某文章
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'remove_art') {
             check_authz_json('shophelp_manage');
@@ -252,7 +251,7 @@ class Shophelp extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 添加一个新分类
+        //-- 添加一个新分类
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'add_catname') {
             check_authz_json('shophelp_manage');
@@ -280,7 +279,7 @@ class Shophelp extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑文章标题
+        //-- 编辑文章标题
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit_title') {
             check_authz_json('shophelp_manage');
@@ -302,7 +301,7 @@ class Shophelp extends Init
     }
 
     /* 获得网店帮助文章分类 */
-    function get_shophelp_list()
+    public function get_shophelp_list()
     {
         $list = array();
         $sql = 'SELECT cat_id, cat_name, sort_order' .
@@ -320,7 +319,7 @@ class Shophelp extends Init
     }
 
     /* 获得网店帮助某分类下的文章 */
-    function shophelp_article_list($cat_id)
+    public function shophelp_article_list($cat_id)
     {
         $cat_id = intval($cat_id);
         $list = array();

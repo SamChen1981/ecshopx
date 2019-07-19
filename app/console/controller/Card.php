@@ -9,14 +9,12 @@ class Card extends Init
 {
     public function index()
     {
-
-
         $image = new cls_image($_CFG['bgcolor']);
 
         $exc = new exchange($ecs->table("card"), $db, 'card_id', 'card_name');
 
         /*------------------------------------------------------ */
-//-- 包装列表
+        //-- 包装列表
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
             assign_query_info();
@@ -35,7 +33,7 @@ class Card extends Init
         }
 
         /*------------------------------------------------------ */
-//-- ajax列表
+        //-- ajax列表
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'query') {
             $cards_list = cards_list();
@@ -50,7 +48,7 @@ class Card extends Init
             make_json_result($smarty->fetch('card_list.htm'), '', array('filter' => $cards_list['filter'], 'page_count' => $cards_list['page_count']));
         }
         /*------------------------------------------------------ */
-//-- 删除贺卡
+        //-- 删除贺卡
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'remove') {
             /* 检查权限 */
@@ -77,7 +75,7 @@ class Card extends Init
             }
         }
         /*------------------------------------------------------ */
-//-- 添加新包装
+        //-- 添加新包装
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'add') {
             /* 权限判断 */
@@ -126,7 +124,7 @@ class Card extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑包装
+        //-- 编辑包装
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit') {
             /* 权限判断 */
@@ -191,7 +189,7 @@ class Card extends Init
             sys_msg($_LANG['drop_card_img_success'], 0, $link);
         }
         /*------------------------------------------------------ */
-//-- ajax编辑卡片名字
+        //-- ajax编辑卡片名字
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit_card_name') {
             check_authz_json('card_manage');
@@ -210,7 +208,7 @@ class Card extends Init
             }
         }
         /*------------------------------------------------------ */
-//-- ajax编辑卡片费用
+        //-- ajax编辑卡片费用
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit_card_fee') {
             check_authz_json('card_manage');
@@ -226,7 +224,7 @@ class Card extends Init
             }
         }
         /*------------------------------------------------------ */
-//-- ajax编辑免费额度
+        //-- ajax编辑免费额度
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit_free_money') {
             check_authz_json('card_manage');
@@ -243,7 +241,7 @@ class Card extends Init
         }
     }
 
-    function cards_list()
+    public function cards_list()
     {
         $result = get_filter();
         if ($result === false) {

@@ -9,12 +9,10 @@ class Package extends Init
 {
     public function index()
     {
-
-
         $exc = new exchange($ecs->table("goods_activity"), $db, 'act_id', 'act_name');
 
         /*------------------------------------------------------ */
-//-- 添加活动
+        //-- 添加活动
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'add') {
             /* 权限判断 */
@@ -83,7 +81,7 @@ class Package extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑活动
+        //-- 编辑活动
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit') {
             /* 权限判断 */
@@ -137,7 +135,7 @@ class Package extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 删除指定的活动
+        //-- 删除指定的活动
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'remove') {
@@ -158,7 +156,7 @@ class Package extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 活动列表
+        //-- 活动列表
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'list') {
             $smarty->assign('ur_here', $_LANG['14_package_list']);
@@ -180,7 +178,7 @@ class Package extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 查询、翻页、排序
+        //-- 查询、翻页、排序
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'query') {
@@ -202,7 +200,7 @@ class Package extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑活动名称
+        //-- 编辑活动名称
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'edit_package_name') {
@@ -224,7 +222,7 @@ class Package extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 搜索商品
+        //-- 搜索商品
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'search_goods') {
@@ -245,11 +243,11 @@ class Package extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 搜索商品，仅返回名称及ID
+        //-- 搜索商品，仅返回名称及ID
         /*------------------------------------------------------ */
 
-//elseif ($_REQUEST['act'] == 'get_goods_list')
-//{
+        //elseif ($_REQUEST['act'] == 'get_goods_list')
+        //{
 //    //    //
 //    $filters = json_decode($_GET['JSON']);
 //
@@ -266,10 +264,10 @@ class Package extends Init
 //    }
 //
 //    make_json_result($opt);
-//}
+        //}
 
         /*------------------------------------------------------ */
-//-- 增加一个商品
+        //-- 增加一个商品
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'add_package_goods') {
@@ -305,7 +303,7 @@ class Package extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 删除一个商品
+        //-- 删除一个商品
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'drop_package_goods') {
@@ -366,7 +364,7 @@ class Package extends Init
      *
      * @return void
      */
-    function get_packagelist()
+    public function get_packagelist()
     {
         $result = get_filter();
         if ($result === false) {
@@ -423,7 +421,7 @@ class Package extends Init
      * @param int $package_id
      * @return  void
      */
-    function handle_packagep_goods($package_id)
+    public function handle_packagep_goods($package_id)
     {
         $sql = "UPDATE " . $GLOBALS['ecs']->table('package_goods') . " SET " .
             " package_id = '$package_id' " .

@@ -9,8 +9,6 @@ class CheckFilePriv extends Init
 {
     public function index()
     {
-
-
         if ($_REQUEST['act'] == 'check') {
             /* 检查权限 */
             admin_priv('file_priv');
@@ -133,7 +131,7 @@ class CheckFilePriv extends Init
      *
      * @return int       $mark          文件权限掩码
      */
-    function check_file_in_array($arr, &$err_msg)
+    public function check_file_in_array($arr, &$err_msg)
     {
         $read = true;
         $writen = true;

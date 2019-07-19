@@ -9,14 +9,12 @@ class Brand extends Init
 {
     public function index()
     {
-
-
         $image = new cls_image($_CFG['bgcolor']);
 
         $exc = new exchange($ecs->table("brand"), $db, 'brand_id', 'brand_name');
 
         /*------------------------------------------------------ */
-//-- 品牌列表
+        //-- 品牌列表
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
             $smarty->assign('ur_here', $_LANG['06_goods_brand_list']);
@@ -35,7 +33,7 @@ class Brand extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 添加品牌
+        //-- 添加品牌
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'add') {
             /* 权限判断 */
@@ -92,7 +90,7 @@ class Brand extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑品牌
+        //-- 编辑品牌
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit') {
             /* 权限判断 */
@@ -152,7 +150,7 @@ class Brand extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑品牌名称
+        //-- 编辑品牌名称
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit_brand_name') {
             check_authz_json('brand_manage');
@@ -189,7 +187,7 @@ class Brand extends Init
             }
         }
         /*------------------------------------------------------ */
-//-- 编辑排序序号
+        //-- 编辑排序序号
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit_sort_order') {
             check_authz_json('brand_manage');
@@ -208,7 +206,7 @@ class Brand extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 切换是否显示
+        //-- 切换是否显示
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'toggle_show') {
             check_authz_json('brand_manage');
@@ -222,7 +220,7 @@ class Brand extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 删除品牌
+        //-- 删除品牌
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'remove') {
             check_authz_json('brand_manage');
@@ -249,7 +247,7 @@ class Brand extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 删除品牌图片
+        //-- 删除品牌图片
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'drop_logo') {
             /* 权限判断 */
@@ -270,7 +268,7 @@ class Brand extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 排序、分页、查询
+        //-- 排序、分页、查询
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'query') {
             $brand_list = get_brandlist();
@@ -293,7 +291,7 @@ class Brand extends Init
      * @access  public
      * @return  array
      */
-    function get_brandlist()
+    public function get_brandlist()
     {
         $result = get_filter();
         if ($result === false) {

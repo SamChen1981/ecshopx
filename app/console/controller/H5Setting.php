@@ -9,13 +9,11 @@ class H5Setting extends Init
 {
     public function index()
     {
-
-
         $uri = $ecs->url();
         $allow_suffix = array('gif', 'jpg', 'png', 'jpeg', 'bmp');
 
         /*------------------------------------------------------ */
-//-- 移动端应用配置
+        //-- 移动端应用配置
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
             /* 检查权限 */
@@ -356,7 +354,7 @@ class H5Setting extends Init
         }
     }
 
-    function get_flash_xml()
+    public function get_flash_xml()
     {
         $flashdb = array();
         if (file_exists(ROOT_PATH . DATA_DIR . '/flash_data.xml')) {
@@ -376,7 +374,7 @@ class H5Setting extends Init
         return $flashdb;
     }
 
-    function put_flash_xml($flashdb)
+    public function put_flash_xml($flashdb)
     {
         if (!empty($flashdb)) {
             $xml = '<?xml version="1.0" encoding="' . EC_CHARSET . '"?><bcaster>';
@@ -390,7 +388,7 @@ class H5Setting extends Init
         }
     }
 
-    function get_url_image($url)
+    public function get_url_image($url)
     {
         $url_arr = explode('.', $url);
         $ext = strtolower(end($url_arr));
@@ -417,7 +415,7 @@ class H5Setting extends Init
         return $tmp_file;
     }
 
-    function get_width_height()
+    public function get_width_height()
     {
         $curr_template = $GLOBALS['_CFG']['template'];
         $path = ROOT_PATH . 'themes/' . $curr_template . '/library/';
@@ -444,7 +442,7 @@ class H5Setting extends Init
         return $width_height;
     }
 
-    function get_flash_templates($dir)
+    public function get_flash_templates($dir)
     {
         $flashtpls = array();
         $template_dir = @opendir($dir);
@@ -457,7 +455,7 @@ class H5Setting extends Init
         return $flashtpls;
     }
 
-    function get_flash_tpl_info($dir, $file)
+    public function get_flash_tpl_info($dir, $file)
     {
         $info = array();
         if (is_file($dir . $file . '/preview.jpg')) {
@@ -472,7 +470,7 @@ class H5Setting extends Init
         return $info;
     }
 
-    function set_flash_data($tplname, &$msg)
+    public function set_flash_data($tplname, &$msg)
     {
         $flashdata = get_flash_xml();
         if (empty($flashdata)) {
@@ -510,7 +508,7 @@ class H5Setting extends Init
         return $msg !== true;
     }
 
-    function set_flash_uproll($tplname, $flashdata)
+    public function set_flash_uproll($tplname, $flashdata)
     {
         $data_file = ROOT_PATH . DATA_DIR . '/flashdata/' . $tplname . '/data.xml';
         $xmldata = '<?xml version="1.0" encoding="' . EC_CHARSET . '"?><myMenu>';
@@ -522,7 +520,7 @@ class H5Setting extends Init
         return true;
     }
 
-    function set_flash_focus($tplname, $flashdata)
+    public function set_flash_focus($tplname, $flashdata)
     {
         $data_file = ROOT_PATH . DATA_DIR . '/flashdata/' . $tplname . '/data.js';
         $jsdata = '';
@@ -545,7 +543,7 @@ class H5Setting extends Init
         return true;
     }
 
-    function set_flash_default($tplname, $flashdata)
+    public function set_flash_default($tplname, $flashdata)
     {
         $data_file = ROOT_PATH . DATA_DIR . '/flashdata/' . $tplname . '/data.xml';
         $xmldata = '<?xml version="1.0" encoding="' . EC_CHARSET . '"?><bcaster>';
@@ -565,7 +563,7 @@ class H5Setting extends Init
      *
      * @return void
      */
-    function ad_list()
+    public function ad_list()
     {
         $result = get_filter();
         if ($result === false) {
@@ -613,7 +611,7 @@ class H5Setting extends Init
      * @access  private
      * @return  Bool
      */
-    function modfiy_ad_status($ad_id, $ad_status = 0)
+    public function modfiy_ad_status($ad_id, $ad_status = 0)
     {
         $return = false;
 
@@ -666,7 +664,7 @@ class H5Setting extends Init
         return $return = true;
     }
 
-    function get_items($code)
+    public function get_items($code)
     {
         $params = get_params();
         foreach ($params as $value) {
@@ -678,7 +676,7 @@ class H5Setting extends Init
         }
     }
 
-    function get_params()
+    public function get_params()
     {
         $grouplist = array(
             0 => array(

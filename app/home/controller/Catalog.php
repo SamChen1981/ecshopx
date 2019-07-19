@@ -42,7 +42,7 @@ class Catalog extends Init
      *
      * @return void
      */
-    function calculate_goods_num($cat_list, $cat_id)
+    public function calculate_goods_num($cat_list, $cat_id)
     {
         $goods_num = 0;
 

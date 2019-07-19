@@ -9,8 +9,6 @@ class Comment extends Init
 {
     public function index()
     {
-
-
         if (!isset($_REQUEST['cmt']) && !isset($_REQUEST['act'])) {
             /* 只有在没有提交评论内容以及没有act的情况下才跳转 */
             ecs_header("Location: ./\n");
@@ -214,7 +212,7 @@ class Comment extends Init
         echo json_encode($result);
     }
     /*------------------------------------------------------ */
-//-- PRIVATE FUNCTION
+    //-- PRIVATE FUNCTION
     /*------------------------------------------------------ */
 
     /**
@@ -224,7 +222,7 @@ class Comment extends Init
      * @param object $cmt
      * @return  void
      */
-    function add_comment($cmt)
+    public function add_comment($cmt)
     {
         /* 评论是否需要审核 */
         $status = 1 - $GLOBALS['_CFG']['comment_check'];

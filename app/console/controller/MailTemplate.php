@@ -9,12 +9,10 @@ class MailTemplate extends Init
 {
     public function index()
     {
-
-
         admin_priv('mail_template');
 
         /*------------------------------------------------------ */
-//-- 模版列表
+        //-- 模版列表
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
             include_once(ROOT_PATH . 'includes/fckeditor/fckeditor.php'); // 包含 html editor 类文件
@@ -68,7 +66,7 @@ class MailTemplate extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 载入指定模版
+        //-- 载入指定模版
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'loat_template') {
             include_once(ROOT_PATH . 'includes/fckeditor/fckeditor.php'); // 包含 html editor 类文件
@@ -124,7 +122,7 @@ class MailTemplate extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 保存模板内容
+        //-- 保存模板内容
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'save_template') {
@@ -167,7 +165,7 @@ class MailTemplate extends Init
      * @param string $temp 邮件模板的ID
      * @return  array
      */
-    function load_template($temp_id)
+    public function load_template($temp_id)
     {
         $sql = "SELECT template_subject, template_content, is_html " .
             "FROM " . $GLOBALS['ecs']->table('mail_templates') . " WHERE template_id='$temp_id'";

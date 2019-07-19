@@ -9,8 +9,6 @@ class Cloud extends Init
 {
     public function index()
     {
-
-
         require(ROOT_PATH . 'includes/shopex_json.php');
 
         $data['api_ver'] = '1.0';

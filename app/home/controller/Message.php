@@ -9,8 +9,6 @@ class Message extends Init
 {
     public function index()
     {
-
-
         if (empty($_CFG['message_board'])) {
             show_message($_LANG['message_board_close']);
         }
@@ -113,7 +111,7 @@ class Message extends Init
      *
      * @return  array
      */
-    function get_msg_list($num, $start)
+    public function get_msg_list($num, $start)
     {
         /* 获取留言数据 */
         $msg = array();

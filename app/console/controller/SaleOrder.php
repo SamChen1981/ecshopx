@@ -9,8 +9,6 @@ class SaleOrder extends Init
 {
     public function index()
     {
-
-
         require_once(ROOT_PATH . 'includes/lib_order.php');
         require_once(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/admin/statistic.php');
         $smarty->assign('lang', $_LANG);
@@ -88,7 +86,6 @@ class SaleOrder extends Init
             assign_query_info();
             $smarty->display('sale_order.htm');
         }
-
     }
 
     /**
@@ -96,7 +93,7 @@ class SaleOrder extends Init
      * @param bool $is_pagination 是否分页
      * @return  array   销售排行数据
      */
-    function get_sales_order($is_pagination = true)
+    public function get_sales_order($is_pagination = true)
     {
         $filter['start_date'] = empty($_REQUEST['start_date']) ? '' : local_strtotime($_REQUEST['start_date']);
         $filter['end_date'] = empty($_REQUEST['end_date']) ? '' : local_strtotime($_REQUEST['end_date']);

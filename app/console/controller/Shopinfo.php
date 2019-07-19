@@ -9,13 +9,12 @@ class Shopinfo extends Init
 {
     public function index()
     {
-
         require_once(ROOT_PATH . "includes/fckeditor/fckeditor.php");
 
         $exc = new exchange($ecs->table("article"), $db, 'article_id', 'title');
 
         /*------------------------------------------------------ */
-//-- 文章列表
+        //-- 文章列表
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
             $smarty->assign('ur_here', $_LANG['shop_info']);
@@ -28,7 +27,7 @@ class Shopinfo extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 查询
+        //-- 查询
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'query') {
             $smarty->assign('list', shopinfo_article_list());
@@ -37,7 +36,7 @@ class Shopinfo extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 添加新文章
+        //-- 添加新文章
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'add') {
             /* 权限判断 */
@@ -88,7 +87,7 @@ class Shopinfo extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 文章编辑
+        //-- 文章编辑
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'edit') {
             /* 权限判断 */
@@ -137,7 +136,7 @@ class Shopinfo extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑文章主题
+        //-- 编辑文章主题
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit_title') {
             check_authz_json('shopinfo_manage');
@@ -158,7 +157,7 @@ class Shopinfo extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 删除文章
+        //-- 删除文章
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'remove') {
             check_authz_json('shopinfo_manage');
@@ -180,7 +179,7 @@ class Shopinfo extends Init
     }
 
     /* 获取网店信息文章数据 */
-    function shopinfo_article_list()
+    public function shopinfo_article_list()
     {
         $list = array();
         $sql = 'SELECT article_id, title ,add_time' .

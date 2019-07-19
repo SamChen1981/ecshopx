@@ -11,7 +11,6 @@ class Init extends Controller
 {
     protected function initialize()
     {
-
         require_once(str_replace('/admin/includes', '/includes', str_replace('\\', '/', dirname(__FILE__))) . '/safety.php');
 
         /* https 检测https */
@@ -121,7 +120,7 @@ class Init extends Controller
         /* 载入系统参数 */
         $_CFG = load_config();
 
-// TODO : 登录部分准备拿出去做，到时候把以下操作一起挪过去
+        // TODO : 登录部分准备拿出去做，到时候把以下操作一起挪过去
         if ($_REQUEST['act'] == 'captcha') {
             $img = new captcha('../data/captcha/', 104, 36);
             @ob_end_clean(); //清除之前出现的多余输入

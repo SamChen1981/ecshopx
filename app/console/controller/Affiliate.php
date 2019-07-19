@@ -9,13 +9,11 @@ class Affiliate extends Init
 {
     public function index()
     {
-
-
         admin_priv('affiliate');
         $config = get_affiliate();
 
         /*------------------------------------------------------ */
-//-- 分成管理页
+        //-- 分成管理页
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
             assign_query_info();
@@ -32,7 +30,7 @@ class Affiliate extends Init
             make_json_result($smarty->fetch('affiliate.htm'), '', null);
         }
         /*------------------------------------------------------ */
-//-- 增加下线分配方案
+        //-- 增加下线分配方案
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'add') {
             if (count($config['item']) < 5) {
@@ -67,7 +65,7 @@ class Affiliate extends Init
             exit;
         }
         /*------------------------------------------------------ */
-//-- 修改配置
+        //-- 修改配置
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'updata') {
             $separate_by = (intval($_POST['separate_by']) == 1) ? 1 : 0;
@@ -102,7 +100,7 @@ class Affiliate extends Init
             sys_msg($_LANG['edit_ok'], 0, $links);
         }
         /*------------------------------------------------------ */
-//-- 推荐开关
+        //-- 推荐开关
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'on') {
             $on = (intval($_POST['on']) == 1) ? 1 : 0;
@@ -113,7 +111,7 @@ class Affiliate extends Init
             sys_msg($_LANG['edit_ok'], 0, $links);
         }
         /*------------------------------------------------------ */
-//-- Ajax修改设置
+        //-- Ajax修改设置
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit_point') {
 
@@ -136,7 +134,7 @@ class Affiliate extends Init
             make_json_result(stripcslashes($val));
         }
         /*------------------------------------------------------ */
-//-- Ajax修改设置
+        //-- Ajax修改设置
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit_money') {
             $key = trim($_POST['id']) - 1;
@@ -157,7 +155,7 @@ class Affiliate extends Init
             make_json_result(stripcslashes($val));
         }
         /*------------------------------------------------------ */
-//-- 删除下线分成
+        //-- 删除下线分成
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'del') {
             $key = trim($_GET['id']) - 1;
@@ -175,7 +173,7 @@ class Affiliate extends Init
         }
     }
 
-    function get_affiliate()
+    public function get_affiliate()
     {
         $config = unserialize($GLOBALS['_CFG']['affiliate']);
         empty($config) && $config = array();
@@ -183,7 +181,7 @@ class Affiliate extends Init
         return $config;
     }
 
-    function put_affiliate($config)
+    public function put_affiliate($config)
     {
         $temp = serialize($config);
         $sql = "UPDATE " . $GLOBALS['ecs']->table('shop_config') .

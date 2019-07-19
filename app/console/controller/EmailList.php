@@ -9,7 +9,6 @@ class EmailList extends Init
 {
     public function index()
     {
-
         admin_priv('email_list');
 
         if ($_REQUEST['act'] == 'list') {
@@ -57,7 +56,7 @@ class EmailList extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 批量删除
+        //-- 批量删除
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'batch_remove') {
             if (!isset($_POST['checkboxes']) || !is_array($_POST['checkboxes'])) {
@@ -73,7 +72,7 @@ class EmailList extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 批量恢复
+        //-- 批量恢复
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'batch_unremove') {
             if (!isset($_POST['checkboxes']) || !is_array($_POST['checkboxes'])) {
@@ -89,7 +88,7 @@ class EmailList extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 批量退订
+        //-- 批量退订
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'batch_exit') {
             if (!isset($_POST['checkboxes']) || !is_array($_POST['checkboxes'])) {
@@ -105,7 +104,7 @@ class EmailList extends Init
         }
     }
 
-    function get_email_list()
+    public function get_email_list()
     {
         $result = get_filter();
         if ($result === false) {

@@ -9,8 +9,6 @@ class FlowStats extends Init
 {
     public function index()
     {
-
-
         require_once(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/admin/statistic.php');
         $smarty->assign('lang', $_LANG);
 

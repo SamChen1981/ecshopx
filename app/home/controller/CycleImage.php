@@ -9,7 +9,6 @@ class CycleImage extends Init
 {
     public function index()
     {
-
         header('Content-Type: application/xml; charset=' . EC_CHARSET);
         header('Cache-Control: no-cache, must-revalidate');
         header('Expires: Thu, 27 Mar 1975 07:38:00 GMT');

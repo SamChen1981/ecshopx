@@ -9,8 +9,6 @@ class Cron extends Init
 {
     public function index()
     {
-
-
         $_REQUEST['act'] = trim($_REQUEST['act']);
         admin_priv('cron');
         $exc = new exchange($ecs->table('crons'), $db, 'cron_code', 'cron_name');
@@ -294,7 +292,7 @@ class Cron extends Init
         }
     }
 
-    function get_next_time($cron)
+    public function get_next_time($cron)
     {
         $timestamp = gmtime();
         $y = local_date('Y', $timestamp);
@@ -323,7 +321,7 @@ class Cron extends Init
         return $next;
     }
 
-    function get_minute($cron_minute)
+    public function get_minute($cron_minute)
     {
         $cron_minute = explode(',', $cron_minute);
         $cron_minute = array_unique($cron_minute);
@@ -338,7 +336,7 @@ class Cron extends Init
         return trim(implode(',', $cron_minute));
     }
 
-    function get_dwh()
+    public function get_dwh()
     {
         $days = $week = $hours = array();
         for ($i = 1; $i <= 31; $i++) {

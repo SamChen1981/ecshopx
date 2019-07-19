@@ -9,8 +9,6 @@ class SaleGeneral extends Init
 {
     public function index()
     {
-
-
         require_once(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/admin/statistic.php');
         $smarty->assign('lang', $_LANG);
 
@@ -63,7 +61,7 @@ class SaleGeneral extends Init
         $data_list = $db->getAll($sql);
 
         /*------------------------------------------------------ */
-//-- 显示统计信息
+        //-- 显示统计信息
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
             /* 赋值查询时间段 */
@@ -108,7 +106,7 @@ class SaleGeneral extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 下载EXCEL报表
+        //-- 下载EXCEL报表
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'download') {
             /* 文件名 */

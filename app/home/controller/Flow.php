@@ -9,8 +9,6 @@ class Flow extends Init
 {
     public function index()
     {
-
-
         require(ROOT_PATH . 'includes/lib_order.php');
 
         /* 载入语言文件 */
@@ -18,7 +16,7 @@ class Flow extends Init
         require_once(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/shopping_flow.php');
 
         /*------------------------------------------------------ */
-//-- INPUT
+        //-- INPUT
         /*------------------------------------------------------ */
 
         if (!isset($_REQUEST['step'])) {
@@ -26,7 +24,7 @@ class Flow extends Init
         }
 
         /*------------------------------------------------------ */
-//-- PROCESSOR
+        //-- PROCESSOR
         /*------------------------------------------------------ */
 
         assign_template();
@@ -42,7 +40,7 @@ class Flow extends Init
         $smarty->assign('data_dir', DATA_DIR);       // 数据目录
 
         /*------------------------------------------------------ */
-//-- 添加商品到购物车
+        //-- 添加商品到购物车
         /*------------------------------------------------------ */
         if ($_REQUEST['step'] == 'add_to_cart') {
             add_log("add_to_cart begin=" . __LINE__ . "=POST:", $_POST);
@@ -1114,7 +1112,7 @@ class Flow extends Init
             exit;
         }
         /*------------------------------------------------------ */
-//-- 完成所有订单操作，提交到数据库
+        //-- 完成所有订单操作，提交到数据库
         /*------------------------------------------------------ */
         elseif ($_REQUEST['step'] == 'done') {
             add_log("pc create order begin==POST:", $_POST);
@@ -1575,7 +1573,7 @@ class Flow extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 更新购物车
+        //-- 更新购物车
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['step'] == 'update_cart') {
@@ -1588,7 +1586,7 @@ class Flow extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 删除购物车中的商品
+        //-- 删除购物车中的商品
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['step'] == 'drop_goods') {
@@ -1765,7 +1763,7 @@ class Flow extends Init
             die(json_encode($result));
         }
         /*------------------------------------------------------ */
-//-- 添加礼包到购物车
+        //-- 添加礼包到购物车
         /*------------------------------------------------------ */
         elseif ($_REQUEST['step'] == 'add_package_to_cart') {
             $_POST['package_info'] = json_str_iconv($_POST['package_info']);
@@ -1912,7 +1910,6 @@ class Flow extends Init
         assign_dynamic('shopping_flow');
 
         $smarty->display('flow.dwt');
-
     }
 
     /**
@@ -1921,7 +1918,7 @@ class Flow extends Init
      * @access  private
      * @return  integral
      */
-    function flow_available_points()
+    public function flow_available_points()
     {
         $where = "c.session_id = '" . SESS_ID . "'";
         if ($_SESSION['user_id']) {
@@ -1944,7 +1941,7 @@ class Flow extends Init
      * @param array $arr
      * @return  void
      */
-    function flow_update_cart($arr)
+    public function flow_update_cart($arr)
     {
         $where = "session_id = '" . SESS_ID . "'";
         if ($_SESSION['user_id']) {
@@ -2074,7 +2071,7 @@ class Flow extends Init
      *
      * @return  void
      */
-    function flow_cart_stock($arr)
+    public function flow_cart_stock($arr)
     {
         $where = "session_id = '" . SESS_ID . "'";
         if ($_SESSION['user_id']) {
@@ -2139,7 +2136,7 @@ class Flow extends Init
      * @param integer $id
      * @return  void
      */
-    function flow_drop_cart_goods($id)
+    public function flow_drop_cart_goods($id)
     {
         $where = "session_id = '" . SESS_ID . "'";
         if ($_SESSION['user_id']) {
@@ -2195,7 +2192,7 @@ class Flow extends Init
      * @access  public
      * @return  void
      */
-    function flow_clear_cart_alone()
+    public function flow_clear_cart_alone()
     {
         $where = "session_id = '" . SESS_ID . "'";
         if ($_SESSION['user_id']) {
@@ -2265,7 +2262,7 @@ class Flow extends Init
      * @param array $b 优惠活动b
      * @return  int     相等返回0，小于返回-1，大于返回1
      */
-    function cmp_favourable($a, $b)
+    public function cmp_favourable($a, $b)
     {
         if ($a['available'] == $b['available']) {
             if ($a['sort_order'] == $b['sort_order']) {
@@ -2283,7 +2280,7 @@ class Flow extends Init
      * @param int $user_rank 用户等级id，0表示非会员
      * @return  array
      */
-    function favourable_list($user_rank)
+    public function favourable_list($user_rank)
     {
         /* 购物车中已有的优惠活动及数量 */
         $used_list = cart_favourable();
@@ -2336,7 +2333,7 @@ class Flow extends Init
      * @param array $favourable 优惠活动信息
      * @return  bool
      */
-    function favourable_available($favourable)
+    public function favourable_available($favourable)
     {
         /* 会员等级是否符合 */
         $user_rank = $_SESSION['user_rank'];
@@ -2357,7 +2354,7 @@ class Flow extends Init
      * @param array $favourable 优惠活动
      * @return  string
      */
-    function act_range_desc($favourable)
+    public function act_range_desc($favourable)
     {
         if ($favourable['act_range'] == FAR_BRAND) {
             $sql = "SELECT brand_name FROM " . $GLOBALS['ecs']->table('brand') .
@@ -2380,7 +2377,7 @@ class Flow extends Init
      * 取得购物车中已有的优惠活动及数量
      * @return  array
      */
-    function cart_favourable()
+    public function cart_favourable()
     {
         $where = "session_id = '" . SESS_ID . "'";
         if ($_SESSION['user_id']) {
@@ -2406,7 +2403,7 @@ class Flow extends Init
      * @param array $favourable 优惠活动
      * @param array $cart_favourable购物车中已有的优惠活动及数量
      */
-    function favourable_used($favourable, $cart_favourable)
+    public function favourable_used($favourable, $cart_favourable)
     {
         if ($favourable['act_type'] == FAT_GOODS) {
             return isset($cart_favourable[$favourable['act_id']]) &&
@@ -2423,7 +2420,7 @@ class Flow extends Init
      * @param int $id 赠品id
      * @param float $price 赠品价格
      */
-    function add_gift_to_cart($act_id, $id, $price)
+    public function add_gift_to_cart($act_id, $id, $price)
     {
         $sql = "INSERT INTO " . $GLOBALS['ecs']->table('cart') . " (" .
             "user_id, session_id, goods_id, goods_sn, goods_name, market_price, goods_price, " .
@@ -2441,7 +2438,7 @@ class Flow extends Init
      * @param string $act_name 优惠活动name
      * @param float $amount 优惠金额
      */
-    function add_favourable_to_cart($act_id, $act_name, $amount)
+    public function add_favourable_to_cart($act_id, $act_name, $amount)
     {
         $sql = "INSERT INTO " . $GLOBALS['ecs']->table('cart') . "(" .
             "user_id, session_id, goods_id, goods_sn, goods_name, market_price, goods_price, " .
@@ -2456,7 +2453,7 @@ class Flow extends Init
      * @param array $favourable 优惠活动
      * @return  float
      */
-    function cart_favourable_amount($favourable)
+    public function cart_favourable_amount($favourable)
     {
         $where = "session_id = '" . SESS_ID . "'";
         if ($_SESSION['user_id']) {

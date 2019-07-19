@@ -9,14 +9,12 @@ class Pack extends Init
 {
     public function index()
     {
-
-
         $image = new cls_image($_CFG['bgcolor']);
 
         $exc = new exchange($ecs->table("pack"), $db, 'pack_id', 'pack_name');
 
         /*------------------------------------------------------ */
-//-- 包装列表
+        //-- 包装列表
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
             $smarty->assign('ur_here', $_LANG['06_pack_list']);
@@ -34,7 +32,7 @@ class Pack extends Init
             $smarty->display('pack_list.htm');
         }
         /*------------------------------------------------------ */
-//-- ajax 列表
+        //-- ajax 列表
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'query') {
             $packs_list = packs_list();
@@ -49,7 +47,7 @@ class Pack extends Init
             make_json_result($smarty->fetch('pack_list.htm'), '', array('filter' => $packs_list['filter'], 'page_count' => $packs_list['page_count']));
         }
         /*------------------------------------------------------ */
-//-- 添加新包装
+        //-- 添加新包装
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'add') {
             /* 权限判断 */
@@ -103,7 +101,7 @@ class Pack extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑包装
+        //-- 编辑包装
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'edit') {
             /* 权限判断 */
@@ -176,7 +174,7 @@ class Pack extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑包装名称
+        //-- 编辑包装名称
         /*------------------------------------------------------ */
 
         if ($_REQUEST['act'] == 'edit_name') {
@@ -199,7 +197,7 @@ class Pack extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑包装费用
+        //-- 编辑包装费用
         /*------------------------------------------------------ */
 
         if ($_REQUEST['act'] == 'edit_pack_fee') {
@@ -217,7 +215,7 @@ class Pack extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑免费额度
+        //-- 编辑免费额度
         /*------------------------------------------------------ */
 
         if ($_REQUEST['act'] == 'edit_free_money') {
@@ -235,7 +233,7 @@ class Pack extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 删除包装
+        //-- 删除包装
         /*------------------------------------------------------ */
 
         if ($_REQUEST['act'] == 'remove') {
@@ -263,7 +261,7 @@ class Pack extends Init
         }
     }
 
-    function packs_list()
+    public function packs_list()
     {
         $result = get_filter();
         if ($result === false) {

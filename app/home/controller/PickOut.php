@@ -9,8 +9,6 @@ class PickOut extends Init
 {
     public function index()
     {
-
-
         $condition = array();
         $picks = array();
         $cat_id = !empty($_GET['cat_id']) ? intval($_GET['cat_id']) : 0;
@@ -252,7 +250,7 @@ class PickOut extends Init
      *
      * @return string
      */
-    function search_url(&$attr_picks, $attr_id = 0)
+    public function search_url(&$attr_picks, $attr_id = 0)
     {
         $str = '';
         foreach ($attr_picks as $pick_id) {

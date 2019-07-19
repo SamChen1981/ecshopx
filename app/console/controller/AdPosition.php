@@ -9,8 +9,6 @@ class AdPosition extends Init
 {
     public function index()
     {
-
-
         require_once(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/admin/ads.php');
 
         /* act操作项的初始化 */
@@ -24,7 +22,7 @@ class AdPosition extends Init
         $exc = new exchange($ecs->table("ad_position"), $db, 'position_id', 'position_name');
 
         /*------------------------------------------------------ */
-//-- 广告位置列表
+        //-- 广告位置列表
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
             $smarty->assign('ur_here', $_LANG['ad_position']);
@@ -43,7 +41,7 @@ class AdPosition extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 添加广告位页面
+        //-- 添加广告位页面
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'add') {
             admin_priv('ad_manage');
@@ -94,7 +92,7 @@ class AdPosition extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 广告位编辑页面
+        //-- 广告位编辑页面
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit') {
             admin_priv('ad_manage');
@@ -150,7 +148,7 @@ class AdPosition extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 排序、分页、查询
+        //-- 排序、分页、查询
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'query') {
             $position_list = ad_position_list();
@@ -168,7 +166,7 @@ class AdPosition extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑广告位置名称
+        //-- 编辑广告位置名称
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit_position_name') {
             check_authz_json('ad_manage');
@@ -190,7 +188,7 @@ class AdPosition extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑广告位宽高
+        //-- 编辑广告位宽高
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit_ad_width') {
             check_authz_json('ad_manage');
@@ -218,7 +216,7 @@ class AdPosition extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑广告位宽高
+        //-- 编辑广告位宽高
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit_ad_height') {
             check_authz_json('ad_manage');
@@ -246,7 +244,7 @@ class AdPosition extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 删除广告位置
+        //-- 删除广告位置
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'remove') {
             check_authz_json('ad_manage');
@@ -271,7 +269,7 @@ class AdPosition extends Init
     }
 
     /* 获取广告位置列表 */
-    function ad_position_list()
+    public function ad_position_list()
     {
         $filter = array();
 

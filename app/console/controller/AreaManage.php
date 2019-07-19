@@ -9,8 +9,6 @@ class AreaManage extends Init
 {
     public function index()
     {
-
-
         $exc = new exchange($ecs->table('region'), $db, 'region_id', 'region_name');
 
         /* act操作项的初始化 */
@@ -21,7 +19,7 @@ class AreaManage extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 列出某地区下的所有地区列表
+        //-- 列出某地区下的所有地区列表
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
             admin_priv('area_manage');
@@ -72,7 +70,7 @@ class AreaManage extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 添加新的地区
+        //-- 添加新的地区
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'add_area') {
@@ -109,7 +107,7 @@ class AreaManage extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑区域名称
+        //-- 编辑区域名称
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'edit_area_name') {
@@ -139,7 +137,7 @@ class AreaManage extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 删除区域
+        //-- 删除区域
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'drop_area') {
             check_authz_json('area_manage');
@@ -183,10 +181,9 @@ class AreaManage extends Init
                 make_json_error($db->error());
             }
         }
-
     }
 
-    function new_region_id($region_id)
+    public function new_region_id($region_id)
     {
         $regions_id = array();
         if (empty($region_id)) {

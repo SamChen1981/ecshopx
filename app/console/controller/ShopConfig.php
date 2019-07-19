@@ -26,7 +26,7 @@ class ShopConfig extends Init
         $url = 'https://service.shopex.cn/sms/index.php?certificate_id=' . $certi_id . '&sess_id=' . $sess_id . '&auth=' . $auth . '&ac=' . $ac;
 
         /*------------------------------------------------------ */
-//-- 列表编辑 ?act=list_edit
+        //-- 列表编辑 ?act=list_edit
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list_edit') {
             /* 检查权限 */
@@ -90,7 +90,7 @@ class ShopConfig extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 邮件服务器设置
+        //-- 邮件服务器设置
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'mail_settings') {
             /* 检查权限 */
@@ -106,7 +106,7 @@ class ShopConfig extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 提交   ?act=post
+        //-- 提交   ?act=post
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'post') {
             $type = empty($_POST['type']) ? '' : $_POST['type'];
@@ -255,7 +255,7 @@ class ShopConfig extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 发送测试邮件
+        //-- 发送测试邮件
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'send_test_email') {
             /* 检查权限 */
@@ -281,7 +281,7 @@ class ShopConfig extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 删除上传文件
+        //-- 删除上传文件
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'del') {
             /* 检查权限 */
@@ -316,7 +316,7 @@ class ShopConfig extends Init
      *
      * @return  boolean
      */
-    function update_configure($key, $val = '')
+    public function update_configure($key, $val = '')
     {
         if (!empty($key)) {
             $sql = "UPDATE " . $GLOBALS['ecs']->table('shop_config') . " SET value='$val' WHERE code='$key'";
@@ -335,7 +335,7 @@ class ShopConfig extends Init
      *
      * @return  array
      */
-    function get_settings($groups = null, $excludes = null)
+    public function get_settings($groups = null, $excludes = null)
     {
         global $db, $ecs, $_LANG;
 

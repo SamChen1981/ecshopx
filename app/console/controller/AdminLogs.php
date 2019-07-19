@@ -19,7 +19,7 @@ class AdminLogs extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 获取所有日志列表
+        //-- 获取所有日志列表
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
             /* 权限的判断 */
@@ -55,7 +55,7 @@ class AdminLogs extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 排序、分页、查询
+        //-- 排序、分页、查询
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'query') {
             $log_list = get_admin_logs();
@@ -76,7 +76,7 @@ class AdminLogs extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 批量删除日志记录
+        //-- 批量删除日志记录
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'batch_drop') {
             admin_priv('logs_drop');
@@ -141,7 +141,7 @@ class AdminLogs extends Init
     }
 
     /* 获取管理员操作记录 */
-    function get_admin_logs()
+    public function get_admin_logs()
     {
         $user_id = !empty($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
         $admin_ip = !empty($_REQUEST['ip']) ? $_REQUEST['ip'] : '';

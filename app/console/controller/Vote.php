@@ -22,7 +22,7 @@ class Vote extends Init
         $exc_opn = new exchange($ecs->table("vote_option"), $db, 'option_id', 'option_name');
 
         /*------------------------------------------------------ */
-//-- 投票列表页面
+        //-- 投票列表页面
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
             /* 模板赋值 */
@@ -43,7 +43,7 @@ class Vote extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 排序、分页、查询
+        //-- 排序、分页、查询
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'query') {
             $vote_list = get_votelist();
@@ -61,7 +61,7 @@ class Vote extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 添加新的投票页面
+        //-- 添加新的投票页面
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'add') {
             /* 权限检查 */
@@ -122,7 +122,7 @@ class Vote extends Init
             }
         }
         /*------------------------------------------------------ */
-//-- 在线调查编辑页面
+        //-- 在线调查编辑页面
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit') {
             admin_priv('vote_priv');
@@ -165,7 +165,7 @@ class Vote extends Init
             sys_msg($_LANG['edit'] . ' ' . $_POST['vote_name'] . ' ' . $_LANG['attradd_succed'], 0, $link);
         }
         /*------------------------------------------------------ */
-//-- 调查选项列表页面
+        //-- 调查选项列表页面
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'option') {
             $id = !empty($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
@@ -184,7 +184,7 @@ class Vote extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 调查选项查询
+        //-- 调查选项查询
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'query_option') {
             $id = intval($_GET['vid']);
@@ -196,7 +196,7 @@ class Vote extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 添加新调查选项
+        //-- 添加新调查选项
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'new_option') {
             check_authz_json('vote_priv');
@@ -229,7 +229,7 @@ class Vote extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑调查主题
+        //-- 编辑调查主题
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit_vote_name') {
             check_authz_json('vote_priv');
@@ -249,7 +249,7 @@ class Vote extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑调查选项
+        //-- 编辑调查选项
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit_option_name') {
             check_authz_json('vote_priv');
@@ -274,7 +274,7 @@ class Vote extends Init
 
 
         /*------------------------------------------------------ */
-//-- 编辑调查选项排序值
+        //-- 编辑调查选项排序值
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit_option_order') {
             check_authz_json('vote_priv');
@@ -290,7 +290,7 @@ class Vote extends Init
 
 
         /*------------------------------------------------------ */
-//-- 删除在线调查主题
+        //-- 删除在线调查主题
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'remove') {
             check_authz_json('vote_priv');
@@ -311,7 +311,7 @@ class Vote extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 删除在线调查选项
+        //-- 删除在线调查选项
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'remove_option') {
             check_authz_json('vote_priv');
@@ -332,7 +332,7 @@ class Vote extends Init
     }
 
     /* 获取在线调查数据列表 */
-    function get_votelist()
+    public function get_votelist()
     {
         $filter = array();
 
@@ -357,7 +357,7 @@ class Vote extends Init
     }
 
     /* 获取调查选项列表 */
-    function get_optionlist($id)
+    public function get_optionlist($id)
     {
         $list = array();
         $sql = 'SELECT option_id, vote_id, option_name, option_count, option_order' .

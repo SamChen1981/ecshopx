@@ -9,12 +9,10 @@ class Agency extends Init
 {
     public function index()
     {
-
-
         $exc = new exchange($ecs->table('agency'), $db, 'agency_id', 'agency_name');
 
         /*------------------------------------------------------ */
-//-- 办事处列表
+        //-- 办事处列表
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
             $smarty->assign('ur_here', $_LANG['agency_list']);
@@ -36,7 +34,7 @@ class Agency extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 排序、分页、查询
+        //-- 排序、分页、查询
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'query') {
             $agency_list = get_agencylist();
@@ -57,7 +55,7 @@ class Agency extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 列表页编辑名称
+        //-- 列表页编辑名称
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit_agency_name') {
             check_authz_json('agency_manage');
@@ -80,7 +78,7 @@ class Agency extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 删除办事处
+        //-- 删除办事处
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'remove') {
             check_authz_json('agency_manage');
@@ -109,7 +107,7 @@ class Agency extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 批量操作
+        //-- 批量操作
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'batch') {
             /* 取得要操作的记录编号 */
@@ -146,7 +144,7 @@ class Agency extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 添加、编辑办事处
+        //-- 添加、编辑办事处
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'add' || $_REQUEST['act'] == 'edit') {
             /* 检查权限 */
@@ -214,7 +212,7 @@ class Agency extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 提交添加、编辑办事处
+        //-- 提交添加、编辑办事处
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update') {
             /* 检查权限 */
@@ -297,7 +295,7 @@ class Agency extends Init
      * 取得办事处列表
      * @return  array
      */
-    function get_agencylist()
+    public function get_agencylist()
     {
         $result = get_filter();
         if ($result === false) {

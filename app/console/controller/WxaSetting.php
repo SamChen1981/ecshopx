@@ -9,13 +9,11 @@ class WxaSetting extends Init
 {
     public function index()
     {
-
-
         $uri = $ecs->url();
         $allow_suffix = array('gif', 'jpg', 'png', 'jpeg', 'bmp');
 
         /*------------------------------------------------------ */
-//-- 移动端应用配置
+        //-- 移动端应用配置
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
             /* 检查权限 */
@@ -121,7 +119,7 @@ class WxaSetting extends Init
         }
     }
 
-    function get_items($code)
+    public function get_items($code)
     {
         $params = get_params();
         foreach ($params as $value) {
@@ -133,7 +131,7 @@ class WxaSetting extends Init
         }
     }
 
-    function get_params()
+    public function get_params()
     {
         $grouplist = array(
             0 => array(

@@ -9,11 +9,9 @@ class Suppliers extends Init
 {
     public function index()
     {
-
-
         define('SUPPLIERS_ACTION_LIST', 'delivery_view,back_view');
         /*------------------------------------------------------ */
-//-- 供货商列表
+        //-- 供货商列表
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
             /* 检查权限 */
@@ -40,7 +38,7 @@ class Suppliers extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 排序、分页、查询
+        //-- 排序、分页、查询
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'query') {
             check_authz_json('suppliers_manage');
@@ -64,7 +62,7 @@ class Suppliers extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 列表页编辑名称
+        //-- 列表页编辑名称
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit_suppliers_name') {
             check_authz_json('suppliers_manage');
@@ -98,7 +96,7 @@ class Suppliers extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 删除供货商
+        //-- 删除供货商
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'remove') {
             check_authz_json('suppliers_manage');
@@ -159,7 +157,7 @@ class Suppliers extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 修改供货商状态
+        //-- 修改供货商状态
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'is_check') {
             check_authz_json('suppliers_manage');
@@ -181,7 +179,7 @@ class Suppliers extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 批量操作
+        //-- 批量操作
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'batch') {
             /* 取得要操作的记录编号 */
@@ -252,7 +250,7 @@ class Suppliers extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 添加、编辑供货商
+        //-- 添加、编辑供货商
         /*------------------------------------------------------ */
         elseif (in_array($_REQUEST['act'], array('add', 'edit'))) {
             /* 检查权限 */
@@ -317,7 +315,7 @@ class Suppliers extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 提交添加、编辑供货商
+        //-- 提交添加、编辑供货商
         /*------------------------------------------------------ */
         elseif (in_array($_REQUEST['act'], array('insert', 'update'))) {
             /* 检查权限 */
@@ -417,7 +415,7 @@ class Suppliers extends Init
      *
      * @return void
      */
-    function suppliers_list()
+    public function suppliers_list()
     {
         $result = get_filter();
         if ($result === false) {

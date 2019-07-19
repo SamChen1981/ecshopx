@@ -9,13 +9,11 @@ class Leancloud extends Init
 {
     public function index()
     {
-
-
         require('leancloud_push.php');
         $platform = array(1 => 'iOS', 2 => 'Android', 3 => '全平台');
         $status = array(1 => '等待中', 2 => '已发送');//数据库0：等待中，1：已发送
         /*------------------------------------------------------ */
-//-- 移动端应用配置
+        //-- 移动端应用配置
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
             /* 检查权限 */
@@ -221,7 +219,7 @@ class Leancloud extends Init
         }
     }
 
-    function get_list($page, $db, $ecs)
+    public function get_list($page, $db, $ecs)
     {
         $sql = "SELECT COUNT(*) FROM " . $ecs->table('push');
         $count = $db->getONE($sql);
@@ -236,7 +234,7 @@ class Leancloud extends Init
         return $push_list ? $push_list : false;
     }
 
-    function getrow($id, $db, $ecs)
+    public function getrow($id, $db, $ecs)
     {
         $sql = "SELECT * FROM " . $ecs->table('push') . " WHERE id = $id";
         $push_list = $db->getAll($sql);
@@ -250,7 +248,7 @@ class Leancloud extends Init
         return $params;
     }
 
-    function get_linkcode($link)
+    public function get_linkcode($link)
     {
         $links = get_url();
         $link_temp = explode(':', $link);
@@ -270,7 +268,7 @@ class Leancloud extends Init
         return $params;
     }
 
-    function get_url()
+    public function get_url()
     {
         $url_list = array(
             'user-defined' => '自定义链接',

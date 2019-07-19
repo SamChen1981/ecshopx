@@ -17,7 +17,7 @@ class UserMsg extends Init
         $exc = new exchange($ecs->table("feedback"), $db, 'msg_id', 'msg_title');
 
         /*------------------------------------------------------ */
-//-- 发送留言
+        //-- 发送留言
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'add') {
             $user_id = empty($_GET['user_id']) ? 0 : intval($_GET['user_id']);
@@ -74,7 +74,7 @@ class UserMsg extends Init
             exit;
         }
         /*------------------------------------------------------ */
-//-- 更新留言的状态为显示或者禁止
+        //-- 更新留言的状态为显示或者禁止
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'check') {
             if ($_REQUEST['check'] == 'allow') {
@@ -100,7 +100,7 @@ class UserMsg extends Init
             }
         }
         /*------------------------------------------------------ */
-//-- 列出所有留言
+        //-- 列出所有留言
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list_all') {
             assign_query_info();
@@ -119,7 +119,7 @@ class UserMsg extends Init
         }
 
         /*------------------------------------------------------ */
-//-- ajax显示留言列表
+        //-- ajax显示留言列表
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'query') {
             $msg_list = msg_list();
@@ -135,7 +135,7 @@ class UserMsg extends Init
             make_json_result($smarty->fetch('msg_list.htm'), '', array('filter' => $msg_list['filter'], 'page_count' => $msg_list['page_count']));
         }
         /*------------------------------------------------------ */
-//-- ajax 删除留言
+        //-- ajax 删除留言
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'remove') {
             $msg_id = intval($_REQUEST['id']);
@@ -163,7 +163,7 @@ class UserMsg extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 批量操作删除、允许显示、禁止显示用户评论
+        //-- 批量操作删除、允许显示、禁止显示用户评论
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'batch') {
             admin_priv('feedback_priv');
@@ -203,7 +203,7 @@ class UserMsg extends Init
 
 
         /*------------------------------------------------------ */
-//-- 回复留言
+        //-- 回复留言
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'view') {
             $smarty->assign('send_fail', !empty($_REQUEST['send_ok']));
@@ -259,7 +259,7 @@ class UserMsg extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 删除会员上传的文件
+        //-- 删除会员上传的文件
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'drop_file') {
             /* 删除上传的文件 */
@@ -283,7 +283,7 @@ class UserMsg extends Init
      *
      * @return void
      */
-    function msg_list()
+    public function msg_list()
     {
         /* 过滤条件 */
         $filter['keywords'] = empty($_REQUEST['keywords']) ? '' : trim($_REQUEST['keywords']);
@@ -338,7 +338,7 @@ class UserMsg extends Init
      *
      * @return  array
      */
-    function get_feedback_detail($id)
+    public function get_feedback_detail($id)
     {
         global $ecs, $db, $_CFG;
 

@@ -9,8 +9,6 @@ class ArticleAuto extends Init
 {
     public function index()
     {
-
-
         admin_priv('article_auto');
         $smarty->assign('thisfile', 'article_auto.php');
         if ($_REQUEST['act'] == 'list') {

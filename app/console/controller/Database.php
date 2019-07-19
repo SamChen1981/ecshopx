@@ -9,8 +9,6 @@ class Database extends Init
 {
     public function index()
     {
-
-
         @ini_set('memory_limit', '64M');
 
         /* 备份页面 */
@@ -377,7 +375,7 @@ class Database extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 上传sql 文件
+        //-- 上传sql 文件
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'upload_sql') {
             /* 权限判断 */
@@ -454,7 +452,7 @@ class Database extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 优化页面
+        //-- 优化页面
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'optimize') {
             /* 初始化数据 */
@@ -558,7 +556,7 @@ class Database extends Init
      *
      * @return void
      */
-    function sql_import($sql_file)
+    public function sql_import($sql_file)
     {
         $db_ver = $GLOBALS['db']->version();
 
@@ -603,7 +601,7 @@ class Database extends Init
      *
      * @return void
      */
-    function num_bitunit($num)
+    public function num_bitunit($num)
     {
         $bitunit = array(' B', ' KB', ' MB', ' GB');
         for ($key = 0, $count = count($bitunit); $key < $count; $key++) {
@@ -622,7 +620,7 @@ class Database extends Init
      * @param
      * @return  void
      */
-    function remove_comment($var)
+    public function remove_comment($var)
     {
         return (substr($var, 0, 2) != '--');
     }

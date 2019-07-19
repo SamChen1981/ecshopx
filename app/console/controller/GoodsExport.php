@@ -6,7 +6,6 @@ class GoodsExport extends Init
 {
     public function index()
     {
-
         if ($_REQUEST['act'] == 'goods_export') {
             /* 检查权限 */
             admin_priv('goods_export');
@@ -659,7 +658,7 @@ class GoodsExport extends Init
      *
      * @return void
      */
-    function utf82u2($str)
+    public function utf82u2($str)
     {
         $len = strlen($str);
         $start = 0;
@@ -728,7 +727,7 @@ class GoodsExport extends Init
      *
      * @return string
      */
-    function image_path_format($content)
+    public function image_path_format($content)
     {
         $prefix = defined('FORCE_SSL_LOGIN') ? 'https://' : 'http://' . $_SERVER['SERVER_NAME'];
         $pattern = '/(background|src)=[\'|\"]((?!http:\/\/).*?)[\'|\"]/i';
@@ -743,7 +742,7 @@ class GoodsExport extends Init
      *
      * @return array
      */
-    function get_attributes($cat_id = 0)
+    public function get_attributes($cat_id = 0)
     {
         $sql = "SELECT `attr_id`, `cat_id`, `attr_name` FROM " . $GLOBALS['ecs']->table('attribute') . " ";
         if (!empty($cat_id)) {
@@ -767,7 +766,7 @@ class GoodsExport extends Init
      *
      * @return array
      */
-    function set_goods_field_name($array, $lang)
+    public function set_goods_field_name($array, $lang)
     {
         $tmp_fields = $array;
         foreach ($array as $key => $value) {
@@ -788,7 +787,7 @@ class GoodsExport extends Init
      *
      * @return array
      */
-    function my_array_merge($array1, $array2)
+    public function my_array_merge($array1, $array2)
     {
         $new_array = $array1;
         foreach ($array2 as $key => $val) {
@@ -804,7 +803,7 @@ class GoodsExport extends Init
      *
      * @return string
      */
-    function get_export_where_sql($filter)
+    public function get_export_where_sql($filter)
     {
         $where = '';
         if (!empty($filter['goods_ids'])) {
@@ -831,7 +830,7 @@ class GoodsExport extends Init
      *
      * @param $str string 处理字符串
      */
-    function replace_special_char($str, $replace = true)
+    public function replace_special_char($str, $replace = true)
     {
         $str = str_replace("\r\n", "", image_path_format($str));
         $str = str_replace("\t", "    ", $str);

@@ -9,8 +9,6 @@ class UsersOrder extends Init
 {
     public function index()
     {
-
-
         require_once(ROOT_PATH . 'includes/lib_order.php');
         require_once(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/admin/statistic.php');
         $smarty->assign('lang', $_LANG);
@@ -80,7 +78,6 @@ class UsersOrder extends Init
             assign_query_info();
             $smarty->display('users_order.htm');
         }
-
     }
 
     /*
@@ -88,7 +85,7 @@ class UsersOrder extends Init
      * @param   bool  $is_pagination  是否分页
      * @return  array   取得会员订单量/购物额排名统计数据
      */
-    function get_user_orderinfo($is_pagination = true)
+    public function get_user_orderinfo($is_pagination = true)
     {
         global $db, $ecs, $start_date, $end_date;
 

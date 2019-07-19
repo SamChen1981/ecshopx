@@ -9,8 +9,6 @@ class Ads extends Init
 {
     public function index()
     {
-
-
         $image = new cls_image($_CFG['bgcolor']);
         $exc = new exchange($ecs->table("ad"), $db, 'ad_id', 'ad_name');
         $allow_suffix = array('gif', 'jpg', 'png', 'jpeg', 'bmp', 'swf');
@@ -22,7 +20,7 @@ class Ads extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 广告列表页面
+        //-- 广告列表页面
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
             admin_priv('ad_manage');
@@ -48,7 +46,7 @@ class Ads extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 排序、分页、查询
+        //-- 排序、分页、查询
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'query') {
             $ads_list = get_adslist();
@@ -69,7 +67,7 @@ class Ads extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 添加新广告页面
+        //-- 添加新广告页面
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'add') {
             admin_priv('ad_manage');
@@ -99,7 +97,7 @@ class Ads extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 新广告的处理
+        //-- 新广告的处理
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'insert') {
             admin_priv('ad_manage');
@@ -228,7 +226,7 @@ class Ads extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 广告编辑页面
+        //-- 广告编辑页面
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit') {
             admin_priv('ad_manage');
@@ -283,7 +281,7 @@ class Ads extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 广告编辑的处理
+        //-- 广告编辑的处理
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'update') {
             admin_priv('ad_manage');
@@ -383,7 +381,7 @@ class Ads extends Init
         }
 
         /*------------------------------------------------------ */
-//--生成广告的JS代码
+        //--生成广告的JS代码
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'add_js') {
             admin_priv('ad_manage');
@@ -411,7 +409,7 @@ class Ads extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑广告名称
+        //-- 编辑广告名称
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit_ad_name') {
             check_authz_json('ad_manage');
@@ -433,7 +431,7 @@ class Ads extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 删除广告位置
+        //-- 删除广告位置
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'remove') {
             check_authz_json('ad_manage');
@@ -458,7 +456,7 @@ class Ads extends Init
     }
 
     /* 获取广告数据列表 */
-    function get_adslist()
+    public function get_adslist()
     {
         /* 过滤查询 */
         $pid = !empty($_REQUEST['pid']) ? intval($_REQUEST['pid']) : 0;

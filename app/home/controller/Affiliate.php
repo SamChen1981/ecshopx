@@ -9,7 +9,7 @@ class Affiliate extends Init
 {
     public function index()
     {
-//$charset = empty($_GET['charset']) ? 'UTF8' : $_GET['charset'];
+        //$charset = empty($_GET['charset']) ? 'UTF8' : $_GET['charset'];
         $display_mode = empty($_GET['display_mode']) ? 'javascript' : $_GET['display_mode'];
 
         if ($display_mode == 'javascript') {
@@ -21,7 +21,7 @@ class Affiliate extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 判断是否存在缓存，如果存在则调用缓存，反之读取相应内容
+        //-- 判断是否存在缓存，如果存在则调用缓存，反之读取相应内容
         /*------------------------------------------------------ */
         /* 缓存编号 */
         $cache_id = sprintf('%X', crc32($_SERVER['QUERY_STRING']));

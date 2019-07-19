@@ -124,7 +124,6 @@ class Filecheck extends Init
             assign_query_info();
             $smarty->display('filecheck.htm');
         }
-
     }
 
     /**检查文件
@@ -133,7 +132,7 @@ class Filecheck extends Init
      * @param int $sub //是否检查子目录
      * @param string $skip //不检查的目录或文件
      */
-    function checkfiles($currentdir, $ext = '', $sub = 1, $skip = '')
+    public function checkfiles($currentdir, $ext = '', $sub = 1, $skip = '')
     {
         global $md5data;
 

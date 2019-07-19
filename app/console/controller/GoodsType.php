@@ -9,12 +9,10 @@ class GoodsType extends Init
 {
     public function index()
     {
-
-
         $exc = new exchange($ecs->table("goods_type"), $db, 'cat_id', 'cat_name');
 
         /*------------------------------------------------------ */
-//-- 管理界面
+        //-- 管理界面
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'manage') {
             assign_query_info();
@@ -42,7 +40,7 @@ class GoodsType extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 获得列表
+        //-- 获得列表
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'query') {
@@ -61,7 +59,7 @@ class GoodsType extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 修改商品类型名称
+        //-- 修改商品类型名称
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit_type_name') {
             check_authz_json('goods_type');
@@ -84,7 +82,7 @@ class GoodsType extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 切换启用状态
+        //-- 切换启用状态
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'toggle_enabled') {
@@ -99,7 +97,7 @@ class GoodsType extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 添加商品类型
+        //-- 添加商品类型
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'add') {
@@ -129,7 +127,7 @@ class GoodsType extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑商品类型
+        //-- 编辑商品类型
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'edit') {
@@ -182,7 +180,7 @@ class GoodsType extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 删除商品类型
+        //-- 删除商品类型
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'remove') {
@@ -218,7 +216,7 @@ class GoodsType extends Init
      * @access  public
      * @return  array
      */
-    function get_goodstype()
+    public function get_goodstype()
     {
         $result = get_filter();
         if ($result === false) {
@@ -259,7 +257,7 @@ class GoodsType extends Init
      *
      * @return  array
      */
-    function get_goodstype_info($cat_id)
+    public function get_goodstype_info($cat_id)
     {
         $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('goods_type') . " WHERE cat_id='$cat_id'";
 
@@ -275,7 +273,7 @@ class GoodsType extends Init
      *
      * @return  void
      */
-    function update_attribute_group($cat_id, $old_group, $new_group)
+    public function update_attribute_group($cat_id, $old_group, $new_group)
     {
         $sql = "UPDATE " . $GLOBALS['ecs']->table('attribute') .
             " SET attr_group='$new_group' WHERE cat_id='$cat_id' AND attr_group='$old_group'";

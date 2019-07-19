@@ -13,7 +13,7 @@ class Goods extends Init
         $smarty->assign('affiliate', $affiliate);
 
         /*------------------------------------------------------ */
-//-- INPUT
+        //-- INPUT
         /*------------------------------------------------------ */
 
         $goods_id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
@@ -32,7 +32,7 @@ class Goods extends Init
             }
         }
         /*------------------------------------------------------ */
-//-- 改变属性、数量时重新计算商品价格
+        //-- 改变属性、数量时重新计算商品价格
         /*------------------------------------------------------ */
 
         if (!empty($_REQUEST['act']) && $_REQUEST['act'] == 'price') {
@@ -60,7 +60,7 @@ class Goods extends Init
 
 
         /*------------------------------------------------------ */
-//-- 商品购买记录ajax处理
+        //-- 商品购买记录ajax处理
         /*------------------------------------------------------ */
 
         if (!empty($_REQUEST['act']) && $_REQUEST['act'] == 'gotopage') {
@@ -97,7 +97,8 @@ class Goods extends Init
                 $pager['page'] = $page;
                 $pager['size'] = $size = 5;
                 $pager['record_count'] = $count;
-                $pager['page_count'] = $page_count = ($count > 0) ? intval(ceil($count / $size)) : 1;;
+                $pager['page_count'] = $page_count = ($count > 0) ? intval(ceil($count / $size)) : 1;
+                ;
                 $pager['page_first'] = "javascript:gotoBuyPage(1,$goods_id)";
                 $pager['page_prev'] = $page > 1 ? "javascript:gotoBuyPage(" . ($page - 1) . ",$goods_id)" : 'javascript:;';
                 $pager['page_next'] = $page < $page_count ? 'javascript:gotoBuyPage(' . ($page + 1) . ",$goods_id)" : 'javascript:;';
@@ -118,7 +119,7 @@ class Goods extends Init
 
 
         /*------------------------------------------------------ */
-//-- PROCESSOR
+        //-- PROCESSOR
         /*------------------------------------------------------ */
 
         $cache_id = $goods_id . '-' . $_SESSION['user_rank'] . '-' . $_CFG['lang'];
@@ -249,7 +250,6 @@ class Goods extends Init
 
         $smarty->assign('now_time', gmtime());           // 当前系统时间
         $smarty->display('goods.dwt', $cache_id);
-
     }
 
     /**
@@ -259,7 +259,7 @@ class Goods extends Init
      * @param integer $goods_id
      * @return  array
      */
-    function get_linked_goods($goods_id)
+    public function get_linked_goods($goods_id)
     {
         $sql = 'SELECT g.goods_id, g.goods_name, g.goods_thumb, g.goods_img, g.shop_price AS org_price, ' .
             "IFNULL(mp.user_price, g.shop_price * '$_SESSION[discount]') AS shop_price, " .
@@ -302,7 +302,7 @@ class Goods extends Init
      * @param integer $goods_id
      * @return  void
      */
-    function get_linked_articles($goods_id)
+    public function get_linked_articles($goods_id)
     {
         $sql = 'SELECT a.article_id, a.title, a.file_url, a.open_type, a.add_time ' .
             'FROM ' . $GLOBALS['ecs']->table('goods_article') . ' AS g, ' .
@@ -332,7 +332,7 @@ class Goods extends Init
      * @param integer $goods_id
      * @return  array
      */
-    function get_user_rank_prices($goods_id, $shop_price)
+    public function get_user_rank_prices($goods_id, $shop_price)
     {
         $sql = "SELECT rank_id, IFNULL(mp.user_price, r.discount * $shop_price / 100) AS price, r.rank_name, r.discount " .
             'FROM ' . $GLOBALS['ecs']->table('user_rank') . ' AS r ' .
@@ -358,7 +358,7 @@ class Goods extends Init
      * @param integer $goods_id
      * @return  array
      */
-    function get_also_bought($goods_id)
+    public function get_also_bought($goods_id)
     {
         $sql = 'SELECT COUNT(b.goods_id ) AS num, g.goods_id, g.goods_name, g.goods_thumb, g.goods_img, g.shop_price, g.promote_price, g.promote_start_date, g.promote_end_date ' .
             'FROM ' . $GLOBALS['ecs']->table('order_goods') . ' AS a ' .
@@ -402,7 +402,7 @@ class Goods extends Init
      * @param integer $goods_id
      * @return  integer
      */
-    function get_goods_rank($goods_id)
+    public function get_goods_rank($goods_id)
     {
         /* 统计时间段 */
         $period = intval($GLOBALS['_CFG']['top10_time']);
@@ -461,7 +461,7 @@ class Goods extends Init
      *
      * @return  void
      */
-    function get_attr_amount($goods_id, $attr)
+    public function get_attr_amount($goods_id, $attr)
     {
         $sql = "SELECT SUM(attr_price) FROM " . $GLOBALS['ecs']->table('goods_attr') .
             " WHERE goods_id='$goods_id' AND " . db_create_in($attr, 'goods_attr_id');
@@ -476,7 +476,7 @@ class Goods extends Init
      *
      * @return  礼包列表
      */
-    function get_package_goods_list($goods_id)
+    public function get_package_goods_list($goods_id)
     {
         $now = gmtime();
         $sql = "SELECT pg.goods_id, ga.act_id, ga.act_name, ga.act_desc, ga.goods_name, ga.start_time,

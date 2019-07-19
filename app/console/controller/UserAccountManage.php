@@ -9,8 +9,6 @@ class UserAccountManage extends Init
 {
     public function index()
     {
-
-
         require_once(ROOT_PATH . 'includes/lib_order.php');
         require_once(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/admin/statistic.php');
         $smarty->assign('lang', $_LANG);
@@ -26,7 +24,7 @@ class UserAccountManage extends Init
         admin_priv('user_account_manage');
 
         /*------------------------------------------------------ */
-//--数据查询
+        //--数据查询
         /*------------------------------------------------------ */
         /* 时间参数 */
 
@@ -44,7 +42,7 @@ class UserAccountManage extends Init
         }
 
         /*------------------------------------------------------ */
-//--商品明细列表
+        //--商品明细列表
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
             $account = $money_list = array();
@@ -91,7 +89,7 @@ class UserAccountManage extends Init
         }
 
         /*------------------------------------------------------ */
-//-- ajax返回用户列表
+        //-- ajax返回用户列表
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'query') {
             $order_list = order_list();
@@ -113,7 +111,7 @@ class UserAccountManage extends Init
      * @param string $type 0,充值 1,提现
      * @return  array
      */
-    function get_total_amount($start_date, $end_date, $type = 0)
+    public function get_total_amount($start_date, $end_date, $type = 0)
     {
         $sql = " SELECT IFNULL(SUM(amount), 0) AS total_amount FROM " . $GLOBALS['ecs']->table('user_account') . " AS a, " . $GLOBALS['ecs']->table('users') . " AS u " .
             " WHERE process_type = $type AND is_paid = 1 AND a.user_id = u.user_id AND paid_time >= '$start_date' AND paid_time < '" . ($end_date + 86400) . "'";
@@ -132,7 +130,7 @@ class UserAccountManage extends Init
      *
      * @return void
      */
-    function order_list()
+    public function order_list()
     {
         global $start_date, $end_date;
 

@@ -9,8 +9,6 @@ class Sql extends Init
 {
     public function index()
     {
-
-
         $_POST['sql'] = !empty($_POST['sql']) ? trim($_POST['sql']) : '';
 
         if (!$_POST['sql']) {
@@ -18,7 +16,7 @@ class Sql extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 用户帐号列表
+        //-- 用户帐号列表
         /*------------------------------------------------------ */
 
         if ($_REQUEST['act'] == 'main') {
@@ -48,7 +46,7 @@ class Sql extends Init
      *
      * @return void
      */
-    function assign_sql($sql)
+    public function assign_sql($sql)
     {
         global $db, $smarty, $_LANG;
 

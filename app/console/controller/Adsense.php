@@ -9,8 +9,6 @@ class Adsense extends Init
 {
     public function index()
     {
-
-
         require_once(ROOT_PATH . 'includes/lib_order.php');
         require_once(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/admin/ads.php');
 
@@ -22,7 +20,7 @@ class Adsense extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 站外投放广告的统计
+        //-- 站外投放广告的统计
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list' || $_REQUEST['act'] == 'download') {
             admin_priv('ad_manage');

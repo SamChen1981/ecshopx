@@ -10,14 +10,14 @@ class GroupBuy extends Init
     public function index()
     {
         /*------------------------------------------------------ */
-//-- act 操作项的初始化
+        //-- act 操作项的初始化
         /*------------------------------------------------------ */
         if (empty($_REQUEST['act'])) {
             $_REQUEST['act'] = 'list';
         }
 
         /*------------------------------------------------------ */
-//-- 团购商品 --> 团购活动商品列表
+        //-- 团购商品 --> 团购活动商品列表
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
             /* 取得团购活动总数 */
@@ -74,7 +74,7 @@ class GroupBuy extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 团购商品 --> 商品详情
+        //-- 团购商品 --> 商品详情
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'view') {
             /* 取得参数：团购活动id */
@@ -148,7 +148,7 @@ class GroupBuy extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 团购商品 --> 购买
+        //-- 团购商品 --> 购买
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'buy') {
@@ -267,7 +267,7 @@ class GroupBuy extends Init
     }
 
     /* 取得团购活动总数 */
-    function group_buy_count()
+    public function group_buy_count()
     {
         $now = gmtime();
         $sql = "SELECT COUNT(*) " .
@@ -284,7 +284,7 @@ class GroupBuy extends Init
      * @param int $page 当前页
      * @return  array
      */
-    function group_buy_list($size, $page)
+    public function group_buy_list($size, $page)
     {
         /* 取得团购活动 */
         $gb_list = array();

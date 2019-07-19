@@ -9,8 +9,6 @@ class MagazineList extends Init
 {
     public function index()
     {
-
-
         admin_priv('magazine_list');
         if ($_REQUEST['act'] == 'list') {
             $smarty->assign('ur_here', $_LANG['magazine_list']);
@@ -179,10 +177,9 @@ class MagazineList extends Init
                 sys_msg($_LANG['edit_ok'], 0, $links);
             }
         }
-
     }
 
-    function get_magazine()
+    public function get_magazine()
     {
         $result = get_filter();
 

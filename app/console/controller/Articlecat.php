@@ -9,8 +9,6 @@ class Articlecat extends Init
 {
     public function index()
     {
-
-
         $exc = new exchange($ecs->table("article_cat"), $db, 'cat_id', 'cat_name');
         /* act操作项的初始化 */
         $_REQUEST['act'] = trim($_REQUEST['act']);
@@ -19,7 +17,7 @@ class Articlecat extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 分类列表
+        //-- 分类列表
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
             $articlecat = article_cat_list(0, 0, false);
@@ -36,7 +34,7 @@ class Articlecat extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 查询
+        //-- 查询
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'query') {
             $articlecat = article_cat_list(0, 0, false);
@@ -49,7 +47,7 @@ class Articlecat extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 添加分类
+        //-- 添加分类
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'add') {
             /* 权限判断 */
@@ -109,7 +107,7 @@ class Articlecat extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑文章分类
+        //-- 编辑文章分类
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit') {
             /* 权限判断 */
@@ -237,7 +235,7 @@ class Articlecat extends Init
 
 
         /*------------------------------------------------------ */
-//-- 编辑文章分类的排序
+        //-- 编辑文章分类的排序
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit_sort_order') {
             check_authz_json('article_cat');
@@ -259,7 +257,7 @@ class Articlecat extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 删除文章分类
+        //-- 删除文章分类
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'remove') {
             check_authz_json('article_cat');
@@ -296,7 +294,7 @@ class Articlecat extends Init
             exit;
         }
         /*------------------------------------------------------ */
-//-- 切换是否显示在导航栏
+        //-- 切换是否显示在导航栏
         /*------------------------------------------------------ */
 
         if ($_REQUEST['act'] == 'toggle_show_in_nav') {
@@ -342,7 +340,7 @@ class Articlecat extends Init
      *
      * @return  mix
      */
-    function cat_update($cat_id, $args)
+    public function cat_update($cat_id, $args)
     {
         if (empty($args) || empty($cat_id)) {
             return false;

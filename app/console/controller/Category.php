@@ -9,8 +9,6 @@ class Category extends Init
 {
     public function index()
     {
-
-
         $exc = new exchange($ecs->table("category"), $db, 'cat_id', 'cat_name');
 
         /* act操作项的初始化 */
@@ -21,7 +19,7 @@ class Category extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 商品分类列表
+        //-- 商品分类列表
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
             /* 获取分类列表 */
@@ -40,7 +38,7 @@ class Category extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 排序、分页、查询
+        //-- 排序、分页、查询
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'query') {
             $cat_list = cat_list(0, 0, false);
@@ -49,7 +47,7 @@ class Category extends Init
             make_json_result($smarty->fetch('category_list.htm'));
         }
         /*------------------------------------------------------ */
-//-- 添加商品分类
+        //-- 添加商品分类
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'add') {
             /* 权限检查 */
@@ -74,7 +72,7 @@ class Category extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 商品分类添加时的处理
+        //-- 商品分类添加时的处理
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'insert') {
             /* 权限检查 */
@@ -137,7 +135,7 @@ class Category extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑商品分类信息
+        //-- 编辑商品分类信息
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'edit') {
             admin_priv('cat_manage');   // 权限检查
@@ -213,7 +211,7 @@ class Category extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑商品分类信息
+        //-- 编辑商品分类信息
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'update') {
             /* 权限检查 */
@@ -301,7 +299,7 @@ class Category extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 批量转移商品分类页面
+        //-- 批量转移商品分类页面
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'move') {
             /* 权限检查 */
@@ -322,7 +320,7 @@ class Category extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 处理批量转移商品分类的处理程序
+        //-- 处理批量转移商品分类的处理程序
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'move_cat') {
             /* 权限检查 */
@@ -351,7 +349,7 @@ class Category extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑排序序号
+        //-- 编辑排序序号
         /*------------------------------------------------------ */
 
         if ($_REQUEST['act'] == 'edit_sort_order') {
@@ -369,7 +367,7 @@ class Category extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑数量单位
+        //-- 编辑数量单位
         /*------------------------------------------------------ */
 
         if ($_REQUEST['act'] == 'edit_measure_unit') {
@@ -387,7 +385,7 @@ class Category extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑排序序号
+        //-- 编辑排序序号
         /*------------------------------------------------------ */
 
         if ($_REQUEST['act'] == 'edit_grade') {
@@ -410,7 +408,7 @@ class Category extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 切换是否显示在导航栏
+        //-- 切换是否显示在导航栏
         /*------------------------------------------------------ */
 
         if ($_REQUEST['act'] == 'toggle_show_in_nav') {
@@ -449,7 +447,7 @@ class Category extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 切换是否显示
+        //-- 切换是否显示
         /*------------------------------------------------------ */
 
         if ($_REQUEST['act'] == 'toggle_is_show') {
@@ -467,7 +465,7 @@ class Category extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 删除商品分类
+        //-- 删除商品分类
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'remove') {
             check_authz_json('cat_manage');
@@ -500,7 +498,6 @@ class Category extends Init
             ecs_header("Location: $url\n");
             exit;
         }
-
     }
 
     /**
@@ -510,7 +507,7 @@ class Category extends Init
      *
      * @return  mix
      */
-    function get_cat_info($cat_id)
+    public function get_cat_info($cat_id)
     {
         $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('category') . " WHERE cat_id='$cat_id' LIMIT 1";
         return $GLOBALS['db']->getRow($sql);
@@ -524,7 +521,7 @@ class Category extends Init
      *
      * @return  mix
      */
-    function cat_update($cat_id, $args)
+    public function cat_update($cat_id, $args)
     {
         if (empty($args) || empty($cat_id)) {
             return false;
@@ -542,7 +539,7 @@ class Category extends Init
      *
      * @return void
      */
-    function get_attr_list()
+    public function get_attr_list()
     {
         $sql = "SELECT a.attr_id, a.cat_id, a.attr_name " .
             " FROM " . $GLOBALS['ecs']->table('attribute') . " AS a,  " .
@@ -570,7 +567,7 @@ class Category extends Init
      *
      * @return void
      */
-    function insert_cat_recommend($recommend_type, $cat_id)
+    public function insert_cat_recommend($recommend_type, $cat_id)
     {
         //检查分类是否为首页推荐
         if (!empty($recommend_type)) {

@@ -9,8 +9,6 @@ class Vote extends Init
 {
     public function index()
     {
-
-
         if (!isset($_REQUEST['vote']) || !isset($_REQUEST['options']) || !isset($_REQUEST['type'])) {
             ecs_header("Location: ./\n");
             exit;
@@ -47,7 +45,6 @@ class Vote extends Init
 
 
         echo json_encode($res);
-
     }
 
     /**
@@ -58,7 +55,7 @@ class Vote extends Init
      * @param string $ip_address
      * @return  boolean
      */
-    function vote_already_submited($vote_id, $ip_address)
+    public function vote_already_submited($vote_id, $ip_address)
     {
         $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('vote_log') . " " .
             "WHERE ip_address = '$ip_address' AND vote_id = '$vote_id' ";
@@ -75,7 +72,7 @@ class Vote extends Init
      * @param string $option_id
      * @return  void
      */
-    function save_vote($vote_id, $ip_address, $option_id)
+    public function save_vote($vote_id, $ip_address, $option_id)
     {
         $sql = "INSERT INTO " . $GLOBALS['ecs']->table('vote_log') . " (vote_id, ip_address, vote_time) " .
             "VALUES ('$vote_id', '$ip_address', " . gmtime() . ")";

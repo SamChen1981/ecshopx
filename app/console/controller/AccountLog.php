@@ -9,12 +9,10 @@ class AccountLog extends Init
 {
     public function index()
     {
-
-
         include_once(ROOT_PATH . 'includes/lib_order.php');
 
         /*------------------------------------------------------ */
-//-- 办事处列表
+        //-- 办事处列表
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
             /* 检查参数 */
@@ -53,7 +51,7 @@ class AccountLog extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 排序、分页、查询
+        //-- 排序、分页、查询
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'query') {
             /* 检查参数 */
@@ -91,7 +89,7 @@ class AccountLog extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 调节帐户
+        //-- 调节帐户
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'add') {
             /* 检查权限 */
@@ -115,7 +113,7 @@ class AccountLog extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 提交添加、编辑办事处
+        //-- 提交添加、编辑办事处
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update') {
             /* 检查权限 */
@@ -165,7 +163,7 @@ class AccountLog extends Init
      *                  frozen_money表示冻结资金，rank_points表示等级积分，pay_points表示消费积分
      * @return  array
      */
-    function get_accountlist($user_id, $account_type = '')
+    public function get_accountlist($user_id, $account_type = '')
     {
         /* 检查参数 */
         $where = " WHERE user_id = '$user_id' ";

@@ -9,8 +9,6 @@ class GroupBuy extends Init
 {
     public function index()
     {
-
-
         require_once(ROOT_PATH . 'includes/lib_goods.php');
         require_once(ROOT_PATH . 'includes/lib_order.php');
 
@@ -25,7 +23,7 @@ class GroupBuy extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 团购活动列表
+        //-- 团购活动列表
         /*------------------------------------------------------ */
 
         if ($_REQUEST['act'] == 'list') {
@@ -66,7 +64,7 @@ class GroupBuy extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 添加/编辑团购活动
+        //-- 添加/编辑团购活动
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'add' || $_REQUEST['act'] == 'edit') {
@@ -99,7 +97,7 @@ class GroupBuy extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 添加/编辑团购活动的提交
+        //-- 添加/编辑团购活动的提交
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'insert_update') {
@@ -484,7 +482,7 @@ class GroupBuy extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 批量删除团购活动
+        //-- 批量删除团购活动
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'batch_drop') {
             if (isset($_POST['checkboxes'])) {
@@ -519,7 +517,7 @@ class GroupBuy extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 搜索商品
+        //-- 搜索商品
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'search_goods') {
@@ -533,7 +531,7 @@ class GroupBuy extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑保证金
+        //-- 编辑保证金
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'edit_deposit') {
@@ -558,7 +556,7 @@ class GroupBuy extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑保证金
+        //-- 编辑保证金
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'edit_restrict_amount') {
@@ -583,7 +581,7 @@ class GroupBuy extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 删除团购活动
+        //-- 删除团购活动
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'remove') {
@@ -618,7 +616,7 @@ class GroupBuy extends Init
      * 取得团购活动列表
      * @return   array
      */
-    function group_buy_list()
+    public function group_buy_list()
     {
         $result = get_filter();
         if ($result === false) {
@@ -701,7 +699,7 @@ class GroupBuy extends Init
      * @param int $goods_id 商品id
      * @return  array
      */
-    function goods_group_buy($goods_id)
+    public function goods_group_buy($goods_id)
     {
         $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('goods_activity') .
             " WHERE goods_id = '$goods_id' " .
@@ -717,7 +715,7 @@ class GroupBuy extends Init
      * @param bool $is_add 是否添加（插入）
      * @return  array('href' => $href, 'text' => $text)
      */
-    function list_link($is_add = true)
+    public function list_link($is_add = true)
     {
         $href = 'group_buy.php?act=list';
         if (!$is_add) {

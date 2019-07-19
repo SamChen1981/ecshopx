@@ -9,14 +9,12 @@ class Navigator extends Init
 {
     public function index()
     {
-
-
         admin_priv('navigator');
 
         $exc = new exchange($ecs->table("nav"), $db, 'id', 'name');
 
         /*------------------------------------------------------ */
-//-- 自定义导航栏列表
+        //-- 自定义导航栏列表
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
             $smarty->assign('ur_here', $_LANG['navigator']);
@@ -34,7 +32,7 @@ class Navigator extends Init
             $smarty->display('navigator.htm');
         }
         /*------------------------------------------------------ */
-//-- 自定义导航栏列表Ajax
+        //-- 自定义导航栏列表Ajax
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'query') {
             $navdb = get_nav();
@@ -49,7 +47,7 @@ class Navigator extends Init
             make_json_result($smarty->fetch('navigator.htm'), '', array('filter' => $navdb['filter'], 'page_count' => $navdb['page_count']));
         }
         /*------------------------------------------------------ */
-//-- 自定义导航栏增加
+        //-- 自定义导航栏增加
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'add') {
             if (empty($_REQUEST['step'])) {
@@ -96,7 +94,7 @@ class Navigator extends Init
             }
         }
         /*------------------------------------------------------ */
-//-- 自定义导航栏编辑
+        //-- 自定义导航栏编辑
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit') {
             $id = $_REQUEST['id'];
@@ -172,7 +170,7 @@ class Navigator extends Init
             }
         }
         /*------------------------------------------------------ */
-//-- 自定义导航栏删除
+        //-- 自定义导航栏删除
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'del') {
             $id = (int)$_GET['id'];
@@ -190,7 +188,7 @@ class Navigator extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑排序
+        //-- 编辑排序
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit_sort_order') {
             check_authz_json('nav');
@@ -212,7 +210,7 @@ class Navigator extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 切换是否显示
+        //-- 切换是否显示
         /*------------------------------------------------------ */
 
         if ($_REQUEST['act'] == 'toggle_ifshow') {
@@ -234,7 +232,7 @@ class Navigator extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 切换是否新窗口
+        //-- 切换是否新窗口
         /*------------------------------------------------------ */
 
         if ($_REQUEST['act'] == 'toggle_opennew') {
@@ -250,7 +248,7 @@ class Navigator extends Init
         }
     }
 
-    function get_nav()
+    public function get_nav()
     {
         $result = get_filter();
         if ($result === false) {
@@ -293,17 +291,17 @@ class Navigator extends Init
     }
 
     /*------------------------------------------------------ */
-//-- 排序相关
+    //-- 排序相关
     /*------------------------------------------------------ */
-    function sort_nav($a, $b)
+    public function sort_nav($a, $b)
     {
         return $a['vieworder'] > $b['vieworder'] ? 1 : -1;
     }
 
     /*------------------------------------------------------ */
-//-- 获得系统列表
+    //-- 获得系统列表
     /*------------------------------------------------------ */
-    function get_sysnav()
+    public function get_sysnav()
     {
         global $_LANG;
         $sysmain = array(
@@ -338,9 +336,9 @@ class Navigator extends Init
     }
 
     /*------------------------------------------------------ */
-//-- 列表项修改
+    //-- 列表项修改
     /*------------------------------------------------------ */
-    function nav_update($id, $args)
+    public function nav_update($id, $args)
     {
         if (empty($args) || empty($id)) {
             return false;
@@ -350,9 +348,9 @@ class Navigator extends Init
     }
 
     /*------------------------------------------------------ */
-//-- 根据URI对导航栏项目进行分析，确定其为商品分类还是文章分类
+    //-- 根据URI对导航栏项目进行分析，确定其为商品分类还是文章分类
     /*------------------------------------------------------ */
-    function analyse_uri($uri)
+    public function analyse_uri($uri)
     {
         $uri = strtolower(str_replace('&amp;', '&', $uri));
         $arr = explode('-', $uri);
@@ -402,9 +400,9 @@ class Navigator extends Init
     }
 
     /*------------------------------------------------------ */
-//-- 是否显示
+    //-- 是否显示
     /*------------------------------------------------------ */
-    function is_show_in_nav($type, $id)
+    public function is_show_in_nav($type, $id)
     {
         if ($type == 'c') {
             $tablename = $GLOBALS['ecs']->table('category');
@@ -415,9 +413,9 @@ class Navigator extends Init
     }
 
     /*------------------------------------------------------ */
-//-- 设置是否显示
+    //-- 设置是否显示
     /*------------------------------------------------------ */
-    function set_show_in_nav($type, $id, $val)
+    public function set_show_in_nav($type, $id, $val)
     {
         if ($type == 'c') {
             $tablename = $GLOBALS['ecs']->table('category');

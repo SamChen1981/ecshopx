@@ -9,19 +9,17 @@ class Respond extends Init
 {
     public function index()
     {
-
-
         require(ROOT_PATH . 'includes/lib_payment.php');
         require(ROOT_PATH . 'includes/lib_order.php');
         /* 支付方式代码 */
         $pay_code = !empty($_REQUEST['code']) ? trim($_REQUEST['code']) : '';
 
-//获取首信支付方式
+        //获取首信支付方式
         if (empty($pay_code) && !empty($_REQUEST['v_pmode']) && !empty($_REQUEST['v_pstring'])) {
             $pay_code = 'cappay';
         }
 
-//pc微信扫码的判断
+        //pc微信扫码的判断
         if (empty($pay_code)) {
             $xml = file_get_contents('php://input');
             if (strpos($xml, '<xml><appid>') !== false && strpos($xml, 'openid') !== false) {
@@ -29,11 +27,11 @@ class Respond extends Init
             }
         }
 
-//获取快钱神州行支付方式
+        //获取快钱神州行支付方式
         if (empty($pay_code) && ($_REQUEST['ext1'] == 'shenzhou') && ($_REQUEST['ext2'] == 'ecshop')) {
             $pay_code = 'shenzhou';
         }
-//获取天工支付方式
+        //获取天工支付方式
         if (empty($pay_code)) {
             if ($_GET['metadata'] == 'tiangong') {
                 $pay_code = 'tiangong';

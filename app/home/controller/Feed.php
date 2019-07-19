@@ -9,7 +9,6 @@ class Feed extends Init
 {
     public function index()
     {
-
         define('INIT_NO_USERS', true);
         define('INIT_NO_SMARTY', true);
 

@@ -9,8 +9,6 @@ class Search extends Init
 {
     public function index()
     {
-
-
         if (!function_exists("htmlspecialchars_decode")) {
             function htmlspecialchars_decode($string, $quote_style = ENT_COMPAT)
             {
@@ -59,7 +57,7 @@ class Search extends Init
         $_REQUEST['act'] = !empty($_REQUEST['act']) ? trim($_REQUEST['act']) : '';
 
         /*------------------------------------------------------ */
-//-- 高级搜索
+        //-- 高级搜索
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'advanced_search') {
             $goods_type = !empty($_REQUEST['goods_type']) ? intval($_REQUEST['goods_type']) : 0;
@@ -88,7 +86,7 @@ class Search extends Init
             exit;
         }
         /*------------------------------------------------------ */
-//-- 搜索结果
+        //-- 搜索结果
         /*------------------------------------------------------ */
         else {
             $_REQUEST['keywords'] = !empty($_REQUEST['keywords']) ? htmlspecialchars(trim($_REQUEST['keywords'])) : '';
@@ -443,7 +441,7 @@ class Search extends Init
      *
      * @return void
      */
-    function is_not_null($value)
+    public function is_not_null($value)
     {
         if (is_array($value)) {
             return (!empty($value['from'])) || (!empty($value['to']));
@@ -459,7 +457,7 @@ class Search extends Init
      * @params  integer $cat_id
      * @return  void
      */
-    function get_seachable_attributes($cat_id = 0)
+    public function get_seachable_attributes($cat_id = 0)
     {
         $attributes = array(
             'cate' => array(),

@@ -22,7 +22,7 @@ class Bonus extends Init
         $exc = new exchange($ecs->table('bonus_type'), $db, 'type_id', 'type_name');
 
         /*------------------------------------------------------ */
-//-- 红包类型列表页面
+        //-- 红包类型列表页面
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
             $smarty->assign('ur_here', $_LANG['04_bonustype_list']);
@@ -44,7 +44,7 @@ class Bonus extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 翻页、排序
+        //-- 翻页、排序
         /*------------------------------------------------------ */
 
         if ($_REQUEST['act'] == 'query') {
@@ -66,7 +66,7 @@ class Bonus extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑红包类型名称
+        //-- 编辑红包类型名称
         /*------------------------------------------------------ */
 
         if ($_REQUEST['act'] == 'edit_type_name') {
@@ -86,7 +86,7 @@ class Bonus extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑红包金额
+        //-- 编辑红包金额
         /*------------------------------------------------------ */
 
         if ($_REQUEST['act'] == 'edit_type_money') {
@@ -106,7 +106,7 @@ class Bonus extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑订单下限
+        //-- 编辑订单下限
         /*------------------------------------------------------ */
 
         if ($_REQUEST['act'] == 'edit_min_amount') {
@@ -125,7 +125,7 @@ class Bonus extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 删除红包类型
+        //-- 删除红包类型
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'remove') {
             check_authz_json('bonus_manage');
@@ -147,7 +147,7 @@ class Bonus extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 红包类型添加页面
+        //-- 红包类型添加页面
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'add') {
             admin_priv('bonus_manage');
@@ -173,7 +173,7 @@ class Bonus extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 红包类型添加的处理
+        //-- 红包类型添加的处理
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'insert') {
             /* 去掉红包类型名称前后的空格 */
@@ -225,7 +225,7 @@ class Bonus extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 红包类型编辑页面
+        //-- 红包类型编辑页面
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'edit') {
             admin_priv('bonus_manage');
@@ -250,7 +250,7 @@ class Bonus extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 红包类型编辑的处理
+        //-- 红包类型编辑的处理
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'update') {
             /* 获得日期信息 */
@@ -289,7 +289,7 @@ class Bonus extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 红包发送页面
+        //-- 红包发送页面
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'send') {
             admin_priv('bonus_manage');
@@ -337,7 +337,7 @@ class Bonus extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 处理红包的发送页面
+        //-- 处理红包的发送页面
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'send_by_user') {
             $user_list = array();
@@ -465,7 +465,7 @@ class Bonus extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 发送邮件
+        //-- 发送邮件
         /*------------------------------------------------------ */
 
         if ($_REQUEST['act'] == 'send_mail') {
@@ -492,7 +492,7 @@ class Bonus extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 按印刷品发放红包
+        //-- 按印刷品发放红包
         /*------------------------------------------------------ */
 
         if ($_REQUEST['act'] == 'send_by_print') {
@@ -527,7 +527,7 @@ class Bonus extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 导出线下发放的信息
+        //-- 导出线下发放的信息
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'gen_excel') {
             @set_time_limit(0);
@@ -586,7 +586,7 @@ class Bonus extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 搜索商品
+        //-- 搜索商品
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'get_goods_list') {
             $filters = json_decode($_GET['JSON']);
@@ -604,7 +604,7 @@ class Bonus extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 添加发放红包的商品
+        //-- 添加发放红包的商品
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'add_bonus_goods') {
             check_authz_json('bonus_manage');
@@ -632,7 +632,7 @@ class Bonus extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 删除发放红包的商品
+        //-- 删除发放红包的商品
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'drop_bonus_goods') {
             check_authz_json('bonus_manage');
@@ -659,7 +659,7 @@ class Bonus extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 搜索用户
+        //-- 搜索用户
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'search_users') {
             $keywords = json_str_iconv(trim($_GET['keywords']));
@@ -672,7 +672,7 @@ class Bonus extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 红包列表
+        //-- 红包列表
         /*------------------------------------------------------ */
 
         if ($_REQUEST['act'] == 'bonus_list') {
@@ -704,7 +704,7 @@ class Bonus extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 红包列表翻页、排序
+        //-- 红包列表翻页、排序
         /*------------------------------------------------------ */
 
         if ($_REQUEST['act'] == 'query_bonus') {
@@ -735,7 +735,7 @@ class Bonus extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 删除红包
+        //-- 删除红包
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'remove_bonus') {
             check_authz_json('bonus_manage');
@@ -751,7 +751,7 @@ class Bonus extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 批量操作
+        //-- 批量操作
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'batch') {
             /* 检查权限 */
@@ -794,7 +794,7 @@ class Bonus extends Init
      * @access  public
      * @return void
      */
-    function get_type_list()
+    public function get_type_list()
     {
         /* 获得所有红包类型的发放数量 */
         $sql = "SELECT bonus_type_id, COUNT(*) AS sent_count" .
@@ -861,7 +861,7 @@ class Bonus extends Init
      * @param integer $type_id
      * @return  array
      */
-    function get_bonus_goods($type_id)
+    public function get_bonus_goods($type_id)
     {
         $sql = "SELECT goods_id, goods_name FROM " . $GLOBALS['ecs']->table('goods') .
             " WHERE bonus_type_id = '$type_id'";
@@ -876,7 +876,7 @@ class Bonus extends Init
      * @param   $page_param
      * @return void
      */
-    function get_bonus_list()
+    public function get_bonus_list()
     {
         /* 查询条件 */
         $filter['sort_by'] = empty($_REQUEST['sort_by']) ? 'bonus_type_id' : trim($_REQUEST['sort_by']);
@@ -916,7 +916,7 @@ class Bonus extends Init
      * @param int $bonus_type_id 红包类型id
      * @return  array
      */
-    function bonus_type_info($bonus_type_id)
+    public function bonus_type_info($bonus_type_id)
     {
         $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('bonus_type') .
             " WHERE type_id = '$bonus_type_id'";
@@ -930,7 +930,7 @@ class Bonus extends Init
      * @param array $bonus_id_list 红包id数组
      * @return  int     成功发送数量
      */
-    function send_bonus_mail($bonus_type_id, $bonus_id_list)
+    public function send_bonus_mail($bonus_type_id, $bonus_id_list)
     {
         /* 取得红包类型信息 */
         $bonus_type = bonus_type_info($bonus_type_id);
@@ -983,7 +983,7 @@ class Bonus extends Init
         return $send_count;
     }
 
-    function add_to_maillist($username, $email, $subject, $content, $is_html)
+    public function add_to_maillist($username, $email, $subject, $content, $is_html)
     {
         $time = time();
         $content = addslashes($content);

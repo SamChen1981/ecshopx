@@ -12,7 +12,7 @@ class Certificate extends Init
 
 
         /*------------------------------------------------------ */
-//-- 授权绑定编辑页
+        //-- 授权绑定编辑页
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list_edit') {
             /* 检查权限 */
@@ -80,7 +80,7 @@ class Certificate extends Init
 
 
         /*------------------------------------------------------ */
-//-- 申请绑定矩阵
+        //-- 申请绑定矩阵
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'apply_bindrelation') {
@@ -110,7 +110,7 @@ class Certificate extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 查看绑定关系
+        //-- 查看绑定关系
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'accept_bindrelation') {
@@ -136,7 +136,7 @@ class Certificate extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 证书下载
+        //-- 证书下载
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'download') {
@@ -155,7 +155,7 @@ class Certificate extends Init
             exit;
         }
         /*------------------------------------------------------ */
-//-- 获取云起认证
+        //-- 获取云起认证
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'get_certificate') {
             header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
@@ -191,7 +191,7 @@ class Certificate extends Init
         }
     }
 
-    function get_appserver_verison()
+    public function get_appserver_verison()
     {
         /*$path_arr = explode('/',ROOT_PATH);
         $count = count($path_arr)-2;
@@ -205,7 +205,7 @@ class Certificate extends Init
         return false;
     }
 
-    function get_h5_version()
+    public function get_h5_version()
     {
         /*$path_arr = explode('/',ROOT_PATH);
         $count = count($path_arr)-1;

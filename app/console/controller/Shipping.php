@@ -9,12 +9,10 @@ class Shipping extends Init
 {
     public function index()
     {
-
-
         $exc = new exchange($ecs->table('shipping'), $db, 'shipping_code', 'shipping_name');
 
         /*------------------------------------------------------ */
-//-- 配送方式列表
+        //-- 配送方式列表
         /*------------------------------------------------------ */
 
         if ($_REQUEST['act'] == 'list') {
@@ -62,7 +60,7 @@ class Shipping extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 安装配送方式
+        //-- 安装配送方式
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'install') {
@@ -100,7 +98,7 @@ class Shipping extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 卸载配送方式
+        //-- 卸载配送方式
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'uninstall') {
@@ -136,7 +134,7 @@ class Shipping extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 模板Flash编辑器
+        //-- 模板Flash编辑器
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'print_index') {
@@ -160,7 +158,7 @@ class Shipping extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 模板Flash编辑器
+        //-- 模板Flash编辑器
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'recovery_default_template') {
@@ -184,7 +182,7 @@ class Shipping extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 模板Flash编辑器 上传图片
+        //-- 模板Flash编辑器 上传图片
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'print_upload') {
@@ -229,7 +227,7 @@ class Shipping extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 模板Flash编辑器 删除图片
+        //-- 模板Flash编辑器 删除图片
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'print_del') {
@@ -257,7 +255,7 @@ class Shipping extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑打印模板
+        //-- 编辑打印模板
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'edit_print_template') {
@@ -289,7 +287,7 @@ class Shipping extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑打印模板
+        //-- 编辑打印模板
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'do_edit_print_template') {
@@ -319,7 +317,7 @@ class Shipping extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑配送方式名称
+        //-- 编辑配送方式名称
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'edit_name') {
@@ -346,7 +344,7 @@ class Shipping extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑配送方式描述
+        //-- 编辑配送方式描述
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'edit_desc') {
@@ -363,7 +361,7 @@ class Shipping extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 修改配送方式保价费
+        //-- 修改配送方式保价费
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'edit_insure') {
@@ -400,7 +398,7 @@ class Shipping extends Init
             make_json_result('');
         }
         /*------------------------------------------------------ */
-//-- 修改配送方式排序
+        //-- 修改配送方式排序
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'edit_order') {
@@ -423,7 +421,7 @@ class Shipping extends Init
      * @access  private
      * @return  Bool
      */
-    function get_site_root_url()
+    public function get_site_root_url()
     {
         return defined('FORCE_SSL_LOGIN') ? 'https://' : 'http://' . $_SERVER['HTTP_HOST'] . str_replace('/' . ADMIN_PATH . '/shipping.php', '', PHP_SELF);
     }
@@ -436,7 +434,7 @@ class Shipping extends Init
      *
      * @return  Bool
      */
-    function is_print_bg_default($print_bg)
+    public function is_print_bg_default($print_bg)
     {
         $_bg = basename($print_bg);
 

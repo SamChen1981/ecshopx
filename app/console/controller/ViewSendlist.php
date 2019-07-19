@@ -9,8 +9,6 @@ class ViewSendlist extends Init
 {
     public function index()
     {
-
-
         admin_priv('view_sendlist');
         if ($_REQUEST['act'] == 'list') {
             $listdb = get_sendlist();
@@ -44,7 +42,7 @@ class ViewSendlist extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 批量删除
+        //-- 批量删除
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'batch_remove') {
@@ -62,7 +60,7 @@ class ViewSendlist extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 批量发送
+        //-- 批量发送
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'batch_send') {
@@ -132,7 +130,7 @@ class ViewSendlist extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 全部发送
+        //-- 全部发送
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'all_send') {
@@ -196,7 +194,7 @@ class ViewSendlist extends Init
         }
     }
 
-    function get_sendlist()
+    public function get_sendlist()
     {
         $result = get_filter();
         if ($result === false) {

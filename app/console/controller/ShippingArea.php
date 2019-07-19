@@ -9,12 +9,10 @@ class ShippingArea extends Init
 {
     public function index()
     {
-
-
         $exc = new exchange($ecs->table('shipping_area'), $db, 'shipping_area_id', 'shipping_area_name');
 
         /*------------------------------------------------------ */
-//-- 配送区域列表
+        //-- 配送区域列表
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
             $shipping_id = intval($_REQUEST['shipping']);
@@ -33,7 +31,7 @@ class ShippingArea extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 新建配送区域
+        //-- 新建配送区域
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'add' && !empty($_REQUEST['shipping'])) {
@@ -140,7 +138,7 @@ class ShippingArea extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑配送区域
+        //-- 编辑配送区域
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'edit') {
@@ -303,7 +301,7 @@ class ShippingArea extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 批量删除配送区域
+        //-- 批量删除配送区域
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'multi_remove') {
             admin_priv('shiparea_manage');
@@ -324,7 +322,7 @@ class ShippingArea extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑配送区域名称
+        //-- 编辑配送区域名称
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'edit_area') {
@@ -354,7 +352,7 @@ class ShippingArea extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 删除配送区域
+        //-- 删除配送区域
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'remove_area') {
@@ -379,7 +377,7 @@ class ShippingArea extends Init
      * 取得配送区域列表
      * @param int $shipping_id 配送id
      */
-    function get_shipping_area_list($shipping_id)
+    public function get_shipping_area_list($shipping_id)
     {
         $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('shipping_area');
         if ($shipping_id > 0) {

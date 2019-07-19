@@ -21,7 +21,7 @@ class Privilege extends Init
         $exc = new exchange($ecs->table("admin_user"), $db, 'user_id', 'user_name');
 
         /*------------------------------------------------------ */
-//-- 退出登录
+        //-- 退出登录
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'logout') {
             if ($_SESSION['yunqi_login'] == true) {
@@ -36,7 +36,7 @@ class Privilege extends Init
             echo "<script>window.top.location.replace('" . $url . "');</script>";
         }
 
-//获取3.0授权信息
+        //获取3.0授权信息
         if ($_REQUEST['act'] == 'login_extend') {
             $callback = $GLOBALS['ecs']->url() . "admin/privilege.php?act=login&type=yunqi";
             $iframe_url = $cert->get_authorize_url($callback);
@@ -45,7 +45,7 @@ class Privilege extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 登陆界面
+        //-- 登陆界面
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'login') {
             header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
@@ -179,7 +179,7 @@ class Privilege extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 验证登陆信息
+        //-- 验证登陆信息
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'signin') {
             if (intval($_CFG['captcha']) & CAPTCHA_ADMIN) {
@@ -267,7 +267,7 @@ class Privilege extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 管理员列表页面
+        //-- 管理员列表页面
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'list') {
             /* 模板赋值 */
@@ -282,7 +282,7 @@ class Privilege extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 查询
+        //-- 查询
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'query') {
             $smarty->assign('admin_list', get_admin_userlist());
@@ -291,7 +291,7 @@ class Privilege extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 添加管理员页面
+        //-- 添加管理员页面
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'add') {
             /* 检查权限 */
@@ -310,7 +310,7 @@ class Privilege extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 添加管理员的处理
+        //-- 添加管理员的处理
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'insert') {
             admin_priv('admin_manage');
@@ -373,7 +373,7 @@ class Privilege extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑管理员信息
+        //-- 编辑管理员信息
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit') {
             /* 不能编辑demo这个管理员 */
@@ -421,7 +421,7 @@ class Privilege extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 更新管理员信息
+        //-- 更新管理员信息
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'update' || $_REQUEST['act'] == 'update_self') {
 
@@ -538,7 +538,7 @@ class Privilege extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑个人资料
+        //-- 编辑个人资料
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'modif') {
             /* 不能编辑demo这个管理员 */
@@ -618,7 +618,7 @@ class Privilege extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 为管理员分配权限
+        //-- 为管理员分配权限
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'allot') {
             include_once(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/admin/priv_action.php');
@@ -676,7 +676,7 @@ class Privilege extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 更新管理员的权限
+        //-- 更新管理员的权限
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'update_allot') {
             admin_priv('admin_manage');
@@ -706,7 +706,7 @@ class Privilege extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 删除一个管理员
+        //-- 删除一个管理员
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'remove') {
             check_authz_json('admin_drop');
@@ -752,7 +752,7 @@ class Privilege extends Init
 
 
         /*------------------------------------------------------ */
-//-- 根据用户名检测用户是否是云起管理员
+        //-- 根据用户名检测用户是否是云起管理员
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'is_yunqi_admin') {
             $result = 'local';
@@ -765,7 +765,7 @@ class Privilege extends Init
     }
 
     /* 获取管理员列表 */
-    function get_admin_userlist()
+    public function get_admin_userlist()
     {
         $list = array();
         $sql = 'SELECT user_id, user_name, email, add_time, last_login ' .
@@ -781,7 +781,7 @@ class Privilege extends Init
     }
 
     /* 清除购物车中过期的数据 */
-    function clear_cart()
+    public function clear_cart()
     {
         /* 取得有效的session */
         $sql = "SELECT DISTINCT session_id " .
@@ -797,7 +797,7 @@ class Privilege extends Init
     }
 
     /* 获取角色列表 */
-    function get_role_list()
+    public function get_role_list()
     {
         $list = array();
         $sql = 'SELECT role_id, role_name, action_list ' .
@@ -806,14 +806,14 @@ class Privilege extends Init
         return $list;
     }
 
-    function yunqi_logout()
+    public function yunqi_logout()
     {
         $cert = new certificate();
         $url = $cert->logout_url();
         header("location: $url");
     }
 
-    function getYunqiAd($ident)
+    public function getYunqiAd($ident)
     {
         if (!$ident) {
             return false;

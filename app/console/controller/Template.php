@@ -9,12 +9,10 @@ class Template extends Init
 {
     public function index()
     {
-
-
         require_once('includes/lib_template.php');
 
         /*------------------------------------------------------ */
-//-- 模版列表
+        //-- 模版列表
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
             admin_priv('template_select');
@@ -74,7 +72,7 @@ class Template extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 设置模板的内容
+        //-- 设置模板的内容
         /*------------------------------------------------------ */
 
         if ($_REQUEST['act'] == 'setup') {
@@ -198,7 +196,7 @@ class Template extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 提交模板内容设置
+        //-- 提交模板内容设置
         /*------------------------------------------------------ */
 
         if ($_REQUEST['act'] == 'setting') {
@@ -395,7 +393,7 @@ class Template extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 管理库项目
+        //-- 管理库项目
         /*------------------------------------------------------ */
 
         if ($_REQUEST['act'] == 'library') {
@@ -442,7 +440,7 @@ class Template extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 安装模版
+        //-- 安装模版
         /*------------------------------------------------------ */
 
         if ($_REQUEST['act'] == 'install') {
@@ -472,7 +470,7 @@ class Template extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 备份模版
+        //-- 备份模版
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'backup') {
             check_authz_json('backup_setting');
@@ -493,7 +491,7 @@ class Template extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 载入指定库项目的内容
+        //-- 载入指定库项目的内容
         /*------------------------------------------------------ */
 
         if ($_REQUEST['act'] == 'load_library') {
@@ -504,7 +502,7 @@ class Template extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 更新库项目内容
+        //-- 更新库项目内容
         /*------------------------------------------------------ */
 
         if ($_REQUEST['act'] == 'update_library') {
@@ -526,7 +524,7 @@ class Template extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 还原库项目
+        //-- 还原库项目
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'restore_library') {
             admin_priv('backup_setting');
@@ -545,7 +543,7 @@ class Template extends Init
 
 
         /*------------------------------------------------------ */
-//-- 布局备份
+        //-- 布局备份
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'backup_setting') {
             admin_priv('backup_setting');
@@ -660,7 +658,7 @@ class Template extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 上传主题(限制2M)
+        //-- 上传主题(限制2M)
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'upload') {
             admin_priv('upload');
@@ -699,7 +697,7 @@ class Template extends Init
         }
     }
 
-    function array_sort($a, $b)
+    public function array_sort($a, $b)
     {
         $cmp = strcmp($a['region'], $b['region']);
 
@@ -718,7 +716,7 @@ class Template extends Init
      * @param string $lib_name 库项目名称
      * @return  array
      */
-    function load_library($curr_template, $lib_name)
+    public function load_library($curr_template, $lib_name)
     {
         $lib_name = str_replace("0xa", '', $lib_name); // 过滤 0xa 非法字符
 
@@ -737,7 +735,7 @@ class Template extends Init
      * @param int $flag 1，AJAX数据；2，Array
      * @return
      */
-    function read_tpl_style($tpl_name, $flag = 1)
+    public function read_tpl_style($tpl_name, $flag = 1)
     {
         if (empty($tpl_name) && $flag == 1) {
             return 0;
@@ -798,7 +796,7 @@ class Template extends Init
      * @param string $tpl_style 模版风格名
      * @return
      */
-    function read_style_and_tpl($tpl_name, $tpl_style)
+    public function read_style_and_tpl($tpl_name, $tpl_style)
     {
         $style_info = array();
         $style_info = get_template_info($tpl_name, $tpl_style);
@@ -828,7 +826,7 @@ class Template extends Init
      * @param mdl_tar Object   &$tar   压缩容器
      * @param string $dir 压缩文件的路径
      */
-    function compression(&$tar, $dir)
+    public function compression(&$tar, $dir)
     {
         $handle = @opendir($dir);
         if ($handle) {
@@ -852,7 +850,7 @@ class Template extends Init
      * @param  [string] $dir 文件路径
      * @return bool     删除文件夹结果
      */
-    function delete_tree($dir)
+    public function delete_tree($dir)
     {
         $handle = @opendir($dir);
         if ($handle) {
@@ -876,7 +874,7 @@ class Template extends Init
      * @param mdl_tar Object   &$tar   压缩数据
      * @param string $dir 解压文件的路径
      */
-    function decompression($tar, $folder)
+    public function decompression($tar, $folder)
     {
         foreach ($tar->files as $file) {
             $information = $tar->getFile($file['name']);

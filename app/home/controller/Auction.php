@@ -12,14 +12,14 @@ class Auction extends Init
 
 
         /*------------------------------------------------------ */
-//-- act 操作项的初始化
+        //-- act 操作项的初始化
         /*------------------------------------------------------ */
         if (empty($_REQUEST['act'])) {
             $_REQUEST['act'] = 'list';
         }
 
         /*------------------------------------------------------ */
-//-- 拍卖活动列表
+        //-- 拍卖活动列表
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
             /* 取得拍卖活动总数 */
@@ -76,7 +76,7 @@ class Auction extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 拍卖商品 --> 商品详情
+        //-- 拍卖商品 --> 商品详情
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'view') {
             /* 取得参数：拍卖活动id */
@@ -166,7 +166,7 @@ class Auction extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 拍卖商品 --> 出价
+        //-- 拍卖商品 --> 出价
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'bid') {
             include_once(ROOT_PATH . 'includes/lib_order.php');
@@ -287,7 +287,7 @@ class Auction extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 拍卖商品 --> 购买
+        //-- 拍卖商品 --> 购买
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'buy') {
             /* 查询：取得参数：拍卖活动id */
@@ -395,7 +395,7 @@ class Auction extends Init
      * 取得拍卖活动数量
      * @return  int
      */
-    function auction_count()
+    public function auction_count()
     {
         $now = gmtime();
         $sql = "SELECT COUNT(*) " .
@@ -412,7 +412,7 @@ class Auction extends Init
      * @param int $page 当前页
      * @return  array
      */
-    function auction_list($size, $page)
+    public function auction_list($size, $page)
     {
         $auction_list = array();
         $auction_list['finished'] = $auction_list['finished'] = array();

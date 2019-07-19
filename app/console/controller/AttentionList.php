@@ -9,8 +9,6 @@ class AttentionList extends Init
 {
     public function index()
     {
-
-
         admin_priv('attention_list');
         if ($_REQUEST['act'] == 'list') {
             $goodsdb = get_attention();
@@ -131,7 +129,7 @@ class AttentionList extends Init
         }
     }
 
-    function get_attention()
+    public function get_attention()
     {
         $result = get_filter();
 

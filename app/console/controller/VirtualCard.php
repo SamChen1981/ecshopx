@@ -15,7 +15,7 @@ class VirtualCard extends Init
         require_once(ROOT_PATH . 'includes/lib_code.php');
 
         /*------------------------------------------------------ */
-//-- 补货处理
+        //-- 补货处理
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'replenish') {
             assign_query_info();
@@ -43,7 +43,7 @@ class VirtualCard extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑补货信息
+        //-- 编辑补货信息
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit_replenish') {
             /* 检查权限 */
@@ -120,7 +120,7 @@ class VirtualCard extends Init
             }
         }
         /*------------------------------------------------------ */
-//-- 补货列表
+        //-- 补货列表
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'card') {
             /* 检查权限 */
@@ -165,7 +165,7 @@ class VirtualCard extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 虚拟卡列表，用于排序、翻页
+        //-- 虚拟卡列表，用于排序、翻页
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'query_card') {
@@ -267,7 +267,7 @@ class VirtualCard extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 更改加密串
+        //-- 更改加密串
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'change') {
@@ -281,7 +281,7 @@ class VirtualCard extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 提交更改
+        //-- 提交更改
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'submit_change') {
@@ -326,7 +326,7 @@ class VirtualCard extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 切换是否已出售状态
+        //-- 切换是否已出售状态
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'toggle_sold') {
@@ -350,7 +350,7 @@ class VirtualCard extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 删除卡片
+        //-- 删除卡片
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'remove_card') {
             check_authz_json('virualcard');
@@ -374,7 +374,7 @@ class VirtualCard extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 开始更改加密串：先检查原串和新串
+        //-- 开始更改加密串：先检查原串和新串
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'start_change') {
@@ -413,7 +413,7 @@ class VirtualCard extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 更新加密串
+        //-- 更新加密串
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'on_change') {
@@ -469,7 +469,7 @@ class VirtualCard extends Init
      *
      * @return array
      */
-    function get_replenish_list()
+    public function get_replenish_list()
     {
         /* 查询条件 */
         $filter['goods_id'] = empty($_REQUEST['goods_id']) ? 0 : intval($_REQUEST['goods_id']);
@@ -537,7 +537,7 @@ class VirtualCard extends Init
      *
      * @return bool
      */
-    function update_goods_number($goods_id)
+    public function update_goods_number($goods_id)
     {
         $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('virtual_card') . " WHERE goods_id = '$goods_id' AND is_saled = 0";
         $goods_number = $GLOBALS['db']->getOne($sql);

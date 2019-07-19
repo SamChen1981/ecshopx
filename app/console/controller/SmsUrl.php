@@ -9,7 +9,6 @@ class SmsUrl extends Init
 {
     public function index()
     {
-
         $url = '';
         if (isset($GLOBALS['_CFG']['certificate_id'])) {
             if ($GLOBALS['_CFG']['certificate_id'] == '') {

@@ -9,8 +9,6 @@ class GoodsAuto extends Init
 {
     public function index()
     {
-
-
         admin_priv('goods_auto');
         $smarty->assign('thisfile', 'goods_auto.php');
         if ($_REQUEST['act'] == 'list') {
@@ -125,7 +123,7 @@ class GoodsAuto extends Init
         }
     }
 
-    function get_auto_goods()
+    public function get_auto_goods()
     {
         $where = ' WHERE g.is_delete <> 1 ';
         if (!empty($_POST['goods_name'])) {

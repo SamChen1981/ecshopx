@@ -9,14 +9,12 @@ class Favourable extends Init
 {
     public function index()
     {
-
-
         require(ROOT_PATH . 'includes/lib_goods.php');
 
         $exc = new exchange($ecs->table('favourable_activity'), $db, 'act_id', 'act_name');
 
         /*------------------------------------------------------ */
-//-- 活动列表页
+        //-- 活动列表页
         /*------------------------------------------------------ */
 
         if ($_REQUEST['act'] == 'list') {
@@ -43,7 +41,7 @@ class Favourable extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 分页、排序、查询
+        //-- 分页、排序、查询
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'query') {
@@ -65,7 +63,7 @@ class Favourable extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 删除
+        //-- 删除
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'remove') {
             check_authz_json('favourable');
@@ -91,7 +89,7 @@ class Favourable extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 批量操作
+        //-- 批量操作
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'batch') {
             /* 取得要操作的记录编号 */
@@ -122,7 +120,7 @@ class Favourable extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 修改排序
+        //-- 修改排序
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit_sort_order') {
             check_authz_json('favourable');
@@ -139,7 +137,7 @@ class Favourable extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 添加、编辑
+        //-- 添加、编辑
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'add' || $_REQUEST['act'] == 'edit') {
@@ -229,7 +227,7 @@ class Favourable extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 添加、编辑后提交
+        //-- 添加、编辑后提交
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update') {
@@ -323,7 +321,7 @@ class Favourable extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 搜索商品
+        //-- 搜索商品
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'search') {
@@ -367,7 +365,7 @@ class Favourable extends Init
      * 取得优惠活动列表
      * @return   array
      */
-    function favourable_list()
+    public function favourable_list()
     {
         $result = get_filter();
         if ($result === false) {

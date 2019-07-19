@@ -22,7 +22,7 @@ class User extends Init
         $back_act = '';
 
 
-// 不需要登录的操作或自己验证是否登录（如ajax处理）的act
+        // 不需要登录的操作或自己验证是否登录（如ajax处理）的act
         $not_login_arr =
             array('sms_get_password', 'ajax_validate_sms', 'ajax_validate_vcode', 'login', 'act_login', 'register', 'act_register', 'act_edit_password', 'get_password', 'send_pwd_email', 'password', 'signin', 'add_tag', 'collect', 'return_to_cart', 'logout', 'email_list', 'validate_email', 'send_hash_mail', 'order_query', 'is_registered', 'check_email', 'clear_history', 'qpassword_name', 'get_passwd_question', 'check_answer');
 
@@ -75,7 +75,7 @@ class User extends Init
             $smarty->assign('action', $action);
             $smarty->assign('lang', $_LANG);
         }
-//用户中心欢迎页
+        //用户中心欢迎页
         if ($action == 'default') {
             include_once(ROOT_PATH . 'includes/lib_clips.php');
             if ($rank = get_rank_info()) {

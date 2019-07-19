@@ -9,14 +9,12 @@ class Goods extends Init
 {
     public function index()
     {
-
-
         require_once(ROOT_PATH . '/' . ADMIN_PATH . '/includes/lib_goods.php');
         $image = new cls_image($_CFG['bgcolor']);
         $exc = new exchange($ecs->table('goods'), $db, 'goods_id', 'goods_name');
 
         /*------------------------------------------------------ */
-//-- 商品列表，商品回收站
+        //-- 商品列表，商品回收站
         /*------------------------------------------------------ */
 
         if ($_REQUEST['act'] == 'list' || $_REQUEST['act'] == 'trash') {
@@ -91,7 +89,7 @@ class Goods extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 添加新商品 编辑商品
+        //-- 添加新商品 编辑商品
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'add' || $_REQUEST['act'] == 'edit' || $_REQUEST['act'] == 'copy') {
@@ -414,7 +412,7 @@ class Goods extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 插入商品 更新商品
+        //-- 插入商品 更新商品
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update') {
@@ -1012,7 +1010,7 @@ class Goods extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 批量操作
+        //-- 批量操作
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'batch') {
@@ -1114,7 +1112,7 @@ class Goods extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 显示图片
+        //-- 显示图片
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'show_image') {
@@ -1132,7 +1130,7 @@ class Goods extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 修改商品名称
+        //-- 修改商品名称
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit_goods_name') {
             check_authz_json('goods_manage');
@@ -1147,7 +1145,7 @@ class Goods extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 修改商品货号
+        //-- 修改商品货号
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit_goods_sn') {
             check_authz_json('goods_manage');
@@ -1217,7 +1215,7 @@ class Goods extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 修改商品价格
+        //-- 修改商品价格
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit_goods_price') {
             check_authz_json('goods_manage');
@@ -1237,7 +1235,7 @@ class Goods extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 修改商品库存数量
+        //-- 修改商品库存数量
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit_goods_number') {
             check_authz_json('goods_manage');
@@ -1260,7 +1258,7 @@ class Goods extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 修改上架状态
+        //-- 修改上架状态
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'toggle_on_sale') {
             check_authz_json('goods_manage');
@@ -1275,7 +1273,7 @@ class Goods extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 修改精品推荐状态
+        //-- 修改精品推荐状态
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'toggle_best') {
             check_authz_json('goods_manage');
@@ -1290,7 +1288,7 @@ class Goods extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 修改新品推荐状态
+        //-- 修改新品推荐状态
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'toggle_new') {
             check_authz_json('goods_manage');
@@ -1305,7 +1303,7 @@ class Goods extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 修改热销推荐状态
+        //-- 修改热销推荐状态
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'toggle_hot') {
             check_authz_json('goods_manage');
@@ -1320,7 +1318,7 @@ class Goods extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 修改商品排序
+        //-- 修改商品排序
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit_sort_order') {
             check_authz_json('goods_manage');
@@ -1335,7 +1333,7 @@ class Goods extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 排序、分页、查询
+        //-- 排序、分页、查询
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'query') {
             $is_delete = empty($_REQUEST['is_delete']) ? 0 : intval($_REQUEST['is_delete']);
@@ -1397,7 +1395,7 @@ class Goods extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 放入回收站
+        //-- 放入回收站
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'remove') {
             $goods_id = intval($_REQUEST['id']);
@@ -1419,7 +1417,7 @@ class Goods extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 还原回收站中的商品
+        //-- 还原回收站中的商品
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'restore_goods') {
@@ -1441,7 +1439,7 @@ class Goods extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 彻底删除商品
+        //-- 彻底删除商品
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'drop_goods') {
             // 检查权限
@@ -1555,7 +1553,7 @@ class Goods extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 切换商品类型
+        //-- 切换商品类型
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'get_attr') {
             check_authz_json('goods_manage');
@@ -1569,7 +1567,7 @@ class Goods extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 删除图片
+        //-- 删除图片
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'drop_image') {
             check_authz_json('goods_manage');
@@ -1601,7 +1599,7 @@ class Goods extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 搜索商品，仅返回名称及ID
+        //-- 搜索商品，仅返回名称及ID
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'get_goods_list') {
             $filters = json_decode($_GET['JSON']);
@@ -1619,7 +1617,7 @@ class Goods extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 把商品加入关联
+        //-- 把商品加入关联
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'add_link_goods') {
             check_authz_json('goods_manage');
@@ -1656,7 +1654,7 @@ class Goods extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 删除关联商品
+        //-- 删除关联商品
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'drop_link_goods') {
             check_authz_json('goods_manage');
@@ -1701,7 +1699,7 @@ class Goods extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 增加一个配件
+        //-- 增加一个配件
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'add_group_goods') {
@@ -1732,7 +1730,7 @@ class Goods extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 删除一个配件
+        //-- 删除一个配件
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'drop_group_goods') {
@@ -1764,7 +1762,7 @@ class Goods extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 搜索文章
+        //-- 搜索文章
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'get_article_list') {
@@ -1789,7 +1787,7 @@ class Goods extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 添加关联文章
+        //-- 添加关联文章
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'add_goods_article') {
@@ -1819,7 +1817,7 @@ class Goods extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 删除关联文章
+        //-- 删除关联文章
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'drop_goods_article') {
             check_authz_json('goods_manage');
@@ -1845,7 +1843,7 @@ class Goods extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 货品列表
+        //-- 货品列表
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'product_list') {
             admin_priv('goods_manage');
@@ -1932,7 +1930,7 @@ class Goods extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 货品排序、分页、查询
+        //-- 货品排序、分页、查询
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'product_query') {
             /* 是否存在商品id */
@@ -1995,7 +1993,7 @@ class Goods extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 货品删除
+        //-- 货品删除
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'product_remove') {
             /* 检查权限 */
@@ -2032,7 +2030,7 @@ class Goods extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 修改货品价格
+        //-- 修改货品价格
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit_product_sn') {
             check_authz_json('goods_manage');
@@ -2055,7 +2053,7 @@ class Goods extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 修改货品库存
+        //-- 修改货品库存
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit_product_number') {
             check_authz_json('goods_manage');
@@ -2079,7 +2077,7 @@ class Goods extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 货品添加 执行
+        //-- 货品添加 执行
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'product_add_execute') {
             admin_priv('goods_manage');
@@ -2186,7 +2184,7 @@ class Goods extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 货品批量操作
+        //-- 货品批量操作
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'batch_product') {
             /* 定义返回 */
@@ -2237,7 +2235,7 @@ class Goods extends Init
             sys_msg($_LANG['no_operation'], 1, $link);
         }
         /*------------------------------------------------------ */
-//-- 修改商品虚拟数量
+        //-- 修改商品虚拟数量
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit_virtual_sales') {
             check_authz_json('goods_manage');
@@ -2259,7 +2257,7 @@ class Goods extends Init
             }
         }
         /*------------------------------------------------------ */
-//-- 异步上传图片
+        //-- 异步上传图片
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'ajax_upload_image') {
             check_authz_json('goods_manage');
@@ -2320,7 +2318,7 @@ class Goods extends Init
      * @param string $extension_code 虚拟商品扩展代码，实体商品为空
      * @return  array('href' => $href, 'text' => $text)
      */
-    function list_link($is_add = true, $extension_code = '')
+    public function list_link($is_add = true, $extension_code = '')
     {
         $href = 'goods.php?act=list';
         if (!empty($extension_code)) {
@@ -2344,7 +2342,7 @@ class Goods extends Init
      * @param string $extension_code 虚拟商品扩展代码，实体商品为空
      * @return  array('href' => $href, 'text' => $text)
      */
-    function add_link($extension_code = '')
+    public function add_link($extension_code = '')
     {
         $href = 'goods.php?act=add';
         if (!empty($extension_code)) {
@@ -2367,7 +2365,7 @@ class Goods extends Init
      *
      * @return boolean
      */
-    function goods_parse_url($url)
+    public function goods_parse_url($url)
     {
         $parse_url = @parse_url($url);
         return (!empty($parse_url['scheme']) && !empty($parse_url['host']));
@@ -2380,7 +2378,7 @@ class Goods extends Init
      * @param array $price_list 价格列表
      * @return  void
      */
-    function handle_volume_price($goods_id, $number_list, $price_list)
+    public function handle_volume_price($goods_id, $number_list, $price_list)
     {
         $sql = "DELETE FROM " . $GLOBALS['ecs']->table('volume_price') .
             " WHERE price_type = '1' AND goods_id = '$goods_id'";
@@ -2407,7 +2405,7 @@ class Goods extends Init
      * @param string $value 字段值
      * @return  bool
      */
-    function update_goods_stock($goods_id, $value)
+    public function update_goods_stock($goods_id, $value)
     {
         if ($goods_id) {
             /* $res = $goods_number - $old_product_number + $product_number; */

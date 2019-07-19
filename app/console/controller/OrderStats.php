@@ -9,8 +9,6 @@ class OrderStats extends Init
 {
     public function index()
     {
-
-
         require_once(ROOT_PATH . 'includes/lib_order.php');
         require_once(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/admin/statistic.php');
         require_once(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/admin/order.php');
@@ -25,7 +23,7 @@ class OrderStats extends Init
         }
 
         /*------------------------------------------------------ */
-//--订单统计
+        //--订单统计
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
             admin_priv('sale_order_stats');
@@ -348,7 +346,7 @@ class OrderStats extends Init
      * @param       $end_date      查询的结束日期
      * @return      $order_info    订单概况数据
      */
-    function get_orderinfo($start_date, $end_date)
+    public function get_orderinfo($start_date, $end_date)
     {
         //    订单状态说明
         //    OS_UNCONFIRMED = '待确认';
@@ -390,7 +388,7 @@ class OrderStats extends Init
      *
      * @return void
      */
-    function order_stats($order_status, $start_date, $end_time)
+    public function order_stats($order_status, $start_date, $end_time)
     {
         $sql = 'SELECT count(o.order_id) as counts FROM ' . $GLOBALS['ecs']->table('order_info') . " as o where 1 ";
         $where = "";

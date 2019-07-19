@@ -9,12 +9,10 @@ class Snatch extends Init
 {
     public function index()
     {
-
-
         $exc = new exchange($ecs->table("goods_activity"), $db, 'act_id', 'act_name');
 
         /*------------------------------------------------------ */
-//-- 添加活动
+        //-- 添加活动
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'add') {
             /* 权限判断 */
@@ -92,7 +90,7 @@ class Snatch extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 活动列表
+        //-- 活动列表
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'list') {
             $smarty->assign('ur_here', $_LANG['02_snatch_list']);
@@ -114,7 +112,7 @@ class Snatch extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 查询、翻页、排序
+        //-- 查询、翻页、排序
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'query') {
@@ -136,7 +134,7 @@ class Snatch extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑活动名称
+        //-- 编辑活动名称
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'edit_snatch_name') {
@@ -158,7 +156,7 @@ class Snatch extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 删除指定的活动
+        //-- 删除指定的活动
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'remove') {
@@ -175,7 +173,7 @@ class Snatch extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑活动
+        //-- 编辑活动
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit') {
             /* 权限判断 */
@@ -251,7 +249,7 @@ class Snatch extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 查看活动详情
+        //-- 查看活动详情
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'view') {
             /* 权限判断 */
@@ -278,7 +276,7 @@ class Snatch extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 排序、翻页活动详情
+        //-- 排序、翻页活动详情
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'query_bid') {
@@ -300,7 +298,7 @@ class Snatch extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 搜索商品
+        //-- 搜索商品
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'search_goods') {
@@ -316,7 +314,7 @@ class Snatch extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 搜索货品
+        //-- 搜索货品
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'search_products') {
@@ -337,7 +335,7 @@ class Snatch extends Init
      *
      * @return void
      */
-    function get_snatchlist()
+    public function get_snatchlist()
     {
         $result = get_filter();
         if ($result === false) {
@@ -397,7 +395,7 @@ class Snatch extends Init
      *
      * @return array       array(snatch_id, snatch_name, goods_id,start_time, end_time, min_price, integral)
      */
-    function get_snatch_info($id)
+    public function get_snatch_info($id)
     {
         global $ecs, $db, $_CFG;
 
@@ -428,7 +426,7 @@ class Snatch extends Init
      *
      * @return array
      */
-    function get_snatch_detail()
+    public function get_snatch_detail()
     {
         $filter['snatch_id'] = empty($_REQUEST['snatch_id']) ? 0 : intval($_REQUEST['snatch_id']);
         $filter['sort_by'] = empty($_REQUEST['sort_by']) ? 'bid_time' : trim($_REQUEST['sort_by']);

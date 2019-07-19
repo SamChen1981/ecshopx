@@ -19,7 +19,7 @@ class UserAccount extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 会员余额记录列表
+        //-- 会员余额记录列表
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
             /* 权限判断 */
@@ -62,7 +62,7 @@ class UserAccount extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 添加/编辑会员余额页面
+        //-- 添加/编辑会员余额页面
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'add' || $_REQUEST['act'] == 'edit') {
             admin_priv('surplus_manage'); //权限判断
@@ -116,7 +116,7 @@ class UserAccount extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 添加/编辑会员余额的处理部分
+        //-- 添加/编辑会员余额的处理部分
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update') {
             /* 权限判断 */
@@ -218,7 +218,7 @@ class UserAccount extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 审核会员余额页面
+        //-- 审核会员余额页面
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'check') {
             /* 检查权限 */
@@ -268,7 +268,7 @@ class UserAccount extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 更新会员余额的状态
+        //-- 更新会员余额的状态
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'action') {
             /* 检查权限 */
@@ -334,7 +334,7 @@ class UserAccount extends Init
         }
 
         /*------------------------------------------------------ */
-//-- ajax帐户信息列表
+        //-- ajax帐户信息列表
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'query') {
             $list = account_list();
@@ -349,7 +349,7 @@ class UserAccount extends Init
             make_json_result($smarty->fetch('user_account_list.htm'), '', array('filter' => $list['filter'], 'page_count' => $list['page_count']));
         }
         /*------------------------------------------------------ */
-//-- ajax删除一条信息
+        //-- ajax删除一条信息
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'remove') {
             /* 检查权限 */
@@ -369,7 +369,6 @@ class UserAccount extends Init
                 make_json_error($db->error());
             }
         }
-
     }
 
     /**
@@ -378,7 +377,7 @@ class UserAccount extends Init
      * @param int $user_id 会员ID
      * @return  int
      */
-    function get_user_surplus($user_id)
+    public function get_user_surplus($user_id)
     {
         $sql = "SELECT SUM(user_money) FROM " . $GLOBALS['ecs']->table('account_log') .
             " WHERE user_id = '$user_id'";
@@ -397,7 +396,7 @@ class UserAccount extends Init
      *
      * @return  int
      */
-    function update_user_account($id, $amount, $admin_note, $is_paid)
+    public function update_user_account($id, $amount, $admin_note, $is_paid)
     {
         $sql = "UPDATE " . $GLOBALS['ecs']->table('user_account') . " SET " .
             "admin_user  = '$_SESSION[admin_name]', " .
@@ -416,7 +415,7 @@ class UserAccount extends Init
      *
      * @return void
      */
-    function account_list()
+    public function account_list()
     {
         $result = get_filter();
         if ($result === false) {

@@ -9,11 +9,9 @@ class GoodsBooking extends Init
 {
     public function index()
     {
-
-
         admin_priv('booking');
         /*------------------------------------------------------ */
-//-- 列出所有订购信息
+        //-- 列出所有订购信息
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list_all') {
             $smarty->assign('ur_here', $_LANG['list_all']);
@@ -34,7 +32,7 @@ class GoodsBooking extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 翻页、排序
+        //-- 翻页、排序
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'query') {
             $list = get_bookinglist();
@@ -55,7 +53,7 @@ class GoodsBooking extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 删除缺货登记
+        //-- 删除缺货登记
         /*------------------------------------------------------ */
 
         if ($_REQUEST['act'] == 'remove') {
@@ -72,7 +70,7 @@ class GoodsBooking extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 显示详情
+        //-- 显示详情
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'detail') {
             $id = intval($_REQUEST['id']);
@@ -85,7 +83,7 @@ class GoodsBooking extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 处理提交数据
+        //-- 处理提交数据
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'update') {
             /* 权限判断 */
@@ -140,7 +138,7 @@ class GoodsBooking extends Init
      *
      * @return array
      */
-    function get_bookinglist()
+    public function get_bookinglist()
     {
         /* 查询条件 */
         $filter['keywords'] = empty($_REQUEST['keywords']) ? '' : trim($_REQUEST['keywords']);
@@ -186,7 +184,7 @@ class GoodsBooking extends Init
      *
      * @return  array
      */
-    function get_booking_info($id)
+    public function get_booking_info($id)
     {
         global $ecs, $db, $_CFG, $_LANG;
 

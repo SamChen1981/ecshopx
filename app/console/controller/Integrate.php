@@ -12,7 +12,7 @@ class Integrate extends Init
 
 
         /*------------------------------------------------------ */
-//-- 会员数据整合插件列表
+        //-- 会员数据整合插件列表
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
             $modules = read_modules('../includes/modules/integrates');
@@ -31,7 +31,7 @@ class Integrate extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 安装会员数据整合插件
+        //-- 安装会员数据整合插件
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'install') {
             admin_priv('integrate_users', '');
@@ -113,7 +113,7 @@ class Integrate extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 设置会员数据整合插件
+        //-- 设置会员数据整合插件
         /*------------------------------------------------------ */
 
         if ($_REQUEST['act'] == 'setup') {
@@ -135,7 +135,7 @@ class Integrate extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 检查用户填写资料
+        //-- 检查用户填写资料
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'check_config') {
             $code = $_POST['code'];
@@ -227,7 +227,7 @@ class Integrate extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 保存UCenter填写的资料
+        //-- 保存UCenter填写的资料
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'save_uc_config') {
             $code = $_POST['code'];
@@ -263,7 +263,7 @@ class Integrate extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 第一次保存UCenter安装的资料
+        //-- 第一次保存UCenter安装的资料
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'save_uc_config_first') {
             $code = $_POST['code'];
@@ -334,7 +334,7 @@ class Integrate extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 用户重名检查
+        //-- 用户重名检查
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'check_user') {
             $code = $_SESSION['code'];
@@ -499,7 +499,7 @@ class Integrate extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 重名用户处理
+        //-- 重名用户处理
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'modify') {
             /* 检查是否有改名失败的用户 */
@@ -530,7 +530,7 @@ class Integrate extends Init
         }
 
         /*------------------------------------------------------ */
-//-- ajax 用户列表查询
+        //-- ajax 用户列表查询
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'query') {
             $arr = conflict_userlist();
@@ -543,7 +543,7 @@ class Integrate extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 重名用户处理过程
+        //-- 重名用户处理过程
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'act_modify') {
             /* 先处理要改名的用户，改名用户要先检查是否有重名情况，有则标记出来 */
@@ -608,7 +608,7 @@ class Integrate extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 将商城数据同步到论坛
+        //-- 将商城数据同步到论坛
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'sync') {
             $size = 100;
@@ -670,7 +670,7 @@ class Integrate extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 完成任务
+        //-- 完成任务
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'task') {
             if (empty($_GET['size']) || $_GET['size'] < 0) {
@@ -769,7 +769,7 @@ class Integrate extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 保存UCenter设置
+        //-- 保存UCenter设置
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'setup_ucenter') {
             $result = array('error' => 0, 'message' => '');
@@ -992,7 +992,7 @@ class Integrate extends Init
      *
      * @return void
      */
-    function conflict_userlist()
+    public function conflict_userlist()
     {
         $filter['flag'] = empty($_REQUEST['flag']) ? 0 : intval($_REQUEST['flag']);
         $where = ' WHERE flag';
@@ -1032,7 +1032,7 @@ class Integrate extends Init
      *
      * @return void
      */
-    function save_integrate_config($code, $cfg)
+    public function save_integrate_config($code, $cfg)
     {
         $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('shop_config') . " WHERE code = 'integrate_code'";
 

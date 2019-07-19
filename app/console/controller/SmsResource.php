@@ -9,8 +9,6 @@ class SmsResource extends Init
 {
     public function index()
     {
-
-
         define('SOURCE_ID', '620386');
 
         $smarty->assign('ur_here', $_LANG['sms_resource_here']);

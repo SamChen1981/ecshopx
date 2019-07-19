@@ -17,14 +17,14 @@ class Wholesale extends Init
         }
 
         /*------------------------------------------------------ */
-//-- act 操作项的初始化
+        //-- act 操作项的初始化
         /*------------------------------------------------------ */
         if (empty($_REQUEST['act'])) {
             $_REQUEST['act'] = 'list';
         }
 
         /*------------------------------------------------------ */
-//-- 批发活动列表
+        //-- 批发活动列表
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
             $search_category = empty($_REQUEST['search_category']) ? 0 : intval($_REQUEST['search_category']);
@@ -100,7 +100,7 @@ class Wholesale extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 下载价格单
+        //-- 下载价格单
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'price_list') {
             $data = $_LANG['goods_name'] . "\t" . $_LANG['goods_attr'] . "\t" . $_LANG['number'] . "\t" . $_LANG['ws_price'] . "\t\n";
@@ -133,7 +133,7 @@ class Wholesale extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 加入购物车
+        //-- 加入购物车
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'add_to_cart') {
             /* 取得参数 */
@@ -255,7 +255,7 @@ class Wholesale extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 从购物车删除
+        //-- 从购物车删除
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'drop_goods') {
             $key = intval($_REQUEST['key']);
@@ -269,7 +269,7 @@ class Wholesale extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 提交订单
+        //-- 提交订单
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'submit_order') {
             include_once(ROOT_PATH . 'includes/lib_order.php');
@@ -376,7 +376,7 @@ class Wholesale extends Init
      * @param string $where 查询条件
      * @return  array
      */
-    function wholesale_list($size, $page, $where)
+    public function wholesale_list($size, $page, $where)
     {
         $list = array();
         $sql = "SELECT w.*, g.goods_thumb, g.goods_name as goods_name " .
@@ -407,7 +407,7 @@ class Wholesale extends Init
      * @param int $goods_id 商品ID
      * @return  array
      */
-    function get_price_ladder($goods_id)
+    public function get_price_ladder($goods_id)
     {
         /* 显示商品规格 */
         $goods_attr_list = array_values(get_goods_attr($goods_id));
@@ -459,7 +459,7 @@ class Wholesale extends Init
      * @param array $reference 参照的商品属性
      * @return  bool
      */
-    function is_attr_matching(&$goods_list, $reference)
+    public function is_attr_matching(&$goods_list, $reference)
     {
         foreach ($goods_list as $key => $goods) {
             // 需要相同的元素个数
@@ -495,7 +495,7 @@ class Wholesale extends Init
         return false;
     }
 
-///**
+    ///**
 // * 购物车中的商品属性与当前购买的商品属性是否匹配
 // * @param   array   $goods_attr     用户选择的商品属性
 // * @param   array   $reference      参照的商品属性

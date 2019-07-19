@@ -9,8 +9,6 @@ class AffiliateCk extends Init
 {
     public function index()
     {
-
-
         admin_priv('affiliate_ck');
         $timestamp = time();
 
@@ -19,7 +17,7 @@ class AffiliateCk extends Init
         $separate_on = $affiliate['on'];
 
         /*------------------------------------------------------ */
-//-- 分成页
+        //-- 分成页
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
             isset($_GET[auid]) && $_GET[auid] = intval($_GET[auid]);
@@ -39,7 +37,7 @@ class AffiliateCk extends Init
             $smarty->display('affiliate_ck_list.htm');
         }
         /*------------------------------------------------------ */
-//-- 分页
+        //-- 分页
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'query') {
             isset($_GET[auid]) && $_GET[auid] = intval($_GET[auid]);
@@ -180,7 +178,7 @@ class AffiliateCk extends Init
         }
     }
 
-    function get_affiliate_ck()
+    public function get_affiliate_ck()
     {
         $affiliate = unserialize($GLOBALS['_CFG']['affiliate']);
         empty($affiliate) && $affiliate = array();
@@ -237,16 +235,16 @@ class AffiliateCk extends Init
                     " ORDER BY order_id DESC" .
                     " LIMIT " . $filter['start'] . ",$filter[page_size]";
 
-                /*
-                    SQL解释：
+            /*
+                SQL解释：
 
-                    列出同时满足以下条件的订单分成情况：
-                    1、有效订单o.user_id > 0
-                    2、满足以下情况之一：
-                        a.有用户注册上线的未分成订单 u.parent_id > 0 AND o.is_separate = 0
-                        b.已分成订单 o.is_separate > 0
+                列出同时满足以下条件的订单分成情况：
+                1、有效订单o.user_id > 0
+                2、满足以下情况之一：
+                    a.有用户注册上线的未分成订单 u.parent_id > 0 AND o.is_separate = 0
+                    b.已分成订单 o.is_separate > 0
 
-                */
+            */
             } else {
                 //推荐订单分成
                 $sql = "SELECT o.*, a.log_id,a.user_id as suid, a.user_name as auser, a.money, a.point, a.separate_type,u.parent_id as up FROM " . $GLOBALS['ecs']->table('order_info') . " o" .
@@ -303,7 +301,7 @@ class AffiliateCk extends Init
         return $arr;
     }
 
-    function write_affiliate_log($oid, $uid, $username, $money, $point, $separate_by)
+    public function write_affiliate_log($oid, $uid, $username, $money, $point, $separate_by)
     {
         $time = gmtime();
         $sql = "INSERT INTO " . $GLOBALS['ecs']->table('affiliate_log') . "( order_id, user_id, user_name, time, money, point, separate_type)" .

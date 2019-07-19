@@ -9,8 +9,6 @@ class VisitSold extends Init
 {
     public function index()
     {
-
-
         require_once(ROOT_PATH . 'includes/lib_order.php');
         require_once('../languages/' . $_CFG['lang'] . '/admin/statistic.php');
         $smarty->assign('lang', $_LANG);
@@ -25,7 +23,7 @@ class VisitSold extends Init
         admin_priv('client_flow_stats');
 
         /*------------------------------------------------------ */
-//--访问购买比例
+        //--访问购买比例
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list' || $_REQUEST['act'] == 'download') {
             /* 变量的初始化 */
@@ -78,7 +76,7 @@ class VisitSold extends Init
      * @param int $show_num 显示个数
      * @return  array           $click_sold_info  访问购买比例数据
      */
-    function click_sold_info($cat_id, $brand_id, $show_num)
+    public function click_sold_info($cat_id, $brand_id, $show_num)
     {
         global $db, $ecs;
 

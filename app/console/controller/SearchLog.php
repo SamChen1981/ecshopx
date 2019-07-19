@@ -9,8 +9,6 @@ class SearchLog extends Init
 {
     public function index()
     {
-
-
         $_REQUEST['act'] = trim($_REQUEST['act']);
 
         admin_priv('search_log');
@@ -43,7 +41,7 @@ class SearchLog extends Init
         }
     }
 
-    function get_search_log()
+    public function get_search_log()
     {
         $where = '';
         if (isset($_REQUEST['start_dateYear']) && isset($_REQUEST['end_dateYear'])) {

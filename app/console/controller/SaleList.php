@@ -9,8 +9,6 @@ class SaleList extends Init
 {
     public function index()
     {
-
-
         require_once(ROOT_PATH . 'includes/lib_order.php');
         require_once(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/admin/statistic.php');
         $smarty->assign('lang', $_LANG);
@@ -60,7 +58,7 @@ class SaleList extends Init
             make_json_result($smarty->fetch('sale_list.htm'), '', array('filter' => $sale_list_data['filter'], 'page_count' => $sale_list_data['page_count']));
         }
         /*------------------------------------------------------ */
-//--商品明细列表
+        //--商品明细列表
         /*------------------------------------------------------ */
         else {
             /* 权限判断 */
@@ -98,7 +96,7 @@ class SaleList extends Init
      * @param bool $is_pagination 是否分页
      * @return  array   销售明细数据
      */
-    function get_sale_list($is_pagination = true)
+    public function get_sale_list($is_pagination = true)
     {
 
         /* 时间参数 */

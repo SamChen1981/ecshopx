@@ -9,8 +9,6 @@ class FriendLink extends Init
 {
     public function index()
     {
-
-
         $image = new cls_image($_CFG['bgcolor']);
 
         $exc = new exchange($ecs->table('friend_link'), $db, 'link_id', 'link_name');
@@ -23,7 +21,7 @@ class FriendLink extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 友情链接列表页面
+        //-- 友情链接列表页面
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
             /* 模板赋值 */
@@ -47,7 +45,7 @@ class FriendLink extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 排序、分页、查询
+        //-- 排序、分页、查询
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'query') {
             /* 获取友情链接数据 */
@@ -69,7 +67,7 @@ class FriendLink extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 添加新链接页面
+        //-- 添加新链接页面
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'add') {
             admin_priv('friendlink');
@@ -84,7 +82,7 @@ class FriendLink extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 处理添加的链接
+        //-- 处理添加的链接
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'insert') {
             /* 变量初始化 */
@@ -147,7 +145,7 @@ class FriendLink extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 友情链接编辑页面
+        //-- 友情链接编辑页面
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit') {
             admin_priv('friendlink');
@@ -183,7 +181,7 @@ class FriendLink extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑链接的处理页面
+        //-- 编辑链接的处理页面
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'update') {
             /* 变量初始化 */
@@ -242,7 +240,7 @@ class FriendLink extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑链接名称
+        //-- 编辑链接名称
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit_link_name') {
             check_authz_json('friendlink');
@@ -265,7 +263,7 @@ class FriendLink extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 删除友情链接
+        //-- 删除友情链接
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'remove') {
             check_authz_json('friendlink');
@@ -291,7 +289,7 @@ class FriendLink extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 编辑排序
+        //-- 编辑排序
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit_show_order') {
             check_authz_json('friendlink');
@@ -312,7 +310,7 @@ class FriendLink extends Init
     }
 
     /* 获取友情链接数据列表 */
-    function get_links_list()
+    public function get_links_list()
     {
         $result = get_filter();
         if ($result === false) {

@@ -12,7 +12,7 @@ class EcmobileSetting extends Init
 
 
         /*------------------------------------------------------ */
-//-- 移动端应用配置
+        //-- 移动端应用配置
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
             /* 检查权限 */
@@ -109,7 +109,7 @@ class EcmobileSetting extends Init
         }
     }
 
-    function get_items($code)
+    public function get_items($code)
     {
         $params = get_params();
         foreach ($params as $value) {
@@ -121,7 +121,7 @@ class EcmobileSetting extends Init
         }
     }
 
-    function get_params()
+    public function get_params()
     {
         $grouplist = array(
             1 => array(

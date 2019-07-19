@@ -9,8 +9,6 @@ class GuestStats extends Init
 {
     public function index()
     {
-
-
         require_once(ROOT_PATH . 'includes/lib_order.php');
         require_once(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/admin/statistic.php');
 
@@ -22,7 +20,7 @@ class GuestStats extends Init
         }
 
         /*------------------------------------------------------ */
-//-- 客户统计列表
+        //-- 客户统计列表
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
             /* 权限判断 */

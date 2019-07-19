@@ -9,7 +9,6 @@ class GoodsScript extends Init
 {
     public function index()
     {
-
         define('INIT_NO_USERS', true);
 
         $charset = empty($_GET['charset']) ? EC_CHARSET : $_GET['charset'];
@@ -20,7 +19,7 @@ class GoodsScript extends Init
         header('content-type: application/x-javascript; charset=' . ($charset == 'UTF8' ? 'utf-8' : $charset));
 
         /*------------------------------------------------------ */
-//-- 判断是否存在缓存，如果存在则调用缓存，反之读取相应内容
+        //-- 判断是否存在缓存，如果存在则调用缓存，反之读取相应内容
         /*------------------------------------------------------ */
         /* 缓存编号 */
         $cache_id = sprintf('%X', crc32($_SERVER['QUERY_STRING']));

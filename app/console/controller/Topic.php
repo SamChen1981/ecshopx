@@ -31,7 +31,7 @@ class Topic extends Init
         $allow_suffix = array('gif', 'jpg', 'png', 'jpeg', 'bmp', 'swf');
 
         /*------------------------------------------------------ */
-//-- 专题列表页面
+        //-- 专题列表页面
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
             admin_priv('topic_manage');
@@ -284,7 +284,7 @@ class Topic extends Init
      * @access  public
      * @return void
      */
-    function get_topic_list()
+    public function get_topic_list()
     {
         $result = get_filter();
         if ($result === false) {
@@ -328,7 +328,7 @@ class Topic extends Init
      * @param string $text 文字
      * @return  array('href' => $href, 'text' => $text)
      */
-    function list_link($is_add = true, $text = '')
+    public function list_link($is_add = true, $text = '')
     {
         $href = 'topic.php?act=list';
         if (!$is_add) {
@@ -341,7 +341,7 @@ class Topic extends Init
         return array('href' => $href, 'text' => $text);
     }
 
-    function get_toppic_width_height()
+    public function get_toppic_width_height()
     {
         $width_height = array();
 
@@ -378,7 +378,7 @@ class Topic extends Init
         return $width_height;
     }
 
-    function get_url_image($url)
+    public function get_url_image($url)
     {
         $url_arr = explode('.', $url);
         $ext = strtolower(end($url_arr));
