@@ -61,8 +61,7 @@ class Init extends Controller
         define('IMAGE_DIR', $GLOBALS['ecs']->image_dir());
 
         /* 初始化数据库类 */
-        $GLOBALS['db'] = new Mysql(config('database.database'), config('database.database'), config('database.database'), config('database.database'));
-        $GLOBALS['db']->set_disable_cache_tables(array($GLOBALS['ecs']->table('sessions'), $GLOBALS['ecs']->table('sessions_data'), $GLOBALS['ecs']->table('cart')));
+        $GLOBALS['db'] = new Mysql();
 
         /* 创建错误处理对象 */
         $GLOBALS['err'] = new Error('message.dwt');

@@ -75,7 +75,7 @@ class Init extends Controller
         define('IMAGE_DIR', $GLOBALS['ecs']->image_dir());
 
         /* 初始化数据库类 */
-        $GLOBALS['db'] = new Mysql($db_host, $db_user, $db_pass, $db_name);
+        $GLOBALS['db'] = new Mysql();
 
         /* 创建错误处理对象 */
         $GLOBALS['err'] = new Error('message.htm');

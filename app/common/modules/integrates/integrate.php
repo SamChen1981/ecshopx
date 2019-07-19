@@ -103,9 +103,9 @@ class integrate
             $this->db = $GLOBALS['db'];
         } else {
             if (empty($cfg['is_latin1'])) {
-                $this->db = new Mysql($cfg['db_host'], $cfg['db_user'], $cfg['db_pass'], $cfg['db_name'], $this->charset, null, $quiet);
+                $this->db = new Mysql();
             } else {
-                $this->db = new Mysql($cfg['db_host'], $cfg['db_user'], $cfg['db_pass'], $cfg['db_name'], 'latin1', null, $quiet);
+                $this->db = new Mysql();
             }
         }
 
