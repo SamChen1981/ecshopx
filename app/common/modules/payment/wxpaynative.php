@@ -118,7 +118,7 @@ function qrcodeResponse(result){
         setTimeout(function() {
             getInterval();
         },
-        ' . (WXPAYNATIVE_QUERY_INTERVAL * 1000) . ');
+        ' . (10 * 1000) . ');
         new Date().getTime();
     } else {
         location = "' . $notify_url . '?code=wxpaynative&check=true&redirect=true&log_id=' . $order["log_id"] . '";

@@ -213,8 +213,8 @@ define('TO_R', 2); //兑换到商城等级积分
 define('FROM_R', 3); //用商城等级积分兑换
 
 /* 支付宝商家账户 */
-define('ALIPAY_AUTH', 'gh0bis45h89m5mwcoe85us4qrwispes0');
-define('ALIPAY_ID', '2088002052150939');
+define('ALIPAY_AUTH', '');
+define('ALIPAY_ID', '');
 
 /* 添加feed事件到UC的TYPE*/
 define('BUY_GOODS', 1); //购买商品
@@ -237,60 +237,7 @@ define('LICENSE_VERSION', '1.0');
 /* 配送方式 */
 define('SHIP_LIST', 'cac|city_express|ems|flat|fpd|post_express|post_mail|presswork|sf_express|sto_express|yto|zto');
 
-/* 矩阵相关接口 */
-define('VERIFY_APP_ID', 'ecshop_b2c');//矩阵接口类型
-
-/* 外网 */
-// define('MATRIX_HOST','http://www.matrix.ecos.shopex.cn');//外网申请绑定
-// define('MATRIX_HOST','http://www.matrix.ecos.shopex.cn');//外网申请绑定
-define('MATRIX_HOST', 'https://iframe.shopex.cn');//外网申请绑定
-// define('MATRIX_COMMIT_URL_SYNC','http://matrix.ecos.shopex.cn/sync');//矩阵同步API
-define('MATRIX_COMMIT_URL_SYNC', 'https://matrix.shopex.cn/sync');//矩阵同步API
-// define('MATRIX_REALTION_URL','http://www.matrix.ecos.shopex.cn/?');//关系绑定API
-define('MATRIX_REALTION_URL', 'https://iframe.shopex.cn/?');//关系绑定API
-define('SMS_RESOURCE_URL', 'https://resource.shopex.cn');//短信平台地址
-define('YUNQI_LOGISTIC_URL', 'https://es.shopex.cn/');/* 云起物流地址 */
-define('AUTH_USER_URL', 'https://license.shopex.cn');/* 授权地址 */
-define('YUNQI_ACCOUNT_URL', 'https://account.shopex.cn/cashier');/* 云起收银地址 */
-define('TEEGON_PASSPORT_URL', 'https://charging.teegon.com/passport/login');/* 天工登录地址 */
-define('OAUTH_API_PATH', 'api');
-
-/* openapi相关 */
-define('OPENAPI_KEY', 'omxypz6c');
-define('OPENAPI_SECRET', 'te3c2d5p5ma6tn5ubqyp');
-define('OPENAPI_KEY_OLD', 'yogfss4l');
-define('OPENAPI_SECRET_OLD', 'grhugs2oplt664ckgp3i');
-define('OPENAPI_SITE', 'https://openapi.shopex.cn');
-define('OPENAPI_OAUTH', 'https://openapi.shopex.cn/oauth');
-
-/* 云起服务地址 */
-// define('YUNQI_SERVICE_URL','http://fw.yunqi.shopex.cn/iframe?');
-define('YUNQI_SERVICE_URL', 'https://fuwu.shopex.cn/iframe?');
-
-/* auth的产品code */
-define('PRODUCT_CODE', 'product_0119');
-define('GOODS_CODE', 'goods_1097');
-
-/* 版本地址 */
-define('VERSION_GBK', 'https://cloud-ecshop.xyunqi.com/version/release_gbk.txt');
-//define('VERSION_UTF8', 'https://cloud-ecshop.xyunqi.com/version/release_utf8.txt');
-// define('VERSION_UTF8', 'http://update.shopex.com.cn/version/program/ECShop/ecshop_version_list.txt');
-define('VERSION_UTF8', 'https://update.xyunqi.com/version/program/ECShop/ecshop_version_list.txt');
-
-/* debug start */
-define('DEBUG_API', true);
-define('LOG_DIR', ROOT_PATH . "temp/logs/" . date("Y-m", time()));
-/* debug end*/
-
-define('PMP_DESKTOP', 'https://pmp.shopex.cn/index.php?app=ad&ctl=display&act=index&nobar=1&nobtn=1&code=babda8d9d1c2863bd2b6091fce411881&entid=131110483129&username=&r=1461304885');
-define('PMS_MARKET', 'https://pmp.shopex.cn/index.php?app=ad&ctl=display&act=index&nobar=1&nobtn=1&code=01564ca0eb12162bcb6801ac67c97f07&entid=131110483129&username=&r=1461304885');
-
 // 生成二维码
-// define('QRCODE_URL', 'http://qr.liantu.com/api.php?text=');
-// define('QRCODE_URL', 'https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=');
 define('QRCODE_URL', 'https://sapi.k780.com/?app=qr.get&level=H&size=8&data=');
 // 生成短链接
-// define('SHORT_URL', 'http://suo.im/api.php?url=');
 define('SHORT_URL', 'https://dwz.cn/admin/create');
-
-define("WXPAYNATIVE_QUERY_INTERVAL", 20);//以秒为单位，首次请求默认为20秒，效果最佳, 值越小，用户体验越好，服务器压力越大，反之用户体验越差，服务器压力越小。 推荐10
