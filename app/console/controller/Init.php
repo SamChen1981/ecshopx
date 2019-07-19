@@ -33,32 +33,6 @@ class Init extends Controller
 
         define('ECS_ADMIN', true);
 
-        error_reporting(E_ALL);
-
-        if (__FILE__ == '') {
-            die('Fatal error code: 0');
-        }
-
-        /* 初始化设置 */
-        @ini_set('memory_limit', '64M');
-        @ini_set('session.cache_expire', 600);
-        @ini_set('session.use_trans_sid', 0);
-        @ini_set('session.use_cookies', 1);
-        @ini_set('session.auto_start', 0);
-        @ini_set('display_errors', 0);
-
-        if (DIRECTORY_SEPARATOR == '\\') {
-            @ini_set('include_path', '.;' . ROOT_PATH);
-        } else {
-            @ini_set('include_path', '.:' . ROOT_PATH);
-        }
-
-        if (file_exists('../data/config.php')) {
-            include('../data/config.php');
-        } else {
-            include('../includes/config.php');
-        }
-
         /* 取得当前ecshop所在的根目录 */
         if (!defined('ADMIN_PATH')) {
             define('ADMIN_PATH', 'admin');
@@ -96,18 +70,18 @@ class Init extends Controller
         }
 
         /* 创建 ECSHOP 对象 */
-        $ecs = new ECS($db_name, $prefix);
+        $GLOBALS['ecs'] = new ECS($db_name, $prefix);
         define('DATA_DIR', $GLOBALS['ecs']->data_dir());
         define('IMAGE_DIR', $GLOBALS['ecs']->image_dir());
 
         /* 初始化数据库类 */
-        $db = new Mysql($db_host, $db_user, $db_pass, $db_name);
+        $GLOBALS['db'] = new Mysql($db_host, $db_user, $db_pass, $db_name);
 
         /* 创建错误处理对象 */
-        $err = new Error('message.htm');
+        $GLOBALS['err'] = new Error('message.htm');
 
         /* 初始化session */
-        $sess = new Session($db, $GLOBALS['ecs']->table('sessions'), $GLOBALS['ecs']->table('sessions_data'), 'ECSCP_ID');
+        $GLOBALS['sess'] = new Session($db, $GLOBALS['ecs']->table('sessions'), $GLOBALS['ecs']->table('sessions_data'), 'ECSCP_ID');
 
         /* 初始化 action */
         if (!isset($_REQUEST['act'])) {
@@ -166,10 +140,10 @@ class Init extends Controller
         }
 
         /* 创建 Smarty 对象。*/
-        $smarty = new Template();
+        $GLOBALS['smarty'] = new Template();
 
-        $GLOBALS['smarty']->template_dir = ROOT_PATH . ADMIN_PATH . '/templates';
-        $GLOBALS['smarty']->compile_dir = ROOT_PATH . 'temp/compiled/admin';
+        $GLOBALS['smarty']->template_dir = app_path('console/view');
+        $GLOBALS['smarty']->compile_dir = runtime_path('temp/compiled/admin');
 
         $GLOBALS['smarty']->assign('lang', $GLOBALS['_LANG']);
         $GLOBALS['smarty']->assign('help_open', $GLOBALS['_CFG']['help_open']);

@@ -115,11 +115,11 @@ class Init extends Controller
             $GLOBALS['smarty'] = new Template();
 
             $GLOBALS['smarty']->cache_lifetime = $GLOBALS['_CFG']['cache_time'];
-            $GLOBALS['smarty']->template_dir = ROOT_PATH . 'themes/' . $GLOBALS['_CFG']['template'];
-            $GLOBALS['smarty']->cache_dir = ROOT_PATH . 'temp/caches';
-            $GLOBALS['smarty']->compile_dir = ROOT_PATH . 'temp/compiled';
+            $GLOBALS['smarty']->template_dir = public_path('themes/' . $GLOBALS['_CFG']['template']);
+            $GLOBALS['smarty']->cache_dir = runtime_path('temp/caches');
+            $GLOBALS['smarty']->compile_dir = runtime_path('temp/compiled');
 
-            if ((DEBUG_MODE & 2) == 2) {
+            if (config('app.app_debug')) {
                 $GLOBALS['smarty']->direct_output = true;
                 $GLOBALS['smarty']->force_compile = true;
             } else {
