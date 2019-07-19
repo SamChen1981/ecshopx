@@ -227,11 +227,13 @@ class ShopConfig extends Init
 
             $GLOBALS['_CFG'] = load_config();
 
-            $shop_country = $GLOBALS['db']->getOne("SELECT region_name FROM " . $GLOBALS['ecs']->table('region') . " WHERE region_id='$GLOBALS['_CFG'][shop_country]'");
-            $shop_province = $GLOBALS['db']->getOne("SELECT region_name FROM " . $GLOBALS['ecs']->table('region') . " WHERE region_id='$GLOBALS['_CFG'][shop_province]'");
-            $shop_city = $GLOBALS['db']->getOne("SELECT region_name FROM " . $GLOBALS['ecs']->table('region') . " WHERE region_id='$GLOBALS['_CFG'][shop_city]'");
+            $shop_country = $GLOBALS['db']->getOne("SELECT region_name FROM " . $GLOBALS['ecs']->table('region') . " WHERE region_id='{$GLOBALS['_CFG']['shop_country']}'");
+            $shop_province = $GLOBALS['db']->getOne("SELECT region_name FROM " . $GLOBALS['ecs']->table('region') . " WHERE region_id='{$GLOBALS['_CFG']['shop_province']}'");
+            $shop_city = $GLOBALS['db']->getOne("SELECT region_name FROM " . $GLOBALS['ecs']->table('region') . " WHERE region_id='{$GLOBALS['_CFG']['shop_city']}'");
 
-            $spt = '<script type="text/javascript" src="https://api-ecshop.xyunqi.com/record.php?';
+            /*
+             * TODO BY LANCE
+             * $spt = '<script type="text/javascript" src="https://api-ecshop.xyunqi.com/record.php?';
             $spt .= "url=" . urlencode($GLOBALS['ecs']->url());
             $spt .= "&shop_name=" . urlencode($GLOBALS['_CFG']['shop_name']);
             $spt .= "&shop_title=" . urlencode($GLOBALS['_CFG']['shop_title']);
@@ -243,7 +245,8 @@ class ShopConfig extends Init
             $spt .= "&email=$GLOBALS['_CFG'][service_email]&phone=$GLOBALS['_CFG'][service_phone]&icp=" . urlencode($GLOBALS['_CFG']['icp_number']);
             $spt .= "&version=" . VERSION . "&language=$GLOBALS['_CFG'][lang]&php_ver=" . PHP_VERSION . "&mysql_ver=" . $GLOBALS['db']->version();
             $spt .= "&charset=" . EC_CHARSET;
-            $spt .= '"></script>';
+            $spt .= '"></script>';*/
+            $spt = '';
 
             if ($type == 'mail_setting') {
                 $links[] = array('text' => $GLOBALS['_LANG']['back_mail_settings'], 'href' => 'shop_config.php?act=mail_settings');
@@ -337,7 +340,6 @@ class ShopConfig extends Init
      */
     private function get_settings($groups = null, $excludes = null)
     {
-
         $config_groups = '';
         $excludes_groups = '';
 

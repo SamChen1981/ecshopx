@@ -767,7 +767,7 @@ class GoodsBatch extends Init
                     echo join(',', $GLOBALS['_LANG']['upload_goods']);
                 }
             } else {
-                echo 'error: $GLOBALS['_LANG'][upload_goods] not exists';
+                echo 'error: ' . $GLOBALS['_LANG']['upload_goods'] . ' not exists';
             }
         }
 

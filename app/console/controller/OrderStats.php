@@ -91,7 +91,7 @@ class OrderStats extends Init
             /* 按月份交叉查询 */
             if ($is_multi) {
                 /* 订单概况 */
-                $order_general_xml = "<chart caption='$GLOBALS['_LANG'][order_circs]' shownames='1' showvalues='0' decimals='0' outCnvBaseFontSize='12' baseFontSize='12' >";
+                $order_general_xml = "<chart caption='{$GLOBALS['_LANG']['order_circs']}' shownames='1' showvalues='0' decimals='0' outCnvBaseFontSize='12' baseFontSize='12' >";
                 $order_general_xml .= "<categories><category label='{$GLOBALS['_LANG']['cs'][OS_UNCONFIRMED]}' />" .
                     "<category label='{$GLOBALS['_LANG']['cs'][CS_AWAIT_PAY]}' />" .
                     "<category label='{$GLOBALS['_LANG']['cs'][CS_AWAIT_SHIP]}' />" .
@@ -119,7 +119,7 @@ class OrderStats extends Init
                 $order_general_xml .= "</chart>";
 
                 /* 支付方式 */
-                $pay_xml = "<chart caption='$GLOBALS['_LANG'][pay_method]' shownames='1' showvalues='0' decimals='0' outCnvBaseFontSize='12' baseFontSize='12' >";
+                $pay_xml = "<chart caption='{$GLOBALS['_LANG']['pay_method']}' shownames='1' showvalues='0' decimals='0' outCnvBaseFontSize='12' baseFontSize='12' >";
 
                 $payment = array();
                 $payment_count = array();
@@ -166,7 +166,7 @@ class OrderStats extends Init
                 $ship = array();
                 $ship_count = array();
 
-                $ship_xml = "<chart caption='$GLOBALS['_LANG'][shipping_method]' shownames='1' showvalues='0' decimals='0' outCnvBaseFontSize='12' baseFontSize='12' >";
+                $ship_xml = "<chart caption='{$GLOBALS['_LANG']['shipping_method']}' shownames='1' showvalues='0' decimals='0' outCnvBaseFontSize='12' baseFontSize='12' >";
 
                 foreach ($start_date_arr as $k => $val) {
                     $sql = 'SELECT sp.shipping_id, sp.shipping_name AS ship_name, i.shipping_time, COUNT(i.order_id) AS order_num ' .
@@ -301,7 +301,7 @@ class OrderStats extends Init
 
             $data .= "$order_info[unconfirmed_num] \t $order_info[await_pay_num] \t $order_info[await_ship_num] \t $order_info[finished_num] \t $order_info[paying_num] \t $order_info[canceled_num] \t $order_info[invalid_num] \t $order_info[returned_num]\t $order_info[shipped_payt_num]\n";
 
-            $data .= "\n$GLOBALS['_LANG'][pay_method]\n";
+            $data .= "\n{$GLOBALS['_LANG']['pay_method']}\n";
 
             /* 支付方式 */
             $sql = 'SELECT i.pay_id, p.pay_name, COUNT(i.order_id) AS order_num ' .
@@ -326,7 +326,7 @@ class OrderStats extends Init
                 "GROUP BY i.shipping_id ORDER BY order_num DESC";
             $ship_res = $GLOBALS['db']->getAll($sql);
 
-            $data .= "\n$GLOBALS['_LANG'][shipping_method]\n";
+            $data .= "\n{$GLOBALS['_LANG']['shipping_method']}\n";
             foreach ($ship_res as $val) {
                 $data .= $val['ship_name'] . "\t";
             }

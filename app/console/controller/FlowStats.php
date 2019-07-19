@@ -12,6 +12,8 @@ class FlowStats extends Init
         require_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/admin/statistic.php');
         $GLOBALS['smarty']->assign('lang', $GLOBALS['_LANG']);
 
+        global $timezone;
+
         /* act操作项的初始化 */
         if (empty($_REQUEST['act'])) {
             $_REQUEST['act'] = 'view';
@@ -61,7 +63,7 @@ class FlowStats extends Init
             $max = 0;
 
             if (!$is_multi) {
-                $general_xml = "<graph caption='$GLOBALS['_LANG'][general_stats]' shownames='1' showvalues='1' decimalPrecision='0' yaxisminvalue='0' yaxismaxvalue='%d' animation='1' outCnvBaseFontSize='12' baseFontSize='12' xaxisname='$GLOBALS['_LANG'][date]' yaxisname='$GLOBALS['_LANG'][access_count]' >";
+                $general_xml = "<graph caption='{$GLOBALS['_LANG']['general_stats']}' shownames='1' showvalues='1' decimalPrecision='0' yaxisminvalue='0' yaxismaxvalue='%d' animation='1' outCnvBaseFontSize='12' baseFontSize='12' xaxisname='{$GLOBALS['_LANG']['date']}' yaxisname='{$GLOBALS['_LANG']['access_count']}' >";
 
                 $sql = "SELECT FLOOR((access_time - $start_date) / (24 * 3600)) AS sn, access_time, COUNT(*) AS access_count" .
                     " FROM " . $GLOBALS['ecs']->table('stats') .
@@ -83,7 +85,7 @@ class FlowStats extends Init
                 $general_xml .= '</graph>';
                 $general_xml = sprintf($general_xml, $max);
             } else {
-                $general_xml = "<graph caption='$GLOBALS['_LANG'][general_stats]' lineThickness='1' showValues='0' formatNumberScale='0' anchorRadius='2'   divLineAlpha='20' divLineColor='CC3300' divLineIsDashed='1' showAlternateHGridColor='1' alternateHGridAlpha='5' alternateHGridColor='CC3300' shadowAlpha='40' labelStep='2' numvdivlines='5' chartRightMargin='35' bgColor='FFFFFF,CC3300' bgAngle='270' bgAlpha='10,10' outCnvBaseFontSize='12' baseFontSize='12' >";
+                $general_xml = "<graph caption='{$GLOBALS['_LANG']['general_stats']}' lineThickness='1' showValues='0' formatNumberScale='0' anchorRadius='2'   divLineAlpha='20' divLineColor='CC3300' divLineIsDashed='1' showAlternateHGridColor='1' alternateHGridAlpha='5' alternateHGridColor='CC3300' shadowAlpha='40' labelStep='2' numvdivlines='5' chartRightMargin='35' bgColor='FFFFFF,CC3300' bgAngle='270' bgAlpha='10,10' outCnvBaseFontSize='12' baseFontSize='12' >";
                 foreach ($start_date_arr as $k => $val) {
                     $seriesName = local_date('Y-m', $start_date_arr[$k]);
                     $general_xml .= "<dataset seriesName='$seriesName' color='" . chart_color($k) . "' anchorBorderColor='" . chart_color($k) . "' anchorBgColor='" . chart_color($k) . "'>";
@@ -153,6 +155,7 @@ class FlowStats extends Init
                     " WHERE $where";
                 $res = $GLOBALS['db']->query($sql);
                 $area_arr = array();
+                $category = array();
                 while ($val = $GLOBALS['db']->fetchRow($res)) {
                     $date = local_date('Y-m', $val['access_time']);
                     $area_arr[$val['area']] = null;
@@ -162,7 +165,7 @@ class FlowStats extends Init
                         $category[$date][$val['area']] = 1;
                     }
                 }
-                $area_xml = "<chart palette='2' caption='$GLOBALS['_LANG'][area_stats]' shownames='1' showvalues='0' numberPrefix='' useRoundEdges='1' legendBorderAlpha='0' outCnvBaseFontSize='13' baseFontSize='13'>";
+                $area_xml = "<chart palette='2' caption='{$GLOBALS['_LANG']['area_stats']}' shownames='1' showvalues='0' numberPrefix='' useRoundEdges='1' legendBorderAlpha='0' outCnvBaseFontSize='13' baseFontSize='13'>";
                 $area_xml .= "<categories>";
                 foreach ($area_arr as $k => $v) {
                     $area_xml .= "<category label='$k'/>";
@@ -190,7 +193,7 @@ class FlowStats extends Init
             /* --来源网站
             /* ------------------------------------- */
             if (!$is_multi) {
-                $from_xml = "<graph caption='$GLOBALS['_LANG'][from_stats]' shownames='1' showvalues='1' decimalPrecision='2' outCnvBaseFontSize='12' baseFontSize='12' pieYScale='45' pieBorderAlpha='40' pieFillAlpha='70' pieSliceDepth='15' pieRadius='100' bgAngle='460'>";
+                $from_xml = "<graph caption='{$GLOBALS['_LANG']['from_stats']}' shownames='1' showvalues='1' decimalPrecision='2' outCnvBaseFontSize='12' baseFontSize='12' pieYScale='45' pieBorderAlpha='40' pieFillAlpha='70' pieSliceDepth='15' pieRadius='100' bgAngle='460'>";
 
                 $sql = "SELECT COUNT(*) AS access_count, referer_domain FROM " . $GLOBALS['ecs']->table('stats') .
                     " WHERE access_time >= '$start_date' AND access_time <= " . ($end_date + 86400) .
@@ -235,7 +238,7 @@ class FlowStats extends Init
                         $category[$date][$val['referer_domain']] = 1;
                     }
                 }
-                $from_xml = "<chart palette='2' caption='$GLOBALS['_LANG'][from_stats]' shownames='1' showvalues='0' numberPrefix='' useRoundEdges='1' legendBorderAlpha='0' outCnvBaseFontSize='13' baseFontSize='13'>";
+                $from_xml = "<chart palette='2' caption='{$GLOBALS['_LANG']['from_stats']}' shownames='1' showvalues='0' numberPrefix='' useRoundEdges='1' legendBorderAlpha='0' outCnvBaseFontSize='13' baseFontSize='13'>";
                 $from_xml .= "<categories>";
                 foreach ($domain_arr as $k => $v) {
                     $from = $k == '' ? $GLOBALS['_LANG']['input_url'] : $k;

@@ -144,7 +144,7 @@ class EditLanguages extends Init
 
             $matches = array();
             $pattern = '/\\[[\'|"](.*?)' . $keyword . '(.*?)[\'|"]\\]\\s|=\\s?[\'|"](.*?)' . $keyword . '(.*?)[\'|"];/';
-            $regx = '/(?P<item>(?P<item_id>\\$GLOBALS['_LANG']\\[[\'|"].*[\'|"]\\])\\s*?=\\s*?[\'|"](?P<item_content>.*)[\'|"];)/';
+            $regx = '/(?P<item>(?P<item_id>\\$GLOBALS[\'_LANG\']\\[[\'|"].*[\'|"]\\])\\s*?=\\s*?[\'|"](?P<item_content>.*)[\'|"];)/';
 
             foreach ($line_array as $lang) {
                 if (preg_match($pattern, $lang)) {

@@ -78,6 +78,8 @@ class Template extends Init
         if ($_REQUEST['act'] == 'setup') {
             admin_priv('template_setup');
 
+            global $page_libs;
+
             $template_theme = $GLOBALS['_CFG']['template'];
             $curr_template = empty($_REQUEST['template_file']) ? 'index' : $_REQUEST['template_file'];
 
@@ -675,7 +677,7 @@ class Template extends Init
                     move_uploaded_file($_FILES["file"]["tmp_name"], $folder . DIRECTORY_SEPARATOR . $theme_name);
                     $tar = new mdl_tar();
                     $tar->openTAR($folder . DIRECTORY_SEPARATOR . $theme_name, $folder);
-                    de$this->compression($tar, $folder);
+                    $this->decompression($tar, $folder);
                     $tar->closeTAR();
                     unlink($folder . DIRECTORY_SEPARATOR . $theme_name);
                 }
@@ -874,7 +876,7 @@ class Template extends Init
      * @param mdl_tar Object   &$tar   压缩数据
      * @param string $dir 解压文件的路径
      */
-    private function de$this->compression($tar, $folder)
+    private function decompression($tar, $folder)
     {
         foreach ($tar->files as $file) {
             $information = $tar->getFile($file['name']);

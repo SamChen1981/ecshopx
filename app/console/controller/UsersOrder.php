@@ -7,6 +7,9 @@ namespace app\console\controller;
  */
 class UsersOrder extends Init
 {
+    private $start_date;
+    private $end_date;
+
     public function index()
     {
         load_helper('order');
@@ -28,8 +31,8 @@ class UsersOrder extends Init
                 header("Content-type: application/vnd.ms-excel; charset=utf-8");
                 header("Content-Disposition: attachment; filename=$filename.xls");
 
-                $data = "$GLOBALS['_LANG'][visit_buy]\t\n";
-                $data .= "$GLOBALS['_LANG'][order_by]\t$GLOBALS['_LANG'][member_name]\t$GLOBALS['_LANG'][order_amount]\t$GLOBALS['_LANG'][buy_sum]\t\n";
+                $data = "{$GLOBALS['_LANG']['visit_buy']}\t\n";
+                $data .= "{$GLOBALS['_LANG']['order_by']}\t{$GLOBALS['_LANG']['member_name']}\t{$GLOBALS['_LANG']['order_amount']}\t{$GLOBALS['_LANG']['buy_sum']}\t\n";
 
                 foreach ($user_orderinfo['user_orderinfo'] as $k => $row) {
                     $order_by = $k + 1;
@@ -53,10 +56,10 @@ class UsersOrder extends Init
             admin_priv('client_flow_stats');
             /* 时间参数 */
             if (!isset($_REQUEST['start_date'])) {
-                $start_date = local_strtotime('-7 days');
+                $this->start_date = local_strtotime('-7 days');
             }
             if (!isset($_REQUEST['end_date'])) {
-                $end_date = local_strtotime('today');
+                $this->end_date = local_strtotime('today');
             }
 
             /* 取得会员排行数据 */
@@ -71,8 +74,8 @@ class UsersOrder extends Init
             $GLOBALS['smarty']->assign('page_count', $user_orderinfo['page_count']);
             $GLOBALS['smarty']->assign('user_orderinfo', $user_orderinfo['user_orderinfo']);
             $GLOBALS['smarty']->assign('full_page', 1);
-            $GLOBALS['smarty']->assign('start_date', local_date('Y-m-d', $start_date));
-            $GLOBALS['smarty']->assign('end_date', local_date('Y-m-d', $end_date));
+            $GLOBALS['smarty']->assign('start_date', local_date('Y-m-d', $this->start_date));
+            $GLOBALS['smarty']->assign('end_date', local_date('Y-m-d', $this->end_date));
             $GLOBALS['smarty']->assign('sort_order_num', '<img src="images/sort_desc.png">');
             /* 页面显示 */
             assign_query_info();
@@ -87,9 +90,8 @@ class UsersOrder extends Init
      */
     private function get_user_orderinfo($is_pagination = true)
     {
-
-        $filter['start_date'] = empty($_REQUEST['start_date']) ? $start_date : local_strtotime($_REQUEST['start_date']);
-        $filter['end_date'] = empty($_REQUEST['end_date']) ? $end_date : local_strtotime($_REQUEST['end_date']);
+        $filter['start_date'] = empty($_REQUEST['start_date']) ? $this->start_date : local_strtotime($_REQUEST['start_date']);
+        $filter['end_date'] = empty($_REQUEST['end_date']) ? $this->end_date : local_strtotime($_REQUEST['end_date']);
         $filter['sort_by'] = empty($_REQUEST['sort_by']) ? 'order_num' : trim($_REQUEST['sort_by']);
         $filter['sort_order'] = empty($_REQUEST['sort_order']) ? 'DESC' : trim($_REQUEST['sort_order']);
 

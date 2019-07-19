@@ -186,8 +186,7 @@ class GoodsBooking extends Init
      */
     private function get_booking_info($id)
     {
-
-        $sql = "SELECT bg.rec_id, bg.user_id, IFNULL(u.user_name, '$GLOBALS['_LANG'][guest_user]') AS user_name, " .
+        $sql = "SELECT bg.rec_id, bg.user_id, IFNULL(u.user_name, '{$GLOBALS['_LANG']['guest_user']}') AS user_name, " .
             "bg.link_man, g.goods_name, bg.goods_id, bg.goods_number, " .
             "bg.booking_time, bg.goods_desc,bg.dispose_user, bg.dispose_time, bg.email, " .
             "bg.tel, bg.dispose_note ,bg.dispose_user, bg.dispose_time,bg.is_dispose  " .

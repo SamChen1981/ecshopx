@@ -517,7 +517,7 @@ class Order extends Init
                     }
 
                     if (!empty($GLOBALS['_LANG']['shipping_print'])) {
-                        echo $GLOBALS['smarty']->fetch("str:$GLOBALS['_LANG'][shipping_print]");
+                        echo $GLOBALS['smarty']->fetch("str:" . $GLOBALS['_LANG']['shipping_print']);
                     } else {
                         echo $GLOBALS['_LANG']['no_print_shipping'];
                     }
@@ -4038,7 +4038,6 @@ class Order extends Init
      */
     private function get_status_list($type = 'all')
     {
-
         $list = array();
 
         if ($type == 'all' || $type == 'order') {

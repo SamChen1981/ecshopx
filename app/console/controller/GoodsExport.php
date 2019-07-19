@@ -43,7 +43,7 @@ class GoodsExport extends Init
             $shop_province = '""';
             $shop_city = '""';
             if ($GLOBALS['_CFG']['shop_province'] || $GLOBALS['_CFG']['shop_city']) {
-                $sql = "SELECT region_id,  region_name FROM " . $GLOBALS['ecs']->table('region') . " WHERE region_id IN ('$GLOBALS['_CFG'][shop_province]',  '$GLOBALS['_CFG'][shop_city]')";
+                $sql = "SELECT region_id,  region_name FROM " . $GLOBALS['ecs']->table('region') . " WHERE region_id IN ('{$GLOBALS['_CFG']['shop_province']}',  '{$GLOBALS['_CFG']['shop_city']}')";
                 $arr = $GLOBALS['db']->getAll($sql);
 
                 if ($arr) {
@@ -113,7 +113,7 @@ class GoodsExport extends Init
             $shop_province = '""';
             $shop_city = '""';
             if ($GLOBALS['_CFG']['shop_province'] || $GLOBALS['_CFG']['shop_city']) {
-                $sql = "SELECT region_id,  region_name FROM " . $GLOBALS['ecs']->table('region') . " WHERE region_id IN ('$GLOBALS['_CFG'][shop_province]',  '$GLOBALS['_CFG'][shop_city]')";
+                $sql = "SELECT region_id,  region_name FROM " . $GLOBALS['ecs']->table('region') . " WHERE region_id IN ('{$GLOBALS['_CFG']['shop_province']}',  '{$GLOBALS['_CFG']['shop_city']}')";
                 $arr = $GLOBALS['db']->getAll($sql);
 
                 if ($arr) {
@@ -272,7 +272,7 @@ class GoodsExport extends Init
             $shop_province = '""';
             $shop_city = '""';
             if ($GLOBALS['_CFG']['shop_province'] || $GLOBALS['_CFG']['shop_city']) {
-                $sql = "SELECT region_id,  region_name FROM " . $GLOBALS['ecs']->table('region') . " WHERE region_id IN ('$GLOBALS['_CFG'][shop_province]',  '$GLOBALS['_CFG'][shop_city]')";
+                $sql = "SELECT region_id,  region_name FROM " . $GLOBALS['ecs']->table('region') . " WHERE region_id IN ('{$GLOBALS['_CFG']['shop_province']}',  '{$GLOBALS['_CFG']['shop_city']}')";
                 $arr = $GLOBALS['db']->getAll($sql);
 
                 if ($arr) {
@@ -386,7 +386,7 @@ class GoodsExport extends Init
             $shop_province = '""';
             $shop_city = '""';
             if ($GLOBALS['_CFG']['shop_province'] || $GLOBALS['_CFG']['shop_city']) {
-                $sql = "SELECT region_id,  region_name FROM " . $GLOBALS['ecs']->table('region') . " WHERE region_id IN ('$GLOBALS['_CFG'][shop_province]',  '$GLOBALS['_CFG'][shop_city]')";
+                $sql = "SELECT region_id,  region_name FROM " . $GLOBALS['ecs']->table('region') . " WHERE region_id IN ('{$GLOBALS['_CFG']['shop_province']}',  '{$GLOBALS['_CFG']['shop_city']}')";
                 $arr = $GLOBALS['db']->getAll($sql);
 
                 if ($arr) {
@@ -584,7 +584,7 @@ class GoodsExport extends Init
             $shop_province = '""';
             $shop_city = '""';
             if ($GLOBALS['_CFG']['shop_province'] || $GLOBALS['_CFG']['shop_city']) {
-                $sql = "SELECT region_id,  region_name FROM " . $GLOBALS['ecs']->table('region') . " WHERE region_id IN ('$GLOBALS['_CFG'][shop_province]',  '$GLOBALS['_CFG'][shop_city]')";
+                $sql = "SELECT region_id,  region_name FROM " . $GLOBALS['ecs']->table('region') . " WHERE region_id IN ('{$GLOBALS['_CFG']['shop_province']}',  '{$GLOBALS['_CFG']['shop_city']}')";
                 $arr = $GLOBALS['db']->getAll($sql);
 
                 if ($arr) {

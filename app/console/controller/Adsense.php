@@ -69,7 +69,7 @@ class Adsense extends Init
             if ($_REQUEST['act'] == 'download') {
                 header("Content-type: application/vnd.ms-excel; charset=utf-8");
                 header("Content-Disposition: attachment; filename=ad_statistics.xls");
-                $data = "$GLOBALS['_LANG'][adsense_name]\t$GLOBALS['_LANG'][cleck_referer]\t$GLOBALS['_LANG'][click_count]\t$GLOBALS['_LANG'][confirm_order]\t$GLOBALS['_LANG'][gen_order_amount]\n";
+                $data = "{$GLOBALS['_LANG']['adsense_name']}\t{$GLOBALS['_LANG']['cleck_referer']}\t{$GLOBALS['_LANG']['click_count']}\t{$GLOBALS['_LANG']['confirm_order']}\t{$GLOBALS['_LANG']['gen_order_amount']}\n";
                 $res = array_merge($goods_stats, $ads_stats);
                 foreach ($res as $row) {
                     $data .= "$row[ad_name]\t$row[referer]\t$row[clicks]\t$row[order_confirm]\t$row[order_num]\n";

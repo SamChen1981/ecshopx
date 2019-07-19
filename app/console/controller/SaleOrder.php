@@ -31,8 +31,8 @@ class SaleOrder extends Init
                 header("Content-type: application/vnd.ms-excel; charset=utf-8");
                 header("Content-Disposition: attachment; filename=$filename.xls");
 
-                $data = "$GLOBALS['_LANG'][sell_stats]\t\n";
-                $data .= "$GLOBALS['_LANG'][order_by]\t$GLOBALS['_LANG'][goods_name]\t$GLOBALS['_LANG'][goods_sn]\t$GLOBALS['_LANG'][sell_amount]\t$GLOBALS['_LANG'][sell_sum]\t$GLOBALS['_LANG'][percent_count]\n";
+                $data = "{$GLOBALS['_LANG']['sell_stats']}\t\n";
+                $data .= "{$GLOBALS['_LANG']['order_by']}\t{$GLOBALS['_LANG']['goods_name']}\t{$GLOBALS['_LANG']['goods_sn']}\t{$GLOBALS['_LANG']['sell_amount']}\t{$GLOBALS['_LANG']['sell_sum']}\t{$GLOBALS['_LANG']['percent_count']}\n";
 
                 foreach ($goods_order_data as $k => $row) {
                     $order_by = $k + 1;
