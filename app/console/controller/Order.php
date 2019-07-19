@@ -282,7 +282,7 @@ class Order extends Init
                 $order['referer'] = $_LANG['from_goods_js'] . ' (' . $_LANG['from'] . $order['referer'] . ')';
             } else {
                 /* 查询广告的名称 */
-                $ad_name = $db->getOne("SELECT ad_name FROM " . $ecs->table('ad') . " WHERE ad_id='$order[from_ad]'");
+                $ad_name = $db->getOne("SELECT ad_name FROM " . $ecs->table('ad') . " WHERE ad_id='{$order['from_ad']}'");
                 $order['referer'] = $_LANG['from_ad_js'] . $ad_name . ' (' . $_LANG['from'] . $order['referer'] . ')';
             }
 
@@ -361,7 +361,7 @@ class Order extends Init
                 if ($row['extension_code'] == 'package_buy') {
                     $row['storage'] = '';
                     $row['brand_name'] = '';
-                    $row['package_goods_list'] = get_$this->package_goods($row['goods_id']);
+                    $row['package_goods_list'] = get_package_goods($row['goods_id']);
                 }
 
                 $goods_list[] = $row;
