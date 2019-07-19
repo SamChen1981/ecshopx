@@ -22,30 +22,6 @@ class Index extends Init
                 exit;
             }
         }
-        /*------------------------------------------------------ */
-        //-- Shopex系统地址转换
-        /*------------------------------------------------------ */
-        if (!empty($_GET['gOo'])) {
-            if (!empty($_GET['gcat'])) {
-                /* 商品分类。*/
-                $Loaction = 'category.php?id=' . $_GET['gcat'];
-            } elseif (!empty($_GET['acat'])) {
-                /* 文章分类。*/
-                $Loaction = 'article_cat.php?id=' . $_GET['acat'];
-            } elseif (!empty($_GET['goodsid'])) {
-                /* 商品详情。*/
-                $Loaction = 'goods.php?id=' . $_GET['goodsid'];
-            } elseif (!empty($_GET['articleid'])) {
-                /* 文章详情。*/
-                $Loaction = 'article.php?id=' . $_GET['articleid'];
-            }
-
-            if (!empty($Loaction)) {
-                ecs_header("Location: $Loaction\n");
-
-                exit;
-            }
-        }
 
         //判断是否有ajax请求
         $act = !empty($_GET['act']) ? $_GET['act'] : '';
