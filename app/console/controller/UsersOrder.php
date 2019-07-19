@@ -85,7 +85,7 @@ class UsersOrder extends Init
      * @param   bool  $is_pagination  是否分页
      * @return  array   取得会员订单量/购物额排名统计数据
      */
-    public function get_user_orderinfo($is_pagination = true)
+    private function get_user_orderinfo($is_pagination = true)
     {
         global $db, $ecs, $start_date, $end_date;
 

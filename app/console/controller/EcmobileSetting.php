@@ -109,7 +109,7 @@ class EcmobileSetting extends Init
         }
     }
 
-    public function get_items($code)
+    private function get_items($code)
     {
         $params = get_params();
         foreach ($params as $value) {
@@ -121,7 +121,7 @@ class EcmobileSetting extends Init
         }
     }
 
-    public function get_params()
+    private function get_params()
     {
         $grouplist = array(
             1 => array(

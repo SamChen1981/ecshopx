@@ -377,7 +377,7 @@ class UserAccount extends Init
      * @param int $user_id 会员ID
      * @return  int
      */
-    public function get_user_surplus($user_id)
+    private function get_user_surplus($user_id)
     {
         $sql = "SELECT SUM(user_money) FROM " . $GLOBALS['ecs']->table('account_log') .
             " WHERE user_id = '$user_id'";
@@ -396,7 +396,7 @@ class UserAccount extends Init
      *
      * @return  int
      */
-    public function update_user_account($id, $amount, $admin_note, $is_paid)
+    private function update_user_account($id, $amount, $admin_note, $is_paid)
     {
         $sql = "UPDATE " . $GLOBALS['ecs']->table('user_account') . " SET " .
             "admin_user  = '$_SESSION[admin_name]', " .
@@ -415,7 +415,7 @@ class UserAccount extends Init
      *
      * @return void
      */
-    public function account_list()
+    private function account_list()
     {
         $result = get_filter();
         if ($result === false) {

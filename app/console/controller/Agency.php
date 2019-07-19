@@ -295,7 +295,7 @@ class Agency extends Init
      * 取得办事处列表
      * @return  array
      */
-    public function get_agencylist()
+    private function get_agencylist()
     {
         $result = get_filter();
         if ($result === false) {

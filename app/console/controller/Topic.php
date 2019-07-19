@@ -284,7 +284,7 @@ class Topic extends Init
      * @access  public
      * @return void
      */
-    public function get_topic_list()
+    private function get_topic_list()
     {
         $result = get_filter();
         if ($result === false) {
@@ -328,7 +328,7 @@ class Topic extends Init
      * @param string $text 文字
      * @return  array('href' => $href, 'text' => $text)
      */
-    public function list_link($is_add = true, $text = '')
+    private function list_link($is_add = true, $text = '')
     {
         $href = 'topic.php?act=list';
         if (!$is_add) {
@@ -341,7 +341,7 @@ class Topic extends Init
         return array('href' => $href, 'text' => $text);
     }
 
-    public function get_toppic_width_height()
+    private function get_toppic_width_height()
     {
         $width_height = array();
 
@@ -378,7 +378,7 @@ class Topic extends Init
         return $width_height;
     }
 
-    public function get_url_image($url)
+    private function get_url_image($url)
     {
         $url_arr = explode('.', $url);
         $ext = strtolower(end($url_arr));

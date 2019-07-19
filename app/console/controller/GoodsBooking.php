@@ -138,7 +138,7 @@ class GoodsBooking extends Init
      *
      * @return array
      */
-    public function get_bookinglist()
+    private function get_bookinglist()
     {
         /* 查询条件 */
         $filter['keywords'] = empty($_REQUEST['keywords']) ? '' : trim($_REQUEST['keywords']);
@@ -184,7 +184,7 @@ class GoodsBooking extends Init
      *
      * @return  array
      */
-    public function get_booking_info($id)
+    private function get_booking_info($id)
     {
         global $ecs, $db, $_CFG, $_LANG;
 

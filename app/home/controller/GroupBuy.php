@@ -267,7 +267,7 @@ class GroupBuy extends Init
     }
 
     /* 取得团购活动总数 */
-    public function group_buy_count()
+    private function group_buy_count()
     {
         $now = gmtime();
         $sql = "SELECT COUNT(*) " .
@@ -284,7 +284,7 @@ class GroupBuy extends Init
      * @param int $page 当前页
      * @return  array
      */
-    public function group_buy_list($size, $page)
+    private function group_buy_list($size, $page)
     {
         /* 取得团购活动 */
         $gb_list = array();

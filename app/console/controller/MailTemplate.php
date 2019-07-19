@@ -165,7 +165,7 @@ class MailTemplate extends Init
      * @param string $temp 邮件模板的ID
      * @return  array
      */
-    public function load_template($temp_id)
+    private function load_template($temp_id)
     {
         $sql = "SELECT template_subject, template_content, is_html " .
             "FROM " . $GLOBALS['ecs']->table('mail_templates') . " WHERE template_id='$temp_id'";

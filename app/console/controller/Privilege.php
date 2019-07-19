@@ -765,7 +765,7 @@ class Privilege extends Init
     }
 
     /* 获取管理员列表 */
-    public function get_admin_userlist()
+    private function get_admin_userlist()
     {
         $list = array();
         $sql = 'SELECT user_id, user_name, email, add_time, last_login ' .
@@ -781,7 +781,7 @@ class Privilege extends Init
     }
 
     /* 清除购物车中过期的数据 */
-    public function clear_cart()
+    private function clear_cart()
     {
         /* 取得有效的session */
         $sql = "SELECT DISTINCT session_id " .
@@ -797,7 +797,7 @@ class Privilege extends Init
     }
 
     /* 获取角色列表 */
-    public function get_role_list()
+    private function get_role_list()
     {
         $list = array();
         $sql = 'SELECT role_id, role_name, action_list ' .
@@ -806,14 +806,14 @@ class Privilege extends Init
         return $list;
     }
 
-    public function yunqi_logout()
+    private function yunqi_logout()
     {
         $cert = new certificate();
         $url = $cert->logout_url();
         header("location: $url");
     }
 
-    public function getYunqiAd($ident)
+    private function getYunqiAd($ident)
     {
         if (!$ident) {
             return false;

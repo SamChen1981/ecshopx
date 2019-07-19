@@ -261,7 +261,7 @@ class Pack extends Init
         }
     }
 
-    public function packs_list()
+    private function packs_list()
     {
         $result = get_filter();
         if ($result === false) {

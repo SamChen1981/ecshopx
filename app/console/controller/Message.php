@@ -294,7 +294,7 @@ class Message extends Init
      *
      * @return void
      */
-    public function get_message_list()
+    private function get_message_list()
     {
         /* 查询条件 */
         $filter['sort_by'] = empty($_REQUEST['sort_by']) ? 'sent_time' : trim($_REQUEST['sort_by']);

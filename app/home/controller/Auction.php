@@ -395,7 +395,7 @@ class Auction extends Init
      * 取得拍卖活动数量
      * @return  int
      */
-    public function auction_count()
+    private function auction_count()
     {
         $now = gmtime();
         $sql = "SELECT COUNT(*) " .
@@ -412,7 +412,7 @@ class Auction extends Init
      * @param int $page 当前页
      * @return  array
      */
-    public function auction_list($size, $page)
+    private function auction_list($size, $page)
     {
         $auction_list = array();
         $auction_list['finished'] = $auction_list['finished'] = array();

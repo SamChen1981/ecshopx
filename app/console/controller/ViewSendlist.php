@@ -194,7 +194,7 @@ class ViewSendlist extends Init
         }
     }
 
-    public function get_sendlist()
+    private function get_sendlist()
     {
         $result = get_filter();
         if ($result === false) {

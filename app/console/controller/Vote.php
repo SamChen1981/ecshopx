@@ -332,7 +332,7 @@ class Vote extends Init
     }
 
     /* 获取在线调查数据列表 */
-    public function get_votelist()
+    private function get_votelist()
     {
         $filter = array();
 
@@ -357,7 +357,7 @@ class Vote extends Init
     }
 
     /* 获取调查选项列表 */
-    public function get_optionlist($id)
+    private function get_optionlist($id)
     {
         $list = array();
         $sql = 'SELECT option_id, vote_id, option_name, option_count, option_order' .

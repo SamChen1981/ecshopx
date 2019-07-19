@@ -616,7 +616,7 @@ class GroupBuy extends Init
      * 取得团购活动列表
      * @return   array
      */
-    public function group_buy_list()
+    private function group_buy_list()
     {
         $result = get_filter();
         if ($result === false) {
@@ -699,7 +699,7 @@ class GroupBuy extends Init
      * @param int $goods_id 商品id
      * @return  array
      */
-    public function goods_group_buy($goods_id)
+    private function goods_group_buy($goods_id)
     {
         $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('goods_activity') .
             " WHERE goods_id = '$goods_id' " .
@@ -715,7 +715,7 @@ class GroupBuy extends Init
      * @param bool $is_add 是否添加（插入）
      * @return  array('href' => $href, 'text' => $text)
      */
-    public function list_link($is_add = true)
+    private function list_link($is_add = true)
     {
         $href = 'group_buy.php?act=list';
         if (!$is_add) {

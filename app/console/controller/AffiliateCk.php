@@ -178,7 +178,7 @@ class AffiliateCk extends Init
         }
     }
 
-    public function get_affiliate_ck()
+    private function get_affiliate_ck()
     {
         $affiliate = unserialize($GLOBALS['_CFG']['affiliate']);
         empty($affiliate) && $affiliate = array();
@@ -301,7 +301,7 @@ class AffiliateCk extends Init
         return $arr;
     }
 
-    public function write_affiliate_log($oid, $uid, $username, $money, $point, $separate_by)
+    private function write_affiliate_log($oid, $uid, $username, $money, $point, $separate_by)
     {
         $time = gmtime();
         $sql = "INSERT INTO " . $GLOBALS['ecs']->table('affiliate_log') . "( order_id, user_id, user_name, time, money, point, separate_type)" .

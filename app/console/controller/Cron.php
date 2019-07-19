@@ -292,7 +292,7 @@ class Cron extends Init
         }
     }
 
-    public function get_next_time($cron)
+    private function get_next_time($cron)
     {
         $timestamp = gmtime();
         $y = local_date('Y', $timestamp);
@@ -321,7 +321,7 @@ class Cron extends Init
         return $next;
     }
 
-    public function get_minute($cron_minute)
+    private function get_minute($cron_minute)
     {
         $cron_minute = explode(',', $cron_minute);
         $cron_minute = array_unique($cron_minute);
@@ -336,7 +336,7 @@ class Cron extends Init
         return trim(implode(',', $cron_minute));
     }
 
-    public function get_dwh()
+    private function get_dwh()
     {
         $days = $week = $hours = array();
         for ($i = 1; $i <= 31; $i++) {

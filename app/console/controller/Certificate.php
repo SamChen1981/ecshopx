@@ -191,7 +191,7 @@ class Certificate extends Init
         }
     }
 
-    public function get_appserver_verison()
+    private function get_appserver_verison()
     {
         /*$path_arr = explode('/',ROOT_PATH);
         $count = count($path_arr)-2;
@@ -205,7 +205,7 @@ class Certificate extends Init
         return false;
     }
 
-    public function get_h5_version()
+    private function get_h5_version()
     {
         /*$path_arr = explode('/',ROOT_PATH);
         $count = count($path_arr)-1;

@@ -76,7 +76,7 @@ class VisitSold extends Init
      * @param int $show_num 显示个数
      * @return  array           $click_sold_info  访问购买比例数据
      */
-    public function click_sold_info($cat_id, $brand_id, $show_num)
+    private function click_sold_info($cat_id, $brand_id, $show_num)
     {
         global $db, $ecs;
 

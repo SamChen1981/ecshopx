@@ -441,7 +441,7 @@ class Search extends Init
      *
      * @return void
      */
-    public function is_not_null($value)
+    private function is_not_null($value)
     {
         if (is_array($value)) {
             return (!empty($value['from'])) || (!empty($value['to']));
@@ -457,7 +457,7 @@ class Search extends Init
      * @params  integer $cat_id
      * @return  void
      */
-    public function get_seachable_attributes($cat_id = 0)
+    private function get_seachable_attributes($cat_id = 0)
     {
         $attributes = array(
             'cate' => array(),

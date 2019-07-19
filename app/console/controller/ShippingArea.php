@@ -377,7 +377,7 @@ class ShippingArea extends Init
      * 取得配送区域列表
      * @param int $shipping_id 配送id
      */
-    public function get_shipping_area_list($shipping_id)
+    private function get_shipping_area_list($shipping_id)
     {
         $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('shipping_area');
         if ($shipping_id > 0) {

@@ -316,7 +316,7 @@ class ShopConfig extends Init
      *
      * @return  boolean
      */
-    public function update_configure($key, $val = '')
+    private function update_configure($key, $val = '')
     {
         if (!empty($key)) {
             $sql = "UPDATE " . $GLOBALS['ecs']->table('shop_config') . " SET value='$val' WHERE code='$key'";
@@ -335,7 +335,7 @@ class ShopConfig extends Init
      *
      * @return  array
      */
-    public function get_settings($groups = null, $excludes = null)
+    private function get_settings($groups = null, $excludes = null)
     {
         global $db, $ecs, $_LANG;
 

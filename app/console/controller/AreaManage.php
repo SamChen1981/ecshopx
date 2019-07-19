@@ -183,7 +183,7 @@ class AreaManage extends Init
         }
     }
 
-    public function new_region_id($region_id)
+    private function new_region_id($region_id)
     {
         $regions_id = array();
         if (empty($region_id)) {

@@ -11,7 +11,7 @@ class sitemap
     public $footer = "</urlset>\n";
     public $item;
 
-    public function item($item)
+    private function item($item)
     {
         $this->item .= "<url>\n";
         foreach ($item as $key => $val) {
@@ -20,7 +20,7 @@ class sitemap
         $this->item .= "</url>\n";
     }
 
-    public function generate()
+    private function generate()
     {
         $all = $this->head;
         $all .= $this->item;

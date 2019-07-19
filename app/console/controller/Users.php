@@ -604,7 +604,7 @@ class Users extends Init
      *
      * @return void
      */
-    public function user_list()
+    private function user_list()
     {
         $result = get_filter();
         if ($result === false) {

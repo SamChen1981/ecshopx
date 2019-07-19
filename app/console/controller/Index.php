@@ -1151,7 +1151,7 @@ class Index extends Init
      * license check
      * @return  bool
      */
-    public function license_check()
+    private function license_check()
     {
         // return 返回数组
         $return_array = array();
@@ -1171,7 +1171,7 @@ class Index extends Init
         return $return_array;
     }
 
-    public function get_appserver_verison()
+    private function get_appserver_verison()
     {
         /*$path_arr = explode('/',ROOT_PATH);
         $count = count($path_arr)-2;
@@ -1185,7 +1185,7 @@ class Index extends Init
         return false;
     }
 
-    public function get_h5_version()
+    private function get_h5_version()
     {
         /*$path_arr = explode('/',ROOT_PATH);
         $count = count($path_arr)-1;

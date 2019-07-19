@@ -248,7 +248,7 @@ class Navigator extends Init
         }
     }
 
-    public function get_nav()
+    private function get_nav()
     {
         $result = get_filter();
         if ($result === false) {
@@ -293,7 +293,7 @@ class Navigator extends Init
     /*------------------------------------------------------ */
     //-- 排序相关
     /*------------------------------------------------------ */
-    public function sort_nav($a, $b)
+    private function sort_nav($a, $b)
     {
         return $a['vieworder'] > $b['vieworder'] ? 1 : -1;
     }
@@ -301,7 +301,7 @@ class Navigator extends Init
     /*------------------------------------------------------ */
     //-- 获得系统列表
     /*------------------------------------------------------ */
-    public function get_sysnav()
+    private function get_sysnav()
     {
         global $_LANG;
         $sysmain = array(
@@ -338,7 +338,7 @@ class Navigator extends Init
     /*------------------------------------------------------ */
     //-- 列表项修改
     /*------------------------------------------------------ */
-    public function nav_update($id, $args)
+    private function nav_update($id, $args)
     {
         if (empty($args) || empty($id)) {
             return false;
@@ -350,7 +350,7 @@ class Navigator extends Init
     /*------------------------------------------------------ */
     //-- 根据URI对导航栏项目进行分析，确定其为商品分类还是文章分类
     /*------------------------------------------------------ */
-    public function analyse_uri($uri)
+    private function analyse_uri($uri)
     {
         $uri = strtolower(str_replace('&amp;', '&', $uri));
         $arr = explode('-', $uri);
@@ -402,7 +402,7 @@ class Navigator extends Init
     /*------------------------------------------------------ */
     //-- 是否显示
     /*------------------------------------------------------ */
-    public function is_show_in_nav($type, $id)
+    private function is_show_in_nav($type, $id)
     {
         if ($type == 'c') {
             $tablename = $GLOBALS['ecs']->table('category');
@@ -415,7 +415,7 @@ class Navigator extends Init
     /*------------------------------------------------------ */
     //-- 设置是否显示
     /*------------------------------------------------------ */
-    public function set_show_in_nav($type, $id, $val)
+    private function set_show_in_nav($type, $id, $val)
     {
         if ($type == 'c') {
             $tablename = $GLOBALS['ecs']->table('category');

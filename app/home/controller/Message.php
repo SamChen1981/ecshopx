@@ -111,7 +111,7 @@ class Message extends Init
      *
      * @return  array
      */
-    public function get_msg_list($num, $start)
+    private function get_msg_list($num, $start)
     {
         /* 获取留言数据 */
         $msg = array();

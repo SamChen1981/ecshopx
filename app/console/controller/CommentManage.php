@@ -292,7 +292,7 @@ class CommentManage extends Init
      * @access  public
      * @return  array
      */
-    public function get_comment_list()
+    private function get_comment_list()
     {
         global $db;
         /* 查询条件 */

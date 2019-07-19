@@ -340,7 +340,7 @@ class Articlecat extends Init
      *
      * @return  mix
      */
-    public function cat_update($cat_id, $args)
+    private function cat_update($cat_id, $args)
     {
         if (empty($args) || empty($cat_id)) {
             return false;

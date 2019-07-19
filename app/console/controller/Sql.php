@@ -46,7 +46,7 @@ class Sql extends Init
      *
      * @return void
      */
-    public function assign_sql($sql)
+    private function assign_sql($sql)
     {
         global $db, $smarty, $_LANG;
 

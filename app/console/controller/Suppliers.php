@@ -415,7 +415,7 @@ class Suppliers extends Init
      *
      * @return void
      */
-    public function suppliers_list()
+    private function suppliers_list()
     {
         $result = get_filter();
         if ($result === false) {

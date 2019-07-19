@@ -2318,7 +2318,7 @@ class Goods extends Init
      * @param string $extension_code 虚拟商品扩展代码，实体商品为空
      * @return  array('href' => $href, 'text' => $text)
      */
-    public function list_link($is_add = true, $extension_code = '')
+    private function list_link($is_add = true, $extension_code = '')
     {
         $href = 'goods.php?act=list';
         if (!empty($extension_code)) {
@@ -2342,7 +2342,7 @@ class Goods extends Init
      * @param string $extension_code 虚拟商品扩展代码，实体商品为空
      * @return  array('href' => $href, 'text' => $text)
      */
-    public function add_link($extension_code = '')
+    private function add_link($extension_code = '')
     {
         $href = 'goods.php?act=add';
         if (!empty($extension_code)) {
@@ -2365,7 +2365,7 @@ class Goods extends Init
      *
      * @return boolean
      */
-    public function goods_parse_url($url)
+    private function goods_parse_url($url)
     {
         $parse_url = @parse_url($url);
         return (!empty($parse_url['scheme']) && !empty($parse_url['host']));
@@ -2378,7 +2378,7 @@ class Goods extends Init
      * @param array $price_list 价格列表
      * @return  void
      */
-    public function handle_volume_price($goods_id, $number_list, $price_list)
+    private function handle_volume_price($goods_id, $number_list, $price_list)
     {
         $sql = "DELETE FROM " . $GLOBALS['ecs']->table('volume_price') .
             " WHERE price_type = '1' AND goods_id = '$goods_id'";
@@ -2405,7 +2405,7 @@ class Goods extends Init
      * @param string $value 字段值
      * @return  bool
      */
-    public function update_goods_stock($goods_id, $value)
+    private function update_goods_stock($goods_id, $value)
     {
         if ($goods_id) {
             /* $res = $goods_number - $old_product_number + $product_number; */

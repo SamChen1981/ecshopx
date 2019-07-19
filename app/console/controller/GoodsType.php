@@ -216,7 +216,7 @@ class GoodsType extends Init
      * @access  public
      * @return  array
      */
-    public function get_goodstype()
+    private function get_goodstype()
     {
         $result = get_filter();
         if ($result === false) {
@@ -257,7 +257,7 @@ class GoodsType extends Init
      *
      * @return  array
      */
-    public function get_goodstype_info($cat_id)
+    private function get_goodstype_info($cat_id)
     {
         $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('goods_type') . " WHERE cat_id='$cat_id'";
 
@@ -273,7 +273,7 @@ class GoodsType extends Init
      *
      * @return  void
      */
-    public function update_attribute_group($cat_id, $old_group, $new_group)
+    private function update_attribute_group($cat_id, $old_group, $new_group)
     {
         $sql = "UPDATE " . $GLOBALS['ecs']->table('attribute') .
             " SET attr_group='$new_group' WHERE cat_id='$cat_id' AND attr_group='$old_group'";

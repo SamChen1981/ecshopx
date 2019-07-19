@@ -141,7 +141,7 @@ class Api extends Init
     }
 
     //计算折扣：根据购物车和优惠活动
-    public function api_compute_discount()
+    private function api_compute_discount()
     {
         check_auth();   //检查基本权限
 
@@ -178,7 +178,7 @@ class Api extends Init
     }
 
     //获取ecshop授权类型
-    public function get_auth_info()
+    private function get_auth_info()
     {
         check_auth();   //检查基本权限
         $auth_sql = 'SELECT * FROM ' . $GLOBALS['ecs']->table('shop_config') . ' WHERE code = "authorize"';
@@ -193,7 +193,7 @@ class Api extends Init
     }
 
     //ecmobile操作触发动作
-    public function ecmobile_fire_event()
+    private function ecmobile_fire_event()
     {
         check_auth();   //检查基本权限
         $type = $_POST['type'];
@@ -222,7 +222,7 @@ class Api extends Init
     }
 
     //发送短信
-    public function yunqi_send_sms()
+    private function yunqi_send_sms()
     {
         check_auth();   //检查基本权限
         if (!$_POST['phone'] || !$_POST['content']) {
@@ -235,7 +235,7 @@ class Api extends Init
     }
 
     //获取物流信息
-    public function ecmobile_get_logistics_info($lang)
+    private function ecmobile_get_logistics_info($lang)
     {
         check_auth();   //检查基本权限
         if (!$_POST['order_sn']) {
@@ -248,7 +248,7 @@ class Api extends Init
     }
 
     // 更新订单
-    public function ome_update_order_item()
+    private function ome_update_order_item()
     {
         require_once(ROOT_PATH . 'includes/lib_order.php');
         check_auth();   //检查基本权限
@@ -382,7 +382,7 @@ class Api extends Init
 
 
     // 检测商品是否有效
-    public function verify_goods_valid($order_sn, $data, &$msg)
+    private function verify_goods_valid($order_sn, $data, &$msg)
     {
         error_log(print_R($data, 1) . "\n", 3, "/tmp/chen_1.log");
         $bns = array();
@@ -446,7 +446,7 @@ class Api extends Init
      * @param array $data 传进的参数
      * @param array $order 订单数据
      */
-    public function _omeUpdateOrderItem($order_sn, $data, $order)
+    private function _omeUpdateOrderItem($order_sn, $data, $order)
     {
 
         //生成订单前检查库存
@@ -540,14 +540,14 @@ class Api extends Init
     }
 
 
-    public function getFieldById($id, $aFeild = array('*'))
+    private function getFieldById($id, $aFeild = array('*'))
     {
         $sqlString = "SELECT " . implode(',', $aFeild) . " FROM " . $GLOBALS['ecs']->table('products') . " WHERE product_id = " . intval($id);
         return $GLOBALS['db']->getRow($sqlString);
     }
 
 
-    public function get_product($bn, $order)
+    private function get_product($bn, $order)
     {
         if (strpos($bn, 'ECS_CARD_') !== false) {
             $card_id = str_replace('ECS_CARD_', '', trim($bn));
@@ -597,7 +597,7 @@ class Api extends Init
     }
 
 
-    public function getStructDataByType($data, $type = 'json')
+    private function getStructDataByType($data, $type = 'json')
     {
         $return_data = json_decode($data, true);
         $return_data or $return_data = json_decode(stripcslashes($data), true);
@@ -606,7 +606,7 @@ class Api extends Init
 
 
     // 获取有效的配送方式
-    public function getDlTypeList()
+    private function getDlTypeList()
     {
         $sql = "SELECT shipping_id,shipping_name from " . $GLOBALS['ecs']->table('shipping') . " WHERE enabled = 1";
         $res = $GLOBALS['db']->getAll($sql);
@@ -615,7 +615,7 @@ class Api extends Init
 
 
     // 获取订单列表
-    public function search_order_lists()
+    private function search_order_lists()
     {
         check_auth();   //检查基本权限
         $version = '1.0';   //版本号
@@ -673,7 +673,7 @@ class Api extends Init
 
 
     // 拉取订单信息
-    public function get_orders_info()
+    private function get_orders_info()
     {
         check_auth();   //检查基本权限
         $version = '1.0';   //版本号
@@ -696,7 +696,7 @@ class Api extends Init
 
 
     //最后过滤返回参数
-    public function last_filter_params($params, $fields = '*')
+    private function last_filter_params($params, $fields = '*')
     {
         if ('*' != $fields) {
             $fields = explode(',', $fields);
@@ -712,7 +712,7 @@ class Api extends Init
 
 
     // 修改收货人信息
-    public function update_consignee()
+    private function update_consignee()
     {
         check_auth();   //检查基本权限
         $version = '1.0';   //版本号
@@ -785,7 +785,7 @@ class Api extends Init
 
 
     // 添加买家家留言
-    public function add_buyer_msg()
+    private function add_buyer_msg()
     {
         check_auth();   //检查基本权限
         $version = '1.0';   //版本号
@@ -812,7 +812,7 @@ class Api extends Init
 
 
     // 添加备注
-    public function update_memo()
+    private function update_memo()
     {
         check_auth();   //检查基本权限
         $version = '1.0';   //版本号
@@ -840,7 +840,7 @@ class Api extends Init
 
 
     // 更新订单状态
-    public function update_order_status()
+    private function update_order_status()
     {
         check_auth();   //检查基本权限
         $version = '1.0';   //版本号
@@ -995,7 +995,7 @@ class Api extends Init
     /**
      *  获取商品列表接口函数
      */
-    public function search_goods_list()
+    private function search_goods_list()
     {
         check_auth();   //检查基本权限
 
@@ -1053,7 +1053,7 @@ class Api extends Init
     /**
      *  商品详细信息接口函数
      */
-    public function search_goods_detail()
+    private function search_goods_detail()
     {
         check_auth();   //检查基本权限
 
@@ -1103,7 +1103,7 @@ class Api extends Init
     /**
      *  被删除商品列表接口函数
      */
-    public function search_deleted_goods_list()
+    private function search_deleted_goods_list()
     {
         api_err('0x007', '暂时不提供此服务功能');   //服务不可用
     }
@@ -1111,7 +1111,7 @@ class Api extends Init
     /**
      *  获取货品列表接口函数
      */
-    public function search_products_list()
+    private function search_products_list()
     {
         check_auth();   //检查基本权限
 
@@ -1157,7 +1157,7 @@ class Api extends Init
     /**
      *  获取站点信息接口函数
      */
-    public function search_site_info()
+    private function search_site_info()
     {
         check_auth();   //检查基本权限
 
@@ -1181,7 +1181,7 @@ class Api extends Init
     /**
      *  权限校验函数
      */
-    public function check_auth()
+    private function check_auth()
     {
         // return true;
         // $license = get_shop_license();  // 取出网店 license信息
@@ -1214,7 +1214,7 @@ class Api extends Init
     }
 
 
-    public function check_shopex_ac_new($params, $token)
+    private function check_shopex_ac_new($params, $token)
     {
         $verfy = strtolower(trim($params['ac']));
         unset($params['ac']);
@@ -1237,7 +1237,7 @@ class Api extends Init
     }
 
 
-    public function assemble($params)
+    private function assemble($params)
     {
         if (!is_array($params)) {
             return null;
@@ -1259,7 +1259,7 @@ class Api extends Init
      *
      * @return  boolean                 返回是否有效
      */
-    public function check_shopex_ac($post_params, $token)
+    private function check_shopex_ac($post_params, $token)
     {
         ksort($post_params);
         $str = '';
@@ -1282,7 +1282,7 @@ class Api extends Init
      * @param string $err_info 错误说明
      *
      */
-    public function api_err($err_type, $err_info = '', $return_type = RETURN_TYPE)
+    private function api_err($err_type, $err_info = '', $return_type = RETURN_TYPE)
     {
         /* 系统级错误列表 */
         $err_arr = array();
@@ -1315,7 +1315,7 @@ class Api extends Init
      * @param int $post 1为xml方式，2为json方式
      *
      */
-    public function data_back($info, $msg = '', $post, $result = 'success')
+    private function data_back($info, $msg = '', $post, $result = 'success')
     {
         /* 分为xml和json两种方式 */
         $data_arr = array('result' => $result, 'msg' => $msg, 'info' => $info, 'shopex_time' => gmtime());
@@ -1362,7 +1362,7 @@ class Api extends Init
      * @param boolean $have_item 是否是数据数组，是则需要在每条数据上加item父节点
      *
      */
-    public function create_tree($doc, $top, $info_arr, $have_item = false)
+    private function create_tree($doc, $top, $info_arr, $have_item = false)
     {
         if (is_array($info_arr)) {
             foreach ($info_arr as $key => $val) {
@@ -1394,7 +1394,7 @@ class Api extends Init
         }
     }
 
-    public function array2xml($data, $root = 'shopex')
+    private function array2xml($data, $root = 'shopex')
     {
         $xml = '<' . $root . '>';
         _array2xml($data, $xml);
@@ -1402,7 +1402,7 @@ class Api extends Init
         return $xml;
     }
 
-    public function _array2xml(&$data, &$xml)
+    private function _array2xml(&$data, &$xml)
     {
         if (is_array($data)) {
             foreach ($data as $k => $v) {
@@ -1423,7 +1423,7 @@ class Api extends Init
         }
     }
 
-    public function create_goods_properties($goods_id)
+    private function create_goods_properties($goods_id)
     {
         /* 对属性进行重新排序和分组
     $sql = "SELECT attr_group ".
@@ -1468,7 +1468,7 @@ class Api extends Init
      * 接收淘打证书数据，联通矩阵申请绑定关系
      * @param type $data
      */
-    public function get_certinfo()
+    private function get_certinfo()
     {
         $data = $_POST;
         check_auth();   //检查基本权限
@@ -1528,7 +1528,7 @@ class Api extends Init
         }
     }
 
-    public function fy_logistics_offline_send()
+    private function fy_logistics_offline_send()
     {
         $ecs = $GLOBALS['ecs'];
         $db = $GLOBALS['db'];
@@ -1957,7 +1957,7 @@ class Api extends Init
      *
      * @return 验证订单是否存在
      */
-    public function verify_order_valid($order_sn, &$order, $colums = '*', &$msg)
+    private function verify_order_valid($order_sn, &$order, $colums = '*', &$msg)
     {
         $sql = "select " . $colums . " from " . $GLOBALS['ecs']->table('order_info') . " where order_sn='" . $order_sn . "'";
         $_order = $GLOBALS['db']->getRow($sql);
@@ -1981,7 +1981,7 @@ class Api extends Init
      * @param array $order 订单数组
      * @return array
      */
-    public function get_order_goods($order)
+    private function get_order_goods($order)
     {
         $goods_list = array();
         $goods_attr = array();
@@ -2039,7 +2039,7 @@ class Api extends Init
      * @param int $order_id 订单 id
      * @return  int     1，全部发货；0，未全部发货
      */
-    public function get_order_finish($order_id)
+    private function get_order_finish($order_id)
     {
         $return_res = 0;
 
@@ -2065,7 +2065,7 @@ class Api extends Init
      * @param string $delivery_sn 发货单号
      * @return  array   发货单信息（金额都有相应格式化的字段，前缀是formated_）
      */
-    public function delivery_order_info($delivery_id, $delivery_sn = '')
+    private function delivery_order_info($delivery_id, $delivery_sn = '')
     {
         $return_order = array();
         if (empty($delivery_id) || !is_numeric($delivery_id)) {
@@ -2101,7 +2101,7 @@ class Api extends Init
      * @param int $order_id 订单 id
      * @return  int     1，全部发货；0，未全部发货；-1，部分发货；-2，完全没发货；
      */
-    public function get_all_delivery_finish($order_id)
+    private function get_all_delivery_finish($order_id)
     {
         $return_res = 0;
 
@@ -2143,7 +2143,7 @@ class Api extends Init
     }
 
     /* 更新库存 */
-    public function update_store()
+    private function update_store()
     {
         check_auth();   //检查基本权限
         $version = '1.0';   //版本号
@@ -2203,7 +2203,7 @@ class Api extends Init
         data_back($result_data, '', RETURN_TYPE);
     }
 
-    public function checkStore($bn, $time, $val)
+    private function checkStore($bn, $time, $val)
     {
         $time = time();
         $sql = "select type_id,time FROM  " . $GLOBALS['ecs']->table('coincidence') . " WHERE type_id='" . $bn . "' and type='UPDATE_STORE' ";
@@ -2224,7 +2224,7 @@ class Api extends Init
     /*
  *获得当前店铺有效支付方式
  */
-    public function get_payment_conf()
+    private function get_payment_conf()
     {
         check_auth();   //检查基本权限
         $version = '1.0';   //版本号
@@ -2249,7 +2249,7 @@ class Api extends Init
 
 
     // 创建支付单
-    public function ome_create_payments()
+    private function ome_create_payments()
     {
         require_once(ROOT_PATH . 'includes/lib_order.php');
         check_auth();   //检查基本权限
@@ -2320,7 +2320,7 @@ class Api extends Init
 
 
     // 创建退款单
-    public function ome_create_reimburse()
+    private function ome_create_reimburse()
     {
         check_auth();   //检查基本权限
         $version = '1.0';   //版本号
@@ -2430,7 +2430,7 @@ class Api extends Init
 
 
     // 退款通知到erp
-    public function send_refund_to_matrix($data)
+    private function send_refund_to_matrix($data)
     {
         $msg['refund_id'] = $data['refund_id'];
         $msg['tid'] = $data['order_id'];
@@ -2444,7 +2444,7 @@ class Api extends Init
     }
 
     // 退款通知到crm
-    public function send_refund_to_crm($data)
+    private function send_refund_to_crm($data)
     {
         $msg['refund_id'] = $data['refund_id'];
         $msg['tid'] = $data['order_id'];
@@ -2460,7 +2460,7 @@ class Api extends Init
     }
 
 
-    public function ome_create_delivery()
+    private function ome_create_delivery()
     {
         check_auth();   //检查基本权限
         $version = '1.0';   //版本号
@@ -2902,7 +2902,7 @@ class Api extends Init
     /**
      * 头文件
      */
-    public function _header($content = 'text/html', $charset = 'utf-8')
+    private function _header($content = 'text/html', $charset = 'utf-8')
     {
         header('Content-type: ' . $content . ';charset=' . $charset);
         header("Cache-Control: no-cache,no-store , must-revalidate");
@@ -2913,7 +2913,7 @@ class Api extends Init
     /**
      * api 返回数据
      */
-    public function api_response($resCode, $errorCode = false, $data = null, $type = 1)
+    private function api_response($resCode, $errorCode = false, $data = null, $type = 1)
     {
         $resposilbe = array(
             'true' => 'success',
@@ -2942,7 +2942,7 @@ class Api extends Init
     /**
      * 登录店铺
      */
-    public function shopex_shop_login()
+    private function shopex_shop_login()
     {
         check_auth(); //检查基本权限
 
@@ -2979,7 +2979,7 @@ class Api extends Init
     /**
      * 获取商品分类列表
      */
-    public function shopex_goods_cat_list()
+    private function shopex_goods_cat_list()
     {
         check_auth(); //检查基本权限
 
@@ -3019,7 +3019,7 @@ class Api extends Init
         api_response('true', 'No Data', '', RETURN_TYPE);
     }
 
-    public function get_cat_path($cat, $cat_list, &$path)
+    private function get_cat_path($cat, $cat_list, &$path)
     {
         $path[] = $cat['cat_name'];
         if ($cat['parent_id'] != 0) {
@@ -3031,7 +3031,7 @@ class Api extends Init
     /**
      * 获取品牌列表
      */
-    public function shopex_brand_list()
+    private function shopex_brand_list()
     {
         check_auth(); //检查基本权限
 
@@ -3066,7 +3066,7 @@ class Api extends Init
     /**
      * 获取商品类型
      */
-    public function shopex_type_list()
+    private function shopex_type_list()
     {
         check_auth(); //检查基本权限
 
@@ -3122,7 +3122,7 @@ class Api extends Init
     /**
      * 添加商品
      */
-    public function shopex_goods_add()
+    private function shopex_goods_add()
     {
         check_auth(); //检查基本权限
 
@@ -3159,7 +3159,7 @@ class Api extends Init
     /**
      * 将数组标签转换成小写
      */
-    public function lowerKey(&$goods_data)
+    private function lowerKey(&$goods_data)
     {
         if (is_array($goods_data)) {
             $goods_data = array_change_key_case($goods_data, CASE_LOWER);
@@ -3174,7 +3174,7 @@ class Api extends Init
     /**
      * 检查商品数据
      */
-    public function checkGoodsArray(&$goods_data)
+    private function checkGoodsArray(&$goods_data)
     {
         $verify_arr = array(
             'title' => 'goods title can not be empty',
@@ -3206,7 +3206,7 @@ class Api extends Init
     /**
      * 获取商品分类id
      */
-    public function getCatagory($goods_data, &$cat_id)
+    private function getCatagory($goods_data, &$cat_id)
     {
         $shopexcatagory = $goods_data['shopexobj']['shopexcatagory']; //分类名称
         $shopexcategorypath = $goods_data['shopexobj']['shopexcategorypath']; //分类路径
@@ -3242,7 +3242,7 @@ class Api extends Init
     /**
      * 获取商品类型id
      */
-    public function goodsType($goods_data, &$type_id)
+    private function goodsType($goods_data, &$type_id)
     {
         $db = $GLOBALS['db'];
         $ecs = $GLOBALS['ecs'];
@@ -3265,7 +3265,7 @@ class Api extends Init
     /**
      * 商品数据
      */
-    public function goods($goods_data, $cat_id, $type_id, &$goods)
+    private function goods($goods_data, $cat_id, $type_id, &$goods)
     {
         $db = $GLOBALS['db'];
         $ecs = $GLOBALS['ecs'];
@@ -3329,7 +3329,7 @@ class Api extends Init
     /**
      * 商品属性
      */
-    public function attribute($goods_data, $goods, $type_id)
+    private function attribute($goods_data, $goods, $type_id)
     {
         $db = $GLOBALS['db'];
         $ecs = $GLOBALS['ecs'];
@@ -3546,7 +3546,7 @@ class Api extends Init
     /**
      * 商品图片
      */
-    public function gallery($goods_data, $goods)
+    private function gallery($goods_data, $goods)
     {
         $db = $GLOBALS['db'];
         $ecs = $GLOBALS['ecs'];
@@ -3601,7 +3601,7 @@ class Api extends Init
     /**
      * 查找商品信息
      */
-    public function shopex_goods_search()
+    private function shopex_goods_search()
     {
         check_auth(); //检查基本权限
 
@@ -3732,7 +3732,7 @@ class Api extends Init
     }
 
     // 更新订单到crm
-    public function update_order_crm($order_sn)
+    private function update_order_crm($order_sn)
     {
         $matrix = new matrix();
         $bind_info = $matrix->get_bind_info(array('ecos.taocrm'));
@@ -3743,7 +3743,7 @@ class Api extends Init
     }
 
     //商品属性去掉引号处理
-    public function remove_quotation_marks($data)
+    private function remove_quotation_marks($data)
     {
         //error_log(date("c")."\t".print_r($data, 1)."\t\n", 3, LOG_DIR."/api_".date("Y-m-d",time()).".log");
         if (!is_array($data)) {

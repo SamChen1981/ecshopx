@@ -105,7 +105,7 @@ class Article extends Init
      * @param integer $article_id
      * @return  array
      */
-    public function get_article_info($article_id)
+    private function get_article_info($article_id)
     {
         /* 获得文章的信息 */
         $sql = "SELECT a.*, IFNULL(AVG(r.comment_rank), 0) AS comment_rank " .
@@ -134,7 +134,7 @@ class Article extends Init
      * @param integer $id
      * @return  array
      */
-    public function article_related_goods($id)
+    private function article_related_goods($id)
     {
         $sql = 'SELECT g.goods_id, g.goods_name, g.goods_thumb, g.goods_img, g.shop_price AS org_price, ' .
             "IFNULL(mp.user_price, g.shop_price * '$_SESSION[discount]') AS shop_price, " .

@@ -275,7 +275,7 @@ class Snatch extends Init
      *
      * @return void
      */
-    public function get_myprice($id)
+    private function get_myprice($id)
     {
         $my_only_price = array();
         $my_price = array();
@@ -324,7 +324,7 @@ class Snatch extends Init
      *
      * @return void
      */
-    public function get_price_list($id, $num = 5)
+    private function get_price_list($id, $num = 5)
     {
         $sql = 'SELECT t1.log_id, t1.bid_price, t2.user_name FROM ' . $GLOBALS['ecs']->table('snatch_log') . ' AS t1, ' . $GLOBALS['ecs']->table('users') . " AS t2 WHERE snatch_id = '$id' AND t1.user_id = t2.user_id ORDER BY t1.log_id DESC LIMIT $num";
         $res = $GLOBALS['db']->query($sql);
@@ -343,7 +343,7 @@ class Snatch extends Init
      *
      * @return void
      */
-    public function get_snatch_list($num = 10)
+    private function get_snatch_list($num = 10)
     {
         $now = gmtime();
         $sql = 'SELECT act_id AS snatch_id, act_name AS snatch_name, end_time ' .
@@ -372,7 +372,7 @@ class Snatch extends Init
      *
      * @return 活动名称
      */
-    public function get_snatch($id)
+    private function get_snatch($id)
     {
         $sql = "SELECT g.goods_id, g.goods_sn, g.is_real, g.goods_name, g.extension_code, g.market_price, g.shop_price AS org_price, product_id, " .
             "IFNULL(mp.user_price, g.shop_price * '$_SESSION[discount]') AS shop_price, " .
@@ -425,7 +425,7 @@ class Snatch extends Init
      *
      * @return void
      */
-    public function get_last_snatch()
+    private function get_last_snatch()
     {
         $now = gmtime();
         $sql = 'SELECT act_id FROM ' . $GLOBALS['ecs']->table('goods_activity') .

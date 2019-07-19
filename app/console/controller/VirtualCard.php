@@ -469,7 +469,7 @@ class VirtualCard extends Init
      *
      * @return array
      */
-    public function get_replenish_list()
+    private function get_replenish_list()
     {
         /* 查询条件 */
         $filter['goods_id'] = empty($_REQUEST['goods_id']) ? 0 : intval($_REQUEST['goods_id']);
@@ -537,7 +537,7 @@ class VirtualCard extends Init
      *
      * @return bool
      */
-    public function update_goods_number($goods_id)
+    private function update_goods_number($goods_id)
     {
         $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('virtual_card') . " WHERE goods_id = '$goods_id' AND is_saled = 0";
         $goods_number = $GLOBALS['db']->getOne($sql);

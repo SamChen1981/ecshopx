@@ -335,7 +335,7 @@ class Snatch extends Init
      *
      * @return void
      */
-    public function get_snatchlist()
+    private function get_snatchlist()
     {
         $result = get_filter();
         if ($result === false) {
@@ -395,7 +395,7 @@ class Snatch extends Init
      *
      * @return array       array(snatch_id, snatch_name, goods_id,start_time, end_time, min_price, integral)
      */
-    public function get_snatch_info($id)
+    private function get_snatch_info($id)
     {
         global $ecs, $db, $_CFG;
 
@@ -426,7 +426,7 @@ class Snatch extends Init
      *
      * @return array
      */
-    public function get_snatch_detail()
+    private function get_snatch_detail()
     {
         $filter['snatch_id'] = empty($_REQUEST['snatch_id']) ? 0 : intval($_REQUEST['snatch_id']);
         $filter['sort_by'] = empty($_REQUEST['sort_by']) ? 'bid_time' : trim($_REQUEST['sort_by']);

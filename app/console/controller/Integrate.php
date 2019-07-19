@@ -992,7 +992,7 @@ class Integrate extends Init
      *
      * @return void
      */
-    public function conflict_userlist()
+    private function conflict_userlist()
     {
         $filter['flag'] = empty($_REQUEST['flag']) ? 0 : intval($_REQUEST['flag']);
         $where = ' WHERE flag';
@@ -1032,7 +1032,7 @@ class Integrate extends Init
      *
      * @return void
      */
-    public function save_integrate_config($code, $cfg)
+    private function save_integrate_config($code, $cfg)
     {
         $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('shop_config') . " WHERE code = 'integrate_code'";
 

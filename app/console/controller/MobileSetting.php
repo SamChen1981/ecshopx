@@ -235,7 +235,7 @@ class MobileSetting extends Init
         }
     }
 
-    public function get_flash_xml()
+    private function get_flash_xml()
     {
         $flashdb = array();
         if (file_exists(ROOT_PATH . DATA_DIR . '/flash_data.xml')) {
@@ -255,7 +255,7 @@ class MobileSetting extends Init
         return $flashdb;
     }
 
-    public function put_flash_xml($flashdb)
+    private function put_flash_xml($flashdb)
     {
         if (!empty($flashdb)) {
             $xml = '<?xml version="1.0" encoding="' . EC_CHARSET . '"?><bcaster>';
@@ -269,7 +269,7 @@ class MobileSetting extends Init
         }
     }
 
-    public function get_url_image($url)
+    private function get_url_image($url)
     {
         $url_arr = explode('.', $url);
         $ext = strtolower(end($url_arr));
@@ -296,7 +296,7 @@ class MobileSetting extends Init
         return $tmp_file;
     }
 
-    public function get_width_height()
+    private function get_width_height()
     {
         $curr_template = $GLOBALS['_CFG']['template'];
         $path = ROOT_PATH . 'themes/' . $curr_template . '/library/';
@@ -323,7 +323,7 @@ class MobileSetting extends Init
         return $width_height;
     }
 
-    public function get_flash_templates($dir)
+    private function get_flash_templates($dir)
     {
         $flashtpls = array();
         $template_dir = @opendir($dir);
@@ -336,7 +336,7 @@ class MobileSetting extends Init
         return $flashtpls;
     }
 
-    public function get_flash_tpl_info($dir, $file)
+    private function get_flash_tpl_info($dir, $file)
     {
         $info = array();
         if (is_file($dir . $file . '/preview.jpg')) {
@@ -351,7 +351,7 @@ class MobileSetting extends Init
         return $info;
     }
 
-    public function set_flash_data($tplname, &$msg)
+    private function set_flash_data($tplname, &$msg)
     {
         $flashdata = get_flash_xml();
         if (empty($flashdata)) {
@@ -389,7 +389,7 @@ class MobileSetting extends Init
         return $msg !== true;
     }
 
-    public function set_flash_uproll($tplname, $flashdata)
+    private function set_flash_uproll($tplname, $flashdata)
     {
         $data_file = ROOT_PATH . DATA_DIR . '/flashdata/' . $tplname . '/data.xml';
         $xmldata = '<?xml version="1.0" encoding="' . EC_CHARSET . '"?><myMenu>';
@@ -401,7 +401,7 @@ class MobileSetting extends Init
         return true;
     }
 
-    public function set_flash_focus($tplname, $flashdata)
+    private function set_flash_focus($tplname, $flashdata)
     {
         $data_file = ROOT_PATH . DATA_DIR . '/flashdata/' . $tplname . '/data.js';
         $jsdata = '';
@@ -424,7 +424,7 @@ class MobileSetting extends Init
         return true;
     }
 
-    public function set_flash_default($tplname, $flashdata)
+    private function set_flash_default($tplname, $flashdata)
     {
         $data_file = ROOT_PATH . DATA_DIR . '/flashdata/' . $tplname . '/data.xml';
         $xmldata = '<?xml version="1.0" encoding="' . EC_CHARSET . '"?><bcaster>';
@@ -444,7 +444,7 @@ class MobileSetting extends Init
      *
      * @return void
      */
-    public function ad_list()
+    private function ad_list()
     {
         $result = get_filter();
         if ($result === false) {
@@ -492,7 +492,7 @@ class MobileSetting extends Init
      * @access  private
      * @return  Bool
      */
-    public function modfiy_ad_status($ad_id, $ad_status = 0)
+    private function modfiy_ad_status($ad_id, $ad_status = 0)
     {
         $return = false;
 

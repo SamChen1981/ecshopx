@@ -301,7 +301,7 @@ class Shophelp extends Init
     }
 
     /* 获得网店帮助文章分类 */
-    public function get_shophelp_list()
+    private function get_shophelp_list()
     {
         $list = array();
         $sql = 'SELECT cat_id, cat_name, sort_order' .
@@ -319,7 +319,7 @@ class Shophelp extends Init
     }
 
     /* 获得网店帮助某分类下的文章 */
-    public function shophelp_article_list($cat_id)
+    private function shophelp_article_list($cat_id)
     {
         $cat_id = intval($cat_id);
         $list = array();

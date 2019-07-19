@@ -291,7 +291,7 @@ class Brand extends Init
      * @access  public
      * @return  array
      */
-    public function get_brandlist()
+    private function get_brandlist()
     {
         $result = get_filter();
         if ($result === false) {

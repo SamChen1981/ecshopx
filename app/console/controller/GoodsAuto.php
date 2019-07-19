@@ -123,7 +123,7 @@ class GoodsAuto extends Init
         }
     }
 
-    public function get_auto_goods()
+    private function get_auto_goods()
     {
         $where = ' WHERE g.is_delete <> 1 ';
         if (!empty($_POST['goods_name'])) {

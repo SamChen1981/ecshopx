@@ -241,7 +241,7 @@ class Card extends Init
         }
     }
 
-    public function cards_list()
+    private function cards_list()
     {
         $result = get_filter();
         if ($result === false) {

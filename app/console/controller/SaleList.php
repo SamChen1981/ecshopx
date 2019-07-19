@@ -96,7 +96,7 @@ class SaleList extends Init
      * @param bool $is_pagination 是否分页
      * @return  array   销售明细数据
      */
-    public function get_sale_list($is_pagination = true)
+    private function get_sale_list($is_pagination = true)
     {
 
         /* 时间参数 */

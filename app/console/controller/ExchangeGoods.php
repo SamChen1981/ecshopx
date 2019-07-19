@@ -279,7 +279,7 @@ class ExchangeGoods extends Init
     }
 
     /* 获得商品列表 */
-    public function get_exchange_goodslist()
+    private function get_exchange_goodslist()
     {
         $result = get_filter();
         if ($result === false) {

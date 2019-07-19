@@ -132,7 +132,7 @@ class Filecheck extends Init
      * @param int $sub //是否检查子目录
      * @param string $skip //不检查的目录或文件
      */
-    public function checkfiles($currentdir, $ext = '', $sub = 1, $skip = '')
+    private function checkfiles($currentdir, $ext = '', $sub = 1, $skip = '')
     {
         global $md5data;
 

@@ -247,7 +247,7 @@ class Role extends Init
     }
 
     /* 获取角色列表 */
-    public function get_role_list()
+    private function get_role_list()
     {
         $list = array();
         $sql = 'SELECT role_id, role_name, action_list, role_describe ' .

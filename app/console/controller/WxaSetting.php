@@ -119,7 +119,7 @@ class WxaSetting extends Init
         }
     }
 
-    public function get_items($code)
+    private function get_items($code)
     {
         $params = get_params();
         foreach ($params as $value) {
@@ -131,7 +131,7 @@ class WxaSetting extends Init
         }
     }
 
-    public function get_params()
+    private function get_params()
     {
         $grouplist = array(
             0 => array(

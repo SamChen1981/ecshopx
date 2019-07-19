@@ -93,7 +93,7 @@ class SaleOrder extends Init
      * @param bool $is_pagination 是否分页
      * @return  array   销售排行数据
      */
-    public function get_sales_order($is_pagination = true)
+    private function get_sales_order($is_pagination = true)
     {
         $filter['start_date'] = empty($_REQUEST['start_date']) ? '' : local_strtotime($_REQUEST['start_date']);
         $filter['end_date'] = empty($_REQUEST['end_date']) ? '' : local_strtotime($_REQUEST['end_date']);

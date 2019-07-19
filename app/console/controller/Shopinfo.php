@@ -179,7 +179,7 @@ class Shopinfo extends Init
     }
 
     /* 获取网店信息文章数据 */
-    public function shopinfo_article_list()
+    private function shopinfo_article_list()
     {
         $list = array();
         $sql = 'SELECT article_id, title ,add_time' .

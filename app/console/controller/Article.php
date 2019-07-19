@@ -517,7 +517,7 @@ class Article extends Init
     }
 
     /* 把商品删除关联 */
-    public function drop_link_goods($goods_id, $article_id)
+    private function drop_link_goods($goods_id, $article_id)
     {
         $sql = "DELETE FROM " . $GLOBALS['ecs']->table('goods_article') .
             " WHERE goods_id = '$goods_id' AND article_id = '$article_id' LIMIT 1";
@@ -526,7 +526,7 @@ class Article extends Init
     }
 
     /* 取得文章关联商品 */
-    public function get_article_goods($article_id)
+    private function get_article_goods($article_id)
     {
         $list = array();
         $sql = 'SELECT g.goods_id, g.goods_name' .
@@ -539,7 +539,7 @@ class Article extends Init
     }
 
     /* 获得文章列表 */
-    public function get_articleslist()
+    private function get_articleslist()
     {
         $result = get_filter();
         if ($result === false) {
@@ -592,7 +592,7 @@ class Article extends Init
     }
 
     /* 上传文件 */
-    public function upload_article_file($upload)
+    private function upload_article_file($upload)
     {
         if (!make_dir("../" . DATA_DIR . "/article")) {
             /* 创建目录失败 */

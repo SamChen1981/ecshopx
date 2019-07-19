@@ -41,7 +41,7 @@ class SearchLog extends Init
         }
     }
 
-    public function get_search_log()
+    private function get_search_log()
     {
         $where = '';
         if (isset($_REQUEST['start_dateYear']) && isset($_REQUEST['end_dateYear'])) {

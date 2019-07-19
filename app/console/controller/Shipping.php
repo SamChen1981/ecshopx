@@ -421,7 +421,7 @@ class Shipping extends Init
      * @access  private
      * @return  Bool
      */
-    public function get_site_root_url()
+    private function get_site_root_url()
     {
         return defined('FORCE_SSL_LOGIN') ? 'https://' : 'http://' . $_SERVER['HTTP_HOST'] . str_replace('/' . ADMIN_PATH . '/shipping.php', '', PHP_SELF);
     }
@@ -434,7 +434,7 @@ class Shipping extends Init
      *
      * @return  Bool
      */
-    public function is_print_bg_default($print_bg)
+    private function is_print_bg_default($print_bg)
     {
         $_bg = basename($print_bg);
 

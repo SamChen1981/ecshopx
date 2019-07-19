@@ -173,7 +173,7 @@ class Affiliate extends Init
         }
     }
 
-    public function get_affiliate()
+    private function get_affiliate()
     {
         $config = unserialize($GLOBALS['_CFG']['affiliate']);
         empty($config) && $config = array();
@@ -181,7 +181,7 @@ class Affiliate extends Init
         return $config;
     }
 
-    public function put_affiliate($config)
+    private function put_affiliate($config)
     {
         $temp = serialize($config);
         $sql = "UPDATE " . $GLOBALS['ecs']->table('shop_config') .

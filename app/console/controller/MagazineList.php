@@ -179,7 +179,7 @@ class MagazineList extends Init
         }
     }
 
-    public function get_magazine()
+    private function get_magazine()
     {
         $result = get_filter();
 

@@ -389,7 +389,7 @@ class Auction extends Init
      * 取得拍卖活动列表
      * @return   array
      */
-    public function auction_list()
+    private function auction_list()
     {
         $result = get_filter();
         if ($result === false) {
@@ -454,7 +454,7 @@ class Auction extends Init
      * @param string $text 文字
      * @return  array('href' => $href, 'text' => $text)
      */
-    public function list_link($is_add = true, $text = '')
+    private function list_link($is_add = true, $text = '')
     {
         $href = 'auction.php?act=list';
         if (!$is_add) {

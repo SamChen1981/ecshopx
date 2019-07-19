@@ -104,7 +104,7 @@ class EmailList extends Init
         }
     }
 
-    public function get_email_list()
+    private function get_email_list()
     {
         $result = get_filter();
         if ($result === false) {

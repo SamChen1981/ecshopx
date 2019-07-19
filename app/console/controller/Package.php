@@ -364,7 +364,7 @@ class Package extends Init
      *
      * @return void
      */
-    public function get_packagelist()
+    private function get_packagelist()
     {
         $result = get_filter();
         if ($result === false) {
@@ -421,7 +421,7 @@ class Package extends Init
      * @param int $package_id
      * @return  void
      */
-    public function handle_packagep_goods($package_id)
+    private function handle_packagep_goods($package_id)
     {
         $sql = "UPDATE " . $GLOBALS['ecs']->table('package_goods') . " SET " .
             " package_id = '$package_id' " .

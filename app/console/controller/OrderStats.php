@@ -346,7 +346,7 @@ class OrderStats extends Init
      * @param       $end_date      查询的结束日期
      * @return      $order_info    订单概况数据
      */
-    public function get_orderinfo($start_date, $end_date)
+    private function get_orderinfo($start_date, $end_date)
     {
         //    订单状态说明
         //    OS_UNCONFIRMED = '待确认';
@@ -388,7 +388,7 @@ class OrderStats extends Init
      *
      * @return void
      */
-    public function order_stats($order_status, $start_date, $end_time)
+    private function order_stats($order_status, $start_date, $end_time)
     {
         $sql = 'SELECT count(o.order_id) as counts FROM ' . $GLOBALS['ecs']->table('order_info') . " as o where 1 ";
         $where = "";

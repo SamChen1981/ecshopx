@@ -250,7 +250,7 @@ class PickOut extends Init
      *
      * @return string
      */
-    public function search_url(&$attr_picks, $attr_id = 0)
+    private function search_url(&$attr_picks, $attr_id = 0)
     {
         $str = '';
         foreach ($attr_picks as $pick_id) {

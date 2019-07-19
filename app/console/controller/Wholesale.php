@@ -569,7 +569,7 @@ class Wholesale extends Init
      * 取得批发活动列表
      * @return   array
      */
-    public function wholesale_list()
+    private function wholesale_list()
     {
         /* 查询会员等级 */
         $rank_list = array();

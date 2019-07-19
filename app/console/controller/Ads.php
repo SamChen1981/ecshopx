@@ -456,7 +456,7 @@ class Ads extends Init
     }
 
     /* 获取广告数据列表 */
-    public function get_adslist()
+    private function get_adslist()
     {
         /* 过滤查询 */
         $pid = !empty($_REQUEST['pid']) ? intval($_REQUEST['pid']) : 0;

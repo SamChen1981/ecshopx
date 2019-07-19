@@ -293,7 +293,7 @@ class Attribute extends Init
      *
      * @return  array
      */
-    public function get_attrlist()
+    private function get_attrlist()
     {
         /* 查询条件 */
         $filter = array();

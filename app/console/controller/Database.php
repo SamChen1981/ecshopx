@@ -556,7 +556,7 @@ class Database extends Init
      *
      * @return void
      */
-    public function sql_import($sql_file)
+    private function sql_import($sql_file)
     {
         $db_ver = $GLOBALS['db']->version();
 
@@ -601,7 +601,7 @@ class Database extends Init
      *
      * @return void
      */
-    public function num_bitunit($num)
+    private function num_bitunit($num)
     {
         $bitunit = array(' B', ' KB', ' MB', ' GB');
         for ($key = 0, $count = count($bitunit); $key < $count; $key++) {
@@ -620,7 +620,7 @@ class Database extends Init
      * @param
      * @return  void
      */
-    public function remove_comment($var)
+    private function remove_comment($var)
     {
         return (substr($var, 0, 2) != '--');
     }

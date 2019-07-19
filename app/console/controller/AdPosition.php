@@ -269,7 +269,7 @@ class AdPosition extends Init
     }
 
     /* 获取广告位置列表 */
-    public function ad_position_list()
+    private function ad_position_list()
     {
         $filter = array();
 

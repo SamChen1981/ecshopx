@@ -129,7 +129,7 @@ class AttentionList extends Init
         }
     }
 
-    public function get_attention()
+    private function get_attention()
     {
         $result = get_filter();
 

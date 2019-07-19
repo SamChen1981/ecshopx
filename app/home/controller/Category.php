@@ -350,7 +350,7 @@ class Category extends Init
      *
      * @return  void
      */
-    public function get_cat_info($cat_id)
+    private function get_cat_info($cat_id)
     {
         return $GLOBALS['db']->getRow('SELECT cat_name, keywords, cat_desc, style, grade, filter_attr, parent_id FROM ' . $GLOBALS['ecs']->table('category') .
             " WHERE cat_id = '$cat_id'");
@@ -363,7 +363,7 @@ class Category extends Init
      * @param string $children
      * @return  array
      */
-    public function category_get_goods($children, $brand, $min, $max, $ext, $size, $page, $sort, $order)
+    private function category_get_goods($children, $brand, $min, $max, $ext, $size, $page, $sort, $order)
     {
         $display = $GLOBALS['display'];
         $where = "g.is_on_sale = 1 AND g.is_alone_sale = 1 AND " .
@@ -444,7 +444,7 @@ class Category extends Init
      * @param string $cat_id
      * @return  integer
      */
-    public function get_cagtegory_goods_count($children, $brand = 0, $min = 0, $max = 0, $ext = '')
+    private function get_cagtegory_goods_count($children, $brand = 0, $min = 0, $max = 0, $ext = '')
     {
         $where = "g.is_on_sale = 1 AND g.is_alone_sale = 1 AND g.is_delete = 0 AND ($children OR " . get_extension_goods($children) . ')';
 
@@ -472,7 +472,7 @@ class Category extends Init
      *
      * @return int
      */
-    public function get_parent_grade($cat_id)
+    private function get_parent_grade($cat_id)
     {
         static $res = null;
 

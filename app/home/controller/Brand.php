@@ -127,7 +127,7 @@ class Brand extends Init
      * @param integer $id
      * @return  void
      */
-    public function get_brand_info($id)
+    private function get_brand_info($id)
     {
         $sql = 'SELECT * FROM ' . $GLOBALS['ecs']->table('brand') . " WHERE brand_id = '$id'";
 
@@ -142,7 +142,7 @@ class Brand extends Init
      * @param integer $brand
      * @return  array
      */
-    public function brand_recommend_goods($type, $brand, $cat = 0)
+    private function brand_recommend_goods($type, $brand, $cat = 0)
     {
         static $result = null;
 
@@ -219,7 +219,7 @@ class Brand extends Init
      * @param integer $cate
      * @return  integer
      */
-    public function goods_count_by_brand($brand_id, $cate = 0)
+    private function goods_count_by_brand($brand_id, $cate = 0)
     {
         $sql = 'SELECT COUNT(*) FROM ' . $GLOBALS['ecs']->table('goods') . ' AS g ' .
             "WHERE brand_id = '$brand_id' AND g.is_on_sale = 1 AND g.is_alone_sale = 1 AND g.is_delete = 0";
@@ -238,7 +238,7 @@ class Brand extends Init
      * @param integer $brand_id
      * @return  array
      */
-    public function brand_get_goods($brand_id, $cate, $size, $page, $sort, $order)
+    private function brand_get_goods($brand_id, $cate, $size, $page, $sort, $order)
     {
         $cate_where = ($cate > 0) ? 'AND ' . get_children($cate) : '';
 
@@ -287,7 +287,7 @@ class Brand extends Init
      * @param integer $brand
      * @return  array
      */
-    public function brand_related_cat($brand)
+    private function brand_related_cat($brand)
     {
         $arr[] = array('cat_id' => 0,
             'cat_name' => $GLOBALS['_LANG']['all_category'],

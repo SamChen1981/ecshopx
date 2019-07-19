@@ -283,7 +283,7 @@ class UserMsg extends Init
      *
      * @return void
      */
-    public function msg_list()
+    private function msg_list()
     {
         /* 过滤条件 */
         $filter['keywords'] = empty($_REQUEST['keywords']) ? '' : trim($_REQUEST['keywords']);
@@ -338,7 +338,7 @@ class UserMsg extends Init
      *
      * @return  array
      */
-    public function get_feedback_detail($id)
+    private function get_feedback_detail($id)
     {
         global $ecs, $db, $_CFG;
 

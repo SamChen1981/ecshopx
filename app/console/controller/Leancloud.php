@@ -219,7 +219,7 @@ class Leancloud extends Init
         }
     }
 
-    public function get_list($page, $db, $ecs)
+    private function get_list($page, $db, $ecs)
     {
         $sql = "SELECT COUNT(*) FROM " . $ecs->table('push');
         $count = $db->getONE($sql);
@@ -234,7 +234,7 @@ class Leancloud extends Init
         return $push_list ? $push_list : false;
     }
 
-    public function getrow($id, $db, $ecs)
+    private function getrow($id, $db, $ecs)
     {
         $sql = "SELECT * FROM " . $ecs->table('push') . " WHERE id = $id";
         $push_list = $db->getAll($sql);
@@ -248,7 +248,7 @@ class Leancloud extends Init
         return $params;
     }
 
-    public function get_linkcode($link)
+    private function get_linkcode($link)
     {
         $links = get_url();
         $link_temp = explode(':', $link);
@@ -268,7 +268,7 @@ class Leancloud extends Init
         return $params;
     }
 
-    public function get_url()
+    private function get_url()
     {
         $url_list = array(
             'user-defined' => '自定义链接',
