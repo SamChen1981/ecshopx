@@ -17,7 +17,7 @@ class Index extends Init
             $Loaction = 'h5/';
 
             if (!empty($Loaction)) {
-                ecs_header("Location: $Loaction\n");
+                return $this->redirect($Loaction);
 
                 exit;
             }

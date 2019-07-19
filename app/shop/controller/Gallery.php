@@ -21,7 +21,7 @@ class Gallery extends Init
 
         /* 如果该商品不存在，返回首页 */
         if ($goods_name === false) {
-            ecs_header("Location: ./\n");
+            return $this->redirect('/');
 
             exit;
         }
@@ -37,7 +37,7 @@ class Gallery extends Init
         $gallery = array('goods_name' => htmlspecialchars($goods_name, ENT_QUOTES), 'list' => array());
         if ($img_count == 0) {
             /* 如果没有图片，返回商品详情页 */
-            ecs_header('Location: goods.php?id=' . $_REQUEST['id'] . "\n");
+            return $this->redirect('goods.php?id=' . $_REQUEST['id'] . "');
             exit;
         } else {
             foreach ($img_list as $key => $img) {

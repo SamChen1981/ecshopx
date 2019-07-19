@@ -155,7 +155,7 @@ class RegFields extends Init
 
             $url = 'reg_fields.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
 
-            ecs_header("Location: $url\n");
+            return $this->redirect($url);
             exit;
         } /*
  *  编辑会员注册项名称

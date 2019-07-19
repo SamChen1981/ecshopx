@@ -80,7 +80,7 @@ class GroupBuy extends Init
             /* 取得参数：团购活动id */
             $group_buy_id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
             if ($group_buy_id <= 0) {
-                ecs_header("Location: ./\n");
+                return $this->redirect('/');
                 exit;
             }
 
@@ -88,7 +88,7 @@ class GroupBuy extends Init
             $group_buy = group_buy_info($group_buy_id);
 
             if (empty($group_buy)) {
-                ecs_header("Location: ./\n");
+                return $this->redirect('/');
                 exit;
             }
 //    elseif ($group_buy['is_on_sale'] == 0 || $group_buy['is_alone_sale'] == 0)
@@ -113,7 +113,7 @@ class GroupBuy extends Init
                 $goods_id = $group_buy['goods_id'];
                 $goods = goods_info($goods_id);
                 if (empty($goods)) {
-                    ecs_header("Location: ./\n");
+                    return $this->redirect('/');
                     exit;
                 }
                 $goods['url'] = build_uri('goods', array('gid' => $goods_id), $goods['goods_name']);
@@ -160,7 +160,7 @@ class GroupBuy extends Init
             /* 查询：取得参数：团购活动id */
             $group_buy_id = isset($_POST['group_buy_id']) ? intval($_POST['group_buy_id']) : 0;
             if ($group_buy_id <= 0) {
-                ecs_header("Location: ./\n");
+                return $this->redirect('/');
                 exit;
             }
 
@@ -172,7 +172,7 @@ class GroupBuy extends Init
             $group_buy = group_buy_info($group_buy_id, $number);
 
             if (empty($group_buy)) {
-                ecs_header("Location: ./\n");
+                return $this->redirect('/');
                 exit;
             }
 
@@ -184,7 +184,7 @@ class GroupBuy extends Init
             /* 查询：取得团购商品信息 */
             $goods = goods_info($group_buy['goods_id']);
             if (empty($goods)) {
-                ecs_header("Location: ./\n");
+                return $this->redirect('/');
                 exit;
             }
 
@@ -261,7 +261,7 @@ class GroupBuy extends Init
             $_SESSION['extension_id'] = $group_buy_id;
 
             /* 进入收货人页面 */
-            ecs_header("Location: ./flow.php?step=consignee\n");
+            return $this->redirect('flow.php?step=consignee');
             exit;
         }
     }

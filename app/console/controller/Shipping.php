@@ -176,7 +176,7 @@ class Shipping extends Init
             $GLOBALS['db']->query("UPDATE " . $GLOBALS['ecs']->table('shipping') . " SET print_bg = '" . addslashes($modules[0]['print_bg']) . "',  config_lable = '" . addslashes($modules[0]['config_lable']) . "' WHERE shipping_code = '$code' LIMIT 1");
 
             $url = "shipping.php?act=edit_print_template&shipping=$shipping_id";
-            ecs_header("Location: $url\n");
+            return $this->redirect($url);
         }
 
         /*------------------------------------------------------ */

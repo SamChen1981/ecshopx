@@ -18,7 +18,7 @@ class Topic extends Init
 
         if (empty($topic)) {
             /* 如果没有找到任何记录则跳回到首页 */
-            ecs_header("Location: ./\n");
+            return $this->redirect('/');
             exit;
         }
 

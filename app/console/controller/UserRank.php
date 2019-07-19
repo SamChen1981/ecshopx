@@ -139,7 +139,7 @@ class UserRank extends Init
 
             $url = 'user_rank.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
 
-            ecs_header("Location: $url\n");
+            return $this->redirect($url);
             exit;
         } /*
  *  编辑会员等级名称

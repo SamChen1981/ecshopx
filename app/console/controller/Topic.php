@@ -256,7 +256,7 @@ class Topic extends Init
 
             if (!empty($_REQUEST['is_ajax'])) {
                 $url = 'topic.php?act=query&' . str_replace('act=delete', '', $_SERVER['QUERY_STRING']);
-                ecs_header("Location: $url\n");
+                return $this->redirect($url);
                 exit;
             }
 

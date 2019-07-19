@@ -220,7 +220,7 @@ class Vote extends Init
 
                     $url = 'vote.php?act=query_option&vid=' . $vote_id . '&' . str_replace('act=new_option', '', $_SERVER['QUERY_STRING']);
 
-                    ecs_header("Location: $url\n");
+                    return $this->redirect($url);
                     exit;
                 }
             } else {
@@ -306,7 +306,7 @@ class Vote extends Init
 
             $url = 'vote.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
 
-            ecs_header("Location: $url\n");
+            return $this->redirect($url);
             exit;
         }
 
@@ -326,7 +326,7 @@ class Vote extends Init
 
             $url = 'vote.php?act=query_option&vid=' . $vote_id . '&' . str_replace('act=remove_option', '', $_SERVER['QUERY_STRING']);
 
-            ecs_header("Location: $url\n");
+            return $this->redirect($url);
             exit;
         }
     }

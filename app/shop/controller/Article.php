@@ -22,12 +22,12 @@ class Article extends Init
             $article = $this->get_article_info($article_id);
 
             if (empty($article)) {
-                ecs_header("Location: ./\n");
+                return $this->redirect('/');
                 exit;
             }
 
             if (!empty($article['link']) && $article['link'] != 'http://' && $article['link'] != 'https://') {
-                ecs_header("location:$article[link]\n");
+                return $this->redirect($article[link]);
                 exit;
             }
 

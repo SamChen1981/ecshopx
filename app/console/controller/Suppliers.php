@@ -117,7 +117,7 @@ class Suppliers extends Init
                 $order_exists = $GLOBALS['db']->getOne($sql, true);
                 if ($order_exists > 0) {
                     $url = 'suppliers.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
-                    ecs_header("Location: $url\n");
+                    return $this->redirect($url);
                     exit;
                 }
 
@@ -128,7 +128,7 @@ class Suppliers extends Init
                 $goods_exists = $GLOBALS['db']->getOne($sql, true);
                 if ($goods_exists > 0) {
                     $url = 'suppliers.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
-                    ecs_header("Location: $url\n");
+                    return $this->redirect($url);
                     exit;
                 }
 
@@ -151,7 +151,7 @@ class Suppliers extends Init
             }
 
             $url = 'suppliers.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
-            ecs_header("Location: $url\n");
+            return $this->redirect($url);
 
             exit;
         }

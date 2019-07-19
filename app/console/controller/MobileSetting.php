@@ -71,7 +71,7 @@ class MobileSetting extends Init
             $this->put_flash_xml($temp);
             $error_msg = '';
             $this->set_flash_data($GLOBALS['_CFG']['flash_theme'], $error_msg);
-            ecs_header("Location: mobile_setting.php?act=list\n");
+            return $this->redirect('mobile_setting.php?act=list');
             exit;
         } elseif ($_REQUEST['act'] == 'add') {
             admin_priv('flash_manage');

@@ -222,7 +222,7 @@ class Shophelp extends Init
 
             $url = 'shophelp.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
 
-            ecs_header("Location: $url\n");
+            return $this->redirect($url);
             exit;
         }
 
@@ -245,7 +245,7 @@ class Shophelp extends Init
 
             $url = 'shophelp.php?act=query_art&cat=' . $cat_id . '&' . str_replace('act=remove_art', '', $_SERVER['QUERY_STRING']);
 
-            ecs_header("Location: $url\n");
+            return $this->redirect($url);
 
             exit;
         }
@@ -267,14 +267,14 @@ class Shophelp extends Init
 
                     admin_log($cat_name, 'add', 'shophelpcat');
 
-                    ecs_header("Location: shophelp.php?act=query\n");
+                    return $this->redirect('shophelp.php?act=query');
                     exit;
                 }
             } else {
                 make_json_error($GLOBALS['_LANG']['js_languages']['no_catname']);
             }
 
-            ecs_header("Location: shophelp.php?act=list_cat\n");
+            return $this->redirect('shophelp.php?act=list_cat');
             exit;
         }
 

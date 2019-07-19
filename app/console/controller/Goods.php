@@ -1411,7 +1411,7 @@ class Goods extends Init
 
                 $url = 'goods.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
 
-                ecs_header("Location: $url\n");
+                return $this->redirect($url);
                 exit;
             }
         }
@@ -1434,7 +1434,7 @@ class Goods extends Init
 
             $url = 'goods.php?act=query&' . str_replace('act=restore_goods', '', $_SERVER['QUERY_STRING']);
 
-            ecs_header("Location: $url\n");
+            return $this->redirect($url);
             exit;
         }
 
@@ -1547,7 +1547,7 @@ class Goods extends Init
             clear_cache_files();
             $url = 'goods.php?act=query&' . str_replace('act=drop_goods', '', $_SERVER['QUERY_STRING']);
 
-            ecs_header("Location: $url\n");
+            return $this->redirect($url);
 
             exit;
         }
@@ -2024,7 +2024,7 @@ class Goods extends Init
 
                 $url = 'goods.php?act=product_query&' . str_replace('act=product_remove', '', $_SERVER['QUERY_STRING']);
 
-                ecs_header("Location: $url\n");
+                return $this->redirect($url);
                 exit;
             }
         }

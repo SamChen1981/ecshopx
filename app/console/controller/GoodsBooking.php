@@ -65,7 +65,7 @@ class GoodsBooking extends Init
 
             $url = 'goods_booking.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
 
-            ecs_header("Location: $url\n");
+            return $this->redirect($url);
             exit;
         }
 
@@ -126,7 +126,7 @@ class GoodsBooking extends Init
                 }
             }
 
-            ecs_header("Location: ?act=detail&id=" . $_REQUEST['rec_id'] . "&send_ok=$send_ok\n");
+            return $this->redirect('?act=detail&id=" . $_REQUEST['rec_id'] . "&send_ok=$send_ok');
             exit;
         }
     }

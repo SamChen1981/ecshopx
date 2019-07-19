@@ -49,7 +49,7 @@ class Flow extends Init
 
             if (!empty($_REQUEST['goods_id']) && empty($_POST['goods'])) {
                 if (!is_numeric($_REQUEST['goods_id']) || intval($_REQUEST['goods_id']) <= 0) {
-                    ecs_header("Location:./\n");
+                    return $this->redirect('/');
                 }
                 $goods_id = intval($_REQUEST['goods_id']);
                 exit;
@@ -147,7 +147,7 @@ class Flow extends Init
             if (!cart_goods_exists($goods_id, array())) {
                 addto_cart($goods_id);
             }
-            ecs_header("Location:./flow.php\n");
+            return $this->redirect('flow.php');
             exit;
         } elseif ($_REQUEST['step'] == 'login') {
             include_once('languages/' . $GLOBALS['_CFG']['lang'] . '/user.php');
@@ -208,9 +208,9 @@ class Flow extends Init
                         /* 检查购物车中是否有商品 没有商品则跳转到首页 */
                         $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('cart') . " WHERE " . $where;
                         if ($GLOBALS['db']->getOne($sql) > 0) {
-                            ecs_header("Location: flow.php?step=checkout\n");
+                            return $this->redirect('flow.php?step=checkout');
                         } else {
-                            ecs_header("Location:index.php\n");
+                            return $this->redirect('index.php');
                         }
 
                         exit;
@@ -240,7 +240,7 @@ class Flow extends Init
                             $matrix->createMember($_SESSION['user_id'], 'ecos.taocrm');
                         }*/
                         /* 用户注册成功 */
-                        ecs_header("Location: flow.php?step=consignee\n");
+                        return $this->redirect('flow.php?step=consignee');
                         exit;
                     } else {
                         $GLOBALS['err']->show();
@@ -341,7 +341,7 @@ class Flow extends Init
                 /* 保存到session */
                 $_SESSION['flow_consignee'] = stripslashes_deep($consignee);
 
-                ecs_header("Location: flow.php?step=checkout\n");
+                return $this->redirect('flow.php?step=checkout');
                 exit;
             }
         } elseif ($_REQUEST['step'] == 'drop_consignee') {
@@ -353,7 +353,7 @@ class Flow extends Init
             $consignee_id = intval($_GET['id']);
 
             if (drop_consignee($consignee_id)) {
-                ecs_header("Location: flow.php?step=consignee\n");
+                return $this->redirect('flow.php?step=consignee');
                 exit;
             } else {
                 show_message($GLOBALS['_LANG']['not_fount_consignee']);
@@ -397,7 +397,7 @@ class Flow extends Init
              */
             if (empty($_SESSION['direct_shopping']) && $_SESSION['user_id'] == 0) {
                 /* 用户没有登录且没有选定匿名购物，转向到登录页面 */
-                ecs_header("Location: flow.php?step=login\n");
+                return $this->redirect('flow.php?step=login');
                 exit;
             }
 
@@ -406,7 +406,7 @@ class Flow extends Init
             /* 检查收货人信息是否完整 */
             if (!check_consignee_info($consignee, $flow_type)) {
                 /* 如果不完整则转向到收货人信息填写界面 */
-                ecs_header("Location: flow.php?step=consignee\n");
+                return $this->redirect('flow.php?step=consignee');
                 exit;
             }
 
@@ -1156,7 +1156,7 @@ class Flow extends Init
              */
             if (empty($_SESSION['direct_shopping']) && $_SESSION['user_id'] == 0) {
                 /* 用户没有登录且没有选定匿名购物，转向到登录页面 */
-                ecs_header("Location: flow.php?step=login\n");
+                return $this->redirect('flow.php?step=login');
                 exit;
             }
 
@@ -1165,7 +1165,7 @@ class Flow extends Init
             /* 检查收货人信息是否完整 */
             if (!check_consignee_info($consignee, $flow_type)) {
                 /* 如果不完整则转向到收货人信息填写界面 */
-                ecs_header("Location: flow.php?step=consignee\n");
+                return $this->redirect('flow.php?step=consignee');
                 exit;
             }
 
@@ -1601,7 +1601,7 @@ class Flow extends Init
             $rec_id = intval($_GET['id']);
             $this->flow_drop_cart_goods($rec_id);
 
-            ecs_header("Location: flow.php\n");
+            return $this->redirect('flow.php');
             exit;
         } /* 把优惠活动加入购物车 */
         elseif ($_REQUEST['step'] == 'add_favourable') {
@@ -1665,7 +1665,7 @@ class Flow extends Init
             }
 
             /* 刷新购物车 */
-            ecs_header("Location: flow.php\n");
+            return $this->redirect('flow.php');
             exit;
         } elseif ($_REQUEST['step'] == 'clear') {
             $sql = "DELETE FROM " . $GLOBALS['ecs']->table('cart') . " WHERE session_id='" . SESS_ID . "'";
@@ -1674,7 +1674,7 @@ class Flow extends Init
             }
             $GLOBALS['db']->query($sql);
 
-            ecs_header("Location:./\n");
+            return $this->redirect('/');
         } elseif ($_REQUEST['step'] == 'drop_to_collect') {
             $where = "session_id = '" . SESS_ID . "'";
             if ($_SESSION['user_id'] > 0) {
@@ -1690,7 +1690,7 @@ class Flow extends Init
                 }
                 $this->flow_drop_cart_goods($rec_id);
             }
-            ecs_header("Location: flow.php\n");
+            return $this->redirect('flow.php');
             exit;
         } /* 验证红包序列号 */
         elseif ($_REQUEST['step'] == 'validate_bonus') {
@@ -1843,7 +1843,7 @@ class Flow extends Init
 
             /* 如果是一步购物，跳到结算中心 */
             if ($GLOBALS['_CFG']['one_step_buy'] == '1') {
-                ecs_header("Location: flow.php?step=checkout\n");
+                return $this->redirect('flow.php?step=checkout');
                 exit;
             }
 

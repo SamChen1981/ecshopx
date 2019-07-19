@@ -143,7 +143,7 @@ class Privilege extends Init
                             // 清除购物车中过期的数据
                             $this->clear_cart();
                             exit('<script>top.location.href="./index.php"</script>');
-                            // ecs_header("Location: ./index.php\n");exit;
+                            // return $this->redirect('/index.php');exit;
                         }
                     }
                 } else {
@@ -258,7 +258,7 @@ class Privilege extends Init
                 // 清除购物车中过期的数据
                 $this->clear_cart();
 
-                ecs_header("Location: ./index.php\n");
+                return $this->redirect('/');
 
                 exit;
             } else {
@@ -746,7 +746,7 @@ class Privilege extends Init
 
             $url = 'privilege.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
 
-            ecs_header("Location: $url\n");
+            return $this->redirect($url);
             exit;
         }
 

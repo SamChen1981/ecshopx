@@ -252,7 +252,7 @@ class Pack extends Init
 
                 $url = 'pack.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
 
-                ecs_header("Location: $url\n");
+                return $this->redirect($url);
                 exit;
             } else {
                 make_json_error($GLOBALS['_LANG']['packremove_falure']);

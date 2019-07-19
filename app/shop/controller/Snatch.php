@@ -24,7 +24,7 @@ class Snatch extends Init
             $id = $this->get_last_snatch();
             if ($id) {
                 $page = build_uri('snatch', array('sid' => $id));
-                ecs_header("Location: $page\n");
+                return $this->redirect($page);
                 exit;
             } else {
                 /* 当前没有任何可默认的活动 */
@@ -173,7 +173,7 @@ class Snatch extends Init
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'buy') {
             if (empty($id)) {
-                ecs_header("Location: ./\n");
+                return $this->redirect('/');
                 exit;
             }
 
@@ -185,14 +185,14 @@ class Snatch extends Init
 
 
             if (empty($snatch)) {
-                ecs_header("Location: ./\n");
+                return $this->redirect('/');
                 exit;
             }
 
             /* 未结束，不能购买 */
             if (empty($snatch['is_end'])) {
                 $page = build_uri('snatch', array('sid' => $id));
-                ecs_header("Location: $page\n");
+                return $this->redirect($page);
                 exit;
             }
 
@@ -262,7 +262,7 @@ class Snatch extends Init
             $_SESSION['extension_id'] = $id;
 
             /* 进入收货人页面 */
-            ecs_header("Location: ./flow.php?step=consignee\n");
+            return $this->redirect('flow.php?step=consignee');
             exit;
         }
     }

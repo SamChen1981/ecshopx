@@ -841,7 +841,7 @@ class User extends Init
                  * $matrix = new matrix();
                 $matrix->set_dead_order($order_id);*/
 
-                ecs_header("Location: user.php?act=order_list\n");
+                return $this->redirect('user.php?act=order_list');
                 exit;
             } else {
                 $GLOBALS['err']->show($GLOBALS['_LANG']['order_list_lnk'], 'user.php?act=order_list');
@@ -929,7 +929,7 @@ class User extends Init
             $consignee_id = intval($_GET['id']);
 
             if (drop_consignee($consignee_id)) {
-                ecs_header("Location: user.php?act=address_list\n");
+                return $this->redirect('user.php?act=address_list');
                 exit;
             } else {
                 show_message($GLOBALS['_LANG']['del_address_false']);
@@ -965,7 +965,7 @@ class User extends Init
                 $GLOBALS['db']->query('DELETE FROM ' . $GLOBALS['ecs']->table('collect_goods') . " WHERE rec_id='$collection_id' AND user_id ='$user_id'");
             }
 
-            ecs_header("Location: user.php?act=collection_list\n");
+            return $this->redirect('user.php?act=collection_list');
             exit;
         } /* 添加关注商品 */
         elseif ($action == 'add_to_attention') {
@@ -973,7 +973,7 @@ class User extends Init
             if ($rec_id) {
                 $GLOBALS['db']->query('UPDATE ' . $GLOBALS['ecs']->table('collect_goods') . "SET is_attention = 1 WHERE rec_id='$rec_id' AND user_id ='$user_id'");
             }
-            ecs_header("Location: user.php?act=collection_list\n");
+            return $this->redirect('user.php?act=collection_list');
             exit;
         } /* 取消关注商品 */
         elseif ($action == 'del_attention') {
@@ -981,7 +981,7 @@ class User extends Init
             if ($rec_id) {
                 $GLOBALS['db']->query('UPDATE ' . $GLOBALS['ecs']->table('collect_goods') . "SET is_attention = 0 WHERE rec_id='$rec_id' AND user_id ='$user_id'");
             }
-            ecs_header("Location: user.php?act=collection_list\n");
+            return $this->redirect('user.php?act=collection_list');
             exit;
         } /* 显示留言列表 */
         elseif ($action == 'message_list') {
@@ -1074,7 +1074,7 @@ class User extends Init
             $tag_words = isset($_GET['tag_words']) ? trim($_GET['tag_words']) : '';
             delete_tag($tag_words, $user_id);
 
-            ecs_header("Location: user.php?act=tag_list\n");
+            return $this->redirect('user.php?act=tag_list');
             exit;
         } /* 显示缺货登记列表 */
         elseif ($action == 'booking_list') {
@@ -1159,13 +1159,13 @@ class User extends Init
 
             $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
             if ($id == 0 || $user_id == 0) {
-                ecs_header("Location: user.php?act=booking_list\n");
+                return $this->redirect('user.php?act=booking_list');
                 exit;
             }
 
             $result = delete_booking($id, $user_id);
             if ($result) {
-                ecs_header("Location: user.php?act=booking_list\n");
+                return $this->redirect('user.php?act=booking_list');
                 exit;
             }
         } /* 确认收货 */
@@ -1175,7 +1175,7 @@ class User extends Init
             $order_id = isset($_GET['order_id']) ? intval($_GET['order_id']) : 0;
 
             if (affirm_received($order_id, $user_id)) {
-                ecs_header("Location: user.php?act=order_list\n");
+                return $this->redirect('user.php?act=order_list');
                 exit;
             } else {
                 $GLOBALS['err']->show($GLOBALS['_LANG']['order_list_lnk'], 'user.php?act=order_list');
@@ -1375,13 +1375,13 @@ class User extends Init
 
             $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
             if ($id == 0 || $user_id == 0) {
-                ecs_header("Location: user.php?act=account_log\n");
+                return $this->redirect('user.php?act=account_log');
                 exit;
             }
 
             $result = del_user_account($id, $user_id);
             if ($result) {
-                ecs_header("Location: user.php?act=account_log\n");
+                return $this->redirect('user.php?act=account_log');
                 exit;
             }
         } /* 会员通过帐目明细列表进行再付款的操作 */
@@ -1395,13 +1395,13 @@ class User extends Init
             $payment_id = isset($_GET['pid']) ? intval($_GET['pid']) : 0;
 
             if ($surplus_id == 0) {
-                ecs_header("Location: user.php?act=account_log\n");
+                return $this->redirect('user.php?act=account_log');
                 exit;
             }
 
             //如果原来的支付方式已禁用或者已删除, 重新选择支付方式
             if ($payment_id == 0) {
-                ecs_header("Location: user.php?act=account_deposit&id=" . $surplus_id . "\n");
+                return $this->redirect('user.php?act=account_deposit&id=" . $surplus_id . "');
                 exit;
             }
 
@@ -1540,7 +1540,7 @@ class User extends Init
                     $GLOBALS['db']->query($sql);
                 }
             }
-            ecs_header("Location: user.php?act=message_list&order_id=$order_id\n");
+            return $this->redirect('user.php?act=message_list&order_id=$order_id');
             exit;
         } /* 删除评论 */
         elseif ($action == 'del_cmt') {
@@ -1549,7 +1549,7 @@ class User extends Init
                 $sql = "DELETE FROM " . $GLOBALS['ecs']->table('comment') . " WHERE comment_id = '$id' AND user_id = '$user_id'";
                 $GLOBALS['db']->query($sql);
             }
-            ecs_header("Location: user.php?act=comment_list\n");
+            return $this->redirect('user.php?act=comment_list');
             exit;
         } /* 合并订单 */
         elseif ($action == 'merge_order') {
@@ -1610,14 +1610,14 @@ class User extends Init
         elseif ($action == 'act_edit_surplus') {
             /* 检查是否登录 */
             if ($_SESSION['user_id'] <= 0) {
-                ecs_header("Location: ./\n");
+                return $this->redirect('/');
                 exit;
             }
 
             /* 检查订单号 */
             $order_id = intval($_POST['order_id']);
             if ($order_id <= 0) {
-                ecs_header("Location: ./\n");
+                return $this->redirect('/');
                 exit;
             }
 
@@ -1633,13 +1633,13 @@ class User extends Init
             /* 取得订单 */
             $order = order_info($order_id);
             if (empty($order)) {
-                ecs_header("Location: ./\n");
+                return $this->redirect('/');
                 exit;
             }
 
             /* 检查订单用户跟当前用户是否一致 */
             if ($_SESSION['user_id'] != $order['user_id']) {
-                ecs_header("Location: ./\n");
+                return $this->redirect('/');
                 exit;
             }
 
@@ -1718,53 +1718,53 @@ class User extends Init
             $matrix->createOrder($order['order_sn']);*/
 
             /* 跳转 */
-            ecs_header('Location: user.php?act=order_detail&order_id=' . $order_id . "\n");
+            return $this->redirect('user.php?act=order_detail&order_id=' . $order_id . "');
             exit;
         } /* 编辑使用余额支付的处理 */
         elseif ($action == 'act_edit_payment') {
             /* 检查是否登录 */
             if ($_SESSION['user_id'] <= 0) {
-                ecs_header("Location: ./\n");
+                return $this->redirect('/');
                 exit;
             }
 
             /* 检查支付方式 */
             $pay_id = intval($_POST['pay_id']);
             if ($pay_id <= 0) {
-                ecs_header("Location: ./\n");
+                return $this->redirect('/');
                 exit;
             }
 
             load_helper('order');
             $payment_info = payment_info($pay_id);
             if (empty($payment_info)) {
-                ecs_header("Location: ./\n");
+                return $this->redirect('/');
                 exit;
             }
 
             /* 检查订单号 */
             $order_id = intval($_POST['order_id']);
             if ($order_id <= 0) {
-                ecs_header("Location: ./\n");
+                return $this->redirect('/');
                 exit;
             }
 
             /* 取得订单 */
             $order = order_info($order_id);
             if (empty($order)) {
-                ecs_header("Location: ./\n");
+                return $this->redirect('/');
                 exit;
             }
 
             /* 检查订单用户跟当前用户是否一致 */
             if ($_SESSION['user_id'] != $order['user_id']) {
-                ecs_header("Location: ./\n");
+                return $this->redirect('/');
                 exit;
             }
 
             /* 检查订单是否未付款和未发货 以及订单金额是否为0 和支付id是否为改变*/
             if ($order['pay_status'] != PS_UNPAYED || $order['shipping_status'] != SS_UNSHIPPED || $order['goods_amount'] <= 0 || $order['pay_id'] == $pay_id) {
-                ecs_header("Location: user.php?act=order_detail&order_id=$order_id\n");
+                return $this->redirect('user.php?act=order_detail&order_id=$order_id');
                 exit;
             }
 
@@ -1778,7 +1778,7 @@ class User extends Init
             $GLOBALS['db']->query($sql);
 
             /* 跳转 */
-            ecs_header("Location: user.php?act=order_detail&order_id=$order_id\n");
+            return $this->redirect('user.php?act=order_detail&order_id=$order_id');
             exit;
         } /* 保存订单详情收货地址 */
         elseif ($action == 'save_order_address') {
@@ -1806,7 +1806,7 @@ class User extends Init
                      * $matrix = new matrix;
                     $matrix->createOrder($order_sn);*/
                 }
-                ecs_header('Location: user.php?act=order_detail&order_id=' . $address['order_id'] . "\n");
+                return $this->redirect('user.php?act=order_detail&order_id=' . $address['order_id'] . "');
                 exit;
             } else {
                 $GLOBALS['err']->show($GLOBALS['_LANG']['order_list_lnk'], 'user.php?act=order_list');

@@ -229,7 +229,7 @@ class UserAccount extends Init
 
             /* 如果参数不合法，返回 */
             if ($id == 0) {
-                ecs_header("Location: user_account.php?act=list\n");
+                return $this->redirect('user_account.php?act=list');
                 exit;
             }
 
@@ -281,7 +281,7 @@ class UserAccount extends Init
 
             /* 如果参数不合法，返回 */
             if ($id == 0 || empty($admin_note)) {
-                ecs_header("Location: user_account.php?act=list\n");
+                return $this->redirect('user_account.php?act=list');
                 exit;
             }
 
@@ -363,7 +363,7 @@ class UserAccount extends Init
             if ($GLOBALS['db']->query($sql, 'SILENT')) {
                 admin_log(addslashes($user_name), 'remove', 'user_surplus');
                 $url = 'user_account.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
-                ecs_header("Location: $url\n");
+                return $this->redirect($url);
                 exit;
             } else {
                 make_json_error($GLOBALS['db']->error());

@@ -86,7 +86,7 @@ class AdminLogs extends Init
             /* 按日期删除日志 */
             if ($drop_type_date) {
                 if ($_POST['log_date'] == '0') {
-                    ecs_header("Location: admin_logs.php?act=list\n");
+                    return $this->redirect('admin_logs.php?act=list');
                     exit;
                 } elseif ($_POST['log_date'] > '0') {
                     $where = " WHERE 1 ";

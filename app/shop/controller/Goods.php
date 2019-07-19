@@ -26,7 +26,7 @@ class Goods extends Init
             $Loaction = 'h5/#product?id=' . $goods_id;
 
             if (!empty($Loaction)) {
-                ecs_header("Location: $Loaction\n");
+                return $this->redirect($Loaction);
 
                 exit;
             }
@@ -139,7 +139,7 @@ class Goods extends Init
 
             if ($goods === false) {
                 /* 如果没有找到任何记录则跳回到首页 */
-                ecs_header("Location: ./\n");
+                return $this->redirect('/');
                 exit;
             } else {
                 if ($goods['brand_id'] > 0) {

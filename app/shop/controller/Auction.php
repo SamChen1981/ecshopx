@@ -82,14 +82,14 @@ class Auction extends Init
             /* 取得参数：拍卖活动id */
             $id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
             if ($id <= 0) {
-                ecs_header("Location: ./\n");
+                return $this->redirect('/');
                 exit;
             }
 
             /* 取得拍卖活动信息 */
             $auction = auction_info($id);
             if (empty($auction)) {
-                ecs_header("Location: ./\n");
+                return $this->redirect('/');
                 exit;
             }
 
@@ -131,7 +131,7 @@ class Auction extends Init
                 $goods_id = $auction['goods_id'];
                 $goods = goods_info($goods_id);
                 if (empty($goods)) {
-                    ecs_header("Location: ./\n");
+                    return $this->redirect('/');
                     exit;
                 }
                 $goods['url'] = build_uri('goods', array('gid' => $goods_id), $goods['goods_name']);
@@ -174,14 +174,14 @@ class Auction extends Init
             /* 取得参数：拍卖活动id */
             $id = isset($_POST['id']) ? intval($_POST['id']) : 0;
             if ($id <= 0) {
-                ecs_header("Location: ./\n");
+                return $this->redirect('/');
                 exit;
             }
 
             /* 取得拍卖活动信息 */
             $auction = auction_info($id);
             if (empty($auction)) {
-                ecs_header("Location: ./\n");
+                return $this->redirect('/');
                 exit;
             }
 
@@ -282,7 +282,7 @@ class Auction extends Init
             }
 
             /* 跳转到活动详情页 */
-            ecs_header("Location: auction.php?act=view&id=$id\n");
+            return $this->redirect('auction.php?act=view&id=$id');
             exit;
         }
 
@@ -293,14 +293,14 @@ class Auction extends Init
             /* 查询：取得参数：拍卖活动id */
             $id = isset($_POST['id']) ? intval($_POST['id']) : 0;
             if ($id <= 0) {
-                ecs_header("Location: ./\n");
+                return $this->redirect('/');
                 exit;
             }
 
             /* 查询：取得拍卖活动信息 */
             $auction = auction_info($id);
             if (empty($auction)) {
-                ecs_header("Location: ./\n");
+                return $this->redirect('/');
                 exit;
             }
 
@@ -386,7 +386,7 @@ class Auction extends Init
             $_SESSION['extension_id'] = $id;
 
             /* 进入收货人页面 */
-            ecs_header("Location: ./flow.php?step=consignee\n");
+            return $this->redirect('flow.php?step=consignee');
             exit;
         }
     }

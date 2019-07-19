@@ -10,7 +10,7 @@ class Vote extends Init
     public function index()
     {
         if (!isset($_REQUEST['vote']) || !isset($_REQUEST['options']) || !isset($_REQUEST['type'])) {
-            ecs_header("Location: ./\n");
+            return $this->redirect('/');
             exit;
         }
 

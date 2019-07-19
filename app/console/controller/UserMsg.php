@@ -50,7 +50,7 @@ class UserMsg extends Init
 
             $GLOBALS['db']->query($sql);
 
-            ecs_header("Location: user_msg.php?act=add&order_id=$_POST[order_id]&user_id=$_POST[user_id]\n");
+            return $this->redirect('user_msg.php?act=add&order_id=$_POST[order_id]&user_id=$_POST[user_id]');
             exit;
         }
 
@@ -70,7 +70,7 @@ class UserMsg extends Init
                 }
             }
 
-            ecs_header("Location: user_msg.php?act=add&order_id=$_GET[order_id]&user_id=$_GET[user_id]\n");
+            return $this->redirect('user_msg.php?act=add&order_id=$_GET[order_id]&user_id=$_GET[user_id]');
             exit;
         }
         /*------------------------------------------------------ */
@@ -85,7 +85,7 @@ class UserMsg extends Init
                 /* 清除缓存 */
                 clear_cache_files();
 
-                ecs_header("Location: user_msg.php?act=view&id=$_REQUEST[id]\n");
+                return $this->redirect('user_msg.php?act=view&id=$_REQUEST[id]');
                 exit;
             } else {
                 /* 禁止留言显示 */
@@ -95,7 +95,7 @@ class UserMsg extends Init
                 /* 清除缓存 */
                 clear_cache_files();
 
-                ecs_header("Location: user_msg.php?act=view&id=$_REQUEST[id]\n");
+                return $this->redirect('user_msg.php?act=view&id=$_REQUEST[id]');
                 exit;
             }
         }
@@ -155,7 +155,7 @@ class UserMsg extends Init
 
                 admin_log(addslashes($msg_title), 'remove', 'message');
                 $url = 'user_msg.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
-                ecs_header("Location: $url\n");
+                return $this->redirect($url);
                 exit;
             } else {
                 make_json_error($GLOBALS['db']->error());
@@ -254,7 +254,7 @@ class UserMsg extends Init
                 }
             }
 
-            ecs_header("Location: ?act=view&id=" . $_REQUEST['msg_id'] . "&send_ok=$send_ok\n");
+            return $this->redirect('?act=view&id=" . $_REQUEST['msg_id'] . "&send_ok=$send_ok');
             exit;
         }
 
@@ -270,7 +270,7 @@ class UserMsg extends Init
             /* 更新数据库 */
             $GLOBALS['db']->query("UPDATE " . $GLOBALS['ecs']->table('feedback') . " SET message_img = '' WHERE msg_id = '$_GET[id]'");
 
-            ecs_header("Location: user_msg.php?act=view&amp;id=" . $_GET['id'] . "\n");
+            return $this->redirect('user_msg.php?act=view&amp;id=" . $_GET['id'] . "');
             exit;
         }
     }

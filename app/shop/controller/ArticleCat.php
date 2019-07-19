@@ -15,7 +15,7 @@ class ArticleCat extends Init
         if (!empty($_GET['id'])) {
             $cat_id = intval($_GET['id']);
         } else {
-            ecs_header("Location: ./\n");
+            return $this->redirect('/');
             exit;
         }
 
@@ -49,7 +49,7 @@ class ArticleCat extends Init
 
             if ($meta === false || empty($meta)) {
                 /* 如果没有找到任何记录则返回首页 */
-                ecs_header("Location: ./\n");
+                return $this->redirect('/');
                 exit;
             }
 

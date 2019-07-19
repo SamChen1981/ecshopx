@@ -20,7 +20,7 @@ class Category extends Init
             $cat_id = intval($_REQUEST['category']);
         } else {
             /* 如果分类ID为0，则返回首页 */
-            ecs_header("Location: ./\n");
+            return $this->redirect('/');
 
             exit;
         }
@@ -70,7 +70,7 @@ class Category extends Init
                 $GLOBALS['smarty']->assign('cat_style', htmlspecialchars($cat['style']));
             } else {
                 /* 如果分类不存在则返回首页 */
-                ecs_header("Location: ./\n");
+                return $this->redirect('/');
 
                 exit;
             }

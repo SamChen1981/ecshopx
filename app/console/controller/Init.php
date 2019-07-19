@@ -63,12 +63,6 @@ class Init extends Controller
             $_REQUEST = addslashes_deep($_REQUEST);
         }
 
-        /* 对路径进行安全处理 */
-        if (strpos(PHP_SELF, '.php/') !== false) {
-            ecs_header("Location:" . substr(PHP_SELF, 0, strpos(PHP_SELF, '.php/') + 4) . "\n");
-            exit();
-        }
-
         /* 创建 ECSHOP 对象 */
         $GLOBALS['ecs'] = new ECS($db_name, $prefix);
         define('DATA_DIR', $GLOBALS['ecs']->data_dir());
@@ -134,7 +128,7 @@ class Init extends Controller
             && file_exists('../upgrade/index.php')) {
             // echo "<pre>";var_dump($GLOBALS['_CFG']['ecs_version'],VERSION,preg_replace('/(?:\.|\s+)[a-z]*$/i', '', $GLOBALS['_CFG']['ecs_version']),preg_replace('/(?:\.|\s+)[a-z]*$/i', '', VERSION));exit;
             // 转到升级文件
-            ecs_header("Location: ../upgrade/index.php\n");
+            return $this->redirect('../upgrade/index.php');
 
             exit;
         }
@@ -174,7 +168,7 @@ class Init extends Controller
                 $GLOBALS['db']->query('UPDATE ' . $GLOBALS['ecs']->table('shop_config') . ' SET value = "' . $ent_sign . '" WHERE code = "ent_sign"');
                 $GLOBALS['db']->query('UPDATE ' . $GLOBALS['ecs']->table('shop_config') . ' SET value = "' . $ent_email . '" WHERE code = "ent_email"');
                 clear_cache_files();
-                ecs_header("Location: ./index.php\n");
+                return $this->redirect('/');
             }
         }
 
@@ -198,7 +192,7 @@ class Init extends Controller
                     if (!empty($_REQUEST['is_ajax'])) {
                         make_json_error($GLOBALS['_LANG']['priv_error']);
                     } else {
-                        ecs_header("Location: privilege.php?act=login\n");
+                        return $this->redirect('privilege.php?act=login');
                     }
 
                     exit;
@@ -219,7 +213,7 @@ class Init extends Controller
                         if (!empty($_REQUEST['is_ajax'])) {
                             make_json_error($GLOBALS['_LANG']['priv_error']);
                         } else {
-                            ecs_header("Location: privilege.php?act=login\n");
+                            return $this->redirect('privilege.php?act=login');
                         }
 
                         exit;
@@ -229,7 +223,7 @@ class Init extends Controller
                 if (!empty($_REQUEST['is_ajax'])) {
                     make_json_error($GLOBALS['_LANG']['priv_error']);
                 } else {
-                    ecs_header("Location: privilege.php?act=login\n");
+                    return $this->redirect('privilege.php?act=login');
                 }
 
                 exit;
@@ -246,7 +240,7 @@ class Init extends Controller
                 if (!empty($_REQUEST['is_ajax'])) {
                     make_json_error($GLOBALS['_LANG']['priv_error']);
                 } else {
-                    ecs_header("Location: privilege.php?act=login\n");
+                    return $this->redirect('privilege.php?act=login');
                 }
 
                 exit;

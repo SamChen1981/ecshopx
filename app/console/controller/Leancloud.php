@@ -84,7 +84,7 @@ class Leancloud extends Init
             $res = $GLOBALS['db']->query($sql);
             admin_log('', 'remove', 'leancloud');
             $url = 'leancloud.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
-            ecs_header("Location: $url\n");
+            return $this->redirect($url);
             exit;
         } elseif ($_REQUEST['act'] == 'do_edit') {
             /* 检查权限 */

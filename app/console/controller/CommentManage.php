@@ -193,7 +193,7 @@ class CommentManage extends Init
             /* 记录管理员操作 */
             admin_log(addslashes($GLOBALS['_LANG']['reply']), 'edit', 'users_comment');
 
-            ecs_header("Location: comment_manage.php?act=reply&id=$_REQUEST[comment_id]&send_ok=$send_ok\n");
+            return $this->redirect('comment_manage.php?act=reply&id=$_REQUEST[comment_id]&send_ok=$send_ok');
             exit;
         }
         /*------------------------------------------------------ */
@@ -210,7 +210,7 @@ class CommentManage extends Init
                 /* 清除缓存 */
                 clear_cache_files();
 
-                ecs_header("Location: comment_manage.php?act=reply&id=$_REQUEST[id]\n");
+                return $this->redirect('comment_manage.php?act=reply&id=$_REQUEST[id]');
                 exit;
             } else {
                 /* 禁止评论显示 */
@@ -220,7 +220,7 @@ class CommentManage extends Init
                 /* 清除缓存 */
                 clear_cache_files();
 
-                ecs_header("Location: comment_manage.php?act=reply&id=$_REQUEST[id]\n");
+                return $this->redirect('comment_manage.php?act=reply&id=$_REQUEST[id]');
                 exit;
             }
         }
@@ -243,7 +243,7 @@ class CommentManage extends Init
 
             $url = 'comment_manage.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
 
-            ecs_header("Location: $url\n");
+            return $this->redirect($url);
             exit;
         }
 

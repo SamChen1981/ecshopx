@@ -209,7 +209,7 @@ class Integrate extends Init
             if ($total == 0) {
                 /* 商城没有用户时，直接保存完成整合 */
                 $this->save_integrate_config($_POST['code'], $_POST['cfg']);
-                ecs_header("Location: integrate.php?act=complete\n");
+                return $this->redirect('integrate.php?act=complete');
                 exit;
             }
 
@@ -603,7 +603,7 @@ class Integrate extends Init
             }
 
             /* 跳转  */
-            ecs_header("Location: integrate.php?act=modify");
+            return $this->redirect('integrate.php?act=modify');
             exit;
         }
 
@@ -956,7 +956,7 @@ class Integrate extends Init
 
             clear_cache_files();
 
-            ecs_header("Location: integrate.php?act=points_set\n");
+            return $this->redirect('integrate.php?act=points_set');
             exit;
         }
 

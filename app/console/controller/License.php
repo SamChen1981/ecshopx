@@ -50,7 +50,7 @@ class License extends Init
                 $links[] = array('text' => $GLOBALS['_LANG']['back'], 'href' => 'license.php?act=list_edit');
                 sys_msg($GLOBALS['_LANG']['no_license_down'], 0, $links);
             }
-            /* 文件下载 */
+            /* 文件下载 TODO BY LANCE */
             ecs_header("Content-Type:text/plain");
             ecs_header("Accept-Ranges:bytes");
             ecs_header("Content-Disposition: attachment; filename=CERTIFICATE.CER");

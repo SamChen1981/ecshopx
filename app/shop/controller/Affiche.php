@@ -11,7 +11,7 @@ class Affiche extends Init
     {
         /* 没有指定广告的id及跳转地址 */
         if (empty($_GET['ad_id'])) {
-            ecs_header("Location: index.php\n");
+            return $this->redirect('index.php');
             exit;
         } else {
             $ad_id = intval($_GET['ad_id']);
@@ -106,7 +106,7 @@ class Affiche extends Init
 
                 $uri = build_uri('goods', array('gid' => $goods_id), $row['goods_name']);
 
-                ecs_header("Location: $uri\n");
+                return $this->redirect($uri);
 
                 exit;
             } else {
@@ -130,7 +130,7 @@ class Affiche extends Init
                     $uri = $GLOBALS['ecs']->url();
                 }
 
-                ecs_header("Location: $uri\n");
+                return $this->redirect($uri);
                 exit;
             }
         }

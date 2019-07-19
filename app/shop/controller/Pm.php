@@ -10,7 +10,7 @@ class Pm extends Init
     public function index()
     {
         if (empty($_SESSION['user_id']) || $GLOBALS['_CFG']['integrate_code'] == 'ecshop') {
-            ecs_header('Location:./');
+            return $this->redirect('/');
         }
 
         uc_call("uc_pm_location", array($_SESSION['user_id']));

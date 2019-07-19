@@ -130,7 +130,7 @@ class Exchange extends Init
 
                 if ($goods === false) {
                     /* 如果没有找到任何记录则跳回到首页 */
-                    ecs_header("Location: ./\n");
+                    return $this->redirect('/');
                     exit;
                 } else {
                     if ($goods['brand_id'] > 0) {
@@ -200,14 +200,14 @@ class Exchange extends Init
             /* 查询：取得参数：商品id */
             $goods_id = isset($_POST['goods_id']) ? intval($_POST['goods_id']) : 0;
             if ($goods_id <= 0) {
-                ecs_header("Location: ./\n");
+                return $this->redirect('/');
                 exit;
             }
 
             /* 查询：取得兑换商品信息 */
             $goods = $this->get_exchange_goods_info($goods_id);
             if (empty($goods)) {
-                ecs_header("Location: ./\n");
+                return $this->redirect('/');
                 exit;
             }
             /* 查询：检查兑换商品是否有库存 */
@@ -294,7 +294,7 @@ class Exchange extends Init
             $_SESSION['extension_id'] = $goods_id;
 
             /* 进入收货人页面 */
-            ecs_header("Location: ./flow.php?step=consignee\n");
+            return $this->redirect('flow.php?step=consignee');
             exit;
         }
     }

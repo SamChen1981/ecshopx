@@ -61,7 +61,7 @@ class Affiliate extends Init
                 make_json_error($GLOBALS['_LANG']['level_error']);
             }
 
-            ecs_header("Location: affiliate.php?act=query\n");
+            return $this->redirect('affiliate.php?act=query');
             exit;
         }
         /*------------------------------------------------------ */
@@ -168,7 +168,7 @@ class Affiliate extends Init
             $config['on'] = 1;
             $config['config']['separate_by'] = 0;
             $this->put_affiliate($config);
-            ecs_header("Location: affiliate.php?act=list\n");
+            return $this->redirect('affiliate.php?act=list');
             exit;
         }
     }

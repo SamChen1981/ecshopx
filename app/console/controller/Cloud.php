@@ -170,7 +170,7 @@ class Cloud extends Init
             if (!empty($_GET['link'])) {
                 $url = parse_url($_GET['link']);
                 if (!empty($url['host'])) {
-                    ecs_header("Location: " . $url['scheme'] . "://" . $url['host'] . $url['path'] . "?" . $url['query'] . $query . "\n");
+                    return $this->redirect($url['scheme'] . "://" . $url['host'] . $url['path'] . "?" . $url['query'] . $query);
                     exit();
                 }
             }
@@ -179,7 +179,7 @@ class Cloud extends Init
                 $query .= '&' . $v . '=' . $data[$v];
             }
 
-            ecs_header("Location: https://cloud-ecshop.xyunqi.com/api.php?act=" . $act . $query . "\n");
+            return $this->redirect('https://cloud-ecshop.xyunqi.com/api.php?act=" . $act . $query . "');
             exit();
         }
     }

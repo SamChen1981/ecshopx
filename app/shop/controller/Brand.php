@@ -66,7 +66,7 @@ class Brand extends Init
             $brand_info = $this->get_brand_info($brand_id);
 
             if (empty($brand_info)) {
-                ecs_header("Location: ./\n");
+                return $this->redirect('/');
                 exit;
             }
 

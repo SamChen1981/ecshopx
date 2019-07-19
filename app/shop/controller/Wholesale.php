@@ -250,7 +250,7 @@ class Wholesale extends Init
             unset($goods_attr, $attr_id, $goods_list, $wholesale, $goods_attr_name);
 
             /* 刷新页面 */
-            ecs_header("Location: ./wholesale.php\n");
+            return $this->redirect('wholesale.php');
             exit;
         }
 
@@ -264,7 +264,7 @@ class Wholesale extends Init
             }
 
             /* 刷新页面 */
-            ecs_header("Location: ./wholesale.php\n");
+            return $this->redirect('wholesale.php');
             exit;
         }
 
