@@ -37,7 +37,7 @@ class EmailList extends Init
             header('Content-Length: ' . $len);
             header('Content-Disposition: attachment; filename="email_list.txt"');
             echo $out;
-            exit;
+
         } elseif ($_REQUEST['act'] == 'query') {
             $emaildb = $this->get_email_list();
             $GLOBALS['smarty']->assign('emaildb', $emaildb['emaildb']);

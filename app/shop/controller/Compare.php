@@ -92,7 +92,7 @@ class Compare extends Init
             $GLOBALS['smarty']->assign('goods_list', $arr);
         } else {
             show_message($GLOBALS['_LANG']['compare_no_goods']);
-            exit;
+
         }
 
         assign_template();

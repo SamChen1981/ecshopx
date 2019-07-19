@@ -47,7 +47,7 @@ class SaleList extends Init
                     echo ecs_iconv(EC_CHARSET, 'GB2312', $value['sales_time']) . "\t";
                     echo "\n";
                 }
-                exit;
+
             }
             $sale_list_data = $this->get_sale_list();
             $GLOBALS['smarty']->assign('goods_sales_list', $sale_list_data['sale_list_data']);

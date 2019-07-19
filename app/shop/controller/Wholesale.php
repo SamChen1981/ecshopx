@@ -251,7 +251,7 @@ class Wholesale extends Init
 
             /* 刷新页面 */
             return $this->redirect('wholesale.php');
-            exit;
+
         }
 
         /*------------------------------------------------------ */
@@ -265,7 +265,7 @@ class Wholesale extends Init
 
             /* 刷新页面 */
             return $this->redirect('wholesale.php');
-            exit;
+
         }
 
         /*------------------------------------------------------ */

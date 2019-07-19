@@ -66,7 +66,7 @@ class GoodsBooking extends Init
             $url = 'goods_booking.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
 
             return $this->redirect($url);
-            exit;
+
         }
 
         /*------------------------------------------------------ */
@@ -127,7 +127,7 @@ class GoodsBooking extends Init
             }
 
             return $this->redirect('?act=detail&id=" . $_REQUEST['rec_id'] . "&send_ok=$send_ok');
-            exit;
+
         }
     }
 

@@ -55,7 +55,7 @@ class License extends Init
             ecs_header("Accept-Ranges:bytes");
             ecs_header("Content-Disposition: attachment; filename=CERTIFICATE.CER");
             echo $license['certificate_id'] . '|' . $license['token'];
-            exit;
+
         }
 
         /*------------------------------------------------------ */

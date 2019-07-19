@@ -24,7 +24,6 @@ class FlowStats extends Init
         if ($_REQUEST['act'] == 'view') {
             if ($GLOBALS['_CFG']['visit_stats'] == 'off') {
                 sys_msg($GLOBALS['_LANG']['stats_off']);
-                exit();
             }
             admin_priv('client_flow_stats');
             $is_multi = empty($_POST['is_multi']) ? false : true;

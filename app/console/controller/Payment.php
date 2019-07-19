@@ -81,14 +81,14 @@ class Payment extends Init
                 if ($yqaccount_result['status'] == 'success') {
                     $cert->set_yunqi_account(array('appkey' => $yqaccount_result['data']['appkey'], 'appsecret' => $yqaccount_result['data']['appsecret'], 'status' => true));
                     echo json_encode(array('status' => true));
-                    exit;
+
                 } else {
                     echo json_encode(array('status' => false));
-                    exit;
+
                 }
             } else {
                 echo json_encode(array('status' => true));
-                exit;
+
             }
             //获取云起收银账号end
         }
@@ -322,7 +322,6 @@ class Payment extends Init
             if ($_POST['pay_code'] == 'chinapay') {
                 $pfx_path = $cer_path = '';
 
-                // echo "<pre>";print_r($_FILES);//exit();
                 if ($_FILES['chinapay_pfx']['size'] > 0) {
                     $pathinfo = pathinfo($_FILES['chinapay_pfx']['name']);
                     if ($pathinfo['extension'] != 'pfx') {
@@ -403,7 +402,6 @@ class Payment extends Init
                     fclose($fhpp);
                 }
             }
-            // echo "<pre>";print_r($pay_config);print_r($_FILES); exit();
             /*  兼容老的站点和移动端 */
             if ($_POST['pay_code'] == 'yunqi') {
                 $cert = new certificate();

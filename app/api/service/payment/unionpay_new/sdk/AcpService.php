@@ -122,7 +122,6 @@ class AcpService
                 } else {
                     $logger->LogInfo(">>>>>签名失败<<<<<<<");
                 }
-                // var_dump($result);exit();
             } else {
                 $logger->LogError("wrong version: " + $params['version']);
                 $result = false;

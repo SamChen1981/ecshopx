@@ -62,7 +62,7 @@ class Affiliate extends Init
             }
 
             return $this->redirect('affiliate.php?act=query');
-            exit;
+
         }
         /*------------------------------------------------------ */
         //-- 修改配置
@@ -169,7 +169,7 @@ class Affiliate extends Init
             $config['config']['separate_by'] = 0;
             $this->put_affiliate($config);
             return $this->redirect('affiliate.php?act=list');
-            exit;
+
         }
     }
 

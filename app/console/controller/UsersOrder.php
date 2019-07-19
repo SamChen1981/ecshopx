@@ -39,7 +39,7 @@ class UsersOrder extends Init
                     $data .= "$order_by\t$row[user_name]\t$row[order_num]\t$row[turnover]\n";
                 }
                 echo ecs_iconv(EC_CHARSET, 'GB2312', $data);
-                exit;
+
             }
             $user_orderinfo = $this->get_user_orderinfo();
             $GLOBALS['smarty']->assign('filter', $user_orderinfo['filter']);

@@ -19,7 +19,7 @@ class Index extends Init
             if (!empty($Loaction)) {
                 return $this->redirect($Loaction);
 
-                exit;
+
             }
         }
 

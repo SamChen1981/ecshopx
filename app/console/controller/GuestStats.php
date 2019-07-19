@@ -95,7 +95,7 @@ class GuestStats extends Init
                     $order_num;
 
                 echo ecs_iconv(EC_CHARSET, 'GB2312', $data) . "\t";
-                exit;
+
             }
 
             /* 赋值到模板 */

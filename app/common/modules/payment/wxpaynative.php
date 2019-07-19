@@ -174,11 +174,9 @@ function qrcodeResponse(result){
             }
 
             $returnXML = $this->arrayToXml($returndata);
-            echo $returnXML;
-            exit;
+            exit($returnXML);
         }
     }
-
 
     private function _checkStatus($log_id)
     {

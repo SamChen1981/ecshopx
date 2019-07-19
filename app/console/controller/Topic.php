@@ -247,7 +247,7 @@ class Topic extends Init
                 $_GET['id'] = intval($_GET['id']);
                 $sql .= "topic_id = '$_GET[id]'";
             } else {
-                exit;
+
             }
 
             $GLOBALS['db']->query($sql);
@@ -257,7 +257,7 @@ class Topic extends Init
             if (!empty($_REQUEST['is_ajax'])) {
                 $url = 'topic.php?act=query&' . str_replace('act=delete', '', $_SERVER['QUERY_STRING']);
                 return $this->redirect($url);
-                exit;
+
             }
 
             $links[] = array('href' => 'topic.php', 'text' => $GLOBALS['_LANG']['back_list']);

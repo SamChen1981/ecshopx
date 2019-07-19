@@ -83,14 +83,14 @@ class Auction extends Init
             $id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
             if ($id <= 0) {
                 return $this->redirect('/');
-                exit;
+
             }
 
             /* 取得拍卖活动信息 */
             $auction = auction_info($id);
             if (empty($auction)) {
                 return $this->redirect('/');
-                exit;
+
             }
 
             /* 缓存id：语言，拍卖活动id，状态，如果是进行中，还要最后出价的时间（如果有的话） */
@@ -132,7 +132,7 @@ class Auction extends Init
                 $goods = goods_info($goods_id);
                 if (empty($goods)) {
                     return $this->redirect('/');
-                    exit;
+
                 }
                 $goods['url'] = build_uri('goods', array('gid' => $goods_id), $goods['goods_name']);
                 $GLOBALS['smarty']->assign('auction_goods', $goods);
@@ -175,14 +175,14 @@ class Auction extends Init
             $id = isset($_POST['id']) ? intval($_POST['id']) : 0;
             if ($id <= 0) {
                 return $this->redirect('/');
-                exit;
+
             }
 
             /* 取得拍卖活动信息 */
             $auction = auction_info($id);
             if (empty($auction)) {
                 return $this->redirect('/');
-                exit;
+
             }
 
             /* 活动是否正在进行 */
@@ -283,7 +283,7 @@ class Auction extends Init
 
             /* 跳转到活动详情页 */
             return $this->redirect('auction.php?act=view&id=$id');
-            exit;
+
         }
 
         /*------------------------------------------------------ */
@@ -294,14 +294,14 @@ class Auction extends Init
             $id = isset($_POST['id']) ? intval($_POST['id']) : 0;
             if ($id <= 0) {
                 return $this->redirect('/');
-                exit;
+
             }
 
             /* 查询：取得拍卖活动信息 */
             $auction = auction_info($id);
             if (empty($auction)) {
                 return $this->redirect('/');
-                exit;
+
             }
 
             /* 查询：活动是否已结束 */
@@ -387,7 +387,7 @@ class Auction extends Init
 
             /* 进入收货人页面 */
             return $this->redirect('flow.php?step=consignee');
-            exit;
+
         }
     }
 

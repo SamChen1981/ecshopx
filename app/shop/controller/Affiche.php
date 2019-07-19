@@ -12,7 +12,7 @@ class Affiche extends Init
         /* 没有指定广告的id及跳转地址 */
         if (empty($_GET['ad_id'])) {
             return $this->redirect('index.php');
-            exit;
+
         } else {
             $ad_id = intval($_GET['ad_id']);
         }
@@ -108,7 +108,7 @@ class Affiche extends Init
 
                 return $this->redirect($uri);
 
-                exit;
+
             } else {
                 /* 更新站内广告的点击次数 */
                 $GLOBALS['db']->query('UPDATE ' . $GLOBALS['ecs']->table('ad') . " SET click_count = click_count + 1 WHERE ad_id = '$ad_id'");
@@ -131,7 +131,7 @@ class Affiche extends Init
                 }
 
                 return $this->redirect($uri);
-                exit;
+
             }
         }
     }

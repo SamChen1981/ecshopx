@@ -119,7 +119,7 @@ class Error
                 die($message['content']);
             }
 
-            exit;
+
         }
     }
 }

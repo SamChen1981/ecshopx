@@ -26,7 +26,7 @@ class WxaSetting extends Init
                 $url = $params['authorize_code'] == 'NCH' ? 'https://account.shopex.cn/order/confirm/goods_2460-946 ' : 'https://account.shopex.cn/order/confirm/goods_2540-1050 ';
                 $GLOBALS['smarty']->assign('url', $url);
                 $GLOBALS['smarty']->display('accredit.html');
-                exit;
+
             }
             $cert = new certificate;
             $isOpenWap = $cert->is_open_sn('fy');

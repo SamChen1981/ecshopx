@@ -23,7 +23,7 @@ class Gallery extends Init
         if ($goods_name === false) {
             return $this->redirect('/');
 
-            exit;
+
         }
 
         /* 获得所有的图片 */
@@ -38,7 +38,7 @@ class Gallery extends Init
         if ($img_count == 0) {
             /* 如果没有图片，返回商品详情页 */
             return $this->redirect('goods.php?id=' . $_REQUEST['id'] . "');
-            exit;
+            
         } else {
             foreach ($img_list as $key => $img) {
                 $gallery['list'][] = array(

@@ -194,7 +194,7 @@ class CommentManage extends Init
             admin_log(addslashes($GLOBALS['_LANG']['reply']), 'edit', 'users_comment');
 
             return $this->redirect('comment_manage.php?act=reply&id=$_REQUEST[comment_id]&send_ok=$send_ok');
-            exit;
+
         }
         /*------------------------------------------------------ */
         //-- 更新评论的状态为显示或者禁止
@@ -211,7 +211,7 @@ class CommentManage extends Init
                 clear_cache_files();
 
                 return $this->redirect('comment_manage.php?act=reply&id=$_REQUEST[id]');
-                exit;
+
             } else {
                 /* 禁止评论显示 */
                 $sql = "UPDATE " . $GLOBALS['ecs']->table('comment') . " SET status = 0 WHERE comment_id = '$_REQUEST[id]'";
@@ -221,7 +221,7 @@ class CommentManage extends Init
                 clear_cache_files();
 
                 return $this->redirect('comment_manage.php?act=reply&id=$_REQUEST[id]');
-                exit;
+
             }
         }
 
@@ -244,7 +244,7 @@ class CommentManage extends Init
             $url = 'comment_manage.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
 
             return $this->redirect($url);
-            exit;
+
         }
 
         /*------------------------------------------------------ */

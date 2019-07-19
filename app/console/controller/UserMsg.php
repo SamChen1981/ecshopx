@@ -51,7 +51,7 @@ class UserMsg extends Init
             $GLOBALS['db']->query($sql);
 
             return $this->redirect('user_msg.php?act=add&order_id=$_POST[order_id]&user_id=$_POST[user_id]');
-            exit;
+
         }
 
         if ($_REQUEST['act'] == 'remove_msg') {
@@ -71,7 +71,7 @@ class UserMsg extends Init
             }
 
             return $this->redirect('user_msg.php?act=add&order_id=$_GET[order_id]&user_id=$_GET[user_id]');
-            exit;
+
         }
         /*------------------------------------------------------ */
         //-- 更新留言的状态为显示或者禁止
@@ -86,7 +86,7 @@ class UserMsg extends Init
                 clear_cache_files();
 
                 return $this->redirect('user_msg.php?act=view&id=$_REQUEST[id]');
-                exit;
+
             } else {
                 /* 禁止留言显示 */
                 $sql = "UPDATE " . $GLOBALS['ecs']->table('feedback') . " SET msg_status = 0 WHERE msg_id = '$_REQUEST[id]'";
@@ -96,7 +96,7 @@ class UserMsg extends Init
                 clear_cache_files();
 
                 return $this->redirect('user_msg.php?act=view&id=$_REQUEST[id]');
-                exit;
+
             }
         }
         /*------------------------------------------------------ */
@@ -156,7 +156,7 @@ class UserMsg extends Init
                 admin_log(addslashes($msg_title), 'remove', 'message');
                 $url = 'user_msg.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
                 return $this->redirect($url);
-                exit;
+
             } else {
                 make_json_error($GLOBALS['db']->error());
             }
@@ -255,7 +255,7 @@ class UserMsg extends Init
             }
 
             return $this->redirect('?act=view&id=" . $_REQUEST['msg_id'] . "&send_ok=$send_ok');
-            exit;
+
         }
 
         /*------------------------------------------------------ */
@@ -271,7 +271,7 @@ class UserMsg extends Init
             $GLOBALS['db']->query("UPDATE " . $GLOBALS['ecs']->table('feedback') . " SET message_img = '' WHERE msg_id = '$_GET[id]'");
 
             return $this->redirect('user_msg.php?act=view&amp;id=" . $_GET['id'] . "');
-            exit;
+
         }
     }
 

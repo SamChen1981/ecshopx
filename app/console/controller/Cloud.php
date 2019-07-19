@@ -171,7 +171,6 @@ class Cloud extends Init
                 $url = parse_url($_GET['link']);
                 if (!empty($url['host'])) {
                     return $this->redirect($url['scheme'] . "://" . $url['host'] . $url['path'] . "?" . $url['query'] . $query);
-                    exit();
                 }
             }
 
@@ -180,7 +179,6 @@ class Cloud extends Init
             }
 
             return $this->redirect('https://cloud-ecshop.xyunqi.com/api.php?act=" . $act . $query . "');
-            exit();
         }
     }
 }

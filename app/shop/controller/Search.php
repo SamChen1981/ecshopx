@@ -29,7 +29,7 @@ class Search extends Init
 
             header("Location: search.php?encode=$string\n");
 
-            exit;
+
         } else {
             $string = base64_decode(trim($_GET['encode']));
             if ($string !== false) {
@@ -83,7 +83,7 @@ class Search extends Init
 
             $GLOBALS['smarty']->display('search.dwt');
 
-            exit;
+
         }
         /*------------------------------------------------------ */
         //-- 搜索结果

@@ -97,7 +97,7 @@ class Init extends Controller
             @ob_end_clean(); //清除之前出现的多余输入
             $img->generate_image();
 
-            exit;
+
         }
 
         require(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/admin/common.php');
@@ -126,11 +126,10 @@ class Init extends Controller
 
         if (preg_replace('/(?:\.|\s+)[a-z]*$/i', '', $GLOBALS['_CFG']['ecs_version']) != preg_replace('/(?:\.|\s+)[a-z]*$/i', '', VERSION)
             && file_exists('../upgrade/index.php')) {
-            // echo "<pre>";var_dump($GLOBALS['_CFG']['ecs_version'],VERSION,preg_replace('/(?:\.|\s+)[a-z]*$/i', '', $GLOBALS['_CFG']['ecs_version']),preg_replace('/(?:\.|\s+)[a-z]*$/i', '', VERSION));exit;
             // 转到升级文件
             return $this->redirect('../upgrade/index.php');
 
-            exit;
+
         }
 
         /* 创建 Smarty 对象。*/
@@ -195,7 +194,7 @@ class Init extends Controller
                         return $this->redirect('privilege.php?act=login');
                     }
 
-                    exit;
+
                 } else {
                     // 检查密码是否正确
                     if (md5($row['password'] . $GLOBALS['_CFG']['hash_code'] . $row['add_time']) == $_COOKIE['ECSCP']['admin_pass']) {
@@ -216,7 +215,7 @@ class Init extends Controller
                             return $this->redirect('privilege.php?act=login');
                         }
 
-                        exit;
+
                     }
                 }
             } else {
@@ -226,7 +225,7 @@ class Init extends Controller
                     return $this->redirect('privilege.php?act=login');
                 }
 
-                exit;
+
             }
         }
 
@@ -243,7 +242,7 @@ class Init extends Controller
                     return $this->redirect('privilege.php?act=login');
                 }
 
-                exit;
+
             }
         }
     }

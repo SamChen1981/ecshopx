@@ -140,7 +140,7 @@ class UserRank extends Init
             $url = 'user_rank.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
 
             return $this->redirect($url);
-            exit;
+
         } /*
  *  编辑会员等级名称
  */

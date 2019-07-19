@@ -345,11 +345,6 @@ EOT;
 
     public static function error($message, $code = 400)
     {
-        /*header("Content-Type: application/json; charset=UTF-8");
-        echo json_encode(Helper::formatResponse([
-                    'error'=>$code, 'data' => $message
-                ]));
-        exit;*/
         error_log(date("c") . "\t" . print_r(array('error' => $code, 'data' => $message), 1) . "\t\n", 3, LOG_DIR . "/leancloud_client_error_" . date("Y-m-d") . ".log");
     }
 }

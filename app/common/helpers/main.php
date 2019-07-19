@@ -1228,7 +1228,7 @@ function show_message($content, $links = '', $hrefs = '', $type = 'info', $auto_
     $GLOBALS['smarty']->assign('message', $msg);
     $GLOBALS['smarty']->display('message.dwt');
 
-    exit;
+
 }
 
 /**

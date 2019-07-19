@@ -23,12 +23,12 @@ class Article extends Init
 
             if (empty($article)) {
                 return $this->redirect('/');
-                exit;
+
             }
 
             if (!empty($article['link']) && $article['link'] != 'http://' && $article['link'] != 'https://') {
                 return $this->redirect($article[link]);
-                exit;
+
             }
 
             $GLOBALS['smarty']->assign('article_categories', article_categories_tree($article_id)); //文章分类树

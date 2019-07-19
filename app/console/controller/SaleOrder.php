@@ -44,7 +44,7 @@ class SaleOrder extends Init
                 } else {
                     echo $data;
                 }
-                exit;
+
             }
             $goods_order_data = $this->get_sales_order();
             $GLOBALS['smarty']->assign('goods_order_data', $goods_order_data['sales_order_data']);

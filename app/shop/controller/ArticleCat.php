@@ -16,7 +16,7 @@ class ArticleCat extends Init
             $cat_id = intval($_GET['id']);
         } else {
             return $this->redirect('/');
-            exit;
+
         }
 
         /* 获得当前页码 */
@@ -50,7 +50,7 @@ class ArticleCat extends Init
             if ($meta === false || empty($meta)) {
                 /* 如果没有找到任何记录则返回首页 */
                 return $this->redirect('/');
-                exit;
+
             }
 
             $GLOBALS['smarty']->assign('keywords', htmlspecialchars($meta['keywords']));

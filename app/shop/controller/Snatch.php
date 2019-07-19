@@ -25,7 +25,7 @@ class Snatch extends Init
             if ($id) {
                 $page = build_uri('snatch', array('sid' => $id));
                 return $this->redirect($page);
-                exit;
+
             } else {
                 /* 当前没有任何可默认的活动 */
                 $id = 0;
@@ -83,7 +83,7 @@ class Snatch extends Init
             $GLOBALS['smarty']->assign('feed_url', ($GLOBALS['_CFG']['rewrite'] == 1) ? "feed-typesnatch.xml" : 'feed.php?type=snatch'); // RSS URL
             $GLOBALS['smarty']->display('snatch.dwt');
 
-            exit;
+
         }
 
         /* 最新出价列表 */
@@ -91,7 +91,7 @@ class Snatch extends Init
             $GLOBALS['smarty']->assign('price_list', $this->get_price_list($id));
             $GLOBALS['smarty']->display('library/snatch_price.lbi');
 
-            exit;
+
         }
 
         /* 用户出价处理 */
@@ -174,7 +174,7 @@ class Snatch extends Init
         if ($_REQUEST['act'] == 'buy') {
             if (empty($id)) {
                 return $this->redirect('/');
-                exit;
+
             }
 
             if (empty($_SESSION['user_id'])) {
@@ -186,14 +186,14 @@ class Snatch extends Init
 
             if (empty($snatch)) {
                 return $this->redirect('/');
-                exit;
+
             }
 
             /* 未结束，不能购买 */
             if (empty($snatch['is_end'])) {
                 $page = build_uri('snatch', array('sid' => $id));
                 return $this->redirect($page);
-                exit;
+
             }
 
             $result = get_snatch_result($id);
@@ -263,7 +263,7 @@ class Snatch extends Init
 
             /* 进入收货人页面 */
             return $this->redirect('flow.php?step=consignee');
-            exit;
+
         }
     }
 

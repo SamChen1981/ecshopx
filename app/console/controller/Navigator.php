@@ -184,7 +184,7 @@ class Navigator extends Init
             $GLOBALS['db']->query($sql);
             clear_cache_files();
             return $this->redirect('navigator.php?act=list');
-            exit;
+
         }
 
         /*------------------------------------------------------ */

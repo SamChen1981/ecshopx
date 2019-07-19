@@ -982,7 +982,7 @@ class Goods extends Init
             $product_list_url = $GLOBALS['ecs']->url() . "admin/goods.php?act=product_list&goods_id=" . $goods_id;
             if ($specifications_list) {
                 echo '<script type="text/javascript">window.location.href="' . $product_list_url . '";</script>';
-                exit;
+
             }
             /* 提示页面 */
             $link = array();
@@ -1412,7 +1412,7 @@ class Goods extends Init
                 $url = 'goods.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
 
                 return $this->redirect($url);
-                exit;
+
             }
         }
 
@@ -1435,7 +1435,7 @@ class Goods extends Init
             $url = 'goods.php?act=query&' . str_replace('act=restore_goods', '', $_SERVER['QUERY_STRING']);
 
             return $this->redirect($url);
-            exit;
+
         }
 
         /*------------------------------------------------------ */
@@ -1549,7 +1549,7 @@ class Goods extends Init
 
             return $this->redirect($url);
 
-            exit;
+
         }
 
         /*------------------------------------------------------ */
@@ -2025,7 +2025,7 @@ class Goods extends Init
                 $url = 'goods.php?act=product_query&' . str_replace('act=product_remove', '', $_SERVER['QUERY_STRING']);
 
                 return $this->redirect($url);
-                exit;
+
             }
         }
 

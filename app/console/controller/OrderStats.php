@@ -336,7 +336,7 @@ class OrderStats extends Init
             }
 
             echo ecs_iconv(EC_CHARSET, 'GB2312', $data) . "\t";
-            exit;
+
         }
     }
 

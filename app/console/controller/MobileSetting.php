@@ -72,7 +72,7 @@ class MobileSetting extends Init
             $error_msg = '';
             $this->set_flash_data($GLOBALS['_CFG']['flash_theme'], $error_msg);
             return $this->redirect('mobile_setting.php?act=list');
-            exit;
+
         } elseif ($_REQUEST['act'] == 'add') {
             admin_priv('flash_manage');
 

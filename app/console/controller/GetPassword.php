@@ -29,7 +29,7 @@ class GetPassword extends Init
 
                 if ($adminid == 0 || empty($code)) {
                     return $this->redirect('privilege.php?act=login');
-                    exit;
+
                 }
 
                 /* 以用户的原密码，与code的值匹配 */
@@ -68,7 +68,7 @@ class GetPassword extends Init
 
                 if (empty($admin_username) || empty($admin_email)) {
                     return $this->redirect('privilege.php?act=login');
-                    exit;
+
                 }
 
                 /* 管理员用户名和邮件地址是否匹配，并取得原密码 */
@@ -121,7 +121,7 @@ class GetPassword extends Init
 
                 if (empty($new_password) || empty($code) || $adminid == 0) {
                     return $this->redirect('privilege.php?act=login');
-                    exit;
+
                 }
 
                 /* 以用户的原密码，与code的值匹配 */

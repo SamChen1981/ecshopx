@@ -370,7 +370,6 @@ class Order extends Init
 
                 $goods_list[] = $row;
             }
-            // echo "<pre>";print_r($order);//exit();
 
             $attr = array();
             $arr = array();
@@ -682,7 +681,7 @@ class Order extends Init
             $GLOBALS['smarty']->assign('action_act', ($delivery_order['status'] == 2) ? 'delivery_ship' : 'delivery_cancel_ship');
             assign_query_info();
             $GLOBALS['smarty']->display('delivery_info.htm');
-            exit; //
+             //
         }
 
         /*------------------------------------------------------ */
@@ -913,7 +912,7 @@ class Order extends Init
                 /* 操作失败 */
                 $links[] = array('text' => $GLOBALS['_LANG']['delivery_sn'] . $GLOBALS['_LANG']['detail'], 'href' => 'order.php?act=delivery_info&delivery_id=' . $delivery_id);
                 sys_msg($GLOBALS['_LANG']['act_false'], 1, $links);
-                exit;
+
             }
 
             /* 修改定单发货单号 */
@@ -1128,7 +1127,7 @@ class Order extends Init
             $GLOBALS['smarty']->assign('action_link', array('href' => 'order.php?act=back_list&' . list_link_postfix(), 'text' => $GLOBALS['_LANG']['10_back_order']));
             assign_query_info();
             $GLOBALS['smarty']->display('back_info.htm');
-            exit; //
+             //
         }
 
         /*------------------------------------------------------ */
@@ -1193,7 +1192,7 @@ class Order extends Init
                 $this->update_order_crm($order['order_sn']);
                 /* 下一步 */
                 return $this->redirect('order.php?act=" . $step_act . "&order_id=" . $order_id . "&step=goods');
-                exit;
+
             } /* 编辑商品信息 */
             elseif ('edit_goods' == $step) {
                 if (isset($_POST['rec_id'])) {
@@ -1256,7 +1255,7 @@ class Order extends Init
                 $this->update_order_crm($old_order['order_sn']);
                 /* 跳回订单商品 */
                 return $this->redirect('order.php?act=" . $step_act . "&order_id=" . $order_id . "&step=goods');
-                exit;
+
             } /* 添加商品 */
             elseif ('add_goods' == $step) {
                 /* 取得参数 */
@@ -1312,7 +1311,7 @@ class Order extends Init
                             $url = "order.php?act=" . $step_act . "&order_id=" . $order_id . "&step=goods";
 
                             echo '<a href="' . $url . '">' . $GLOBALS['_LANG']['goods_num_err'] . '</a>';
-                            exit;
+
 
                             return false;
                         }
@@ -1379,13 +1378,13 @@ class Order extends Init
                 $this->update_order_crm($old_order['order_sn']);
                 /* 跳回订单商品 */
                 return $this->redirect('order.php?act=" . $step_act . "&order_id=" . $order_id . "&step=goods');
-                exit;
+
             } /* 商品 */
             elseif ('goods' == $step) {
                 /* 下一步 */
                 if (isset($_POST['next'])) {
                     return $this->redirect('order.php?act=" . $step_act . "&order_id=" . $order_id . "&step=consignee');
-                    exit;
+
                 } /* 完成 */
                 elseif (isset($_POST['finish'])) {
                     /* 初始化提示信息和链接 */
@@ -1404,7 +1403,7 @@ class Order extends Init
                         $this->update_order_crm($old_order['order_sn']);
                         /* 跳转到订单详情 */
                         return $this->redirect('order.php?act=info&order_id=" . $order_id . "');
-                        exit;
+
                     }
                 }
             } /* 保存收货人信息 */
@@ -1427,11 +1426,11 @@ class Order extends Init
                     if (exist_real_goods($order_id)) {
                         /* 存在实体商品，去配送方式 */
                         return $this->redirect('order.php?act=" . $step_act . "&order_id=" . $order_id . "&step=shipping');
-                        exit;
+
                     } else {
                         /* 不存在实体商品，去支付方式 */
                         return $this->redirect('order.php?act=" . $step_act . "&order_id=" . $order_id . "&step=payment');
-                        exit;
+
                     }
                 } elseif (isset($_POST['finish'])) {
                     /* 如果是编辑且存在实体商品，检查收货人地区的改变是否影响原来选的配送 */
@@ -1468,7 +1467,7 @@ class Order extends Init
                     } else {
                         return $this->redirect('order.php?act=info&order_id=" . $order_id . "');
                     }
-                    exit;
+
                 }
             } /* 保存配送信息 */
             elseif ('shipping' == $step) {
@@ -1519,7 +1518,7 @@ class Order extends Init
                 if (isset($_POST['next'])) {
                     /* 下一步 */
                     return $this->redirect('order.php?act=" . $step_act . "&order_id=" . $order_id . "&step=payment');
-                    exit;
+
                 } elseif (isset($_POST['finish'])) {
                     /* 初始化提示信息和链接 */
                     $msgs = array();
@@ -1546,7 +1545,7 @@ class Order extends Init
                     } else {
                         /* 完成 */
                         return $this->redirect('order.php?act=info&order_id=" . $order_id . "');
-                        exit;
+
                     }
                 }
             } /* 保存支付信息 */
@@ -1592,7 +1591,7 @@ class Order extends Init
                 if (isset($_POST['next'])) {
                     /* 下一步 */
                     return $this->redirect('order.php?act=" . $step_act . "&order_id=" . $order_id . "&step=other');
-                    exit;
+
                 } elseif (isset($_POST['finish'])) {
                     /* 初始化提示信息和链接 */
                     $msgs = array();
@@ -1608,7 +1607,7 @@ class Order extends Init
                     } else {
                         /* 完成 */
                         return $this->redirect('order.php?act=info&order_id=" . $order_id . "');
-                        exit;
+
                     }
                 }
             } elseif ('other' == $step) {
@@ -1656,11 +1655,11 @@ class Order extends Init
                 if (isset($_POST['next'])) {
                     /* 下一步 */
                     return $this->redirect('order.php?act=" . $step_act . "&order_id=" . $order_id . "&step=money');
-                    exit;
+
                 } elseif (isset($_POST['finish'])) {
                     /* 完成 */
                     return $this->redirect('order.php?act=info&order_id=" . $order_id . "');
-                    exit;
+
                 }
             } elseif ('money' == $step) {
                 /* 取得订单信息 */
@@ -1826,7 +1825,7 @@ class Order extends Init
                         sys_msg(join(chr(13), $msgs), 0, $links);
                     } else {
                         return $this->redirect('order.php?act=info&order_id=" . $order_id . "');
-                        exit;
+
                     }
                 }
             } /* 保存发货后的配送方式和发货单号 */
@@ -1858,7 +1857,7 @@ class Order extends Init
                 $this->update_order_crm($old_order['order_sn']);
                 if (isset($_POST['finish'])) {
                     return $this->redirect('order.php?act=info&order_id=" . $order_id . "');
-                    exit;
+
                 }
             }
         }
@@ -2142,7 +2141,7 @@ class Order extends Init
 
                 /* 跳回订单商品 */
                 return $this->redirect('order.php?act=" . $step_act . "&order_id=" . $order_id . "&step=goods');
-                exit;
+
             } /* 取消刚添加或编辑的订单 */
             elseif ('cancel_order' == $func) {
                 $step_act = $_GET['step_act'];
@@ -2155,11 +2154,11 @@ class Order extends Init
                         $GLOBALS['db']->query($sql);
                     }
                     return $this->redirect('order.php?act=list');
-                    exit;
+
                 } else {
                     /* 如果是编辑，返回订单信息 */
                     return $this->redirect('order.php?act=info&order_id=" . $order_id . "');
-                    exit;
+
                 }
             } /* 编辑订单时由于订单已付款且金额减少而退款 */
             elseif ('refund' == $func) {
@@ -2176,7 +2175,7 @@ class Order extends Init
 
                 /* 返回订单详情 */
                 return $this->redirect('order.php?act=info&order_id=" . $order_id . "');
-                exit;
+
             } /* 载入退款页面 */
             elseif ('load_refund' == $func) {
                 $refund_amount = floatval($_REQUEST['refund_amount']);
@@ -2448,7 +2447,7 @@ class Order extends Init
                 $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['order_operate'] . $GLOBALS['_LANG']['op_split']);
                 assign_query_info();
                 $GLOBALS['smarty']->display('order_delivery_info.htm');
-                exit;
+
             } /* 未发货 */
             elseif (isset($_POST['unship'])) {
                 /* 检查权限 */
@@ -2725,13 +2724,13 @@ class Order extends Init
                 }
 
                 echo $html;
-                exit;
+
             } /* 去发货 */
             elseif (isset($_POST['to_delivery'])) {
                 $url = 'order.php?act=delivery_list&order_sn=' . $_REQUEST['order_sn'];
 
                 return $this->redirect($url);
-                exit;
+
             }
 
             /* 直接处理还是跳到详细页面 */
@@ -2758,12 +2757,12 @@ class Order extends Init
                     /* 一个订单 */
                     ecs_header("Location: order.php?act=operate_post&order_id=" . $order_id .
                         "&operation=" . $operation . "&action_note=" . urlencode($action_note) . "\n");
-                    exit;
+
                 } else {
                     /* 多个订单 */
                     ecs_header("Location: order.php?act=batch_operate_post&order_id=" . $order_id .
                         "&operation=" . $operation . "&action_note=" . urlencode($action_note) . "\n");
-                    exit;
+
                 }
             }
         }
@@ -3819,7 +3818,7 @@ class Order extends Init
             $operable_list = $this->operable_list($order);
             if (!isset($operable_list['remove'])) {
                 make_json_error('Hacking attempt');
-                exit;
+
             }
 
             $GLOBALS['db']->query("DELETE FROM " . $GLOBALS['ecs']->table('order_info') . " WHERE order_id = '$order_id'");
@@ -3832,7 +3831,7 @@ class Order extends Init
                 $url = 'order.php?act=query&' . str_replace('act=remove_order', '', $_SERVER['QUERY_STRING']);
 
                 return $this->redirect($url);
-                exit;
+
             } else {
                 make_json_error($GLOBALS['db']->errorMsg());
             }
@@ -3907,7 +3906,7 @@ class Order extends Init
 
             if ($order_id == 0) {
                 make_json_error('NO ORDER ID');
-                exit;
+
             }
 
             $sql = 'UPDATE ' . $GLOBALS['ecs']->table('order_info') . " SET invoice_no='$no' WHERE order_id = '$order_id'";
@@ -3935,7 +3934,7 @@ class Order extends Init
 
             if ($order_id == 0) {
                 make_json_error('NO ORDER ID');
-                exit;
+
             }
 
             $sql = 'UPDATE ' . $GLOBALS['ecs']->table('order_info') . " SET pay_note='$no' WHERE order_id = '$order_id'";

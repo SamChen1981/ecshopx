@@ -69,7 +69,7 @@ class Card extends Init
                 $url = 'card.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
 
                 return $this->redirect($url);
-                exit;
+
             } else {
                 make_json_error($GLOBALS['db']->error());
             }

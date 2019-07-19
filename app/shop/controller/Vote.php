@@ -11,7 +11,7 @@ class Vote extends Init
     {
         if (!isset($_REQUEST['vote']) || !isset($_REQUEST['options']) || !isset($_REQUEST['type'])) {
             return $this->redirect('/');
-            exit;
+
         }
 
         $res = array('error' => 0, 'message' => '', 'content' => '');

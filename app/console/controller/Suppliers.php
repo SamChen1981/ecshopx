@@ -118,7 +118,7 @@ class Suppliers extends Init
                 if ($order_exists > 0) {
                     $url = 'suppliers.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
                     return $this->redirect($url);
-                    exit;
+
                 }
 
                 /* 判断供货商是否存在商品 */
@@ -129,7 +129,7 @@ class Suppliers extends Init
                 if ($goods_exists > 0) {
                     $url = 'suppliers.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
                     return $this->redirect($url);
-                    exit;
+
                 }
 
                 $sql = "DELETE FROM " . $GLOBALS['ecs']->table('suppliers') . "
@@ -153,7 +153,7 @@ class Suppliers extends Init
             $url = 'suppliers.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
             return $this->redirect($url);
 
-            exit;
+
         }
 
         /*------------------------------------------------------ */
@@ -175,7 +175,7 @@ class Suppliers extends Init
                 make_json_result($_suppliers['is_check']);
             }
 
-            exit;
+
         }
 
         /*------------------------------------------------------ */

@@ -210,7 +210,7 @@ class Integrate extends Init
                 /* 商城没有用户时，直接保存完成整合 */
                 $this->save_integrate_config($_POST['code'], $_POST['cfg']);
                 return $this->redirect('integrate.php?act=complete');
-                exit;
+
             }
 
             /* 检测成功临时保存论坛配置参数 */
@@ -604,7 +604,7 @@ class Integrate extends Init
 
             /* 跳转  */
             return $this->redirect('integrate.php?act=modify');
-            exit;
+
         }
 
         /*------------------------------------------------------ */
@@ -957,7 +957,7 @@ class Integrate extends Init
             clear_cache_files();
 
             return $this->redirect('integrate.php?act=points_set');
-            exit;
+
         }
 
         if ($_REQUEST['act'] == 'save_points') {

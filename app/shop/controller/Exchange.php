@@ -131,7 +131,7 @@ class Exchange extends Init
                 if ($goods === false) {
                     /* 如果没有找到任何记录则跳回到首页 */
                     return $this->redirect('/');
-                    exit;
+
                 } else {
                     if ($goods['brand_id'] > 0) {
                         $goods['goods_brand_url'] = build_uri('brand', array('bid' => $goods['brand_id']), $goods['goods_brand']);
@@ -201,14 +201,14 @@ class Exchange extends Init
             $goods_id = isset($_POST['goods_id']) ? intval($_POST['goods_id']) : 0;
             if ($goods_id <= 0) {
                 return $this->redirect('/');
-                exit;
+
             }
 
             /* 查询：取得兑换商品信息 */
             $goods = $this->get_exchange_goods_info($goods_id);
             if (empty($goods)) {
                 return $this->redirect('/');
-                exit;
+
             }
             /* 查询：检查兑换商品是否有库存 */
             if ($goods['goods_number'] == 0 && $GLOBALS['_CFG']['use_storage'] == 1) {
@@ -295,7 +295,7 @@ class Exchange extends Init
 
             /* 进入收货人页面 */
             return $this->redirect('flow.php?step=consignee');
-            exit;
+
         }
     }
 

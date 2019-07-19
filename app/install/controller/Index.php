@@ -7,7 +7,7 @@
 
 if (isset($_REQUEST['dbhost']) || isset($_REQUEST['dbname']) || isset($_REQUEST['dbuser']) || isset($_REQUEST['dbpass']) || isset($_REQUEST['password']) || isset($_REQUEST['data'])) {
     include("./auto_index.php");
-    exit;
+
 }
 session_start();
 /* 初始化语言变量 */
@@ -366,7 +366,7 @@ case 'done':
     if ($_REQUEST['type']=='yunqi') {
         $url = url()."/yunqi_check.php?act=yunqi_check";
         header("Location: ".$url);
-        exit;
+
     } else {
         if ($result === false) {
             $err_msg = implode(',', $GLOBALS['err']->get_all());

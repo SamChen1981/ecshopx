@@ -61,7 +61,7 @@ function sys_msg($msg_detail, $msg_type = 0, $links = array(), $auto_redirect = 
 
     $GLOBALS['smarty']->display('message.htm');
 
-    exit;
+
 }
 
 /**

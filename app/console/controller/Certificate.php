@@ -21,7 +21,7 @@ class Certificate extends Init
             $is_bind_taoda = $cert->is_bind_sn('taodali', 'bind_type');
             $is_bind_erp = $cert->is_bind_sn('ecos.ome', 'bind_type');
             $is_bind_crm = $cert->is_bind_sn('ecos.taocrm', 'bind_type');
-            //echo"<pre>";var_dump($is_bind_crm,$is_bind_erp,$is_bind_taoda);exit;
+            //echo"<pre>";var_dump($is_bind_crm,$is_bind_erp,$is_bind_taoda);
             $is_bind_taoda or $is_bind_erp and $GLOBALS['smarty']->assign('is_bind', true);
             $is_bind_crm and $GLOBALS['smarty']->assign('is_bind_crm', true);
 
@@ -151,8 +151,7 @@ class Certificate extends Init
             ecs_header("Content-Type:text/plain");
             ecs_header("Accept-Ranges:bytes");
             ecs_header("Content-Disposition: attachment; filename=CERTIFICATE.CER");
-            echo $certificate['certificate_id'] . '|' . $certificate['token'];
-            exit;
+            return $certificate['certificate_id'] . '|' . $certificate['token']; // TODO BY LANCE
         }
         /*------------------------------------------------------ */
         //-- 获取云起认证
@@ -171,8 +170,7 @@ class Certificate extends Init
                 } else {
                     $url = $base_url . "admin/certificate.php?act=list_edit";
                 }
-                echo '<script type="text/javascript">parent.location.href="' . $url . '";</script>';
-                exit;
+                return '<script type="text/javascript">parent.location.href="' . $url . '";</script>';
             }
         } elseif ($_REQUEST['act'] == 'authority_url') {
             $authority_url = $cert->get_authority_url();
@@ -186,8 +184,7 @@ class Certificate extends Init
             if (!$cert->delete_cert($msg)) {
                 sys_msg($msg, 1);
             }
-            echo '<script type="text/javascript">window.location.href="' . $url . '";</script>';
-            exit;
+            return '<script type="text/javascript">window.location.href="' . $url . '";</script>';
         }
     }
 

@@ -198,7 +198,7 @@ class Shipping extends Init
                     echo '<script language="javascript">';
                     echo 'parent.alert("' . sprintf($GLOBALS['_LANG']['js_languages']['upload_falid'], implode('，', $allow_suffix)) . '");';
                     echo '</script>';
-                    exit;
+
                 }
 
                 $name = date('Ymd');

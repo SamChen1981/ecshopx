@@ -97,8 +97,6 @@ class CHINAPAY
             // 'trans_P2'          =>  '', //参数2
         );
         $params = $this->sign($params);
-        // echo "<pre>";print_r($params);exit();
-        // echo "<pre>";print_r($payment);print_R($order);exit();
 
         require_once('chinapay_util/Settings_INI.php');
         $settings = new Settings_INI();
@@ -228,12 +226,10 @@ eot;
         }
 
         $securityPropFile = ROOT_PATH . "cert/security.properties";
-        // print_r($securityPropFile);exit();
         $secssUtil->init($securityPropFile);
         $secssUtil->sign($sendMap);
 
         $sendMap['Signature'] = $secssUtil->getSign();
-        // echo "<pre>";print_r($sendMap);exit();
         return $sendMap;
     }
 

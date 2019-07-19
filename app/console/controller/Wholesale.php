@@ -88,7 +88,7 @@ class Wholesale extends Init
             $url = 'wholesale.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
 
             return $this->redirect($url);
-            exit;
+
         }
 
         /*------------------------------------------------------ */

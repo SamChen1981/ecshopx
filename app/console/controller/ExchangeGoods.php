@@ -262,7 +262,7 @@ class ExchangeGoods extends Init
             $url = 'exchange_goods.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
 
             return $this->redirect($url);
-            exit;
+
         }
 
         /*------------------------------------------------------ */

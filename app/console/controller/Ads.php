@@ -454,7 +454,7 @@ class Ads extends Init
             $url = 'ads.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
 
             return $this->redirect($url);
-            exit;
+
         }
     }
 

@@ -87,7 +87,7 @@ class AdminLogs extends Init
             if ($drop_type_date) {
                 if ($_POST['log_date'] == '0') {
                     return $this->redirect('admin_logs.php?act=list');
-                    exit;
+
                 } elseif ($_POST['log_date'] > '0') {
                     $where = " WHERE 1 ";
                     switch ($_POST['log_date']) {

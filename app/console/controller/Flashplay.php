@@ -19,7 +19,7 @@ class Flashplay extends Init
             /* 判断系统当前设置 如果为用户自定义 则跳转到自定义 */
             if ($GLOBALS['_CFG']['index_ad'] == 'cus') {
                 return $this->redirect('flashplay.php?act=custom_list');
-                exit;
+
             }
 
             $playerdb = $this->get_flash_xml();
@@ -73,7 +73,7 @@ class Flashplay extends Init
             $error_msg = '';
             $this->set_flash_data($GLOBALS['_CFG']['flash_theme'], $error_msg);
             return $this->redirect('flashplay.php?act=list');
-            exit;
+
         } elseif ($_REQUEST['act'] == 'add') {
             admin_priv('flash_manage');
 

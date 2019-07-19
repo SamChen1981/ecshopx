@@ -117,7 +117,7 @@ class Privilege extends Init
                                     setcookie('use_oldkey', 'true', time() + 7200, null, null, null, true);
                                     $url = $GLOBALS['ecs']->url() . "admin/privilege.php?act=login_extend";
                                     echo "<script>window.top.location.replace('" . $url . "');</script>";
-                                    exit;
+
                                 }
                                 setcookie('use_oldkey', 'true', time() - 1, null, null, null, true);
 
@@ -143,7 +143,7 @@ class Privilege extends Init
                             // 清除购物车中过期的数据
                             $this->clear_cart();
                             exit('<script>top.location.href="./index.php"</script>');
-                            // return $this->redirect('/index.php');exit;
+                            // return $this->redirect('/index.php');
                         }
                     }
                 } else {
@@ -221,7 +221,7 @@ class Privilege extends Init
                 if ($row['passport_uid']) {
                     $yunqi_login = $GLOBALS['ecs']->url . "privilege.php?act=login&type=yunqi";
                     header("Location: " . $yunqi_login);
-                    exit;
+
                 }
                 //end
                 // 登录成功
@@ -260,7 +260,7 @@ class Privilege extends Init
 
                 return $this->redirect('/');
 
-                exit;
+
             } else {
                 sys_msg($GLOBALS['_LANG']['login_faild'], 1);
             }
@@ -747,7 +747,7 @@ class Privilege extends Init
             $url = 'privilege.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
 
             return $this->redirect($url);
-            exit;
+
         }
 
 

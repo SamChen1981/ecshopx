@@ -291,7 +291,7 @@ class Articlecat extends Init
             $url = 'articlecat.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
 
             return $this->redirect($url);
-            exit;
+
         }
         /*------------------------------------------------------ */
         //-- 切换是否显示在导航栏

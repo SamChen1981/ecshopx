@@ -138,7 +138,7 @@ HTML;
         $signQueryString = $this->arrayToString($signData);
         if ($this->params['signMethod'] == 01) {
             //签名之前先用sha1处理
-            //echo $signQueryString;exit;
+            //echo $signQueryString;
             $datasha1 = sha1($signQueryString);
             $signed = $this->rsaSign($datasha1);
         } else {

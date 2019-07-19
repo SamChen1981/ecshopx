@@ -52,7 +52,7 @@ class Leancloud extends Init
             if (!$config || !json_decode($config['config'], true)) {
                 $links[] = array('text' => $GLOBALS['_LANG']['mobile_setting'], 'href' => 'ecmobile_setting.php?act=list');
                 sys_msg($GLOBALS['_LANG']['push_off'], 1, $links);
-                exit;
+
             }
             $cert = new certificate;
             $isOpenWap = $cert->is_open_sn('fy');
@@ -85,13 +85,12 @@ class Leancloud extends Init
             admin_log('', 'remove', 'leancloud');
             $url = 'leancloud.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
             return $this->redirect($url);
-            exit;
+
         } elseif ($_REQUEST['act'] == 'do_edit') {
             /* 检查权限 */
             admin_priv('leancloud');
             $links[] = array('text' => $GLOBALS['_LANG']['mobile_setting'], 'href' => 'leancloud.php?act=list');
             $params = $_POST['msg'];
-//    echo'<pre>';print_r($params);exit;
             $time = date('Y-m-d H:i:s');
             if ($params['push_time'] && $params['push_type'] == '1') {
                 $push_at = str_replace('T', ' ', $params['push_time']);
@@ -205,7 +204,6 @@ class Leancloud extends Init
         } elseif ($_REQUEST['act'] == 'batch_remove') {
             /* 检查权限 */
             admin_priv('leancloud');
-//    echo'<pre>';print_r($_POST);exit;
             $items = $_POST['checkboxes'];
             foreach ($items as $v) {
                 $id = intval($v);
@@ -215,7 +213,7 @@ class Leancloud extends Init
             admin_log('', 'remove', 'leancloud');
             $links[] = array('text' => $GLOBALS['_LANG']['mobile_setting'], 'href' => 'leancloud.php?act=list');
             sys_msg($GLOBALS['_LANG']['attradd_succed'], 0, $links);
-            exit;
+
         }
     }
 

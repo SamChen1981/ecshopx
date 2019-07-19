@@ -275,9 +275,7 @@ class Iconv
             if ($this->config['target_lang'] == 'BIG-5') {
                 $this->ctf = @fopen($this->config['codetable_dir'] . $this->config['GBtoBIG5_table'], 'rb');
                 if (is_null($this->ctf)) {
-                    echo '打开打开转换表文件失败！';
-
-                    exit;
+                    exit('打开打开转换表文件失败！');
                 }
             }
 
@@ -309,9 +307,7 @@ class Iconv
             if ($this->config['target_lang'] == 'GBK') {
                 $this->ctf = @fopen($this->config['codetable_dir'] . $this->config['BIG5toGB_table'], 'rb');
                 if (is_null($this->ctf)) {
-                    echo '打开打开转换表文件失败！';
-
-                    exit;
+                    exit('打开打开转换表文件失败！');
                 }
             }
             // 假如转换目标编码为 UTF8 的话

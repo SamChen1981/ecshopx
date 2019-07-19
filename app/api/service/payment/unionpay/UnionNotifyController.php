@@ -37,7 +37,7 @@ class UnionNotifyController extends BaseController
         
         if (!$unionpay->verifySign()) {
             echo 'fail';
-            exit;
+
         }
         if ($unionpay->params['respCode'] == '00') {
             $out_trade_no = $unionpay->params['queryId'];

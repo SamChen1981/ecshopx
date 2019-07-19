@@ -65,10 +65,8 @@ class Mysql extends Db
             echo "<b>info</b>: $message\n\n<br /><br />";
         } else {
             echo "<b>MySQL server error report:";
-            print_r($this->error_message);
+            exit($this->error_message);
         }
-
-        exit;
     }
 
     public function selectLimit($sql, $num, $start = 0)

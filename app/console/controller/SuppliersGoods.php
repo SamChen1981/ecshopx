@@ -1231,7 +1231,7 @@ class SuppliersGoods extends Init
                 $url = 'goods.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
 
                 return $this->redirect($url);
-                exit;
+
             }
         }
 
@@ -1254,7 +1254,7 @@ class SuppliersGoods extends Init
             $url = 'goods.php?act=query&' . str_replace('act=restore_goods', '', $_SERVER['QUERY_STRING']);
 
             return $this->redirect($url);
-            exit;
+
         }
 
         /*------------------------------------------------------ */
@@ -1363,7 +1363,7 @@ class SuppliersGoods extends Init
 
             return $this->redirect($url);
 
-            exit;
+
         }
 
         /*------------------------------------------------------ */

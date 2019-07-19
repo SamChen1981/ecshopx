@@ -175,8 +175,6 @@ class Index extends Init
                 unset($_SESSION['shop_guide']);//销毁session
 
                 return $this->redirect('index.php?act=first');
-
-                exit();
             }
 
             $gd = gd_version();
@@ -666,7 +664,7 @@ class Index extends Init
 
                 $set_modules = true;
                 if (strpos($mod_shop, $shipping) === false) {
-                    exit;
+
                 } else {
                     include_once(ROOT_PATH . 'includes/modules/shipping/' . $shipping . '.php');
                 }
@@ -1023,7 +1021,6 @@ class Index extends Init
         elseif ($_REQUEST['act'] == 'send_mail') {
             if ($GLOBALS['_CFG']['send_mail_on'] == 'off') {
                 make_json_result('', $GLOBALS['_LANG']['send_mail_off'], 0);
-                exit();
             }
             $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('email_sendlist') . " ORDER BY pri DESC, last_send ASC LIMIT 1";
             $row = $GLOBALS['db']->getRow($sql);

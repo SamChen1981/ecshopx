@@ -242,7 +242,7 @@ class Role extends Init
             }
 
             return $this->redirect($url);
-            exit;
+
         }
     }
 

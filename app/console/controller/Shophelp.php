@@ -223,7 +223,7 @@ class Shophelp extends Init
             $url = 'shophelp.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
 
             return $this->redirect($url);
-            exit;
+
         }
 
         /*------------------------------------------------------ */
@@ -247,7 +247,7 @@ class Shophelp extends Init
 
             return $this->redirect($url);
 
-            exit;
+
         }
 
         /*------------------------------------------------------ */
@@ -268,14 +268,14 @@ class Shophelp extends Init
                     admin_log($cat_name, 'add', 'shophelpcat');
 
                     return $this->redirect('shophelp.php?act=query');
-                    exit;
+
                 }
             } else {
                 make_json_error($GLOBALS['_LANG']['js_languages']['no_catname']);
             }
 
             return $this->redirect('shophelp.php?act=list_cat');
-            exit;
+
         }
 
         /*------------------------------------------------------ */

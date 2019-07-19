@@ -19,7 +19,7 @@ class Topic extends Init
         if (empty($topic)) {
             /* 如果没有找到任何记录则跳回到首页 */
             return $this->redirect('/');
-            exit;
+
         }
 
         $templates = empty($topic['template']) ? 'topic.dwt' : $topic['template'];

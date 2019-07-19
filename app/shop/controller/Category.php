@@ -22,7 +22,7 @@ class Category extends Init
             /* 如果分类ID为0，则返回首页 */
             return $this->redirect('/');
 
-            exit;
+
         }
 
 
@@ -72,7 +72,7 @@ class Category extends Init
                 /* 如果分类不存在则返回首页 */
                 return $this->redirect('/');
 
-                exit;
+
             }
 
             /* 赋值固定内容 */

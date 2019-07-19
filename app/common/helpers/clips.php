@@ -759,7 +759,7 @@ function get_user_prompt($user_id)
 
     /* 排序 */
     // $cmp = create_function('$a, $b', 'if($a["add_time"] == $b["add_time"]){return 0;};return $a["add_time"] < $b["add_time"] ? 1 : -1;');
-    // var_dump($cmp,$a);exit;
+    // var_dump($cmp,$a);
     //php7.2 create_function 废弃
     $cmp = function ($a, $b) {
         if ($a["add_time"] == $b["add_time"]) {

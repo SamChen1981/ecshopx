@@ -46,7 +46,7 @@ class VisitSold extends Init
                     $data .= "$order_by\t$row[goods_name]\t$row[click_count]\t$row[sold_times]\t$row[scale]\n";
                 }
                 echo ecs_iconv(EC_CHARSET, 'GB2312', $data);
-                exit;
+
             }
 
             /* 赋值到模板 */

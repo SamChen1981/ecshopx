@@ -220,7 +220,7 @@ class User extends Init
                 $code = $code['code'];
                 if (!$code) {
                     make_json_result('failed');
-                    exit;
+
                 }
 
                 /* 检查验证码 */
@@ -228,10 +228,10 @@ class User extends Init
                 if ($validator->check_word($code)) {
                     $_SESSION['v_code'] = 'true';
                     make_json_result('succ');
-                    exit;
+
                 } else {
                     make_json_result('failed');
-                    exit;
+
                 }
             }
 
@@ -691,7 +691,7 @@ class User extends Init
             if ($order === false) {
                 $GLOBALS['err']->show($GLOBALS['_LANG']['back_home_lnk'], './');
 
-                exit;
+
             }
 
             /* 是否显示添加到购物车 */
@@ -744,7 +744,7 @@ class User extends Init
             $order_id = $_POST['order_id'];
             if (!$order_id) {
                 echo json_encode(array('status' => false, 'msg' => '入参错误'));
-                exit;
+
             }
             load_helper('clips');
             load_helper('payment');
@@ -763,10 +763,10 @@ class User extends Init
                 $pay_obj = new $payment_info['pay_code'];
                 $pay_online = $pay_obj->get_code($order, array());
                 echo json_encode(array('status' => true, 'pay_online' => $pay_online));
-                exit;
+
             } else {
                 echo json_encode(array('status' => false, 'msg' => '支付方式为空'));
-                exit;
+
             }
         } elseif ($action == 'get_yunqi_online_balance') {
             //变量初始化
@@ -774,7 +774,7 @@ class User extends Init
             $payment_id = isset($_POST['pid']) ? intval($_POST['pid']) : 0;
             if (!$surplus_id || !$payment_id) {
                 echo json_encode(array('status' => false, 'msg' => '入参错误'));
-                exit;
+
             }
             load_helper('clips');
             load_helper('payment');
@@ -822,10 +822,10 @@ class User extends Init
                 $pay_obj = new $payment_info['pay_code'];
                 $pay_online = $pay_obj->get_code($order, $payment);
                 echo json_encode(array('status' => true, 'pay_online' => $pay_online));
-                exit;
+
             } else {
                 echo json_encode(array('status' => false, 'msg' => '支付方式为空'));
-                exit;
+
             }
         } /* 取消订单 */
         elseif ($action == 'cancel_order') {
@@ -842,7 +842,7 @@ class User extends Init
                 $matrix->set_dead_order($order_id);*/
 
                 return $this->redirect('user.php?act=order_list');
-                exit;
+
             } else {
                 $GLOBALS['err']->show($GLOBALS['_LANG']['order_list_lnk'], 'user.php?act=order_list');
             }
@@ -930,7 +930,7 @@ class User extends Init
 
             if (drop_consignee($consignee_id)) {
                 return $this->redirect('user.php?act=address_list');
-                exit;
+
             } else {
                 show_message($GLOBALS['_LANG']['del_address_false']);
             }
@@ -966,7 +966,7 @@ class User extends Init
             }
 
             return $this->redirect('user.php?act=collection_list');
-            exit;
+
         } /* 添加关注商品 */
         elseif ($action == 'add_to_attention') {
             $rec_id = (int)$_GET['rec_id'];
@@ -974,7 +974,7 @@ class User extends Init
                 $GLOBALS['db']->query('UPDATE ' . $GLOBALS['ecs']->table('collect_goods') . "SET is_attention = 1 WHERE rec_id='$rec_id' AND user_id ='$user_id'");
             }
             return $this->redirect('user.php?act=collection_list');
-            exit;
+
         } /* 取消关注商品 */
         elseif ($action == 'del_attention') {
             $rec_id = (int)$_GET['rec_id'];
@@ -982,7 +982,7 @@ class User extends Init
                 $GLOBALS['db']->query('UPDATE ' . $GLOBALS['ecs']->table('collect_goods') . "SET is_attention = 0 WHERE rec_id='$rec_id' AND user_id ='$user_id'");
             }
             return $this->redirect('user.php?act=collection_list');
-            exit;
+
         } /* 显示留言列表 */
         elseif ($action == 'message_list') {
             load_helper('clips');
@@ -1075,7 +1075,7 @@ class User extends Init
             delete_tag($tag_words, $user_id);
 
             return $this->redirect('user.php?act=tag_list');
-            exit;
+
         } /* 显示缺货登记列表 */
         elseif ($action == 'booking_list') {
             load_helper('clips');
@@ -1160,13 +1160,13 @@ class User extends Init
             $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
             if ($id == 0 || $user_id == 0) {
                 return $this->redirect('user.php?act=booking_list');
-                exit;
+
             }
 
             $result = delete_booking($id, $user_id);
             if ($result) {
                 return $this->redirect('user.php?act=booking_list');
-                exit;
+
             }
         } /* 确认收货 */
         elseif ($action == 'affirm_received') {
@@ -1176,7 +1176,7 @@ class User extends Init
 
             if (affirm_received($order_id, $user_id)) {
                 return $this->redirect('user.php?act=order_list');
-                exit;
+
             } else {
                 $GLOBALS['err']->show($GLOBALS['_LANG']['order_list_lnk'], 'user.php?act=order_list');
             }
@@ -1376,13 +1376,13 @@ class User extends Init
             $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
             if ($id == 0 || $user_id == 0) {
                 return $this->redirect('user.php?act=account_log');
-                exit;
+
             }
 
             $result = del_user_account($id, $user_id);
             if ($result) {
                 return $this->redirect('user.php?act=account_log');
-                exit;
+
             }
         } /* 会员通过帐目明细列表进行再付款的操作 */
         elseif ($action == 'pay') {
@@ -1396,13 +1396,13 @@ class User extends Init
 
             if ($surplus_id == 0) {
                 return $this->redirect('user.php?act=account_log');
-                exit;
+
             }
 
             //如果原来的支付方式已禁用或者已删除, 重新选择支付方式
             if ($payment_id == 0) {
                 return $this->redirect('user.php?act=account_deposit&id=" . $surplus_id . "');
-                exit;
+
             }
 
             //获取单条会员帐目信息
@@ -1489,7 +1489,7 @@ class User extends Init
 
 
             echo json_encode($result);
-            exit;
+
         } /* 添加收藏商品(ajax) */
         elseif ($action == 'collect') {
             $result = array('error' => 0, 'message' => '');
@@ -1541,7 +1541,7 @@ class User extends Init
                 }
             }
             return $this->redirect('user.php?act=message_list&order_id=$order_id');
-            exit;
+
         } /* 删除评论 */
         elseif ($action == 'del_cmt') {
             $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
@@ -1550,7 +1550,7 @@ class User extends Init
                 $GLOBALS['db']->query($sql);
             }
             return $this->redirect('user.php?act=comment_list');
-            exit;
+
         } /* 合并订单 */
         elseif ($action == 'merge_order') {
             load_helper('transaction');
@@ -1611,14 +1611,14 @@ class User extends Init
             /* 检查是否登录 */
             if ($_SESSION['user_id'] <= 0) {
                 return $this->redirect('/');
-                exit;
+
             }
 
             /* 检查订单号 */
             $order_id = intval($_POST['order_id']);
             if ($order_id <= 0) {
                 return $this->redirect('/');
-                exit;
+
             }
 
             /* 检查余额 */
@@ -1634,13 +1634,13 @@ class User extends Init
             $order = order_info($order_id);
             if (empty($order)) {
                 return $this->redirect('/');
-                exit;
+
             }
 
             /* 检查订单用户跟当前用户是否一致 */
             if ($_SESSION['user_id'] != $order['user_id']) {
                 return $this->redirect('/');
-                exit;
+
             }
 
             /* 检查订单是否未付款，检查应付款金额是否大于0 */
@@ -1719,53 +1719,53 @@ class User extends Init
 
             /* 跳转 */
             return $this->redirect('user.php?act=order_detail&order_id=' . $order_id . "');
-            exit;
+            
         } /* 编辑使用余额支付的处理 */
         elseif ($action == 'act_edit_payment') {
             /* 检查是否登录 */
             if ($_SESSION['user_id'] <= 0) {
                 return $this->redirect('/');
-                exit;
+
             }
 
             /* 检查支付方式 */
             $pay_id = intval($_POST['pay_id']);
             if ($pay_id <= 0) {
                 return $this->redirect('/');
-                exit;
+
             }
 
             load_helper('order');
             $payment_info = payment_info($pay_id);
             if (empty($payment_info)) {
                 return $this->redirect('/');
-                exit;
+
             }
 
             /* 检查订单号 */
             $order_id = intval($_POST['order_id']);
             if ($order_id <= 0) {
                 return $this->redirect('/');
-                exit;
+
             }
 
             /* 取得订单 */
             $order = order_info($order_id);
             if (empty($order)) {
                 return $this->redirect('/');
-                exit;
+
             }
 
             /* 检查订单用户跟当前用户是否一致 */
             if ($_SESSION['user_id'] != $order['user_id']) {
                 return $this->redirect('/');
-                exit;
+
             }
 
             /* 检查订单是否未付款和未发货 以及订单金额是否为0 和支付id是否为改变*/
             if ($order['pay_status'] != PS_UNPAYED || $order['shipping_status'] != SS_UNSHIPPED || $order['goods_amount'] <= 0 || $order['pay_id'] == $pay_id) {
                 return $this->redirect('user.php?act=order_detail&order_id=$order_id');
-                exit;
+
             }
 
             $order_amount = $order['order_amount'] - $order['pay_fee'];
@@ -1779,7 +1779,7 @@ class User extends Init
 
             /* 跳转 */
             return $this->redirect('user.php?act=order_detail&order_id=$order_id');
-            exit;
+
         } /* 保存订单详情收货地址 */
         elseif ($action == 'save_order_address') {
             load_helper('transaction');
@@ -1807,7 +1807,7 @@ class User extends Init
                     $matrix->createOrder($order_sn);*/
                 }
                 return $this->redirect('user.php?act=order_detail&order_id=' . $address['order_id'] . "');
-                exit;
+                
             } else {
                 $GLOBALS['err']->show($GLOBALS['_LANG']['order_list_lnk'], 'user.php?act=order_list');
             }
@@ -2470,18 +2470,18 @@ class User extends Init
                 $data = unserialize($send_limit_ip);
                 if (isset($data[$ip]) && $data[$ip] > 9) {
                     make_json_result('当前IP已超当日限制');
-                    exit;
+
                 }
             }
             if (isset($_SESSION['last_send']) && $time < ((int)$_SESSION['last_send'] + 120)) {
                 make_json_result(($_SESSION['last_send'] + 120 - $time) . '秒后再试');
-                exit;
+
             }
             $post_data = json_decode(str_replace('\\', '', $_POST['JSON']), 1);
             //判断是否经过验证码验证
             if ((!isset($_SESSION['v_code']) || $_SESSION['v_code'] != 'true') && !isset($post_data['no_need_vcode'])) {
                 make_json_result('v_code fail');
-                exit;
+
             }
             $_SESSION['v_code'] = 'false';
             $mobile = $post_data['mobile'] ? trim($post_data['mobile']) : false;
@@ -2492,7 +2492,6 @@ class User extends Init
                     $is_reg = $GLOBALS['user']->check_user($mobile);
                     if (!$is_reg) {
                         make_json_result($GLOBALS['_LANG']['phone_number_reg_check_fail']);
-                        exit();
                     }
                 }
                 $sms_code = mt_rand(100000, 999999);
@@ -2502,7 +2501,7 @@ class User extends Init
                 $is_send = $is_send ? 'succ' : 'fail';
             } else {
                 make_json_result('phone number is incorrect');
-                exit;
+
             }
             //短信发送限制
             if ($is_send == 'succ') {
@@ -2513,7 +2512,7 @@ class User extends Init
                 file_put_contents(__FILE__ . $date . ".txt", serialize($data));
             }
             make_json_result($is_send);
-            exit;
+
         } elseif ($action == 'sms_get_password') {
             load_helper('passport');
 

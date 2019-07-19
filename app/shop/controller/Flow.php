@@ -52,7 +52,7 @@ class Flow extends Init
                     return $this->redirect('/');
                 }
                 $goods_id = intval($_REQUEST['goods_id']);
-                exit;
+
             }
 
             $result = array('error' => 0, 'message' => '', 'content' => '', 'goods_id' => '');
@@ -148,7 +148,7 @@ class Flow extends Init
                 addto_cart($goods_id);
             }
             return $this->redirect('flow.php');
-            exit;
+
         } elseif ($_REQUEST['step'] == 'login') {
             include_once('languages/' . $GLOBALS['_CFG']['lang'] . '/user.php');
 
@@ -213,7 +213,7 @@ class Flow extends Init
                             return $this->redirect('index.php');
                         }
 
-                        exit;
+
                     } else {
                         $_SESSION['login_fail']++;
                         show_message($GLOBALS['_LANG']['signin_failed'], '', 'flow.php?step=login');
@@ -241,7 +241,7 @@ class Flow extends Init
                         }*/
                         /* 用户注册成功 */
                         return $this->redirect('flow.php?step=consignee');
-                        exit;
+
                     } else {
                         $GLOBALS['err']->show();
                     }
@@ -342,7 +342,7 @@ class Flow extends Init
                 $_SESSION['flow_consignee'] = stripslashes_deep($consignee);
 
                 return $this->redirect('flow.php?step=checkout');
-                exit;
+
             }
         } elseif ($_REQUEST['step'] == 'drop_consignee') {
             /*------------------------------------------------------ */
@@ -354,7 +354,7 @@ class Flow extends Init
 
             if (drop_consignee($consignee_id)) {
                 return $this->redirect('flow.php?step=consignee');
-                exit;
+
             } else {
                 show_message($GLOBALS['_LANG']['not_fount_consignee']);
             }
@@ -398,7 +398,7 @@ class Flow extends Init
             if (empty($_SESSION['direct_shopping']) && $_SESSION['user_id'] == 0) {
                 /* 用户没有登录且没有选定匿名购物，转向到登录页面 */
                 return $this->redirect('flow.php?step=login');
-                exit;
+
             }
 
             $consignee = get_consignee($_SESSION['user_id']);
@@ -407,7 +407,7 @@ class Flow extends Init
             if (!check_consignee_info($consignee, $flow_type)) {
                 /* 如果不完整则转向到收货人信息填写界面 */
                 return $this->redirect('flow.php?step=consignee');
-                exit;
+
             }
 
             $_SESSION['flow_consignee'] = $consignee;
@@ -685,7 +685,7 @@ class Flow extends Init
             }
 
             echo json_encode($result);
-            exit;
+
         } elseif ($_REQUEST['step'] == 'select_insure') {
             /*------------------------------------------------------ */
             //-- 选定/取消配送的保价
@@ -733,7 +733,7 @@ class Flow extends Init
             }
 
             echo json_encode($result);
-            exit;
+
         } elseif ($_REQUEST['step'] == 'select_payment') {
             /*------------------------------------------------------ */
             //-- 改变支付方式
@@ -783,7 +783,7 @@ class Flow extends Init
             }
 
             echo json_encode($result);
-            exit;
+
         } elseif ($_REQUEST['step'] == 'select_pack') {
             /*------------------------------------------------------ */
             //-- 改变商品包装
@@ -831,7 +831,7 @@ class Flow extends Init
             }
 
             echo json_encode($result);
-            exit;
+
         } elseif ($_REQUEST['step'] == 'select_card') {
             /*------------------------------------------------------ */
             //-- 改变贺卡
@@ -879,7 +879,7 @@ class Flow extends Init
             }
 
             echo json_encode($result);
-            exit;
+
         } elseif ($_REQUEST['step'] == 'change_surplus') {
             /*------------------------------------------------------ */
             //-- 改变余额
@@ -1093,7 +1093,7 @@ class Flow extends Init
                 die($GLOBALS['_LANG']['surplus_not_enough']);
             }
 
-            exit;
+
         } elseif ($_REQUEST['step'] == 'check_integral') {
             /*------------------------------------------------------ */
             //-- 检查用户输入的余额
@@ -1111,7 +1111,7 @@ class Flow extends Init
                 die(sprintf($GLOBALS['_LANG']['integral_too_much'], $flow_points));
             }
 
-            exit;
+
         }
         /*------------------------------------------------------ */
         //-- 完成所有订单操作，提交到数据库
@@ -1157,7 +1157,7 @@ class Flow extends Init
             if (empty($_SESSION['direct_shopping']) && $_SESSION['user_id'] == 0) {
                 /* 用户没有登录且没有选定匿名购物，转向到登录页面 */
                 return $this->redirect('flow.php?step=login');
-                exit;
+
             }
 
             $consignee = get_consignee($_SESSION['user_id']);
@@ -1166,7 +1166,7 @@ class Flow extends Init
             if (!check_consignee_info($consignee, $flow_type)) {
                 /* 如果不完整则转向到收货人信息填写界面 */
                 return $this->redirect('flow.php?step=consignee');
-                exit;
+
             }
 
             $_POST['how_oos'] = isset($_POST['how_oos']) ? intval($_POST['how_oos']) : 0;
@@ -1590,7 +1590,7 @@ class Flow extends Init
             }
 
             show_message($GLOBALS['_LANG']['update_cart_notice'], $GLOBALS['_LANG']['back_to_cart'], 'flow.php');
-            exit;
+
         }
 
         /*------------------------------------------------------ */
@@ -1602,7 +1602,7 @@ class Flow extends Init
             $this->flow_drop_cart_goods($rec_id);
 
             return $this->redirect('flow.php');
-            exit;
+
         } /* 把优惠活动加入购物车 */
         elseif ($_REQUEST['step'] == 'add_favourable') {
             $where = "session_id = '" . SESS_ID . "'";
@@ -1666,7 +1666,7 @@ class Flow extends Init
 
             /* 刷新购物车 */
             return $this->redirect('flow.php');
-            exit;
+
         } elseif ($_REQUEST['step'] == 'clear') {
             $sql = "DELETE FROM " . $GLOBALS['ecs']->table('cart') . " WHERE session_id='" . SESS_ID . "'";
             if ($_SESSION['user_id']) {
@@ -1691,7 +1691,7 @@ class Flow extends Init
                 $this->flow_drop_cart_goods($rec_id);
             }
             return $this->redirect('flow.php');
-            exit;
+
         } /* 验证红包序列号 */
         elseif ($_REQUEST['step'] == 'validate_bonus') {
             $bonus_sn = trim($_REQUEST['bonus_sn']);
@@ -1844,7 +1844,7 @@ class Flow extends Init
             /* 如果是一步购物，跳到结算中心 */
             if ($GLOBALS['_CFG']['one_step_buy'] == '1') {
                 return $this->redirect('flow.php?step=checkout');
-                exit;
+
             }
 
             /* 取得商品列表，计算合计 */
@@ -1983,7 +1983,7 @@ class Flow extends Init
                         $row['goods_number'],
                         $row['goods_number']
                     ));
-                    exit;
+
                 }
                 /* 是货品 */
                 $goods['product_id'] = trim($goods['product_id']);
@@ -1998,13 +1998,13 @@ class Flow extends Init
                             $product_number['product_number'],
                             $product_number['product_number']
                         ));
-                        exit;
+
                     }
                 }
             } elseif (intval($GLOBALS['_CFG']['use_storage']) > 0 && $goods['extension_code'] == 'package_buy') {
                 if (judge_package_stock($goods['goods_id'], $val)) {
                     show_message($GLOBALS['_LANG']['package_stock_insufficiency']);
-                    exit;
+
                 }
             }
 
@@ -2110,7 +2110,7 @@ class Flow extends Init
                         $row['goods_number'],
                         $row['goods_number']
                     ));
-                    exit;
+
                 }
 
                 /* 是货品 */
@@ -2125,13 +2125,13 @@ class Flow extends Init
                             $row['goods_number'],
                             $row['goods_number']
                         ));
-                        exit;
+
                     }
                 }
             } elseif (intval($GLOBALS['_CFG']['use_storage']) > 0 && $goods['extension_code'] == 'package_buy') {
                 if (judge_package_stock($goods['goods_id'], $val)) {
                     show_message($GLOBALS['_LANG']['package_stock_insufficiency']);
-                    exit;
+
                 }
             }
         }

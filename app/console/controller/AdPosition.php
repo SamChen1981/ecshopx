@@ -264,7 +264,7 @@ class AdPosition extends Init
             $url = 'ad_position.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
 
             return $this->redirect($url);
-            exit;
+
         }
     }
 

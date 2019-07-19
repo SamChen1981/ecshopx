@@ -29,7 +29,7 @@ class Certi extends Init
                 'info' => ''
             );
             echo json_encode($return);
-            exit;
+
         } else {
             $return = array(
                 'res' => 'fail',
@@ -37,7 +37,7 @@ class Certi extends Init
                 'info' => 'You have the different ac!'
             );
             echo json_encode($return);
-            exit;
+
         }
     }
 }

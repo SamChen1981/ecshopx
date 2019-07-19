@@ -615,7 +615,7 @@ class AopClient
         if ($isCheckSign) {
             if (!$this->rsaCheckV2($params, $rsaPublicKeyPem)) {
                 echo "<br/>checkSign failure<br/>";
-                exit;
+
             }
         }
         if ($isDecrypt) {

@@ -41,7 +41,7 @@ class Snatch extends Init
             $_POST['goods_name'] = $GLOBALS['db']->GetOne($sql);
             if (empty($_POST['goods_name'])) {
                 sys_msg($GLOBALS['_LANG']['no_goods'], 1);
-                exit;
+
             }
 
             $sql = "SELECT COUNT(*) " .
@@ -169,7 +169,7 @@ class Snatch extends Init
             $url = 'snatch.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
 
             return $this->redirect($url);
-            exit;
+
         }
 
         /*------------------------------------------------------ */

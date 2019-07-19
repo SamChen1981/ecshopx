@@ -28,7 +28,7 @@ class Goods extends Init
             if (!empty($Loaction)) {
                 return $this->redirect($Loaction);
 
-                exit;
+
             }
         }
         /*------------------------------------------------------ */
@@ -140,7 +140,7 @@ class Goods extends Init
             if ($goods === false) {
                 /* 如果没有找到任何记录则跳回到首页 */
                 return $this->redirect('/');
-                exit;
+
             } else {
                 if ($goods['brand_id'] > 0) {
                     $goods['goods_brand_url'] = build_uri('brand', array('bid' => $goods['brand_id']), $goods['goods_brand']);
