@@ -92,7 +92,7 @@ class AffiliateCk extends Init
     分成
 */
         elseif ($_REQUEST['act'] == 'separate') {
-            include_once(ROOT_PATH . 'includes/lib_order.php');
+            load_helper('order');
             $affiliate = unserialize($GLOBALS['_CFG']['affiliate']);
             empty($affiliate) && $affiliate = array();
 

@@ -9,7 +9,7 @@ class Flow extends Init
 {
     public function index()
     {
-        require(ROOT_PATH . 'includes/lib_order.php');
+        load_helper('order');
 
         /* 载入语言文件 */
         require_once(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/user.php');
@@ -182,7 +182,7 @@ class Flow extends Init
                     $smarty->assign('rand', mt_rand());
                 }
             } else {
-                include_once('includes/lib_passport.php');
+                load_helper('passport');
                 if (!empty($_POST['act']) && $_POST['act'] == 'signin') {
                     $captcha = intval($_CFG['captcha']);
                     if (($captcha & CAPTCHA_LOGIN) && (!($captcha & CAPTCHA_LOGIN_FAIL) || (($captcha & CAPTCHA_LOGIN_FAIL) && $_SESSION['login_fail'] > 2)) && gd_version() > 0) {
@@ -251,7 +251,7 @@ class Flow extends Init
             /*------------------------------------------------------ */
             //-- 收货人信息
             /*------------------------------------------------------ */
-            include_once('includes/lib_transaction.php');
+            load_helper('transaction');
 
             if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 /* 取得购物类型 */
@@ -328,7 +328,7 @@ class Flow extends Init
                 );
 
                 if ($_SESSION['user_id'] > 0) {
-                    include_once(ROOT_PATH . 'includes/lib_transaction.php');
+                    load_helper('transaction');
 
                     /* 如果用户已经登录，则保存收货人信息 */
                     $consignee['user_id'] = $_SESSION['user_id'];
@@ -346,7 +346,7 @@ class Flow extends Init
             /*------------------------------------------------------ */
             //-- 删除收货人信息
             /*------------------------------------------------------ */
-            include_once('includes/lib_transaction.php');
+            load_helper('transaction');
 
             $consignee_id = intval($_GET['id']);
 
@@ -1116,8 +1116,8 @@ class Flow extends Init
         /*------------------------------------------------------ */
         elseif ($_REQUEST['step'] == 'done') {
             add_log("pc create order begin==POST:", $_POST);
-            include_once('includes/lib_clips.php');
-            include_once('includes/lib_payment.php');
+            load_helper('clips');
+            load_helper('payment');
 
             $where = "session_id = '" . SESS_ID . "'";
             if ($_SESSION['user_id']) {
@@ -1855,7 +1855,7 @@ class Flow extends Init
 
             // 显示收藏夹内的商品
             if ($_SESSION['user_id'] > 0) {
-                require_once(ROOT_PATH . 'includes/lib_clips.php');
+                load_helper('clips');
                 $collection_goods = get_collection_goods($_SESSION['user_id']);
                 $smarty->assign('collection_goods', $collection_goods);
                 $where = "user_id = '" . intval($_SESSION['user_id']) . "' ";

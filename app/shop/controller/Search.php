@@ -19,8 +19,8 @@ class Search extends Init
         if (empty($_GET['encode'])) {
             $string = array_merge($_GET, $_POST);
             if (get_magic_quotes_gpc()) {
-                require(dirname(__FILE__) . '/includes/lib_base.php');
-                //require(dirname(__FILE__) . '/includes/lib_common.php');
+                load_helper('base');
+                //load_helper('common');
 
                 $string = stripslashes_deep($string);
             }

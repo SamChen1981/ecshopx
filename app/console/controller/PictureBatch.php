@@ -9,7 +9,7 @@ class PictureBatch extends Init
 {
     public function index()
     {
-        include_once(ROOT_PATH . '/' . ADMIN_PATH . '/includes/lib_goods.php');
+        load_helper('goods', 'console');
         $image = new cls_image($_CFG['bgcolor']);
 
         /* 权限检查 */

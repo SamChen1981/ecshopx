@@ -40,7 +40,7 @@ if (isset($set_modules) && $set_modules == true) {
 cancel_log("begin");
 empty($cron['auto_cancel_day']) && $cron['auto_cancel_day'] = 12;
 $cancel_time = gmtime() - $cron['auto_cancel_day'] * 3600;
-include_once(ROOT_PATH . 'includes/lib_order.php');
+load_helper('order');
 $sql = "SELECT pay_id FROM " . $ecs->table('payment') . " WHERE is_cod = 1";
 $pay_id_list = $db->getCol($sql);
 $order_status = [OS_UNCONFIRMED, OS_CONFIRMED, OS_SPLITED, OS_SPLITING_PART];

@@ -9,7 +9,7 @@ class Wholesale extends Init
 {
     public function index()
     {
-        include_once('../includes/lib_goods.php');
+        load_helper('goods');
 
         /*------------------------------------------------------ */
         //-- 活动列表页

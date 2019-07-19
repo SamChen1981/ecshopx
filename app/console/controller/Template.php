@@ -9,7 +9,7 @@ class Template extends Init
 {
     public function index()
     {
-        require_once('includes/lib_template.php');
+        load_helper('template', 'console');
 
         /*------------------------------------------------------ */
         //-- 模版列表

@@ -272,7 +272,7 @@ class Wholesale extends Init
         //-- 提交订单
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'submit_order') {
-            include_once(ROOT_PATH . 'includes/lib_order.php');
+            load_helper('order');
 
             /* 检查购物车中是否有商品 */
             if (count($_SESSION['wholesale_goods']) == 0) {

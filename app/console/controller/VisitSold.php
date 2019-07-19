@@ -9,7 +9,7 @@ class VisitSold extends Init
 {
     public function index()
     {
-        require_once(ROOT_PATH . 'includes/lib_order.php');
+        load_helper('order');
         require_once('../languages/' . $_CFG['lang'] . '/admin/statistic.php');
         $smarty->assign('lang', $_LANG);
 

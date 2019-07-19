@@ -9,8 +9,8 @@ class Order extends Init
 {
     public function index()
     {
-        require_once(ROOT_PATH . 'includes/lib_order.php');
-        require_once(ROOT_PATH . 'includes/lib_goods.php');
+        load_helper('order');
+        load_helper('goods');
         require('leancloud_push.php');
 
         /*------------------------------------------------------ */
@@ -4056,7 +4056,7 @@ class Order extends Init
      */
     private function update_order_amount($order_id)
     {
-        include_once(ROOT_PATH . 'includes/lib_order.php');
+        load_helper('order');
         //更新订单总金额
         $sql = "UPDATE " . $GLOBALS['ecs']->table('order_info') .
             " SET order_amount = " . order_due_field() .
@@ -4231,7 +4231,7 @@ class Order extends Init
         if (!empty($list['split'])) {
             /* 如果是团购活动且未处理成功，不能发货 */
             if ($order['extension_code'] == 'group_buy') {
-                include_once(ROOT_PATH . 'includes/lib_goods.php');
+                load_helper('goods');
                 $group_buy = group_buy_info(intval($order['extension_id']));
                 if ($group_buy['status'] != GBS_SUCCEED) {
                     unset($list['split']);
@@ -5446,7 +5446,7 @@ class Order extends Init
         }
 
         /* 包含加密解密函数所在文件 */
-        include_once(ROOT_PATH . 'includes/lib_code.php');
+        load_helper('code');
 
         // 取出超值礼包中的虚拟商品信息
         foreach ($goods as $virtual_goods_key => $virtual_goods_value) {

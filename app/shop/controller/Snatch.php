@@ -231,7 +231,7 @@ class Snatch extends Init
             }
 
             /* 清空购物车中所有商品 */
-            include_once(ROOT_PATH . 'includes/lib_order.php');
+            load_helper('order');
             clear_cart(CART_SNATCH_GOODS);
 
             /* 加入购物车 */

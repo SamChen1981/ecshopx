@@ -32,10 +32,9 @@ if (isset($_SERVER['PHP_SELF'])) {
 define('EC_CHARSET', 'utf-8');
 define('EC_DB_CHARSET', 'utf8');
 
-require(ROOT_PATH . 'includes/safety.php');
-require(ROOT_PATH . 'includes/lib_base.php');
-require(ROOT_PATH . 'includes/lib_common.php');
-require(ROOT_PATH . 'includes/lib_time.php');
+load_helper('base');
+load_helper('common');
+load_helper('time');
 
 /* 创建错误处理对象 */
 $err = new ecs_error('message.dwt');
@@ -43,7 +42,7 @@ $err = new ecs_error('message.dwt');
 /* 初始化模板引擎 */
 $smarty = new template(ROOT_PATH . 'install/templates/');
 
-require(ROOT_PATH . 'install/includes/lib_installer.php');
+load_helper('installer', 'install');
 
 /* 发送HTTP头部，保证浏览器识别UTF8编码 */
 header('Content-type: text/html; charset='.EC_CHARSET);

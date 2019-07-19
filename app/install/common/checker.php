@@ -15,7 +15,7 @@
  */
 function check_dirs_priv($checking_dirs)
 {
-    include_once(ROOT_PATH . 'includes/lib_common.php');
+    load_helper('common');
 
     global $_LANG;
     $msgs = array('result' => 'OK', 'detail' => array());

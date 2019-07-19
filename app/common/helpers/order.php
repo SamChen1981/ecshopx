@@ -254,7 +254,7 @@ function available_payment_list($support_cod, $cod_fee = 0, $is_online = false, 
         $modules[] = $row;
     }
 
-    include_once(ROOT_PATH . 'includes/lib_compositor.php');
+    load_helper('compositor');
 
     if (isset($modules)) {
         return $modules;
@@ -1975,7 +1975,7 @@ function merge_order($from_order_sn, $to_order_sn)
         "WHERE order_id " . db_create_in(array($from_order['order_id'], $to_order['order_id']));
     $GLOBALS['db']->query($sql);
 
-    include_once(ROOT_PATH . 'includes/lib_clips.php');
+    load_helper('clips');
     /* 插入支付日志 */
     insert_pay_log($order_id, $order['order_amount'], PAY_ORDER);
 
@@ -2551,7 +2551,7 @@ function integral_to_give($order)
 {
     /* 判断是否团购 */
     if ($order['extension_code'] == 'group_buy') {
-        include_once(ROOT_PATH . 'includes/lib_goods.php');
+        load_helper('goods');
         $group_buy = group_buy_info(intval($order['extension_id']));
 
         return array('custom_points' => $group_buy['gift_integral'], 'rank_points' => $order['goods_amount']);

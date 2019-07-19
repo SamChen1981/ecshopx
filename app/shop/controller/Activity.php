@@ -11,8 +11,8 @@ class Activity extends Init
 {
     public function index()
     {
-        require_once(ROOT_PATH . 'includes/lib_order.php');
-        include_once(ROOT_PATH . 'includes/lib_transaction.php');
+        load_helper('order');
+        load_helper('transaction');
 
         /* 载入语言文件 */
         require_once(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/shopping_flow.php');

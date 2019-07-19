@@ -9,7 +9,7 @@ class SuppliersGoods extends Init
 {
     public function index()
     {
-        require_once(ROOT_PATH . '/admin/includes/lib_goods.php');
+        load_helper('goods', 'console');
         $image = new cls_image($_CFG['bgcolor']);
         $exc = new exchange($ecs->table('goods'), $db, 'goods_id', 'goods_name');
 

@@ -476,7 +476,7 @@ class Bonus extends Init
             }
 
             /* 取得红包信息 */
-            include_once(ROOT_PATH . 'includes/lib_order.php');
+            load_helper('order');
             $bonus = bonus_info($bonus_id);
             if (empty($bonus)) {
                 sys_msg($_LANG['bonus_not_exist']);

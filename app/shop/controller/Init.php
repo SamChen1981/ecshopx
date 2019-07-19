@@ -31,13 +31,13 @@ class Init extends Controller
         }
         define('PHP_SELF', $php_self);
 
-        require(ROOT_PATH . 'includes/lib_time.php');
-        require(ROOT_PATH . 'includes/lib_base.php');
-        require(ROOT_PATH . 'includes/lib_common.php');
-        require(ROOT_PATH . 'includes/lib_main.php');
-        require(ROOT_PATH . 'includes/lib_insert.php');
-        require(ROOT_PATH . 'includes/lib_goods.php');
-        require(ROOT_PATH . 'includes/lib_article.php');
+        load_helper('time');
+        load_helper('base');
+        load_helper('common');
+        load_helper('main');
+        load_helper('insert');
+        load_helper('goods');
+        load_helper('article');
 
         /* 对用户传入的变量进行转义操作。*/
         if (!get_magic_quotes_gpc()) {

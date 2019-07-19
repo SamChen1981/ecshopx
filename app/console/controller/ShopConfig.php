@@ -169,7 +169,7 @@ class ShopConfig extends Init
                         sys_msg(sprintf($_LANG['msg_invalid_file'], $file['name']));
                     } else {
                         if ($code == 'shop_logo') {
-                            include_once('includes/lib_template.php');
+                            load_helper('template', 'console');
                             $info = get_template_info($_CFG['template']);
 
                             $file_name = str_replace('{$template}', $_CFG['template'], $file_var_list[$code]['store_dir']) . $info['logo'];

@@ -9,7 +9,7 @@ class AccountLog extends Init
 {
     public function index()
     {
-        include_once(ROOT_PATH . 'includes/lib_order.php');
+        load_helper('order');
 
         /*------------------------------------------------------ */
         //-- 办事处列表

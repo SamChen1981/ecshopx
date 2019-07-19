@@ -39,7 +39,7 @@ if (isset($set_modules) && $set_modules == true) {
 }
 confirm_log("begin");
 empty($cron['auto_confirm_day']) && $cron['auto_confirm_day'] = 7;
-include_once(ROOT_PATH . 'includes/lib_transaction.php');
+load_helper('transaction');
 $confirmtime = gmtime() - $cron['auto_confirm_day'] * 3600 * 24;
 $order_status = [OS_SPLITED];
 $pay_status = [PS_UNPAYED, PS_PAYED];

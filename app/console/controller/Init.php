@@ -66,11 +66,11 @@ class Init extends Controller
         } else {
             define('PHP_SELF', $_SERVER['SCRIPT_NAME']);
         }
-        require(ROOT_PATH . 'includes/inc_constant.php');
-        require(ROOT_PATH . 'includes/lib_time.php');
-        require(ROOT_PATH . 'includes/lib_base.php');
-        require(ROOT_PATH . 'includes/lib_common.php');
-        require(ROOT_PATH . ADMIN_PATH . '/includes/lib_main.php');
+
+        load_helper('time');
+        load_helper('base');
+        load_helper('common');
+        load_helper('main', 'console');
 
         /* 对用户传入的变量进行转义操作。*/
         if (!get_magic_quotes_gpc()) {

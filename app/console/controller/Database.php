@@ -514,7 +514,7 @@ class Database extends Init
          */
         if ($_REQUEST['act'] == 'cleardata') {
             admin_priv('db_clear');
-            include_once(ROOT_PATH . "includes/lib_passport.php");
+            load_helper('passport');
             $data['username'] = isset($_POST['username']) ? trim($_POST['username']) : '';
             $data['password'] = isset($_POST['password']) ? trim($_POST['password']) : '';
             if ((!$data['username'] or !$data['password']) && !$_SESSION['yunqi_login']) {

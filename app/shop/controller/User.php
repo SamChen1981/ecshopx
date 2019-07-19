@@ -77,7 +77,7 @@ class User extends Init
         }
         //用户中心欢迎页
         if ($action == 'default') {
-            include_once(ROOT_PATH . 'includes/lib_clips.php');
+            load_helper('clips');
             if ($rank = get_rank_info()) {
                 $smarty->assign('rank_name', sprintf($_LANG['your_level'], $rank['rank_name']));
                 if (!empty($rank['next_rank_name'])) {
@@ -120,7 +120,7 @@ class User extends Init
                 $smarty->assign('shop_reg_closed', $_CFG['shop_reg_closed']);
                 $smarty->display('user_passport.dwt');
             } else {
-                include_once(ROOT_PATH . 'includes/lib_passport.php');
+                load_helper('passport');
 
                 $username = isset($_POST['username']) ? trim($_POST['username']) : '';
                 $password = isset($_POST['password']) ? trim($_POST['password']) : '';
@@ -212,7 +212,7 @@ class User extends Init
             /* 验证码检查 */
 
             if ((intval($_CFG['captcha']) || CAPTCHA_REGISTER) && gd_version() > 0) {
-                require('admin/includes/lib_main.php');
+                load_helper('main', 'console');
                 $code = str_replace('\\', '', $_REQUEST['JSON']);
                 $code = json_decode($code, 1);
                 $code = $code['code'];
@@ -238,7 +238,7 @@ class User extends Init
         } elseif ($action == 'validate_email') {
             $hash = empty($_GET['hash']) ? '' : trim($_GET['hash']);
             if ($hash) {
-                include_once(ROOT_PATH . 'includes/lib_passport.php');
+                load_helper('passport');
                 $id = register_hash('decode', $hash);
                 if ($id > 0) {
                     $sql = "UPDATE " . $ecs->table('users') . " SET is_validated = 1 WHERE user_id='$id'";
@@ -251,7 +251,7 @@ class User extends Init
             show_message($_LANG['validate_fail']);
         } /* 验证用户注册用户名是否可以注册 */
         elseif ($action == 'is_registered') {
-            include_once(ROOT_PATH . 'includes/lib_passport.php');
+            load_helper('passport');
 
             $username = trim($_GET['username']);
             $username = json_str_iconv($username);
@@ -378,7 +378,7 @@ class User extends Init
             show_message($_LANG['logout'] . $ucdata, array($_LANG['back_up_page'], $_LANG['back_home_lnk']), array($back_act, 'index.php'), 'info');
         } /* 个人资料页面 */
         elseif ($action == 'profile') {
-            include_once(ROOT_PATH . 'includes/lib_transaction.php');
+            load_helper('transaction');
 
             $user_info = get_profile($user_id);
 
@@ -427,7 +427,7 @@ class User extends Init
             $smarty->display('user_transaction.dwt');
         } /* 修改个人资料的处理 */
         elseif ($action == 'act_edit_profile') {
-            include_once(ROOT_PATH . 'includes/lib_transaction.php');
+            load_helper('transaction');
 
             $birthday = trim($_POST['birthdayYear']) . '-' . trim($_POST['birthdayMonth']) . '-' .
                 trim($_POST['birthdayDay']);
@@ -505,7 +505,7 @@ class User extends Init
             }
         } /* 密码找回-->修改密码界面 */
         elseif ($action == 'get_password') {
-            include_once(ROOT_PATH . 'includes/lib_passport.php');
+            load_helper('passport');
 
             if (isset($_GET['code']) && isset($_GET['uid'])) { //从邮件处获得的act
                 $code = trim($_GET['code']);
@@ -588,7 +588,7 @@ class User extends Init
             }
         } /* 发送密码修改确认邮件 */
         elseif ($action == 'send_pwd_email') {
-            include_once(ROOT_PATH . 'includes/lib_passport.php');
+            load_helper('passport');
 
             /* 初始化会员用户名和邮件地址 */
             $user_name = !empty($_POST['user_name']) ? trim($_POST['user_name']) : '';
@@ -619,7 +619,7 @@ class User extends Init
             $smarty->display('user_passport.dwt');
         } /* 修改会员密码 */
         elseif ($action == 'act_edit_password') {
-            include_once(ROOT_PATH . 'includes/lib_passport.php');
+            load_helper('passport');
             $old_password = isset($_POST['old_password']) ? trim($_POST['old_password']) : null;
             $new_password = isset($_POST['new_password']) ? trim($_POST['new_password']) : '';
             $user_id = isset($_POST['uid']) ? intval($_POST['uid']) : $user_id;
@@ -644,7 +644,7 @@ class User extends Init
             }
         } /* 添加一个红包 */
         elseif ($action == 'act_add_bonus') {
-            include_once(ROOT_PATH . 'includes/lib_transaction.php');
+            load_helper('transaction');
 
             $bouns_sn = isset($_POST['bonus_sn']) ? intval($_POST['bonus_sn']) : '';
 
@@ -655,7 +655,7 @@ class User extends Init
             }
         } /* 查看订单列表 */
         elseif ($action == 'order_list') {
-            include_once(ROOT_PATH . 'includes/lib_transaction.php');
+            load_helper('transaction');
 
             $page = isset($_REQUEST['page']) ? intval($_REQUEST['page']) : 1;
 
@@ -676,10 +676,10 @@ class User extends Init
             $smarty->display('user_transaction.dwt');
         } /* 查看订单详情 */
         elseif ($action == 'order_detail') {
-            include_once(ROOT_PATH . 'includes/lib_transaction.php');
-            include_once(ROOT_PATH . 'includes/lib_payment.php');
-            include_once(ROOT_PATH . 'includes/lib_order.php');
-            include_once(ROOT_PATH . 'includes/lib_clips.php');
+            load_helper('transaction');
+            load_helper('payment');
+            load_helper('order');
+            load_helper('clips');
 
             $order_id = isset($_GET['order_id']) ? intval($_GET['order_id']) : 0;
 
@@ -744,9 +744,9 @@ class User extends Init
                 echo json_encode(array('status' => false, 'msg' => '入参错误'));
                 exit;
             }
-            include_once(ROOT_PATH . 'includes/lib_clips.php');
-            include_once(ROOT_PATH . 'includes/lib_payment.php');
-            include_once(ROOT_PATH . 'includes/lib_transaction.php');
+            load_helper('clips');
+            load_helper('payment');
+            load_helper('transaction');
             /* 订单详情 */
             $order = get_order_detail($order_id, $_SESSION['user_id']);
             //支付方式信息
@@ -774,10 +774,10 @@ class User extends Init
                 echo json_encode(array('status' => false, 'msg' => '入参错误'));
                 exit;
             }
-            include_once(ROOT_PATH . 'includes/lib_clips.php');
-            include_once(ROOT_PATH . 'includes/lib_payment.php');
-            include_once(ROOT_PATH . 'includes/lib_order.php');
-            include_once(ROOT_PATH . 'includes/lib_transaction.php');
+            load_helper('clips');
+            load_helper('payment');
+            load_helper('order');
+            load_helper('transaction');
             //获取单条会员帐目信息
             $order = array();
             $order = get_surplus_info($surplus_id);
@@ -827,8 +827,8 @@ class User extends Init
             }
         } /* 取消订单 */
         elseif ($action == 'cancel_order') {
-            include_once(ROOT_PATH . 'includes/lib_transaction.php');
-            include_once(ROOT_PATH . 'includes/lib_order.php');
+            load_helper('transaction');
+            load_helper('order');
 
             $order_id = isset($_GET['order_id']) ? intval($_GET['order_id']) : 0;
 
@@ -844,7 +844,7 @@ class User extends Init
             }
         } /* 收货地址列表界面*/
         elseif ($action == 'address_list') {
-            include_once(ROOT_PATH . 'includes/lib_transaction.php');
+            load_helper('transaction');
             include_once(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/shopping_flow.php');
             $smarty->assign('lang', $_LANG);
 
@@ -894,7 +894,7 @@ class User extends Init
             $smarty->display('account_bind.dwt');
         } /* 添加/编辑收货地址的处理 */
         elseif ($action == 'act_edit_address') {
-            include_once(ROOT_PATH . 'includes/lib_transaction.php');
+            load_helper('transaction');
             include_once(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/shopping_flow.php');
             $smarty->assign('lang', $_LANG);
 
@@ -920,7 +920,7 @@ class User extends Init
             }
         } /* 删除收货地址 */
         elseif ($action == 'drop_consignee') {
-            include_once('includes/lib_transaction.php');
+            load_helper('transaction');
 
             $consignee_id = intval($_GET['id']);
 
@@ -932,7 +932,7 @@ class User extends Init
             }
         } /* 显示收藏商品列表 */
         elseif ($action == 'collection_list') {
-            include_once(ROOT_PATH . 'includes/lib_clips.php');
+            load_helper('clips');
 
             $page = isset($_REQUEST['page']) ? intval($_REQUEST['page']) : 1;
 
@@ -953,7 +953,7 @@ class User extends Init
             $smarty->display('user_clips.dwt');
         } /* 删除收藏的商品 */
         elseif ($action == 'delete_collection') {
-            include_once(ROOT_PATH . 'includes/lib_clips.php');
+            load_helper('clips');
 
             $collection_id = isset($_GET['collection_id']) ? intval($_GET['collection_id']) : 0;
 
@@ -981,7 +981,7 @@ class User extends Init
             exit;
         } /* 显示留言列表 */
         elseif ($action == 'message_list') {
-            include_once(ROOT_PATH . 'includes/lib_clips.php');
+            load_helper('clips');
 
             $page = isset($_REQUEST['page']) ? intval($_REQUEST['page']) : 1;
 
@@ -1014,7 +1014,7 @@ class User extends Init
             $smarty->display('user_clips.dwt');
         } /* 显示评论列表 */
         elseif ($action == 'comment_list') {
-            include_once(ROOT_PATH . 'includes/lib_clips.php');
+            load_helper('clips');
 
             $page = isset($_REQUEST['page']) ? intval($_REQUEST['page']) : 1;
 
@@ -1029,7 +1029,7 @@ class User extends Init
             $smarty->display('user_clips.dwt');
         } /* 添加我的留言 */
         elseif ($action == 'act_add_message') {
-            include_once(ROOT_PATH . 'includes/lib_clips.php');
+            load_helper('clips');
 
             $message = array(
                 'user_id' => $user_id,
@@ -1055,7 +1055,7 @@ class User extends Init
             }
         } /* 标签云列表 */
         elseif ($action == 'tag_list') {
-            include_once(ROOT_PATH . 'includes/lib_clips.php');
+            load_helper('clips');
 
             $good_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
@@ -1064,7 +1064,7 @@ class User extends Init
             $smarty->display('user_clips.dwt');
         } /* 删除标签云的处理 */
         elseif ($action == 'act_del_tag') {
-            include_once(ROOT_PATH . 'includes/lib_clips.php');
+            load_helper('clips');
 
             $tag_words = isset($_GET['tag_words']) ? trim($_GET['tag_words']) : '';
             delete_tag($tag_words, $user_id);
@@ -1073,7 +1073,7 @@ class User extends Init
             exit;
         } /* 显示缺货登记列表 */
         elseif ($action == 'booking_list') {
-            include_once(ROOT_PATH . 'includes/lib_clips.php');
+            load_helper('clips');
 
             $page = isset($_REQUEST['page']) ? intval($_REQUEST['page']) : 1;
 
@@ -1090,7 +1090,7 @@ class User extends Init
             $smarty->display('user_clips.dwt');
         } /* 添加缺货登记页面 */
         elseif ($action == 'add_booking') {
-            include_once(ROOT_PATH . 'includes/lib_clips.php');
+            load_helper('clips');
 
             $goods_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
             if ($goods_id == 0) {
@@ -1120,7 +1120,7 @@ class User extends Init
             $smarty->display('user_clips.dwt');
         } /* 添加缺货登记的处理 */
         elseif ($action == 'act_add_booking') {
-            include_once(ROOT_PATH . 'includes/lib_clips.php');
+            load_helper('clips');
 
             $booking = array(
                 'goods_id' => isset($_POST['id']) ? intval($_POST['id']) : 0,
@@ -1150,7 +1150,7 @@ class User extends Init
             }
         } /* 删除缺货登记 */
         elseif ($action == 'act_del_booking') {
-            include_once(ROOT_PATH . 'includes/lib_clips.php');
+            load_helper('clips');
 
             $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
             if ($id == 0 || $user_id == 0) {
@@ -1165,7 +1165,7 @@ class User extends Init
             }
         } /* 确认收货 */
         elseif ($action == 'affirm_received') {
-            include_once(ROOT_PATH . 'includes/lib_transaction.php');
+            load_helper('transaction');
 
             $order_id = isset($_GET['order_id']) ? intval($_GET['order_id']) : 0;
 
@@ -1180,7 +1180,7 @@ class User extends Init
             $smarty->display('user_transaction.dwt');
         } /* 会员预付款界面 */
         elseif ($action == 'account_deposit') {
-            include_once(ROOT_PATH . 'includes/lib_clips.php');
+            load_helper('clips');
 
             $surplus_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
             $account = get_surplus_info($surplus_id);
@@ -1190,7 +1190,7 @@ class User extends Init
             $smarty->display('user_transaction.dwt');
         } /* 会员账目明细界面 */
         elseif ($action == 'account_detail') {
-            include_once(ROOT_PATH . 'includes/lib_clips.php');
+            load_helper('clips');
 
             $page = isset($_REQUEST['page']) ? intval($_REQUEST['page']) : 1;
 
@@ -1237,7 +1237,7 @@ class User extends Init
             $smarty->display('user_transaction.dwt');
         } /* 会员充值和提现申请记录 */
         elseif ($action == 'account_log') {
-            include_once(ROOT_PATH . 'includes/lib_clips.php');
+            load_helper('clips');
 
             $page = isset($_REQUEST['page']) ? intval($_REQUEST['page']) : 1;
 
@@ -1266,8 +1266,8 @@ class User extends Init
             $smarty->display('user_transaction.dwt');
         } /* 对会员余额申请的处理 */
         elseif ($action == 'act_account') {
-            include_once(ROOT_PATH . 'includes/lib_clips.php');
-            include_once(ROOT_PATH . 'includes/lib_order.php');
+            load_helper('clips');
+            load_helper('order');
             $amount = isset($_POST['amount']) ? floatval($_POST['amount']) : 0;
             if ($amount <= 0) {
                 show_message($_LANG['amount_gt_zero']);
@@ -1312,7 +1312,7 @@ class User extends Init
                     show_message($_LANG['select_payment_pls']);
                 }
 
-                include_once(ROOT_PATH . 'includes/lib_payment.php');
+                load_helper('payment');
 
                 //获取支付方式名称
                 $payment_info = array();
@@ -1366,7 +1366,7 @@ class User extends Init
             }
         } /* 删除会员余额 */
         elseif ($action == 'cancel') {
-            include_once(ROOT_PATH . 'includes/lib_clips.php');
+            load_helper('clips');
 
             $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
             if ($id == 0 || $user_id == 0) {
@@ -1381,9 +1381,9 @@ class User extends Init
             }
         } /* 会员通过帐目明细列表进行再付款的操作 */
         elseif ($action == 'pay') {
-            include_once(ROOT_PATH . 'includes/lib_clips.php');
-            include_once(ROOT_PATH . 'includes/lib_payment.php');
-            include_once(ROOT_PATH . 'includes/lib_order.php');
+            load_helper('clips');
+            load_helper('payment');
+            load_helper('order');
 
             //变量初始化
             $surplus_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
@@ -1451,7 +1451,7 @@ class User extends Init
                 $smarty->display('user_transaction.dwt');
             } /* 重新选择支付方式 */
             else {
-                include_once(ROOT_PATH . 'includes/lib_clips.php');
+                load_helper('clips');
 
                 $smarty->assign('payment', get_online_payment_list());
                 $smarty->assign('order', $order);
@@ -1460,7 +1460,7 @@ class User extends Init
             }
         } /* 添加标签(ajax) */
         elseif ($action == 'add_tag') {
-            include_once('includes/lib_clips.php');
+            load_helper('clips');
 
             $result = array('error' => 0, 'message' => '', 'content' => '');
             $id = isset($_POST['id']) ? intval($_POST['id']) : 0;
@@ -1548,8 +1548,8 @@ class User extends Init
             exit;
         } /* 合并订单 */
         elseif ($action == 'merge_order') {
-            include_once(ROOT_PATH . 'includes/lib_transaction.php');
-            include_once(ROOT_PATH . 'includes/lib_order.php');
+            load_helper('transaction');
+            load_helper('order');
             $from_order = isset($_POST['from_order']) ? trim($_POST['from_order']) : '';
             $to_order = isset($_POST['to_order']) ? trim($_POST['to_order']) : '';
             if (merge_user_order($from_order, $to_order, $user_id)) {
@@ -1559,7 +1559,7 @@ class User extends Init
             }
         } /* 将指定订单中商品添加到购物车 */
         elseif ($action == 'return_to_cart') {
-            include_once(ROOT_PATH . 'includes/lib_transaction.php');
+            load_helper('transaction');
 
             $result = array('error' => 0, 'message' => '', 'content' => '');
             $order_id = isset($_POST['order_id']) ? intval($_POST['order_id']) : 0;
@@ -1623,7 +1623,7 @@ class User extends Init
                 $err->show($_LANG['order_detail'], 'user.php?act=order_detail&order_id=' . $order_id);
             }
 
-            include_once(ROOT_PATH . 'includes/lib_order.php');
+            load_helper('order');
 
             /* 取得订单 */
             $order = order_info($order_id);
@@ -1728,7 +1728,7 @@ class User extends Init
                 exit;
             }
 
-            include_once(ROOT_PATH . 'includes/lib_order.php');
+            load_helper('order');
             $payment_info = payment_info($pay_id);
             if (empty($payment_info)) {
                 ecs_header("Location: ./\n");
@@ -1775,7 +1775,7 @@ class User extends Init
             exit;
         } /* 保存订单详情收货地址 */
         elseif ($action == 'save_order_address') {
-            include_once(ROOT_PATH . 'includes/lib_transaction.php');
+            load_helper('transaction');
 
             $address = array(
                 'consignee' => isset($_POST['consignee']) ? compile_str(trim($_POST['consignee'])) : '',
@@ -1804,7 +1804,7 @@ class User extends Init
             }
         } /* 我的红包列表 */
         elseif ($action == 'bonus') {
-            include_once(ROOT_PATH . 'includes/lib_transaction.php');
+            load_helper('transaction');
 
             $page = isset($_REQUEST['page']) ? intval($_REQUEST['page']) : 1;
             $record_count = $db->getOne("SELECT COUNT(*) FROM " . $ecs->table('user_bonus') . " WHERE user_id = '$user_id'");
@@ -1817,13 +1817,13 @@ class User extends Init
             $smarty->display('user_transaction.dwt');
         } /* 我的团购列表 */
         elseif ($action == 'group_buy') {
-            include_once(ROOT_PATH . 'includes/lib_transaction.php');
+            load_helper('transaction');
 
             //待议
             $smarty->display('user_transaction.dwt');
         } /* 团购订单详情 */
         elseif ($action == 'group_buy_detail') {
-            include_once(ROOT_PATH . 'includes/lib_transaction.php');
+            load_helper('transaction');
 
             //待议
             $smarty->display('user_transaction.dwt');
@@ -2097,7 +2097,7 @@ class User extends Init
             }
         } /* ajax 发送验证邮件 */
         elseif ($action == 'send_hash_mail') {
-            include_once(ROOT_PATH . 'includes/lib_passport.php');
+            load_helper('passport');
 
             $result = array('error' => 0, 'message' => '', 'content' => '');
 
@@ -2118,8 +2118,8 @@ class User extends Init
 
             die(json_encode($result));
         } elseif ($action == 'track_packages') {
-            include_once(ROOT_PATH . 'includes/lib_transaction.php');
-            include_once(ROOT_PATH . 'includes/lib_order.php');
+            load_helper('transaction');
+            load_helper('order');
 
             $page = isset($_REQUEST['page']) ? intval($_REQUEST['page']) : 1;
 
@@ -2385,7 +2385,7 @@ class User extends Init
                 show_message($_LANG['exchange_deny'], $_LANG['transform_points'], 'user.php?act=transform_points');
             }
             $netamount = floor($exchange_amount / $ratio);
-            include_once(ROOT_PATH . './includes/lib_uc.php');
+            load_helper('uc');
             $result = exchange_points($row['user_id'], $fromcredits, $creditdesc, $appiddesc, $netamount);
             if ($result === true) {
                 $sql = "UPDATE " . $ecs->table('users') . " SET {$shop_points[$fromcredits]}={$shop_points[$fromcredits]}-'$exchange_amount' WHERE user_id='{$row['user_id']}'";
@@ -2415,7 +2415,7 @@ class User extends Init
             if (empty($row)) {
                 show_message($_LANG['invalid_order_sn'], '', 'user.php?act=order_list');
             }
-            include_once(ROOT_PATH . 'includes/lib_order.php');
+            load_helper('order');
             $smarty->assign('logistics_info', get_logistics_trace($order_sn, 0, $_CFG['lang']));
             $smarty->display('delivery_info.dwt');
         } /* ajax 物流信息 */
@@ -2440,14 +2440,14 @@ class User extends Init
                 $result['message'] = $_LANG['invalid_order_sn'];
                 die(json_encode($result));
             }
-            include_once(ROOT_PATH . 'includes/lib_order.php');
+            load_helper('order');
             $smarty->assign('order_info', $row);
             $smarty->assign('logistics_info', get_logistics_trace($order_sn, 2, $_CFG['lang']));
             $result['content'] = $smarty->fetch('library/delivery_info.lbi');
 
             die(json_encode($result));
         } elseif ($action == 'ajax_validate_sms') {
-            require('admin/includes/lib_main.php');
+            load_helper('main', 'console');
             $time = time();
             $date = date('Ymd', $time);
             $pre_date = date('Ymd', $time - 64000);
@@ -2506,7 +2506,7 @@ class User extends Init
             make_json_result($is_send);
             exit;
         } elseif ($action == 'sms_get_password') {
-            include_once(ROOT_PATH . 'includes/lib_passport.php');
+            load_helper('passport');
 
             if ($_POST['sms_code'] != '' && $_POST['username'] != '') {
                 $sms_code = trim($_POST['sms_code']);

@@ -386,7 +386,7 @@ function create_admin_passport($admin_name, $admin_password, $admin_password2, $
     }
 
     include(ROOT_PATH . 'data/config.php');
-    include_once(ROOT_PATH . 'includes/lib_common.php');
+    load_helper('common');
 
     $nav_list = join(',', $_LANG['admin_user']);
 

@@ -59,7 +59,7 @@ case 'uccheck':
     break;
 
 case 'check':
-    include_once(ROOT_PATH . 'install/includes/lib_env_checker.php');
+    load_helper('checker', 'install');
     include_once(ROOT_PATH . 'install/includes/checking_dirs.php');
     $dir_checking = check_dirs_priv($checking_dirs);
 

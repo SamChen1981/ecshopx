@@ -67,7 +67,7 @@ class Quotation extends Init
 
     private function get_quotation_where($filter)
     {
-        include_once(ROOT_PATH . ADMIN_PATH . '/includes/lib_main.php');
+        load_helper('main', 'console');
         $_filter = new StdClass();
         $_filter->cat_id = $filter['cat_id'];
         $_filter->brand_id = $filter['brand_id'];

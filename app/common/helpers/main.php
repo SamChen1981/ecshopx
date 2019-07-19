@@ -1624,7 +1624,7 @@ function get_library_number($library, $template = null)
         $num = intval($lib_list[$template][$library]);
     } else {
         /* 模板设置文件查找默认值 */
-        include_once(ROOT_PATH . ADMIN_PATH . '/includes/lib_template.php');
+        load_helper('template', 'console');
         static $static_page_libs = null;
         if ($static_page_libs == null) {
             $static_page_libs = $page_libs;

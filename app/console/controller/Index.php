@@ -9,7 +9,7 @@ class Index extends Init
 {
     public function index()
     {
-        require_once(ROOT_PATH . '/includes/lib_order.php');
+        load_helper('order');
         /*------------------------------------------------------ */
         //-- 框架
         /*------------------------------------------------------ */
@@ -486,7 +486,7 @@ class Index extends Init
             $smarty->assign('pmp_market', PMS_MARKET);
             $smarty->display('start.htm');
         } elseif ($_REQUEST['act'] == 'main_api') {
-            require_once(ROOT_PATH . '/includes/lib_base.php');
+            load_helper('base');
             $data = read_static_cache('api_str');
 
             if ($data === false || API_TIME < date('Y-m-d H:i:s', time() - 43200)) {
@@ -827,7 +827,7 @@ class Index extends Init
                 $cat_id = $db->insert_Id();
 
                 //货号
-                require_once(ROOT_PATH . ADMIN_PATH . '/includes/lib_goods.php');
+                load_helper('goods', 'console');
                 $max_id = $db->getOne("SELECT MAX(goods_id) + 1 FROM " . $ecs->table('goods'));
                 $goods_sn = generate_goods_sn($max_id);
 
@@ -1100,8 +1100,8 @@ class Index extends Init
 
             if (isset($is_ajax) && $is_ajax) {
                 // license 检查
-                include_once(ROOT_PATH . 'includes/lib_main.php');
-                include_once(ROOT_PATH . 'includes/lib_license.php');
+                load_helper('main');
+                load_helper('license');
 
                 $license = $this->license_check();
                 switch ($license['flag']) {

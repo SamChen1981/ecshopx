@@ -57,7 +57,7 @@ class Payment extends Init
             }
 
 
-            include_once(ROOT_PATH . 'includes/lib_compositor.php');
+            load_helper('compositor');
             $yunqi_payment and array_unshift($modules, $yunqi_payment);
 
             assign_query_info();

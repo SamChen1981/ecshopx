@@ -169,7 +169,7 @@ class Auction extends Init
         //-- 拍卖商品 --> 出价
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'bid') {
-            include_once(ROOT_PATH . 'includes/lib_order.php');
+            load_helper('order');
 
             /* 取得参数：拍卖活动id */
             $id = isset($_POST['id']) ? intval($_POST['id']) : 0;
@@ -357,7 +357,7 @@ class Auction extends Init
             }
 
             /* 清空购物车中所有拍卖商品 */
-            include_once(ROOT_PATH . 'includes/lib_order.php');
+            load_helper('order');
             clear_cart(CART_AUCTION_GOODS);
 
             /* 加入购物车 */

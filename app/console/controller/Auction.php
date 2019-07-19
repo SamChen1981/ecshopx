@@ -9,7 +9,7 @@ class Auction extends Init
 {
     public function index()
     {
-        require(ROOT_PATH . 'includes/lib_goods.php');
+        load_helper('goods');
 
         $exc = new exchange($ecs->table('goods_activity'), $db, 'act_id', 'act_name');
 

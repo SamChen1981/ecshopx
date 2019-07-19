@@ -9,8 +9,8 @@ class GroupBuy extends Init
 {
     public function index()
     {
-        require_once(ROOT_PATH . 'includes/lib_goods.php');
-        require_once(ROOT_PATH . 'includes/lib_order.php');
+        load_helper('goods');
+        load_helper('order');
 
         /* 检查权限 */
         admin_priv('group_by');

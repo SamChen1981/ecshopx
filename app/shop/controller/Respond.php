@@ -9,8 +9,8 @@ class Respond extends Init
 {
     public function index()
     {
-        require(ROOT_PATH . 'includes/lib_payment.php');
-        require(ROOT_PATH . 'includes/lib_order.php');
+        load_helper('payment');
+        load_helper('order');
         /* 支付方式代码 */
         $pay_code = !empty($_REQUEST['code']) ? trim($_REQUEST['code']) : '';
 

@@ -14,7 +14,7 @@ class Message extends Init
         }
         $action = isset($_REQUEST['act']) ? trim($_REQUEST['act']) : 'default';
         if ($action == 'act_add_message') {
-            include_once(ROOT_PATH . 'includes/lib_clips.php');
+            load_helper('clips');
 
             /* 验证码防止灌水刷屏 */
             if ((intval($_CFG['captcha']) & CAPTCHA_MESSAGE) && gd_version() > 0) {

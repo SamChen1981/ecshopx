@@ -546,7 +546,7 @@ function update_address($address)
  */
 function get_order_detail($order_id, $user_id = 0)
 {
-    include_once(ROOT_PATH . 'includes/lib_order.php');
+    load_helper('order');
 
     $order_id = intval($order_id);
     if ($order_id <= 0) {
@@ -683,7 +683,7 @@ function get_order_detail($order_id, $user_id = 0)
  */
 function get_user_merge($user_id)
 {
-    include_once(ROOT_PATH . 'includes/lib_order.php');
+    load_helper('order');
     $sql = "SELECT order_sn FROM " . $GLOBALS['ecs']->table('order_info') .
         " WHERE user_id  = '$user_id' " . order_query_sql('unprocessed') .
         "AND extension_code = '' " .

@@ -406,7 +406,7 @@ class Certificate
                 }
                 unset($res['params']['data']);
             }
-            include_once(ROOT_PATH . 'includes/lib_passport.php');
+            load_helper('passport');
             $result = set_yunqi_passport($res['params']['passport_uid']);
             $this->set_shop_certificate(array('use_yunqi_login' => true));
             $this->check_certi($res);
@@ -465,7 +465,7 @@ class Certificate
 
     public function install_yqpayment()
     {
-        include_once(ROOT_PATH . 'includes/lib_payment.php');
+        load_helper('payment');
         $payment = get_payment('yunqi');
         $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('payment') . " WHERE pay_code = 'yunqi'";
 

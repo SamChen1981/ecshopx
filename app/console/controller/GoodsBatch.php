@@ -9,7 +9,7 @@ class GoodsBatch extends Init
 {
     public function index()
     {
-        require('includes/lib_goods.php');
+        load_helper('goods', 'console');
 
         /*------------------------------------------------------ */
         //-- 批量上传

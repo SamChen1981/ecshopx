@@ -12,7 +12,7 @@ class VirtualCard extends Init
 
 
         /* 包含文件 */
-        require_once(ROOT_PATH . 'includes/lib_code.php');
+        load_helper('code');
 
         /*------------------------------------------------------ */
         //-- 补货处理
