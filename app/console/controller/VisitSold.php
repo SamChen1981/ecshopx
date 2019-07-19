@@ -10,8 +10,8 @@ class VisitSold extends Init
     public function index()
     {
         load_helper('order');
-        require_once('../languages/' . $_CFG['lang'] . '/admin/statistic.php');
-        $smarty->assign('lang', $_LANG);
+        require_once('../languages/' . $GLOBALS['_CFG']['lang'] . '/admin/statistic.php');
+        $GLOBALS['smarty']->assign('lang', $GLOBALS['_LANG']);
 
         /* act操作项的初始化 */
         if (empty($_REQUEST['act'])) {
@@ -39,8 +39,8 @@ class VisitSold extends Init
                 $filename = 'visit_sold';
                 header("Content-type: application/vnd.ms-excel; charset=utf-8");
                 header("Content-Disposition: attachment; filename=$filename.xls");
-                $data = "$_LANG[visit_buy]\t\n";
-                $data .= "$_LANG[order_by]\t$_LANG[goods_name]\t$_LANG[fav_exponential]\t$_LANG[buy_times]\t$_LANG[visit_buy]\n";
+                $data = "$GLOBALS['_LANG'][visit_buy]\t\n";
+                $data .= "$GLOBALS['_LANG'][order_by]\t$GLOBALS['_LANG'][goods_name]\t$GLOBALS['_LANG'][fav_exponential]\t$GLOBALS['_LANG'][buy_times]\t$GLOBALS['_LANG'][visit_buy]\n";
                 foreach ($click_sold_info as $k => $row) {
                     $order_by = $k + 1;
                     $data .= "$order_by\t$row[goods_name]\t$row[click_count]\t$row[sold_times]\t$row[scale]\n";
@@ -50,21 +50,21 @@ class VisitSold extends Init
             }
 
             /* 赋值到模板 */
-            $smarty->assign('ur_here', $_LANG['visit_buy_per']);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['visit_buy_per']);
 
-            $smarty->assign('show_num', $show_num);
-            $smarty->assign('brand_id', $brand_id);
-            $smarty->assign('click_sold_info', $click_sold_info);
+            $GLOBALS['smarty']->assign('show_num', $show_num);
+            $GLOBALS['smarty']->assign('brand_id', $brand_id);
+            $GLOBALS['smarty']->assign('click_sold_info', $click_sold_info);
 
-            $smarty->assign('cat_list', cat_list(0, $cat_id));
-            $smarty->assign('brand_list', get_brand_list());
+            $GLOBALS['smarty']->assign('cat_list', cat_list(0, $cat_id));
+            $GLOBALS['smarty']->assign('brand_list', get_brand_list());
 
             $filename = 'visit_sold';
-            $smarty->assign('action_link', array('text' => $_LANG['download_visit_buy'], 'href' => 'visit_sold.php?act=download&show_num=' . $show_num . '&cat_id=' . $cat_id . '&brand_id=' . $brand_id . '&show_num=' . $show_num));
+            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['download_visit_buy'], 'href' => 'visit_sold.php?act=download&show_num=' . $show_num . '&cat_id=' . $cat_id . '&brand_id=' . $brand_id . '&show_num=' . $show_num));
 
             /* 显示页面 */
             assign_query_info();
-            $smarty->display('visit_sold.htm');
+            $GLOBALS['smarty']->display('visit_sold.htm');
         }
     }
 
@@ -78,7 +78,6 @@ class VisitSold extends Init
      */
     private function click_sold_info($cat_id, $brand_id, $show_num)
     {
-        global $db, $ecs;
 
         $where = " WHERE o.order_id = og.order_id AND g.goods_id = og.goods_id " . order_query_sql('finished', 'o.');
         $limit = " LIMIT " . $show_num;
@@ -92,11 +91,11 @@ class VisitSold extends Init
 
         $click_sold_info = array();
         $sql = "SELECT og.goods_id, g.goods_sn, g.goods_name, g.click_count,  COUNT(og.goods_id) AS sold_times " .
-            " FROM " . $ecs->table('goods') . " AS g, " . $ecs->table('order_goods') . " AS og, " . $ecs->table('order_info') . " AS o " . $where .
+            " FROM " . $GLOBALS['ecs']->table('goods') . " AS g, " . $GLOBALS['ecs']->table('order_goods') . " AS og, " . $GLOBALS['ecs']->table('order_info') . " AS o " . $where .
             " GROUP BY og.goods_id ORDER BY g.click_count DESC " . $limit;
-        $res = $db->query($sql);
+        $res = $GLOBALS['db']->query($sql);
 
-        while ($item = $db->fetchRow($res)) {
+        while ($item = $GLOBALS['db']->fetchRow($res)) {
             if ($item['click_count'] <= 0) {
                 $item['scale'] = 0;
             } else {

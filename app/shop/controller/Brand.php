@@ -22,32 +22,32 @@ class Brand extends Init
         }
         if (empty($brand_id)) {
             /* 缓存编号 */
-            $cache_id = sprintf('%X', crc32($_CFG['lang']));
-            if (!$smarty->is_cached('brand_list.dwt', $cache_id)) {
+            $cache_id = sprintf('%X', crc32($GLOBALS['_CFG']['lang']));
+            if (!$GLOBALS['smarty']->is_cached('brand_list.dwt', $cache_id)) {
                 assign_template();
-                $position = assign_ur_here('', $_LANG['all_brand']);
-                $smarty->assign('page_title', $position['title']);    // 页面标题
-                $smarty->assign('ur_here', $position['ur_here']);  // 当前位置
+                $position = assign_ur_here('', $GLOBALS['_LANG']['all_brand']);
+                $GLOBALS['smarty']->assign('page_title', $position['title']);    // 页面标题
+                $GLOBALS['smarty']->assign('ur_here', $position['ur_here']);  // 当前位置
 
-                $smarty->assign('categories', get_categories_tree()); // 分类树
-                $smarty->assign('helps', get_shop_help());       // 网店帮助
-                $smarty->assign('top_goods', get_top10());           // 销售排行
+                $GLOBALS['smarty']->assign('categories', get_categories_tree()); // 分类树
+                $GLOBALS['smarty']->assign('helps', get_shop_help());       // 网店帮助
+                $GLOBALS['smarty']->assign('top_goods', get_top10());           // 销售排行
 
-                $smarty->assign('brand_list', get_brands());
+                $GLOBALS['smarty']->assign('brand_list', get_brands());
             }
-            $smarty->display('brand_list.dwt', $cache_id);
+            $GLOBALS['smarty']->display('brand_list.dwt', $cache_id);
             exit();
         }
 
         /* 初始化分页信息 */
         $page = !empty($_REQUEST['page']) && intval($_REQUEST['page']) > 0 ? intval($_REQUEST['page']) : 1;
-        $size = !empty($_CFG['page_size']) && intval($_CFG['page_size']) > 0 ? intval($_CFG['page_size']) : 10;
+        $size = !empty($GLOBALS['_CFG']['page_size']) && intval($GLOBALS['_CFG']['page_size']) > 0 ? intval($GLOBALS['_CFG']['page_size']) : 10;
         $cate = !empty($_REQUEST['cat']) && intval($_REQUEST['cat']) > 0 ? intval($_REQUEST['cat']) : 0;
 
         /* 排序、显示方式以及类型 */
-        $default_display_type = $_CFG['show_order_type'] == '0' ? 'list' : ($_CFG['show_order_type'] == '1' ? 'grid' : 'text');
-        $default_sort_order_method = $_CFG['sort_order_method'] == '0' ? 'DESC' : 'ASC';
-        $default_sort_order_type = $_CFG['sort_order_type'] == '0' ? 'goods_id' : ($_CFG['sort_order_type'] == '1' ? 'shop_price' : 'last_update');
+        $default_display_type = $GLOBALS['_CFG']['show_order_type'] == '0' ? 'list' : ($GLOBALS['_CFG']['show_order_type'] == '1' ? 'grid' : 'text');
+        $default_sort_order_method = $GLOBALS['_CFG']['sort_order_method'] == '0' ? 'DESC' : 'ASC';
+        $default_sort_order_type = $GLOBALS['_CFG']['sort_order_type'] == '0' ? 'goods_id' : ($GLOBALS['_CFG']['sort_order_type'] == '1' ? 'shop_price' : 'last_update');
 
         $sort = (isset($_REQUEST['sort']) && in_array(trim(strtolower($_REQUEST['sort'])), array('goods_id', 'shop_price', 'last_update'))) ? trim($_REQUEST['sort']) : $default_sort_order_type;
         $order = (isset($_REQUEST['order']) && in_array(trim(strtoupper($_REQUEST['order'])), array('ASC', 'DESC'))) ? trim($_REQUEST['order']) : $default_sort_order_method;
@@ -60,9 +60,9 @@ class Brand extends Init
         /*------------------------------------------------------ */
 
         /* 页面的缓存ID */
-        $cache_id = sprintf('%X', crc32($brand_id . '-' . $display . '-' . $sort . '-' . $order . '-' . $page . '-' . $size . '-' . $_SESSION['user_rank'] . '-' . $_CFG['lang'] . '-' . $cate));
+        $cache_id = sprintf('%X', crc32($brand_id . '-' . $display . '-' . $sort . '-' . $order . '-' . $page . '-' . $size . '-' . $_SESSION['user_rank'] . '-' . $GLOBALS['_CFG']['lang'] . '-' . $cate));
 
-        if (!$smarty->is_cached('brand.dwt', $cache_id)) {
+        if (!$GLOBALS['smarty']->is_cached('brand.dwt', $cache_id)) {
             $brand_info = $this->get_brand_info($brand_id);
 
             if (empty($brand_info)) {
@@ -70,36 +70,36 @@ class Brand extends Init
                 exit;
             }
 
-            $smarty->assign('data_dir', DATA_DIR);
-            $smarty->assign('keywords', htmlspecialchars($brand_info['brand_desc']));
-            $smarty->assign('description', htmlspecialchars($brand_info['brand_desc']));
+            $GLOBALS['smarty']->assign('data_dir', DATA_DIR);
+            $GLOBALS['smarty']->assign('keywords', htmlspecialchars($brand_info['brand_desc']));
+            $GLOBALS['smarty']->assign('description', htmlspecialchars($brand_info['brand_desc']));
 
             /* 赋值固定内容 */
             assign_template();
             $position = assign_ur_here($cate, $brand_info['brand_name']);
-            $smarty->assign('page_title', $position['title']);   // 页面标题
-            $smarty->assign('ur_here', $position['ur_here']); // 当前位置
-            $smarty->assign('brand_id', $brand_id);
-            $smarty->assign('category', $cate);
+            $GLOBALS['smarty']->assign('page_title', $position['title']);   // 页面标题
+            $GLOBALS['smarty']->assign('ur_here', $position['ur_here']); // 当前位置
+            $GLOBALS['smarty']->assign('brand_id', $brand_id);
+            $GLOBALS['smarty']->assign('category', $cate);
 
-            $smarty->assign('categories', get_categories_tree());        // 分类树
-            $smarty->assign('helps', get_shop_help());              // 网店帮助
-            $smarty->assign('top_goods', get_top10());                  // 销售排行
-            $smarty->assign('show_marketprice', $_CFG['show_marketprice']);
-            $smarty->assign('brand_cat_list', $this->brand_related_cat($brand_id)); // 相关分类
-            $smarty->assign('feed_url', ($_CFG['rewrite'] == 1) ? "feed-b$brand_id.xml" : 'feed.php?brand=' . $brand_id);
+            $GLOBALS['smarty']->assign('categories', get_categories_tree());        // 分类树
+            $GLOBALS['smarty']->assign('helps', get_shop_help());              // 网店帮助
+            $GLOBALS['smarty']->assign('top_goods', get_top10());                  // 销售排行
+            $GLOBALS['smarty']->assign('show_marketprice', $GLOBALS['_CFG']['show_marketprice']);
+            $GLOBALS['smarty']->assign('brand_cat_list', $this->brand_related_cat($brand_id)); // 相关分类
+            $GLOBALS['smarty']->assign('feed_url', ($GLOBALS['_CFG']['rewrite'] == 1) ? "feed-b$brand_id.xml" : 'feed.php?brand=' . $brand_id);
 
             /* 调查 */
             $vote = get_vote();
             if (!empty($vote)) {
-                $smarty->assign('vote_id', $vote['id']);
-                $smarty->assign('vote', $vote['content']);
+                $GLOBALS['smarty']->assign('vote_id', $vote['id']);
+                $GLOBALS['smarty']->assign('vote', $vote['content']);
             }
 
-            $smarty->assign('best_goods', $this->brand_recommend_goods('best', $brand_id, $cate));
-            $smarty->assign('promotion_goods', $this->brand_recommend_goods('promote', $brand_id, $cate));
-            $smarty->assign('brand', $brand_info);
-            $smarty->assign('promotion_info', get_promotion_info());
+            $GLOBALS['smarty']->assign('best_goods', $this->brand_recommend_goods('best', $brand_id, $cate));
+            $GLOBALS['smarty']->assign('promotion_goods', $this->brand_recommend_goods('promote', $brand_id, $cate));
+            $GLOBALS['smarty']->assign('brand', $brand_info);
+            $GLOBALS['smarty']->assign('promotion_info', get_promotion_info());
 
             $count = $this->goods_count_by_brand($brand_id, $cate);
 
@@ -110,14 +110,14 @@ class Brand extends Init
                     $goodslist[] = array();
                 }
             }
-            $smarty->assign('goods_list', $goodslist);
-            $smarty->assign('script_name', 'brand');
+            $GLOBALS['smarty']->assign('goods_list', $goodslist);
+            $GLOBALS['smarty']->assign('script_name', 'brand');
 
             assign_pager('brand', $cate, $count, $size, $sort, $order, $page, '', $brand_id, 0, 0, $display); // 分页
             assign_dynamic('brand'); // 动态内容
         }
 
-        $smarty->display('brand.dwt', $cache_id);
+        $GLOBALS['smarty']->display('brand.dwt', $cache_id);
     }
 
     /**

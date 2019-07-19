@@ -10,6 +10,5 @@ class Index
 {
     public function index()
     {
-
     }
 }

@@ -6,7 +6,6 @@
 
 $shipping_lang = ROOT_PATH.'languages/' .$GLOBALS['_CFG']['lang']. '/shipping/zto.php';
 if (file_exists($shipping_lang)) {
-    global $_LANG;
     include_once($shipping_lang);
 }
 
@@ -51,7 +50,7 @@ if (isset($set_modules) && $set_modules == true) {
     $modules[$i]['print_bg'] = '/images/receipt/dly_zto.jpg';
 
     /* 打印快递单标签位置信息 */
-    $modules[$i]['config_lable'] = 't_shop_province,' . $_LANG['lable_box']['shop_province'] . ',116,30,296.55,117.2,b_shop_province||,||t_customer_province,' . $_LANG['lable_box']['customer_province'] . ',114,32,649.95,114.3,b_customer_province||,||t_shop_address,' . $_LANG['lable_box']['shop_address'] . ',260,57,151.75,152.05,b_shop_address||,||t_shop_name,' . $_LANG['lable_box']['shop_name'] . ',259,28,152.65,212.4,b_shop_name||,||t_shop_tel,' . $_LANG['lable_box']['shop_tel'] . ',131,37,138.65,246.5,b_shop_tel||,||t_customer_post,' . $_LANG['lable_box']['customer_post'] . ',104,39,659.2,242.2,b_customer_post||,||t_customer_tel,' . $_LANG['lable_box']['customer_tel'] . ',158,22,461.9,241.9,b_customer_tel||,||t_customer_mobel,' . $_LANG['lable_box']['customer_mobel'] . ',159,21,463.25,265.4,b_customer_mobel||,||t_customer_name,' . $_LANG['lable_box']['customer_name'] . ',109,32,498.9,115.8,b_customer_name||,||t_customer_address,' . $_LANG['lable_box']['customer_address'] . ',264,58,499.6,150.1,b_customer_address||,||t_months,' . $_LANG['lable_box']['months'] . ',35,23,135.85,392.8,b_months||,||t_day,' . $_LANG['lable_box']['day'] . ',24,23,180.1,392.8,b_day||,||';
+    $modules[$i]['config_lable'] = 't_shop_province,' . $GLOBALS['_LANG']['lable_box']['shop_province'] . ',116,30,296.55,117.2,b_shop_province||,||t_customer_province,' . $GLOBALS['_LANG']['lable_box']['customer_province'] . ',114,32,649.95,114.3,b_customer_province||,||t_shop_address,' . $GLOBALS['_LANG']['lable_box']['shop_address'] . ',260,57,151.75,152.05,b_shop_address||,||t_shop_name,' . $GLOBALS['_LANG']['lable_box']['shop_name'] . ',259,28,152.65,212.4,b_shop_name||,||t_shop_tel,' . $GLOBALS['_LANG']['lable_box']['shop_tel'] . ',131,37,138.65,246.5,b_shop_tel||,||t_customer_post,' . $GLOBALS['_LANG']['lable_box']['customer_post'] . ',104,39,659.2,242.2,b_customer_post||,||t_customer_tel,' . $GLOBALS['_LANG']['lable_box']['customer_tel'] . ',158,22,461.9,241.9,b_customer_tel||,||t_customer_mobel,' . $GLOBALS['_LANG']['lable_box']['customer_mobel'] . ',159,21,463.25,265.4,b_customer_mobel||,||t_customer_name,' . $GLOBALS['_LANG']['lable_box']['customer_name'] . ',109,32,498.9,115.8,b_customer_name||,||t_customer_address,' . $GLOBALS['_LANG']['lable_box']['customer_address'] . ',264,58,499.6,150.1,b_customer_address||,||t_months,' . $GLOBALS['_LANG']['lable_box']['months'] . ',35,23,135.85,392.8,b_months||,||t_day,' . $GLOBALS['_LANG']['lable_box']['day'] . ',24,23,180.1,392.8,b_day||,||';
 
     return;
 }

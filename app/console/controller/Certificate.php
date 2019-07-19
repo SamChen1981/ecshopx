@@ -22,13 +22,13 @@ class Certificate extends Init
             $is_bind_erp = $cert->is_bind_sn('ecos.ome', 'bind_type');
             $is_bind_crm = $cert->is_bind_sn('ecos.taocrm', 'bind_type');
             //echo"<pre>";var_dump($is_bind_crm,$is_bind_erp,$is_bind_taoda);exit;
-            $is_bind_taoda or $is_bind_erp and $smarty->assign('is_bind', true);
-            $is_bind_crm and $smarty->assign('is_bind_crm', true);
+            $is_bind_taoda or $is_bind_erp and $GLOBALS['smarty']->assign('is_bind', true);
+            $is_bind_crm and $GLOBALS['smarty']->assign('is_bind_crm', true);
 
             if (!$certificate['certificate_id']) {
                 $callback = $GLOBALS['ecs']->url() . "admin/certificate.php?act=get_certificate";
                 $iframe_url = $cert->get_authorize_url($callback);
-                $smarty->assign('iframe_url', $iframe_url);
+                $GLOBALS['smarty']->assign('iframe_url', $iframe_url);
             }
             //版本检查
             $release_url = VERSION_UTF8;
@@ -68,14 +68,14 @@ class Certificate extends Init
             $bind_crm_member_push_no = $member_count - $bind_crm_member_push;
             $bind_crm_order_push_no = $order_count - $bind_crm_order_push;
 
-            $smarty->assign('certi', $certificate);
-            $smarty->assign('ur_here', $_LANG['certificate_here']);
-            $smarty->assign('bind_crm_member_push', $bind_crm_member_push);
-            $smarty->assign('bind_crm_order_push', $bind_crm_order_push);
-            $smarty->assign('bind_crm_member_push_no', $bind_crm_member_push_no);
-            $smarty->assign('bind_crm_order_push_no', $bind_crm_order_push_no);
-            $smarty->assign('message', $message);
-            $smarty->display('certificate.htm');
+            $GLOBALS['smarty']->assign('certi', $certificate);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['certificate_here']);
+            $GLOBALS['smarty']->assign('bind_crm_member_push', $bind_crm_member_push);
+            $GLOBALS['smarty']->assign('bind_crm_order_push', $bind_crm_order_push);
+            $GLOBALS['smarty']->assign('bind_crm_member_push_no', $bind_crm_member_push_no);
+            $GLOBALS['smarty']->assign('bind_crm_order_push_no', $bind_crm_order_push_no);
+            $GLOBALS['smarty']->assign('message', $message);
+            $GLOBALS['smarty']->display('certificate.htm');
         }
 
 
@@ -90,23 +90,23 @@ class Certificate extends Init
             if ($cert->is_bind_sn('taodali', 'bind_type')) {
                 echo "已经绑定了淘打，不能再进行绑定";
             }
-            $domain_url = $ecs->url();
+            $domain_url = $GLOBALS['ecs']->url();
             $array_data['certi_id'] = $certificate['certificate_id'];
             $array_data['node_id'] = $certificate['node_id'];
             $array_data['sess_id'] = md5($array_data['node_id']);
             $array_data['certi_ac'] = $cert->make_shopex_ac($array_data, $certificate['token']);
             $array_data['source'] = 'apply';
             $array_data['bind_type'] = 'shopex';
-            $array_data['api_url'] = $ecs->url() . "api.php";
+            $array_data['api_url'] = $GLOBALS['ecs']->url() . "api.php";
             $array_data['api_v'] = '3.2';  // 用新的api
             foreach ($array_data as $str_key => $str_value) {
                 $array_params[] = $str_key . "=" . rawurlencode($str_value);
             }
             $str_url = MATRIX_REALTION_URL . implode("&", $array_params);
             $callback = urlencode($domain_url . "matrix_callback.php");
-            $smarty->assign('callback', $callback);
-            $smarty->assign('str_url', $str_url);
-            $smarty->display('apply_bindrelation.htm');
+            $GLOBALS['smarty']->assign('callback', $callback);
+            $GLOBALS['smarty']->assign('str_url', $str_url);
+            $GLOBALS['smarty']->display('apply_bindrelation.htm');
         }
 
         /*------------------------------------------------------ */
@@ -116,7 +116,7 @@ class Certificate extends Init
         elseif ($_REQUEST['act'] == 'accept_bindrelation') {
             /* 检查权限 */
             admin_priv('certificate');
-            $domain_url = $ecs->url();
+            $domain_url = $GLOBALS['ecs']->url();
             $array_data = array();
 
             $array_data['certi_id'] = $certificate['certificate_id'];
@@ -124,15 +124,15 @@ class Certificate extends Init
             $array_data['sess_id'] = md5($array_data['node_id']);
             $array_data['certi_ac'] = $cert->make_shopex_ac($array_data, $certificate['token']);
             $array_data['source'] = 'accept';
-            $array_data['api_url'] = $ecs->url() . "api.php";
+            $array_data['api_url'] = $GLOBALS['ecs']->url() . "api.php";
             $array_data['callback'] = $domain_url . "matrix_callback.php";
 
             foreach ($array_data as $str_key => $str_value) {
                 $array_params[] = $str_key . "=" . rawurlencode($str_value);
             }
             $str_url = MATRIX_REALTION_URL . implode("&", $array_params);
-            $smarty->assign('str_url', $str_url);
-            $smarty->display('accept_bindrelation.htm');
+            $GLOBALS['smarty']->assign('str_url', $str_url);
+            $GLOBALS['smarty']->display('accept_bindrelation.htm');
         }
 
         /*------------------------------------------------------ */
@@ -144,8 +144,8 @@ class Certificate extends Init
             admin_priv('certificate');
 
             if ($certificate['certificate_id'] == '' || $certificate['token'] == '') {
-                $links[] = array('text' => $_LANG['back'], 'href' => 'certificate.php?act=list_edit');
-                sys_msg($_LANG['no_license_down'], 0, $links);
+                $links[] = array('text' => $GLOBALS['_LANG']['back'], 'href' => 'certificate.php?act=list_edit');
+                sys_msg($GLOBALS['_LANG']['no_license_down'], 0, $links);
             }
             /* 文件下载 */
             ecs_header("Content-Type:text/plain");
@@ -176,8 +176,8 @@ class Certificate extends Init
             }
         } elseif ($_REQUEST['act'] == 'authority_url') {
             $authority_url = $cert->get_authority_url();
-            $smarty->assign('authority_url', $authority_url);
-            $smarty->display('authority.htm');
+            $GLOBALS['smarty']->assign('authority_url', $authority_url);
+            $GLOBALS['smarty']->display('authority.htm');
         } elseif ($_REQUEST['act'] == 'delete') {
             /* 检查权限 */
             admin_priv('certificate');

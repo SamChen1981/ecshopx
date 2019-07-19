@@ -52,7 +52,7 @@ class CheckFilePriv extends Init
                 $dir_subdir['images'][] = $val;
             }
 
-            $tpl = 'themes/' . $_CFG['template'] . '/';
+            $tpl = 'themes/' . $GLOBALS['_CFG']['template'] . '/';
 
 
             $list = array();
@@ -60,7 +60,7 @@ class CheckFilePriv extends Init
             /* 检查目录 */
             foreach ($dir as $val) {
                 $mark = file_mode_info(ROOT_PATH . $val);
-                $list[] = array('item' => $val . $_LANG['dir'], 'r' => $mark & 1, 'w' => $mark & 2, 'm' => $mark & 4);
+                $list[] = array('item' => $val . $GLOBALS['_LANG']['dir'], 'r' => $mark & 1, 'w' => $mark & 2, 'm' => $mark & 4);
             }
 
             /* 检查目录及子目录 */
@@ -68,7 +68,7 @@ class CheckFilePriv extends Init
             foreach ($keys as $key) {
                 $err_msg = array();
                 $mark = $this->check_file_in_array($dir_subdir[$key], $err_msg);
-                $list[] = array('item' => $key . $_LANG['dir_subdir'], 'r' => $mark & 1, 'w' => $mark & 2, 'm' => $mark & 4, 'err_msg' => $err_msg);
+                $list[] = array('item' => $key . $GLOBALS['_LANG']['dir_subdir'], 'r' => $mark & 1, 'w' => $mark & 2, 'm' => $mark & 4, 'err_msg' => $err_msg);
             }
 
             /* 检查当前模板可写性 */
@@ -91,7 +91,7 @@ class CheckFilePriv extends Init
             /* 开始检查 */
             $err_msg = array();
             $mark = $this->check_file_in_array($tpl_file, $err_msg);
-            $list[] = array('item' => $tpl . $_LANG['tpl_file'], 'r' => $mark & 1, 'w' => $mark & 2, 'm' => $mark & 4, 'err_msg' => $err_msg);
+            $list[] = array('item' => $tpl . $GLOBALS['_LANG']['tpl_file'], 'r' => $mark & 1, 'w' => $mark & 2, 'm' => $mark & 4, 'err_msg' => $err_msg);
 
             /* 检查smarty的缓存目录和编译目录及image目录是否有执行rename()函数的权限 */
             $tpl_list = array();
@@ -115,10 +115,10 @@ class CheckFilePriv extends Init
                 }
             }
             $tpl_msg = implode(', ', $tpl_list);
-            $smarty->assign('ur_here', $_LANG['check_file_priv']);
-            $smarty->assign('list', $list);
-            $smarty->assign('tpl_msg', $tpl_msg);
-            $smarty->display('file_priv.html');
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['check_file_priv']);
+            $GLOBALS['smarty']->assign('list', $list);
+            $GLOBALS['smarty']->assign('tpl_msg', $tpl_msg);
+            $GLOBALS['smarty']->display('file_priv.html');
         }
     }
 

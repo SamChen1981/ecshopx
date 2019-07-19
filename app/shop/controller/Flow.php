@@ -12,8 +12,8 @@ class Flow extends Init
         load_helper('order');
 
         /* 载入语言文件 */
-        require_once(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/user.php');
-        require_once(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/shopping_flow.php');
+        require_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/user.php');
+        require_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/shopping_flow.php');
 
         /*------------------------------------------------------ */
         //-- INPUT
@@ -29,15 +29,15 @@ class Flow extends Init
 
         assign_template();
         assign_dynamic('flow');
-        $position = assign_ur_here(0, $_LANG['shopping_flow']);
-        $smarty->assign('page_title', $position['title']);    // 页面标题
-        $smarty->assign('ur_here', $position['ur_here']);  // 当前位置
+        $position = assign_ur_here(0, $GLOBALS['_LANG']['shopping_flow']);
+        $GLOBALS['smarty']->assign('page_title', $position['title']);    // 页面标题
+        $GLOBALS['smarty']->assign('ur_here', $position['ur_here']);  // 当前位置
 
-        $smarty->assign('categories', get_categories_tree()); // 分类树
-        $smarty->assign('helps', get_shop_help());       // 网店帮助
-        $smarty->assign('lang', $_LANG);
-        $smarty->assign('show_marketprice', $_CFG['show_marketprice']);
-        $smarty->assign('data_dir', DATA_DIR);       // 数据目录
+        $GLOBALS['smarty']->assign('categories', get_categories_tree()); // 分类树
+        $GLOBALS['smarty']->assign('helps', get_shop_help());       // 网店帮助
+        $GLOBALS['smarty']->assign('lang', $GLOBALS['_LANG']);
+        $GLOBALS['smarty']->assign('show_marketprice', $GLOBALS['_CFG']['show_marketprice']);
+        $GLOBALS['smarty']->assign('data_dir', DATA_DIR);       // 数据目录
 
         /*------------------------------------------------------ */
         //-- 添加商品到购物车
@@ -102,14 +102,14 @@ class Flow extends Init
             }
 
             /* 更新：如果是一步购物，先清空购物车 */
-            if ($_CFG['one_step_buy'] == '1') {
+            if ($GLOBALS['_CFG']['one_step_buy'] == '1') {
                 clear_cart();
             }
 
             /* 检查：商品数量是否合法 */
             if (!is_numeric($goods->number) || intval($goods->number) <= 0) {
                 $result['error'] = 1;
-                $result['message'] = $_LANG['invalid_number'];
+                $result['message'] = $GLOBALS['_LANG']['invalid_number'];
             } /* 更新：购物车 */
             else {
                 if (!empty($goods->spec)) {
@@ -119,17 +119,17 @@ class Flow extends Init
                 }
                 // 更新：添加到购物车
                 if (addto_cart($goods->goods_id, $goods->number, $goods->spec, $goods->parent)) {
-                    if ($_CFG['cart_confirm'] > 2) {
+                    if ($GLOBALS['_CFG']['cart_confirm'] > 2) {
                         $result['message'] = '';
                     } else {
-                        $result['message'] = $_CFG['cart_confirm'] == 1 ? $_LANG['addto_cart_success_1'] : $_LANG['addto_cart_success_2'];
+                        $result['message'] = $GLOBALS['_CFG']['cart_confirm'] == 1 ? $GLOBALS['_LANG']['addto_cart_success_1'] : $GLOBALS['_LANG']['addto_cart_success_2'];
                     }
 
                     $result['content'] = insert_cart_info();
-                    $result['one_step_buy'] = $_CFG['one_step_buy'];
+                    $result['one_step_buy'] = $GLOBALS['_CFG']['one_step_buy'];
                 } else {
-                    $result['message'] = $err->last_message();
-                    $result['error'] = $err->error_no;
+                    $result['message'] = $GLOBALS['err']->last_message();
+                    $result['error'] = $GLOBALS['err']->error_no;
                     $result['goods_id'] = stripslashes($goods->goods_id);
                     if (is_array($goods->spec)) {
                         $result['product_spec'] = implode(',', $goods->spec);
@@ -139,7 +139,7 @@ class Flow extends Init
                 }
             }
 
-            $result['confirm_type'] = !empty($_CFG['cart_confirm']) ? $_CFG['cart_confirm'] : 2;
+            $result['confirm_type'] = !empty($GLOBALS['_CFG']['cart_confirm']) ? $GLOBALS['_CFG']['cart_confirm'] : 2;
             die(json_encode($result));
         } elseif ($_REQUEST['step'] == 'link_buy') {
             $goods_id = intval($_GET['goods_id']);
@@ -150,7 +150,7 @@ class Flow extends Init
             ecs_header("Location:./flow.php\n");
             exit;
         } elseif ($_REQUEST['step'] == 'login') {
-            include_once('languages/' . $_CFG['lang'] . '/user.php');
+            include_once('languages/' . $GLOBALS['_CFG']['lang'] . '/user.php');
 
             $where = "session_id = '" . SESS_ID . "'";
             if ($_SESSION['user_id']) {
@@ -161,33 +161,33 @@ class Flow extends Init
              * 用户登录注册
              */
             if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-                $smarty->assign('anonymous_buy', $_CFG['anonymous_buy']);
+                $GLOBALS['smarty']->assign('anonymous_buy', $GLOBALS['_CFG']['anonymous_buy']);
 
                 /* 检查是否有赠品，如果有提示登录后重新选择赠品 */
-                // $sql = "SELECT COUNT(*) FROM " . $ecs->table('cart') .
+                // $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('cart') .
                 //         " WHERE session_id = '" . SESS_ID . "' AND is_gift > 0";
-                $sql = "SELECT COUNT(*) FROM " . $ecs->table('cart') . " WHERE " . $where . " AND is_gift > 0";
-                if ($db->getOne($sql) > 0) {
-                    $smarty->assign('need_rechoose_gift', 1);
+                $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('cart') . " WHERE " . $where . " AND is_gift > 0";
+                if ($GLOBALS['db']->getOne($sql) > 0) {
+                    $GLOBALS['smarty']->assign('need_rechoose_gift', 1);
                 }
 
                 /* 检查是否需要注册码 */
-                $captcha = intval($_CFG['captcha']);
+                $captcha = intval($GLOBALS['_CFG']['captcha']);
                 if (($captcha & CAPTCHA_LOGIN) && (!($captcha & CAPTCHA_LOGIN_FAIL) || (($captcha & CAPTCHA_LOGIN_FAIL) && $_SESSION['login_fail'] > 2)) && gd_version() > 0) {
-                    $smarty->assign('enabled_login_captcha', 1);
-                    $smarty->assign('rand', mt_rand());
+                    $GLOBALS['smarty']->assign('enabled_login_captcha', 1);
+                    $GLOBALS['smarty']->assign('rand', mt_rand());
                 }
                 if ($captcha & CAPTCHA_REGISTER) {
-                    $smarty->assign('enabled_register_captcha', 1);
-                    $smarty->assign('rand', mt_rand());
+                    $GLOBALS['smarty']->assign('enabled_register_captcha', 1);
+                    $GLOBALS['smarty']->assign('rand', mt_rand());
                 }
             } else {
                 load_helper('passport');
                 if (!empty($_POST['act']) && $_POST['act'] == 'signin') {
-                    $captcha = intval($_CFG['captcha']);
+                    $captcha = intval($GLOBALS['_CFG']['captcha']);
                     if (($captcha & CAPTCHA_LOGIN) && (!($captcha & CAPTCHA_LOGIN_FAIL) || (($captcha & CAPTCHA_LOGIN_FAIL) && $_SESSION['login_fail'] > 2)) && gd_version() > 0) {
                         if (empty($_POST['captcha'])) {
-                            show_message($_LANG['invalid_captcha']);
+                            show_message($GLOBALS['_LANG']['invalid_captcha']);
                         }
 
                         /* 检查验证码 */
@@ -195,19 +195,19 @@ class Flow extends Init
                         $validator = new captcha();
                         $validator->session_word = 'captcha_login';
                         if (!$validator->check_word($_POST['captcha'])) {
-                            show_message($_LANG['invalid_captcha']);
+                            show_message($GLOBALS['_LANG']['invalid_captcha']);
                         }
                     }
 
                     $_POST['password'] = isset($_POST['password']) ? trim($_POST['password']) : '';
-                    if ($user->login($_POST['username'], $_POST['password'], isset($_POST['remember']))) {
+                    if ($GLOBALS['user']->login($_POST['username'], $_POST['password'], isset($_POST['remember']))) {
                         update_cart_offline(); //离线购物车绑定会员id
                         update_user_info();  //更新用户信息
                         recalculate_price(); // 重新计算购物车中的商品价格
 
                         /* 检查购物车中是否有商品 没有商品则跳转到首页 */
-                        $sql = "SELECT COUNT(*) FROM " . $ecs->table('cart') . " WHERE " . $where;
-                        if ($db->getOne($sql) > 0) {
+                        $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('cart') . " WHERE " . $where;
+                        if ($GLOBALS['db']->getOne($sql) > 0) {
                             ecs_header("Location: flow.php?step=checkout\n");
                         } else {
                             ecs_header("Location:index.php\n");
@@ -216,19 +216,19 @@ class Flow extends Init
                         exit;
                     } else {
                         $_SESSION['login_fail']++;
-                        show_message($_LANG['signin_failed'], '', 'flow.php?step=login');
+                        show_message($GLOBALS['_LANG']['signin_failed'], '', 'flow.php?step=login');
                     }
                 } elseif (!empty($_POST['act']) && $_POST['act'] == 'signup') {
-                    if ((intval($_CFG['captcha']) & CAPTCHA_REGISTER) && gd_version() > 0) {
+                    if ((intval($GLOBALS['_CFG']['captcha']) & CAPTCHA_REGISTER) && gd_version() > 0) {
                         if (empty($_POST['captcha'])) {
-                            show_message($_LANG['invalid_captcha']);
+                            show_message($GLOBALS['_LANG']['invalid_captcha']);
                         }
 
                         /* 检查验证码 */
 
                         $validator = new captcha();
                         if (!$validator->check_word($_POST['captcha'])) {
-                            show_message($_LANG['invalid_captcha']);
+                            show_message($GLOBALS['_LANG']['invalid_captcha']);
                         }
                     }
 
@@ -243,7 +243,7 @@ class Flow extends Init
                         ecs_header("Location: flow.php?step=consignee\n");
                         exit;
                     } else {
-                        $err->show();
+                        $GLOBALS['err']->show();
                     }
                 } else {
                     // TODO: 非法访问的处理
@@ -268,9 +268,9 @@ class Flow extends Init
                 }
 
                 /* 取得国家列表、商店所在国家、商店所在国家的省列表 */
-                $smarty->assign('country_list', get_regions());
-                $smarty->assign('shop_country', $_CFG['shop_country']);
-                $smarty->assign('shop_province_list', get_regions(1, $_CFG['shop_country']));
+                $GLOBALS['smarty']->assign('country_list', get_regions());
+                $GLOBALS['smarty']->assign('shop_country', $GLOBALS['_CFG']['shop_country']);
+                $GLOBALS['smarty']->assign('shop_province_list', get_regions(1, $GLOBALS['_CFG']['shop_country']));
 
                 /* 获得用户所有的收货人信息 */
                 if ($_SESSION['user_id'] > 0) {
@@ -278,17 +278,17 @@ class Flow extends Init
 
                     if (count($consignee_list) < 5) {
                         /* 如果用户收货人信息的总数小于 5 则增加一个新的收货人信息 */
-                        $consignee_list[] = array('country' => $_CFG['shop_country'], 'email' => isset($_SESSION['email']) ? $_SESSION['email'] : '');
+                        $consignee_list[] = array('country' => $GLOBALS['_CFG']['shop_country'], 'email' => isset($_SESSION['email']) ? $_SESSION['email'] : '');
                     }
                 } else {
                     if (isset($_SESSION['flow_consignee'])) {
                         $consignee_list = array($_SESSION['flow_consignee']);
                     } else {
-                        $consignee_list[] = array('country' => $_CFG['shop_country']);
+                        $consignee_list[] = array('country' => $GLOBALS['_CFG']['shop_country']);
                     }
                 }
-                $smarty->assign('name_of_region', array($_CFG['name_of_region_1'], $_CFG['name_of_region_2'], $_CFG['name_of_region_3'], $_CFG['name_of_region_4']));
-                $smarty->assign('consignee_list', $consignee_list);
+                $GLOBALS['smarty']->assign('name_of_region', array($GLOBALS['_CFG']['name_of_region_1'], $GLOBALS['_CFG']['name_of_region_2'], $GLOBALS['_CFG']['name_of_region_3'], $GLOBALS['_CFG']['name_of_region_4']));
+                $GLOBALS['smarty']->assign('consignee_list', $consignee_list);
 
                 /* 取得每个收货地址的省市区列表 */
                 $province_list = array();
@@ -303,12 +303,12 @@ class Flow extends Init
                     $city_list[$region_id] = get_regions(2, $consignee['province']);
                     $district_list[$region_id] = get_regions(3, $consignee['city']);
                 }
-                $smarty->assign('province_list', $province_list);
-                $smarty->assign('city_list', $city_list);
-                $smarty->assign('district_list', $district_list);
+                $GLOBALS['smarty']->assign('province_list', $province_list);
+                $GLOBALS['smarty']->assign('city_list', $city_list);
+                $GLOBALS['smarty']->assign('district_list', $district_list);
 
                 /* 返回收货人页面代码 */
-                $smarty->assign('real_goods_count', exist_real_goods(0, $flow_type) ? 1 : 0);
+                $GLOBALS['smarty']->assign('real_goods_count', exist_real_goods(0, $flow_type) ? 1 : 0);
             } else {
                 /*
                  * 保存收货人信息
@@ -356,7 +356,7 @@ class Flow extends Init
                 ecs_header("Location: flow.php?step=consignee\n");
                 exit;
             } else {
-                show_message($_LANG['not_fount_consignee']);
+                show_message($GLOBALS['_LANG']['not_fount_consignee']);
             }
         } elseif ($_REQUEST['step'] == 'checkout') {
             /*------------------------------------------------------ */
@@ -368,10 +368,10 @@ class Flow extends Init
 
             /* 团购标志 */
             if ($flow_type == CART_GROUP_BUY_GOODS) {
-                $smarty->assign('is_group_buy', 1);
+                $GLOBALS['smarty']->assign('is_group_buy', 1);
             } /* 积分兑换商品 */
             elseif ($flow_type == CART_EXCHANGE_GOODS) {
-                $smarty->assign('is_exchange_goods', 1);
+                $GLOBALS['smarty']->assign('is_exchange_goods', 1);
             } else {
                 //正常购物流程  清空其他购物流程情况
                 $_SESSION['flow_order']['extension_code'] = '';
@@ -383,11 +383,11 @@ class Flow extends Init
             }
 
             /* 检查购物车中是否有商品 */
-            $sql = "SELECT COUNT(*) FROM " . $ecs->table('cart') .
+            $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('cart') .
                 " WHERE " . $where . " AND parent_id = 0 AND is_gift = 0 AND rec_type = '$flow_type'";
 
-            if ($db->getOne($sql) == 0) {
-                show_message($_LANG['no_goods_in_cart'], '', '', 'warning');
+            if ($GLOBALS['db']->getOne($sql) == 0) {
+                show_message($GLOBALS['_LANG']['no_goods_in_cart'], '', '', 'warning');
             }
 
             /*
@@ -411,35 +411,35 @@ class Flow extends Init
             }
 
             $_SESSION['flow_consignee'] = $consignee;
-            $smarty->assign('consignee', $consignee);
+            $GLOBALS['smarty']->assign('consignee', $consignee);
 
             /* 对商品信息赋值 */
             $cart_goods = cart_goods($flow_type); // 取得商品列表，计算合计
-            $smarty->assign('goods_list', $cart_goods);
+            $GLOBALS['smarty']->assign('goods_list', $cart_goods);
 
             /* 对是否允许修改购物车赋值 */
-            if ($flow_type != CART_GENERAL_GOODS || $_CFG['one_step_buy'] == '1') {
-                $smarty->assign('allow_edit_cart', 0);
+            if ($flow_type != CART_GENERAL_GOODS || $GLOBALS['_CFG']['one_step_buy'] == '1') {
+                $GLOBALS['smarty']->assign('allow_edit_cart', 0);
             } else {
-                $smarty->assign('allow_edit_cart', 1);
+                $GLOBALS['smarty']->assign('allow_edit_cart', 1);
             }
 
             /*
              * 取得购物流程设置
              */
-            $smarty->assign('config', $_CFG);
+            $GLOBALS['smarty']->assign('config', $GLOBALS['_CFG']);
             /*
              * 取得订单信息
              */
             $order = flow_order_info();
-            $smarty->assign('order', $order);
+            $GLOBALS['smarty']->assign('order', $order);
 
             /* 计算折扣 */
             if ($flow_type != CART_EXCHANGE_GOODS && $flow_type != CART_GROUP_BUY_GOODS) {
                 $discount = compute_discount();
-                $smarty->assign('discount', $discount['discount']);
+                $GLOBALS['smarty']->assign('discount', $discount['discount']);
                 $favour_name = empty($discount['name']) ? '' : join(',', $discount['name']);
-                $smarty->assign('your_discount', sprintf($_LANG['your_discount'], $favour_name, price_format($discount['discount'])));
+                $GLOBALS['smarty']->assign('your_discount', sprintf($GLOBALS['_LANG']['your_discount'], $favour_name, price_format($discount['discount'])));
             }
 
             /*
@@ -447,9 +447,9 @@ class Flow extends Init
              */
             $total = order_fee($order, $cart_goods, $consignee);
 
-            $smarty->assign('total', $total);
-            $smarty->assign('shopping_money', sprintf($_LANG['shopping_money'], $total['formated_goods_price']));
-            $smarty->assign('market_price_desc', sprintf($_LANG['than_market_price'], $total['formated_market_price'], $total['formated_saving'], $total['save_rate']));
+            $GLOBALS['smarty']->assign('total', $total);
+            $GLOBALS['smarty']->assign('shopping_money', sprintf($GLOBALS['_LANG']['shopping_money'], $total['formated_goods_price']));
+            $GLOBALS['smarty']->assign('market_price_desc', sprintf($GLOBALS['_LANG']['than_market_price'], $total['formated_market_price'], $total['formated_saving'], $total['save_rate']));
 
             /* 取得配送列表 */
             $region = array($consignee['country'], $consignee['province'], $consignee['city'], $consignee['district']);
@@ -459,8 +459,8 @@ class Flow extends Init
             $cod_disabled = true;
 
             // 查看购物车中是否全为免运费商品，若是则把运费赋为零
-            $sql = 'SELECT count(*) FROM ' . $ecs->table('cart') . " WHERE " . $where . " AND `extension_code` != 'package_buy' AND `is_shipping` = 0";
-            $shipping_count = $db->getOne($sql);
+            $sql = 'SELECT count(*) FROM ' . $GLOBALS['ecs']->table('cart') . " WHERE " . $where . " AND `extension_code` != 'package_buy' AND `is_shipping` = 0";
+            $shipping_count = $GLOBALS['db']->getOne($sql);
 
             foreach ($shipping_list as $key => $val) {
                 $shipping_cfg = unserialize_config($val['configure']);
@@ -485,9 +485,9 @@ class Flow extends Init
                 }
             }
 
-            $smarty->assign('shipping_list', $shipping_list);
-            $smarty->assign('insure_disabled', $insure_disabled);
-            $smarty->assign('cod_disabled', $cod_disabled);
+            $GLOBALS['smarty']->assign('shipping_list', $shipping_list);
+            $GLOBALS['smarty']->assign('insure_disabled', $insure_disabled);
+            $GLOBALS['smarty']->assign('cod_disabled', $cod_disabled);
 
             /* 取得支付列表 */
             if ($order['shipping_id'] == 0) {
@@ -514,7 +514,7 @@ class Flow extends Init
                             $cod_fee = 0;
 
                             /* 赋值保证金 */
-                            $smarty->assign('gb_deposit', $group_buy['deposit']);
+                            $GLOBALS['smarty']->assign('gb_deposit', $group_buy['deposit']);
                         }
                     }
 
@@ -545,7 +545,7 @@ class Flow extends Init
                             unset($payment_list[$key]);
                         } else {
                             if ($_SESSION['flow_order']['pay_id'] == $payment['pay_id']) {
-                                $smarty->assign('disable_surplus', 1);
+                                $GLOBALS['smarty']->assign('disable_surplus', 1);
                             }
                         }
                     }
@@ -556,46 +556,46 @@ class Flow extends Init
                 }
             }
             $yunqi_payment and array_unshift($payment_list, $yunqi_payment);
-            $smarty->assign('payment_list', $payment_list);
+            $GLOBALS['smarty']->assign('payment_list', $payment_list);
 
             /* 取得包装与贺卡 */
             if ($total['real_goods_count'] > 0) {
                 /* 只有有实体商品,才要判断包装和贺卡 */
-                if (!isset($_CFG['use_package']) || $_CFG['use_package'] == '1') {
+                if (!isset($GLOBALS['_CFG']['use_package']) || $GLOBALS['_CFG']['use_package'] == '1') {
                     /* 如果使用包装，取得包装列表及用户选择的包装 */
-                    $smarty->assign('pack_list', pack_list());
+                    $GLOBALS['smarty']->assign('pack_list', pack_list());
                 }
 
                 /* 如果使用贺卡，取得贺卡列表及用户选择的贺卡 */
-                if (!isset($_CFG['use_card']) || $_CFG['use_card'] == '1') {
-                    $smarty->assign('card_list', card_list());
+                if (!isset($GLOBALS['_CFG']['use_card']) || $GLOBALS['_CFG']['use_card'] == '1') {
+                    $GLOBALS['smarty']->assign('card_list', card_list());
                 }
             }
 
             $user_info = user_info($_SESSION['user_id']);
 
             /* 如果使用余额，取得用户余额 */
-            if ((!isset($_CFG['use_surplus']) || $_CFG['use_surplus'] == '1')
+            if ((!isset($GLOBALS['_CFG']['use_surplus']) || $GLOBALS['_CFG']['use_surplus'] == '1')
                 && $_SESSION['user_id'] > 0
                 && $user_info['user_money'] > 0) {
                 // 能使用余额
-                $smarty->assign('allow_use_surplus', 1);
-                $smarty->assign('your_surplus', $user_info['user_money']);
+                $GLOBALS['smarty']->assign('allow_use_surplus', 1);
+                $GLOBALS['smarty']->assign('your_surplus', $user_info['user_money']);
             }
 
             /* 如果使用积分，取得用户可用积分及本订单最多可以使用的积分 */
-            if ((!isset($_CFG['use_integral']) || $_CFG['use_integral'] == '1')
+            if ((!isset($GLOBALS['_CFG']['use_integral']) || $GLOBALS['_CFG']['use_integral'] == '1')
                 && $_SESSION['user_id'] > 0
                 && $user_info['pay_points'] > 0
                 && ($flow_type != CART_GROUP_BUY_GOODS && $flow_type != CART_EXCHANGE_GOODS)) {
                 // 能使用积分
-                $smarty->assign('allow_use_integral', 1);
-                $smarty->assign('order_max_integral', $this->flow_available_points());  // 可用积分
-                $smarty->assign('your_integral', $user_info['pay_points']); // 用户积分
+                $GLOBALS['smarty']->assign('allow_use_integral', 1);
+                $GLOBALS['smarty']->assign('order_max_integral', $this->flow_available_points());  // 可用积分
+                $GLOBALS['smarty']->assign('your_integral', $user_info['pay_points']); // 用户积分
             }
 
             /* 如果使用红包，取得用户可以使用的红包及用户选择的红包 */
-            if ((!isset($_CFG['use_bonus']) || $_CFG['use_bonus'] == '1')
+            if ((!isset($GLOBALS['_CFG']['use_bonus']) || $GLOBALS['_CFG']['use_bonus'] == '1')
                 && ($flow_type != CART_GROUP_BUY_GOODS && $flow_type != CART_EXCHANGE_GOODS)) {
                 // 取得用户可用红包
                 $user_bonus = user_bonus($_SESSION['user_id'], $total['goods_price']);
@@ -603,34 +603,34 @@ class Flow extends Init
                     foreach ($user_bonus as $key => $val) {
                         $user_bonus[$key]['bonus_money_formated'] = price_format($val['type_money'], false);
                     }
-                    $smarty->assign('bonus_list', $user_bonus);
+                    $GLOBALS['smarty']->assign('bonus_list', $user_bonus);
                 }
 
                 // 能使用红包
-                $smarty->assign('allow_use_bonus', 1);
+                $GLOBALS['smarty']->assign('allow_use_bonus', 1);
             }
 
             /* 如果使用缺货处理，取得缺货处理列表 */
-            if (!isset($_CFG['use_how_oos']) || $_CFG['use_how_oos'] == '1') {
+            if (!isset($GLOBALS['_CFG']['use_how_oos']) || $GLOBALS['_CFG']['use_how_oos'] == '1') {
                 if (is_array($GLOBALS['_LANG']['oos']) && !empty($GLOBALS['_LANG']['oos'])) {
-                    $smarty->assign('how_oos_list', $GLOBALS['_LANG']['oos']);
+                    $GLOBALS['smarty']->assign('how_oos_list', $GLOBALS['_LANG']['oos']);
                 }
             }
 
             /* 如果能开发票，取得发票内容列表 */
-            if ((!isset($_CFG['can_invoice']) || $_CFG['can_invoice'] == '1')
-                && isset($_CFG['invoice_content'])
-                && trim($_CFG['invoice_content']) != '' && $flow_type != CART_EXCHANGE_GOODS) {
-                $inv_content_list = explode("\n", str_replace("\r", '', $_CFG['invoice_content']));
-                $smarty->assign('inv_content_list', $inv_content_list);
+            if ((!isset($GLOBALS['_CFG']['can_invoice']) || $GLOBALS['_CFG']['can_invoice'] == '1')
+                && isset($GLOBALS['_CFG']['invoice_content'])
+                && trim($GLOBALS['_CFG']['invoice_content']) != '' && $flow_type != CART_EXCHANGE_GOODS) {
+                $inv_content_list = explode("\n", str_replace("\r", '', $GLOBALS['_CFG']['invoice_content']));
+                $GLOBALS['smarty']->assign('inv_content_list', $inv_content_list);
 
                 $inv_type_list = array();
-                foreach ($_CFG['invoice_type']['type'] as $key => $type) {
+                foreach ($GLOBALS['_CFG']['invoice_type']['type'] as $key => $type) {
                     if (!empty($type)) {
-                        $inv_type_list[$type] = $type . ' [' . floatval($_CFG['invoice_type']['rate'][$key]) . '%]';
+                        $inv_type_list[$type] = $type . ' [' . floatval($GLOBALS['_CFG']['invoice_type']['rate'][$key]) . '%]';
                     }
                 }
-                $smarty->assign('inv_type_list', $inv_type_list);
+                $GLOBALS['smarty']->assign('inv_type_list', $inv_type_list);
             }
 
             /* 保存 session */
@@ -651,10 +651,10 @@ class Flow extends Init
             $cart_goods = cart_goods($flow_type); // 取得商品列表，计算合计
 
             if (empty($cart_goods) || !check_consignee_info($consignee, $flow_type)) {
-                $result['error'] = $_LANG['no_goods_in_cart'];
+                $result['error'] = $GLOBALS['_LANG']['no_goods_in_cart'];
             } else {
                 /* 取得购物流程设置 */
-                $smarty->assign('config', $_CFG);
+                $GLOBALS['smarty']->assign('config', $GLOBALS['_CFG']);
 
                 /* 取得订单信息 */
                 $order = flow_order_info();
@@ -665,15 +665,15 @@ class Flow extends Init
 
                 /* 计算订单的费用 */
                 $total = order_fee($order, $cart_goods, $consignee);
-                $smarty->assign('total', $total);
+                $GLOBALS['smarty']->assign('total', $total);
 
                 /* 取得可以得到的积分和红包 */
-                $smarty->assign('total_integral', cart_amount(false, $flow_type) - $total['bonus'] - $total['integral_money']);
-                $smarty->assign('total_bonus', price_format(get_total_bonus(), false));
+                $GLOBALS['smarty']->assign('total_integral', cart_amount(false, $flow_type) - $total['bonus'] - $total['integral_money']);
+                $GLOBALS['smarty']->assign('total_bonus', price_format(get_total_bonus(), false));
 
                 /* 团购标志 */
                 if ($flow_type == CART_GROUP_BUY_GOODS) {
-                    $smarty->assign('is_group_buy', 1);
+                    $GLOBALS['smarty']->assign('is_group_buy', 1);
                 }
 
                 $result['cod_fee'] = $shipping_info['pay_fee'];
@@ -681,7 +681,7 @@ class Flow extends Init
                     $result['cod_fee'] = price_format($result['cod_fee'], false);
                 }
                 $result['need_insure'] = ($shipping_info['insure'] > 0 && !empty($order['need_insure'])) ? 1 : 0;
-                $result['content'] = $smarty->fetch('library/order_total.lbi');
+                $result['content'] = $GLOBALS['smarty']->fetch('library/order_total.lbi');
             }
 
             echo json_encode($result);
@@ -703,10 +703,10 @@ class Flow extends Init
             $cart_goods = cart_goods($flow_type); // 取得商品列表，计算合计
 
             if (empty($cart_goods) || !check_consignee_info($consignee, $flow_type)) {
-                $result['error'] = $_LANG['no_goods_in_cart'];
+                $result['error'] = $GLOBALS['_LANG']['no_goods_in_cart'];
             } else {
                 /* 取得购物流程设置 */
-                $smarty->assign('config', $_CFG);
+                $GLOBALS['smarty']->assign('config', $GLOBALS['_CFG']);
 
                 /* 取得订单信息 */
                 $order = flow_order_info();
@@ -718,18 +718,18 @@ class Flow extends Init
 
                 /* 计算订单的费用 */
                 $total = order_fee($order, $cart_goods, $consignee);
-                $smarty->assign('total', $total);
+                $GLOBALS['smarty']->assign('total', $total);
 
                 /* 取得可以得到的积分和红包 */
-                $smarty->assign('total_integral', cart_amount(false, $flow_type) - $total['bonus'] - $total['integral_money']);
-                $smarty->assign('total_bonus', price_format(get_total_bonus(), false));
+                $GLOBALS['smarty']->assign('total_integral', cart_amount(false, $flow_type) - $total['bonus'] - $total['integral_money']);
+                $GLOBALS['smarty']->assign('total_bonus', price_format(get_total_bonus(), false));
 
                 /* 团购标志 */
                 if ($flow_type == CART_GROUP_BUY_GOODS) {
-                    $smarty->assign('is_group_buy', 1);
+                    $GLOBALS['smarty']->assign('is_group_buy', 1);
                 }
 
-                $result['content'] = $smarty->fetch('library/order_total.lbi');
+                $result['content'] = $GLOBALS['smarty']->fetch('library/order_total.lbi');
             }
 
             echo json_encode($result);
@@ -751,10 +751,10 @@ class Flow extends Init
             $cart_goods = cart_goods($flow_type); // 取得商品列表，计算合计
 
             if (empty($cart_goods) || !check_consignee_info($consignee, $flow_type)) {
-                $result['error'] = $_LANG['no_goods_in_cart'];
+                $result['error'] = $GLOBALS['_LANG']['no_goods_in_cart'];
             } else {
                 /* 取得购物流程设置 */
-                $smarty->assign('config', $_CFG);
+                $GLOBALS['smarty']->assign('config', $GLOBALS['_CFG']);
 
                 /* 取得订单信息 */
                 $order = flow_order_info();
@@ -768,18 +768,18 @@ class Flow extends Init
 
                 /* 计算订单的费用 */
                 $total = order_fee($order, $cart_goods, $consignee);
-                $smarty->assign('total', $total);
+                $GLOBALS['smarty']->assign('total', $total);
 
                 /* 取得可以得到的积分和红包 */
-                $smarty->assign('total_integral', cart_amount(false, $flow_type) - $total['bonus'] - $total['integral_money']);
-                $smarty->assign('total_bonus', price_format(get_total_bonus(), false));
+                $GLOBALS['smarty']->assign('total_integral', cart_amount(false, $flow_type) - $total['bonus'] - $total['integral_money']);
+                $GLOBALS['smarty']->assign('total_bonus', price_format(get_total_bonus(), false));
 
                 /* 团购标志 */
                 if ($flow_type == CART_GROUP_BUY_GOODS) {
-                    $smarty->assign('is_group_buy', 1);
+                    $GLOBALS['smarty']->assign('is_group_buy', 1);
                 }
 
-                $result['content'] = $smarty->fetch('library/order_total.lbi');
+                $result['content'] = $GLOBALS['smarty']->fetch('library/order_total.lbi');
             }
 
             echo json_encode($result);
@@ -801,10 +801,10 @@ class Flow extends Init
             $cart_goods = cart_goods($flow_type); // 取得商品列表，计算合计
 
             if (empty($cart_goods) || !check_consignee_info($consignee, $flow_type)) {
-                $result['error'] = $_LANG['no_goods_in_cart'];
+                $result['error'] = $GLOBALS['_LANG']['no_goods_in_cart'];
             } else {
                 /* 取得购物流程设置 */
-                $smarty->assign('config', $_CFG);
+                $GLOBALS['smarty']->assign('config', $GLOBALS['_CFG']);
 
                 /* 取得订单信息 */
                 $order = flow_order_info();
@@ -816,18 +816,18 @@ class Flow extends Init
 
                 /* 计算订单的费用 */
                 $total = order_fee($order, $cart_goods, $consignee);
-                $smarty->assign('total', $total);
+                $GLOBALS['smarty']->assign('total', $total);
 
                 /* 取得可以得到的积分和红包 */
-                $smarty->assign('total_integral', cart_amount(false, $flow_type) - $total['bonus'] - $total['integral_money']);
-                $smarty->assign('total_bonus', price_format(get_total_bonus(), false));
+                $GLOBALS['smarty']->assign('total_integral', cart_amount(false, $flow_type) - $total['bonus'] - $total['integral_money']);
+                $GLOBALS['smarty']->assign('total_bonus', price_format(get_total_bonus(), false));
 
                 /* 团购标志 */
                 if ($flow_type == CART_GROUP_BUY_GOODS) {
-                    $smarty->assign('is_group_buy', 1);
+                    $GLOBALS['smarty']->assign('is_group_buy', 1);
                 }
 
-                $result['content'] = $smarty->fetch('library/order_total.lbi');
+                $result['content'] = $GLOBALS['smarty']->fetch('library/order_total.lbi');
             }
 
             echo json_encode($result);
@@ -849,10 +849,10 @@ class Flow extends Init
             $cart_goods = cart_goods($flow_type); // 取得商品列表，计算合计
 
             if (empty($cart_goods) || !check_consignee_info($consignee, $flow_type)) {
-                $result['error'] = $_LANG['no_goods_in_cart'];
+                $result['error'] = $GLOBALS['_LANG']['no_goods_in_cart'];
             } else {
                 /* 取得购物流程设置 */
-                $smarty->assign('config', $_CFG);
+                $GLOBALS['smarty']->assign('config', $GLOBALS['_CFG']);
 
                 /* 取得订单信息 */
                 $order = flow_order_info();
@@ -864,18 +864,18 @@ class Flow extends Init
 
                 /* 计算订单的费用 */
                 $total = order_fee($order, $cart_goods, $consignee);
-                $smarty->assign('total', $total);
+                $GLOBALS['smarty']->assign('total', $total);
 
                 /* 取得可以得到的积分和红包 */
-                $smarty->assign('total_integral', cart_amount(false, $flow_type) - $order['bonus'] - $total['integral_money']);
-                $smarty->assign('total_bonus', price_format(get_total_bonus(), false));
+                $GLOBALS['smarty']->assign('total_integral', cart_amount(false, $flow_type) - $order['bonus'] - $total['integral_money']);
+                $GLOBALS['smarty']->assign('total_bonus', price_format(get_total_bonus(), false));
 
                 /* 团购标志 */
                 if ($flow_type == CART_GROUP_BUY_GOODS) {
-                    $smarty->assign('is_group_buy', 1);
+                    $GLOBALS['smarty']->assign('is_group_buy', 1);
                 }
 
-                $result['content'] = $smarty->fetch('library/order_total.lbi');
+                $result['content'] = $GLOBALS['smarty']->fetch('library/order_total.lbi');
             }
 
             echo json_encode($result);
@@ -889,13 +889,13 @@ class Flow extends Init
             $user_info = user_info($_SESSION['user_id']);
 
             if ($user_info['user_money'] + $user_info['credit_line'] < $surplus) {
-                $result['error'] = $_LANG['surplus_not_enough'];
+                $result['error'] = $GLOBALS['_LANG']['surplus_not_enough'];
             } else {
                 /* 取得购物类型 */
                 $flow_type = isset($_SESSION['flow_type']) ? intval($_SESSION['flow_type']) : CART_GENERAL_GOODS;
 
                 /* 取得购物流程设置 */
-                $smarty->assign('config', $_CFG);
+                $GLOBALS['smarty']->assign('config', $GLOBALS['_CFG']);
 
                 /* 获得收货人信息 */
                 $consignee = get_consignee($_SESSION['user_id']);
@@ -904,7 +904,7 @@ class Flow extends Init
                 $cart_goods = cart_goods($flow_type); // 取得商品列表，计算合计
 
                 if (empty($cart_goods) || !check_consignee_info($consignee, $flow_type)) {
-                    $result['error'] = $_LANG['no_goods_in_cart'];
+                    $result['error'] = $GLOBALS['_LANG']['no_goods_in_cart'];
                 } else {
                     /* 取得订单信息 */
                     $order = flow_order_info();
@@ -912,14 +912,14 @@ class Flow extends Init
 
                     /* 计算订单的费用 */
                     $total = order_fee($order, $cart_goods, $consignee);
-                    $smarty->assign('total', $total);
+                    $GLOBALS['smarty']->assign('total', $total);
 
                     /* 团购标志 */
                     if ($flow_type == CART_GROUP_BUY_GOODS) {
-                        $smarty->assign('is_group_buy', 1);
+                        $GLOBALS['smarty']->assign('is_group_buy', 1);
                     }
 
-                    $result['content'] = $smarty->fetch('library/order_total.lbi');
+                    $result['content'] = $GLOBALS['smarty']->fetch('library/order_total.lbi');
                 }
             }
 
@@ -939,9 +939,9 @@ class Flow extends Init
             $user_points = $user_info['pay_points']; // 用户的积分总数
 
             if ($points > $user_points) {
-                $result['error'] = $_LANG['integral_not_enough'];
+                $result['error'] = $GLOBALS['_LANG']['integral_not_enough'];
             } elseif ($points > $flow_points) {
-                $result['error'] = sprintf($_LANG['integral_too_much'], $flow_points);
+                $result['error'] = sprintf($GLOBALS['_LANG']['integral_too_much'], $flow_points);
             } else {
                 /* 取得购物类型 */
                 $flow_type = isset($_SESSION['flow_type']) ? intval($_SESSION['flow_type']) : CART_GENERAL_GOODS;
@@ -955,19 +955,19 @@ class Flow extends Init
                 $cart_goods = cart_goods($flow_type); // 取得商品列表，计算合计
 
                 if (empty($cart_goods) || !check_consignee_info($consignee, $flow_type)) {
-                    $result['error'] = $_LANG['no_goods_in_cart'];
+                    $result['error'] = $GLOBALS['_LANG']['no_goods_in_cart'];
                 } else {
                     /* 计算订单的费用 */
                     $total = order_fee($order, $cart_goods, $consignee);
-                    $smarty->assign('total', $total);
-                    $smarty->assign('config', $_CFG);
+                    $GLOBALS['smarty']->assign('total', $total);
+                    $GLOBALS['smarty']->assign('config', $GLOBALS['_CFG']);
 
                     /* 团购标志 */
                     if ($flow_type == CART_GROUP_BUY_GOODS) {
-                        $smarty->assign('is_group_buy', 1);
+                        $GLOBALS['smarty']->assign('is_group_buy', 1);
                     }
 
-                    $result['content'] = $smarty->fetch('library/order_total.lbi');
+                    $result['content'] = $GLOBALS['smarty']->fetch('library/order_total.lbi');
                     $result['error'] = '';
                 }
             }
@@ -989,10 +989,10 @@ class Flow extends Init
             $cart_goods = cart_goods($flow_type); // 取得商品列表，计算合计
 
             if (empty($cart_goods) || !check_consignee_info($consignee, $flow_type)) {
-                $result['error'] = $_LANG['no_goods_in_cart'];
+                $result['error'] = $GLOBALS['_LANG']['no_goods_in_cart'];
             } else {
                 /* 取得购物流程设置 */
-                $smarty->assign('config', $_CFG);
+                $GLOBALS['smarty']->assign('config', $GLOBALS['_CFG']);
 
                 /* 取得订单信息 */
                 $order = flow_order_info();
@@ -1003,19 +1003,19 @@ class Flow extends Init
                     $order['bonus_id'] = intval($_GET['bonus']);
                 } else {
                     $order['bonus_id'] = 0;
-                    $result['error'] = $_LANG['invalid_bonus'];
+                    $result['error'] = $GLOBALS['_LANG']['invalid_bonus'];
                 }
 
                 /* 计算订单的费用 */
                 $total = order_fee($order, $cart_goods, $consignee);
-                $smarty->assign('total', $total);
+                $GLOBALS['smarty']->assign('total', $total);
 
                 /* 团购标志 */
                 if ($flow_type == CART_GROUP_BUY_GOODS) {
-                    $smarty->assign('is_group_buy', 1);
+                    $GLOBALS['smarty']->assign('is_group_buy', 1);
                 }
 
-                $result['content'] = $smarty->fetch('library/order_total.lbi');
+                $result['content'] = $GLOBALS['smarty']->fetch('library/order_total.lbi');
             }
 
             die(json_encode($result));
@@ -1038,11 +1038,11 @@ class Flow extends Init
             $cart_goods = cart_goods($flow_type); // 取得商品列表，计算合计
 
             if (empty($cart_goods) || !check_consignee_info($consignee, $flow_type)) {
-                $result['error'] = $_LANG['no_goods_in_cart'];
+                $result['error'] = $GLOBALS['_LANG']['no_goods_in_cart'];
                 die(json_encode($result));
             } else {
                 /* 取得购物流程设置 */
-                $smarty->assign('config', $_CFG);
+                $GLOBALS['smarty']->assign('config', $GLOBALS['_CFG']);
 
                 /* 取得订单信息 */
                 $order = flow_order_info();
@@ -1061,14 +1061,14 @@ class Flow extends Init
 
                 /* 计算订单的费用 */
                 $total = order_fee($order, $cart_goods, $consignee);
-                $smarty->assign('total', $total);
+                $GLOBALS['smarty']->assign('total', $total);
 
                 /* 团购标志 */
                 if ($flow_type == CART_GROUP_BUY_GOODS) {
-                    $smarty->assign('is_group_buy', 1);
+                    $GLOBALS['smarty']->assign('is_group_buy', 1);
                 }
 
-                die($smarty->fetch('library/order_total.lbi'));
+                die($GLOBALS['smarty']->fetch('library/order_total.lbi'));
             }
         } elseif ($_REQUEST['step'] == 'change_oos') {
             /*------------------------------------------------------ */
@@ -1090,7 +1090,7 @@ class Flow extends Init
             $user_info = user_info($_SESSION['user_id']);
 
             if (($user_info['user_money'] + $user_info['credit_line'] < $surplus)) {
-                die($_LANG['surplus_not_enough']);
+                die($GLOBALS['_LANG']['surplus_not_enough']);
             }
 
             exit;
@@ -1104,11 +1104,11 @@ class Flow extends Init
             $user_points = $user_info['pay_points']; // 用户的积分总数
 
             if ($points > $user_points) {
-                die($_LANG['integral_not_enough']);
+                die($GLOBALS['_LANG']['integral_not_enough']);
             }
 
             if ($points > $flow_points) {
-                die(sprintf($_LANG['integral_too_much'], $flow_points));
+                die(sprintf($GLOBALS['_LANG']['integral_too_much'], $flow_points));
             }
 
             exit;
@@ -1130,16 +1130,16 @@ class Flow extends Init
             $flow_type = isset($_SESSION['flow_type']) ? intval($_SESSION['flow_type']) : CART_GENERAL_GOODS;
             add_log("pc create order ==flow_type:" . $flow_type . "==user_id:" . intval($_SESSION['user_id']));
             /* 检查购物车中是否有商品 */
-            $sql = "SELECT COUNT(*) FROM " . $ecs->table('cart') .
+            $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('cart') .
                 " WHERE " . $where .
                 "AND parent_id = 0 AND is_gift = 0 AND rec_type = '$flow_type'";
-            if ($db->getOne($sql) == 0) {
-                show_message($_LANG['no_goods_in_cart'], '', '', 'warning');
+            if ($GLOBALS['db']->getOne($sql) == 0) {
+                show_message($GLOBALS['_LANG']['no_goods_in_cart'], '', '', 'warning');
             }
 
             /* 检查商品库存 */
             /* 如果使用库存，且下订单时减库存，则减少库存 */
-            if ($_CFG['use_storage'] == '1' && $_CFG['stock_dec_time'] == SDT_PLACE) {
+            if ($GLOBALS['_CFG']['use_storage'] == '1' && $GLOBALS['_CFG']['stock_dec_time'] == SDT_PLACE) {
                 $cart_goods_stock = get_cart_goods();
                 $_cart_goods_stock = array();
                 foreach ($cart_goods_stock['goods_list'] as $value) {
@@ -1190,7 +1190,7 @@ class Flow extends Init
                 'inv_payee' => trim($_POST['inv_payee']),
                 'inv_content' => $_POST['inv_content'],
                 'postscript' => trim($_POST['postscript']),
-                'how_oos' => isset($_LANG['oos'][$_POST['how_oos']]) ? addslashes($_LANG['oos'][$_POST['how_oos']]) : '',
+                'how_oos' => isset($GLOBALS['_LANG']['oos'][$_POST['how_oos']]) ? addslashes($GLOBALS['_LANG']['oos'][$_POST['how_oos']]) : '',
                 'need_insure' => isset($_POST['need_insure']) ? intval($_POST['need_insure']) : 0,
                 'user_id' => $_SESSION['user_id'],
                 'add_time' => gmtime(),
@@ -1201,7 +1201,7 @@ class Flow extends Init
                 'agency_id' => get_agency_by_regions(array($consignee['country'], $consignee['province'], $consignee['city'], $consignee['district']))
             );
 
-            if (isset($_CFG['use_how_oos']) && $_CFG['use_how_oos'] == '0') {
+            if (isset($GLOBALS['_CFG']['use_how_oos']) && $GLOBALS['_CFG']['use_how_oos'] == '0') {
                 $order['how_oos'] = '';
             }
 
@@ -1251,8 +1251,8 @@ class Flow extends Init
                 if (empty($bonus) || $bonus['user_id'] > 0 || $bonus['order_id'] > 0 || $bonus['min_goods_amount'] > cart_amount(true, $flow_type) || $now > $bonus['use_end_date']) {
                 } else {
                     if ($user_id > 0) {
-                        $sql = "UPDATE " . $ecs->table('user_bonus') . " SET user_id = '$user_id' WHERE bonus_id = '$bonus[bonus_id]' LIMIT 1";
-                        $db->query($sql);
+                        $sql = "UPDATE " . $GLOBALS['ecs']->table('user_bonus') . " SET user_id = '$user_id' WHERE bonus_id = '$bonus[bonus_id]' LIMIT 1";
+                        $GLOBALS['db']->query($sql);
                     }
                     $order['bonus_id'] = $bonus['bonus_id'];
                     $order['bonus_sn'] = $bonus_sn;
@@ -1263,12 +1263,12 @@ class Flow extends Init
             $cart_goods = cart_goods($flow_type);
             add_log("pc create order ==cart_goods==", $cart_goods);
             if (empty($cart_goods)) {
-                show_message($_LANG['no_goods_in_cart'], $_LANG['back_home'], './', 'warning');
+                show_message($GLOBALS['_LANG']['no_goods_in_cart'], $GLOBALS['_LANG']['back_home'], './', 'warning');
             }
 
             /* 检查商品总额是否达到最低限购金额 */
-            if ($flow_type == CART_GENERAL_GOODS && cart_amount(true, CART_GENERAL_GOODS) < $_CFG['min_goods_amount']) {
-                show_message(sprintf($_LANG['goods_amount_not_enough'], price_format($_CFG['min_goods_amount'], false)));
+            if ($flow_type == CART_GENERAL_GOODS && cart_amount(true, CART_GENERAL_GOODS) < $GLOBALS['_CFG']['min_goods_amount']) {
+                show_message(sprintf($GLOBALS['_LANG']['goods_amount_not_enough'], price_format($GLOBALS['_CFG']['min_goods_amount'], false)));
             }
 
             /* 收货人信息 */
@@ -1284,9 +1284,9 @@ class Flow extends Init
                 }
             }
             if (isset($is_real_good)) {
-                $sql = "SELECT shipping_id FROM " . $ecs->table('shipping') . " WHERE shipping_id=" . $order['shipping_id'] . " AND enabled =1";
-                if (!$db->getOne($sql)) {
-                    show_message($_LANG['flow_no_shipping']);
+                $sql = "SELECT shipping_id FROM " . $GLOBALS['ecs']->table('shipping') . " WHERE shipping_id=" . $order['shipping_id'] . " AND enabled =1";
+                if (!$GLOBALS['db']->getOne($sql)) {
+                    show_message($GLOBALS['_LANG']['flow_no_shipping']);
                 }
             }
             /* 订单中的总额 */
@@ -1344,7 +1344,7 @@ class Flow extends Init
                     $order['surplus'] = 0;
                 }
                 if ($order['order_amount'] > ($user_info['user_money'] + $user_info['credit_line'])) {
-                    show_message($_LANG['balance_not_enough']);
+                    show_message($GLOBALS['_LANG']['balance_not_enough']);
                 } else {
                     $order['surplus'] = $order['order_amount'];
                     $order['order_amount'] = 0;
@@ -1377,7 +1377,7 @@ class Flow extends Init
                 $order['extension_id'] = $_SESSION['extension_id'];
             }
 
-            $affiliate = unserialize($_CFG['affiliate']);
+            $affiliate = unserialize($GLOBALS['_CFG']['affiliate']);
             if (isset($affiliate['on']) && $affiliate['on'] == 1 && $affiliate['config']['separate_by'] == 1) {
                 //推荐订单分成
                 $parent_id = get_affiliate();
@@ -1407,28 +1407,28 @@ class Flow extends Init
                 }
             } while ($error_no == 1062); //如果是订单号重复则重新提交数据
 
-            $new_order_id = $db->insert_id();
+            $new_order_id = $GLOBALS['db']->insert_id();
             $order['order_id'] = $new_order_id;
 
             /* 插入订单商品 */
-            $sql = "INSERT INTO " . $ecs->table('order_goods') . "( " .
+            $sql = "INSERT INTO " . $GLOBALS['ecs']->table('order_goods') . "( " .
                 "order_id, goods_id, goods_name, goods_sn, product_id, goods_number, market_price, " .
                 "goods_price, goods_attr, is_real, extension_code, parent_id, is_gift, goods_attr_id) " .
                 " SELECT '$new_order_id', goods_id, goods_name, goods_sn, product_id, goods_number, market_price, " .
                 "goods_price, goods_attr, is_real, extension_code, parent_id, is_gift, goods_attr_id" .
-                " FROM " . $ecs->table('cart') .
+                " FROM " . $GLOBALS['ecs']->table('cart') .
                 " WHERE " . $where . " AND rec_type = '$flow_type'";
             add_log("pc create order end ==insert order_goods sql:" . $sql);
-            $db->query($sql);
+            $GLOBALS['db']->query($sql);
             /* 修改拍卖活动状态 */
             if ($order['extension_code'] == 'auction') {
-                $sql = "UPDATE " . $ecs->table('goods_activity') . " SET is_finished='2' WHERE act_id=" . $order['extension_id'];
-                $db->query($sql);
+                $sql = "UPDATE " . $GLOBALS['ecs']->table('goods_activity') . " SET is_finished='2' WHERE act_id=" . $order['extension_id'];
+                $GLOBALS['db']->query($sql);
             }
 
             /* 处理余额、积分、红包 */
             if ($order['user_id'] > 0 && $order['surplus'] > 0) {
-                log_account_change($order['user_id'], $order['surplus'] * (-1), 0, 0, 0, sprintf($_LANG['pay_order'], $order['order_sn']));
+                log_account_change($order['user_id'], $order['surplus'] * (-1), 0, 0, 0, sprintf($GLOBALS['_LANG']['pay_order'], $order['order_sn']));
                 //订单支付后，创建订单到淘打
                 /*
                  * TODO BY LANCE
@@ -1439,7 +1439,7 @@ class Flow extends Init
                 }*/
             }
             if ($order['user_id'] > 0 && $order['integral'] > 0) {
-                log_account_change($order['user_id'], 0, 0, 0, $order['integral'] * (-1), sprintf($_LANG['pay_order'], $order['order_sn']));
+                log_account_change($order['user_id'], 0, 0, 0, $order['integral'] * (-1), sprintf($GLOBALS['_LANG']['pay_order'], $order['order_sn']));
                 //订单支付后，创建订单到淘打
                 /*
                  * TODO BY LANCE
@@ -1456,28 +1456,28 @@ class Flow extends Init
             }
 
             /* 如果使用库存，且下订单时减库存，则减少库存 */
-            if ($_CFG['use_storage'] == '1' && $_CFG['stock_dec_time'] == SDT_PLACE) {
+            if ($GLOBALS['_CFG']['use_storage'] == '1' && $GLOBALS['_CFG']['stock_dec_time'] == SDT_PLACE) {
                 change_order_goods_storage($order['order_id'], true, SDT_PLACE);
             }
 
             /* 给商家发邮件 */
             /* 增加是否给客服发送邮件选项 */
-            if ($_CFG['send_service_email'] && $_CFG['service_email'] != '') {
+            if ($GLOBALS['_CFG']['send_service_email'] && $GLOBALS['_CFG']['service_email'] != '') {
                 $tpl = get_mail_template('remind_of_new_order');
-                $smarty->assign('order', $order);
-                $smarty->assign('goods_list', $cart_goods);
-                $smarty->assign('shop_name', $_CFG['shop_name']);
-                $smarty->assign('send_date', date($_CFG['time_format']));
-                $content = $smarty->fetch('str:' . $tpl['template_content']);
-                send_mail($_CFG['shop_name'], $_CFG['service_email'], $tpl['template_subject'], $content, $tpl['is_html']);
+                $GLOBALS['smarty']->assign('order', $order);
+                $GLOBALS['smarty']->assign('goods_list', $cart_goods);
+                $GLOBALS['smarty']->assign('shop_name', $GLOBALS['_CFG']['shop_name']);
+                $GLOBALS['smarty']->assign('send_date', date($GLOBALS['_CFG']['time_format']));
+                $content = $GLOBALS['smarty']->fetch('str:' . $tpl['template_content']);
+                send_mail($GLOBALS['_CFG']['shop_name'], $GLOBALS['_CFG']['service_email'], $tpl['template_subject'], $content, $tpl['is_html']);
             }
 
             /* 如果需要，发短信 */
-            if ($_CFG['sms_order_placed'] == '1' && $_CFG['sms_shop_mobile'] != '') {
+            if ($GLOBALS['_CFG']['sms_order_placed'] == '1' && $GLOBALS['_CFG']['sms_shop_mobile'] != '') {
                 $sms = new Sms();
                 $msg = $order['pay_status'] == PS_UNPAYED ?
-                    $_LANG['order_placed_sms'] : $_LANG['order_placed_sms'] . '[' . $_LANG['sms_paid'] . ']';
-                $sms->send($_CFG['sms_shop_mobile'], sprintf($msg, $order['consignee'], $order['tel']), '', 13, 1);
+                    $GLOBALS['_LANG']['order_placed_sms'] : $GLOBALS['_LANG']['order_placed_sms'] . '[' . $GLOBALS['_LANG']['sms_paid'] . ']';
+                $sms->send($GLOBALS['_CFG']['sms_shop_mobile'], sprintf($msg, $order['consignee'], $order['tel']), '', 13, 1);
             }
 
             /* 如果订单金额为0 处理虚拟卡 */
@@ -1499,10 +1499,10 @@ class Flow extends Init
                     if (virtual_goods_ship($virtual_goods, $msg, $order['order_sn'], true)) {
                         /* 如果没有实体商品，修改发货状态，送积分和红包 */
                         $sql = "SELECT COUNT(*)" .
-                            " FROM " . $ecs->table('order_goods') .
+                            " FROM " . $GLOBALS['ecs']->table('order_goods') .
                             " WHERE order_id = '$order[order_id]' " .
                             " AND is_real = 1";
-                        if ($db->getOne($sql) <= 0) {
+                        if ($GLOBALS['db']->getOne($sql) <= 0) {
                             /* 修改订单状态 */
                             update_order($order['order_id'], array('shipping_status' => SS_SHIPPED, 'shipping_time' => gmtime()));
 
@@ -1513,7 +1513,7 @@ class Flow extends Init
 
                                 /* 计算并发放积分 */
                                 $integral = integral_to_give($order);
-                                log_account_change($order['user_id'], 0, 0, intval($integral['rank_points']), intval($integral['custom_points']), sprintf($_LANG['order_gift_integral'], $order['order_sn']));
+                                log_account_change($order['user_id'], 0, 0, intval($integral['rank_points']), intval($integral['custom_points']), sprintf($GLOBALS['_LANG']['order_gift_integral'], $order['order_sn']));
 
                                 /* 发放红包 */
                                 send_order_bonus($order['order_id']);
@@ -1538,9 +1538,9 @@ class Flow extends Init
                 include_once('includes/modules/payment/' . $payment['pay_code'] . '.php');
                 $pay_obj = new $payment['pay_code'];
                 //为天宫支付传递商品名
-                $sql = "SELECT goods_name FROM " . $ecs->table('order_goods') . " WHERE order_id =" . $order['order_id'];
-                $res = $db->query($sql);
-                while ($aaa[] = $db->fetchRow($res)) {
+                $sql = "SELECT goods_name FROM " . $GLOBALS['ecs']->table('order_goods') . " WHERE order_id =" . $order['order_id'];
+                $res = $GLOBALS['db']->query($sql);
+                while ($aaa[] = $GLOBALS['db']->fetchRow($res)) {
                     $bbb = array_values($aaa);
                 }
                 foreach ($bbb as $v) {
@@ -1556,17 +1556,17 @@ class Flow extends Init
 
                 $order['pay_desc'] = $payment['pay_desc'];
 
-                $smarty->assign('pay_online', $pay_online);
+                $GLOBALS['smarty']->assign('pay_online', $pay_online);
             }
             if (!empty($order['shipping_name'])) {
                 $order['shipping_name'] = trim(stripcslashes($order['shipping_name']));
             }
 
             /* 订单信息 */
-            $smarty->assign('order', $order);
-            $smarty->assign('total', $total);
-            $smarty->assign('goods_list', $cart_goods);
-            $smarty->assign('order_submit_back', sprintf($_LANG['order_submit_back'], $_LANG['back_home'], $_LANG['goto_user_center'])); // 返回提示
+            $GLOBALS['smarty']->assign('order', $order);
+            $GLOBALS['smarty']->assign('total', $total);
+            $GLOBALS['smarty']->assign('goods_list', $cart_goods);
+            $GLOBALS['smarty']->assign('order_submit_back', sprintf($GLOBALS['_LANG']['order_submit_back'], $GLOBALS['_LANG']['back_home'], $GLOBALS['_LANG']['goto_user_center'])); // 返回提示
 
             // 对接erp将订单推送到erp
             /*
@@ -1589,7 +1589,7 @@ class Flow extends Init
                 $this->flow_update_cart($_POST['goods_number']);
             }
 
-            show_message($_LANG['update_cart_notice'], $_LANG['back_to_cart'], 'flow.php');
+            show_message($GLOBALS['_LANG']['update_cart_notice'], $GLOBALS['_LANG']['back_to_cart'], 'flow.php');
             exit;
         }
 
@@ -1613,43 +1613,43 @@ class Flow extends Init
             $act_id = intval($_POST['act_id']);
             $favourable = favourable_info($act_id);
             if (empty($favourable)) {
-                show_message($_LANG['favourable_not_exist']);
+                show_message($GLOBALS['_LANG']['favourable_not_exist']);
             }
 
             /* 判断用户能否享受该优惠 */
             if (!$this->favourable_available($favourable)) {
-                show_message($_LANG['favourable_not_available']);
+                show_message($GLOBALS['_LANG']['favourable_not_available']);
             }
 
             /* 检查购物车中是否已有该优惠 */
             $cart_favourable = $this->cart_favourable();
             if ($this->favourable_used($favourable, $cart_favourable)) {
-                show_message($_LANG['favourable_used']);
+                show_message($GLOBALS['_LANG']['favourable_used']);
             }
 
             /* 赠品（特惠品）优惠 */
             if ($favourable['act_type'] == FAT_GOODS) {
                 /* 检查是否选择了赠品 */
                 if (empty($_POST['gift'])) {
-                    show_message($_LANG['pls_select_gift']);
+                    show_message($GLOBALS['_LANG']['pls_select_gift']);
                 }
 
                 /* 检查是否已在购物车 */
                 $sql = "SELECT goods_name" .
-                    " FROM " . $ecs->table('cart') .
+                    " FROM " . $GLOBALS['ecs']->table('cart') .
                     " WHERE " . $where .
                     " AND rec_type = '" . CART_GENERAL_GOODS . "'" .
                     " AND is_gift = '$act_id'" .
                     " AND goods_id " . db_create_in($_POST['gift']);
-                $gift_name = $db->getCol($sql);
+                $gift_name = $GLOBALS['db']->getCol($sql);
                 if (!empty($gift_name)) {
-                    show_message(sprintf($_LANG['gift_in_cart'], join(',', $gift_name)));
+                    show_message(sprintf($GLOBALS['_LANG']['gift_in_cart'], join(',', $gift_name)));
                 }
 
                 /* 检查数量是否超过上限 */
                 $count = isset($cart_favourable[$act_id]) ? $cart_favourable[$act_id] : 0;
                 if ($favourable['act_type_ext'] > 0 && $count + count($_POST['gift']) > $favourable['act_type_ext']) {
-                    show_message($_LANG['gift_count_exceed']);
+                    show_message($GLOBALS['_LANG']['gift_count_exceed']);
                 }
 
                 /* 添加赠品到购物车 */
@@ -1668,11 +1668,11 @@ class Flow extends Init
             ecs_header("Location: flow.php\n");
             exit;
         } elseif ($_REQUEST['step'] == 'clear') {
-            $sql = "DELETE FROM " . $ecs->table('cart') . " WHERE session_id='" . SESS_ID . "'";
+            $sql = "DELETE FROM " . $GLOBALS['ecs']->table('cart') . " WHERE session_id='" . SESS_ID . "'";
             if ($_SESSION['user_id']) {
                 $sql .= " OR user_id='" . intval($_SESSION['user_id']) . "'";
             }
-            $db->query($sql);
+            $GLOBALS['db']->query($sql);
 
             ecs_header("Location:./\n");
         } elseif ($_REQUEST['step'] == 'drop_to_collect') {
@@ -1680,13 +1680,13 @@ class Flow extends Init
             if ($_SESSION['user_id'] > 0) {
                 $where = "user_id = '" . intval($_SESSION['user_id']) . "'";
                 $rec_id = intval($_GET['id']);
-                $goods_id = $db->getOne("SELECT  goods_id FROM " . $ecs->table('cart') . " WHERE rec_id = '$rec_id' AND " . $where);
-                $count = $db->getOne("SELECT goods_id FROM " . $ecs->table('collect_goods') . " WHERE user_id = '$_SESSION[user_id]' AND goods_id = '$goods_id'");
+                $goods_id = $GLOBALS['db']->getOne("SELECT  goods_id FROM " . $GLOBALS['ecs']->table('cart') . " WHERE rec_id = '$rec_id' AND " . $where);
+                $count = $GLOBALS['db']->getOne("SELECT goods_id FROM " . $GLOBALS['ecs']->table('collect_goods') . " WHERE user_id = '$_SESSION[user_id]' AND goods_id = '$goods_id'");
                 if (empty($count)) {
                     $time = gmtime();
                     $sql = "INSERT INTO " . $GLOBALS['ecs']->table('collect_goods') . " (user_id, goods_id, add_time)" .
                         "VALUES ('$_SESSION[user_id]', '$goods_id', '$time')";
-                    $db->query($sql);
+                    $GLOBALS['db']->query($sql);
                 }
                 $this->flow_drop_cart_goods($rec_id);
             }
@@ -1703,13 +1703,13 @@ class Flow extends Init
 
 //    if (empty($bonus) || $bonus['user_id'] > 0 || $bonus['order_id'] > 0)
 //    {
-//        die($_LANG['bonus_sn_error']);
+//        die($GLOBALS['_LANG']['bonus_sn_error']);
 //    }
 //    if ($bonus['min_goods_amount'] > cart_amount())
 //    {
-//        die(sprintf($_LANG['bonus_min_amount_error'], price_format($bonus['min_goods_amount'], false)));
+//        die(sprintf($GLOBALS['_LANG']['bonus_min_amount_error'], price_format($bonus['min_goods_amount'], false)));
 //    }
-//    die(sprintf($_LANG['bonus_is_ok'], price_format($bonus['type_money'], false)));
+//    die(sprintf($GLOBALS['_LANG']['bonus_is_ok'], price_format($bonus['type_money'], false)));
             $bonus_kill = price_format($bonus['type_money'], false);
 
             $result = array('error' => '', 'content' => '');
@@ -1724,10 +1724,10 @@ class Flow extends Init
             $cart_goods = cart_goods($flow_type); // 取得商品列表，计算合计
 
             if (empty($cart_goods) || !check_consignee_info($consignee, $flow_type)) {
-                $result['error'] = $_LANG['no_goods_in_cart'];
+                $result['error'] = $GLOBALS['_LANG']['no_goods_in_cart'];
             } else {
                 /* 取得购物流程设置 */
-                $smarty->assign('config', $_CFG);
+                $GLOBALS['smarty']->assign('config', $GLOBALS['_CFG']);
 
                 /* 取得订单信息 */
                 $order = flow_order_info();
@@ -1738,7 +1738,7 @@ class Flow extends Init
                     $now = gmtime();
                     if ($now > $bonus['use_end_date']) {
                         $order['bonus_id'] = '';
-                        $result['error'] = $_LANG['bonus_use_expire'];
+                        $result['error'] = $GLOBALS['_LANG']['bonus_use_expire'];
                     } else {
                         $order['bonus_id'] = $bonus['bonus_id'];
                         $order['bonus_sn'] = $bonus_sn;
@@ -1746,7 +1746,7 @@ class Flow extends Init
                 } else {
                     //$order['bonus_kill'] = 0;
                     $order['bonus_id'] = '';
-                    $result['error'] = $_LANG['invalid_bonus'];
+                    $result['error'] = $GLOBALS['_LANG']['invalid_bonus'];
                 }
 
                 /* 计算订单的费用 */
@@ -1756,17 +1756,17 @@ class Flow extends Init
                     $order['bonus_id'] = '';
                     /* 重新计算订单 */
                     $total = order_fee($order, $cart_goods, $consignee);
-                    $result['error'] = sprintf($_LANG['bonus_min_amount_error'], price_format($bonus['min_goods_amount'], false));
+                    $result['error'] = sprintf($GLOBALS['_LANG']['bonus_min_amount_error'], price_format($bonus['min_goods_amount'], false));
                 }
 
-                $smarty->assign('total', $total);
+                $GLOBALS['smarty']->assign('total', $total);
 
                 /* 团购标志 */
                 if ($flow_type == CART_GROUP_BUY_GOODS) {
-                    $smarty->assign('is_group_buy', 1);
+                    $GLOBALS['smarty']->assign('is_group_buy', 1);
                 }
 
-                $result['content'] = $smarty->fetch('library/order_total.lbi');
+                $result['content'] = $GLOBALS['smarty']->fetch('library/order_total.lbi');
             }
             die(json_encode($result));
         }
@@ -1786,51 +1786,51 @@ class Flow extends Init
             $package = json_decode($_POST['package_info']);
 
             /* 如果是一步购物，先清空购物车 */
-            if ($_CFG['one_step_buy'] == '1') {
+            if ($GLOBALS['_CFG']['one_step_buy'] == '1') {
                 clear_cart();
             }
 
             /* 商品数量是否合法 */
             if (!is_numeric($package->number) || intval($package->number) <= 0) {
                 $result['error'] = 1;
-                $result['message'] = $_LANG['invalid_number'];
+                $result['message'] = $GLOBALS['_LANG']['invalid_number'];
             } else {
                 /* 添加到购物车 */
                 if (add_package_to_cart($package->package_id, $package->number)) {
-                    if ($_CFG['cart_confirm'] > 2) {
+                    if ($GLOBALS['_CFG']['cart_confirm'] > 2) {
                         $result['message'] = '';
                     } else {
-                        $result['message'] = $_CFG['cart_confirm'] == 1 ? $_LANG['addto_cart_success_1'] : $_LANG['addto_cart_success_2'];
+                        $result['message'] = $GLOBALS['_CFG']['cart_confirm'] == 1 ? $GLOBALS['_LANG']['addto_cart_success_1'] : $GLOBALS['_LANG']['addto_cart_success_2'];
                     }
 
                     $result['content'] = insert_cart_info();
-                    $result['one_step_buy'] = $_CFG['one_step_buy'];
+                    $result['one_step_buy'] = $GLOBALS['_CFG']['one_step_buy'];
                 } else {
-                    $result['message'] = $err->last_message();
-                    $result['error'] = $err->error_no;
+                    $result['message'] = $GLOBALS['err']->last_message();
+                    $result['error'] = $GLOBALS['err']->error_no;
                     $result['package_id'] = stripslashes($package->package_id);
                 }
             }
-            $result['confirm_type'] = !empty($_CFG['cart_confirm']) ? $_CFG['cart_confirm'] : 2;
+            $result['confirm_type'] = !empty($GLOBALS['_CFG']['cart_confirm']) ? $GLOBALS['_CFG']['cart_confirm'] : 2;
             die(json_encode($result));
         } elseif ($_REQUEST['step'] == 'repurchase') {
             $order_id = intval($_POST['order_id']);
             $order_id = json_str_iconv($order_id);
             $user_id = $_SESSION['user_id'];
-            $order = $db->getOne('SELECT count(*) FROM ' . $ecs->table('order_info') . ' WHERE order_id = ' . $order_id . ' and user_id = ' . $user_id);
+            $order = $GLOBALS['db']->getOne('SELECT count(*) FROM ' . $GLOBALS['ecs']->table('order_info') . ' WHERE order_id = ' . $order_id . ' and user_id = ' . $user_id);
             if (!$order) {
-                $result = array('error' => 1, 'message' => $_LANG['repurchase_fail']);
+                $result = array('error' => 1, 'message' => $GLOBALS['_LANG']['repurchase_fail']);
                 die(json_encode($result));
             }
 
-            $db->query('DELETE FROM ' . $ecs->table('cart') . " WHERE rec_type = " . CART_REPURCHASE);
-            $order_goods = $db->getAll("SELECT goods_id, goods_number, goods_attr_id, parent_id FROM " . $ecs->table('order_goods') . " WHERE order_id = " . $order_id);
+            $GLOBALS['db']->query('DELETE FROM ' . $GLOBALS['ecs']->table('cart') . " WHERE rec_type = " . CART_REPURCHASE);
+            $order_goods = $GLOBALS['db']->getAll("SELECT goods_id, goods_number, goods_attr_id, parent_id FROM " . $GLOBALS['ecs']->table('order_goods') . " WHERE order_id = " . $order_id);
             $result = array('error' => 0, 'message' => '');
             foreach ($order_goods as $goods) {
                 $spec = empty($goods['goods_attr_id']) ? array() : explode(',', $goods['goods_attr_id']);
                 if (!addto_cart($goods['goods_id'], $goods['goods_number'], $spec, $goods['parent_id'], CART_REPURCHASE)) {
                     $result = false;
-                    $result = array('error' => 1, 'message' => $_LANG['repurchase_fail']);
+                    $result = array('error' => 1, 'message' => $GLOBALS['_LANG']['repurchase_fail']);
                 }
             }
             die(json_encode($result));
@@ -1842,20 +1842,20 @@ class Flow extends Init
             $_SESSION['flow_type'] = $flow_type;
 
             /* 如果是一步购物，跳到结算中心 */
-            if ($_CFG['one_step_buy'] == '1') {
+            if ($GLOBALS['_CFG']['one_step_buy'] == '1') {
                 ecs_header("Location: flow.php?step=checkout\n");
                 exit;
             }
 
             /* 取得商品列表，计算合计 */
             $cart_goods = get_cart_goods($flow_type);
-            $smarty->assign('goods_list', $cart_goods['goods_list']);
-            $smarty->assign('total', $cart_goods['total']);
+            $GLOBALS['smarty']->assign('goods_list', $cart_goods['goods_list']);
+            $GLOBALS['smarty']->assign('total', $cart_goods['total']);
 
             //购物车的描述的格式化
-            $smarty->assign('shopping_money', sprintf($_LANG['shopping_money'], $cart_goods['total']['goods_price']));
-            $smarty->assign('market_price_desc', sprintf(
-                $_LANG['than_market_price'],
+            $GLOBALS['smarty']->assign('shopping_money', sprintf($GLOBALS['_LANG']['shopping_money'], $cart_goods['total']['goods_price']));
+            $GLOBALS['smarty']->assign('market_price_desc', sprintf(
+                $GLOBALS['_LANG']['than_market_price'],
                 $cart_goods['total']['market_price'],
                 $cart_goods['total']['saving'],
                 $cart_goods['total']['save_rate']
@@ -1865,7 +1865,7 @@ class Flow extends Init
             if ($_SESSION['user_id'] > 0) {
                 load_helper('clips');
                 $collection_goods = get_collection_goods($_SESSION['user_id']);
-                $smarty->assign('collection_goods', $collection_goods);
+                $GLOBALS['smarty']->assign('collection_goods', $collection_goods);
                 $where = "user_id = '" . intval($_SESSION['user_id']) . "' ";
             } else {
                 $where = "session_id = '" . SESS_ID . "' ";
@@ -1875,19 +1875,19 @@ class Flow extends Init
             $favourable_list = $this->favourable_list($_SESSION['user_rank']);
             usort($favourable_list, 'cmp_favourable');
 
-            $smarty->assign('favourable_list', $favourable_list);
+            $GLOBALS['smarty']->assign('favourable_list', $favourable_list);
 
             /* 计算折扣 */
             $discount = compute_discount();
-            $smarty->assign('discount', $discount['discount']);
+            $GLOBALS['smarty']->assign('discount', $discount['discount']);
             $favour_name = empty($discount['name']) ? '' : join(',', $discount['name']);
-            $smarty->assign('your_discount', sprintf($_LANG['your_discount'], $favour_name, price_format($discount['discount'])));
+            $GLOBALS['smarty']->assign('your_discount', sprintf($GLOBALS['_LANG']['your_discount'], $favour_name, price_format($discount['discount'])));
 
             /* 增加是否在购物车里显示商品图 */
-            $smarty->assign('show_goods_thumb', $GLOBALS['_CFG']['show_goods_in_cart']);
+            $GLOBALS['smarty']->assign('show_goods_thumb', $GLOBALS['_CFG']['show_goods_in_cart']);
 
             /* 增加是否在购物车里显示商品属性 */
-            $smarty->assign('show_goods_attribute', $GLOBALS['_CFG']['show_attr_in_cart']);
+            $GLOBALS['smarty']->assign('show_goods_attribute', $GLOBALS['_CFG']['show_attr_in_cart']);
 
             /* 购物车中商品配件列表 */
             //取得购物车中基本件ID
@@ -1909,15 +1909,15 @@ class Flow extends Init
 
             $fittings_list = get_goods_fittings($parent_list);
 
-            $smarty->assign('fittings_list', $fittings_list);
+            $GLOBALS['smarty']->assign('fittings_list', $fittings_list);
         }
 
-        $smarty->assign('currency_format', $_CFG['currency_format']);
-        $smarty->assign('integral_scale', $_CFG['integral_scale']);
-        $smarty->assign('step', $_REQUEST['step']);
+        $GLOBALS['smarty']->assign('currency_format', $GLOBALS['_CFG']['currency_format']);
+        $GLOBALS['smarty']->assign('integral_scale', $GLOBALS['_CFG']['integral_scale']);
+        $GLOBALS['smarty']->assign('step', $_REQUEST['step']);
         assign_dynamic('shopping_flow');
 
-        $smarty->display('flow.dwt');
+        $GLOBALS['smarty']->display('flow.dwt');
     }
 
     /**

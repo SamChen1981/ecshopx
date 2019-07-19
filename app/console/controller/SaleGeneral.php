@@ -9,8 +9,8 @@ class SaleGeneral extends Init
 {
     public function index()
     {
-        require_once(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/admin/statistic.php');
-        $smarty->assign('lang', $_LANG);
+        require_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/admin/statistic.php');
+        $GLOBALS['smarty']->assign('lang', $GLOBALS['_LANG']);
 
         /* 权限判断 */
         admin_priv('sale_order_stats');
@@ -52,21 +52,21 @@ class SaleGeneral extends Init
         $format = ($query_type == 'year') ? '%Y' : '%Y-%m';
         $sql = "SELECT DATE_FORMAT(FROM_UNIXTIME(shipping_time), '$format') AS period, COUNT(*) AS order_count, " .
             "SUM(goods_amount + shipping_fee + insure_fee + pay_fee + pack_fee + card_fee - discount) AS order_amount " .
-            "FROM " . $ecs->table('order_info') .
+            "FROM " . $GLOBALS['ecs']->table('order_info') .
             " WHERE (order_status = '" . OS_CONFIRMED . "' OR order_status >= '" . OS_SPLITED . "')" .
             " AND (pay_status = '" . PS_PAYED . "' OR pay_status = '" . PS_PAYING . "') " .
             " AND (shipping_status = '" . SS_SHIPPED . "' OR shipping_status = '" . SS_RECEIVED . "') " .
             " AND shipping_time >= '$start_time' AND shipping_time <= '$end_time'" .
             " GROUP BY period ";
-        $data_list = $db->getAll($sql);
+        $data_list = $GLOBALS['db']->getAll($sql);
 
         /*------------------------------------------------------ */
         //-- 显示统计信息
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
             /* 赋值查询时间段 */
-            $smarty->assign('start_time', local_date('Y-m-d', $start_time));
-            $smarty->assign('end_time', local_date('Y-m-d', $end_time));
+            $GLOBALS['smarty']->assign('start_time', local_date('Y-m-d', $start_time));
+            $GLOBALS['smarty']->assign('end_time', local_date('Y-m-d', $end_time));
 
             /* 赋值统计数据 */
             $xml = "<chart caption='' xAxisName='%s' showValues='0' decimals='0' formatNumberScale='0'>%s</chart>";
@@ -80,11 +80,11 @@ class SaleGeneral extends Init
                 $i++;
             }
 
-            $smarty->assign('data_count', sprintf($xml, '', $data_count)); // 订单数统计数据
-            $smarty->assign('data_amount', sprintf($xml, '', $data_amount));    // 销售额统计数据
+            $GLOBALS['smarty']->assign('data_count', sprintf($xml, '', $data_count)); // 订单数统计数据
+            $GLOBALS['smarty']->assign('data_amount', sprintf($xml, '', $data_amount));    // 销售额统计数据
 
-            $smarty->assign('data_count_name', $_LANG['order_count_trend']);
-            $smarty->assign('data_amount_name', $_LANG['order_amount_trend']);
+            $GLOBALS['smarty']->assign('data_count_name', $GLOBALS['_LANG']['order_count_trend']);
+            $GLOBALS['smarty']->assign('data_amount_name', $GLOBALS['_LANG']['order_amount_trend']);
 
             /* 根据查询类型生成文件名 */
             if ($query_type == 'year') {
@@ -92,17 +92,17 @@ class SaleGeneral extends Init
             } else {
                 $filename = date('Ym', $start_time) . "_" . date('Ym', $end_time) . '_report';
             }
-            $smarty->assign(
+            $GLOBALS['smarty']->assign(
                 'action_link',
-                array('text' => $_LANG['down_sales_stats'],
+                array('text' => $GLOBALS['_LANG']['down_sales_stats'],
                     'href' => 'sale_general.php?act=download&filename=' . $filename .
                         '&query_type=' . $query_type . '&start_time=' . $start_time . '&end_time=' . $end_time)
             );
 
             /* 显示模板 */
-            $smarty->assign('ur_here', $_LANG['report_sell']);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['report_sell']);
             assign_query_info();
-            $smarty->display('sale_general.htm');
+            $GLOBALS['smarty']->display('sale_general.htm');
         }
 
         /*------------------------------------------------------ */
@@ -116,12 +116,12 @@ class SaleGeneral extends Init
             header("Content-Disposition: attachment; filename=$filename.xls");
 
             /* 文件标题 */
-            echo ecs_iconv(EC_CHARSET, 'GB2312', $filename . $_LANG['sales_statistics']) . "\t\n";
+            echo ecs_iconv(EC_CHARSET, 'GB2312', $filename . $GLOBALS['_LANG']['sales_statistics']) . "\t\n";
 
             /* 订单数量, 销售出商品数量, 销售金额 */
-            echo ecs_iconv(EC_CHARSET, 'GB2312', $_LANG['period']) . "\t";
-            echo ecs_iconv(EC_CHARSET, 'GB2312', $_LANG['order_count_trend']) . "\t";
-            echo ecs_iconv(EC_CHARSET, 'GB2312', $_LANG['order_amount_trend']) . "\t\n";
+            echo ecs_iconv(EC_CHARSET, 'GB2312', $GLOBALS['_LANG']['period']) . "\t";
+            echo ecs_iconv(EC_CHARSET, 'GB2312', $GLOBALS['_LANG']['order_count_trend']) . "\t";
+            echo ecs_iconv(EC_CHARSET, 'GB2312', $GLOBALS['_LANG']['order_amount_trend']) . "\t\n";
 
             foreach ($data_list as $data) {
                 echo ecs_iconv(EC_CHARSET, 'GB2312', $data['period']) . "\t";

@@ -9,7 +9,7 @@ class AdPosition extends Init
 {
     public function index()
     {
-        require_once(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/admin/ads.php');
+        require_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/admin/ads.php');
 
         /* act操作项的初始化 */
         if (empty($_REQUEST['act'])) {
@@ -18,26 +18,26 @@ class AdPosition extends Init
             $_REQUEST['act'] = trim($_REQUEST['act']);
         }
 
-        $smarty->assign('lang', $_LANG);
-        $exc = new exchange($ecs->table("ad_position"), $db, 'position_id', 'position_name');
+        $GLOBALS['smarty']->assign('lang', $GLOBALS['_LANG']);
+        $exc = new Exchange($GLOBALS['ecs']->table("ad_position"), $db, 'position_id', 'position_name');
 
         /*------------------------------------------------------ */
         //-- 广告位置列表
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
-            $smarty->assign('ur_here', $_LANG['ad_position']);
-            $smarty->assign('action_link', array('text' => $_LANG['position_add'], 'href' => 'ad_position.php?act=add'));
-            $smarty->assign('full_page', 1);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['ad_position']);
+            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['position_add'], 'href' => 'ad_position.php?act=add'));
+            $GLOBALS['smarty']->assign('full_page', 1);
 
             $position_list = $this->ad_position_list();
 
-            $smarty->assign('position_list', $position_list['position']);
-            $smarty->assign('filter', $position_list['filter']);
-            $smarty->assign('record_count', $position_list['record_count']);
-            $smarty->assign('page_count', $position_list['page_count']);
+            $GLOBALS['smarty']->assign('position_list', $position_list['position']);
+            $GLOBALS['smarty']->assign('filter', $position_list['filter']);
+            $GLOBALS['smarty']->assign('record_count', $position_list['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $position_list['page_count']);
 
             assign_query_info();
-            $smarty->display('ad_position_list.htm');
+            $GLOBALS['smarty']->display('ad_position_list.htm');
         }
 
         /*------------------------------------------------------ */
@@ -47,14 +47,14 @@ class AdPosition extends Init
             admin_priv('ad_manage');
 
             /* 模板赋值 */
-            $smarty->assign('ur_here', $_LANG['position_add']);
-            $smarty->assign('form_act', 'insert');
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['position_add']);
+            $GLOBALS['smarty']->assign('form_act', 'insert');
 
-            $smarty->assign('action_link', array('href' => 'ad_position.php?act=list', 'text' => $_LANG['ad_position']));
-            $smarty->assign('posit_arr', array('position_style' => '<table cellpadding="0" cellspacing="0">' . "\n" . '{foreach from=$ads item=ad}' . "\n" . '<tr><td>{$ad}</td></tr>' . "\n" . '{/foreach}' . "\n" . '</table>'));
+            $GLOBALS['smarty']->assign('action_link', array('href' => 'ad_position.php?act=list', 'text' => $GLOBALS['_LANG']['ad_position']));
+            $GLOBALS['smarty']->assign('posit_arr', array('position_style' => '<table cellpadding="0" cellspacing="0">' . "\n" . '{foreach from=$ads item=ad}' . "\n" . '<tr><td>{$ad}</td></tr>' . "\n" . '{/foreach}' . "\n" . '</table>'));
 
             assign_query_info();
-            $smarty->display('ad_position_info.htm');
+            $GLOBALS['smarty']->display('ad_position_info.htm');
         } elseif ($_REQUEST['act'] == 'insert') {
             admin_priv('ad_manage');
 
@@ -67,27 +67,27 @@ class AdPosition extends Init
             /* 查看广告位是否有重复 */
             if ($exc->num("position_name", $position_name) == 0) {
                 /* 将广告位置的信息插入数据表 */
-                $sql = 'INSERT INTO ' . $ecs->table('ad_position') . ' (position_name, ad_width, ad_height, position_desc, position_style) ' .
+                $sql = 'INSERT INTO ' . $GLOBALS['ecs']->table('ad_position') . ' (position_name, ad_width, ad_height, position_desc, position_style) ' .
                     "VALUES ('$position_name', '$ad_width', '$ad_height', '$position_desc', '$_POST[position_style]')";
 
-                $db->query($sql);
+                $GLOBALS['db']->query($sql);
                 /* 记录管理员操作 */
                 admin_log($position_name, 'add', 'ads_position');
 
                 /* 提示信息 */
-                $link[0]['text'] = $_LANG['ads_add'];
+                $link[0]['text'] = $GLOBALS['_LANG']['ads_add'];
                 $link[0]['href'] = 'ads.php?act=add';
 
-                $link[1]['text'] = $_LANG['continue_add_position'];
+                $link[1]['text'] = $GLOBALS['_LANG']['continue_add_position'];
                 $link[1]['href'] = 'ad_position.php?act=add';
 
-                $link[2]['text'] = $_LANG['back_position_list'];
+                $link[2]['text'] = $GLOBALS['_LANG']['back_position_list'];
                 $link[2]['href'] = 'ad_position.php?act=list';
 
-                sys_msg($_LANG['add'] . "&nbsp;" . stripslashes($position_name) . "&nbsp;" . $_LANG['attradd_succed'], 0, $link);
+                sys_msg($GLOBALS['_LANG']['add'] . "&nbsp;" . stripslashes($position_name) . "&nbsp;" . $GLOBALS['_LANG']['attradd_succed'], 0, $link);
             } else {
-                $link[] = array('text' => $_LANG['go_back'], 'href' => 'javascript:history.back(-1)');
-                sys_msg($_LANG['posit_name_exist'], 0, $link);
+                $link[] = array('text' => $GLOBALS['_LANG']['go_back'], 'href' => 'javascript:history.back(-1)');
+                sys_msg($GLOBALS['_LANG']['posit_name_exist'], 0, $link);
             }
         }
 
@@ -100,16 +100,16 @@ class AdPosition extends Init
             $id = !empty($_GET['id']) ? intval($_GET['id']) : 0;
 
             /* 获取广告位数据 */
-            $sql = 'SELECT * FROM ' . $ecs->table('ad_position') . " WHERE position_id='$id'";
-            $posit_arr = $db->getRow($sql);
+            $sql = 'SELECT * FROM ' . $GLOBALS['ecs']->table('ad_position') . " WHERE position_id='$id'";
+            $posit_arr = $GLOBALS['db']->getRow($sql);
 
-            $smarty->assign('ur_here', $_LANG['position_edit']);
-            $smarty->assign('action_link', array('href' => 'ad_position.php?act=list', 'text' => $_LANG['ad_position']));
-            $smarty->assign('posit_arr', $posit_arr);
-            $smarty->assign('form_act', 'update');
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['position_edit']);
+            $GLOBALS['smarty']->assign('action_link', array('href' => 'ad_position.php?act=list', 'text' => $GLOBALS['_LANG']['ad_position']));
+            $GLOBALS['smarty']->assign('posit_arr', $posit_arr);
+            $GLOBALS['smarty']->assign('form_act', 'update');
 
             assign_query_info();
-            $smarty->display('ad_position_info.htm');
+            $GLOBALS['smarty']->display('ad_position_info.htm');
         } elseif ($_REQUEST['act'] == 'update') {
             admin_priv('ad_manage');
 
@@ -120,17 +120,17 @@ class AdPosition extends Init
             $ad_height = !empty($_POST['ad_height']) ? intval($_POST['ad_height']) : 0;
             $position_id = !empty($_POST['id']) ? intval($_POST['id']) : 0;
             /* 查看广告位是否与其它有重复 */
-            $sql = 'SELECT COUNT(*) FROM ' . $ecs->table('ad_position') .
+            $sql = 'SELECT COUNT(*) FROM ' . $GLOBALS['ecs']->table('ad_position') .
                 " WHERE position_name = '$position_name' AND position_id <> '$position_id'";
-            if ($db->getOne($sql) == 0) {
-                $sql = "UPDATE " . $ecs->table('ad_position') . " SET " .
+            if ($GLOBALS['db']->getOne($sql) == 0) {
+                $sql = "UPDATE " . $GLOBALS['ecs']->table('ad_position') . " SET " .
                     "position_name    = '$position_name', " .
                     "ad_width         = '$ad_width', " .
                     "ad_height        = '$ad_height', " .
                     "position_desc    = '$position_desc', " .
                     "position_style   = '$_POST[position_style]' " .
                     "WHERE position_id = '$position_id'";
-                if ($db->query($sql)) {
+                if ($GLOBALS['db']->query($sql)) {
                     /* 记录管理员操作 */
                     admin_log($position_name, 'edit', 'ads_position');
 
@@ -138,12 +138,12 @@ class AdPosition extends Init
                     clear_cache_files();
 
                     /* 提示信息 */
-                    $link[] = array('text' => $_LANG['back_position_list'], 'href' => 'ad_position.php?act=list');
-                    sys_msg($_LANG['edit'] . ' ' . stripslashes($position_name) . ' ' . $_LANG['attradd_succed'], 0, $link);
+                    $link[] = array('text' => $GLOBALS['_LANG']['back_position_list'], 'href' => 'ad_position.php?act=list');
+                    sys_msg($GLOBALS['_LANG']['edit'] . ' ' . stripslashes($position_name) . ' ' . $GLOBALS['_LANG']['attradd_succed'], 0, $link);
                 }
             } else {
-                $link[] = array('text' => $_LANG['go_back'], 'href' => 'javascript:history.back(-1)');
-                sys_msg($_LANG['posit_name_exist'], 0, $link);
+                $link[] = array('text' => $GLOBALS['_LANG']['go_back'], 'href' => 'javascript:history.back(-1)');
+                sys_msg($GLOBALS['_LANG']['posit_name_exist'], 0, $link);
             }
         }
 
@@ -153,13 +153,13 @@ class AdPosition extends Init
         elseif ($_REQUEST['act'] == 'query') {
             $position_list = $this->ad_position_list();
 
-            $smarty->assign('position_list', $position_list['position']);
-            $smarty->assign('filter', $position_list['filter']);
-            $smarty->assign('record_count', $position_list['record_count']);
-            $smarty->assign('page_count', $position_list['page_count']);
+            $GLOBALS['smarty']->assign('position_list', $position_list['position']);
+            $GLOBALS['smarty']->assign('filter', $position_list['filter']);
+            $GLOBALS['smarty']->assign('record_count', $position_list['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $position_list['page_count']);
 
             make_json_result(
-                $smarty->fetch('ad_position_list.htm'),
+                $GLOBALS['smarty']->fetch('ad_position_list.htm'),
                 '',
                 array('filter' => $position_list['filter'], 'page_count' => $position_list['page_count'])
             );
@@ -176,13 +176,13 @@ class AdPosition extends Init
 
             /* 检查名称是否重复 */
             if ($exc->num("position_name", $position_name, $id) != 0) {
-                make_json_error(sprintf($_LANG['posit_name_exist'], $position_name));
+                make_json_error(sprintf($GLOBALS['_LANG']['posit_name_exist'], $position_name));
             } else {
                 if ($exc->edit("position_name = '$position_name'", $id)) {
                     admin_log($position_name, 'edit', 'ads_position');
                     make_json_result(stripslashes($position_name));
                 } else {
-                    make_json_result(sprintf($_LANG['brandedit_fail'], $position_name));
+                    make_json_result(sprintf($GLOBALS['_LANG']['brandedit_fail'], $position_name));
                 }
             }
         }
@@ -198,12 +198,12 @@ class AdPosition extends Init
 
             /* 宽度值必须是数字 */
             if (!preg_match("/^[\.0-9]+$/", $ad_width)) {
-                make_json_error($_LANG['width_number']);
+                make_json_error($GLOBALS['_LANG']['width_number']);
             }
 
             /* 广告位宽度应在1-1024之间 */
             if ($ad_width > 1024 || $ad_width < 1) {
-                make_json_error($_LANG['width_value']);
+                make_json_error($GLOBALS['_LANG']['width_value']);
             }
 
             if ($exc->edit("ad_width = '$ad_width'", $id)) {
@@ -211,7 +211,7 @@ class AdPosition extends Init
                 admin_log($ad_width, 'edit', 'ads_position');
                 make_json_result(stripslashes($ad_width));
             } else {
-                make_json_error($db->error());
+                make_json_error($GLOBALS['db']->error());
             }
         }
 
@@ -226,12 +226,12 @@ class AdPosition extends Init
 
             /* 高度值必须是数字 */
             if (!preg_match("/^[\.0-9]+$/", $ad_height)) {
-                make_json_error($_LANG['height_number']);
+                make_json_error($GLOBALS['_LANG']['height_number']);
             }
 
             /* 广告位宽度应在1-1024之间 */
             if ($ad_height > 1024 || $ad_height < 1) {
-                make_json_error($_LANG['height_value']);
+                make_json_error($GLOBALS['_LANG']['height_value']);
             }
 
             if ($exc->edit("ad_height = '$ad_height'", $id)) {
@@ -239,7 +239,7 @@ class AdPosition extends Init
                 admin_log($ad_height, 'edit', 'ads_position');
                 make_json_result(stripslashes($ad_height));
             } else {
-                make_json_error($db->error());
+                make_json_error($GLOBALS['db']->error());
             }
         }
 
@@ -254,8 +254,8 @@ class AdPosition extends Init
             /* 查询广告位下是否有广告存在 */
             $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('ad') . " WHERE position_id = '$id'";
 
-            if ($db->getOne($sql) > 0) {
-                make_json_error($_LANG['not_del_adposit']);
+            if ($GLOBALS['db']->getOne($sql) > 0) {
+                make_json_error($GLOBALS['_LANG']['not_del_adposit']);
             } else {
                 $exc->drop($id);
                 admin_log('', 'remove', 'ads_position');

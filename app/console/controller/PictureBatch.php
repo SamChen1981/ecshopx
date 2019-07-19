@@ -10,17 +10,17 @@ class PictureBatch extends Init
     public function index()
     {
         load_helper('goods', 'console');
-        $image = new Image($_CFG['bgcolor']);
+        $image = new Image($GLOBALS['_CFG']['bgcolor']);
 
         /* 权限检查 */
         admin_priv('picture_batch');
 
         if (empty($_GET['is_ajax'])) {
             assign_query_info();
-            $smarty->assign('ur_here', $_LANG['12_batch_pic']);
-            $smarty->assign('cat_list', cat_list(0, 0));
-            $smarty->assign('brand_list', get_brand_list());
-            $smarty->display('picture_batch.htm');
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['12_batch_pic']);
+            $GLOBALS['smarty']->assign('cat_list', cat_list(0, 0));
+            $GLOBALS['smarty']->assign('brand_list', get_brand_list());
+            $GLOBALS['smarty']->display('picture_batch.htm');
         } elseif (!empty($_GET['get_goods'])) {
             $brand_id = intval($_GET['brand_id']);
             $cat_id = intval($_GET['cat_id']);
@@ -33,9 +33,9 @@ class PictureBatch extends Init
                 $goods_where .= " AND g.`brand_id` = '$brand_id'";
             }
 
-            $sql = 'SELECT `goods_id`, `goods_name` FROM ' . $ecs->table('goods') . ' AS g WHERE 1 ' . $goods_where . ' LIMIT 50';
+            $sql = 'SELECT `goods_id`, `goods_name` FROM ' . $GLOBALS['ecs']->table('goods') . ' AS g WHERE 1 ' . $goods_where . ' LIMIT 50';
 
-            die(json_encode($db->getAll($sql)));
+            die(json_encode($GLOBALS['db']->getAll($sql)));
         } else {
             $proc_thumb = (isset($GLOBALS['shop_id']) && $GLOBALS['shop_id'] > 0);
             $do_album = empty($_GET['do_album']) ? 0 : 1;
@@ -62,7 +62,7 @@ class PictureBatch extends Init
             }
 
             if (!empty($goods_where)) {
-                $album_where = ', ' . $ecs->table('goods') . " AS g WHERE album.img_original > '' AND album.goods_id = g.goods_id " . $goods_where;
+                $album_where = ', ' . $GLOBALS['ecs']->table('goods') . " AS g WHERE album.img_original > '' AND album.goods_id = g.goods_id " . $goods_where;
             } else {
                 $album_where = " WHERE album.img_original > ''";
             }
@@ -80,31 +80,31 @@ class PictureBatch extends Init
 
                 /* 检查GD */
                 if ($image->gd_version() < 1) {
-                    make_json_error($_LANG['missing_gd']);
+                    make_json_error($GLOBALS['_LANG']['missing_gd']);
                 }
 
                 /* 如果需要添加水印，检查水印文件 */
-                if ((!empty($_CFG['watermark'])) && ($_CFG['watermark_place'] > 0) && $watermark && (!$image->validate_image($_CFG['watermark']))) {
+                if ((!empty($GLOBALS['_CFG']['watermark'])) && ($GLOBALS['_CFG']['watermark_place'] > 0) && $watermark && (!$image->validate_image($GLOBALS['_CFG']['watermark']))) {
                     make_json_error($image->error_msg());
                 }
                 $title = '';
 
                 if (isset($_GET['total_icon'])) {
-                    $count = $db->GetOne("SELECT COUNT(*) FROM " . $ecs->table('goods') . " AS g WHERE g.original_img <> ''" . $goods_where);
-                    $title = sprintf($_LANG['goods_format'], $count, $page_size);
+                    $count = $GLOBALS['db']->GetOne("SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('goods') . " AS g WHERE g.original_img <> ''" . $goods_where);
+                    $title = sprintf($GLOBALS['_LANG']['goods_format'], $count, $page_size);
                 }
 
                 if (isset($_GET['total_album'])) {
                     $count = $GLOBALS['db']->GetOne("SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('goods_gallery') . ' AS album ' . $album_where);
-                    $title = sprintf('&nbsp;' . $_LANG['gallery_format'], $count, $page_size);
+                    $title = sprintf('&nbsp;' . $GLOBALS['_LANG']['gallery_format'], $count, $page_size);
                     $module_no = 1;
                 }
                 $result = array('error' => 0, 'message' => '', 'content' => '', 'module_no' => $module_no, 'done' => 1, 'title' => $title, 'page_size' => $page_size,
                     'page' => 1, 'thumb' => $thumb, 'watermark' => $watermark, 'total' => 1, 'change' => $change, 'silent' => $silent,
                     'do_album' => $do_album, 'do_icon' => $do_icon, 'goods_id' => $goods_id, 'brand_id' => $brand_id, 'cat_id' => $cat_id,
-                    'row' => array('new_page' => sprintf($_LANG['page_format'], 1),
-                        'new_total' => sprintf($_LANG['total_format'], ceil($count / $page_size)),
-                        'new_time' => $_LANG['wait'],
+                    'row' => array('new_page' => sprintf($GLOBALS['_LANG']['page_format'], 1),
+                        'new_total' => sprintf($GLOBALS['_LANG']['total_format'], ceil($count / $page_size)),
+                        'new_time' => $GLOBALS['_LANG']['wait'],
                         'cur_id' => 'time_1'));
 
                 die(json_encode($result));
@@ -127,7 +127,7 @@ class PictureBatch extends Init
                 //-- 商品图片
                 /*------------------------------------------------------ */
                 if ($result['module_no'] == 0) {
-                    $count = $GLOBALS['db']->GetOne("SELECT COUNT(*) FROM " . $ecs->table('goods') . " AS g WHERE g.original_img > ''" . $goods_where);
+                    $count = $GLOBALS['db']->GetOne("SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('goods') . " AS g WHERE g.original_img > ''" . $goods_where);
                     /* 页数在许可范围内 */
                     if ($result['page'] <= ceil($count / $result['page_size'])) {
                         $start_time = gmtime(); //开始执行时间
@@ -141,18 +141,18 @@ class PictureBatch extends Init
                         $end_time = gmtime();
                         $result['row']['pre_id'] = 'time_' . $result['total'];
                         $result['row']['pre_time'] = ($end_time > $start_time) ? $end_time - $start_time : 1;
-                        $result['row']['pre_time'] = sprintf($_LANG['time_format'], $result['row']['pre_time']);
+                        $result['row']['pre_time'] = sprintf($GLOBALS['_LANG']['time_format'], $result['row']['pre_time']);
                         $result['row']['cur_id'] = 'time_' . ($result['total'] + 1);
                         $result['page']++; // 新行
-                        $result['row']['new_page'] = sprintf($_LANG['page_format'], $result['page']);
-                        $result['row']['new_total'] = sprintf($_LANG['total_format'], ceil($count / $result['page_size']));
-                        $result['row']['new_time'] = $_LANG['wait'];
+                        $result['row']['new_page'] = sprintf($GLOBALS['_LANG']['page_format'], $result['page']);
+                        $result['row']['new_total'] = sprintf($GLOBALS['_LANG']['total_format'], ceil($count / $result['page_size']));
+                        $result['row']['new_time'] = $GLOBALS['_LANG']['wait'];
                         $result['total']++;
                     } else {
                         --$result['total'];
                         --$result['page'];
                         $result['done'] = 0;
-                        $result['message'] = ($do_album) ? '' : $_LANG['done'];
+                        $result['message'] = ($do_album) ? '' : $GLOBALS['_LANG']['done'];
                         /* 清除缓存 */
                         clear_cache_files();
                         die(json_encode($result));
@@ -173,24 +173,24 @@ class PictureBatch extends Init
 
                         $result['row']['pre_id'] = 'time_' . $result['total'];
                         $result['row']['pre_time'] = ($end_time > $start_time) ? $end_time - $start_time : 1;
-                        $result['row']['pre_time'] = sprintf($_LANG['time_format'], $result['row']['pre_time']);
+                        $result['row']['pre_time'] = sprintf($GLOBALS['_LANG']['time_format'], $result['row']['pre_time']);
                         $result['row']['cur_id'] = 'time_' . ($result['total'] + 1);
                         $result['page']++;
-                        $result['row']['new_page'] = sprintf($_LANG['page_format'], $result['page']);
-                        $result['row']['new_total'] = sprintf($_LANG['total_format'], ceil($count / $result['page_size']));
-                        $result['row']['new_time'] = $_LANG['wait'];
+                        $result['row']['new_page'] = sprintf($GLOBALS['_LANG']['page_format'], $result['page']);
+                        $result['row']['new_total'] = sprintf($GLOBALS['_LANG']['total_format'], ceil($count / $result['page_size']));
+                        $result['row']['new_time'] = $GLOBALS['_LANG']['wait'];
 
                         $result['total']++;
                     } else {
                         $result['row']['pre_id'] = 'time_' . $result['total'];
                         $result['row']['cur_id'] = 'time_' . ($result['total'] + 1);
-                        $result['row']['new_page'] = sprintf($_LANG['page_format'], $result['page']);
-                        $result['row']['new_total'] = sprintf($_LANG['total_format'], ceil($count / $result['page_size']));
-                        $result['row']['new_time'] = $_LANG['wait'];
+                        $result['row']['new_page'] = sprintf($GLOBALS['_LANG']['page_format'], $result['page']);
+                        $result['row']['new_total'] = sprintf($GLOBALS['_LANG']['total_format'], ceil($count / $result['page_size']));
+                        $result['row']['new_time'] = $GLOBALS['_LANG']['wait'];
 
                         /* 执行结束 */
                         $result['done'] = 0;
-                        $result['message'] = $_LANG['done'];
+                        $result['message'] = $GLOBALS['_LANG']['done'];
                         /* 清除缓存 */
                         clear_cache_files();
                     }

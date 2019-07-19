@@ -28,23 +28,23 @@ class Sms extends Init
                 admin_priv('sms_send');
 
                 if ($sms->has_registered()) {
-                    $smarty->assign('ur_here', $_LANG['03_sms_send']);
+                    $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['03_sms_send']);
                     $special_ranks = get_rank_list();
-                    $send_rank['1_0'] = $_LANG['user_list'];
+                    $send_rank['1_0'] = $GLOBALS['_LANG']['user_list'];
                     foreach ($special_ranks as $rank_key => $rank_value) {
                         $send_rank['2_' . $rank_key] = $rank_value;
                     }
                     assign_query_info();
-                    $smarty->assign('send_rank', $send_rank);
-                    $sql = "SELECT * FROM " . $ecs->table('shop_config') . "WHERE  code='default_sms_sign'";
-                    $row = $db->getRow($sql);
-                    $smarty->assign('default_sms_sign', $row['value']);
-                    $smarty->display('sms_send_ui.htm');
+                    $GLOBALS['smarty']->assign('send_rank', $send_rank);
+                    $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('shop_config') . "WHERE  code='default_sms_sign'";
+                    $row = $GLOBALS['db']->getRow($sql);
+                    $GLOBALS['smarty']->assign('default_sms_sign', $row['value']);
+                    $GLOBALS['smarty']->display('sms_send_ui.htm');
                 } else {
-                    $smarty->assign('ur_here', $_LANG['register_sms']);
-                    $smarty->assign('sms_site_info', $sms->get_site_info());
+                    $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['register_sms']);
+                    $GLOBALS['smarty']->assign('sms_site_info', $sms->get_site_info());
                     assign_query_info();
-                    $smarty->display('sms_register_ui.htm');
+                    $GLOBALS['smarty']->display('sms_register_ui.htm');
                 }
 
                 break;
@@ -52,33 +52,33 @@ class Sms extends Init
                 admin_priv('sms_send');
 
                 if ($sms->has_registered()) {
-                    $sql = "SELECT * FROM " . $ecs->table('shop_config') . "WHERE  code='sms_sign'";
-                    $row = $db->getRow($sql);
+                    $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('shop_config') . "WHERE  code='sms_sign'";
+                    $row = $GLOBALS['db']->getRow($sql);
                     if (!empty($row['id'])) {
                         $sms_sign = unserialize($row['value']);
                         $t = array();
-                        if (is_array($sms_sign) && isset($sms_sign[$_CFG['ent_id']])) {
-                            foreach ($sms_sign[$_CFG['ent_id']] as $key => $val) {
-                                $t[$_CFG['ent_id']][$key]['key'] = $key;
-                                $t[$_CFG['ent_id']][$key]['value'] = $val;
+                        if (is_array($sms_sign) && isset($sms_sign[$GLOBALS['_CFG']['ent_id']])) {
+                            foreach ($sms_sign[$GLOBALS['_CFG']['ent_id']] as $key => $val) {
+                                $t[$GLOBALS['_CFG']['ent_id']][$key]['key'] = $key;
+                                $t[$GLOBALS['_CFG']['ent_id']][$key]['value'] = $val;
                             }
-                            $smarty->assign('sms_sign', $t[$_CFG['ent_id']]);
+                            $GLOBALS['smarty']->assign('sms_sign', $t[$GLOBALS['_CFG']['ent_id']]);
                         }
                     } else {
                         $this->shop_config_update('sms_sign', '');
                         $this->shop_config_update('default_sms_sign', '');
                     }
-                    $sql = "SELECT * FROM " . $ecs->table('shop_config') . "WHERE  code='default_sms_sign'";
-                    $default_sms_sign = $db->getRow($sql);
-                    $smarty->assign('default_sign', $default_sms_sign['value']);
+                    $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('shop_config') . "WHERE  code='default_sms_sign'";
+                    $default_sms_sign = $GLOBALS['db']->getRow($sql);
+                    $GLOBALS['smarty']->assign('default_sign', $default_sms_sign['value']);
 
 
-                    $smarty->display('sms_sign.htm');
+                    $GLOBALS['smarty']->display('sms_sign.htm');
                 } else {
-                    $smarty->assign('ur_here', $_LANG['register_sms']);
-                    $smarty->assign('sms_site_info', $sms->get_site_info());
+                    $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['register_sms']);
+                    $GLOBALS['smarty']->assign('sms_site_info', $sms->get_site_info());
                     assign_query_info();
-                    $smarty->display('sms_register_ui.htm');
+                    $GLOBALS['smarty']->display('sms_register_ui.htm');
                 }
                 break;
 
@@ -87,18 +87,18 @@ class Sms extends Init
 
                 if ($sms->has_registered()) {
                     if (empty($_POST['sms_sign'])) {
-                        sys_msg($_LANG['insert_sign'], 1, array(), false);
+                        sys_msg($GLOBALS['_LANG']['insert_sign'], 1, array(), false);
                     }
 
-                    $sql = "SELECT * FROM " . $ecs->table('shop_config') . "WHERE  code='sms_sign'";
-                    $row = $db->getRow($sql);
+                    $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('shop_config') . "WHERE  code='sms_sign'";
+                    $row = $GLOBALS['db']->getRow($sql);
 
                     if (!empty($row['id'])) {
                         $sms_sign = unserialize($row['value']);
-                        $smarty->assign('sms_sign', $sms_sign);
+                        $GLOBALS['smarty']->assign('sms_sign', $sms_sign);
                         $data = array();
-                        $data['shopexid'] = $_CFG['ent_id'];
-                        $data['passwd'] = $_CFG['ent_ac'];
+                        $data['shopexid'] = $GLOBALS['_CFG']['ent_id'];
+                        $data['passwd'] = $GLOBALS['_CFG']['ent_ac'];
 
                         $content_t = $content_y = trim($_POST['sms_sign']);
                         if (EC_CHARSET != 'utf-8') {
@@ -119,15 +119,15 @@ class Sms extends Init
 
                         if ($result['res'] == 'succ' && !empty($result['data']['extend_no'])) {
                             $extend_no = $result['data']['extend_no'];
-                            $sms_sign[$_CFG['ent_id']][$extend_no] = $content_y;
+                            $sms_sign[$GLOBALS['_CFG']['ent_id']][$extend_no] = $content_y;
                             $sms_sign = serialize($sms_sign);
-                            if (empty($_CFG['default_sms_sign'])) {
+                            if (empty($GLOBALS['_CFG']['default_sms_sign'])) {
                                 $this->shop_config_update('default_sms_sign', $content_y);
                             }
                             $this->shop_config_update('sms_sign', $sms_sign);
                             /* 清除缓存 */
                             clear_all_files();
-                            sys_msg($_LANG['insert_succ'], 1, array(), false);
+                            sys_msg($GLOBALS['_LANG']['insert_succ'], 1, array(), false);
                         } else {
                             if ($result['code'] == 1004) {
                                 delete_yunqi_code();
@@ -143,13 +143,13 @@ class Sms extends Init
                         $this->shop_config_update('sms_sign', '');
                         /* 清除缓存 */
                         clear_all_files();
-                        sys_msg($_LANG['error_smg'], 1, array(), false);
+                        sys_msg($GLOBALS['_LANG']['error_smg'], 1, array(), false);
                     }
                 } else {
-                    $smarty->assign('ur_here', $_LANG['register_sms']);
-                    $smarty->assign('sms_site_info', $sms->get_site_info());
+                    $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['register_sms']);
+                    $GLOBALS['smarty']->assign('sms_site_info', $sms->get_site_info());
                     assign_query_info();
-                    $smarty->display('sms_register_ui.htm');
+                    $GLOBALS['smarty']->display('sms_register_ui.htm');
                 }
                 break;
 
@@ -157,18 +157,18 @@ class Sms extends Init
             case 'sms_sign_update':
                 admin_priv('sms_send');
                 if ($sms->has_registered()) {
-                    $sql = "SELECT * FROM " . $ecs->table('shop_config') . "WHERE  code='sms_sign'";
-                    $row = $db->getRow($sql);
+                    $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('shop_config') . "WHERE  code='sms_sign'";
+                    $row = $GLOBALS['db']->getRow($sql);
                     if (!empty($row['id'])) {
                         $sms_sign = unserialize($row['value']);
-                        $smarty->assign('sms_sign', $sms_sign);
+                        $GLOBALS['smarty']->assign('sms_sign', $sms_sign);
                         $extend_no = $_POST['extend_no'];
 
-                        $content_t = $content_y = $sms_sign[$_CFG['ent_id']][$extend_no];
+                        $content_t = $content_y = $sms_sign[$GLOBALS['_CFG']['ent_id']][$extend_no];
                         $new_content_t = $new_content_y = $_POST['new_sms_sign'];
 
-                        if (!isset($sms_sign[$_CFG['ent_id']][$extend_no]) || empty($extend_no)) {
-                            sys_msg($_LANG['error_smg'], 1, array(), false);
+                        if (!isset($sms_sign[$GLOBALS['_CFG']['ent_id']][$extend_no]) || empty($extend_no)) {
+                            sys_msg($GLOBALS['_LANG']['error_smg'], 1, array(), false);
                         }
                         if (EC_CHARSET != 'utf-8') {
                             $content_t = iconv('gb2312', 'utf-8', $content_y);
@@ -191,18 +191,18 @@ class Sms extends Init
 
                         if ($result['res'] == 'succ' && !empty($result['data']['new_extend_no'])) {
                             $new_extend_no = $result['data']['new_extend_no'];
-                            unset($sms_sign[$_CFG['ent_id']][$extend_no]);
-                            $sms_sign[$_CFG['ent_id']][$new_extend_no] = $new_content_y;
+                            unset($sms_sign[$GLOBALS['_CFG']['ent_id']][$extend_no]);
+                            $sms_sign[$GLOBALS['_CFG']['ent_id']][$new_extend_no] = $new_content_y;
 
                             $sms_sign = serialize($sms_sign);
-                            if (empty($_CFG['default_sms_sign'])) {
+                            if (empty($GLOBALS['_CFG']['default_sms_sign'])) {
                                 $this->shop_config_update('default_sms_sign', $new_content_y);
                             }
                             $this->shop_config_update('sms_sign', $sms_sign);
 
                             /* 清除缓存 */
                             clear_all_files();
-                            sys_msg($_LANG['edit_succ'], 1, array(), false);
+                            sys_msg($GLOBALS['_LANG']['edit_succ'], 1, array(), false);
                         } else {
                             if ($result['code'] == 1004) {
                                 delete_yunqi_code();
@@ -218,51 +218,51 @@ class Sms extends Init
                         $this->shop_config_update('sms_sign', '');
                         /* 清除缓存 */
                         clear_all_files();
-                        sys_msg($_LANG['error_smg'], 1, array(), false);
+                        sys_msg($GLOBALS['_LANG']['error_smg'], 1, array(), false);
                     }
                 } else {
-                    $smarty->assign('ur_here', $_LANG['register_sms']);
-                    $smarty->assign('sms_site_info', $sms->get_site_info());
+                    $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['register_sms']);
+                    $GLOBALS['smarty']->assign('sms_site_info', $sms->get_site_info());
                     assign_query_info();
-                    $smarty->display('sms_register_ui.htm');
+                    $GLOBALS['smarty']->display('sms_register_ui.htm');
                 }
                 break;
 
             case 'sms_sign_default':
                 admin_priv('sms_send');
                 if ($sms->has_registered()) {
-                    $sql = "SELECT * FROM " . $ecs->table('shop_config') . "WHERE  code='sms_sign'";
-                    $row = $db->getRow($sql);
+                    $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('shop_config') . "WHERE  code='sms_sign'";
+                    $row = $GLOBALS['db']->getRow($sql);
                     if (!empty($row['id'])) {
                         $sms_sign = unserialize($row['value']);
-                        $smarty->assign('sms_sign', $sms_sign);
+                        $GLOBALS['smarty']->assign('sms_sign', $sms_sign);
                         $data = array();
-                        $data['shopexid'] = $_CFG['ent_id'];
-                        $data['passwd'] = $_CFG['ent_ac'];
+                        $data['shopexid'] = $GLOBALS['_CFG']['ent_id'];
+                        $data['passwd'] = $GLOBALS['_CFG']['ent_ac'];
 
                         $extend_no = $_POST['extend_no'];
 
-                        $sms_sign_default = $sms_sign[$_CFG['ent_id']][$extend_no];
+                        $sms_sign_default = $sms_sign[$GLOBALS['_CFG']['ent_id']][$extend_no];
                         if (!empty($sms_sign_default)) {
                             $this->shop_config_update('default_sms_sign', $sms_sign_default);
                             /* 清除缓存 */
                             clear_all_files();
-                            sys_msg($_LANG['default_succ'], 1, array(), false);
+                            sys_msg($GLOBALS['_LANG']['default_succ'], 1, array(), false);
                         } else {
-                            sys_msg($_LANG['no_default'], 1, array(), false);
+                            sys_msg($GLOBALS['_LANG']['no_default'], 1, array(), false);
                         }
                     } else {
                         $this->shop_config_update('default_sms_sign', $content_y);
                         $this->shop_config_update('sms_sign', '');
                         /* 清除缓存 */
                         clear_all_files();
-                        sys_msg($_LANG['error_smg'], 1, array(), false);
+                        sys_msg($GLOBALS['_LANG']['error_smg'], 1, array(), false);
                     }
                 } else {
-                    $smarty->assign('ur_here', $_LANG['register_sms']);
-                    $smarty->assign('sms_site_info', $sms->get_site_info());
+                    $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['register_sms']);
+                    $GLOBALS['smarty']->assign('sms_site_info', $sms->get_site_info());
                     assign_query_info();
-                    $smarty->display('sms_register_ui.htm');
+                    $GLOBALS['smarty']->display('sms_register_ui.htm');
                 }
                 break;
 
@@ -283,25 +283,25 @@ class Sms extends Init
                     $rank_array = explode('_', $send_rank);
 
                     if ($rank_array['0'] == 1) {
-                        $sql = 'SELECT mobile_phone FROM ' . $ecs->table('users') . "WHERE mobile_phone <>'' ";
-                        $row = $db->query($sql);
-                        while ($rank_rs = $db->fetch_array($row)) {
+                        $sql = 'SELECT mobile_phone FROM ' . $GLOBALS['ecs']->table('users') . "WHERE mobile_phone <>'' ";
+                        $row = $GLOBALS['db']->query($sql);
+                        while ($rank_rs = $GLOBALS['db']->fetch_array($row)) {
                             $value[] = $rank_rs['mobile_phone'];
                         }
                     } else {
-                        $rank_sql = "SELECT * FROM " . $ecs->table('user_rank') . " WHERE rank_id = '" . $rank_array['1'] . "'";
-                        $rank_row = $db->getRow($rank_sql);
-                        //$sql = 'SELECT mobile_phone FROM ' . $ecs->table('users') . "WHERE mobile_phone <>'' AND rank_points > " .$rank_row['min_points']." AND rank_points < ".$rank_row['max_points']." ";
+                        $rank_sql = "SELECT * FROM " . $GLOBALS['ecs']->table('user_rank') . " WHERE rank_id = '" . $rank_array['1'] . "'";
+                        $rank_row = $GLOBALS['db']->getRow($rank_sql);
+                        //$sql = 'SELECT mobile_phone FROM ' . $GLOBALS['ecs']->table('users') . "WHERE mobile_phone <>'' AND rank_points > " .$rank_row['min_points']." AND rank_points < ".$rank_row['max_points']." ";
 
                         if ($rank_row['special_rank'] == 1) {
-                            $sql = 'SELECT mobile_phone FROM ' . $ecs->table('users') . " WHERE mobile_phone <>'' AND user_rank = '" . $rank_array['1'] . "'";
+                            $sql = 'SELECT mobile_phone FROM ' . $GLOBALS['ecs']->table('users') . " WHERE mobile_phone <>'' AND user_rank = '" . $rank_array['1'] . "'";
                         } else {
-                            $sql = 'SELECT mobile_phone FROM ' . $ecs->table('users') . "WHERE mobile_phone <>'' AND rank_points > " . $rank_row['min_points'] . " AND rank_points < " . $rank_row['max_points'] . " ";
+                            $sql = 'SELECT mobile_phone FROM ' . $GLOBALS['ecs']->table('users') . "WHERE mobile_phone <>'' AND rank_points > " . $rank_row['min_points'] . " AND rank_points < " . $rank_row['max_points'] . " ";
                         }
 
-                        $row = $db->query($sql);
+                        $row = $GLOBALS['db']->query($sql);
 
-                        while ($rank_rs = $db->fetch_array($row)) {
+                        while ($rank_rs = $GLOBALS['db']->fetch_array($row)) {
                             $value[] = $rank_rs['mobile_phone'];
                         }
                     }
@@ -317,15 +317,15 @@ class Sms extends Init
 
                 $result = $sms->send($phone, $msg, $send_date, $send_num = 13, $sms_type);
 
-                $link[] = array('text' => $_LANG['back'] . $_LANG['03_sms_send'],
+                $link[] = array('text' => $GLOBALS['_LANG']['back'] . $GLOBALS['_LANG']['03_sms_send'],
                     'href' => 'sms.php?act=display_send_ui');
 
                 if ($result === true) {//发送成功
-                    sys_msg($_LANG['send_ok'], 0, $link);
+                    sys_msg($GLOBALS['_LANG']['send_ok'], 0, $link);
                 } else {
-                    @$error_detail = $_LANG['server_errors'][$sms->errors['server_errors']['error_no']]
-                        . $_LANG['api_errors']['send'][$sms->errors['api_errors']['error_no']];
-                    sys_msg($_LANG['send_error'] . $error_detail, 1, $link);
+                    @$error_detail = $GLOBALS['_LANG']['server_errors'][$sms->errors['server_errors']['error_no']]
+                        . $GLOBALS['_LANG']['api_errors']['send'][$sms->errors['api_errors']['error_no']];
+                    sys_msg($GLOBALS['_LANG']['send_error'] . $error_detail, 1, $link);
                 }
 
                 break;

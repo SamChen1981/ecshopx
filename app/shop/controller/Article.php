@@ -12,12 +12,12 @@ class Article extends Init
         $_REQUEST['id'] = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
         $article_id = $_REQUEST['id'];
         if (isset($_REQUEST['cat_id']) && $_REQUEST['cat_id'] < 0) {
-            $article_id = $db->getOne("SELECT article_id FROM " . $ecs->table('article') . " WHERE cat_id = '" . intval($_REQUEST['cat_id']) . "' ");
+            $article_id = $GLOBALS['db']->getOne("SELECT article_id FROM " . $GLOBALS['ecs']->table('article') . " WHERE cat_id = '" . intval($_REQUEST['cat_id']) . "' ");
         }
 
-        $cache_id = sprintf('%X', crc32($_REQUEST['id'] . '-' . $_CFG['lang']));
+        $cache_id = sprintf('%X', crc32($_REQUEST['id'] . '-' . $GLOBALS['_CFG']['lang']));
 
-        if (!$smarty->is_cached('article.dwt', $cache_id)) {
+        if (!$GLOBALS['smarty']->is_cached('article.dwt', $cache_id)) {
             /* 文章详情 */
             $article = $this->get_article_info($article_id);
 
@@ -31,30 +31,30 @@ class Article extends Init
                 exit;
             }
 
-            $smarty->assign('article_categories', article_categories_tree($article_id)); //文章分类树
-            $smarty->assign('categories', get_categories_tree());  // 分类树
-            $smarty->assign('helps', get_shop_help()); // 网店帮助
-            $smarty->assign('top_goods', get_top10());    // 销售排行
-            $smarty->assign('best_goods', get_recommend_goods('best'));       // 推荐商品
-            $smarty->assign('new_goods', get_recommend_goods('new'));        // 最新商品
-            $smarty->assign('hot_goods', get_recommend_goods('hot'));        // 热点文章
-            $smarty->assign('promotion_goods', get_promote_goods());    // 特价商品
-            $smarty->assign('related_goods', $this->article_related_goods($_REQUEST['id']));  // 特价商品
-            $smarty->assign('id', $article_id);
-            $smarty->assign('username', $_SESSION['user_name']);
-            $smarty->assign('email', $_SESSION['email']);
-            $smarty->assign('type', '1');
-            $smarty->assign('promotion_info', get_promotion_info());
+            $GLOBALS['smarty']->assign('article_categories', article_categories_tree($article_id)); //文章分类树
+            $GLOBALS['smarty']->assign('categories', get_categories_tree());  // 分类树
+            $GLOBALS['smarty']->assign('helps', get_shop_help()); // 网店帮助
+            $GLOBALS['smarty']->assign('top_goods', get_top10());    // 销售排行
+            $GLOBALS['smarty']->assign('best_goods', get_recommend_goods('best'));       // 推荐商品
+            $GLOBALS['smarty']->assign('new_goods', get_recommend_goods('new'));        // 最新商品
+            $GLOBALS['smarty']->assign('hot_goods', get_recommend_goods('hot'));        // 热点文章
+            $GLOBALS['smarty']->assign('promotion_goods', get_promote_goods());    // 特价商品
+            $GLOBALS['smarty']->assign('related_goods', $this->article_related_goods($_REQUEST['id']));  // 特价商品
+            $GLOBALS['smarty']->assign('id', $article_id);
+            $GLOBALS['smarty']->assign('username', $_SESSION['user_name']);
+            $GLOBALS['smarty']->assign('email', $_SESSION['email']);
+            $GLOBALS['smarty']->assign('type', '1');
+            $GLOBALS['smarty']->assign('promotion_info', get_promotion_info());
 
             /* 验证码相关设置 */
-            if ((intval($_CFG['captcha']) & CAPTCHA_COMMENT) && gd_version() > 0) {
-                $smarty->assign('enabled_captcha', 1);
-                $smarty->assign('rand', mt_rand());
+            if ((intval($GLOBALS['_CFG']['captcha']) & CAPTCHA_COMMENT) && gd_version() > 0) {
+                $GLOBALS['smarty']->assign('enabled_captcha', 1);
+                $GLOBALS['smarty']->assign('rand', mt_rand());
             }
 
-            $smarty->assign('article', $article);
-            $smarty->assign('keywords', htmlspecialchars($article['keywords']));
-            $smarty->assign('description', htmlspecialchars($article['description']));
+            $GLOBALS['smarty']->assign('article', $article);
+            $GLOBALS['smarty']->assign('keywords', htmlspecialchars($article['keywords']));
+            $GLOBALS['smarty']->assign('description', htmlspecialchars($article['description']));
 
             $catlist = array();
             foreach (get_article_parent_cats($article['cat_id']) as $k => $v) {
@@ -64,37 +64,37 @@ class Article extends Init
             assign_template('a', $catlist);
 
             $position = assign_ur_here($article['cat_id'], $article['title']);
-            $smarty->assign('page_title', $position['title']);    // 页面标题
-            $smarty->assign('ur_here', $position['ur_here']);  // 当前位置
-            $smarty->assign('comment_type', 1);
+            $GLOBALS['smarty']->assign('page_title', $position['title']);    // 页面标题
+            $GLOBALS['smarty']->assign('ur_here', $position['ur_here']);  // 当前位置
+            $GLOBALS['smarty']->assign('comment_type', 1);
 
             /* 相关商品 */
             $sql = "SELECT a.goods_id, g.goods_name " .
-                "FROM " . $ecs->table('goods_article') . " AS a, " . $ecs->table('goods') . " AS g " .
+                "FROM " . $GLOBALS['ecs']->table('goods_article') . " AS a, " . $GLOBALS['ecs']->table('goods') . " AS g " .
                 "WHERE a.goods_id = g.goods_id " .
                 "AND a.article_id = '$_REQUEST[id]' ";
-            $smarty->assign('goods_list', $db->getAll($sql));
+            $GLOBALS['smarty']->assign('goods_list', $GLOBALS['db']->getAll($sql));
 
             /* 上一篇下一篇文章 */
-            $next_article = $db->getRow("SELECT article_id, title FROM " . $ecs->table('article') . " WHERE article_id > $article_id AND cat_id=$article[cat_id] AND is_open=1 LIMIT 1");
+            $next_article = $GLOBALS['db']->getRow("SELECT article_id, title FROM " . $GLOBALS['ecs']->table('article') . " WHERE article_id > $article_id AND cat_id=$article[cat_id] AND is_open=1 LIMIT 1");
             if (!empty($next_article)) {
                 $next_article['url'] = build_uri('article', array('aid' => $next_article['article_id']), $next_article['title']);
-                $smarty->assign('next_article', $next_article);
+                $GLOBALS['smarty']->assign('next_article', $next_article);
             }
 
-            $prev_aid = $db->getOne("SELECT max(article_id) FROM " . $ecs->table('article') . " WHERE article_id < $article_id AND cat_id=$article[cat_id] AND is_open=1");
+            $prev_aid = $GLOBALS['db']->getOne("SELECT max(article_id) FROM " . $GLOBALS['ecs']->table('article') . " WHERE article_id < $article_id AND cat_id=$article[cat_id] AND is_open=1");
             if (!empty($prev_aid)) {
-                $prev_article = $db->getRow("SELECT article_id, title FROM " . $ecs->table('article') . " WHERE article_id = $prev_aid");
+                $prev_article = $GLOBALS['db']->getRow("SELECT article_id, title FROM " . $GLOBALS['ecs']->table('article') . " WHERE article_id = $prev_aid");
                 $prev_article['url'] = build_uri('article', array('aid' => $prev_article['article_id']), $prev_article['title']);
-                $smarty->assign('prev_article', $prev_article);
+                $GLOBALS['smarty']->assign('prev_article', $prev_article);
             }
 
             assign_dynamic('article');
         }
         if (isset($article) && $article['cat_id'] > 2) {
-            $smarty->display('article.dwt', $cache_id);
+            $GLOBALS['smarty']->display('article.dwt', $cache_id);
         } else {
-            $smarty->display('article_pro.dwt', $cache_id);
+            $GLOBALS['smarty']->display('article_pro.dwt', $cache_id);
         }
     }
 

@@ -10,8 +10,8 @@ class UserAccountManage extends Init
     public function index()
     {
         load_helper('order');
-        require_once(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/admin/statistic.php');
-        $smarty->assign('lang', $_LANG);
+        require_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/admin/statistic.php');
+        $GLOBALS['smarty']->assign('lang', $GLOBALS['_LANG']);
 
         /* act操作项的初始化 */
         if (empty($_REQUEST['act'])) {
@@ -50,42 +50,42 @@ class UserAccountManage extends Init
             $account['to_cash_amount'] = $this->get_total_amount($start_date, $end_date, 1);//提现总额
 
             $sql = " SELECT IFNULL(SUM(user_money), 0) AS user_money, IFNULL(SUM(frozen_money), 0) AS frozen_money FROM " .
-                $ecs->table('account_log') . " WHERE `change_time` >= " . $start_date . " AND `change_time` < " . ($end_date + 86400);
-            $money_list = $db->getRow($sql);
+                $GLOBALS['ecs']->table('account_log') . " WHERE `change_time` >= " . $start_date . " AND `change_time` < " . ($end_date + 86400);
+            $money_list = $GLOBALS['db']->getRow($sql);
             $account['user_money'] = price_format($money_list['user_money']);   //用户可用余额
             $account['frozen_money'] = price_format($money_list['frozen_money']);   //用户冻结金额
 
             $sql = "SELECT IFNULL(SUM(surplus), 0) AS surplus, IFNULL(SUM(integral_money), 0) AS integral_money FROM " .
-                $ecs->table('order_info') . " WHERE 1 AND `add_time` >= " . $start_date . " AND `add_time` < " . ($end_date + 86400);
-            $money_list = $db->getRow($sql);
+                $GLOBALS['ecs']->table('order_info') . " WHERE 1 AND `add_time` >= " . $start_date . " AND `add_time` < " . ($end_date + 86400);
+            $money_list = $GLOBALS['db']->getRow($sql);
 
             $account['surplus'] = price_format($money_list['surplus']);   //交易使用余额
             $account['integral_money'] = price_format($money_list['integral_money']);   //积分使用余额
 
             /* 赋值到模板 */
-            $smarty->assign('account', $account);
-            $smarty->assign('start_date', local_date('Y-m-d', $start_date));
-            $smarty->assign('end_date', local_date('Y-m-d', $end_date));
-            $smarty->assign('ur_here', $_LANG['user_account_manage']);
+            $GLOBALS['smarty']->assign('account', $account);
+            $GLOBALS['smarty']->assign('start_date', local_date('Y-m-d', $start_date));
+            $GLOBALS['smarty']->assign('end_date', local_date('Y-m-d', $end_date));
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['user_account_manage']);
 
             /* 显示页面 */
             assign_query_info();
-            $smarty->display('user_account_manage.htm');
+            $GLOBALS['smarty']->display('user_account_manage.htm');
         } elseif ($_REQUEST['act'] == 'surplus') {
             $order_list = $this->order_list();
 
             /* 赋值到模板 */
-            $smarty->assign('order_list', $order_list['order_list']);
-            $smarty->assign('ur_here', $_LANG['order_by_surplus']);
-            $smarty->assign('filter', $order_list['filter']);
-            $smarty->assign('record_count', $order_list['record_count']);
-            $smarty->assign('page_count', $order_list['page_count']);
-            $smarty->assign('full_page', 1);
-            $smarty->assign('action_link', array('text' => $_LANG['user_account_manage'], 'href' => 'user_account_manage.php?act=list&start_date=' . local_date('Y-m-d', $start_date) . '&end_date=' . local_date('Y-m-d', $end_date)));
+            $GLOBALS['smarty']->assign('order_list', $order_list['order_list']);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['order_by_surplus']);
+            $GLOBALS['smarty']->assign('filter', $order_list['filter']);
+            $GLOBALS['smarty']->assign('record_count', $order_list['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $order_list['page_count']);
+            $GLOBALS['smarty']->assign('full_page', 1);
+            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['user_account_manage'], 'href' => 'user_account_manage.php?act=list&start_date=' . local_date('Y-m-d', $start_date) . '&end_date=' . local_date('Y-m-d', $end_date)));
 
             /* 显示页面 */
             assign_query_info();
-            $smarty->display('order_surplus_list.htm');
+            $GLOBALS['smarty']->display('order_surplus_list.htm');
         }
 
         /*------------------------------------------------------ */
@@ -94,15 +94,15 @@ class UserAccountManage extends Init
         elseif ($_REQUEST['act'] == 'query') {
             $order_list = $this->order_list();
 
-            $smarty->assign('order_list', $order_list['order_list']);
-            $smarty->assign('filter', $order_list['filter']);
-            $smarty->assign('record_count', $order_list['record_count']);
-            $smarty->assign('page_count', $order_list['page_count']);
+            $GLOBALS['smarty']->assign('order_list', $order_list['order_list']);
+            $GLOBALS['smarty']->assign('filter', $order_list['filter']);
+            $GLOBALS['smarty']->assign('record_count', $order_list['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $order_list['page_count']);
 
             $sort_flag = sort_flag($order_list['filter']);
-            $smarty->assign($sort_flag['tag'], $sort_flag['img']);
+            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
-            make_json_result($smarty->fetch('order_surplus_list.htm'), '', array('filter' => $order_list['filter'], 'page_count' => $order_list['page_count']));
+            make_json_result($GLOBALS['smarty']->fetch('order_surplus_list.htm'), '', array('filter' => $order_list['filter'], 'page_count' => $order_list['page_count']));
         }
     }
 
@@ -132,8 +132,6 @@ class UserAccountManage extends Init
      */
     private function order_list()
     {
-        global $start_date, $end_date;
-
         $result = get_filter();
 
         if ($result === false) {

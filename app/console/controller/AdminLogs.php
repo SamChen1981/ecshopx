@@ -31,27 +31,27 @@ class AdminLogs extends Init
 
             /* 查询IP地址列表 */
             $ip_list = array();
-            $res = $db->query("SELECT DISTINCT ip_address FROM " . $ecs->table('admin_log'));
-            while ($row = $db->FetchRow($res)) {
+            $res = $GLOBALS['db']->query("SELECT DISTINCT ip_address FROM " . $GLOBALS['ecs']->table('admin_log'));
+            while ($row = $GLOBALS['db']->FetchRow($res)) {
                 $ip_list[$row['ip_address']] = $row['ip_address'];
             }
 
-            $smarty->assign('ur_here', $_LANG['admin_logs']);
-            $smarty->assign('ip_list', $ip_list);
-            $smarty->assign('full_page', 1);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['admin_logs']);
+            $GLOBALS['smarty']->assign('ip_list', $ip_list);
+            $GLOBALS['smarty']->assign('full_page', 1);
 
             $log_list = $this->get_admin_logs();
 
-            $smarty->assign('log_list', $log_list['list']);
-            $smarty->assign('filter', $log_list['filter']);
-            $smarty->assign('record_count', $log_list['record_count']);
-            $smarty->assign('page_count', $log_list['page_count']);
+            $GLOBALS['smarty']->assign('log_list', $log_list['list']);
+            $GLOBALS['smarty']->assign('filter', $log_list['filter']);
+            $GLOBALS['smarty']->assign('record_count', $log_list['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $log_list['page_count']);
 
             $sort_flag = sort_flag($log_list['filter']);
-            $smarty->assign($sort_flag['tag'], $sort_flag['img']);
+            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
             assign_query_info();
-            $smarty->display('admin_logs.htm');
+            $GLOBALS['smarty']->display('admin_logs.htm');
         }
 
         /*------------------------------------------------------ */
@@ -60,16 +60,16 @@ class AdminLogs extends Init
         elseif ($_REQUEST['act'] == 'query') {
             $log_list = $this->get_admin_logs();
 
-            $smarty->assign('log_list', $log_list['list']);
-            $smarty->assign('filter', $log_list['filter']);
-            $smarty->assign('record_count', $log_list['record_count']);
-            $smarty->assign('page_count', $log_list['page_count']);
+            $GLOBALS['smarty']->assign('log_list', $log_list['list']);
+            $GLOBALS['smarty']->assign('filter', $log_list['filter']);
+            $GLOBALS['smarty']->assign('record_count', $log_list['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $log_list['page_count']);
 
             $sort_flag = sort_flag($log_list['filter']);
-            $smarty->assign($sort_flag['tag'], $sort_flag['img']);
+            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
             make_json_result(
-                $smarty->fetch('admin_logs.htm'),
+                $GLOBALS['smarty']->fetch('admin_logs.htm'),
                 '',
                 array('filter' => $log_list['filter'], 'page_count' => $log_list['page_count'])
             );
@@ -112,29 +112,29 @@ class AdminLogs extends Init
                             $where .= " AND log_time <= '" . $a_year . "'";
                             break;
                     }
-                    $sql = "DELETE FROM " . $ecs->table('admin_log') . $where;
-                    $res = $db->query($sql);
+                    $sql = "DELETE FROM " . $GLOBALS['ecs']->table('admin_log') . $where;
+                    $res = $GLOBALS['db']->query($sql);
                     if ($res) {
                         admin_log('', 'remove', 'adminlog');
 
-                        $link[] = array('text' => $_LANG['back_list'], 'href' => 'admin_logs.php?act=list');
-                        sys_msg($_LANG['drop_sueeccud'], 1, $link);
+                        $link[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'admin_logs.php?act=list');
+                        sys_msg($GLOBALS['_LANG']['drop_sueeccud'], 1, $link);
                     }
                 }
             } /* 如果不是按日期来删除, 就按ID删除日志 */
             else {
                 $count = 0;
                 foreach ($_POST['checkboxes'] as $key => $id) {
-                    $sql = "DELETE FROM " . $ecs->table('admin_log') . " WHERE log_id = '$id'";
-                    $result = $db->query($sql);
+                    $sql = "DELETE FROM " . $GLOBALS['ecs']->table('admin_log') . " WHERE log_id = '$id'";
+                    $result = $GLOBALS['db']->query($sql);
 
                     $count++;
                 }
                 if ($result) {
                     admin_log('', 'remove', 'adminlog');
 
-                    $link[] = array('text' => $_LANG['back_list'], 'href' => 'admin_logs.php?act=list');
-                    sys_msg(sprintf($_LANG['batch_drop_success'], $count), 0, $link);
+                    $link[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'admin_logs.php?act=list');
+                    sys_msg(sprintf($GLOBALS['_LANG']['batch_drop_success'], $count), 0, $link);
                 }
             }
         }

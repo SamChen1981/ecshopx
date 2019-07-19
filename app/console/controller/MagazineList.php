@@ -11,170 +11,170 @@ class MagazineList extends Init
     {
         admin_priv('magazine_list');
         if ($_REQUEST['act'] == 'list') {
-            $smarty->assign('ur_here', $_LANG['magazine_list']);
-            $smarty->assign('action_link', array('text' => $_LANG['add_new'], 'href' => 'magazine_list.php?act=add'));
-            $smarty->assign('full_page', 1);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['magazine_list']);
+            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['add_new'], 'href' => 'magazine_list.php?act=add'));
+            $GLOBALS['smarty']->assign('full_page', 1);
 
             $magazinedb = $this->get_magazine();
 
-            $smarty->assign('magazinedb', $magazinedb['magazinedb']);
-            $smarty->assign('filter', $magazinedb['filter']);
-            $smarty->assign('record_count', $magazinedb['record_count']);
-            $smarty->assign('page_count', $magazinedb['page_count']);
+            $GLOBALS['smarty']->assign('magazinedb', $magazinedb['magazinedb']);
+            $GLOBALS['smarty']->assign('filter', $magazinedb['filter']);
+            $GLOBALS['smarty']->assign('record_count', $magazinedb['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $magazinedb['page_count']);
 
             $special_ranks = get_rank_list();
-            $send_rank[SEND_LIST . '_0'] = $_LANG['email_user'];
-            $send_rank[SEND_USER . '_0'] = $_LANG['user_list'];
+            $send_rank[SEND_LIST . '_0'] = $GLOBALS['_LANG']['email_user'];
+            $send_rank[SEND_USER . '_0'] = $GLOBALS['_LANG']['user_list'];
             foreach ($special_ranks as $rank_key => $rank_value) {
                 $send_rank[SEND_RANK . '_' . $rank_key] = $rank_value;
             }
-            $smarty->assign('send_rank', $send_rank);
+            $GLOBALS['smarty']->assign('send_rank', $send_rank);
 
             assign_query_info();
-            $smarty->display('magazine_list.htm');
+            $GLOBALS['smarty']->display('magazine_list.htm');
         } elseif ($_REQUEST['act'] == 'query') {
             $magazinedb = $this->get_magazine();
-            $smarty->assign('magazinedb', $magazinedb['magazinedb']);
-            $smarty->assign('filter', $magazinedb['filter']);
-            $smarty->assign('record_count', $magazinedb['record_count']);
-            $smarty->assign('page_count', $magazinedb['page_count']);
+            $GLOBALS['smarty']->assign('magazinedb', $magazinedb['magazinedb']);
+            $GLOBALS['smarty']->assign('filter', $magazinedb['filter']);
+            $GLOBALS['smarty']->assign('record_count', $magazinedb['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $magazinedb['page_count']);
 
             $sort_flag = sort_flag($magazinedb['filter']);
-            $smarty->assign($sort_flag['tag'], $sort_flag['img']);
+            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
-            make_json_result($smarty->fetch('magazine_list.htm'), '', array('filter' => $magazinedb['filter'], 'page_count' => $magazinedb['page_count']));
+            make_json_result($GLOBALS['smarty']->fetch('magazine_list.htm'), '', array('filter' => $magazinedb['filter'], 'page_count' => $magazinedb['page_count']));
         } elseif ($_REQUEST['act'] == 'add') {
             if (empty($_POST['step'])) {
                 include_once(ROOT_PATH . 'includes/fckeditor/fckeditor.php'); // 包含 html editor 类文件
-                $smarty->assign('action_link', array('text' => $_LANG['go_list'], 'href' => 'magazine_list.php?act=list'));
-                $smarty->assign(array('ur_here' => $_LANG['magazine_list'], 'act' => 'add'));
+                $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['go_list'], 'href' => 'magazine_list.php?act=list'));
+                $GLOBALS['smarty']->assign(array('ur_here' => $GLOBALS['_LANG']['magazine_list'], 'act' => 'add'));
                 create_html_editor('magazine_content');
                 assign_query_info();
-                $smarty->display('magazine_list_add.htm');
+                $GLOBALS['smarty']->display('magazine_list_add.htm');
             } elseif ($_POST['step'] == 2) {
                 $magazine_name = trim($_POST['magazine_name']);
                 $magazine_content = trim($_POST['magazine_content']);
                 $magazine_content = str_replace('src=\"', 'src=\"' . defined('FORCE_SSL_ADMIN') ? "https://" : "http://" . $_SERVER['HTTP_HOST'], $magazine_content);
                 $time = gmtime();
-                $sql = "INSERT INTO " . $ecs->table('mail_templates') . " (template_code, is_html,template_subject, template_content, last_modify, type) VALUES('" . md5($magazine_name . $time) . "',1, '$magazine_name', '$magazine_content', '$time', 'magazine')";
-                $db->query($sql);
-                $links[] = array('text' => $_LANG['magazine_list'], 'href' => 'magazine_list.php?act=list');
-                $links[] = array('text' => $_LANG['add_new'], 'href' => 'magazine_list.php?act=add');
-                sys_msg($_LANG['edit_ok'], 0, $links);
+                $sql = "INSERT INTO " . $GLOBALS['ecs']->table('mail_templates') . " (template_code, is_html,template_subject, template_content, last_modify, type) VALUES('" . md5($magazine_name . $time) . "',1, '$magazine_name', '$magazine_content', '$time', 'magazine')";
+                $GLOBALS['db']->query($sql);
+                $links[] = array('text' => $GLOBALS['_LANG']['magazine_list'], 'href' => 'magazine_list.php?act=list');
+                $links[] = array('text' => $GLOBALS['_LANG']['add_new'], 'href' => 'magazine_list.php?act=add');
+                sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
             }
         } elseif ($_REQUEST['act'] == 'edit') {
             include_once(ROOT_PATH . 'includes/fckeditor/fckeditor.php'); // 包含 html editor 类文件
             $id = intval($_REQUEST['id']);
             if (empty($_POST['step'])) {
-                $rt = $db->getRow("SELECT * FROM " . $ecs->table('mail_templates') . " WHERE type = 'magazine' AND template_id = '$id'");
-                $smarty->assign(array('id' => $id, 'act' => 'edit', 'magazine_name' => $rt['template_subject'], 'magazine_content' => $rt['template_content']));
-                $smarty->assign(array('ur_here' => $_LANG['magazine_list'], 'act' => 'edit'));
-                $smarty->assign('action_link', array('text' => $_LANG['go_list'], 'href' => 'magazine_list.php?act=list'));
+                $rt = $GLOBALS['db']->getRow("SELECT * FROM " . $GLOBALS['ecs']->table('mail_templates') . " WHERE type = 'magazine' AND template_id = '$id'");
+                $GLOBALS['smarty']->assign(array('id' => $id, 'act' => 'edit', 'magazine_name' => $rt['template_subject'], 'magazine_content' => $rt['template_content']));
+                $GLOBALS['smarty']->assign(array('ur_here' => $GLOBALS['_LANG']['magazine_list'], 'act' => 'edit'));
+                $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['go_list'], 'href' => 'magazine_list.php?act=list'));
                 create_html_editor('magazine_content', $rt['template_content']);
                 assign_query_info();
-                $smarty->display('magazine_list_add.htm');
+                $GLOBALS['smarty']->display('magazine_list_add.htm');
             } elseif ($_POST['step'] == 2) {
                 $magazine_name = trim($_POST['magazine_name']);
                 $magazine_content = trim($_POST['magazine_content']);
                 $magazine_content = str_replace('src=\"', 'src=\"' . defined('FORCE_SSL_ADMIN') ? "https://" : "http://" . $_SERVER['HTTP_HOST'], $magazine_content);
                 $time = gmtime();
-                $db->query("UPDATE " . $ecs->table('mail_templates') . " SET is_html = 1, template_subject = '$magazine_name', template_content = '$magazine_content', last_modify = '$time' WHERE type = 'magazine' AND template_id = '$id'");
-                $links[] = array('text' => $_LANG['magazine_list'], 'href' => 'magazine_list.php?act=list');
-                sys_msg($_LANG['edit_ok'], 0, $links);
+                $GLOBALS['db']->query("UPDATE " . $GLOBALS['ecs']->table('mail_templates') . " SET is_html = 1, template_subject = '$magazine_name', template_content = '$magazine_content', last_modify = '$time' WHERE type = 'magazine' AND template_id = '$id'");
+                $links[] = array('text' => $GLOBALS['_LANG']['magazine_list'], 'href' => 'magazine_list.php?act=list');
+                sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
             }
         } elseif ($_REQUEST['act'] == 'del') {
             $id = intval($_REQUEST['id']);
-            $db->query("DELETE  FROM " . $ecs->table('mail_templates') . " WHERE type = 'magazine' AND template_id = '$id' LIMIT 1");
-            $links[] = array('text' => $_LANG['magazine_list'], 'href' => 'magazine_list.php?act=list');
-            sys_msg($_LANG['edit_ok'], 0, $links);
+            $GLOBALS['db']->query("DELETE  FROM " . $GLOBALS['ecs']->table('mail_templates') . " WHERE type = 'magazine' AND template_id = '$id' LIMIT 1");
+            $links[] = array('text' => $GLOBALS['_LANG']['magazine_list'], 'href' => 'magazine_list.php?act=list');
+            sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
         } elseif ($_REQUEST['act'] == 'addtolist') {
             $id = intval($_REQUEST['id']);
             $pri = !empty($_REQUEST['pri']) ? 1 : 0;
             $start = empty($_GET['start']) ? 0 : (int)$_GET['start'];
             $send_rank = $_REQUEST['send_rank'];
             $rank_array = explode('_', $send_rank);
-            $template_id = $db->getOne("SELECT template_id FROM " . $ecs->table('mail_templates') . " WHERE type = 'magazine' AND template_id = '$id'");
+            $template_id = $GLOBALS['db']->getOne("SELECT template_id FROM " . $GLOBALS['ecs']->table('mail_templates') . " WHERE type = 'magazine' AND template_id = '$id'");
             if (!empty($template_id)) {
                 if (SEND_LIST == $rank_array['0']) {
-                    $count = $db->getOne("SELECT COUNT(*) FROM " . $ecs->table('email_list') . "WHERE stat = 1");
+                    $count = $GLOBALS['db']->getOne("SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('email_list') . "WHERE stat = 1");
                     if ($count > $start) {
-                        $sql = "SELECT email FROM " . $ecs->table('email_list') . "WHERE stat = 1 LIMIT $start,100";
-                        $query = $db->query($sql);
+                        $sql = "SELECT email FROM " . $GLOBALS['ecs']->table('email_list') . "WHERE stat = 1 LIMIT $start,100";
+                        $query = $GLOBALS['db']->query($sql);
                         $add = '';
 
                         $i = 0;
-                        while ($rt = $db->fetch_array($query)) {
+                        while ($rt = $GLOBALS['db']->fetch_array($query)) {
                             $time = time();
                             $add .= $add ? ",('$rt[email]','$id','$pri','$time')" : "('$rt[email]','$id','$pri','$time')";
                             $i++;
                         }
                         if ($add) {
-                            $sql = "INSERT INTO " . $ecs->table('email_sendlist') . " (email,template_id,pri,last_send) VALUES " . $add;
-                            $db->query($sql);
+                            $sql = "INSERT INTO " . $GLOBALS['ecs']->table('email_sendlist') . " (email,template_id,pri,last_send) VALUES " . $add;
+                            $GLOBALS['db']->query($sql);
                         }
                         if ($i == 100) {
                             $start = $start + 100;
                         } else {
                             $start = $start + $i;
                         }
-                        $links[] = array('text' => sprintf($_LANG['finish_list'], $start), 'href' => "magazine_list.php?act=addtolist&id=$id&pri=$pri&start=$start&send_rank=$send_rank");
-                        sys_msg($_LANG['finishing'], 0, $links);
+                        $links[] = array('text' => sprintf($GLOBALS['_LANG']['finish_list'], $start), 'href' => "magazine_list.php?act=addtolist&id=$id&pri=$pri&start=$start&send_rank=$send_rank");
+                        sys_msg($GLOBALS['_LANG']['finishing'], 0, $links);
                     } else {
-                        $db->query("UPDATE " . $ecs->table('mail_templates') . " SET last_send = " . time() . " WHERE type = 'magazine' AND template_id = '$id'");
-                        $links[] = array('text' => $_LANG['magazine_list'], 'href' => 'magazine_list.php?act=list');
-                        sys_msg($_LANG['edit_ok'], 0, $links);
+                        $GLOBALS['db']->query("UPDATE " . $GLOBALS['ecs']->table('mail_templates') . " SET last_send = " . time() . " WHERE type = 'magazine' AND template_id = '$id'");
+                        $links[] = array('text' => $GLOBALS['_LANG']['magazine_list'], 'href' => 'magazine_list.php?act=list');
+                        sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
                     }
                 } else {
-                    $sql = "SELECT special_rank FROM " . $ecs->table('user_rank') . " WHERE rank_id = '" . $rank_array['1'] . "'";
-                    $row = $db->getRow($sql);
+                    $sql = "SELECT special_rank FROM " . $GLOBALS['ecs']->table('user_rank') . " WHERE rank_id = '" . $rank_array['1'] . "'";
+                    $row = $GLOBALS['db']->getRow($sql);
                     if (SEND_USER == $rank_array['0']) {
-                        $count_sql = 'SELECT COUNT(*) FROM ' . $ecs->table('users') . 'WHERE is_validated = 1';
-                        $email_sql = 'SELECT email FROM ' . $ecs->table('users') . "WHERE is_validated = 1 LIMIT $start,100";
+                        $count_sql = 'SELECT COUNT(*) FROM ' . $GLOBALS['ecs']->table('users') . 'WHERE is_validated = 1';
+                        $email_sql = 'SELECT email FROM ' . $GLOBALS['ecs']->table('users') . "WHERE is_validated = 1 LIMIT $start,100";
                     } elseif ($row['special_rank']) {
-                        $count_sql = 'SELECT COUNT(*) FROM ' . $ecs->table('users') . 'WHERE is_validated = 1 AND user_rank = ' . $rank_array['1'];
-                        $email_sql = 'SELECT email FROM ' . $ecs->table('users') . 'WHERE is_validated = 1 AND user_rank = ' . $rank_array['1'] . " LIMIT $start,100";
+                        $count_sql = 'SELECT COUNT(*) FROM ' . $GLOBALS['ecs']->table('users') . 'WHERE is_validated = 1 AND user_rank = ' . $rank_array['1'];
+                        $email_sql = 'SELECT email FROM ' . $GLOBALS['ecs']->table('users') . 'WHERE is_validated = 1 AND user_rank = ' . $rank_array['1'] . " LIMIT $start,100";
                     } else {
                         $count_sql = 'SELECT COUNT(*) ' .
-                            'FROM ' . $ecs->table('users') . ' AS u LEFT JOIN ' . $ecs->table('user_rank') . ' AS ur ' .
+                            'FROM ' . $GLOBALS['ecs']->table('users') . ' AS u LEFT JOIN ' . $GLOBALS['ecs']->table('user_rank') . ' AS ur ' .
                             "  ON ur.special_rank = '0' AND ur.min_points <= u.rank_points AND ur.max_points > u.rank_points" .
                             " WHERE ur.rank_id = '" . $rank_array['1'] . "' AND u.is_validated = 1";
                         $email_sql = 'SELECT u.email ' .
-                            'FROM ' . $ecs->table('users') . ' AS u LEFT JOIN ' . $ecs->table('user_rank') . ' AS ur ' .
+                            'FROM ' . $GLOBALS['ecs']->table('users') . ' AS u LEFT JOIN ' . $GLOBALS['ecs']->table('user_rank') . ' AS ur ' .
                             "  ON ur.special_rank = '0' AND ur.min_points <= u.rank_points AND ur.max_points > u.rank_points" .
                             " WHERE ur.rank_id = '" . $rank_array['1'] . "' AND u.is_validated = 1 LIMIT $start,100";
                     }
 
-                    $count = $db->getOne($count_sql);
+                    $count = $GLOBALS['db']->getOne($count_sql);
                     if ($count > $start) {
-                        $query = $db->query($email_sql);
+                        $query = $GLOBALS['db']->query($email_sql);
                         $add = '';
 
                         $i = 0;
-                        while ($rt = $db->fetch_array($query)) {
+                        while ($rt = $GLOBALS['db']->fetch_array($query)) {
                             $time = time();
                             $add .= $add ? ",('$rt[email]','$id','$pri','$time')" : "('$rt[email]','$id','$pri','$time')";
                             $i++;
                         }
                         if ($add) {
-                            $sql = "INSERT INTO " . $ecs->table('email_sendlist') . " (email,template_id,pri,last_send) VALUES " . $add;
-                            $db->query($sql);
+                            $sql = "INSERT INTO " . $GLOBALS['ecs']->table('email_sendlist') . " (email,template_id,pri,last_send) VALUES " . $add;
+                            $GLOBALS['db']->query($sql);
                         }
                         if ($i == 100) {
                             $start = $start + 100;
                         } else {
                             $start = $start + $i;
                         }
-                        $links[] = array('text' => sprintf($_LANG['finish_list'], $start), 'href' => "magazine_list.php?act=addtolist&id=$id&pri=$pri&start=$start&send_rank=$send_rank");
-                        sys_msg($_LANG['finishing'], 0, $links);
+                        $links[] = array('text' => sprintf($GLOBALS['_LANG']['finish_list'], $start), 'href' => "magazine_list.php?act=addtolist&id=$id&pri=$pri&start=$start&send_rank=$send_rank");
+                        sys_msg($GLOBALS['_LANG']['finishing'], 0, $links);
                     } else {
-                        $db->query("UPDATE " . $ecs->table('mail_templates') . " SET last_send = " . time() . " WHERE type = 'magazine' AND template_id = '$id'");
-                        $links[] = array('text' => $_LANG['magazine_list'], 'href' => 'magazine_list.php?act=list');
-                        sys_msg($_LANG['edit_ok'], 0, $links);
+                        $GLOBALS['db']->query("UPDATE " . $GLOBALS['ecs']->table('mail_templates') . " SET last_send = " . time() . " WHERE type = 'magazine' AND template_id = '$id'");
+                        $links[] = array('text' => $GLOBALS['_LANG']['magazine_list'], 'href' => 'magazine_list.php?act=list');
+                        sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
                     }
                 }
             } else {
-                $links[] = array('text' => $_LANG['magazine_list'], 'href' => 'magazine_list.php?act=list');
-                sys_msg($_LANG['edit_ok'], 0, $links);
+                $links[] = array('text' => $GLOBALS['_LANG']['magazine_list'], 'href' => 'magazine_list.php?act=list');
+                sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
             }
         }
     }

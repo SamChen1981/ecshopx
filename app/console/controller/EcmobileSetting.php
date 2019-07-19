@@ -19,7 +19,7 @@ class EcmobileSetting extends Init
         if ($_REQUEST['act'] == 'list') {
             /* 检查权限 */
             admin_priv('mobile_setting');
-            $smarty->assign('ur_here', $_LANG['lead_here']);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['lead_here']);
             $cert = new Certificate();
             $isOpenWap = $cert->is_open_sn('fy');
             if ($isOpenWap == false && $_SESSION['yunqi_login'] && $_SESSION['TOKEN']) {
@@ -31,8 +31,8 @@ class EcmobileSetting extends Init
             }
             $tab = !$isOpenWap ? 'open' : 'enter';
             $charset = EC_CHARSET == 'utf-8' ? "utf8" : 'gbk';
-            $sql = "SELECT * FROM " . $ecs->table('config') . " WHERE 1";
-            $group_items = $db->getAll($sql);
+            $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('config') . " WHERE 1";
+            $group_items = $GLOBALS['db']->getAll($sql);
             $grouplist = $this->get_params();
             foreach ($grouplist as $key => $value) {
                 foreach ($value['items'] as $k => $v) {
@@ -47,13 +47,13 @@ class EcmobileSetting extends Init
                 }
             }
 
-            $smarty->assign('ur_here', $_LANG['mobile_setting']);
-            $smarty->assign('group_list', $grouplist);
-            $smarty->display('mobile_config.html');
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['mobile_setting']);
+            $GLOBALS['smarty']->assign('group_list', $grouplist);
+            $GLOBALS['smarty']->display('mobile_config.html');
         } elseif ($_REQUEST['act'] == 'post') {
             /* 检查权限 */
             admin_priv('mobile_setting');
-            $links[] = array('text' => $_LANG['mobile_setting'], 'href' => 'ecmobile_setting.php?act=list');
+            $links[] = array('text' => $GLOBALS['_LANG']['mobile_setting'], 'href' => 'ecmobile_setting.php?act=list');
 
             foreach ($_POST['value'] as $key => $value) {
                 $_POST['value'][$key] = trim($value);
@@ -71,8 +71,8 @@ class EcmobileSetting extends Init
                     }
                 }
             }
-            $sql = "SELECT * FROM " . $ecs->table('config') . " WHERE `code` = '" . $_POST['code'] . "'";
-            $res = $db->getRow($sql);
+            $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('config') . " WHERE `code` = '" . $_POST['code'] . "'";
+            $res = $GLOBALS['db']->getRow($sql);
             $items = $this->get_items($_POST['code']);
 
             $type = $items['type'];
@@ -84,30 +84,30 @@ class EcmobileSetting extends Init
             $time = date('Y-m-d H:i:s', time());
 
             if ($res) {
-                $sql = "UPDATE " . $ecs->table('config') . " SET `updated_at` = '$time',`status` = '$status' ,`config` = '" . json_encode($_POST['value']) . "' WHERE `code` = '$code'";
+                $sql = "UPDATE " . $GLOBALS['ecs']->table('config') . " SET `updated_at` = '$time',`status` = '$status' ,`config` = '" . json_encode($_POST['value']) . "' WHERE `code` = '$code'";
             } else {
-                $sql = "INSERT INTO " . $ecs->table('config') . " (`name`,`type`,`description`,`code`,`config`,`created_at`,`updated_at`,`status`) VALUES ('$name','$type','$description','$code','$config','$time','$time','$status')";
+                $sql = "INSERT INTO " . $GLOBALS['ecs']->table('config') . " (`name`,`type`,`description`,`code`,`config`,`created_at`,`updated_at`,`status`) VALUES ('$name','$type','$description','$code','$config','$time','$time','$status')";
             }
-            $db->query($sql);
+            $GLOBALS['db']->query($sql);
             if ($type == 'payment') {
                 save_payment($code, $name, $description, $config, $status, PAY_TYPE_APP);
             }
             if ($cert_steam) {
                 //处理文件
-                $sql = "SELECT * FROM " . $ecs->table('config') . " WHERE `code` = '" . $_POST['code'] . "'";
-                $setting = $db->getRow($sql);
+                $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('config') . " WHERE `code` = '" . $_POST['code'] . "'";
+                $setting = $GLOBALS['db']->getRow($sql);
                 if ($setting['id']) {
                     $id = $setting['id'];
-                    $cert_tmp = $db->getRow("SELECT * FROM " . $ecs->table('cert') . " WHERE `config_id` = '$id'");
+                    $cert_tmp = $GLOBALS['db']->getRow("SELECT * FROM " . $GLOBALS['ecs']->table('cert') . " WHERE `config_id` = '$id'");
                     if ($cert_tmp) {
-                        $db->query("UPDATE " . $ecs->table('cert') . " SET `file` = '$cert_steam' WHERE `config_id` = '$id'");
+                        $GLOBALS['db']->query("UPDATE " . $GLOBALS['ecs']->table('cert') . " SET `file` = '$cert_steam' WHERE `config_id` = '$id'");
                     } else {
-                        $db->query("INSERT INTO " . $ecs->table('cert') . " (`config_id`,`file`) VALUES ($id,'$cert_steam')");
+                        $GLOBALS['db']->query("INSERT INTO " . $GLOBALS['ecs']->table('cert') . " (`config_id`,`file`) VALUES ($id,'$cert_steam')");
                     }
                 }
             }
 
-            sys_msg($_LANG['attradd_succed'], 0, $links);
+            sys_msg($GLOBALS['_LANG']['attradd_succed'], 0, $links);
         }
     }
 

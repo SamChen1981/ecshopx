@@ -10,7 +10,7 @@ class Adsense extends Init
     public function index()
     {
         load_helper('order');
-        require_once(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/admin/ads.php');
+        require_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/admin/ads.php');
 
         /* act操作项的初始化 */
         if (empty($_REQUEST['act'])) {
@@ -28,48 +28,48 @@ class Adsense extends Init
             /* 获取广告数据 */
             $ads_stats = array();
             $sql = "SELECT a.ad_id, a.ad_name, b.* " .
-                "FROM " . $ecs->table('ad') . " AS a, " . $ecs->table('adsense') . " AS b " .
+                "FROM " . $GLOBALS['ecs']->table('ad') . " AS a, " . $GLOBALS['ecs']->table('adsense') . " AS b " .
                 "WHERE b.from_ad = a.ad_id ORDER by a.ad_name DESC";
-            $res = $db->query($sql);
-            while ($rows = $db->fetchRow($res)) {
+            $res = $GLOBALS['db']->query($sql);
+            while ($rows = $GLOBALS['db']->fetchRow($res)) {
                 /* 获取当前广告所产生的订单总数 */
                 $rows['referer'] = addslashes($rows['referer']);
-                $sql2 = 'SELECT COUNT(order_id) FROM ' . $ecs->table('order_info') . " WHERE from_ad='$rows[ad_id]' AND referer='$rows[referer]'";
-                $rows['order_num'] = $db->getOne($sql2);
+                $sql2 = 'SELECT COUNT(order_id) FROM ' . $GLOBALS['ecs']->table('order_info') . " WHERE from_ad='$rows[ad_id]' AND referer='$rows[referer]'";
+                $rows['order_num'] = $GLOBALS['db']->getOne($sql2);
 
                 /* 当前广告所产生的已完成的有效订单 */
-                $sql3 = "SELECT COUNT(order_id) FROM " . $ecs->table('order_info') .
+                $sql3 = "SELECT COUNT(order_id) FROM " . $GLOBALS['ecs']->table('order_info') .
                     " WHERE from_ad    = '$rows[ad_id]'" .
                     " AND referer = '$rows[referer]' " . order_query_sql('finished');
-                $rows['order_confirm'] = $db->getOne($sql3);
+                $rows['order_confirm'] = $GLOBALS['db']->getOne($sql3);
 
                 $ads_stats[] = $rows;
             }
-            $smarty->assign('ads_stats', $ads_stats);
+            $GLOBALS['smarty']->assign('ads_stats', $ads_stats);
 
             /* 站外JS投放商品的统计数据 */
             $goods_stats = array();
-            $goods_sql = "SELECT from_ad, referer, clicks FROM " . $ecs->table('adsense') .
+            $goods_sql = "SELECT from_ad, referer, clicks FROM " . $GLOBALS['ecs']->table('adsense') .
                 " WHERE from_ad = '-1' ORDER by referer DESC";
-            $goods_res = $db->query($goods_sql);
-            while ($rows2 = $db->fetchRow($goods_res)) {
+            $goods_res = $GLOBALS['db']->query($goods_sql);
+            while ($rows2 = $GLOBALS['db']->fetchRow($goods_res)) {
                 /* 获取当前广告所产生的订单总数 */
                 $rows2['referer'] = addslashes($rows2['referer']);
-                $rows2['order_num'] = $db->getOne("SELECT COUNT(order_id) FROM " . $ecs->table('order_info') . " WHERE referer='$rows2[referer]'");
+                $rows2['order_num'] = $GLOBALS['db']->getOne("SELECT COUNT(order_id) FROM " . $GLOBALS['ecs']->table('order_info') . " WHERE referer='$rows2[referer]'");
 
                 /* 当前广告所产生的已完成的有效订单 */
 
-                $sql = "SELECT COUNT(order_id) FROM " . $ecs->table('order_info') .
+                $sql = "SELECT COUNT(order_id) FROM " . $GLOBALS['ecs']->table('order_info') .
                     " WHERE referer='$rows2[referer]'" . order_query_sql('finished');
-                $rows2['order_confirm'] = $db->getOne($sql);
+                $rows2['order_confirm'] = $GLOBALS['db']->getOne($sql);
 
-                $rows2['ad_name'] = $_LANG['adsense_js_goods'];
+                $rows2['ad_name'] = $GLOBALS['_LANG']['adsense_js_goods'];
                 $goods_stats[] = $rows2;
             }
             if ($_REQUEST['act'] == 'download') {
                 header("Content-type: application/vnd.ms-excel; charset=utf-8");
                 header("Content-Disposition: attachment; filename=ad_statistics.xls");
-                $data = "$_LANG[adsense_name]\t$_LANG[cleck_referer]\t$_LANG[click_count]\t$_LANG[confirm_order]\t$_LANG[gen_order_amount]\n";
+                $data = "$GLOBALS['_LANG'][adsense_name]\t$GLOBALS['_LANG'][cleck_referer]\t$GLOBALS['_LANG'][click_count]\t$GLOBALS['_LANG'][confirm_order]\t$GLOBALS['_LANG'][gen_order_amount]\n";
                 $res = array_merge($goods_stats, $ads_stats);
                 foreach ($res as $row) {
                     $data .= "$row[ad_name]\t$row[referer]\t$row[clicks]\t$row[order_confirm]\t$row[order_num]\n";
@@ -77,17 +77,17 @@ class Adsense extends Init
                 echo ecs_iconv(EC_CHARSET, 'GB2312', $data);
                 exit;
             }
-            $smarty->assign('goods_stats', $goods_stats);
+            $GLOBALS['smarty']->assign('goods_stats', $goods_stats);
 
             /* 赋值给模板 */
-            $smarty->assign('action_link', array('href' => 'ads.php?act=list', 'text' => $_LANG['ad_list']));
-            $smarty->assign('action_link2', array('href' => 'adsense.php?act=download', 'text' => $_LANG['download_ad_statistics']));
-            $smarty->assign('ur_here', $_LANG['adsense_js_stats']);
-            $smarty->assign('lang', $_LANG);
+            $GLOBALS['smarty']->assign('action_link', array('href' => 'ads.php?act=list', 'text' => $GLOBALS['_LANG']['ad_list']));
+            $GLOBALS['smarty']->assign('action_link2', array('href' => 'adsense.php?act=download', 'text' => $GLOBALS['_LANG']['download_ad_statistics']));
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['adsense_js_stats']);
+            $GLOBALS['smarty']->assign('lang', $GLOBALS['_LANG']);
 
             /* 显示页面 */
             assign_query_info();
-            $smarty->display('adsense.htm');
+            $GLOBALS['smarty']->display('adsense.htm');
         }
     }
 }

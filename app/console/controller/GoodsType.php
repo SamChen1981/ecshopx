@@ -9,7 +9,7 @@ class GoodsType extends Init
 {
     public function index()
     {
-        $exc = new exchange($ecs->table("goods_type"), $db, 'cat_id', 'cat_name');
+        $exc = new Exchange($GLOBALS['ecs']->table("goods_type"), $db, 'cat_id', 'cat_name');
 
         /*------------------------------------------------------ */
         //-- 管理界面
@@ -17,26 +17,26 @@ class GoodsType extends Init
         if ($_REQUEST['act'] == 'manage') {
             assign_query_info();
 
-            $smarty->assign('ur_here', $_LANG['08_goods_type']);
-            $smarty->assign('full_page', 1);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['08_goods_type']);
+            $GLOBALS['smarty']->assign('full_page', 1);
 
             $good_type_list = $this->get_goodstype();
             $good_in_type = '';
 
-            $smarty->assign('goods_type_arr', $good_type_list['type']);
-            $smarty->assign('filter', $good_type_list['filter']);
-            $smarty->assign('record_count', $good_type_list['record_count']);
-            $smarty->assign('page_count', $good_type_list['page_count']);
+            $GLOBALS['smarty']->assign('goods_type_arr', $good_type_list['type']);
+            $GLOBALS['smarty']->assign('filter', $good_type_list['filter']);
+            $GLOBALS['smarty']->assign('record_count', $good_type_list['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $good_type_list['page_count']);
 
-            $query = $db->query("SELECT a.cat_id FROM " . $ecs->table('attribute') . " AS a RIGHT JOIN " . $ecs->table('goods_attr') . " AS g ON g.attr_id = a.attr_id GROUP BY a.cat_id");
-            while ($row = $db->fetchRow($query)) {
+            $query = $GLOBALS['db']->query("SELECT a.cat_id FROM " . $GLOBALS['ecs']->table('attribute') . " AS a RIGHT JOIN " . $GLOBALS['ecs']->table('goods_attr') . " AS g ON g.attr_id = a.attr_id GROUP BY a.cat_id");
+            while ($row = $GLOBALS['db']->fetchRow($query)) {
                 $good_in_type[$row['cat_id']] = 1;
             }
-            $smarty->assign('good_in_type', $good_in_type);
+            $GLOBALS['smarty']->assign('good_in_type', $good_in_type);
 
-            $smarty->assign('action_link', array('text' => $_LANG['new_goods_type'], 'href' => 'goods_type.php?act=add'));
+            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['new_goods_type'], 'href' => 'goods_type.php?act=add'));
 
-            $smarty->display('goods_type.htm');
+            $GLOBALS['smarty']->display('goods_type.htm');
         }
 
         /*------------------------------------------------------ */
@@ -46,13 +46,13 @@ class GoodsType extends Init
         elseif ($_REQUEST['act'] == 'query') {
             $good_type_list = $this->get_goodstype();
 
-            $smarty->assign('goods_type_arr', $good_type_list['type']);
-            $smarty->assign('filter', $good_type_list['filter']);
-            $smarty->assign('record_count', $good_type_list['record_count']);
-            $smarty->assign('page_count', $good_type_list['page_count']);
+            $GLOBALS['smarty']->assign('goods_type_arr', $good_type_list['type']);
+            $GLOBALS['smarty']->assign('filter', $good_type_list['filter']);
+            $GLOBALS['smarty']->assign('record_count', $good_type_list['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $good_type_list['page_count']);
 
             make_json_result(
-                $smarty->fetch('goods_type.htm'),
+                $GLOBALS['smarty']->fetch('goods_type.htm'),
                 '',
                 array('filter' => $good_type_list['filter'], 'page_count' => $good_type_list['page_count'])
             );
@@ -77,7 +77,7 @@ class GoodsType extends Init
 
                 make_json_result(stripslashes($type_name));
             } else {
-                make_json_error($_LANG['repeat_type_name']);
+                make_json_error($GLOBALS['_LANG']['repeat_type_name']);
             }
         }
 
@@ -103,14 +103,14 @@ class GoodsType extends Init
         elseif ($_REQUEST['act'] == 'add') {
             admin_priv('goods_type');
 
-            $smarty->assign('ur_here', $_LANG['new_goods_type']);
-            $smarty->assign('action_link', array('href' => 'goods_type.php?act=manage', 'text' => $_LANG['goods_type_list']));
-            $smarty->assign('action', 'add');
-            $smarty->assign('form_act', 'insert');
-            $smarty->assign('goods_type', array('enabled' => 1));
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['new_goods_type']);
+            $GLOBALS['smarty']->assign('action_link', array('href' => 'goods_type.php?act=manage', 'text' => $GLOBALS['_LANG']['goods_type_list']));
+            $GLOBALS['smarty']->assign('action', 'add');
+            $GLOBALS['smarty']->assign('form_act', 'insert');
+            $GLOBALS['smarty']->assign('goods_type', array('enabled' => 1));
 
             assign_query_info();
-            $smarty->display('goods_type_info.htm');
+            $GLOBALS['smarty']->display('goods_type_info.htm');
         } elseif ($_REQUEST['act'] == 'insert') {
             //$goods_type['cat_name']   = trim_right(sub_str($_POST['cat_name'], 60));
             //$goods_type['attr_group'] = trim_right(sub_str($_POST['attr_group'], 255));
@@ -118,11 +118,11 @@ class GoodsType extends Init
             $goods_type['attr_group'] = sub_str($_POST['attr_group'], 255);
             $goods_type['enabled'] = intval($_POST['enabled']);
 
-            if ($db->autoExecute($ecs->table('goods_type'), $goods_type) !== false) {
-                $links = array(array('href' => 'goods_type.php?act=manage', 'text' => $_LANG['back_list']));
-                sys_msg($_LANG['add_goodstype_success'], 0, $links);
+            if ($GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('goods_type'), $goods_type) !== false) {
+                $links = array(array('href' => 'goods_type.php?act=manage', 'text' => $GLOBALS['_LANG']['back_list']));
+                sys_msg($GLOBALS['_LANG']['add_goodstype_success'], 0, $links);
             } else {
-                sys_msg($_LANG['add_goodstype_failed'], 1);
+                sys_msg($GLOBALS['_LANG']['add_goodstype_failed'], 1);
             }
         }
 
@@ -134,19 +134,19 @@ class GoodsType extends Init
             $goods_type = $this->get_goodstype_info(intval($_GET['cat_id']));
 
             if (empty($goods_type)) {
-                sys_msg($_LANG['cannot_found_goodstype'], 1);
+                sys_msg($GLOBALS['_LANG']['cannot_found_goodstype'], 1);
             }
 
             admin_priv('goods_type');
 
-            $smarty->assign('ur_here', $_LANG['edit_goods_type']);
-            $smarty->assign('action_link', array('href' => 'goods_type.php?act=manage', 'text' => $_LANG['goods_type_list']));
-            $smarty->assign('action', 'add');
-            $smarty->assign('form_act', 'update');
-            $smarty->assign('goods_type', $goods_type);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['edit_goods_type']);
+            $GLOBALS['smarty']->assign('action_link', array('href' => 'goods_type.php?act=manage', 'text' => $GLOBALS['_LANG']['goods_type_list']));
+            $GLOBALS['smarty']->assign('action', 'add');
+            $GLOBALS['smarty']->assign('form_act', 'update');
+            $GLOBALS['smarty']->assign('goods_type', $goods_type);
 
             assign_query_info();
-            $smarty->display('goods_type_info.htm');
+            $GLOBALS['smarty']->display('goods_type_info.htm');
         } elseif ($_REQUEST['act'] == 'update') {
             $goods_type['cat_name'] = sub_str($_POST['cat_name'], 60);
             $goods_type['attr_group'] = sub_str($_POST['attr_group'], 255);
@@ -154,7 +154,7 @@ class GoodsType extends Init
             $cat_id = intval($_POST['cat_id']);
             $old_groups = get_attr_groups($cat_id);
 
-            if ($db->autoExecute($ecs->table('goods_type'), $goods_type, 'UPDATE', "cat_id='$cat_id'") !== false) {
+            if ($GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('goods_type'), $goods_type, 'UPDATE', "cat_id='$cat_id'") !== false) {
                 /* 对比原来的分组 */
                 $new_groups = explode("\n", str_replace("\r", '', $goods_type['attr_group']));  // 新的分组
 
@@ -172,10 +172,10 @@ class GoodsType extends Init
                     }
                 }
 
-                $links = array(array('href' => 'goods_type.php?act=manage', 'text' => $_LANG['back_list']));
-                sys_msg($_LANG['edit_goodstype_success'], 0, $links);
+                $links = array(array('href' => 'goods_type.php?act=manage', 'text' => $GLOBALS['_LANG']['back_list']));
+                sys_msg($GLOBALS['_LANG']['edit_goodstype_success'], 0, $links);
             } else {
-                sys_msg($_LANG['edit_goodstype_failed'], 1);
+                sys_msg($GLOBALS['_LANG']['edit_goodstype_failed'], 1);
             }
         }
 
@@ -194,18 +194,18 @@ class GoodsType extends Init
                 admin_log(addslashes($name), 'remove', 'goods_type');
 
                 /* 清除该类型下的所有属性 */
-                $sql = "SELECT attr_id FROM " . $ecs->table('attribute') . " WHERE cat_id = '$id'";
-                $arr = $db->getCol($sql);
+                $sql = "SELECT attr_id FROM " . $GLOBALS['ecs']->table('attribute') . " WHERE cat_id = '$id'";
+                $arr = $GLOBALS['db']->getCol($sql);
 
-                $GLOBALS['db']->query("DELETE FROM " . $ecs->table('attribute') . " WHERE attr_id " . db_create_in($arr));
-                $GLOBALS['db']->query("DELETE FROM " . $ecs->table('goods_attr') . " WHERE attr_id " . db_create_in($arr));
+                $GLOBALS['db']->query("DELETE FROM " . $GLOBALS['ecs']->table('attribute') . " WHERE attr_id " . db_create_in($arr));
+                $GLOBALS['db']->query("DELETE FROM " . $GLOBALS['ecs']->table('goods_attr') . " WHERE attr_id " . db_create_in($arr));
 
                 $url = 'goods_type.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
 
                 ecs_header("Location: $url\n");
                 exit;
             } else {
-                make_json_error($_LANG['remove_failed']);
+                make_json_error($GLOBALS['_LANG']['remove_failed']);
             }
         }
     }

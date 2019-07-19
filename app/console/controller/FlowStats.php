@@ -9,8 +9,8 @@ class FlowStats extends Init
 {
     public function index()
     {
-        require_once(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/admin/statistic.php');
-        $smarty->assign('lang', $_LANG);
+        require_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/admin/statistic.php');
+        $GLOBALS['smarty']->assign('lang', $GLOBALS['_LANG']);
 
         /* act操作项的初始化 */
         if (empty($_REQUEST['act'])) {
@@ -20,8 +20,8 @@ class FlowStats extends Init
         }
 
         if ($_REQUEST['act'] == 'view') {
-            if ($_CFG['visit_stats'] == 'off') {
-                sys_msg($_LANG['stats_off']);
+            if ($GLOBALS['_CFG']['visit_stats'] == 'off') {
+                sys_msg($GLOBALS['_LANG']['stats_off']);
                 exit();
             }
             admin_priv('client_flow_stats');
@@ -61,17 +61,17 @@ class FlowStats extends Init
             $max = 0;
 
             if (!$is_multi) {
-                $general_xml = "<graph caption='$_LANG[general_stats]' shownames='1' showvalues='1' decimalPrecision='0' yaxisminvalue='0' yaxismaxvalue='%d' animation='1' outCnvBaseFontSize='12' baseFontSize='12' xaxisname='$_LANG[date]' yaxisname='$_LANG[access_count]' >";
+                $general_xml = "<graph caption='$GLOBALS['_LANG'][general_stats]' shownames='1' showvalues='1' decimalPrecision='0' yaxisminvalue='0' yaxismaxvalue='%d' animation='1' outCnvBaseFontSize='12' baseFontSize='12' xaxisname='$GLOBALS['_LANG'][date]' yaxisname='$GLOBALS['_LANG'][access_count]' >";
 
                 $sql = "SELECT FLOOR((access_time - $start_date) / (24 * 3600)) AS sn, access_time, COUNT(*) AS access_count" .
-                    " FROM " . $ecs->table('stats') .
+                    " FROM " . $GLOBALS['ecs']->table('stats') .
                     " WHERE access_time >= '$start_date' AND access_time <= " . ($end_date + 86400) .
                     " GROUP BY sn";
-                $res = $db->query($sql);
+                $res = $GLOBALS['db']->query($sql);
 
                 $key = 0;
 
-                while ($val = $db->fetchRow($res)) {
+                while ($val = $GLOBALS['db']->fetchRow($res)) {
                     $val['access_date'] = gmdate('m-d', $val['access_time'] + intval($timezone) * 3600);
                     $general_xml .= "<set name='$val[access_date]' value='$val[access_count]' color='" . chart_color($key) . "' />";
                     if ($val['access_count'] > $max) {
@@ -83,19 +83,19 @@ class FlowStats extends Init
                 $general_xml .= '</graph>';
                 $general_xml = sprintf($general_xml, $max);
             } else {
-                $general_xml = "<graph caption='$_LANG[general_stats]' lineThickness='1' showValues='0' formatNumberScale='0' anchorRadius='2'   divLineAlpha='20' divLineColor='CC3300' divLineIsDashed='1' showAlternateHGridColor='1' alternateHGridAlpha='5' alternateHGridColor='CC3300' shadowAlpha='40' labelStep='2' numvdivlines='5' chartRightMargin='35' bgColor='FFFFFF,CC3300' bgAngle='270' bgAlpha='10,10' outCnvBaseFontSize='12' baseFontSize='12' >";
+                $general_xml = "<graph caption='$GLOBALS['_LANG'][general_stats]' lineThickness='1' showValues='0' formatNumberScale='0' anchorRadius='2'   divLineAlpha='20' divLineColor='CC3300' divLineIsDashed='1' showAlternateHGridColor='1' alternateHGridAlpha='5' alternateHGridColor='CC3300' shadowAlpha='40' labelStep='2' numvdivlines='5' chartRightMargin='35' bgColor='FFFFFF,CC3300' bgAngle='270' bgAlpha='10,10' outCnvBaseFontSize='12' baseFontSize='12' >";
                 foreach ($start_date_arr as $k => $val) {
                     $seriesName = local_date('Y-m', $start_date_arr[$k]);
                     $general_xml .= "<dataset seriesName='$seriesName' color='" . chart_color($k) . "' anchorBorderColor='" . chart_color($k) . "' anchorBgColor='" . chart_color($k) . "'>";
                     $sql = "SELECT FLOOR((access_time - $start_date_arr[$k]) / (24 * 3600)) AS sn, access_time, COUNT(*) AS access_count" .
-                        " FROM " . $ecs->table('stats') .
+                        " FROM " . $GLOBALS['ecs']->table('stats') .
                         " WHERE access_time >= '$start_date_arr[$k]' AND access_time <= " . ($end_date_arr[$k] + 86400) .
                         " GROUP BY sn";
-                    $res = $db->query($sql);
+                    $res = $GLOBALS['db']->query($sql);
 
                     $lastDay = 0;
 
-                    while ($val = $db->fetchRow($res)) {
+                    while ($val = $GLOBALS['db']->fetchRow($res)) {
                         $day = gmdate('d', $val['access_time'] + $timezone * 3600);
 
                         if ($lastDay == 0) {
@@ -126,15 +126,15 @@ class FlowStats extends Init
             $area_xml = '';
 
             if (!$is_multi) {
-                $area_xml .= "<graph caption='" . $_LANG['area_stats'] . "' shownames='1' showvalues='1' decimalPrecision='2' outCnvBaseFontSize='13' baseFontSize='13' pieYScale='45'  pieBorderAlpha='40' pieFillAlpha='70' pieSliceDepth='15' pieRadius='100' bgAngle='460'>";
+                $area_xml .= "<graph caption='" . $GLOBALS['_LANG']['area_stats'] . "' shownames='1' showvalues='1' decimalPrecision='2' outCnvBaseFontSize='13' baseFontSize='13' pieYScale='45'  pieBorderAlpha='40' pieFillAlpha='70' pieSliceDepth='15' pieRadius='100' bgAngle='460'>";
 
-                $sql = "SELECT COUNT(*) AS access_count, area FROM " . $ecs->table('stats') .
+                $sql = "SELECT COUNT(*) AS access_count, area FROM " . $GLOBALS['ecs']->table('stats') .
                     " WHERE access_time >= '$start_date' AND access_time < " . ($end_date + 86400) .
                     " GROUP BY area ORDER BY access_count DESC LIMIT 20";
-                $res = $db->query($sql);
+                $res = $GLOBALS['db']->query($sql);
 
                 $key = 0;
-                while ($val = $db->fetchRow($res)) {
+                while ($val = $GLOBALS['db']->fetchRow($res)) {
                     $area = empty($val['area']) ? 'unknow' : $val['area'];
 
                     $area_xml .= "<set name='$area' value='$val[access_count]' color='" . chart_color($key) . "' />";
@@ -149,11 +149,11 @@ class FlowStats extends Init
                     }
                     $where .= "(access_time >= '$start_date_arr[$k]' AND access_time <= " . ($end_date_arr[$k] + 86400) . ")";
                 }
-                $sql = "SELECT access_time, area FROM " . $ecs->table('stats') .
+                $sql = "SELECT access_time, area FROM " . $GLOBALS['ecs']->table('stats') .
                     " WHERE $where";
-                $res = $db->query($sql);
+                $res = $GLOBALS['db']->query($sql);
                 $area_arr = array();
-                while ($val = $db->fetchRow($res)) {
+                while ($val = $GLOBALS['db']->fetchRow($res)) {
                     $date = local_date('Y-m', $val['access_time']);
                     $area_arr[$val['area']] = null;
                     if (isset($category[$date][$val['area']])) {
@@ -162,7 +162,7 @@ class FlowStats extends Init
                         $category[$date][$val['area']] = 1;
                     }
                 }
-                $area_xml = "<chart palette='2' caption='$_LANG[area_stats]' shownames='1' showvalues='0' numberPrefix='' useRoundEdges='1' legendBorderAlpha='0' outCnvBaseFontSize='13' baseFontSize='13'>";
+                $area_xml = "<chart palette='2' caption='$GLOBALS['_LANG'][area_stats]' shownames='1' showvalues='0' numberPrefix='' useRoundEdges='1' legendBorderAlpha='0' outCnvBaseFontSize='13' baseFontSize='13'>";
                 $area_xml .= "<categories>";
                 foreach ($area_arr as $k => $v) {
                     $area_xml .= "<category label='$k'/>";
@@ -190,17 +190,17 @@ class FlowStats extends Init
             /* --来源网站
             /* ------------------------------------- */
             if (!$is_multi) {
-                $from_xml = "<graph caption='$_LANG[from_stats]' shownames='1' showvalues='1' decimalPrecision='2' outCnvBaseFontSize='12' baseFontSize='12' pieYScale='45' pieBorderAlpha='40' pieFillAlpha='70' pieSliceDepth='15' pieRadius='100' bgAngle='460'>";
+                $from_xml = "<graph caption='$GLOBALS['_LANG'][from_stats]' shownames='1' showvalues='1' decimalPrecision='2' outCnvBaseFontSize='12' baseFontSize='12' pieYScale='45' pieBorderAlpha='40' pieFillAlpha='70' pieSliceDepth='15' pieRadius='100' bgAngle='460'>";
 
-                $sql = "SELECT COUNT(*) AS access_count, referer_domain FROM " . $ecs->table('stats') .
+                $sql = "SELECT COUNT(*) AS access_count, referer_domain FROM " . $GLOBALS['ecs']->table('stats') .
                     " WHERE access_time >= '$start_date' AND access_time <= " . ($end_date + 86400) .
                     " GROUP BY referer_domain ORDER BY access_count DESC LIMIT 20";
-                $res = $db->query($sql);
+                $res = $GLOBALS['db']->query($sql);
 
                 $key = 0;
 
-                while ($val = $db->fetchRow($res)) {
-                    $from = empty($val['referer_domain']) ? $_LANG['input_url'] : $val['referer_domain'];
+                while ($val = $GLOBALS['db']->fetchRow($res)) {
+                    $from = empty($val['referer_domain']) ? $GLOBALS['_LANG']['input_url'] : $val['referer_domain'];
 
                     if ((strpos($from, '"') !== false) || (strpos($from, "'") !== false)) {
                         // 会有非域名数据出现，直接过滤掉
@@ -221,12 +221,12 @@ class FlowStats extends Init
                     $where .= "(access_time >= '$start_date_arr[$k]' AND access_time <= " . ($end_date_arr[$k] + 86400) . ")";
                 }
 
-                $sql = "SELECT access_time, referer_domain FROM " . $ecs->table('stats') .
+                $sql = "SELECT access_time, referer_domain FROM " . $GLOBALS['ecs']->table('stats') .
                     " WHERE $where";
 
-                $res = $db->query($sql);
+                $res = $GLOBALS['db']->query($sql);
                 $domain_arr = array();
-                while ($val = $db->fetchRow($res)) {
+                while ($val = $GLOBALS['db']->fetchRow($res)) {
                     $date = local_date('Y-m', $val['access_time']);
                     $domain_arr[$val['referer_domain']] = null;
                     if (isset($category[$date][$val['referer_domain']])) {
@@ -235,10 +235,10 @@ class FlowStats extends Init
                         $category[$date][$val['referer_domain']] = 1;
                     }
                 }
-                $from_xml = "<chart palette='2' caption='$_LANG[from_stats]' shownames='1' showvalues='0' numberPrefix='' useRoundEdges='1' legendBorderAlpha='0' outCnvBaseFontSize='13' baseFontSize='13'>";
+                $from_xml = "<chart palette='2' caption='$GLOBALS['_LANG'][from_stats]' shownames='1' showvalues='0' numberPrefix='' useRoundEdges='1' legendBorderAlpha='0' outCnvBaseFontSize='13' baseFontSize='13'>";
                 $from_xml .= "<categories>";
                 foreach ($domain_arr as $k => $v) {
-                    $from = $k == '' ? $_LANG['input_url'] : $k;
+                    $from = $k == '' ? $GLOBALS['_LANG']['input_url'] : $k;
                     $from_xml .= "<category label='$from'/>";
                 }
                 $from_xml .= "</categories>";
@@ -261,15 +261,15 @@ class FlowStats extends Init
             }
 
             /* 模板赋值 */
-            $smarty->assign('ur_here', $_LANG['flow_stats']);
-            $smarty->assign('general_data', $general_xml);
-            $smarty->assign('area_data', $area_xml);
-            $smarty->assign('is_multi', $is_multi);
-            $smarty->assign('from_data', $from_xml);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['flow_stats']);
+            $GLOBALS['smarty']->assign('general_data', $general_xml);
+            $GLOBALS['smarty']->assign('area_data', $area_xml);
+            $GLOBALS['smarty']->assign('is_multi', $is_multi);
+            $GLOBALS['smarty']->assign('from_data', $from_xml);
             /* 显示日期 */
 
-            $smarty->assign('start_date', local_date('Y-m-d', $start_date));
-            $smarty->assign('end_date', local_date('Y-m-d', $end_date));
+            $GLOBALS['smarty']->assign('start_date', local_date('Y-m-d', $start_date));
+            $GLOBALS['smarty']->assign('end_date', local_date('Y-m-d', $end_date));
 
             for ($i = 0; $i < 5; $i++) {
                 if (isset($start_date_arr[$i])) {
@@ -278,20 +278,20 @@ class FlowStats extends Init
                     $start_date_arr[$i] = null;
                 }
             }
-            $smarty->assign('start_date_arr', $start_date_arr);
+            $GLOBALS['smarty']->assign('start_date_arr', $start_date_arr);
 
             if (!$is_multi) {
-                $filename = gmdate($_CFG['date_format'], intval($start_date) + intval($timezone) * 3600) . '_' .
-                    gmdate($_CFG['date_format'], intval($end_date) + intval($timezone) * 3600);
+                $filename = gmdate($GLOBALS['_CFG']['date_format'], intval($start_date) + intval($timezone) * 3600) . '_' .
+                    gmdate($GLOBALS['_CFG']['date_format'], intval($end_date) + intval($timezone) * 3600);
 
-                $smarty->assign('action_link', array('text' => $_LANG['down_flow_stats'],
+                $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['down_flow_stats'],
                     'href' => 'flow_stats.php?act=download&filename=' . $filename .
                         '&start_date=' . $start_date . '&end_date=' . $end_date));
             }
 
             /* 显示页面 */
             assign_query_info();
-            $smarty->display('flow_stats.htm');
+            $GLOBALS['smarty']->display('flow_stats.htm');
         } /* 报表下载 */
         elseif ($act = 'download') {
             $filename = !empty($_REQUEST['filename']) ? trim($_REQUEST['filename']) : '';
@@ -306,9 +306,9 @@ class FlowStats extends Init
                 " GROUP BY sn";
             $res = $GLOBALS['db']->query($sql);
 
-            $data = $_LANG['general_stats'] . "\t\n";
-            $data .= $_LANG['date'] . "\t";
-            $data .= $_LANG['access_count'] . "\t\n";
+            $data = $GLOBALS['_LANG']['general_stats'] . "\t\n";
+            $data .= $GLOBALS['_LANG']['date'] . "\t";
+            $data .= $GLOBALS['_LANG']['access_count'] . "\t\n";
 
             while ($val = $GLOBALS['db']->fetchRow($res)) {
                 $val['access_date'] = gmdate('m-d', $val['access_time'] + $timezone * 3600);
@@ -322,9 +322,9 @@ class FlowStats extends Init
 
             $res = $GLOBALS['db']->query($sql);
 
-            $data .= $_LANG['area_stats'] . "\t\n";
-            $data .= $_LANG['area'] . "\t";
-            $data .= $_LANG['access_count'] . "\t\n";
+            $data .= $GLOBALS['_LANG']['area_stats'] . "\t\n";
+            $data .= $GLOBALS['_LANG']['area'] . "\t";
+            $data .= $GLOBALS['_LANG']['access_count'] . "\t\n";
 
             while ($val = $GLOBALS['db']->fetchRow($res)) {
                 $data .= $val['area'] . "\t";
@@ -337,13 +337,13 @@ class FlowStats extends Init
 
             $res = $GLOBALS['db']->query($sql);
 
-            $data .= "\n" . $_LANG['from_stats'] . "\t\n";
+            $data .= "\n" . $GLOBALS['_LANG']['from_stats'] . "\t\n";
 
-            $data .= $_LANG['url'] . "\t";
-            $data .= $_LANG['access_count'] . "\t\n";
+            $data .= $GLOBALS['_LANG']['url'] . "\t";
+            $data .= $GLOBALS['_LANG']['access_count'] . "\t\n";
 
             while ($val = $GLOBALS['db']->fetchRow($res)) {
-                $data .= ($val['referer_domain'] == "" ? $_LANG['input_url'] : $val['referer_domain']) . "\t";
+                $data .= ($val['referer_domain'] == "" ? $GLOBALS['_LANG']['input_url'] : $val['referer_domain']) . "\t";
                 $data .= $val['access_count'] . "\t\n";
             }
             if (EC_CHARSET != 'gbk') {

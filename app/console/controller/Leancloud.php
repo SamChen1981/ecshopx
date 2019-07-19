@@ -34,24 +34,24 @@ class Leancloud extends Init
             unset($push_list['count']);
             $order_by = array('ORDER BY created_at ASC' => '创建时间从新到旧', 'ORDER BY created_at DESC' => '创建时间从旧到新', 'ORDER BY push_at ASC' => '推送时间从新到旧', 'ORDER BY push_at DESC' => '推送时间从旧到新');
             $filter = array('page' => '1', 'page_size' => '10', 'page_count' => ceil($count / 10), 'record_count' => $count, 'status' => '0', 'platform' => '0', 'title' => '', 'order_by' => '0');
-            $smarty->assign('filter', $filter);
-            $smarty->assign('order_by', $order_by);
-            $smarty->assign('platform', $platform);
-            $smarty->assign('status', $status);
-            $smarty->assign('ur_here', $_LANG['leancloud']);
-            $smarty->assign('record_count', $count);
-            $smarty->assign('page_count', ceil($count / 10));
-            $smarty->assign('push_list', $push_list);
-            $smarty->assign('full_page', 1);
+            $GLOBALS['smarty']->assign('filter', $filter);
+            $GLOBALS['smarty']->assign('order_by', $order_by);
+            $GLOBALS['smarty']->assign('platform', $platform);
+            $GLOBALS['smarty']->assign('status', $status);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['leancloud']);
+            $GLOBALS['smarty']->assign('record_count', $count);
+            $GLOBALS['smarty']->assign('page_count', ceil($count / 10));
+            $GLOBALS['smarty']->assign('push_list', $push_list);
+            $GLOBALS['smarty']->assign('full_page', 1);
 
-            $smarty->display('leancloud.html');
+            $GLOBALS['smarty']->display('leancloud.html');
         } elseif ($_REQUEST['act'] == 'edit') {
             /* 检查权限 */
             admin_priv('leancloud');
             $config = get_config($db, $ecs);
             if (!$config || !json_decode($config['config'], true)) {
-                $links[] = array('text' => $_LANG['mobile_setting'], 'href' => 'ecmobile_setting.php?act=list');
-                sys_msg($_LANG['push_off'], 1, $links);
+                $links[] = array('text' => $GLOBALS['_LANG']['mobile_setting'], 'href' => 'ecmobile_setting.php?act=list');
+                sys_msg($GLOBALS['_LANG']['push_off'], 1, $links);
                 exit;
             }
             $cert = new certificate;
@@ -67,21 +67,21 @@ class Leancloud extends Init
             $charset = EC_CHARSET == 'utf-8' ? "utf8" : 'gbk';
             if ($_GET['id']) {
                 $params = $this->getrow($_GET['id'], $db, $ecs);
-                $smarty->assign('params', $params);
+                $GLOBALS['smarty']->assign('params', $params);
             }
             $links = $this->get_url();
             $push_type = array(0 => '立即发送', 1 => '定时发送');
-            $smarty->assign('ur_here', $_LANG['leancloud']);
-            $smarty->assign('platform', $platform);
-            $smarty->assign('links', $links);
-            $smarty->assign('push_type', $push_type);
-            $smarty->display('leancloud_edit.html');
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['leancloud']);
+            $GLOBALS['smarty']->assign('platform', $platform);
+            $GLOBALS['smarty']->assign('links', $links);
+            $GLOBALS['smarty']->assign('push_type', $push_type);
+            $GLOBALS['smarty']->display('leancloud_edit.html');
         } elseif ($_REQUEST['act'] == 'remove') {
             /* 检查权限 */
             admin_priv('leancloud');
             $id = intval($_GET['id']);
-            $sql = "DELETE FROM " . $ecs->table('push') . " WHERE id = '$id'";
-            $res = $db->query($sql);
+            $sql = "DELETE FROM " . $GLOBALS['ecs']->table('push') . " WHERE id = '$id'";
+            $res = $GLOBALS['db']->query($sql);
             admin_log('', 'remove', 'leancloud');
             $url = 'leancloud.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
             ecs_header("Location: $url\n");
@@ -89,7 +89,7 @@ class Leancloud extends Init
         } elseif ($_REQUEST['act'] == 'do_edit') {
             /* 检查权限 */
             admin_priv('leancloud');
-            $links[] = array('text' => $_LANG['mobile_setting'], 'href' => 'leancloud.php?act=list');
+            $links[] = array('text' => $GLOBALS['_LANG']['mobile_setting'], 'href' => 'leancloud.php?act=list');
             $params = $_POST['msg'];
 //    echo'<pre>';print_r($params);exit;
             $time = date('Y-m-d H:i:s');
@@ -115,16 +115,16 @@ class Leancloud extends Init
             $send_type = $params['send_type'];
             if ($params['id']) {
                 $id = $params['id'];
-                $sql = "UPDATE " . $ecs->table('push') . " SET `content`='$content',`title`='$title',`link`='$link',`platform`='$platform',`push_type`='$send_type',`push_at`='$push_at',`updated_at`='$time',`isPush`='0' WHERE id = $id";
+                $sql = "UPDATE " . $GLOBALS['ecs']->table('push') . " SET `content`='$content',`title`='$title',`link`='$link',`platform`='$platform',`push_type`='$send_type',`push_at`='$push_at',`updated_at`='$time',`isPush`='0' WHERE id = $id";
             } else {
-                $sql = "INSERT INTO " . $ecs->table('push') . " (`title`,`content`,`link`,`platform`,`push_type`,`message_type`,`push_at`,`created_at`,`updated_at`) VALUES ('$title','$content','$link','$platform','$push_type','1','$push_at','$time','$time')";
+                $sql = "INSERT INTO " . $GLOBALS['ecs']->table('push') . " (`title`,`content`,`link`,`platform`,`push_type`,`message_type`,`push_at`,`created_at`,`updated_at`) VALUES ('$title','$content','$link','$platform','$push_type','1','$push_at','$time','$time')";
             }
-            $res = $db->query($sql);
+            $res = $GLOBALS['db']->query($sql);
             if (!$id && $res) {
-                $id = $db->getRow("SELECT id FROM " . $ecs->table('push') . " ORDER BY `id` DESC LIMIT 1");
+                $id = $GLOBALS['db']->getRow("SELECT id FROM " . $GLOBALS['ecs']->table('push') . " ORDER BY `id` DESC LIMIT 1");
             }
             $is_push = push($id, $db, $ecs);
-            sys_msg($_LANG['attradd_succed'], 0, $links);
+            sys_msg($GLOBALS['_LANG']['attradd_succed'], 0, $links);
         } elseif ($_REQUEST['act'] == 'resend') {
             /* 检查权限 */
             admin_priv('leancloud');
@@ -132,10 +132,10 @@ class Leancloud extends Init
             $is_push = push($id, $db, $ecs);
             $is_push = $is_push ? 1 : 0;
             $time = date('Y-m-d H:i:s', time());
-            $sql = "UPDATE " . $ecs->table('push') . " SET `push_at`='$time',`updated_at`='$time',`isPush`='$is_push' WHERE id = $id";
-            $db->query($sql);
-            $links[] = array('text' => $_LANG['mobile_setting'], 'href' => 'leancloud.php?act=list');
-            sys_msg($_LANG['attradd_succed'], 0, $links);
+            $sql = "UPDATE " . $GLOBALS['ecs']->table('push') . " SET `push_at`='$time',`updated_at`='$time',`isPush`='$is_push' WHERE id = $id";
+            $GLOBALS['db']->query($sql);
+            $links[] = array('text' => $GLOBALS['_LANG']['mobile_setting'], 'href' => 'leancloud.php?act=list');
+            sys_msg($GLOBALS['_LANG']['attradd_succed'], 0, $links);
         } elseif ($_REQUEST['act'] == 'query') {
             /* 检查权限 */
             admin_priv('leancloud');
@@ -171,8 +171,8 @@ class Leancloud extends Init
             } else {
                 $filter_sql = '1 ';
             }
-            $sql = "SELECT count(*) as count FROM " . $ecs->table('push') . " WHERE " . $filter_sql;
-            $count = $db->getAll($sql);
+            $sql = "SELECT count(*) as count FROM " . $GLOBALS['ecs']->table('push') . " WHERE " . $filter_sql;
+            $count = $GLOBALS['db']->getAll($sql);
             $count = $count[0]['count'];
             $page = $_POST['page'];
             $page_size = $_POST['page_size'] ? $_POST['page_size'] : $_COOKIE['ECSCP']['page_size'];
@@ -180,8 +180,8 @@ class Leancloud extends Init
             $page_count = ceil($count / $page_size);
             $start = ($page - 1) * $page_size;
             $end = $page_size;
-            $sql = "SELECT * FROM " . $ecs->table('push') . " WHERE " . $filter_sql . $order_by . " LIMIT $start,$end";
-            $push_list = $db->getALL($sql);
+            $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('push') . " WHERE " . $filter_sql . $order_by . " LIMIT $start,$end";
+            $push_list = $GLOBALS['db']->getALL($sql);
             foreach ($push_list as $k => $v) {
                 $push_list[$k]['isPush']++;
             }
@@ -194,14 +194,14 @@ class Leancloud extends Init
             $filter['order_by'] = $_POST['order_by'];
             $filter['status'] = $_POST['status'];
 
-            $smarty->assign('platform', $platform);
-            $smarty->assign('status', $status);
-            $smarty->assign('push_list', $push_list);
-            $smarty->assign('filter', $filter);
-            $smarty->assign('record_count', $count);
-            $smarty->assign('page_count', $page_count);
+            $GLOBALS['smarty']->assign('platform', $platform);
+            $GLOBALS['smarty']->assign('status', $status);
+            $GLOBALS['smarty']->assign('push_list', $push_list);
+            $GLOBALS['smarty']->assign('filter', $filter);
+            $GLOBALS['smarty']->assign('record_count', $count);
+            $GLOBALS['smarty']->assign('page_count', $page_count);
 
-            make_json_result($smarty->fetch('leancloud.html'), '', array('filter' => $filter, 'page_count' => $page_count));
+            make_json_result($GLOBALS['smarty']->fetch('leancloud.html'), '', array('filter' => $filter, 'page_count' => $page_count));
         } elseif ($_REQUEST['act'] == 'batch_remove') {
             /* 检查权限 */
             admin_priv('leancloud');
@@ -209,24 +209,24 @@ class Leancloud extends Init
             $items = $_POST['checkboxes'];
             foreach ($items as $v) {
                 $id = intval($v);
-                $sql = "DELETE FROM " . $ecs->table('push') . " WHERE id = '$id'";
-                $res = $db->query($sql);
+                $sql = "DELETE FROM " . $GLOBALS['ecs']->table('push') . " WHERE id = '$id'";
+                $res = $GLOBALS['db']->query($sql);
             }
             admin_log('', 'remove', 'leancloud');
-            $links[] = array('text' => $_LANG['mobile_setting'], 'href' => 'leancloud.php?act=list');
-            sys_msg($_LANG['attradd_succed'], 0, $links);
+            $links[] = array('text' => $GLOBALS['_LANG']['mobile_setting'], 'href' => 'leancloud.php?act=list');
+            sys_msg($GLOBALS['_LANG']['attradd_succed'], 0, $links);
             exit;
         }
     }
 
     private function get_list($page, $db, $ecs)
     {
-        $sql = "SELECT COUNT(*) FROM " . $ecs->table('push');
-        $count = $db->getONE($sql);
+        $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('push');
+        $count = $GLOBALS['db']->getONE($sql);
         $start = ($page - 1) * 10;
         $end = 10;
-        $sql = "SELECT * FROM " . $ecs->table('push') . " WHERE 1 ORDER BY id DESC LIMIT $start,$end";
-        $push_list = $db->getAll($sql);
+        $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('push') . " WHERE 1 ORDER BY id DESC LIMIT $start,$end";
+        $push_list = $GLOBALS['db']->getAll($sql);
         foreach ($push_list as $k => $v) {
             $push_list[$k]['isPush']++;
         }
@@ -236,8 +236,8 @@ class Leancloud extends Init
 
     private function getrow($id, $db, $ecs)
     {
-        $sql = "SELECT * FROM " . $ecs->table('push') . " WHERE id = $id";
-        $push_list = $db->getAll($sql);
+        $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('push') . " WHERE id = $id";
+        $push_list = $GLOBALS['db']->getAll($sql);
         $params = $push_list[0];
         if ($params['link']) {
             $link = $this->get_linkcode($params['link']);

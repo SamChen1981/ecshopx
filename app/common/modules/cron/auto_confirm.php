@@ -6,8 +6,6 @@
 
 $cron_lang = ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/cron/auto_confirm.php';
 if (file_exists($cron_lang)) {
-    global $_LANG;
-
     include_once($cron_lang);
 }
 
@@ -45,16 +43,16 @@ $order_status = [OS_SPLITED];
 $pay_status = [PS_UNPAYED, PS_PAYED];
 $shipping_status = [SS_SHIPPED];
 $where = "order_status in (" . implode(',', $order_status) . ") AND pay_status in (" . implode(',', $pay_status) . ") AND shipping_status in (" . implode(',', $shipping_status) . ") AND shipping_time < " . $confirmtime;
-$sql = "SELECT count(*) FROM " . $ecs->table('order_info') . " WHERE " . $where;
-$count = $db->GetOne($sql);
+$sql = "SELECT count(*) FROM " . $GLOBALS['ecs']->table('order_info') . " WHERE " . $where;
+$count = $GLOBALS['db']->GetOne($sql);
 confirm_log("select_count:" . $count);
 $page_size = 1;
 $total = ceil($count / $page_size);
 $i = 1;
 while ($i <= $total) {
-    $sql = "SELECT order_id FROM " . $ecs->table('order_info') . " WHERE " . $where . " limit 0," . $page_size;
+    $sql = "SELECT order_id FROM " . $GLOBALS['ecs']->table('order_info') . " WHERE " . $where . " limit 0," . $page_size;
     confirm_log("select_sql:" . $sql);
-    $rows = $db->getAll($sql);
+    $rows = $GLOBALS['db']->getAll($sql);
     confirm_log("select_rows:", $rows);
     foreach ($rows as $key => $order) {
         $order_id = isset($order['order_id']) ? intval($order['order_id']) : 0;

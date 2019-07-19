@@ -10,7 +10,7 @@ class GuestStats extends Init
     public function index()
     {
         load_helper('order');
-        require_once(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/admin/statistic.php');
+        require_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/admin/statistic.php');
 
         /* act操作项的初始化 */
         if (empty($_REQUEST['act'])) {
@@ -28,8 +28,8 @@ class GuestStats extends Init
 
             /* 取得会员总数 */
             $users = init_users();
-            $sql = "SELECT COUNT(*) FROM " . $ecs->table("users");
-            $res = $db->getCol($sql);
+            $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table("users");
+            $res = $GLOBALS['db']->getCol($sql);
             $user_num = $res[0];
 
 
@@ -37,48 +37,48 @@ class GuestStats extends Init
             $total_fee = " SUM(" . order_amount_field() . ") AS turnover ";
 
             /* 有过订单的会员数 */
-            $sql = 'SELECT COUNT(DISTINCT user_id) FROM ' . $ecs->table('order_info') .
+            $sql = 'SELECT COUNT(DISTINCT user_id) FROM ' . $GLOBALS['ecs']->table('order_info') .
                 " WHERE user_id > 0 " . order_query_sql('finished');
-            $have_order_usernum = $db->getOne($sql);
+            $have_order_usernum = $GLOBALS['db']->getOne($sql);
 
             /* 会员订单总数和订单总购物额 */
             $user_all_order = array();
             $sql = "SELECT COUNT(*) AS order_num, " . $total_fee .
-                "FROM " . $ecs->table('order_info') .
+                "FROM " . $GLOBALS['ecs']->table('order_info') .
                 " WHERE user_id > 0 " . order_query_sql('finished');
-            $user_all_order = $db->getRow($sql);
+            $user_all_order = $GLOBALS['db']->getRow($sql);
             $user_all_order['turnover'] = floatval($user_all_order['turnover']);
 
             /* 匿名会员订单总数和总购物额 */
             $guest_all_order = array();
             $sql = "SELECT COUNT(*) AS order_num, " . $total_fee .
-                "FROM " . $ecs->table('order_info') .
+                "FROM " . $GLOBALS['ecs']->table('order_info') .
                 " WHERE user_id = 0 " . order_query_sql('finished');
-            $guest_all_order = $db->getRow($sql);
+            $guest_all_order = $GLOBALS['db']->getRow($sql);
 
             /* 匿名会员平均订单额: 购物总额/订单数 */
             $guest_order_amount = ($guest_all_order['order_num'] > 0) ? floatval($guest_all_order['turnover'] / $guest_all_order['order_num']) : '0.00';
 
             $_GET['flag'] = isset($_GET['flag']) ? 'download' : '';
             if ($_GET['flag'] == 'download') {
-                $filename = ecs_iconv(EC_CHARSET, 'GB2312', $_LANG['guest_statistics']);
+                $filename = ecs_iconv(EC_CHARSET, 'GB2312', $GLOBALS['_LANG']['guest_statistics']);
 
                 header("Content-type: application/vnd.ms-excel; charset=utf-8");
                 header("Content-Disposition: attachment; filename=$filename.xls");
 
                 /* 生成会员购买率 */
-                $data = $_LANG['percent_buy_member'] . "\t\n";
-                $data .= $_LANG['member_count'] . "\t" . $_LANG['order_member_count'] . "\t" .
-                    $_LANG['member_order_count'] . "\t" . $_LANG['percent_buy_member'] . "\n";
+                $data = $GLOBALS['_LANG']['percent_buy_member'] . "\t\n";
+                $data .= $GLOBALS['_LANG']['member_count'] . "\t" . $GLOBALS['_LANG']['order_member_count'] . "\t" .
+                    $GLOBALS['_LANG']['member_order_count'] . "\t" . $GLOBALS['_LANG']['percent_buy_member'] . "\n";
 
                 $data .= $user_num . "\t" . $have_order_usernum . "\t" .
                     $user_all_order['order_num'] . "\t" . sprintf("%0.2f", ($user_num > 0 ? $have_order_usernum / $user_num : 0) * 100) . "\n\n";
 
                 /* 每会员平均订单数及购物额 */
-                $data .= $_LANG['order_turnover_peruser'] . "\t\n";
+                $data .= $GLOBALS['_LANG']['order_turnover_peruser'] . "\t\n";
 
-                $data .= $_LANG['member_sum'] . "\t" . $_LANG['average_member_order'] . "\t" .
-                    $_LANG['member_order_sum'] . "\n";
+                $data .= $GLOBALS['_LANG']['member_sum'] . "\t" . $GLOBALS['_LANG']['average_member_order'] . "\t" .
+                    $GLOBALS['_LANG']['member_order_sum'] . "\n";
 
                 $ave_user_ordernum = $user_num > 0 ? sprintf("%0.2f", $user_all_order['order_num'] / $user_num) : 0;
                 $ave_user_turnover = $user_num > 0 ? price_format($user_all_order['turnover'] / $user_num) : 0;
@@ -86,9 +86,9 @@ class GuestStats extends Init
                 $data .= price_format($user_all_order['turnover']) . "\t" . $ave_user_ordernum . "\t" . $ave_user_turnover . "\n\n";
 
                 /* 每会员平均订单数及购物额 */
-                $data .= $_LANG['order_turnover_percus'] . "\t\n";
-                $data .= $_LANG['guest_member_orderamount'] . "\t" . $_LANG['guest_member_ordercount'] . "\t" .
-                    $_LANG['guest_order_sum'] . "\n";
+                $data .= $GLOBALS['_LANG']['order_turnover_percus'] . "\t\n";
+                $data .= $GLOBALS['_LANG']['guest_member_orderamount'] . "\t" . $GLOBALS['_LANG']['guest_member_ordercount'] . "\t" .
+                    $GLOBALS['_LANG']['guest_order_sum'] . "\n";
 
                 $order_num = $guest_all_order['order_num'] > 0 ? price_format($guest_all_order['turnover'] / $guest_all_order['order_num']) : 0;
                 $data .= price_format($guest_all_order['turnover']) . "\t" . $guest_all_order['order_num'] . "\t" .
@@ -99,34 +99,34 @@ class GuestStats extends Init
             }
 
             /* 赋值到模板 */
-            $smarty->assign('user_num', $user_num);                    // 会员总数
-            $smarty->assign('have_order_usernum', $have_order_usernum);          // 有过订单的会员数
-            $smarty->assign('user_order_turnover', $user_all_order['order_num']); // 会员总订单数
-            $smarty->assign('user_all_turnover', price_format($user_all_order['turnover']));  //会员购物总额
-            $smarty->assign('guest_all_turnover', price_format($guest_all_order['turnover'])); //匿名会员购物总额
-            $smarty->assign('guest_order_num', $guest_all_order['order_num']);              //匿名会员订单总数
+            $GLOBALS['smarty']->assign('user_num', $user_num);                    // 会员总数
+            $GLOBALS['smarty']->assign('have_order_usernum', $have_order_usernum);          // 有过订单的会员数
+            $GLOBALS['smarty']->assign('user_order_turnover', $user_all_order['order_num']); // 会员总订单数
+            $GLOBALS['smarty']->assign('user_all_turnover', price_format($user_all_order['turnover']));  //会员购物总额
+            $GLOBALS['smarty']->assign('guest_all_turnover', price_format($guest_all_order['turnover'])); //匿名会员购物总额
+            $GLOBALS['smarty']->assign('guest_order_num', $guest_all_order['order_num']);              //匿名会员订单总数
 
             /* 每会员订单数 */
-            $smarty->assign('ave_user_ordernum', $user_num > 0 ? sprintf("%0.2f", $user_all_order['order_num'] / $user_num) : 0);
+            $GLOBALS['smarty']->assign('ave_user_ordernum', $user_num > 0 ? sprintf("%0.2f", $user_all_order['order_num'] / $user_num) : 0);
 
             /* 每会员购物额 */
-            $smarty->assign('ave_user_turnover', $user_num > 0 ? price_format($user_all_order['turnover'] / $user_num) : 0);
+            $GLOBALS['smarty']->assign('ave_user_turnover', $user_num > 0 ? price_format($user_all_order['turnover'] / $user_num) : 0);
 
             /* 注册会员购买率 */
-            $smarty->assign('user_ratio', sprintf("%0.2f", ($user_num > 0 ? $have_order_usernum / $user_num : 0) * 100));
+            $GLOBALS['smarty']->assign('user_ratio', sprintf("%0.2f", ($user_num > 0 ? $have_order_usernum / $user_num : 0) * 100));
 
             /* 匿名会员平均订单额 */
-            $smarty->assign('guest_order_amount', $guest_all_order['order_num'] > 0 ? price_format($guest_all_order['turnover'] / $guest_all_order['order_num']) : 0);
+            $GLOBALS['smarty']->assign('guest_order_amount', $guest_all_order['order_num'] > 0 ? price_format($guest_all_order['turnover'] / $guest_all_order['order_num']) : 0);
 
-            $smarty->assign('all_order', $user_all_order);    //所有订单总数以及所有购物总额
-            $smarty->assign('ur_here', $_LANG['report_guest']);
-            $smarty->assign('lang', $_LANG);
+            $GLOBALS['smarty']->assign('all_order', $user_all_order);    //所有订单总数以及所有购物总额
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['report_guest']);
+            $GLOBALS['smarty']->assign('lang', $GLOBALS['_LANG']);
 
-            $smarty->assign('action_link', array('text' => $_LANG['down_guest_stats'],
+            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['down_guest_stats'],
                 'href' => 'guest_stats.php?flag=download'));
 
             assign_query_info();
-            $smarty->display('guest_stats.htm');
+            $GLOBALS['smarty']->display('guest_stats.htm');
         }
     }
 }

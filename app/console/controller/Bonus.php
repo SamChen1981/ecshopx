@@ -19,28 +19,28 @@ class Bonus extends Init
         }
 
         /* 初始化$exc对象 */
-        $exc = new exchange($ecs->table('bonus_type'), $db, 'type_id', 'type_name');
+        $exc = new Exchange($GLOBALS['ecs']->table('bonus_type'), $db, 'type_id', 'type_name');
 
         /*------------------------------------------------------ */
         //-- 红包类型列表页面
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
-            $smarty->assign('ur_here', $_LANG['04_bonustype_list']);
-            $smarty->assign('action_link', array('text' => $_LANG['bonustype_add'], 'href' => 'bonus.php?act=add'));
-            $smarty->assign('full_page', 1);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['04_bonustype_list']);
+            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['bonustype_add'], 'href' => 'bonus.php?act=add'));
+            $GLOBALS['smarty']->assign('full_page', 1);
 
             $list = $this->get_type_list();
 
-            $smarty->assign('type_list', $list['item']);
-            $smarty->assign('filter', $list['filter']);
-            $smarty->assign('record_count', $list['record_count']);
-            $smarty->assign('page_count', $list['page_count']);
+            $GLOBALS['smarty']->assign('type_list', $list['item']);
+            $GLOBALS['smarty']->assign('filter', $list['filter']);
+            $GLOBALS['smarty']->assign('record_count', $list['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $list['page_count']);
 
             $sort_flag = sort_flag($list['filter']);
-            $smarty->assign($sort_flag['tag'], $sort_flag['img']);
+            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
             assign_query_info();
-            $smarty->display('bonus_type.htm');
+            $GLOBALS['smarty']->display('bonus_type.htm');
         }
 
         /*------------------------------------------------------ */
@@ -50,16 +50,16 @@ class Bonus extends Init
         if ($_REQUEST['act'] == 'query') {
             $list = $this->get_type_list();
 
-            $smarty->assign('type_list', $list['item']);
-            $smarty->assign('filter', $list['filter']);
-            $smarty->assign('record_count', $list['record_count']);
-            $smarty->assign('page_count', $list['page_count']);
+            $GLOBALS['smarty']->assign('type_list', $list['item']);
+            $GLOBALS['smarty']->assign('filter', $list['filter']);
+            $GLOBALS['smarty']->assign('record_count', $list['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $list['page_count']);
 
             $sort_flag = sort_flag($list['filter']);
-            $smarty->assign($sort_flag['tag'], $sort_flag['img']);
+            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
             make_json_result(
-                $smarty->fetch('bonus_type.htm'),
+                $GLOBALS['smarty']->fetch('bonus_type.htm'),
                 '',
                 array('filter' => $list['filter'], 'page_count' => $list['page_count'])
             );
@@ -77,7 +77,7 @@ class Bonus extends Init
 
             /* 检查红包类型名称是否重复 */
             if (!$exc->is_only('type_name', $id, $val)) {
-                make_json_error($_LANG['type_name_exist']);
+                make_json_error($GLOBALS['_LANG']['type_name_exist']);
             } else {
                 $exc->edit("type_name='$val'", $id);
 
@@ -97,7 +97,7 @@ class Bonus extends Init
 
             /* 检查红包类型名称是否重复 */
             if ($val <= 0) {
-                make_json_error($_LANG['type_money_error']);
+                make_json_error($GLOBALS['_LANG']['type_money_error']);
             } else {
                 $exc->edit("type_money='$val'", $id);
 
@@ -116,7 +116,7 @@ class Bonus extends Init
             $val = floatval($_POST['val']);
 
             if ($val < 0) {
-                make_json_error($_LANG['min_amount_empty']);
+                make_json_error($GLOBALS['_LANG']['min_amount_empty']);
             } else {
                 $exc->edit("min_amount='$val'", $id);
 
@@ -135,10 +135,10 @@ class Bonus extends Init
             $exc->drop($id);
 
             /* 更新商品信息 */
-            $db->query("UPDATE " . $ecs->table('goods') . " SET bonus_type_id = 0 WHERE bonus_type_id = '$id'");
+            $GLOBALS['db']->query("UPDATE " . $GLOBALS['ecs']->table('goods') . " SET bonus_type_id = 0 WHERE bonus_type_id = '$id'");
 
             /* 删除用户的红包 */
-            $db->query("DELETE FROM " . $ecs->table('user_bonus') . " WHERE bonus_type_id = '$id'");
+            $GLOBALS['db']->query("DELETE FROM " . $GLOBALS['ecs']->table('user_bonus') . " WHERE bonus_type_id = '$id'");
 
             $url = 'bonus.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
 
@@ -152,13 +152,13 @@ class Bonus extends Init
         if ($_REQUEST['act'] == 'add') {
             admin_priv('bonus_manage');
 
-            $smarty->assign('lang', $_LANG);
-            $smarty->assign('ur_here', $_LANG['bonustype_add']);
-            $smarty->assign('action_link', array('href' => 'bonus.php?act=list', 'text' => $_LANG['04_bonustype_list']));
-            $smarty->assign('action', 'add');
+            $GLOBALS['smarty']->assign('lang', $GLOBALS['_LANG']);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['bonustype_add']);
+            $GLOBALS['smarty']->assign('action_link', array('href' => 'bonus.php?act=list', 'text' => $GLOBALS['_LANG']['04_bonustype_list']));
+            $GLOBALS['smarty']->assign('action', 'add');
 
-            $smarty->assign('form_act', 'insert');
-            $smarty->assign('cfg_lang', $_CFG['lang']);
+            $GLOBALS['smarty']->assign('form_act', 'insert');
+            $GLOBALS['smarty']->assign('cfg_lang', $GLOBALS['_CFG']['lang']);
 
             $next_month = local_strtotime_new('+1 months');
             $bonus_arr['send_start_date'] = local_date('Y-m-d');
@@ -166,10 +166,10 @@ class Bonus extends Init
             $bonus_arr['send_end_date'] = local_date('Y-m-d', $next_month);
             $bonus_arr['use_end_date'] = local_date('Y-m-d', $next_month);
             $bonus_arr['send_type'] = 0;
-            $smarty->assign('bonus_arr', $bonus_arr);
+            $GLOBALS['smarty']->assign('bonus_arr', $bonus_arr);
 
             assign_query_info();
-            $smarty->display('bonus_type_info.htm');
+            $GLOBALS['smarty']->display('bonus_type_info.htm');
         }
 
         /*------------------------------------------------------ */
@@ -184,10 +184,10 @@ class Bonus extends Init
             $min_amount = !empty($_POST['min_amount']) ? intval($_POST['min_amount']) : 0;
 
             /* 检查类型是否有重复 */
-            $sql = "SELECT COUNT(*) FROM " . $ecs->table('bonus_type') . " WHERE type_name='$type_name'";
-            if ($db->getOne($sql) > 0) {
-                $link[] = array('text' => $_LANG['go_back'], 'href' => 'javascript:history.back(-1)');
-                sys_msg($_LANG['type_name_exist'], 0, $link);
+            $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('bonus_type') . " WHERE type_name='$type_name'";
+            if ($GLOBALS['db']->getOne($sql) > 0) {
+                $link[] = array('text' => $GLOBALS['_LANG']['go_back'], 'href' => 'javascript:history.back(-1)');
+                sys_msg($GLOBALS['_LANG']['type_name_exist'], 0, $link);
             }
 
             /* 获得日期信息 */
@@ -197,7 +197,7 @@ class Bonus extends Init
             $use_enddate = local_strtotime_new($_POST['use_end_date']);
 
             /* 插入数据库。 */
-            $sql = "INSERT INTO " . $ecs->table('bonus_type') . " (type_name, type_money,send_start_date,send_end_date,use_start_date,use_end_date,send_type,min_amount,min_goods_amount)
+            $sql = "INSERT INTO " . $GLOBALS['ecs']->table('bonus_type') . " (type_name, type_money,send_start_date,send_end_date,use_start_date,use_end_date,send_type,min_amount,min_goods_amount)
     VALUES ('$type_name',
             '$_POST[type_money]',
             '$send_startdate',
@@ -207,7 +207,7 @@ class Bonus extends Init
             '$_POST[send_type]',
             '$min_amount','" . floatval($_POST['min_goods_amount']) . "')";
 
-            $db->query($sql);
+            $GLOBALS['db']->query($sql);
             /* 记录管理员操作 */
             admin_log($_POST['type_name'], 'add', 'bonustype');
 
@@ -215,13 +215,13 @@ class Bonus extends Init
             clear_cache_files();
 
             /* 提示信息 */
-            $link[0]['text'] = $_LANG['continus_add'];
+            $link[0]['text'] = $GLOBALS['_LANG']['continus_add'];
             $link[0]['href'] = 'bonus.php?act=add';
 
-            $link[1]['text'] = $_LANG['back_list'];
+            $link[1]['text'] = $GLOBALS['_LANG']['back_list'];
             $link[1]['href'] = 'bonus.php?act=list';
 
-            sys_msg($_LANG['add'] . "&nbsp;" . $_POST['type_name'] . "&nbsp;" . $_LANG['attradd_succed'], 0, $link);
+            sys_msg($GLOBALS['_LANG']['add'] . "&nbsp;" . $_POST['type_name'] . "&nbsp;" . $GLOBALS['_LANG']['attradd_succed'], 0, $link);
         }
 
         /*------------------------------------------------------ */
@@ -232,21 +232,21 @@ class Bonus extends Init
 
             /* 获取红包类型数据 */
             $type_id = !empty($_GET['type_id']) ? intval($_GET['type_id']) : 0;
-            $bonus_arr = $db->getRow("SELECT * FROM " . $ecs->table('bonus_type') . " WHERE type_id = '$type_id'");
+            $bonus_arr = $GLOBALS['db']->getRow("SELECT * FROM " . $GLOBALS['ecs']->table('bonus_type') . " WHERE type_id = '$type_id'");
 
             $bonus_arr['send_start_date'] = local_date('Y-m-d', $bonus_arr['send_start_date']);
             $bonus_arr['send_end_date'] = local_date('Y-m-d', $bonus_arr['send_end_date']);
             $bonus_arr['use_start_date'] = local_date('Y-m-d', $bonus_arr['use_start_date']);
             $bonus_arr['use_end_date'] = local_date('Y-m-d', $bonus_arr['use_end_date']);
 
-            $smarty->assign('lang', $_LANG);
-            $smarty->assign('ur_here', $_LANG['bonustype_edit']);
-            $smarty->assign('action_link', array('href' => 'bonus.php?act=list&' . list_link_postfix(), 'text' => $_LANG['04_bonustype_list']));
-            $smarty->assign('form_act', 'update');
-            $smarty->assign('bonus_arr', $bonus_arr);
+            $GLOBALS['smarty']->assign('lang', $GLOBALS['_LANG']);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['bonustype_edit']);
+            $GLOBALS['smarty']->assign('action_link', array('href' => 'bonus.php?act=list&' . list_link_postfix(), 'text' => $GLOBALS['_LANG']['04_bonustype_list']));
+            $GLOBALS['smarty']->assign('form_act', 'update');
+            $GLOBALS['smarty']->assign('bonus_arr', $bonus_arr);
 
             assign_query_info();
-            $smarty->display('bonus_type_info.htm');
+            $GLOBALS['smarty']->display('bonus_type_info.htm');
         }
 
         /*------------------------------------------------------ */
@@ -264,7 +264,7 @@ class Bonus extends Init
             $type_id = !empty($_POST['type_id']) ? intval($_POST['type_id']) : 0;
             $min_amount = !empty($_POST['min_amount']) ? intval($_POST['min_amount']) : 0;
 
-            $sql = "UPDATE " . $ecs->table('bonus_type') . " SET " .
+            $sql = "UPDATE " . $GLOBALS['ecs']->table('bonus_type') . " SET " .
                 "type_name       = '$type_name', " .
                 "type_money      = '$_POST[type_money]', " .
                 "send_start_date = '$send_startdate', " .
@@ -276,7 +276,7 @@ class Bonus extends Init
                 "min_goods_amount = '" . floatval($_POST['min_goods_amount']) . "' " .
                 "WHERE type_id   = '$type_id'";
 
-            $db->query($sql);
+            $GLOBALS['db']->query($sql);
             /* 记录管理员操作 */
             admin_log($_POST['type_name'], 'edit', 'bonustype');
 
@@ -284,8 +284,8 @@ class Bonus extends Init
             clear_cache_files();
 
             /* 提示信息 */
-            $link[] = array('text' => $_LANG['back_list'], 'href' => 'bonus.php?act=list&' . list_link_postfix());
-            sys_msg($_LANG['edit'] . ' ' . $_POST['type_name'] . ' ' . $_LANG['attradd_succed'], 0, $link);
+            $link[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'bonus.php?act=list&' . list_link_postfix());
+            sys_msg($GLOBALS['_LANG']['edit'] . ' ' . $_POST['type_name'] . ' ' . $GLOBALS['_LANG']['attradd_succed'], 0, $link);
         }
 
         /*------------------------------------------------------ */
@@ -299,40 +299,40 @@ class Bonus extends Init
 
             assign_query_info();
 
-            $smarty->assign('ur_here', $_LANG['send_bonus']);
-            $smarty->assign('action_link', array('href' => 'bonus.php?act=list', 'text' => $_LANG['04_bonustype_list']));
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['send_bonus']);
+            $GLOBALS['smarty']->assign('action_link', array('href' => 'bonus.php?act=list', 'text' => $GLOBALS['_LANG']['04_bonustype_list']));
 
             if ($_REQUEST['send_by'] == SEND_BY_USER) {
-                $smarty->assign('id', $id);
-                $smarty->assign('ranklist', get_rank_list());
+                $GLOBALS['smarty']->assign('id', $id);
+                $GLOBALS['smarty']->assign('ranklist', get_rank_list());
 
-                $smarty->display('bonus_by_user.htm');
+                $GLOBALS['smarty']->display('bonus_by_user.htm');
             } elseif ($_REQUEST['send_by'] == SEND_BY_GOODS) {
                 /* 查询此红包类型信息 */
-                $bonus_type = $db->GetRow("SELECT type_id, type_name FROM " . $ecs->table('bonus_type') .
+                $bonus_type = $GLOBALS['db']->GetRow("SELECT type_id, type_name FROM " . $GLOBALS['ecs']->table('bonus_type') .
                     " WHERE type_id='$_REQUEST[id]'");
 
                 /* 查询红包类型的商品列表 */
                 $goods_list = $this->get_bonus_goods($_REQUEST['id']);
 
                 /* 查询其他红包类型的商品 */
-                $sql = "SELECT goods_id FROM " . $ecs->table('goods') .
+                $sql = "SELECT goods_id FROM " . $GLOBALS['ecs']->table('goods') .
                     " WHERE bonus_type_id > 0 AND bonus_type_id <> '$_REQUEST[id]'";
-                $other_goods_list = $db->getCol($sql);
-                $smarty->assign('other_goods', join(',', $other_goods_list));
+                $other_goods_list = $GLOBALS['db']->getCol($sql);
+                $GLOBALS['smarty']->assign('other_goods', join(',', $other_goods_list));
 
                 /* 模板赋值 */
-                $smarty->assign('cat_list', cat_list());
-                $smarty->assign('brand_list', get_brand_list());
+                $GLOBALS['smarty']->assign('cat_list', cat_list());
+                $GLOBALS['smarty']->assign('brand_list', get_brand_list());
 
-                $smarty->assign('bonus_type', $bonus_type);
-                $smarty->assign('goods_list', $goods_list);
+                $GLOBALS['smarty']->assign('bonus_type', $bonus_type);
+                $GLOBALS['smarty']->assign('goods_list', $goods_list);
 
-                $smarty->display('bonus_by_goods.htm');
+                $GLOBALS['smarty']->display('bonus_by_goods.htm');
             } elseif ($_REQUEST['send_by'] == SEND_BY_PRINT) {
-                $smarty->assign('type_list', get_bonus_type());
+                $GLOBALS['smarty']->assign('type_list', get_bonus_type());
 
-                $smarty->display('bonus_by_print.htm');
+                $GLOBALS['smarty']->display('bonus_by_print.htm');
             }
         }
 
@@ -351,45 +351,45 @@ class Bonus extends Init
                 $rank_id = intval($_REQUEST['rank_id']);
 
                 if ($rank_id > 0) {
-                    $sql = "SELECT min_points, max_points, special_rank FROM " . $ecs->table('user_rank') . " WHERE rank_id = '$rank_id'";
-                    $row = $db->getRow($sql);
+                    $sql = "SELECT min_points, max_points, special_rank FROM " . $GLOBALS['ecs']->table('user_rank') . " WHERE rank_id = '$rank_id'";
+                    $row = $GLOBALS['db']->getRow($sql);
                     if ($row['special_rank']) {
                         /* 特殊会员组处理 */
-                        $sql = 'SELECT COUNT(*) FROM ' . $ecs->table('users') . " WHERE user_rank = '$rank_id'";
-                        $send_count = $db->getOne($sql);
+                        $sql = 'SELECT COUNT(*) FROM ' . $GLOBALS['ecs']->table('users') . " WHERE user_rank = '$rank_id'";
+                        $send_count = $GLOBALS['db']->getOne($sql);
                         if ($validated_email) {
-                            $sql = 'SELECT user_id, email, user_name FROM ' . $ecs->table('users') .
+                            $sql = 'SELECT user_id, email, user_name FROM ' . $GLOBALS['ecs']->table('users') .
                                 " WHERE user_rank = '$rank_id' AND is_validated = 1" .
                                 " LIMIT $start, $limit";
                         } else {
-                            $sql = 'SELECT user_id, email, user_name FROM ' . $ecs->table('users') .
+                            $sql = 'SELECT user_id, email, user_name FROM ' . $GLOBALS['ecs']->table('users') .
                                 " WHERE user_rank = '$rank_id'" .
                                 " LIMIT $start, $limit";
                         }
                     } else {
-                        $sql = 'SELECT COUNT(*) FROM ' . $ecs->table('users') .
+                        $sql = 'SELECT COUNT(*) FROM ' . $GLOBALS['ecs']->table('users') .
                             " WHERE rank_points >= " . intval($row['min_points']) . " AND rank_points < " . intval($row['max_points']);
-                        $send_count = $db->getOne($sql);
+                        $send_count = $GLOBALS['db']->getOne($sql);
 
                         if ($validated_email) {
-                            $sql = 'SELECT user_id, email, user_name FROM ' . $ecs->table('users') .
+                            $sql = 'SELECT user_id, email, user_name FROM ' . $GLOBALS['ecs']->table('users') .
                                 " WHERE rank_points >= " . intval($row['min_points']) . " AND rank_points < " . intval($row['max_points']) .
                                 " AND is_validated = 1 LIMIT $start, $limit";
                         } else {
-                            $sql = 'SELECT user_id, email, user_name FROM ' . $ecs->table('users') .
+                            $sql = 'SELECT user_id, email, user_name FROM ' . $GLOBALS['ecs']->table('users') .
                                 " WHERE rank_points >= " . intval($row['min_points']) . " AND rank_points < " . intval($row['max_points']) .
                                 " LIMIT $start, $limit";
                         }
                     }
 
-                    $user_list = $db->getAll($sql);
+                    $user_list = $GLOBALS['db']->getAll($sql);
                     $count = count($user_list);
                 }
             } elseif (isset($_REQUEST['send_user'])) {
                 /* 按会员列表发放红包 */
                 /* 如果是空数组，直接返回 */
                 if (empty($_REQUEST['user'])) {
-                    sys_msg($_LANG['send_user_empty'], 1);
+                    sys_msg($GLOBALS['_LANG']['send_user_empty'], 1);
                 }
 
                 $user_array = (is_array($_REQUEST['user'])) ? $_REQUEST['user'] : explode(',', $_REQUEST['user']);
@@ -398,9 +398,9 @@ class Bonus extends Init
                 $id_array = array_slice($user_array, $start, $limit);
 
                 /* 根据会员ID取得用户名和邮件地址 */
-                $sql = "SELECT user_id, email, user_name FROM " . $ecs->table('users') .
+                $sql = "SELECT user_id, email, user_name FROM " . $GLOBALS['ecs']->table('users') .
                     " WHERE user_id " . db_create_in($id_array);
-                $user_list = $db->getAll($sql);
+                $user_list = $GLOBALS['db']->getAll($sql);
                 $count = count($user_list);
             }
 
@@ -409,31 +409,31 @@ class Bonus extends Init
             $bonus_type = $this->bonus_type_info($_REQUEST['id']);
 
             $tpl = get_mail_template('send_bonus');
-            $today = local_date($_CFG['date_format']);
+            $today = local_date($GLOBALS['_CFG']['date_format']);
 
             foreach ($user_list as $key => $val) {
                 /* 发送邮件通知 */
-                $smarty->assign('user_name', $val['user_name']);
-                $smarty->assign('shop_name', $GLOBALS['_CFG']['shop_name']);
-                $smarty->assign('send_date', $today);
-                $smarty->assign('sent_date', $today);
-                $smarty->assign('count', 1);
-                $smarty->assign('money', price_format($bonus_type['type_money']));
+                $GLOBALS['smarty']->assign('user_name', $val['user_name']);
+                $GLOBALS['smarty']->assign('shop_name', $GLOBALS['_CFG']['shop_name']);
+                $GLOBALS['smarty']->assign('send_date', $today);
+                $GLOBALS['smarty']->assign('sent_date', $today);
+                $GLOBALS['smarty']->assign('count', 1);
+                $GLOBALS['smarty']->assign('money', price_format($bonus_type['type_money']));
 
-                $content = $smarty->fetch('str:' . $tpl['template_content']);
+                $content = $GLOBALS['smarty']->fetch('str:' . $tpl['template_content']);
 
                 if ($this->add_to_maillist($val['user_name'], $val['email'], $tpl['template_subject'], $content, $tpl['is_html'])) {
                     /* 向会员红包表录入数据 */
-                    $sql = "INSERT INTO " . $ecs->table('user_bonus') .
+                    $sql = "INSERT INTO " . $GLOBALS['ecs']->table('user_bonus') .
                         "(bonus_type_id, bonus_sn, user_id, used_time, order_id, emailed) " .
                         "VALUES ('$_REQUEST[id]', 0, '$val[user_id]', 0, 0, " . BONUS_MAIL_SUCCEED . ")";
-                    $db->query($sql);
+                    $GLOBALS['db']->query($sql);
                 } else {
                     /* 邮件发送失败，更新数据库 */
-                    $sql = "INSERT INTO " . $ecs->table('user_bonus') .
+                    $sql = "INSERT INTO " . $GLOBALS['ecs']->table('user_bonus') .
                         "(bonus_type_id, bonus_sn, user_id, used_time, order_id, emailed) " .
                         "VALUES ('$_REQUEST[id]', 0, '$val[user_id]', 0, 0, " . BONUS_MAIL_FAIL . ")";
-                    $db->query($sql);
+                    $GLOBALS['db']->query($sql);
                 }
 
                 if ($loop >= $limit) {
@@ -443,7 +443,7 @@ class Bonus extends Init
                 }
             }
 
-            //admin_log(addslashes($_LANG['send_bonus']), 'add', 'bonustype');
+            //admin_log(addslashes($GLOBALS['_LANG']['send_bonus']), 'add', 'bonustype');
             if ($send_count > ($start + $limit)) {
                 /*  */
                 $href = "bonus.php?act=send_by_user&start=" . ($start + $limit) . "&limit=$limit&id=$_REQUEST[id]&";
@@ -456,12 +456,12 @@ class Bonus extends Init
                     $href .= "send_user=1&user=" . implode(',', $user_array);
                 }
 
-                $link[] = array('text' => $_LANG['send_continue'], 'href' => $href);
+                $link[] = array('text' => $GLOBALS['_LANG']['send_continue'], 'href' => $href);
             }
 
-            $link[] = array('text' => $_LANG['back_list'], 'href' => 'bonus.php?act=list');
+            $link[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'bonus.php?act=list');
 
-            sys_msg(sprintf($_LANG['sendbonus_count'], $count), 0, $link);
+            sys_msg(sprintf($GLOBALS['_LANG']['sendbonus_count'], $count), 0, $link);
         }
 
         /*------------------------------------------------------ */
@@ -479,16 +479,16 @@ class Bonus extends Init
             load_helper('order');
             $bonus = bonus_info($bonus_id);
             if (empty($bonus)) {
-                sys_msg($_LANG['bonus_not_exist']);
+                sys_msg($GLOBALS['_LANG']['bonus_not_exist']);
             }
 
             /* 发邮件 */
             $count = $this->send_bonus_mail($bonus['bonus_type_id'], array($bonus_id));
 
-            $link[0]['text'] = $_LANG['back_bonus_list'];
+            $link[0]['text'] = $GLOBALS['_LANG']['back_bonus_list'];
             $link[0]['href'] = 'bonus.php?act=bonus_list&bonus_type=' . $bonus['bonus_type_id'];
 
-            sys_msg(sprintf($_LANG['success_send_mail'], $count), 0, $link);
+            sys_msg(sprintf($GLOBALS['_LANG']['success_send_mail'], $count), 0, $link);
         }
 
         /*------------------------------------------------------ */
@@ -503,12 +503,12 @@ class Bonus extends Init
             $bonus_sum = !empty($_POST['bonus_sum']) ? $_POST['bonus_sum'] : 1;
 
             /* 生成红包序列号 */
-            $num = $db->getOne("SELECT MAX(bonus_sn) FROM " . $ecs->table('user_bonus'));
+            $num = $GLOBALS['db']->getOne("SELECT MAX(bonus_sn) FROM " . $GLOBALS['ecs']->table('user_bonus'));
             $num = $num ? floor($num / 10000) : 100000;
 
             for ($i = 0, $j = 0; $i < $bonus_sum; $i++) {
                 $bonus_sn = ($num + $i) . str_pad(mt_rand(0, 9999), 4, '0', STR_PAD_LEFT);
-                $db->query("INSERT INTO " . $ecs->table('user_bonus') . " (bonus_type_id, bonus_sn) VALUES('$bonus_typeid', '$bonus_sn')");
+                $GLOBALS['db']->query("INSERT INTO " . $GLOBALS['ecs']->table('user_bonus') . " (bonus_type_id, bonus_sn) VALUES('$bonus_typeid', '$bonus_sn')");
 
                 $j++;
             }
@@ -520,10 +520,10 @@ class Bonus extends Init
             clear_cache_files();
 
             /* 提示信息 */
-            $link[0]['text'] = $_LANG['back_bonus_list'];
+            $link[0]['text'] = $GLOBALS['_LANG']['back_bonus_list'];
             $link[0]['href'] = 'bonus.php?act=bonus_list&bonus_type=' . $bonus_typeid;
 
-            sys_msg($_LANG['creat_bonus'] . $j . $_LANG['creat_bonus_num'], 0, $link);
+            sys_msg($GLOBALS['_LANG']['creat_bonus'] . $j . $GLOBALS['_LANG']['creat_bonus_num'], 0, $link);
         }
 
         /*------------------------------------------------------ */
@@ -534,7 +534,7 @@ class Bonus extends Init
 
             /* 获得此线下红包类型的ID */
             $tid = !empty($_GET['tid']) ? intval($_GET['tid']) : 0;
-            $type_name = $db->getOne("SELECT type_name FROM " . $ecs->table('bonus_type') . " WHERE type_id = '$tid'");
+            $type_name = $GLOBALS['db']->getOne("SELECT type_name FROM " . $GLOBALS['ecs']->table('bonus_type') . " WHERE type_id = '$tid'");
 
             /* 文件名称 */
             $bonus_filename = $type_name . '_bonus_list';
@@ -547,29 +547,29 @@ class Bonus extends Init
 
             /* 文件标题 */
             if (EC_CHARSET != 'gbk') {
-                echo ecs_iconv('UTF8', 'GB2312', $_LANG['bonus_excel_file']) . "\t\n";
+                echo ecs_iconv('UTF8', 'GB2312', $GLOBALS['_LANG']['bonus_excel_file']) . "\t\n";
                 /* 红包序列号, 红包金额, 类型名称(红包名称), 使用结束日期 */
-                echo ecs_iconv('UTF8', 'GB2312', $_LANG['bonus_sn']) . "\t";
-                echo ecs_iconv('UTF8', 'GB2312', $_LANG['type_money']) . "\t";
-                echo ecs_iconv('UTF8', 'GB2312', $_LANG['type_name']) . "\t";
-                echo ecs_iconv('UTF8', 'GB2312', $_LANG['use_enddate']) . "\t\n";
+                echo ecs_iconv('UTF8', 'GB2312', $GLOBALS['_LANG']['bonus_sn']) . "\t";
+                echo ecs_iconv('UTF8', 'GB2312', $GLOBALS['_LANG']['type_money']) . "\t";
+                echo ecs_iconv('UTF8', 'GB2312', $GLOBALS['_LANG']['type_name']) . "\t";
+                echo ecs_iconv('UTF8', 'GB2312', $GLOBALS['_LANG']['use_enddate']) . "\t\n";
             } else {
-                echo $_LANG['bonus_excel_file'] . "\t\n";
+                echo $GLOBALS['_LANG']['bonus_excel_file'] . "\t\n";
                 /* 红包序列号, 红包金额, 类型名称(红包名称), 使用结束日期 */
-                echo $_LANG['bonus_sn'] . "\t";
-                echo $_LANG['type_money'] . "\t";
-                echo $_LANG['type_name'] . "\t";
-                echo $_LANG['use_enddate'] . "\t\n";
+                echo $GLOBALS['_LANG']['bonus_sn'] . "\t";
+                echo $GLOBALS['_LANG']['type_money'] . "\t";
+                echo $GLOBALS['_LANG']['type_name'] . "\t";
+                echo $GLOBALS['_LANG']['use_enddate'] . "\t\n";
             }
 
             $val = array();
             $sql = "SELECT ub.bonus_id, ub.bonus_type_id, ub.bonus_sn, bt.type_name, bt.type_money, bt.use_end_date " .
-                "FROM " . $ecs->table('user_bonus') . " AS ub, " . $ecs->table('bonus_type') . " AS bt " .
+                "FROM " . $GLOBALS['ecs']->table('user_bonus') . " AS ub, " . $GLOBALS['ecs']->table('bonus_type') . " AS bt " .
                 "WHERE bt.type_id = ub.bonus_type_id AND ub.bonus_type_id = '$tid' ORDER BY ub.bonus_id DESC";
-            $res = $db->query($sql);
+            $res = $GLOBALS['db']->query($sql);
 
             $code_table = array();
-            while ($val = $db->fetchRow($res)) {
+            while ($val = $GLOBALS['db']->fetchRow($res)) {
                 echo $val['bonus_sn'] . "\t";
                 echo $val['type_money'] . "\t";
                 if (!isset($code_table[$val['type_name']])) {
@@ -614,8 +614,8 @@ class Bonus extends Init
             $type_id = $args[0];
 
             foreach ($add_ids as $key => $val) {
-                $sql = "UPDATE " . $ecs->table('goods') . " SET bonus_type_id='$type_id' WHERE goods_id='$val'";
-                $db->query($sql, 'SILENT') or make_json_error($db->error());
+                $sql = "UPDATE " . $GLOBALS['ecs']->table('goods') . " SET bonus_type_id='$type_id' WHERE goods_id='$val'";
+                $GLOBALS['db']->query($sql, 'SILENT') or make_json_error($GLOBALS['db']->error());
             }
 
             /* 重新载入 */
@@ -642,7 +642,7 @@ class Bonus extends Init
             $arguments = json_decode($_GET['JSON']);
             $type_id = $arguments[0];
 
-            $db->query("UPDATE " . $ecs->table('goods') . " SET bonus_type_id = 0 " .
+            $GLOBALS['db']->query("UPDATE " . $GLOBALS['ecs']->table('goods') . " SET bonus_type_id = 0 " .
                 "WHERE bonus_type_id = '$type_id' AND goods_id " . $drop_goods_ids);
 
             /* 重新载入 */
@@ -664,9 +664,9 @@ class Bonus extends Init
         if ($_REQUEST['act'] == 'search_users') {
             $keywords = json_str_iconv(trim($_GET['keywords']));
 
-            $sql = "SELECT user_id, user_name FROM " . $ecs->table('users') .
+            $sql = "SELECT user_id, user_name FROM " . $GLOBALS['ecs']->table('users') .
                 " WHERE user_name LIKE '%" . mysql_like_quote($keywords) . "%' OR user_id LIKE '%" . mysql_like_quote($keywords) . "%'";
-            $row = $db->getAll($sql);
+            $row = $GLOBALS['db']->getAll($sql);
 
             make_json_result($row);
         }
@@ -676,31 +676,31 @@ class Bonus extends Init
         /*------------------------------------------------------ */
 
         if ($_REQUEST['act'] == 'bonus_list') {
-            $smarty->assign('full_page', 1);
-            $smarty->assign('ur_here', $_LANG['bonus_list']);
-            $smarty->assign('action_link', array('href' => 'bonus.php?act=list', 'text' => $_LANG['04_bonustype_list']));
+            $GLOBALS['smarty']->assign('full_page', 1);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['bonus_list']);
+            $GLOBALS['smarty']->assign('action_link', array('href' => 'bonus.php?act=list', 'text' => $GLOBALS['_LANG']['04_bonustype_list']));
 
             $list = $this->get_bonus_list();
 
             /* 赋值是否显示红包序列号 */
             $bonus_type = $this->bonus_type_info(intval($_REQUEST['bonus_type']));
             if ($bonus_type['send_type'] == SEND_BY_PRINT) {
-                $smarty->assign('show_bonus_sn', 1);
+                $GLOBALS['smarty']->assign('show_bonus_sn', 1);
             } /* 赋值是否显示发邮件操作和是否发过邮件 */
             elseif ($bonus_type['send_type'] == SEND_BY_USER) {
-                $smarty->assign('show_mail', 1);
+                $GLOBALS['smarty']->assign('show_mail', 1);
             }
 
-            $smarty->assign('bonus_list', $list['item']);
-            $smarty->assign('filter', $list['filter']);
-            $smarty->assign('record_count', $list['record_count']);
-            $smarty->assign('page_count', $list['page_count']);
+            $GLOBALS['smarty']->assign('bonus_list', $list['item']);
+            $GLOBALS['smarty']->assign('filter', $list['filter']);
+            $GLOBALS['smarty']->assign('record_count', $list['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $list['page_count']);
 
             $sort_flag = sort_flag($list['filter']);
-            $smarty->assign($sort_flag['tag'], $sort_flag['img']);
+            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
             assign_query_info();
-            $smarty->display('bonus_list.htm');
+            $GLOBALS['smarty']->display('bonus_list.htm');
         }
 
         /*------------------------------------------------------ */
@@ -713,22 +713,22 @@ class Bonus extends Init
             /* 赋值是否显示红包序列号 */
             $bonus_type = $this->bonus_type_info(intval($_REQUEST['bonus_type']));
             if ($bonus_type['send_type'] == SEND_BY_PRINT) {
-                $smarty->assign('show_bonus_sn', 1);
+                $GLOBALS['smarty']->assign('show_bonus_sn', 1);
             } /* 赋值是否显示发邮件操作和是否发过邮件 */
             elseif ($bonus_type['send_type'] == SEND_BY_USER) {
-                $smarty->assign('show_mail', 1);
+                $GLOBALS['smarty']->assign('show_mail', 1);
             }
 
-            $smarty->assign('bonus_list', $list['item']);
-            $smarty->assign('filter', $list['filter']);
-            $smarty->assign('record_count', $list['record_count']);
-            $smarty->assign('page_count', $list['page_count']);
+            $GLOBALS['smarty']->assign('bonus_list', $list['item']);
+            $GLOBALS['smarty']->assign('filter', $list['filter']);
+            $GLOBALS['smarty']->assign('record_count', $list['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $list['page_count']);
 
             $sort_flag = sort_flag($list['filter']);
-            $smarty->assign($sort_flag['tag'], $sort_flag['img']);
+            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
             make_json_result(
-                $smarty->fetch('bonus_list.htm'),
+                $GLOBALS['smarty']->fetch('bonus_list.htm'),
                 '',
                 array('filter' => $list['filter'], 'page_count' => $list['page_count'])
             );
@@ -742,7 +742,7 @@ class Bonus extends Init
 
             $id = intval($_GET['id']);
 
-            $db->query("DELETE FROM " . $ecs->table('user_bonus') . " WHERE bonus_id='$id'");
+            $GLOBALS['db']->query("DELETE FROM " . $GLOBALS['ecs']->table('user_bonus') . " WHERE bonus_id='$id'");
 
             $url = 'bonus.php?act=query_bonus&' . str_replace('act=remove_bonus', '', $_SERVER['QUERY_STRING']);
 
@@ -766,25 +766,25 @@ class Bonus extends Init
 
                 /* 删除红包 */
                 if (isset($_POST['drop'])) {
-                    $sql = "DELETE FROM " . $ecs->table('user_bonus') . " WHERE bonus_id " . db_create_in($bonus_id_list);
-                    $db->query($sql);
+                    $sql = "DELETE FROM " . $GLOBALS['ecs']->table('user_bonus') . " WHERE bonus_id " . db_create_in($bonus_id_list);
+                    $GLOBALS['db']->query($sql);
 
                     admin_log(count($bonus_id_list), 'remove', 'userbonus');
 
                     clear_cache_files();
 
-                    $link[] = array('text' => $_LANG['back_bonus_list'],
+                    $link[] = array('text' => $GLOBALS['_LANG']['back_bonus_list'],
                         'href' => 'bonus.php?act=bonus_list&bonus_type=' . $bonus_type_id);
-                    sys_msg(sprintf($_LANG['batch_drop_success'], count($bonus_id_list)), 0, $link);
+                    sys_msg(sprintf($GLOBALS['_LANG']['batch_drop_success'], count($bonus_id_list)), 0, $link);
                 } /* 发邮件 */
                 elseif (isset($_POST['mail'])) {
                     $count = $this->send_bonus_mail($bonus_type_id, $bonus_id_list);
-                    $link[] = array('text' => $_LANG['back_bonus_list'],
+                    $link[] = array('text' => $GLOBALS['_LANG']['back_bonus_list'],
                         'href' => 'bonus.php?act=bonus_list&bonus_type=' . $bonus_type_id);
-                    sys_msg(sprintf($_LANG['success_send_mail'], $count), 0, $link);
+                    sys_msg(sprintf($GLOBALS['_LANG']['success_send_mail'], $count), 0, $link);
                 }
             } else {
-                sys_msg($_LANG['no_select_bonus'], 1);
+                sys_msg($GLOBALS['_LANG']['no_select_bonus'], 1);
             }
         }
     }

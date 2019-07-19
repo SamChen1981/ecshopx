@@ -17,17 +17,17 @@ class Integrate extends Init
         if ($_REQUEST['act'] == 'list') {
             $modules = read_modules('../includes/modules/integrates');
             for ($i = 0; $i < count($modules); $i++) {
-                $modules[$i]['installed'] = ($modules[$i]['code'] == $_CFG['integrate_code']) ? 1 : 0;
+                $modules[$i]['installed'] = ($modules[$i]['code'] == $GLOBALS['_CFG']['integrate_code']) ? 1 : 0;
             }
 
-            $allow_set_points = $_CFG['integrate_code'] == 'ecshop' ? 0 : 1;
+            $allow_set_points = $GLOBALS['_CFG']['integrate_code'] == 'ecshop' ? 0 : 1;
 
-            $smarty->assign('allow_set_points', $allow_set_points);
-            $smarty->assign('ur_here', $_LANG['06_list_integrate']);
-            $smarty->assign('modules', $modules);
+            $GLOBALS['smarty']->assign('allow_set_points', $allow_set_points);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['06_list_integrate']);
+            $GLOBALS['smarty']->assign('modules', $modules);
 
             assign_query_info();
-            $smarty->display('integrates_list.htm');
+            $GLOBALS['smarty']->display('integrates_list.htm');
         }
 
         /*------------------------------------------------------ */
@@ -40,36 +40,36 @@ class Integrate extends Init
             if ($_GET['code'] == 'ucenter') {
                 $uc_client_dir = file_mode_info(ROOT_PATH . 'uc_client/data');
                 if ($uc_client_dir === false) {
-                    sys_msg($_LANG['uc_client_not_exists'], 0);
+                    sys_msg($GLOBALS['_LANG']['uc_client_not_exists'], 0);
                 }
                 if ($uc_client_dir < 7) {
-                    sys_msg($_LANG['uc_client_not_write'], 0);
+                    sys_msg($GLOBALS['_LANG']['uc_client_not_write'], 0);
                 }
             }
             if ($_GET['code'] == 'ecshop') {
-                $sql = "UPDATE " . $ecs->table('shop_config') . " SET value = 'ecshop' WHERE code = 'integrate_code'";
-                $db->query($sql);
+                $sql = "UPDATE " . $GLOBALS['ecs']->table('shop_config') . " SET value = 'ecshop' WHERE code = 'integrate_code'";
+                $GLOBALS['db']->query($sql);
                 $sql = "UPDATE " . $GLOBALS['ecs']->table('shop_config') . " SET value = '' WHERE code = 'points_rule'";
                 $GLOBALS['db']->query($sql);
 
                 /* 清除shopconfig表的sql的缓存 */
                 clear_cache_files();
 
-                $links[0]['text'] = $_LANG['go_back'];
+                $links[0]['text'] = $GLOBALS['_LANG']['go_back'];
                 $links[0]['href'] = 'integrate.php?act=list';
-                sys_msg($_LANG['update_success'], 0, $links);
+                sys_msg($GLOBALS['_LANG']['update_success'], 0, $links);
             } else {
                 $sql = "UPDATE " . $GLOBALS['ecs']->table('users') .
                     " SET flag = 0, alias=''" .
                     " WHERE flag > 0";
-                $db->query($sql); //如果有标记，清空标记
+                $GLOBALS['db']->query($sql); //如果有标记，清空标记
                 $set_modules = true;
                 include_once(ROOT_PATH . "includes/modules/integrates/" . $_GET['code'] . ".php");
                 $set_modules = false;
 
-//        if ($_GET['code'] == 'ucenter' && !empty($_CFG['integrate_config']))
+//        if ($_GET['code'] == 'ucenter' && !empty($GLOBALS['_CFG']['integrate_config']))
 //        {
-//            $cfg = unserialize($_CFG['integrate_config']);
+//            $cfg = unserialize($GLOBALS['_CFG']['integrate_config']);
 //        }
 //        else
 //        {
@@ -81,19 +81,19 @@ class Integrate extends Init
 
                 assign_query_info();
 
-                $smarty->assign('cfg', $cfg);
-                $smarty->assign('save', 0);
-                $smarty->assign('set_list', get_charset_list());
-                $smarty->assign('ur_here', $_LANG['integrate_setup']);
-                $smarty->assign('code', $_GET['code']);
-                $smarty->display('integrates_setup.htm');
+                $GLOBALS['smarty']->assign('cfg', $cfg);
+                $GLOBALS['smarty']->assign('save', 0);
+                $GLOBALS['smarty']->assign('set_list', get_charset_list());
+                $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['integrate_setup']);
+                $GLOBALS['smarty']->assign('code', $_GET['code']);
+                $GLOBALS['smarty']->display('integrates_setup.htm');
             }
         }
 
         if ($_REQUEST['act'] == 'view_install_log') {
             $code = empty($_GET['code']) ? '' : trim(addslashes($_GET['code']));
             if (empty($code) || file_exists(ROOT_PATH . DATA_DIR . '/integrate_' . $code . '_log.php')) {
-                sys_msg($_LANG['lost_intall_log'], 1);
+                sys_msg($GLOBALS['_LANG']['lost_intall_log'], 1);
             }
 
             include(ROOT_PATH . DATA_DIR . '/integrate_' . $code . '_log.php');
@@ -108,7 +108,7 @@ class Integrate extends Init
                     var_dump($ignore_list);
                 }
             } else {
-                sys_msg($_LANG['empty_intall_log'], 1);
+                sys_msg($GLOBALS['_LANG']['empty_intall_log'], 1);
             }
         }
 
@@ -120,17 +120,17 @@ class Integrate extends Init
             admin_priv('integrate_users', '');
 
             if ($_GET['code'] == 'ecshop') {
-                sys_msg($_LANG['need_not_setup']);
+                sys_msg($GLOBALS['_LANG']['need_not_setup']);
             } else {
-                $cfg = unserialize($_CFG['integrate_config']);
+                $cfg = unserialize($GLOBALS['_CFG']['integrate_config']);
                 assign_query_info();
 
-                $smarty->assign('save', 1);
-                $smarty->assign('set_list', get_charset_list());
-                $smarty->assign('ur_here', $_LANG['integrate_setup']);
-                $smarty->assign('code', $_GET['code']);
-                $smarty->assign('cfg', $cfg);
-                $smarty->display('integrates_setup.htm');
+                $GLOBALS['smarty']->assign('save', 1);
+                $GLOBALS['smarty']->assign('set_list', get_charset_list());
+                $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['integrate_setup']);
+                $GLOBALS['smarty']->assign('code', $_GET['code']);
+                $GLOBALS['smarty']->assign('cfg', $cfg);
+                $GLOBALS['smarty']->display('integrates_setup.htm');
             }
         }
 
@@ -147,11 +147,11 @@ class Integrate extends Init
             if ($cls_user->error) {
                 /* 出错提示 */
                 if ($cls_user->error == 1) {
-                    sys_msg($_LANG['error_db_msg']);
+                    sys_msg($GLOBALS['_LANG']['error_db_msg']);
                 } elseif ($cls_user->error == 2) {
-                    sys_msg($_LANG['error_table_exist']);
+                    sys_msg($GLOBALS['_LANG']['error_table_exist']);
                 } elseif ($cls_user->error == 1049) {
-                    sys_msg($_LANG['error_db_exist']);
+                    sys_msg($GLOBALS['_LANG']['error_db_exist']);
                 } else {
                     sys_msg($cls_user->db->error());
                 }
@@ -166,15 +166,15 @@ class Integrate extends Init
 
                     if ($db_charset == 'latin1') {
                         if (empty($_POST['cfg']['is_latin1'])) {
-                            sys_msg($_LANG['error_is_latin1'], null, null, false);
+                            sys_msg($GLOBALS['_LANG']['error_is_latin1'], null, null, false);
                         }
                     } else {
                         $user_db_charset = $_POST['cfg']['db_charset'] == 'GB2312' ? 'GBK' : $_POST['cfg']['db_charset'];
                         if (!empty($_POST['cfg']['is_latin1'])) {
-                            sys_msg($_LANG['error_not_latin1'], null, null, false);
+                            sys_msg($GLOBALS['_LANG']['error_not_latin1'], null, null, false);
                         }
                         if ($user_db_charset != strtoupper($db_charset)) {
-                            sys_msg(sprintf($_LANG['invalid_db_charset'], strtoupper($db_charset), $user_db_charset), null, null, false);
+                            sys_msg(sprintf($GLOBALS['_LANG']['invalid_db_charset'], strtoupper($db_charset), $user_db_charset), null, null, false);
                         }
                     }
                 }
@@ -191,20 +191,20 @@ class Integrate extends Init
             $test = $cls_user->db->query($sql, 'SILENT');
 
             if (!$test) {
-                sys_msg($_LANG['error_latin1'], null, null, false);
+                sys_msg($GLOBALS['_LANG']['error_latin1'], null, null, false);
             }
 
             if (!empty($_POST['save'])) {
                 /* 直接保存修改 */
                 if ($this->save_integrate_config($code, $_POST['cfg'])) {
-                    sys_msg($_LANG['save_ok'], 0, array(array('text' => $_LANG['06_list_integrate'], 'href' => 'integrate.php?act=list')));
+                    sys_msg($GLOBALS['_LANG']['save_ok'], 0, array(array('text' => $GLOBALS['_LANG']['06_list_integrate'], 'href' => 'integrate.php?act=list')));
                 } else {
-                    sys_msg($_LANG['save_error'], 0, array(array('text' => $_LANG['06_list_integrate'], 'href' => 'integrate.php?act=list')));
+                    sys_msg($GLOBALS['_LANG']['save_error'], 0, array(array('text' => $GLOBALS['_LANG']['06_list_integrate'], 'href' => 'integrate.php?act=list')));
                 }
             }
 
-            $sql = "SELECT COUNT(*) FROM " . $ecs->table('users');
-            $total = $db->getOne($sql);
+            $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('users');
+            $total = $GLOBALS['db']->getOne($sql);
 
             if ($total == 0) {
                 /* 商城没有用户时，直接保存完成整合 */
@@ -219,11 +219,11 @@ class Integrate extends Init
 
             $size = 100;
 
-            $smarty->assign('ur_here', $_LANG['conflict_username_check']);
-            $smarty->assign('domain', '@ecshop');
-            $smarty->assign('lang_total', sprintf($_LANG['shop_user_total'], $total));
-            $smarty->assign('size', $size);
-            $smarty->display('integrates_check.htm');
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['conflict_username_check']);
+            $GLOBALS['smarty']->assign('domain', '@ecshop');
+            $GLOBALS['smarty']->assign('lang_total', sprintf($GLOBALS['_LANG']['shop_user_total'], $total));
+            $GLOBALS['smarty']->assign('size', $size);
+            $GLOBALS['smarty']->display('integrates_check.htm');
         }
 
         /*------------------------------------------------------ */
@@ -232,7 +232,7 @@ class Integrate extends Init
         if ($_REQUEST['act'] == 'save_uc_config') {
             $code = $_POST['code'];
 
-            $cfg = unserialize($_CFG['integrate_config']);
+            $cfg = unserialize($GLOBALS['_CFG']['integrate_config']);
 
             include_once(ROOT_PATH . "includes/modules/integrates/" . $code . ".php");
             $_POST['cfg']['quiet'] = 1;
@@ -241,11 +241,11 @@ class Integrate extends Init
             if ($cls_user->error) {
                 /* 出错提示 */
                 if ($cls_user->error == 1) {
-                    sys_msg($_LANG['error_db_msg']);
+                    sys_msg($GLOBALS['_LANG']['error_db_msg']);
                 } elseif ($cls_user->error == 2) {
-                    sys_msg($_LANG['error_table_exist']);
+                    sys_msg($GLOBALS['_LANG']['error_table_exist']);
                 } elseif ($cls_user->error == 1049) {
-                    sys_msg($_LANG['error_db_exist']);
+                    sys_msg($GLOBALS['_LANG']['error_db_exist']);
                 } else {
                     sys_msg($cls_user->db->error());
                 }
@@ -256,9 +256,9 @@ class Integrate extends Init
 
             /* 直接保存修改 */
             if ($this->save_integrate_config($code, $cfg)) {
-                sys_msg($_LANG['save_ok'], 0, array(array('text' => $_LANG['06_list_integrate'], 'href' => 'integrate.php?act=list')));
+                sys_msg($GLOBALS['_LANG']['save_ok'], 0, array(array('text' => $GLOBALS['_LANG']['06_list_integrate'], 'href' => 'integrate.php?act=list')));
             } else {
-                sys_msg($_LANG['save_error'], 0, array(array('text' => $_LANG['06_list_integrate'], 'href' => 'integrate.php?act=list')));
+                sys_msg($GLOBALS['_LANG']['save_error'], 0, array(array('text' => $GLOBALS['_LANG']['06_list_integrate'], 'href' => 'integrate.php?act=list')));
             }
         }
 
@@ -275,11 +275,11 @@ class Integrate extends Init
             if ($cls_user->error) {
                 /* 出错提示 */
                 if ($cls_user->error == 1) {
-                    sys_msg($_LANG['error_db_msg']);
+                    sys_msg($GLOBALS['_LANG']['error_db_msg']);
                 } elseif ($cls_user->error == 2) {
-                    sys_msg($_LANG['error_table_exist']);
+                    sys_msg($GLOBALS['_LANG']['error_table_exist']);
                 } elseif ($cls_user->error == 1049) {
-                    sys_msg($_LANG['error_db_exist']);
+                    sys_msg($GLOBALS['_LANG']['error_db_exist']);
                 } else {
                     sys_msg($cls_user->db->error());
                 }
@@ -302,7 +302,7 @@ class Integrate extends Init
                 'db_charset' => $ucdbcharset,
             );
             /* 增加UC语言项 */
-            $cfg['uc_lang'] = $_LANG['uc_lang'];
+            $cfg['uc_lang'] = $GLOBALS['_LANG']['uc_lang'];
 
             /* 检测成功临时保存论坛配置参数 */
             $_SESSION['cfg'] = $cfg;
@@ -311,14 +311,14 @@ class Integrate extends Init
             /* 直接保存修改 */
             if (!empty($_POST['save'])) {
                 if ($this->save_integrate_config($code, $cfg)) {
-                    sys_msg($_LANG['save_ok'], 0, array(array('text' => $_LANG['06_list_integrate'], 'href' => 'integrate.php?act=list')));
+                    sys_msg($GLOBALS['_LANG']['save_ok'], 0, array(array('text' => $GLOBALS['_LANG']['06_list_integrate'], 'href' => 'integrate.php?act=list')));
                 } else {
-                    sys_msg($_LANG['save_error'], 0, array(array('text' => $_LANG['06_list_integrate'], 'href' => 'integrate.php?act=list')));
+                    sys_msg($GLOBALS['_LANG']['save_error'], 0, array(array('text' => $GLOBALS['_LANG']['06_list_integrate'], 'href' => 'integrate.php?act=list')));
                 }
             }
 
-            $query = $db->query("SHOW TABLE STATUS LIKE '" . $GLOBALS['prefix'] . 'users' . "'");
-            $data = $db->fetch_array($query);
+            $query = $GLOBALS['db']->query("SHOW TABLE STATUS LIKE '" . $GLOBALS['prefix'] . 'users' . "'");
+            $data = $GLOBALS['db']->fetch_array($query);
             if ($data["Auto_increment"]) {
                 $maxuid = $data["Auto_increment"] - 1;
             } else {
@@ -328,9 +328,9 @@ class Integrate extends Init
             /* 保存完成整合 */
             $this->save_integrate_config($code, $cfg);
 
-            $smarty->assign('ur_here', $_LANG['ucenter_import_username']);
-            $smarty->assign('user_startid_intro', sprintf($_LANG['user_startid_intro'], $maxuid, $maxuid));
-            $smarty->display('integrates_uc_import.htm');
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['ucenter_import_username']);
+            $GLOBALS['smarty']->assign('user_startid_intro', sprintf($GLOBALS['_LANG']['user_startid_intro'], $maxuid, $maxuid));
+            $GLOBALS['smarty']->display('integrates_uc_import.htm');
         }
 
         /*------------------------------------------------------ */
@@ -350,13 +350,13 @@ class Integrate extends Init
             }
             $_SESSION['domain'] = $domain;
 
-            $sql = "SELECT COUNT(*) FROM " . $ecs->table('users');
-            $total = $db->getOne($sql);
+            $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('users');
+            $total = $GLOBALS['db']->getOne($sql);
 
             $result = array('error' => 0, 'message' => '', 'start' => 0, 'size' => $size, 'content' => '', 'method' => $method, 'domain' => $domain, 'is_end' => 0);
 
-            $sql = "SELECT user_name FROM " . $ecs->table('users') . " LIMIT $start, $size";
-            $user_list = $db->getCol($sql);
+            $sql = "SELECT user_name FROM " . $GLOBALS['ecs']->table('users') . " LIMIT $start, $size";
+            $user_list = $GLOBALS['db']->getCol($sql);
 
             $post_user_list = $cls_user->test_conflict($user_list);
 
@@ -407,15 +407,15 @@ class Integrate extends Init
 
             if (($start + $size) < $total) {
                 $result['start'] = $start + $size;
-                $result['content'] = sprintf($_LANG['notice'], $result['start'], $total);
+                $result['content'] = sprintf($GLOBALS['_LANG']['notice'], $result['start'], $total);
             } else {
                 $start = $total;
-                $result['content'] = $_LANG['check_complete'];
+                $result['content'] = $GLOBALS['_LANG']['check_complete'];
                 $result['is_end'] = 1;
 
                 /* 查找有无重名用户,无重名用户则直接同步，有则查看重名用户 */
-                $sql = "SELECT COUNT(*) FROM " . $ecs->table('users') . " WHERE flag > 0 ";
-                if ($db->getOne($sql) > 0) {
+                $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('users') . " WHERE flag > 0 ";
+                if ($GLOBALS['db']->getOne($sql) > 0) {
                     $result['href'] = "integrate.php?act=modify";
                 } else {
                     $result['href'] = "integrate.php?act=sync";
@@ -433,8 +433,8 @@ class Integrate extends Init
             $cfg = $_SESSION['cfg'];
             $ucdb = new Mysql($cfg['db_host'], $cfg['db_user'], $cfg['db_pass'], $cfg['db_name'], $cfg['db_charset']);
             $result = array('error' => 0, 'message' => '');
-            $query = $db->query("SHOW TABLE STATUS LIKE '" . $GLOBALS['prefix'] . 'users' . "'");
-            $data = $db->fetch_array($query);
+            $query = $GLOBALS['db']->query("SHOW TABLE STATUS LIKE '" . $GLOBALS['prefix'] . 'users' . "'");
+            $data = $GLOBALS['db']->fetch_array($query);
             if ($data["Auto_increment"]) {
                 $maxuid = $data["Auto_increment"] - 1;
             } else {
@@ -445,8 +445,8 @@ class Integrate extends Init
             $uc_uid = array();
             $repeat_user = array();
 
-            $query = $db->query("SELECT * FROM " . $ecs->table('users') . " ORDER BY `user_id` ASC");
-            while ($data = $db->fetch_array($query)) {
+            $query = $GLOBALS['db']->query("SELECT * FROM " . $GLOBALS['ecs']->table('users') . " ORDER BY `user_id` ASC");
+            while ($data = $GLOBALS['db']->fetch_array($query)) {
                 $salt = rand(100000, 999999);
                 $password = md5($data['password'] . $salt);
                 $data['username'] = trim(addslashes($data['user_name']));
@@ -481,20 +481,20 @@ class Integrate extends Init
             }
             // 更新ECSHOP表
             foreach ($up_user_table as $table) {
-                $db->query("UPDATE " . $ecs->table($table) . " SET `user_id`=`user_id`+ $maxuid ORDER BY `user_id` DESC");
+                $GLOBALS['db']->query("UPDATE " . $GLOBALS['ecs']->table($table) . " SET `user_id`=`user_id`+ $maxuid ORDER BY `user_id` DESC");
                 foreach ($uc_uid as $uid) {
-                    $db->query("UPDATE " . $ecs->table($table) . " SET `user_id`='" . $uid['uid'] . "' WHERE `user_id`='" . ($uid['user_id'] + $maxuid) . "'");
+                    $GLOBALS['db']->query("UPDATE " . $GLOBALS['ecs']->table($table) . " SET `user_id`='" . $uid['uid'] . "' WHERE `user_id`='" . ($uid['user_id'] + $maxuid) . "'");
                 }
             }
             foreach ($truncate_user_table as $table) {
-                $db->query("TRUNCATE TABLE " . $ecs->table($table));
+                $GLOBALS['db']->query("TRUNCATE TABLE " . $GLOBALS['ecs']->table($table));
             }
             // 保存重复的用户信息
             if (!empty($repeat_user)) {
                 @file_put_contents(ROOT_PATH . 'data/repeat_user.php', '<?php die();?>' . json_encode($repeat_user));
             }
             $result['error'] = 0;
-            $result['message'] = $_LANG['import_user_success'];
+            $result['message'] = $GLOBALS['_LANG']['import_user_success'];
             die(json_encode($result));
         }
 
@@ -503,30 +503,30 @@ class Integrate extends Init
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'modify') {
             /* 检查是否有改名失败的用户 */
-            $sql = "SELECT COUNT(*) FROM " . $ecs->table('users') . " WHERE flag = 1";
-            if ($db->getOne($sql) > 0) {
+            $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('users') . " WHERE flag = 1";
+            if ($GLOBALS['db']->getOne($sql) > 0) {
                 $_REQUEST['flag'] = 1;
-                $smarty->assign('default_flag', 1);
+                $GLOBALS['smarty']->assign('default_flag', 1);
             } else {
                 $_REQUEST['flag'] = 0;
-                $smarty->assign('default_flag', 0);
+                $GLOBALS['smarty']->assign('default_flag', 0);
             }
 
             /* 显示重名用户及处理方法 */
-            $flags = array(0 => $_LANG['all_user'], 1 => $_LANG['error_user'], 2 => $_LANG['rename_user'], 3 => $_LANG['delete_user'], 4 => $_LANG['ignore_user']);
-            $smarty->assign('flags', $flags);
+            $flags = array(0 => $GLOBALS['_LANG']['all_user'], 1 => $GLOBALS['_LANG']['error_user'], 2 => $GLOBALS['_LANG']['rename_user'], 3 => $GLOBALS['_LANG']['delete_user'], 4 => $GLOBALS['_LANG']['ignore_user']);
+            $GLOBALS['smarty']->assign('flags', $flags);
 
             $arr = $this->conflict_userlist();
 
-            $smarty->assign('ur_here', $_LANG['conflict_username_modify']);
-            $smarty->assign('domain', '@ecshop');
-            $smarty->assign('list', $arr['list']);
-            $smarty->assign('filter', $arr['filter']);
-            $smarty->assign('record_count', $arr['record_count']);
-            $smarty->assign('page_count', $arr['page_count']);
-            $smarty->assign('full_page', 1);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['conflict_username_modify']);
+            $GLOBALS['smarty']->assign('domain', '@ecshop');
+            $GLOBALS['smarty']->assign('list', $arr['list']);
+            $GLOBALS['smarty']->assign('filter', $arr['filter']);
+            $GLOBALS['smarty']->assign('record_count', $arr['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $arr['page_count']);
+            $GLOBALS['smarty']->assign('full_page', 1);
 
-            $smarty->display('integrates_modify.htm');
+            $GLOBALS['smarty']->display('integrates_modify.htm');
         }
 
         /*------------------------------------------------------ */
@@ -534,12 +534,12 @@ class Integrate extends Init
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'query') {
             $arr = $this->conflict_userlist();
-            $smarty->assign('list', $arr['list']);
-            $smarty->assign('filter', $arr['filter']);
-            $smarty->assign('record_count', $arr['record_count']);
-            $smarty->assign('page_count', $arr['page_count']);
-            $smarty->assign('full_page', 0);
-            make_json_result($smarty->fetch('integrates_modify.htm'), '', array('filter' => $arr['filter'], 'page_count' => $arr['page_count']));
+            $GLOBALS['smarty']->assign('list', $arr['list']);
+            $GLOBALS['smarty']->assign('filter', $arr['filter']);
+            $GLOBALS['smarty']->assign('record_count', $arr['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $arr['page_count']);
+            $GLOBALS['smarty']->assign('full_page', 0);
+            make_json_result($GLOBALS['smarty']->fetch('integrates_modify.htm'), '', array('filter' => $arr['filter'], 'page_count' => $arr['page_count']));
         }
 
         /*------------------------------------------------------ */
@@ -556,7 +556,7 @@ class Integrate extends Init
             if ($alias) {
                 /* 检查改名后用户名是否会重名 */
                 $sql = 'SELECT user_name FROM ' . $GLOBALS['ecs']->table('users') . ' WHERE ' . db_create_in($alias, 'user_name');
-                $ecs_error_list = $db->getCol($sql);
+                $ecs_error_list = $GLOBALS['db']->getCol($sql);
 
                 /* 检查和商城是否有重名 */
                 $code = $_SESSION['code'];
@@ -580,7 +580,7 @@ class Integrate extends Init
                                     " SET flag = 2, alias = '" . $_POST['alias'][$user_id] . "'" .
                                     " WHERE user_id = '$user_id'";
                             }
-                            $db->query($sql);
+                            $GLOBALS['db']->query($sql);
                         }
                     }
                 } else {
@@ -589,7 +589,7 @@ class Integrate extends Init
                         $sql = "UPDATE " . $GLOBALS['ecs']->table('users') .
                             " SET flag = 2, alias = '" . $_POST['alias'][$user_id] . "'" .
                             " WHERE user_id = '$user_id'";
-                        $db->query($sql);
+                        $GLOBALS['db']->query($sql);
                     }
                 }
             }
@@ -598,7 +598,7 @@ class Integrate extends Init
             foreach ($_POST['opt'] as $user_id => $val) {
                 if ($val == 3 || $val == 4) {
                     $sql = "UPDATE " . $GLOBALS['ecs']->table('users') . " SET flag='$val' WHERE user_id='$user_id'";
-                    $db->query($sql);
+                    $GLOBALS['db']->query($sql);
                 }
             }
 
@@ -612,10 +612,10 @@ class Integrate extends Init
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'sync') {
             $size = 100;
-            $total = $db->getOne("SELECT COUNT(*) FROM " . $ecs->table("users"));
-            $task_del = $db->getOne("SELECT COUNT(*) FROM " . $ecs->table("users") . " WHERE flag = 3");
-            $task_rename = $db->getOne("SELECT COUNT(*) FROM " . $ecs->table("users") . " WHERE flag = 2");
-            $task_ignore = $db->getOne("SELECT COUNT(*) FROM " . $ecs->table("users") . " WHERE flag = 4");
+            $total = $GLOBALS['db']->getOne("SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table("users"));
+            $task_del = $GLOBALS['db']->getOne("SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table("users") . " WHERE flag = 3");
+            $task_rename = $GLOBALS['db']->getOne("SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table("users") . " WHERE flag = 2");
+            $task_ignore = $GLOBALS['db']->getOne("SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table("users") . " WHERE flag = 4");
             $task_sync = $total - $task_del - $task_ignore;
 
             $_SESSION['task'] = array('del' => array('total' => $task_del, 'start' => 0), 'rename' => array('total' => $task_rename, 'start' => 0), 'sync' => array('total' => $task_sync, 'start' => 0));
@@ -626,27 +626,27 @@ class Integrate extends Init
 
             $tasks = array();
             if ($task_del > 0) {
-                $tasks[] = array('task_name' => sprintf($_LANG['task_del'], $task_del), 'task_status' => '<span id="task_del">' . $_LANG['task_uncomplete'] . '<span>');
-                $sql = "SELECT user_name FROM " . $ecs->table('users') . " WHERE flag = 2";
-                $del_list = $db->getCol($sql);
+                $tasks[] = array('task_name' => sprintf($GLOBALS['_LANG']['task_del'], $task_del), 'task_status' => '<span id="task_del">' . $GLOBALS['_LANG']['task_uncomplete'] . '<span>');
+                $sql = "SELECT user_name FROM " . $GLOBALS['ecs']->table('users') . " WHERE flag = 2";
+                $del_list = $GLOBALS['db']->getCol($sql);
             }
 
             if ($task_rename > 0) {
-                $tasks[] = array('task_name' => sprintf($_LANG['task_rename'], $task_rename), 'task_status' => '<span id="task_rename">' . $_LANG['task_uncomplete'] . '</span>');
-                $sql = "SELECT user_name, alias FROM " . $ecs->table('users') . " WHERE flag = 3";
-                $rename_list = $db->getAll($sql);
+                $tasks[] = array('task_name' => sprintf($GLOBALS['_LANG']['task_rename'], $task_rename), 'task_status' => '<span id="task_rename">' . $GLOBALS['_LANG']['task_uncomplete'] . '</span>');
+                $sql = "SELECT user_name, alias FROM " . $GLOBALS['ecs']->table('users') . " WHERE flag = 3";
+                $rename_list = $GLOBALS['db']->getAll($sql);
             }
 
             if ($task_ignore > 0) {
-                $sql = "SELECT user_name FROM " . $ecs->table('users') . " WHERE flag = 4";
-                $ignore_list = $db->getCol($sql);
+                $sql = "SELECT user_name FROM " . $GLOBALS['ecs']->table('users') . " WHERE flag = 4";
+                $ignore_list = $GLOBALS['db']->getCol($sql);
             }
 
             if ($task_sync > 0) {
-                $tasks[] = array('task_name' => sprintf($_LANG['task_sync'], $task_sync), 'task_status' => '<span id="task_sync">' . $_LANG['task_uncomplete'] . '</span>');
+                $tasks[] = array('task_name' => sprintf($GLOBALS['_LANG']['task_sync'], $task_sync), 'task_status' => '<span id="task_sync">' . $GLOBALS['_LANG']['task_uncomplete'] . '</span>');
             }
 
-            $tasks[] = array('task_name' => $_LANG['task_save'], 'task_status' => '<span id="task_save">' . $_LANG['task_uncomplete'] . '</span>');
+            $tasks[] = array('task_name' => $GLOBALS['_LANG']['task_save'], 'task_status' => '<span id="task_save">' . $GLOBALS['_LANG']['task_uncomplete'] . '</span>');
 
             /* 保存修改日志 */
             $fp = @fopen(ROOT_PATH . DATA_DIR . '/integrate_' . $_SESSION['code'] . '_log.php', 'wb');
@@ -663,10 +663,10 @@ class Integrate extends Init
             fwrite($fp, $log);
             fclose($fp);
 
-            $smarty->assign('tasks', $tasks);
-            $smarty->assign('ur_here', $_LANG['user_sync']);
-            $smarty->assign('size', $size);
-            $smarty->display('integrates_sync.htm');
+            $GLOBALS['smarty']->assign('tasks', $tasks);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['user_sync']);
+            $GLOBALS['smarty']->assign('size', $size);
+            $GLOBALS['smarty']->display('integrates_sync.htm');
         }
 
         /*------------------------------------------------------ */
@@ -684,33 +684,33 @@ class Integrate extends Init
             if ($_SESSION['task']['del']['start'] < $_SESSION['task']['del']['total']) {
                 /* 执行操作 */
                 /* 查找要删除用户 */
-                $arr = $db->getCol("SELECT user_name FROM " . $ecs->table('users') . " WHERE flag = 3 LIMIT " . $_SESSION['task']['del']['start'] . ',' . $result['size']);
-                $db->query("DELETE FROM " . $ecs->table('users') . " WHERE " . db_create_in($arr, 'user_name'));
+                $arr = $GLOBALS['db']->getCol("SELECT user_name FROM " . $GLOBALS['ecs']->table('users') . " WHERE flag = 3 LIMIT " . $_SESSION['task']['del']['start'] . ',' . $result['size']);
+                $GLOBALS['db']->query("DELETE FROM " . $GLOBALS['ecs']->table('users') . " WHERE " . db_create_in($arr, 'user_name'));
 
                 /* 保存设置 */
                 $result['id'] = 'task_del';
                 if ($_SESSION['task']['del']['start'] + $result['size'] >= $_SESSION['task']['del']['total']) {
                     $_SESSION['task']['del']['start'] = $_SESSION['task']['del']['total'];
-                    $result['content'] = $_LANG['task_complete'];
+                    $result['content'] = $GLOBALS['_LANG']['task_complete'];
                 } else {
                     $_SESSION['task']['del']['start'] += $result['size'];
-                    $result['content'] = sprintf($_LANG['task_run'], $_SESSION['task']['del']['start'], $_SESSION['task']['del']['total']);
+                    $result['content'] = sprintf($GLOBALS['_LANG']['task_run'], $_SESSION['task']['del']['start'], $_SESSION['task']['del']['total']);
                 }
 
                 die(json_encode($result));
             } elseif ($_SESSION['task']['rename']['start'] < $_SESSION['task']['rename']['total']) {
                 /* 查找要改名用户 */
-                $arr = $db->getCol("SELECT user_name FROM " . $ecs->table('users') . " WHERE flag = 2 LIMIT " . $_SESSION['task']['del']['start'] . ',' . $result['size']);
-                $db->query("UPDATE " . $ecs->table('users') . " SET user_name=alias, alias='' WHERE " . db_create_in($arr, 'user_name'));
+                $arr = $GLOBALS['db']->getCol("SELECT user_name FROM " . $GLOBALS['ecs']->table('users') . " WHERE flag = 2 LIMIT " . $_SESSION['task']['del']['start'] . ',' . $result['size']);
+                $GLOBALS['db']->query("UPDATE " . $GLOBALS['ecs']->table('users') . " SET user_name=alias, alias='' WHERE " . db_create_in($arr, 'user_name'));
 
                 /* 保存设置 */
                 $result['id'] = 'task_rename';
                 if ($_SESSION['task']['rename']['start'] + $result['size'] >= $_SESSION['task']['rename']['total']) {
                     $_SESSION['task']['rename']['start'] = $_SESSION['task']['rename']['total'];
-                    $result['content'] = $_LANG['task_complete'];
+                    $result['content'] = $GLOBALS['_LANG']['task_complete'];
                 } else {
                     $_SESSION['task']['rename']['start'] += $result['size'];
-                    $result['content'] = sprintf($_LANG['task_run'], $_SESSION['task']['rename']['start'], $_SESSION['task']['rename']['total']);
+                    $result['content'] = sprintf($GLOBALS['_LANG']['task_run'], $_SESSION['task']['rename']['start'], $_SESSION['task']['rename']['total']);
                 }
                 die(json_encode($result));
             } elseif ($_SESSION['task']['sync']['start'] < $_SESSION['task']['sync']['total']) {
@@ -720,8 +720,8 @@ class Integrate extends Init
                 $cls_user->need_sync = false;
 
                 $sql = "SELECT user_name, password, email, sex, birthday, reg_time " .
-                    "FROM " . $ecs->table('users') . " LIMIT " . $_SESSION['task']['del']['start'] . ',' . $result['size'];
-                $arr = $db->getAll($sql);
+                    "FROM " . $GLOBALS['ecs']->table('users') . " LIMIT " . $_SESSION['task']['del']['start'] . ',' . $result['size'];
+                $arr = $GLOBALS['db']->getAll($sql);
                 foreach ($arr as $user) {
                     @$cls_user->add_user($user['user_name'], '', $user['email'], $user['sex'], $user['birthday'], $user['reg_time'], $user['password']);
                 }
@@ -730,30 +730,30 @@ class Integrate extends Init
                 $result['id'] = 'task_sync';
                 if ($_SESSION['task']['sync']['start'] + $result['size'] >= $_SESSION['task']['sync']['total']) {
                     $_SESSION['task']['sync']['start'] = $_SESSION['task']['sync']['total'];
-                    $result['content'] = $_LANG['task_complete'];
+                    $result['content'] = $GLOBALS['_LANG']['task_complete'];
                 } else {
                     $_SESSION['task']['sync']['start'] += $result['size'];
-                    $result['content'] = sprintf($_LANG['task_run'], $_SESSION['task']['sync']['start'], $_SESSION['task']['sync']['total']);
+                    $result['content'] = sprintf($GLOBALS['_LANG']['task_run'], $_SESSION['task']['sync']['start'], $_SESSION['task']['sync']['total']);
                 }
                 die(json_encode($result));
             } else {
                 /* 记录合并用户 */
 
                 /* 插入code到shop_config表 */
-                $sql = "SELECT COUNT(*) FROM " . $ecs->table('shop_config') . " WHERE code = 'integrate_code'";
+                $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('shop_config') . " WHERE code = 'integrate_code'";
 
-                if ($db->GetOne($sql) == 0) {
-                    $sql = "INSERT INTO " . $ecs->table('shop_config') . " (code, value) " .
+                if ($GLOBALS['db']->GetOne($sql) == 0) {
+                    $sql = "INSERT INTO " . $GLOBALS['ecs']->table('shop_config') . " (code, value) " .
                         "VALUES ('integrate_code', '$_SESSION[code]')";
                 } else {
-                    $sql = "UPDATE " . $ecs->table('shop_config') . " SET value = '$_SESSION[code]' WHERE code = 'integrate_code'";
+                    $sql = "UPDATE " . $GLOBALS['ecs']->table('shop_config') . " SET value = '$_SESSION[code]' WHERE code = 'integrate_code'";
                 }
-                $db->query($sql);
+                $GLOBALS['db']->query($sql);
 
                 /* 序列化设置信息，并保存到数据库 */
                 $this->save_integrate_config($_SESSION['code'], $_SESSION['cfg']);
 
-                $result['content'] = $_LANG['task_complete'];
+                $result['content'] = $GLOBALS['_LANG']['task_complete'];
                 $result['id'] = 'task_save';
                 $result['end'] = 1;
 
@@ -762,8 +762,8 @@ class Integrate extends Init
                 unset($_SESSION['code']);
                 unset($_SESSION['task']);
                 unset($_SESSION['domain']);
-                $sql = "UPDATE " . $ecs->table('users') . " set flag = 0, alias = '' WHERE flag > 0";
-                $db->query($sql);
+                $sql = "UPDATE " . $GLOBALS['ecs']->table('users') . " set flag = 0, alias = '' WHERE flag > 0";
+                $GLOBALS['db']->query($sql);
                 die(json_encode($result));
             }
         }
@@ -775,7 +775,7 @@ class Integrate extends Init
             $result = array('error' => 0, 'message' => '');
 
             $app_type = 'ECSHOP';
-            $app_name = $db->getOne('SELECT value FROM ' . $ecs->table('shop_config') . " WHERE code = 'shop_name'");
+            $app_name = $GLOBALS['db']->getOne('SELECT value FROM ' . $GLOBALS['ecs']->table('shop_config') . " WHERE code = 'shop_name'");
             $app_url = $GLOBALS['ecs']->url();
             $app_charset = EC_CHARSET;
             $app_dbcharset = strtolower((str_replace('-', '', EC_CHARSET)));
@@ -798,13 +798,13 @@ class Integrate extends Init
 
             $ucfounderpw = trim($_POST['ucfounderpw']);
             $app_tagtemplates = 'apptagtemplates[template]=' . urlencode('<a href="{url}" target="_blank">{goods_name}</a>') . '&' .
-                'apptagtemplates[fields][goods_name]=' . urlencode($_LANG['tagtemplates_goodsname']) . '&' .
-                'apptagtemplates[fields][uid]=' . urlencode($_LANG['tagtemplates_uid']) . '&' .
-                'apptagtemplates[fields][username]=' . urlencode($_LANG['tagtemplates_username']) . '&' .
-                'apptagtemplates[fields][dateline]=' . urlencode($_LANG['tagtemplates_dateline']) . '&' .
-                'apptagtemplates[fields][url]=' . urlencode($_LANG['tagtemplates_url']) . '&' .
-                'apptagtemplates[fields][image]=' . urlencode($_LANG['tagtemplates_image']) . '&' .
-                'apptagtemplates[fields][goods_price]=' . urlencode($_LANG['tagtemplates_price']);
+                'apptagtemplates[fields][goods_name]=' . urlencode($GLOBALS['_LANG']['tagtemplates_goodsname']) . '&' .
+                'apptagtemplates[fields][uid]=' . urlencode($GLOBALS['_LANG']['tagtemplates_uid']) . '&' .
+                'apptagtemplates[fields][username]=' . urlencode($GLOBALS['_LANG']['tagtemplates_username']) . '&' .
+                'apptagtemplates[fields][dateline]=' . urlencode($GLOBALS['_LANG']['tagtemplates_dateline']) . '&' .
+                'apptagtemplates[fields][url]=' . urlencode($GLOBALS['_LANG']['tagtemplates_url']) . '&' .
+                'apptagtemplates[fields][image]=' . urlencode($GLOBALS['_LANG']['tagtemplates_image']) . '&' .
+                'apptagtemplates[fields][goods_price]=' . urlencode($GLOBALS['_LANG']['tagtemplates_price']);
             $postdata = "m=app&a=add&ucfounder=&ucfounderpw=" . urlencode($ucfounderpw) . "&apptype=" . urlencode($app_type) .
                 "&appname=" . urlencode($app_name) . "&appurl=" . urlencode($app_url) . "&appip=&appcharset=" . $app_charset .
                 '&appdbcharset=' . $app_dbcharset . '&apptagtemplates=' . $app_tagtemplates;
@@ -814,17 +814,17 @@ class Integrate extends Init
             if (empty($ucconfig)) {
                 //ucenter 验证失败
                 $result['error'] = 1;
-                $result['message'] = $_LANG['uc_msg_verify_failur'];
+                $result['message'] = $GLOBALS['_LANG']['uc_msg_verify_failur'];
             } elseif ($ucconfig == '-1') {
                 //管理员密码无效
                 $result['error'] = 1;
-                $result['message'] = $_LANG['uc_msg_password_wrong'];
+                $result['message'] = $GLOBALS['_LANG']['uc_msg_password_wrong'];
             } else {
                 list($appauthkey, $appid) = explode('|', $ucconfig);
                 if (empty($appauthkey) || empty($appid)) {
                     //ucenter 安装数据错误
                     $result['error'] = 1;
-                    $result['message'] = $_LANG['uc_msg_data_error'];
+                    $result['message'] = $GLOBALS['_LANG']['uc_msg_data_error'];
                 } else {
                     $result['error'] = 0;
                     $result['message'] = $ucconfig;
@@ -836,24 +836,24 @@ class Integrate extends Init
 
         /* 显示整合成功信息 */
         if ($_REQUEST['act'] == 'complete') {
-            sys_msg($_LANG['sync_ok'], 0, array(array('text' => $_LANG['06_list_integrate'], 'href' => 'integrate.php?act=list')));
+            sys_msg($GLOBALS['_LANG']['sync_ok'], 0, array(array('text' => $GLOBALS['_LANG']['06_list_integrate'], 'href' => 'integrate.php?act=list')));
         }
 
         if ($_REQUEST['act'] == 'points_set') {
             $rule_index = empty($_GET['rule_index']) ? '' : trim($_GET['rule_index']);
 
             $user = init_users();
-            $points = $user->get_points_name(); //获取商城可用积分
+            $points = $GLOBALS['user']->get_points_name(); //获取商城可用积分
 
             if (empty($points)) {
-                sys_msg($_LANG['no_points'], 0, array(array('text' => $_LANG['06_list_integrate'], 'href' => 'integrate.php?act=list')));
+                sys_msg($GLOBALS['_LANG']['no_points'], 0, array(array('text' => $GLOBALS['_LANG']['06_list_integrate'], 'href' => 'integrate.php?act=list')));
             } elseif ($points == 'ucenter') {
-                sys_msg($_LANG['uc_points'], 0, array(array('text' => $_LANG['uc_set_credits'], 'href' => UC_API, 'target' => '_blank')), false);
+                sys_msg($GLOBALS['_LANG']['uc_points'], 0, array(array('text' => $GLOBALS['_LANG']['uc_set_credits'], 'href' => UC_API, 'target' => '_blank')), false);
             }
 
             $rule = array(); //取得一样规则
-            if ($_CFG['points_rule']) {
-                $rule = unserialize($_CFG['points_rule']);
+            if ($GLOBALS['_CFG']['points_rule']) {
+                $rule = unserialize($GLOBALS['_CFG']['points_rule']);
             }
 
             $points_key = array_keys($points);
@@ -864,30 +864,30 @@ class Integrate extends Init
             $exist_rule = array();
             for ($i = 0; $i < $count; $i++) {
                 if (!isset($rule[TO_P . $points_key[$i]])) {
-                    $select_rule[TO_P . $points_key[$i]] = $_LANG['bbs'] . $points[$points_key[$i]]['title'] . '->' . $_LANG['shop_pay_points'];
+                    $select_rule[TO_P . $points_key[$i]] = $GLOBALS['_LANG']['bbs'] . $points[$points_key[$i]]['title'] . '->' . $GLOBALS['_LANG']['shop_pay_points'];
                 } else {
-                    $exist_rule[TO_P . $points_key[$i]] = $_LANG['bbs'] . $points[$points_key[$i]]['title'] . '->' . $_LANG['shop_pay_points'];
+                    $exist_rule[TO_P . $points_key[$i]] = $GLOBALS['_LANG']['bbs'] . $points[$points_key[$i]]['title'] . '->' . $GLOBALS['_LANG']['shop_pay_points'];
                 }
             }
             for ($i = 0; $i < $count; $i++) {
                 if (!isset($rule[TO_R . $points_key[$i]])) {
-                    $select_rule[TO_R . $points_key[$i]] = $_LANG['bbs'] . $points[$points_key[$i]]['title'] . '->' . $_LANG['shop_rank_points'];
+                    $select_rule[TO_R . $points_key[$i]] = $GLOBALS['_LANG']['bbs'] . $points[$points_key[$i]]['title'] . '->' . $GLOBALS['_LANG']['shop_rank_points'];
                 } else {
-                    $exist_rule[TO_R . $points_key[$i]] = $_LANG['bbs'] . $points[$points_key[$i]]['title'] . '->' . $_LANG['shop_rank_points'];
+                    $exist_rule[TO_R . $points_key[$i]] = $GLOBALS['_LANG']['bbs'] . $points[$points_key[$i]]['title'] . '->' . $GLOBALS['_LANG']['shop_rank_points'];
                 }
             }
             for ($i = 0; $i < $count; $i++) {
                 if (!isset($rule[FROM_P . $points_key[$i]])) {
-                    $select_rule[FROM_P . $points_key[$i]] = $_LANG['shop_pay_points'] . '->' . $_LANG['bbs'] . $points[$points_key[$i]]['title'];
+                    $select_rule[FROM_P . $points_key[$i]] = $GLOBALS['_LANG']['shop_pay_points'] . '->' . $GLOBALS['_LANG']['bbs'] . $points[$points_key[$i]]['title'];
                 } else {
-                    $exist_rule[FROM_P . $points_key[$i]] = $_LANG['shop_pay_points'] . '->' . $_LANG['bbs'] . $points[$points_key[$i]]['title'];
+                    $exist_rule[FROM_P . $points_key[$i]] = $GLOBALS['_LANG']['shop_pay_points'] . '->' . $GLOBALS['_LANG']['bbs'] . $points[$points_key[$i]]['title'];
                 }
             }
             for ($i = 0; $i < $count; $i++) {
                 if (!isset($rule[FROM_R . $points_key[$i]])) {
-                    $select_rule[FROM_R . $points_key[$i]] = $_LANG['shop_rank_points'] . '->' . $_LANG['bbs'] . $points[$points_key[$i]]['title'];
+                    $select_rule[FROM_R . $points_key[$i]] = $GLOBALS['_LANG']['shop_rank_points'] . '->' . $GLOBALS['_LANG']['bbs'] . $points[$points_key[$i]]['title'];
                 } else {
-                    $exist_rule[FROM_R . $points_key[$i]] = $_LANG['shop_rank_points'] . '->' . $_LANG['bbs'] . $points[$points_key[$i]]['title'];
+                    $exist_rule[FROM_R . $points_key[$i]] = $GLOBALS['_LANG']['shop_rank_points'] . '->' . $GLOBALS['_LANG']['bbs'] . $points[$points_key[$i]]['title'];
                 }
             }
 
@@ -902,27 +902,27 @@ class Integrate extends Init
                 list($from_val, $to_val) = explode(':', $rule[$rule_index]);
 
                 $select_rule[$rule_index] = $exist_rule[$rule_index];
-                $smarty->assign('from_val', $from_val);
-                $smarty->assign('to_val', $to_val);
+                $GLOBALS['smarty']->assign('from_val', $from_val);
+                $GLOBALS['smarty']->assign('to_val', $to_val);
             }
 
-            $smarty->assign('rule_index', $rule_index);
-            $smarty->assign('allow_add', $allow_add);
-            $smarty->assign('select_rule', $select_rule);
-            $smarty->assign('exist_rule', $exist_rule);
-            $smarty->assign('rule_list', $rule);
-            $smarty->assign('integral_name', $_CFG['integral_name']);
-            $smarty->assign('full_page', 1);
-            $smarty->assign('points', $points);
-            $smarty->display('integrates_points.htm');
+            $GLOBALS['smarty']->assign('rule_index', $rule_index);
+            $GLOBALS['smarty']->assign('allow_add', $allow_add);
+            $GLOBALS['smarty']->assign('select_rule', $select_rule);
+            $GLOBALS['smarty']->assign('exist_rule', $exist_rule);
+            $GLOBALS['smarty']->assign('rule_list', $rule);
+            $GLOBALS['smarty']->assign('integral_name', $GLOBALS['_CFG']['integral_name']);
+            $GLOBALS['smarty']->assign('full_page', 1);
+            $GLOBALS['smarty']->assign('points', $points);
+            $GLOBALS['smarty']->display('integrates_points.htm');
         }
 
         if ($_REQUEST['act'] == 'edit_points') {
             $rule_index = empty($_REQUEST['rule_index']) ? '' : trim($_REQUEST['rule_index']);
 
             $rule = array(); //取得一样规则
-            if ($_CFG['points_rule']) {
-                $rule = unserialize($_CFG['points_rule']);
+            if ($GLOBALS['_CFG']['points_rule']) {
+                $rule = unserialize($GLOBALS['_CFG']['points_rule']);
             }
 
             if (isset($_POST['from_val']) && isset($_POST['to_val'])) {
@@ -950,9 +950,9 @@ class Integrate extends Init
                 unset($rule[$rule_index]);
             }
 
-            $sql = "UPDATE " . $ecs->table('shop_config') . " SET value ='" . serialize($rule) . "' WHERE code='points_rule'";
+            $sql = "UPDATE " . $GLOBALS['ecs']->table('shop_config') . " SET value ='" . serialize($rule) . "' WHERE code='points_rule'";
 
-            $db->query($sql);
+            $GLOBALS['db']->query($sql);
 
             clear_cache_files();
 
@@ -972,15 +972,15 @@ class Integrate extends Init
                 }
             }
 
-            $sql = "SELECT COUNT(*) FROM " . $ecs->table('shop_config') . " WHERE code='points_set'";
-            if ($db->getOne($sql) == 0) {
-                $sql = "INSERT INTO " . $ecs->table('shop_config') . " (parent_id, type, code, value) VALUES (6, 'hidden', 'points_set', '" . serialize($cfg) . "')";
+            $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('shop_config') . " WHERE code='points_set'";
+            if ($GLOBALS['db']->getOne($sql) == 0) {
+                $sql = "INSERT INTO " . $GLOBALS['ecs']->table('shop_config') . " (parent_id, type, code, value) VALUES (6, 'hidden', 'points_set', '" . serialize($cfg) . "')";
             } else {
-                $sql = "UPDATE " . $ecs->table('shop_config') . " SET value ='" . serialize($cfg) . "' WHERE code='points_set'";
+                $sql = "UPDATE " . $GLOBALS['ecs']->table('shop_config') . " SET value ='" . serialize($cfg) . "' WHERE code='points_set'";
             }
-            $db->query($sql);
+            $GLOBALS['db']->query($sql);
             clear_cache_files();
-            sys_msg($_LANG['save_ok'], 0, array(array('text' => $_LANG['06_list_integrate'], 'href' => 'integrate.php?act=list')));
+            sys_msg($GLOBALS['_LANG']['save_ok'], 0, array(array('text' => $GLOBALS['_LANG']['06_list_integrate'], 'href' => 'integrate.php?act=list')));
         }
     }
 
@@ -1037,7 +1037,7 @@ class Integrate extends Init
         $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('shop_config') . " WHERE code = 'integrate_code'";
 
         if ($GLOBALS['db']->GetOne($sql) == 0) {
-            $sql = "INSERT INTO " . $ecs->table('shop_config') . " (code, value) " .
+            $sql = "INSERT INTO " . $GLOBALS['ecs']->table('shop_config') . " (code, value) " .
                 "VALUES ('integrate_code', '$code')";
         } else {
             $sql = "SELECT value FROM " . $GLOBALS['ecs']->table('shop_config') . " WHERE code = 'integrate_code'";

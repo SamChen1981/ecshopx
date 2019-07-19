@@ -9,8 +9,8 @@ class UserRank extends Init
 {
     public function index()
     {
-        $exc = new exchange($ecs->table("user_rank"), $db, 'rank_id', 'rank_name');
-        $exc_user = new exchange($ecs->table("users"), $db, 'user_rank', 'user_rank');
+        $exc = new Exchange($GLOBALS['ecs']->table("user_rank"), $db, 'rank_id', 'rank_name');
+        $exc_user = new Exchange($GLOBALS['ecs']->table("users"), $db, 'user_rank', 'user_rank');
 
         /*------------------------------------------------------ */
         //-- 会员等级列表
@@ -18,16 +18,16 @@ class UserRank extends Init
 
         if ($_REQUEST['act'] == 'list') {
             $ranks = array();
-            $ranks = $db->getAll("SELECT * FROM " . $ecs->table('user_rank'));
+            $ranks = $GLOBALS['db']->getAll("SELECT * FROM " . $GLOBALS['ecs']->table('user_rank'));
 
-            $smarty->assign('ur_here', $_LANG['05_user_rank_list']);
-            $smarty->assign('action_link', array('text' => $_LANG['add_user_rank'], 'href' => 'user_rank.php?act=add'));
-            $smarty->assign('full_page', 1);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['05_user_rank_list']);
+            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['add_user_rank'], 'href' => 'user_rank.php?act=add'));
+            $GLOBALS['smarty']->assign('full_page', 1);
 
-            $smarty->assign('user_ranks', $ranks);
+            $GLOBALS['smarty']->assign('user_ranks', $ranks);
 
             assign_query_info();
-            $smarty->display('user_rank.htm');
+            $GLOBALS['smarty']->display('user_rank.htm');
         }
 
         /*------------------------------------------------------ */
@@ -35,10 +35,10 @@ class UserRank extends Init
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'query') {
             $ranks = array();
-            $ranks = $db->getAll("SELECT * FROM " . $ecs->table('user_rank'));
+            $ranks = $GLOBALS['db']->getAll("SELECT * FROM " . $GLOBALS['ecs']->table('user_rank'));
 
-            $smarty->assign('user_ranks', $ranks);
-            make_json_result($smarty->fetch('user_rank.htm'));
+            $GLOBALS['smarty']->assign('user_ranks', $ranks);
+            make_json_result($GLOBALS['smarty']->fetch('user_rank.htm'));
         }
 
         /*------------------------------------------------------ */
@@ -57,14 +57,14 @@ class UserRank extends Init
 
             $form_action = 'insert';
 
-            $smarty->assign('rank', $rank);
-            $smarty->assign('ur_here', $_LANG['add_user_rank']);
-            $smarty->assign('action_link', array('text' => $_LANG['05_user_rank_list'], 'href' => 'user_rank.php?act=list'));
-            $smarty->assign('ur_here', $_LANG['add_user_rank']);
-            $smarty->assign('form_action', $form_action);
+            $GLOBALS['smarty']->assign('rank', $rank);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['add_user_rank']);
+            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['05_user_rank_list'], 'href' => 'user_rank.php?act=list'));
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['add_user_rank']);
+            $GLOBALS['smarty']->assign('form_action', $form_action);
 
             assign_query_info();
-            $smarty->display('user_rank_info.htm');
+            $GLOBALS['smarty']->display('user_rank_info.htm');
         }
 
         /*------------------------------------------------------ */
@@ -80,19 +80,19 @@ class UserRank extends Init
 
             /* 检查是否存在重名的会员等级 */
             if (!$exc->is_only('rank_name', trim($_POST['rank_name']))) {
-                sys_msg(sprintf($_LANG['rank_name_exists'], trim($_POST['rank_name'])), 1);
+                sys_msg(sprintf($GLOBALS['_LANG']['rank_name_exists'], trim($_POST['rank_name'])), 1);
             }
 
             /* 非特殊会员组检查积分的上下限是否合理 */
             if ($_POST['min_points'] >= $_POST['max_points'] && $special_rank == 0) {
-                sys_msg($_LANG['js_languages']['integral_max_small'], 1);
+                sys_msg($GLOBALS['_LANG']['js_languages']['integral_max_small'], 1);
             }
 
             /* 特殊等级会员组不判断积分限制 */
             if ($special_rank == 0) {
                 /* 检查下限制有无重复 */
                 if (!$exc->is_only('min_points', intval($_POST['min_points']))) {
-                    sys_msg(sprintf($_LANG['integral_min_exists'], intval($_POST['min_points'])));
+                    sys_msg(sprintf($GLOBALS['_LANG']['integral_min_exists'], intval($_POST['min_points'])));
                 }
             }
 
@@ -100,24 +100,24 @@ class UserRank extends Init
             if ($special_rank == 0) {
                 /* 检查上限有无重复 */
                 if (!$exc->is_only('max_points', intval($_POST['max_points']))) {
-                    sys_msg(sprintf($_LANG['integral_max_exists'], intval($_POST['max_points'])));
+                    sys_msg(sprintf($GLOBALS['_LANG']['integral_max_exists'], intval($_POST['max_points'])));
                 }
             }
 
-            $sql = "INSERT INTO " . $ecs->table('user_rank') . "( " .
+            $sql = "INSERT INTO " . $GLOBALS['ecs']->table('user_rank') . "( " .
                 "rank_name, min_points, max_points, discount, special_rank, show_price" .
                 ") VALUES (" .
                 "'$_POST[rank_name]', '" . intval($_POST['min_points']) . "', '" . intval($_POST['max_points']) . "', " .
                 "'$_POST[discount]', '$special_rank', '" . intval($_POST['show_price']) . "')";
-            $db->query($sql);
+            $GLOBALS['db']->query($sql);
 
             /* 管理员日志 */
             admin_log(trim($_POST['rank_name']), 'add', 'user_rank');
             clear_cache_files();
 
-            $lnk[] = array('text' => $_LANG['back_list'], 'href' => 'user_rank.php?act=list');
-            $lnk[] = array('text' => $_LANG['add_continue'], 'href' => 'user_rank.php?act=add');
-            sys_msg($_LANG['add_rank_success'], 0, $lnk);
+            $lnk[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'user_rank.php?act=list');
+            $lnk[] = array('text' => $GLOBALS['_LANG']['add_continue'], 'href' => 'user_rank.php?act=add');
+            sys_msg($GLOBALS['_LANG']['add_rank_success'], 0, $lnk);
         }
 
         /*------------------------------------------------------ */
@@ -155,10 +155,10 @@ class UserRank extends Init
                     clear_cache_files();
                     make_json_result(stripcslashes($val));
                 } else {
-                    make_json_error($db->error());
+                    make_json_error($GLOBALS['db']->error());
                 }
             } else {
-                make_json_error(sprintf($_LANG['rank_name_exists'], htmlspecialchars($val)));
+                make_json_error(sprintf($GLOBALS['_LANG']['rank_name_exists'], htmlspecialchars($val)));
             }
         } /*
  *  ajax编辑积分下限
@@ -169,13 +169,13 @@ class UserRank extends Init
             $rank_id = empty($_REQUEST['id']) ? 0 : intval($_REQUEST['id']);
             $val = empty($_REQUEST['val']) ? 0 : intval($_REQUEST['val']);
 
-            $rank = $db->getRow("SELECT max_points, special_rank FROM " . $ecs->table('user_rank') . " WHERE rank_id = '$rank_id'");
+            $rank = $GLOBALS['db']->getRow("SELECT max_points, special_rank FROM " . $GLOBALS['ecs']->table('user_rank') . " WHERE rank_id = '$rank_id'");
             if ($val >= $rank['max_points'] && $rank['special_rank'] == 0) {
-                make_json_error($_LANG['js_languages']['integral_max_small']);
+                make_json_error($GLOBALS['_LANG']['js_languages']['integral_max_small']);
             }
 
             if ($rank['special_rank'] == 0 && !$exc->is_only('min_points', $val, $rank_id)) {
-                make_json_error(sprintf($_LANG['integral_min_exists'], $val));
+                make_json_error(sprintf($GLOBALS['_LANG']['integral_min_exists'], $val));
             }
 
             if ($exc->edit("min_points = '$val'", $rank_id)) {
@@ -183,7 +183,7 @@ class UserRank extends Init
                 admin_log(addslashes($rank_name), 'edit', 'user_rank');
                 make_json_result($val);
             } else {
-                make_json_error($db->error());
+                make_json_error($GLOBALS['db']->error());
             }
         } /*
  *  ajax修改积分上限
@@ -194,21 +194,21 @@ class UserRank extends Init
             $rank_id = empty($_REQUEST['id']) ? 0 : intval($_REQUEST['id']);
             $val = empty($_REQUEST['val']) ? 0 : intval($_REQUEST['val']);
 
-            $rank = $db->getRow("SELECT min_points, special_rank FROM " . $ecs->table('user_rank') . " WHERE rank_id = '$rank_id'");
+            $rank = $GLOBALS['db']->getRow("SELECT min_points, special_rank FROM " . $GLOBALS['ecs']->table('user_rank') . " WHERE rank_id = '$rank_id'");
 
             if ($val <= $rank['min_points'] && $rank['special_rank'] == 0) {
-                make_json_error($_LANG['js_languages']['integral_max_small']);
+                make_json_error($GLOBALS['_LANG']['js_languages']['integral_max_small']);
             }
 
             if ($rank['special_rank'] == 0 && !$exc->is_only('max_points', $val, $rank_id)) {
-                make_json_error(sprintf($_LANG['integral_max_exists'], $val));
+                make_json_error(sprintf($GLOBALS['_LANG']['integral_max_exists'], $val));
             }
             if ($exc->edit("max_points = '$val'", $rank_id)) {
                 $rank_name = $exc->get_name($rank_id);
                 admin_log(addslashes($rank_name), 'edit', 'user_rank');
                 make_json_result($val);
             } else {
-                make_json_error($db->error());
+                make_json_error($GLOBALS['db']->error());
             }
         } /*
  *  修改折扣率
@@ -220,7 +220,7 @@ class UserRank extends Init
             $val = empty($_REQUEST['val']) ? 0 : intval($_REQUEST['val']);
 
             if ($val < 1 || $val > 100) {
-                make_json_error($_LANG['js_languages']['discount_invalid']);
+                make_json_error($GLOBALS['_LANG']['js_languages']['discount_invalid']);
             }
 
             if ($exc->edit("discount = '$val'", $rank_id)) {
@@ -247,7 +247,7 @@ class UserRank extends Init
                 admin_log(addslashes($rank_name), 'edit', 'user_rank');
                 make_json_result($is_special);
             } else {
-                make_json_error($db->error());
+                make_json_error($GLOBALS['db']->error());
             }
         }
         /*------------------------------------------------------ */
@@ -265,7 +265,7 @@ class UserRank extends Init
                 clear_cache_files();
                 make_json_result($is_show);
             } else {
-                make_json_error($db->error());
+                make_json_error($GLOBALS['db']->error());
             }
         }
     }

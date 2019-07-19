@@ -681,11 +681,9 @@ function color_tag(&$tags)
  */
 function get_rank_info()
 {
-    global $db, $ecs;
-
     if (!empty($_SESSION['user_rank'])) {
-        $sql = "SELECT rank_name, special_rank FROM " . $ecs->table('user_rank') . " WHERE rank_id = '$_SESSION[user_rank]'";
-        $row = $db->getRow($sql);
+        $sql = "SELECT rank_name, special_rank FROM " . $GLOBALS['ecs']->table('user_rank') . " WHERE rank_id = '$_SESSION[user_rank]'";
+        $row = $GLOBALS['db']->getRow($sql);
         if (empty($row)) {
             return array();
         }
@@ -693,9 +691,9 @@ function get_rank_info()
         if ($row['special_rank']) {
             return array('rank_name' => $rank_name);
         } else {
-            $user_rank = $db->getOne("SELECT rank_points FROM " . $ecs->table('users') . " WHERE user_id = '$_SESSION[user_id]'");
-            $sql = "SELECT rank_name,min_points FROM " . $ecs->table('user_rank') . " WHERE min_points > '$user_rank' ORDER BY min_points ASC LIMIT 1";
-            $rt = $db->getRow($sql);
+            $user_rank = $GLOBALS['db']->getOne("SELECT rank_points FROM " . $GLOBALS['ecs']->table('users') . " WHERE user_id = '$_SESSION[user_id]'");
+            $sql = "SELECT rank_name,min_points FROM " . $GLOBALS['ecs']->table('user_rank') . " WHERE min_points > '$user_rank' ORDER BY min_points ASC LIMIT 1";
+            $rt = $GLOBALS['db']->getRow($sql);
             $next_rank_name = $rt['rank_name'];
             $next_rank = $rt['min_points'] - $user_rank;
             return array('rank_name' => $rank_name, 'next_rank_name' => $next_rank_name, 'next_rank' => $next_rank);

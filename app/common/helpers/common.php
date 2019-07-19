@@ -116,8 +116,6 @@ function assign_query_info()
  */
 function region_result($parent, $sel_name, $type)
 {
-    global $cp;
-
     $arr = get_regions($type, $parent);
     foreach ($arr as $v) {
         $region =& $cp->add_node('region');
@@ -542,7 +540,6 @@ function get_brand_list()
  */
 function get_brands($cat = 0, $app = 'brand')
 {
-    global $page_libs;
     $template = basename(PHP_SELF);
     $template = substr($template, 0, strrpos($template, '.'));
     load_helper('template', 'console');
@@ -2085,7 +2082,6 @@ function is_spec($goods_attr_id_array, $sort = 'asc')
  */
 function get_package_info($id)
 {
-    global $ecs, $db, $_CFG;
     $id = is_numeric($id) ? intval($id) : 0;
     $now = gmtime();
 
@@ -2093,7 +2089,7 @@ function get_package_info($id)
         " FROM " . $GLOBALS['ecs']->table('goods_activity') .
         " WHERE act_id='$id' AND act_type = " . GAT_PACKAGE;
 
-    $package = $db->GetRow($sql);
+    $package = $GLOBALS['db']->GetRow($sql);
 
     /* 将时间转成可阅读格式 */
     if ($package['start_time'] <= $now && $package['end_time'] >= $now) {
@@ -2453,7 +2449,6 @@ function iframe_source_encode($product)
 
 function create_env($arr, $file = 'appserver')
 {
-    global $err, $_LANG;
     $replace = array();
     $url = $_SERVER['HTTP_HOST'];
     if ($file == 'appserver') {
@@ -2486,7 +2481,7 @@ function create_env($arr, $file = 'appserver')
         if (file_put_contents($path, preg_replace(array_keys($replace), array_values($replace), $file))) {
             return true;
         } else {
-            $err->add($_LANG['write_env_config_file_failed']);
+            $GLOBALS['err']->add($GLOBALS['_LANG']['write_env_config_file_failed']);
             return false;
         }
     }
@@ -2508,7 +2503,7 @@ function create_env($arr, $file = 'appserver')
         if (file_put_contents($path, $new_file)) {
             return true;
         } else {
-            $err->add($_LANG['write_env_config_file_failed']);
+            $GLOBALS['err']->add($GLOBALS['_LANG']['write_env_config_file_failed']);
             return false;
         }
     }
@@ -2521,8 +2516,6 @@ function create_env($arr, $file = 'appserver')
 
 function test_api()
 {
-    global $err, $_LANG;
-
     $api_url = get_h5_api_host();
 
     $headers = array(
@@ -2576,13 +2569,13 @@ function test_api()
     }
 
     if (strpos($respType, "text/html") !== false) {
-        $err->add($_LANG['test_appserver_failed']);
+        $GLOBALS['err']->add($GLOBALS['_LANG']['test_appserver_failed']);
     }
 
     $data = json_decode($resp, true);
     if (isset($data["error"])) {
         $code = isset($data["code"]) ? $data["code"] : 400;
-        $err->add($_LANG['test_appserver_failed']);
+        $GLOBALS['err']->add($GLOBALS['_LANG']['test_appserver_failed']);
     }
     return true;
 }

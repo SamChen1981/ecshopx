@@ -25,19 +25,19 @@ class GoodsScript extends Init
         $cache_id = sprintf('%X', crc32($_SERVER['QUERY_STRING']));
 
         $tpl = ROOT_PATH . DATA_DIR . '/goods_script.html';
-        if (!$smarty->is_cached($tpl, $cache_id)) {
+        if (!$GLOBALS['smarty']->is_cached($tpl, $cache_id)) {
             $time = gmtime();
             $sql = '';
             /* 根据参数生成查询语句 */
             if ($type == '') {
                 $sitename = !empty($_GET['sitename']) ? $_GET['sitename'] : '';
                 $_from = (!empty($_GET['charset']) && $_GET['charset'] != 'UTF8') ? urlencode(ecs_iconv('UTF-8', 'GBK', $sitename)) : urlencode(@$sitename);
-                $goods_url = $ecs->url() . 'affiche.php?ad_id=-1&amp;from=' . $_from . '&amp;goods_id=';
+                $goods_url = $GLOBALS['ecs']->url() . 'affiche.php?ad_id=-1&amp;from=' . $_from . '&amp;goods_id=';
 
                 $sql = 'SELECT goods_id, goods_name, market_price, goods_thumb, RAND() AS rnd, ' .
                     "IF(is_promote = 1 AND '$time' >= promote_start_date AND " .
                     "'$time' <= promote_end_date, promote_price, shop_price) AS goods_price " .
-                    'FROM ' . $ecs->table('goods') . ' AS g ' .
+                    'FROM ' . $GLOBALS['ecs']->table('goods') . ' AS g ' .
                     "WHERE is_delete = '0' AND is_on_sale = '1' AND is_alone_sale = '1' ";
                 if (!empty($_GET['cat_id'])) {
                     $sql .= ' AND ' . get_children(intval($_GET['cat_id']));
@@ -61,16 +61,16 @@ class GoodsScript extends Init
                 }
             } elseif ($type == 'collection') {
                 $uid = (int)$_GET['u'];
-                $goods_url = $ecs->url() . "goods.php?u=$uid&id=";
+                $goods_url = $GLOBALS['ecs']->url() . "goods.php?u=$uid&id=";
                 $sql = "SELECT g.goods_id, g.goods_name, g.market_price, g.goods_thumb, IF(g.is_promote = 1 AND '$time' >= g.promote_start_date AND " .
-                    "'$time' <= g.promote_end_date, g.promote_price, g.shop_price) AS goods_price FROM " . $ecs->table('goods') . " g LEFT JOIN " . $ecs->table('collect_goods') . " c ON g.goods_id = c.goods_id " .
+                    "'$time' <= g.promote_end_date, g.promote_price, g.shop_price) AS goods_price FROM " . $GLOBALS['ecs']->table('goods') . " g LEFT JOIN " . $GLOBALS['ecs']->table('collect_goods') . " c ON g.goods_id = c.goods_id " .
                     " WHERE c.user_id = '$uid'";
             }
             $sql .= " LIMIT " . (!empty($_GET['goods_num']) ? intval($_GET['goods_num']) : 10);
-            $res = $db->query($sql);
+            $res = $GLOBALS['db']->query($sql);
 
             $goods_list = array();
-            while ($goods = $db->fetchRow($res)) {
+            while ($goods = $GLOBALS['db']->fetchRow($res)) {
                 // 转换编码
                 $goods['goods_price'] = price_format($goods['goods_price']);
                 if ($charset != EC_CHARSET) {
@@ -99,24 +99,24 @@ class GoodsScript extends Init
                 $columns_num = ceil($goods_num / $rows_num);
                 $goods_items = array_chunk($goods_list, $columns_num);
             }
-            $smarty->assign('goods_list', $goods_items);
+            $GLOBALS['smarty']->assign('goods_list', $goods_items);
 
 
             /* 是否需要图片 */
             $need_image = empty($_GET['need_image']) || $_GET['need_image'] == 'true' ? 1 : 0;
-            $smarty->assign('need_image', $need_image);
+            $GLOBALS['smarty']->assign('need_image', $need_image);
 
             /* 图片大小 */
-            $smarty->assign('thumb_width', intval($_CFG['thumb_width']));
-            $smarty->assign('thumb_height', intval($_CFG['thumb_height']));
+            $GLOBALS['smarty']->assign('thumb_width', intval($GLOBALS['_CFG']['thumb_width']));
+            $GLOBALS['smarty']->assign('thumb_height', intval($GLOBALS['_CFG']['thumb_height']));
 
             /* 网站根目录 */
-            $smarty->assign('url', $ecs->url());
+            $GLOBALS['smarty']->assign('url', $GLOBALS['ecs']->url());
 
             /* 商品页面连接 */
-            $smarty->assign('goods_url', $goods_url);
+            $GLOBALS['smarty']->assign('goods_url', $goods_url);
         }
-        $output = $smarty->fetch($tpl, $cache_id);
+        $output = $GLOBALS['smarty']->fetch($tpl, $cache_id);
         $output = str_replace("\r", '', $output);
         $output = str_replace("\n", '', $output);
 

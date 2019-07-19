@@ -14,27 +14,27 @@ class SearchLog extends Init
         admin_priv('search_log');
         if ($_REQUEST['act'] == 'list') {
             $logdb = $this->get_search_log();
-            $smarty->assign('ur_here', $_LANG['search_log']);
-            $smarty->assign('full_page', 1);
-            $smarty->assign('logdb', $logdb['logdb']);
-            $smarty->assign('filter', $logdb['filter']);
-            $smarty->assign('record_count', $logdb['record_count']);
-            $smarty->assign('page_count', $logdb['page_count']);
-            $smarty->assign('start_date', local_date('Y-m-d'));
-            $smarty->assign('end_date', local_date('Y-m-d'));
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['search_log']);
+            $GLOBALS['smarty']->assign('full_page', 1);
+            $GLOBALS['smarty']->assign('logdb', $logdb['logdb']);
+            $GLOBALS['smarty']->assign('filter', $logdb['filter']);
+            $GLOBALS['smarty']->assign('record_count', $logdb['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $logdb['page_count']);
+            $GLOBALS['smarty']->assign('start_date', local_date('Y-m-d'));
+            $GLOBALS['smarty']->assign('end_date', local_date('Y-m-d'));
             assign_query_info();
-            $smarty->display('search_log_list.htm');
+            $GLOBALS['smarty']->display('search_log_list.htm');
         } elseif ($_REQUEST['act'] == 'query') {
             $logdb = $this->get_search_log();
-            $smarty->assign('full_page', 0);
-            $smarty->assign('logdb', $logdb['logdb']);
-            $smarty->assign('filter', $logdb['filter']);
-            $smarty->assign('record_count', $logdb['record_count']);
-            $smarty->assign('page_count', $logdb['page_count']);
-            $smarty->assign('start_date', local_date('Y-m-d'));
-            $smarty->assign('end_date', local_date('Y-m-d'));
+            $GLOBALS['smarty']->assign('full_page', 0);
+            $GLOBALS['smarty']->assign('logdb', $logdb['logdb']);
+            $GLOBALS['smarty']->assign('filter', $logdb['filter']);
+            $GLOBALS['smarty']->assign('record_count', $logdb['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $logdb['page_count']);
+            $GLOBALS['smarty']->assign('start_date', local_date('Y-m-d'));
+            $GLOBALS['smarty']->assign('end_date', local_date('Y-m-d'));
             make_json_result(
-                $smarty->fetch('search_log_list.htm'),
+                $GLOBALS['smarty']->fetch('search_log_list.htm'),
                 '',
                 array('filter' => $logdb['filter'], 'page_count' => $logdb['page_count'])
             );

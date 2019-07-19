@@ -11,7 +11,7 @@ class Favourable extends Init
     {
         load_helper('goods');
 
-        $exc = new exchange($ecs->table('favourable_activity'), $db, 'act_id', 'act_name');
+        $exc = new Exchange($GLOBALS['ecs']->table('favourable_activity'), $db, 'act_id', 'act_name');
 
         /*------------------------------------------------------ */
         //-- 活动列表页
@@ -21,23 +21,23 @@ class Favourable extends Init
             admin_priv('favourable');
 
             /* 模板赋值 */
-            $smarty->assign('full_page', 1);
-            $smarty->assign('ur_here', $_LANG['favourable_list']);
-            $smarty->assign('action_link', array('href' => 'favourable.php?act=add', 'text' => $_LANG['add_favourable']));
+            $GLOBALS['smarty']->assign('full_page', 1);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['favourable_list']);
+            $GLOBALS['smarty']->assign('action_link', array('href' => 'favourable.php?act=add', 'text' => $GLOBALS['_LANG']['add_favourable']));
 
             $list = $this->favourable_list();
 
-            $smarty->assign('favourable_list', $list['item']);
-            $smarty->assign('filter', $list['filter']);
-            $smarty->assign('record_count', $list['record_count']);
-            $smarty->assign('page_count', $list['page_count']);
+            $GLOBALS['smarty']->assign('favourable_list', $list['item']);
+            $GLOBALS['smarty']->assign('filter', $list['filter']);
+            $GLOBALS['smarty']->assign('record_count', $list['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $list['page_count']);
 
             $sort_flag = sort_flag($list['filter']);
-            $smarty->assign($sort_flag['tag'], $sort_flag['img']);
+            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
             /* 显示商品列表页面 */
             assign_query_info();
-            $smarty->display('favourable_list.htm');
+            $GLOBALS['smarty']->display('favourable_list.htm');
         }
 
         /*------------------------------------------------------ */
@@ -47,16 +47,16 @@ class Favourable extends Init
         elseif ($_REQUEST['act'] == 'query') {
             $list = $this->favourable_list();
 
-            $smarty->assign('favourable_list', $list['item']);
-            $smarty->assign('filter', $list['filter']);
-            $smarty->assign('record_count', $list['record_count']);
-            $smarty->assign('page_count', $list['page_count']);
+            $GLOBALS['smarty']->assign('favourable_list', $list['item']);
+            $GLOBALS['smarty']->assign('filter', $list['filter']);
+            $GLOBALS['smarty']->assign('record_count', $list['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $list['page_count']);
 
             $sort_flag = sort_flag($list['filter']);
-            $smarty->assign($sort_flag['tag'], $sort_flag['img']);
+            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
             make_json_result(
-                $smarty->fetch('favourable_list.htm'),
+                $GLOBALS['smarty']->fetch('favourable_list.htm'),
                 '',
                 array('filter' => $list['filter'], 'page_count' => $list['page_count'])
             );
@@ -71,7 +71,7 @@ class Favourable extends Init
             $id = intval($_GET['id']);
             $favourable = favourable_info($id);
             if (empty($favourable)) {
-                make_json_error($_LANG['favourable_not_exist']);
+                make_json_error($GLOBALS['_LANG']['favourable_not_exist']);
             }
             $name = $favourable['act_name'];
             $exc->drop($id);
@@ -94,7 +94,7 @@ class Favourable extends Init
         elseif ($_REQUEST['act'] == 'batch') {
             /* 取得要操作的记录编号 */
             if (empty($_POST['checkboxes'])) {
-                sys_msg($_LANG['no_record_selected']);
+                sys_msg($GLOBALS['_LANG']['no_record_selected']);
             } else {
                 /* 检查权限 */
                 admin_priv('favourable');
@@ -103,9 +103,9 @@ class Favourable extends Init
 
                 if (isset($_POST['drop'])) {
                     /* 删除记录 */
-                    $sql = "DELETE FROM " . $ecs->table('favourable_activity') .
+                    $sql = "DELETE FROM " . $GLOBALS['ecs']->table('favourable_activity') .
                         " WHERE act_id " . db_create_in($ids);
-                    $db->query($sql);
+                    $GLOBALS['db']->query($sql);
 
                     /* 记日志 */
                     admin_log('', 'batch_remove', 'favourable');
@@ -113,8 +113,8 @@ class Favourable extends Init
                     /* 清除缓存 */
                     clear_cache_files();
 
-                    $links[] = array('text' => $_LANG['back_favourable_list'], 'href' => 'favourable.php?act=list&' . list_link_postfix());
-                    sys_msg($_LANG['batch_drop_ok']);
+                    $links[] = array('text' => $GLOBALS['_LANG']['back_favourable_list'], 'href' => 'favourable.php?act=list&' . list_link_postfix());
+                    sys_msg($GLOBALS['_LANG']['batch_drop_ok']);
                 }
             }
         }
@@ -128,10 +128,10 @@ class Favourable extends Init
             $id = intval($_POST['id']);
             $val = intval($_POST['val']);
 
-            $sql = "UPDATE " . $ecs->table('favourable_activity') .
+            $sql = "UPDATE " . $GLOBALS['ecs']->table('favourable_activity') .
                 " SET sort_order = '$val'" .
                 " WHERE act_id = '$id' LIMIT 1";
-            $db->query($sql);
+            $GLOBALS['db']->query($sql);
 
             make_json_result($val);
         }
@@ -146,7 +146,7 @@ class Favourable extends Init
 
             /* 是否添加 */
             $is_add = $_REQUEST['act'] == 'add';
-            $smarty->assign('form_action', $is_add ? 'insert' : 'update');
+            $GLOBALS['smarty']->assign('form_action', $is_add ? 'insert' : 'update');
 
             /* 初始化、取得优惠活动信息 */
             if ($is_add) {
@@ -171,59 +171,59 @@ class Favourable extends Init
                 $id = intval($_GET['id']);
                 $favourable = favourable_info($id);
                 if (empty($favourable)) {
-                    sys_msg($_LANG['favourable_not_exist']);
+                    sys_msg($GLOBALS['_LANG']['favourable_not_exist']);
                 }
             }
-            $smarty->assign('favourable', $favourable);
+            $GLOBALS['smarty']->assign('favourable', $favourable);
 
             /* 取得用户等级 */
             $user_rank_list = array();
             $user_rank_list[] = array(
                 'rank_id' => 0,
-                'rank_name' => $_LANG['not_user'],
+                'rank_name' => $GLOBALS['_LANG']['not_user'],
                 'checked' => strpos(',' . $favourable['user_rank'] . ',', ',0,') !== false
             );
-            $sql = "SELECT rank_id, rank_name FROM " . $ecs->table('user_rank');
-            $res = $db->query($sql);
-            while ($row = $db->fetchRow($res)) {
+            $sql = "SELECT rank_id, rank_name FROM " . $GLOBALS['ecs']->table('user_rank');
+            $res = $GLOBALS['db']->query($sql);
+            while ($row = $GLOBALS['db']->fetchRow($res)) {
                 $row['checked'] = strpos(',' . $favourable['user_rank'] . ',', ',' . $row['rank_id'] . ',') !== false;
                 $user_rank_list[] = $row;
             }
-            $smarty->assign('user_rank_list', $user_rank_list);
+            $GLOBALS['smarty']->assign('user_rank_list', $user_rank_list);
 
             /* 取得优惠范围 */
             $act_range_ext = array();
             if ($favourable['act_range'] != FAR_ALL && !empty($favourable['act_range_ext'])) {
                 if ($favourable['act_range'] == FAR_CATEGORY) {
-                    $sql = "SELECT cat_id AS id, cat_name AS name FROM " . $ecs->table('category') .
+                    $sql = "SELECT cat_id AS id, cat_name AS name FROM " . $GLOBALS['ecs']->table('category') .
                         " WHERE cat_id " . db_create_in($favourable['act_range_ext']);
                 } elseif ($favourable['act_range'] == FAR_BRAND) {
-                    $sql = "SELECT brand_id AS id, brand_name AS name FROM " . $ecs->table('brand') .
+                    $sql = "SELECT brand_id AS id, brand_name AS name FROM " . $GLOBALS['ecs']->table('brand') .
                         " WHERE brand_id " . db_create_in($favourable['act_range_ext']);
                 } else {
-                    $sql = "SELECT goods_id AS id, goods_name AS name FROM " . $ecs->table('goods') .
+                    $sql = "SELECT goods_id AS id, goods_name AS name FROM " . $GLOBALS['ecs']->table('goods') .
                         " WHERE goods_id " . db_create_in($favourable['act_range_ext']);
                 }
-                $act_range_ext = $db->getAll($sql);
+                $act_range_ext = $GLOBALS['db']->getAll($sql);
             }
-            $smarty->assign('act_range_ext', $act_range_ext);
+            $GLOBALS['smarty']->assign('act_range_ext', $act_range_ext);
 
             /* 赋值时间控件的语言 */
-            $smarty->assign('cfg_lang', $_CFG['lang']);
+            $GLOBALS['smarty']->assign('cfg_lang', $GLOBALS['_CFG']['lang']);
 
             /* 显示模板 */
             if ($is_add) {
-                $smarty->assign('ur_here', $_LANG['add_favourable']);
+                $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['add_favourable']);
             } else {
-                $smarty->assign('ur_here', $_LANG['edit_favourable']);
+                $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['edit_favourable']);
             }
             $href = 'favourable.php?act=list';
             if (!$is_add) {
                 $href .= '&' . list_link_postfix();
             }
-            $smarty->assign('action_link', array('href' => $href, 'text' => $_LANG['favourable_list']));
+            $GLOBALS['smarty']->assign('action_link', array('href' => $href, 'text' => $GLOBALS['_LANG']['favourable_list']));
             assign_query_info();
-            $smarty->display('favourable_info.htm');
+            $GLOBALS['smarty']->display('favourable_info.htm');
         }
 
         /*------------------------------------------------------ */
@@ -240,24 +240,24 @@ class Favourable extends Init
             /* 检查名称是否重复 */
             $act_name = sub_str($_POST['act_name'], 255, false);
             if (!$exc->is_only('act_name', $act_name, intval($_POST['id']))) {
-                sys_msg($_LANG['act_name_exists']);
+                sys_msg($GLOBALS['_LANG']['act_name_exists']);
             }
 
             /* 检查享受优惠的会员等级 */
             if (!isset($_POST['user_rank'])) {
-                sys_msg($_LANG['pls_set_user_rank']);
+                sys_msg($GLOBALS['_LANG']['pls_set_user_rank']);
             }
 
             /* 检查优惠范围扩展信息 */
             if (intval($_POST['act_range']) > 0 && !isset($_POST['act_range_ext'])) {
-                sys_msg($_LANG['pls_set_act_range']);
+                sys_msg($GLOBALS['_LANG']['pls_set_act_range']);
             }
 
             /* 检查金额上下限 */
             $min_amount = floatval($_POST['min_amount']) >= 0 ? floatval($_POST['min_amount']) : 0;
             $max_amount = floatval($_POST['max_amount']) >= 0 ? floatval($_POST['max_amount']) : 0;
             if ($max_amount > 0 && $min_amount > $max_amount) {
-                sys_msg($_LANG['amount_error']);
+                sys_msg($GLOBALS['_LANG']['amount_error']);
             }
 
             /* 取得赠品 */
@@ -289,10 +289,10 @@ class Favourable extends Init
 
             /* 保存数据 */
             if ($is_add) {
-                $db->autoExecute($ecs->table('favourable_activity'), $favourable, 'INSERT');
-                $favourable['act_id'] = $db->insert_id();
+                $GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('favourable_activity'), $favourable, 'INSERT');
+                $favourable['act_id'] = $GLOBALS['db']->insert_id();
             } else {
-                $db->autoExecute($ecs->table('favourable_activity'), $favourable, 'UPDATE', "act_id = '$favourable[act_id]'");
+                $GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('favourable_activity'), $favourable, 'UPDATE', "act_id = '$favourable[act_id]'");
             }
 
             /* 记日志 */
@@ -308,15 +308,15 @@ class Favourable extends Init
             /* 提示信息 */
             if ($is_add) {
                 $links = array(
-                    array('href' => 'favourable.php?act=add', 'text' => $_LANG['continue_add_favourable']),
-                    array('href' => 'favourable.php?act=list', 'text' => $_LANG['back_favourable_list'])
+                    array('href' => 'favourable.php?act=add', 'text' => $GLOBALS['_LANG']['continue_add_favourable']),
+                    array('href' => 'favourable.php?act=list', 'text' => $GLOBALS['_LANG']['back_favourable_list'])
                 );
-                sys_msg($_LANG['add_favourable_ok'], 0, $links);
+                sys_msg($GLOBALS['_LANG']['add_favourable_ok'], 0, $links);
             } else {
                 $links = array(
-                    array('href' => 'favourable.php?act=list&' . list_link_postfix(), 'text' => $_LANG['back_favourable_list'])
+                    array('href' => 'favourable.php?act=list&' . list_link_postfix(), 'text' => $GLOBALS['_LANG']['back_favourable_list'])
                 );
-                sys_msg($_LANG['edit_favourable_ok'], 0, $links);
+                sys_msg($GLOBALS['_LANG']['edit_favourable_ok'], 0, $links);
             }
         }
 
@@ -334,26 +334,26 @@ class Favourable extends Init
             if ($filter->act_range == FAR_ALL) {
                 $arr[0] = array(
                     'id' => 0,
-                    'name' => $_LANG['js_languages']['all_need_not_search']
+                    'name' => $GLOBALS['_LANG']['js_languages']['all_need_not_search']
                 );
             } elseif ($filter->act_range == FAR_CATEGORY) {
-                $sql = "SELECT cat_id AS id, cat_name AS name FROM " . $ecs->table('category') .
+                $sql = "SELECT cat_id AS id, cat_name AS name FROM " . $GLOBALS['ecs']->table('category') .
                     " WHERE cat_name LIKE '%" . mysql_like_quote($filter->keyword) . "%' LIMIT 50";
-                $arr = $db->getAll($sql);
+                $arr = $GLOBALS['db']->getAll($sql);
             } elseif ($filter->act_range == FAR_BRAND) {
-                $sql = "SELECT brand_id AS id, brand_name AS name FROM " . $ecs->table('brand') .
+                $sql = "SELECT brand_id AS id, brand_name AS name FROM " . $GLOBALS['ecs']->table('brand') .
                     " WHERE brand_name LIKE '%" . mysql_like_quote($filter->keyword) . "%' LIMIT 50";
-                $arr = $db->getAll($sql);
+                $arr = $GLOBALS['db']->getAll($sql);
             } else {
-                $sql = "SELECT goods_id AS id, goods_name AS name FROM " . $ecs->table('goods') .
+                $sql = "SELECT goods_id AS id, goods_name AS name FROM " . $GLOBALS['ecs']->table('goods') .
                     " WHERE goods_name LIKE '%" . mysql_like_quote($filter->keyword) . "%'" .
                     " OR goods_sn LIKE '%" . mysql_like_quote($filter->keyword) . "%' LIMIT 50";
-                $arr = $db->getAll($sql);
+                $arr = $GLOBALS['db']->getAll($sql);
             }
             if (empty($arr)) {
                 $arr = array(0 => array(
                     'id' => 0,
-                    'name' => $_LANG['search_result_empty']
+                    'name' => $GLOBALS['_LANG']['search_result_empty']
                 ));
             }
 

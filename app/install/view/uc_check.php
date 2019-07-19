@@ -9,9 +9,9 @@
 <script type="text/javascript" src="js/uccheck.js"></script>
 <script type="text/javascript" src="js/draggable.js"></script>
 <script type="text/javascript">
-var $_LANG = {};
+var $GLOBALS['_LANG'] = {};
 <?php foreach ($lang['js_languages'] as $key => $item): ?>
-$_LANG["<?php echo $key;?>"] = "<?php echo $item;?>";
+$GLOBALS['_LANG']["<?php echo $key;?>"] = "<?php echo $item;?>";
 <?php endforeach; ?>
 </script>
 </head>

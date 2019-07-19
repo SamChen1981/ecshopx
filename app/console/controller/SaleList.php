@@ -10,8 +10,8 @@ class SaleList extends Init
     public function index()
     {
         load_helper('order');
-        require_once(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/admin/statistic.php');
-        $smarty->assign('lang', $_LANG);
+        require_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/admin/statistic.php');
+        $GLOBALS['smarty']->assign('lang', $GLOBALS['_LANG']);
 
         if (isset($_REQUEST['act']) && ($_REQUEST['act'] == 'query' || $_REQUEST['act'] == 'download')) {
             /* 检查权限 */
@@ -30,14 +30,14 @@ class SaleList extends Init
                 header("Content-Disposition: attachment; filename=$file_name.xls");
 
                 /* 文件标题 */
-                echo ecs_iconv(EC_CHARSET, 'GB2312', $_REQUEST['start_date'] . $_LANG['to'] . $_REQUEST['end_date'] . $_LANG['sales_list']) . "\t\n";
+                echo ecs_iconv(EC_CHARSET, 'GB2312', $_REQUEST['start_date'] . $GLOBALS['_LANG']['to'] . $_REQUEST['end_date'] . $GLOBALS['_LANG']['sales_list']) . "\t\n";
 
                 /* 商品名称,订单号,商品数量,销售价格,销售日期 */
-                echo ecs_iconv(EC_CHARSET, 'GB2312', $_LANG['goods_name']) . "\t";
-                echo ecs_iconv(EC_CHARSET, 'GB2312', $_LANG['order_sn']) . "\t";
-                echo ecs_iconv(EC_CHARSET, 'GB2312', $_LANG['amount']) . "\t";
-                echo ecs_iconv(EC_CHARSET, 'GB2312', $_LANG['sell_price']) . "\t";
-                echo ecs_iconv(EC_CHARSET, 'GB2312', $_LANG['sell_date']) . "\t\n";
+                echo ecs_iconv(EC_CHARSET, 'GB2312', $GLOBALS['_LANG']['goods_name']) . "\t";
+                echo ecs_iconv(EC_CHARSET, 'GB2312', $GLOBALS['_LANG']['order_sn']) . "\t";
+                echo ecs_iconv(EC_CHARSET, 'GB2312', $GLOBALS['_LANG']['amount']) . "\t";
+                echo ecs_iconv(EC_CHARSET, 'GB2312', $GLOBALS['_LANG']['sell_price']) . "\t";
+                echo ecs_iconv(EC_CHARSET, 'GB2312', $GLOBALS['_LANG']['sell_date']) . "\t\n";
 
                 foreach ($goods_sales_list['sale_list_data'] as $key => $value) {
                     echo ecs_iconv(EC_CHARSET, 'GB2312', $value['goods_name']) . "\t";
@@ -50,12 +50,12 @@ class SaleList extends Init
                 exit;
             }
             $sale_list_data = $this->get_sale_list();
-            $smarty->assign('goods_sales_list', $sale_list_data['sale_list_data']);
-            $smarty->assign('filter', $sale_list_data['filter']);
-            $smarty->assign('record_count', $sale_list_data['record_count']);
-            $smarty->assign('page_count', $sale_list_data['page_count']);
+            $GLOBALS['smarty']->assign('goods_sales_list', $sale_list_data['sale_list_data']);
+            $GLOBALS['smarty']->assign('filter', $sale_list_data['filter']);
+            $GLOBALS['smarty']->assign('record_count', $sale_list_data['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $sale_list_data['page_count']);
 
-            make_json_result($smarty->fetch('sale_list.htm'), '', array('filter' => $sale_list_data['filter'], 'page_count' => $sale_list_data['page_count']));
+            make_json_result($GLOBALS['smarty']->fetch('sale_list.htm'), '', array('filter' => $sale_list_data['filter'], 'page_count' => $sale_list_data['page_count']));
         }
         /*------------------------------------------------------ */
         //--商品明细列表
@@ -73,21 +73,21 @@ class SaleList extends Init
 
             $sale_list_data = $this->get_sale_list();
             /* 赋值到模板 */
-            $smarty->assign('filter', $sale_list_data['filter']);
-            $smarty->assign('record_count', $sale_list_data['record_count']);
-            $smarty->assign('page_count', $sale_list_data['page_count']);
-            $smarty->assign('goods_sales_list', $sale_list_data['sale_list_data']);
-            $smarty->assign('ur_here', $_LANG['sell_stats']);
-            $smarty->assign('full_page', 1);
-            $smarty->assign('start_date', local_date('Y-m-d', $start_date));
-            $smarty->assign('end_date', local_date('Y-m-d', $end_date));
-            $smarty->assign('ur_here', $_LANG['sale_list']);
-            $smarty->assign('cfg_lang', $_CFG['lang']);
-            $smarty->assign('action_link', array('text' => $_LANG['down_sales'], 'href' => '#download'));
+            $GLOBALS['smarty']->assign('filter', $sale_list_data['filter']);
+            $GLOBALS['smarty']->assign('record_count', $sale_list_data['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $sale_list_data['page_count']);
+            $GLOBALS['smarty']->assign('goods_sales_list', $sale_list_data['sale_list_data']);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['sell_stats']);
+            $GLOBALS['smarty']->assign('full_page', 1);
+            $GLOBALS['smarty']->assign('start_date', local_date('Y-m-d', $start_date));
+            $GLOBALS['smarty']->assign('end_date', local_date('Y-m-d', $end_date));
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['sale_list']);
+            $GLOBALS['smarty']->assign('cfg_lang', $GLOBALS['_CFG']['lang']);
+            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['down_sales'], 'href' => '#download'));
 
             /* 显示页面 */
             assign_query_info();
-            $smarty->display('sale_list.htm');
+            $GLOBALS['smarty']->display('sale_list.htm');
         }
     }
 

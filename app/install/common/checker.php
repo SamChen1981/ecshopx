@@ -10,14 +10,13 @@
  * @access  public
  * @param array $checking_dirs 目录列表
  * @return  array     检查后的消息数组，
- *    成功格式形如array('result' => 'OK', 'detail' => array(array($dir, $_LANG['can_write']), array(), ...))
- *    失败格式形如array('result' => 'ERROR', 'd etail' => array(array($dir, $_LANG['cannt_write']), array(), ...))
+ *    成功格式形如array('result' => 'OK', 'detail' => array(array($dir, $GLOBALS['_LANG']['can_write']), array(), ...))
+ *    失败格式形如array('result' => 'ERROR', 'd etail' => array(array($dir, $GLOBALS['_LANG']['cannt_write']), array(), ...))
  */
 function check_dirs_priv($checking_dirs)
 {
     load_helper('common');
 
-    global $_LANG;
     $msgs = array('result' => 'OK', 'detail' => array());
 
     foreach ($checking_dirs as $dir) {
@@ -30,15 +29,15 @@ function check_dirs_priv($checking_dirs)
         // }
         if (!file_exists($path . $dir)) {
             $msgs['result'] = 'ERROR';
-            $msgs['detail'][] = array($dir, $_LANG['not_exists']);
+            $msgs['detail'][] = array($dir, $GLOBALS['_LANG']['not_exists']);
             continue;
         }
 
         if (file_mode_info($path . $dir) < 2) {
             $msgs['result'] = 'ERROR';
-            $msgs['detail'][] = array($dir, $_LANG['cannt_write']);
+            $msgs['detail'][] = array($dir, $GLOBALS['_LANG']['cannt_write']);
         } else {
-            $msgs['detail'][] = array($dir, $_LANG['can_write']);
+            $msgs['detail'][] = array($dir, $GLOBALS['_LANG']['can_write']);
         }
     }
 
@@ -54,15 +53,13 @@ function check_dirs_priv($checking_dirs)
  */
 function check_templates_priv($templates_root)
 {
-    global $_LANG;
-
     $msgs = array();
     $filename = '';
     $filepath = '';
 
     foreach ($templates_root as $tpl_type => $tpl_root) {
         if (!file_exists($tpl_root)) {
-            $msgs[] = str_replace(ROOT_PATH, '', $tpl_root . ' ' . $_LANG['not_exists']);
+            $msgs[] = str_replace(ROOT_PATH, '', $tpl_root . ' ' . $GLOBALS['_LANG']['not_exists']);
             continue;
         }
 
@@ -72,7 +69,7 @@ function check_templates_priv($templates_root)
             if (is_file($filepath)
                 && strrpos($filename, '.' . $tpl_type) !== false
                 && file_mode_info($filepath) < 7) {
-                $msgs[] = str_replace(ROOT_PATH, '', $filepath . ' ' . $_LANG['cannt_write']);
+                $msgs[] = str_replace(ROOT_PATH, '', $filepath . ' ' . $GLOBALS['_LANG']['cannt_write']);
             }
         }
         @closedir($tpl_handle);

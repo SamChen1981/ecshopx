@@ -19,9 +19,9 @@ class Lead extends Init
             admin_priv('lead');
             $url_cur = $_SERVER['HTTP_REFERER'];
             $url_arr = explode('/admin', $url_cur);
-            $smarty->assign('ur_here', $_LANG['lead_here']);
-            $smarty->assign('url', $url_arr[0]);
-            $smarty->display('lead.htm');
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['lead_here']);
+            $GLOBALS['smarty']->assign('url', $url_arr[0]);
+            $GLOBALS['smarty']->display('lead.htm');
         }
     }
 }

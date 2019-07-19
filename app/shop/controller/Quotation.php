@@ -11,13 +11,13 @@ class Quotation extends Init
     {
         $action = isset($_REQUEST['act']) ? trim($_REQUEST['act']) : 'default';
         if ($action == 'print_quotation') {
-            $smarty->template_dir = DATA_DIR;
-            $smarty->assign('shop_name', $_CFG['shop_title']);
-            $smarty->assign('cfg', $_CFG);
+            $GLOBALS['smarty']->template_dir = DATA_DIR;
+            $GLOBALS['smarty']->assign('shop_name', $GLOBALS['_CFG']['shop_title']);
+            $GLOBALS['smarty']->assign('cfg', $GLOBALS['_CFG']);
             $where = $this->get_quotation_where($_POST);
             $sql = "SELECT g.goods_id, g.goods_name, g.shop_price, g.goods_number, c.cat_name AS goods_category,p.product_id,p.product_number,p.goods_attr" .
-                " FROM " . $ecs->table('goods') . " AS g LEFT JOIN " . $ecs->table('category') . " AS c ON g.cat_id = c.cat_id LEFT JOIN " . $ecs->table('products') . "as p  On g.goods_id=p.goods_id" . $where . " AND is_on_sale = 1 AND is_alone_sale = 1 ";
-            $goods_list = $db->getAll($sql);
+                " FROM " . $GLOBALS['ecs']->table('goods') . " AS g LEFT JOIN " . $GLOBALS['ecs']->table('category') . " AS c ON g.cat_id = c.cat_id LEFT JOIN " . $GLOBALS['ecs']->table('products') . "as p  On g.goods_id=p.goods_id" . $where . " AND is_on_sale = 1 AND is_alone_sale = 1 ";
+            $goods_list = $GLOBALS['db']->getAll($sql);
 
             foreach ($goods_list as $key => $val) {
                 if (!empty($val['product_id'])) {
@@ -34,35 +34,35 @@ class Quotation extends Init
                 }
                 $goods_list[$key]['goods_key'] = $key;
             }
-            $user_rank = $db->getAll("SELECT * FROM " . $ecs->table('user_rank') . "WHERE show_price = 1 OR rank_id = '$_SESSION[user_rank]'");
+            $user_rank = $GLOBALS['db']->getAll("SELECT * FROM " . $GLOBALS['ecs']->table('user_rank') . "WHERE show_price = 1 OR rank_id = '$_SESSION[user_rank]'");
             $rank_point = 0;
             if (!empty($_SESSION['user_id'])) {
-                $rank_point = $db->getOne("SELECT rank_points FROM " . $ecs->table('users') . " WHERE user_id = '$_SESSION[user_id]'");
+                $rank_point = $GLOBALS['db']->getOne("SELECT rank_points FROM " . $GLOBALS['ecs']->table('users') . " WHERE user_id = '$_SESSION[user_id]'");
             }
             $user_rank = $this->calc_user_rank($user_rank, $rank_point);
             $user_men = $this->serve_user($goods_list);
-            $smarty->assign('extend_price', $user_rank['ext_price']);
-            $smarty->assign('extend_rank', $user_men);
-            $smarty->assign('goods_list', $goods_list);
+            $GLOBALS['smarty']->assign('extend_price', $user_rank['ext_price']);
+            $GLOBALS['smarty']->assign('extend_rank', $user_men);
+            $GLOBALS['smarty']->assign('goods_list', $goods_list);
 
-            $html = $smarty->fetch('quotation_print.html');
+            $html = $GLOBALS['smarty']->fetch('quotation_print.html');
             exit($html);
         }
 
         assign_template();
 
-        $position = assign_ur_here(0, $_LANG['quotation']);
-        $smarty->assign('page_title', $position['title']);   // 页面标题
-        $smarty->assign('ur_here', $position['ur_here']); // 当前位置
+        $position = assign_ur_here(0, $GLOBALS['_LANG']['quotation']);
+        $GLOBALS['smarty']->assign('page_title', $position['title']);   // 页面标题
+        $GLOBALS['smarty']->assign('ur_here', $position['ur_here']); // 当前位置
 
-        $smarty->assign('cat_list', cat_list());
-        $smarty->assign('brand_list', get_brand_list());
+        $GLOBALS['smarty']->assign('cat_list', cat_list());
+        $GLOBALS['smarty']->assign('brand_list', get_brand_list());
 
-        if (is_null($smarty->get_template_vars('helps'))) {
-            $smarty->assign('helps', get_shop_help()); // 网店帮助
+        if (is_null($GLOBALS['smarty']->get_template_vars('helps'))) {
+            $GLOBALS['smarty']->assign('helps', get_shop_help()); // 网店帮助
         }
 
-        $smarty->display('quotation.dwt');
+        $GLOBALS['smarty']->display('quotation.dwt');
     }
 
     private function get_quotation_where($filter)

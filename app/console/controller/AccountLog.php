@@ -22,9 +22,9 @@ class AccountLog extends Init
             }
             $user = user_info($user_id);
             if (empty($user)) {
-                sys_msg($_LANG['user_not_exist']);
+                sys_msg($GLOBALS['_LANG']['user_not_exist']);
             }
-            $smarty->assign('user', $user);
+            $GLOBALS['smarty']->assign('user', $user);
 
             if (empty($_REQUEST['account_type']) || !in_array(
                     $_REQUEST['account_type'],
@@ -34,20 +34,20 @@ class AccountLog extends Init
             } else {
                 $account_type = $_REQUEST['account_type'];
             }
-            $smarty->assign('account_type', $account_type);
+            $GLOBALS['smarty']->assign('account_type', $account_type);
 
-            $smarty->assign('ur_here', $_LANG['account_list']);
-            $smarty->assign('action_link', array('text' => $_LANG['add_account'], 'href' => 'account_log.php?act=add&user_id=' . $user_id));
-            $smarty->assign('full_page', 1);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['account_list']);
+            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['add_account'], 'href' => 'account_log.php?act=add&user_id=' . $user_id));
+            $GLOBALS['smarty']->assign('full_page', 1);
 
             $account_list = $this->get_accountlist($user_id, $account_type);
-            $smarty->assign('account_list', $account_list['account']);
-            $smarty->assign('filter', $account_list['filter']);
-            $smarty->assign('record_count', $account_list['record_count']);
-            $smarty->assign('page_count', $account_list['page_count']);
+            $GLOBALS['smarty']->assign('account_list', $account_list['account']);
+            $GLOBALS['smarty']->assign('filter', $account_list['filter']);
+            $GLOBALS['smarty']->assign('record_count', $account_list['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $account_list['page_count']);
 
             assign_query_info();
-            $smarty->display('account_list.htm');
+            $GLOBALS['smarty']->display('account_list.htm');
         }
 
         /*------------------------------------------------------ */
@@ -61,9 +61,9 @@ class AccountLog extends Init
             }
             $user = user_info($user_id);
             if (empty($user)) {
-                sys_msg($_LANG['user_not_exist']);
+                sys_msg($GLOBALS['_LANG']['user_not_exist']);
             }
-            $smarty->assign('user', $user);
+            $GLOBALS['smarty']->assign('user', $user);
 
             if (empty($_REQUEST['account_type']) || !in_array(
                     $_REQUEST['account_type'],
@@ -73,16 +73,16 @@ class AccountLog extends Init
             } else {
                 $account_type = $_REQUEST['account_type'];
             }
-            $smarty->assign('account_type', $account_type);
+            $GLOBALS['smarty']->assign('account_type', $account_type);
 
             $account_list = $this->get_accountlist($user_id, $account_type);
-            $smarty->assign('account_list', $account_list['account']);
-            $smarty->assign('filter', $account_list['filter']);
-            $smarty->assign('record_count', $account_list['record_count']);
-            $smarty->assign('page_count', $account_list['page_count']);
+            $GLOBALS['smarty']->assign('account_list', $account_list['account']);
+            $GLOBALS['smarty']->assign('filter', $account_list['filter']);
+            $GLOBALS['smarty']->assign('record_count', $account_list['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $account_list['page_count']);
 
             make_json_result(
-                $smarty->fetch('account_list.htm'),
+                $GLOBALS['smarty']->fetch('account_list.htm'),
                 '',
                 array('filter' => $account_list['filter'], 'page_count' => $account_list['page_count'])
             );
@@ -101,15 +101,15 @@ class AccountLog extends Init
             }
             $user = user_info($user_id);
             if (empty($user)) {
-                sys_msg($_LANG['user_not_exist']);
+                sys_msg($GLOBALS['_LANG']['user_not_exist']);
             }
-            $smarty->assign('user', $user);
+            $GLOBALS['smarty']->assign('user', $user);
 
             /* 显示模板 */
-            $smarty->assign('ur_here', $_LANG['add_account']);
-            $smarty->assign('action_link', array('href' => 'account_log.php?act=list&user_id=' . $user_id, 'text' => $_LANG['account_list']));
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['add_account']);
+            $GLOBALS['smarty']->assign('action_link', array('href' => 'account_log.php?act=list&user_id=' . $user_id, 'text' => $GLOBALS['_LANG']['account_list']));
             assign_query_info();
-            $smarty->display('account_info.htm');
+            $GLOBALS['smarty']->display('account_info.htm');
         }
 
         /*------------------------------------------------------ */
@@ -119,8 +119,8 @@ class AccountLog extends Init
             /* 检查权限 */
             admin_priv('account_manage');
             $token = trim($_POST['token']);
-            if ($token != $_CFG['token']) {
-                sys_msg($_LANG['no_account_change'], 1);
+            if ($token != $GLOBALS['_CFG']['token']) {
+                sys_msg($GLOBALS['_LANG']['no_account_change'], 1);
             }
 
 
@@ -131,7 +131,7 @@ class AccountLog extends Init
             }
             $user = user_info($user_id);
             if (empty($user)) {
-                sys_msg($_LANG['user_not_exist']);
+                sys_msg($GLOBALS['_LANG']['user_not_exist']);
             }
 
             /* 提交值 */
@@ -142,7 +142,7 @@ class AccountLog extends Init
             $pay_points = floatval($_POST['add_sub_pay_points']) * abs(floatval($_POST['pay_points']));
 
             if ($user_money == 0 && $frozen_money == 0 && $rank_points == 0 && $pay_points == 0) {
-                sys_msg($_LANG['no_account_change']);
+                sys_msg($GLOBALS['_LANG']['no_account_change']);
             }
 
             /* 保存 */
@@ -150,9 +150,9 @@ class AccountLog extends Init
 
             /* 提示信息 */
             $links = array(
-                array('href' => 'account_log.php?act=list&user_id=' . $user_id, 'text' => $_LANG['account_list'])
+                array('href' => 'account_log.php?act=list&user_id=' . $user_id, 'text' => $GLOBALS['_LANG']['account_list'])
             );
-            sys_msg($_LANG['log_account_change_ok'], 0, $links);
+            sys_msg($GLOBALS['_LANG']['log_account_change_ok'], 0, $links);
         }
     }
 

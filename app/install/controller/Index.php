@@ -21,7 +21,7 @@ $_SESSION['ecs_lang'] = $installer_lang;
 $installer_lang_package_path = ROOT_PATH . 'install/languages/' . $installer_lang . '.php';
 if (file_exists($installer_lang_package_path)) {
     include_once($installer_lang_package_path);
-    $smarty->assign('lang', $_LANG);
+    $GLOBALS['smarty']->assign('lang', $GLOBALS['_LANG']);
 } else {
     die('Can\'t find language package!');
 }
@@ -30,11 +30,11 @@ if (file_exists($installer_lang_package_path)) {
 $step = isset($_REQUEST['step']) ? $_REQUEST['step'] : 'welcome';
 if (file_exists(ROOT_PATH . 'data/install.lock') && $step != 'done') {
     $step = 'error';
-    $err->add($_LANG['has_locked_installer']);
+    $GLOBALS['err']->add($GLOBALS['_LANG']['has_locked_installer']);
 
     if (isset($_REQUEST['IS_AJAX_REQUEST'])
             && $_REQUEST['IS_AJAX_REQUEST'] === 'yes') {
-        die(implode(',', $err->get_all()));
+        die(implode(',', $GLOBALS['err']->get_all()));
     }
 }
 
@@ -43,18 +43,18 @@ case 'welcome':
     $_SESSION['welcome']['ucapi'] = $_POST['ucapi'];
     $_SESSION['welcome']['ucfounderpw'] = $_POST['ucfounderpw'];
     $_SESSION['welcome']['installer_lang'] = $installer_lang;
-    $smarty->assign('ucapi', $_POST['ucapi']);
-    $smarty->assign('ucfounderpw', $_POST['ucfounderpw']);
-    $smarty->assign('installer_lang', $installer_lang);
-    $smarty->display('welcome.php');
+    $GLOBALS['smarty']->assign('ucapi', $_POST['ucapi']);
+    $GLOBALS['smarty']->assign('ucfounderpw', $_POST['ucfounderpw']);
+    $GLOBALS['smarty']->assign('installer_lang', $installer_lang);
+    $GLOBALS['smarty']->display('welcome.php');
 
     break;
 
 case 'uccheck':
-    $smarty->assign('ucapi', $_POST['ucapi']);
-    $smarty->assign('ucfounderpw', $_POST['ucfounderpw']);
-    $smarty->assign('installer_lang', $installer_lang);
-    $smarty->display('uc_check.php');
+    $GLOBALS['smarty']->assign('ucapi', $_POST['ucapi']);
+    $GLOBALS['smarty']->assign('ucfounderpw', $_POST['ucfounderpw']);
+    $GLOBALS['smarty']->assign('installer_lang', $installer_lang);
+    $GLOBALS['smarty']->display('uc_check.php');
 
     break;
 
@@ -80,7 +80,7 @@ case 'check':
 
     $has_unwritable_tpl = 'yes';
     if (empty($template_checking)) {
-        $template_checking = $_LANG['all_are_writable'];
+        $template_checking = $GLOBALS['_LANG']['all_are_writable'];
         $has_unwritable_tpl = 'no';
     }
 
@@ -95,17 +95,17 @@ case 'check':
     $_SESSION['check']['rename_priv'] = $rename_priv;
     $_SESSION['check']['disabled'] = $disabled;
     $_SESSION['check']['userinterface'] = $ui;
-    $smarty->assign('ucapi', $_POST['ucapi']);
-    $smarty->assign('ucfounderpw', $_POST['ucfounderpw']);
-    $smarty->assign('installer_lang', $installer_lang);
-    $smarty->assign('system_info', get_system_info());
-    $smarty->assign('dir_checking', $dir_checking['detail']);
-    $smarty->assign('has_unwritable_tpl', $has_unwritable_tpl);
-    $smarty->assign('template_checking', $template_checking);
-    $smarty->assign('rename_priv', $rename_priv);
-    $smarty->assign('disabled', $disabled);
-    $smarty->assign('userinterface', $ui);
-    $smarty->display('checking.php');
+    $GLOBALS['smarty']->assign('ucapi', $_POST['ucapi']);
+    $GLOBALS['smarty']->assign('ucfounderpw', $_POST['ucfounderpw']);
+    $GLOBALS['smarty']->assign('installer_lang', $installer_lang);
+    $GLOBALS['smarty']->assign('system_info', get_system_info());
+    $GLOBALS['smarty']->assign('dir_checking', $dir_checking['detail']);
+    $GLOBALS['smarty']->assign('has_unwritable_tpl', $has_unwritable_tpl);
+    $GLOBALS['smarty']->assign('template_checking', $template_checking);
+    $GLOBALS['smarty']->assign('rename_priv', $rename_priv);
+    $GLOBALS['smarty']->assign('disabled', $disabled);
+    $GLOBALS['smarty']->assign('userinterface', $ui);
+    $GLOBALS['smarty']->display('checking.php');
 
     break;
 
@@ -118,7 +118,7 @@ case 'setting_ui':
     }
     $goods_types = array();
     foreach ($attributes as $key=>$val) {
-        $goods_types[$key] = $_LANG[$key];
+        $goods_types[$key] = $GLOBALS['_LANG'][$key];
     }
 
     if (!has_supported_gd()) {
@@ -141,17 +141,17 @@ case 'setting_ui':
     $_SESSION['setting_ui']['local_timezone'] = get_local_timezone();
     $_SESSION['setting_ui']['timezones'] = $timezones;
     $_SESSION['setting_ui']['userinterface'] = empty($_GET['ui'])?'ecshop':$_GET['ui'];
-    $smarty->assign('ucapi', $_POST['ucapi']);
-    $smarty->assign('ucfounderpw', $_POST['ucfounderpw']);
-    $smarty->assign('installer_lang', $installer_lang);
-    $smarty->assign('checked', $checked);
-    $smarty->assign('disabled', $disabled);
-    $smarty->assign('goods_types', $goods_types);
-    $smarty->assign('show_timezone', $show_timezone);
-    $smarty->assign('local_timezone', get_local_timezone());
-    $smarty->assign('timezones', $timezones);
-    $smarty->assign('userinterface', empty($_GET['ui'])?'ecshop':$_GET['ui']);
-    $smarty->display('setting.php');
+    $GLOBALS['smarty']->assign('ucapi', $_POST['ucapi']);
+    $GLOBALS['smarty']->assign('ucfounderpw', $_POST['ucfounderpw']);
+    $GLOBALS['smarty']->assign('installer_lang', $installer_lang);
+    $GLOBALS['smarty']->assign('checked', $checked);
+    $GLOBALS['smarty']->assign('disabled', $disabled);
+    $GLOBALS['smarty']->assign('goods_types', $goods_types);
+    $GLOBALS['smarty']->assign('show_timezone', $show_timezone);
+    $GLOBALS['smarty']->assign('local_timezone', get_local_timezone());
+    $GLOBALS['smarty']->assign('timezones', $timezones);
+    $GLOBALS['smarty']->assign('userinterface', empty($_GET['ui'])?'ecshop':$_GET['ui']);
+    $GLOBALS['smarty']->display('setting.php');
 
     break;
 
@@ -164,7 +164,7 @@ case 'get_db_list':
 
     $databases  = get_db_list($db_host, $db_port, $db_user, $db_pass);
     if ($databases === false) {
-        echo json_encode(implode(',', $err->get_all()));
+        echo json_encode(implode(',', $GLOBALS['err']->get_all()));
     } else {
         $result = array('msg'=> 'OK', 'list'=>implode(',', $databases));
         echo json_encode($result);
@@ -198,7 +198,7 @@ case 'create_config_file':
     $result_h5 = create_env($data, 'h5');
 
     if ($result === false || $result_api === false || $result_h5 ===false) {
-        echo implode(',', $err->get_all());
+        echo implode(',', $GLOBALS['err']->get_all());
     } else {
         echo 'OK';
     }
@@ -229,18 +229,18 @@ case 'setup_ucenter':
     }
     if ($dns_error) {
         $result['error'] = 2;
-        $result['message'] = '';//$_LANG['ucenter_data_error'];
+        $result['message'] = '';//$GLOBALS['_LANG']['ucenter_data_error'];
         die(json_encode($result));
     }
     $ucfounderpw = trim($_POST['ucfounderpw']);
     $app_tagtemplates = 'apptagtemplates[template]='.urlencode('<a href="{url}" target="_blank">{goods_name}</a>').'&'.
-        'apptagtemplates[fields][goods_name]='.urlencode($_LANG['tagtemplates_goodsname']).'&'.
-        'apptagtemplates[fields][uid]='.urlencode($_LANG['tagtemplates_uid']).'&'.
-        'apptagtemplates[fields][username]='.urlencode($_LANG['tagtemplates_username']).'&'.
-        'apptagtemplates[fields][dateline]='.urlencode($_LANG['tagtemplates_dateline']).'&'.
-        'apptagtemplates[fields][url]='.urlencode($_LANG['tagtemplates_url']).'&'.
-        'apptagtemplates[fields][image]='.urlencode($_LANG['tagtemplates_image']).'&'.
-        'apptagtemplates[fields][goods_price]='.urlencode($_LANG['tagtemplates_price']);
+        'apptagtemplates[fields][goods_name]='.urlencode($GLOBALS['_LANG']['tagtemplates_goodsname']).'&'.
+        'apptagtemplates[fields][uid]='.urlencode($GLOBALS['_LANG']['tagtemplates_uid']).'&'.
+        'apptagtemplates[fields][username]='.urlencode($GLOBALS['_LANG']['tagtemplates_username']).'&'.
+        'apptagtemplates[fields][dateline]='.urlencode($GLOBALS['_LANG']['tagtemplates_dateline']).'&'.
+        'apptagtemplates[fields][url]='.urlencode($GLOBALS['_LANG']['tagtemplates_url']).'&'.
+        'apptagtemplates[fields][image]='.urlencode($GLOBALS['_LANG']['tagtemplates_image']).'&'.
+        'apptagtemplates[fields][goods_price]='.urlencode($GLOBALS['_LANG']['tagtemplates_price']);
     $postdata ="m=app&a=add&ucfounder=&ucfounderpw=".urlencode($ucfounderpw)."&apptype=".urlencode($app_type).
         "&appname=".urlencode($app_name)."&appurl=".urlencode($app_url)."&appip=&appcharset=".$app_charset.
         '&appdbcharset='.$app_dbcharset.'&'.$app_tagtemplates;
@@ -248,24 +248,24 @@ case 'setup_ucenter':
     if (empty($ucconfig)) {
         //ucenter 验证失败
         $result['error'] = 1;
-        $result['message'] = $_LANG['ucenter_validation_fails'];
+        $result['message'] = $GLOBALS['_LANG']['ucenter_validation_fails'];
     } elseif ($ucconfig == '-1') {
         //管理员密码无效
         $result['error'] = 1;
-        $result['message'] = $_LANG['ucenter_creator_wrong_password'];
+        $result['message'] = $GLOBALS['_LANG']['ucenter_creator_wrong_password'];
     } else {
         list($appauthkey, $appid) = explode('|', $ucconfig);
         if (empty($appauthkey) || empty($appid)) {
             //ucenter 安装数据错误
             $result['error'] = 1;
-            $result['message'] = $_LANG['ucenter_data_error'];
+            $result['message'] = $GLOBALS['_LANG']['ucenter_data_error'];
         } elseif (($succeed = save_uc_config($ucconfig."|$ucapi|$ucip"))) {
             $result['error'] = 0;
             $result['message'] = 'OK';
         } else {
             //config文件写入错误
             $result['error'] = 1;
-            $result['message'] = $_LANG['ucenter_config_error'];
+            $result['message'] = $GLOBALS['_LANG']['ucenter_config_error'];
         }
     }
     die(json_encode($result));
@@ -281,7 +281,7 @@ case 'create_database':
 
     $result = create_database($db_host, $db_port, $db_user, $db_pass, $db_name);
     if ($result === false) {
-        echo implode(',', $err->get_all());
+        echo implode(',', $GLOBALS['err']->get_all());
     } else {
         echo 'OK';
     }
@@ -305,7 +305,7 @@ case 'install_base_data':
     $result = install_data($sql_files);
 
     if ($result === false) {
-        echo implode(',', $err->get_all());
+        echo implode(',', $GLOBALS['err']->get_all());
     } else {
         echo 'OK';
     }
@@ -325,7 +325,7 @@ case 'create_admin_passport':
         $admin_email
     );
     if ($result === false) {
-        echo implode(',', $err->get_all());
+        echo implode(',', $GLOBALS['err']->get_all());
     } else {
         echo 'OK';
     }
@@ -341,7 +341,7 @@ case 'do_others':
 
     $result = do_others($system_lang, $captcha, $goods_types, $install_demo, $integrate);
     if ($result === false) {
-        echo implode(',', $err->get_all());
+        echo implode(',', $GLOBALS['err']->get_all());
     } else {
         echo 'OK';
     }
@@ -351,10 +351,10 @@ case 'do_others':
 case 'done':
     if (file_exists(ROOT_PATH . 'data/install.lock')) {
         $step = 'error';
-        $err->add($_LANG['has_locked_installer']);
-        $err_msg = implode(',', $err->get_all());
-        $smarty->assign('err_msg', $err_msg);
-        $smarty->display('error.php');
+        $GLOBALS['err']->add($GLOBALS['_LANG']['has_locked_installer']);
+        $err_msg = implode(',', $GLOBALS['err']->get_all());
+        $GLOBALS['smarty']->assign('err_msg', $err_msg);
+        $GLOBALS['smarty']->display('error.php');
         break;
     }
     if (!file_exists(ROOT_PATH . 'data/install.lock')) {
@@ -369,15 +369,15 @@ case 'done':
         exit;
     } else {
         if ($result === false) {
-            $err_msg = implode(',', $err->get_all());
-            $smarty->assign('err_msg', $err_msg);
-            $smarty->display('error.php');
+            $err_msg = implode(',', $GLOBALS['err']->get_all());
+            $GLOBALS['smarty']->assign('err_msg', $err_msg);
+            $GLOBALS['smarty']->display('error.php');
         } else {
             @unlink(ROOT_PATH .'data/config_temp.php');
             $spt_code = get_spt_code();
             $_SESSION['done']['spt_code'] = $spt_code;
-            $smarty->assign('spt_code', spt_code);
-            $smarty->display('done.php');
+            $GLOBALS['smarty']->assign('spt_code', spt_code);
+            $GLOBALS['smarty']->display('done.php');
         }
     }
     break;
@@ -393,19 +393,19 @@ case 'active':
     $_SESSION['active']['admin_url'] = $admin_url;
     $_SESSION['active']['link_url'] = $link_url;
     $_SESSION['active']['nowtime'] = time();
-    $smarty->assign('installer_lang', $installer_lang);
-    $smarty->assign('admin_url', $admin_url);
-    $smarty->assign('link_url', $link_url);
-    $smarty->assign('nowtime', time());
-    $smarty->assign('spt_code', spt_code);
-    $smarty->display('active.php');
+    $GLOBALS['smarty']->assign('installer_lang', $installer_lang);
+    $GLOBALS['smarty']->assign('admin_url', $admin_url);
+    $GLOBALS['smarty']->assign('link_url', $link_url);
+    $GLOBALS['smarty']->assign('nowtime', time());
+    $GLOBALS['smarty']->assign('spt_code', spt_code);
+    $GLOBALS['smarty']->display('active.php');
 
     break;
 
 case 'error':
-    $err_msg = implode(',', $err->get_all());
-    $smarty->assign('err_msg', $err_msg);
-    $smarty->display('error.php');
+    $err_msg = implode(',', $GLOBALS['err']->get_all());
+    $GLOBALS['smarty']->assign('err_msg', $err_msg);
+    $GLOBALS['smarty']->display('error.php');
 
     break;
 

@@ -11,10 +11,10 @@ class Topic extends Init
     {
         $topic_id = empty($_REQUEST['topic_id']) ? 0 : intval($_REQUEST['topic_id']);
 
-        $sql = "SELECT template FROM " . $ecs->table('topic') .
+        $sql = "SELECT template FROM " . $GLOBALS['ecs']->table('topic') .
             "WHERE topic_id = '$topic_id' and  " . gmtime() . " >= start_time and " . gmtime() . "<= end_time";
 
-        $topic = $db->getRow($sql);
+        $topic = $GLOBALS['db']->getRow($sql);
 
         if (empty($topic)) {
             /* 如果没有找到任何记录则跳回到首页 */
@@ -24,12 +24,12 @@ class Topic extends Init
 
         $templates = empty($topic['template']) ? 'topic.dwt' : $topic['template'];
 
-        $cache_id = sprintf('%X', crc32($_SESSION['user_rank'] . '-' . $_CFG['lang'] . '-' . $topic_id));
+        $cache_id = sprintf('%X', crc32($_SESSION['user_rank'] . '-' . $GLOBALS['_CFG']['lang'] . '-' . $topic_id));
 
-        if (!$smarty->is_cached($templates, $cache_id)) {
-            $sql = "SELECT * FROM " . $ecs->table('topic') . " WHERE topic_id = '$topic_id'";
+        if (!$GLOBALS['smarty']->is_cached($templates, $cache_id)) {
+            $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('topic') . " WHERE topic_id = '$topic_id'";
 
-            $topic = $db->getRow($sql);
+            $topic = $GLOBALS['db']->getRow($sql);
             $topic['data'] = addcslashes($topic['data'], "'");
             $tmp = @unserialize($topic["data"]);
             $arr = (array)$tmp;
@@ -80,7 +80,7 @@ class Topic extends Init
                 foreach ($arr as $key => $value) {
                     foreach ($value as $val) {
                         if ($val == $row['goods_id']) {
-                            $key = $key == 'default' ? $_LANG['all_goods'] : $key;
+                            $key = $key == 'default' ? $GLOBALS['_LANG']['all_goods'] : $key;
                             $sort_goods_arr[$key][] = $row;
                         }
                     }
@@ -90,19 +90,19 @@ class Topic extends Init
             /* 模板赋值 */
             assign_template();
             $position = assign_ur_here();
-            $smarty->assign('page_title', $position['title']);       // 页面标题
-            $smarty->assign('ur_here', $position['ur_here'] . '> ' . $topic['title']);     // 当前位置
-            $smarty->assign('show_marketprice', $_CFG['show_marketprice']);
-            $smarty->assign('sort_goods_arr', $sort_goods_arr);          // 商品列表
-            $smarty->assign('topic', $topic);                   // 专题信息
-            $smarty->assign('keywords', $topic['keywords']);       // 专题信息
-            $smarty->assign('description', $topic['description']);    // 专题信息
-            $smarty->assign('title_pic', $topic['title_pic']);      // 分类标题图片地址
-            $smarty->assign('base_style', '#' . $topic['base_style']);     // 基本风格样式颜色
+            $GLOBALS['smarty']->assign('page_title', $position['title']);       // 页面标题
+            $GLOBALS['smarty']->assign('ur_here', $position['ur_here'] . '> ' . $topic['title']);     // 当前位置
+            $GLOBALS['smarty']->assign('show_marketprice', $GLOBALS['_CFG']['show_marketprice']);
+            $GLOBALS['smarty']->assign('sort_goods_arr', $sort_goods_arr);          // 商品列表
+            $GLOBALS['smarty']->assign('topic', $topic);                   // 专题信息
+            $GLOBALS['smarty']->assign('keywords', $topic['keywords']);       // 专题信息
+            $GLOBALS['smarty']->assign('description', $topic['description']);    // 专题信息
+            $GLOBALS['smarty']->assign('title_pic', $topic['title_pic']);      // 分类标题图片地址
+            $GLOBALS['smarty']->assign('base_style', '#' . $topic['base_style']);     // 基本风格样式颜色
 
             $template_file = empty($topic['template']) ? 'topic.dwt' : $topic['template'];
         }
         /* 显示模板 */
-        $smarty->display($templates, $cache_id);
+        $GLOBALS['smarty']->display($templates, $cache_id);
     }
 }

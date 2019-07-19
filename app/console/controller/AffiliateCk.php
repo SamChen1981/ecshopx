@@ -22,19 +22,19 @@ class AffiliateCk extends Init
         if ($_REQUEST['act'] == 'list') {
             isset($_GET[auid]) && $_GET[auid] = intval($_GET[auid]);
             $logdb = $this->get_affiliate_ck();
-            $smarty->assign('full_page', 1);
-            $smarty->assign('ur_here', $_LANG['affiliate_ck']);
-            $smarty->assign('on', $separate_on);
-            $smarty->assign('logdb', $logdb['logdb']);
-            $smarty->assign('filter', $logdb['filter']);
-            $smarty->assign('record_count', $logdb['record_count']);
-            $smarty->assign('page_count', $logdb['page_count']);
+            $GLOBALS['smarty']->assign('full_page', 1);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['affiliate_ck']);
+            $GLOBALS['smarty']->assign('on', $separate_on);
+            $GLOBALS['smarty']->assign('logdb', $logdb['logdb']);
+            $GLOBALS['smarty']->assign('filter', $logdb['filter']);
+            $GLOBALS['smarty']->assign('record_count', $logdb['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $logdb['page_count']);
             if (!empty($_GET['auid'])) {
                 settype($_GET['auid'], "integer");
-                $smarty->assign('action_link', array('text' => $_LANG['back_note'], 'href' => "users.php?act=edit&id=" . intval($_GET['auid'])));
+                $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['back_note'], 'href' => "users.php?act=edit&id=" . intval($_GET['auid'])));
             }
             assign_query_info();
-            $smarty->display('affiliate_ck_list.htm');
+            $GLOBALS['smarty']->display('affiliate_ck_list.htm');
         }
         /*------------------------------------------------------ */
         //-- 分页
@@ -42,36 +42,36 @@ class AffiliateCk extends Init
         elseif ($_REQUEST['act'] == 'query') {
             isset($_GET[auid]) && $_GET[auid] = intval($_GET[auid]);
             $logdb = $this->get_affiliate_ck();
-            $smarty->assign('logdb', $logdb['logdb']);
-            $smarty->assign('on', $separate_on);
-            $smarty->assign('filter', $logdb['filter']);
-            $smarty->assign('record_count', $logdb['record_count']);
-            $smarty->assign('page_count', $logdb['page_count']);
+            $GLOBALS['smarty']->assign('logdb', $logdb['logdb']);
+            $GLOBALS['smarty']->assign('on', $separate_on);
+            $GLOBALS['smarty']->assign('filter', $logdb['filter']);
+            $GLOBALS['smarty']->assign('record_count', $logdb['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $logdb['page_count']);
 
             $sort_flag = sort_flag($logdb['filter']);
-            $smarty->assign($sort_flag['tag'], $sort_flag['img']);
+            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
-            make_json_result($smarty->fetch('affiliate_ck_list.htm'), '', array('filter' => $logdb['filter'], 'page_count' => $logdb['page_count']));
+            make_json_result($GLOBALS['smarty']->fetch('affiliate_ck_list.htm'), '', array('filter' => $logdb['filter'], 'page_count' => $logdb['page_count']));
         } /*
     取消分成，不再能对该订单进行分成
 */
         elseif ($_REQUEST['act'] == 'del') {
             $oid = (int)$_REQUEST['oid'];
-            $stat = $db->getOne("SELECT is_separate FROM " . $GLOBALS['ecs']->table('order_info') . " WHERE order_id = '$oid'");
+            $stat = $GLOBALS['db']->getOne("SELECT is_separate FROM " . $GLOBALS['ecs']->table('order_info') . " WHERE order_id = '$oid'");
             if (empty($stat)) {
                 $sql = "UPDATE " . $GLOBALS['ecs']->table('order_info') .
                     " SET is_separate = 2,lastmodify = '" . gmtime() .
                     "' WHERE order_id = '$oid'";
-                $db->query($sql);
+                $GLOBALS['db']->query($sql);
             }
-            $links[] = array('text' => $_LANG['affiliate_ck'], 'href' => 'affiliate_ck.php?act=list');
-            sys_msg($_LANG['edit_ok'], 0, $links);
+            $links[] = array('text' => $GLOBALS['_LANG']['affiliate_ck'], 'href' => 'affiliate_ck.php?act=list');
+            sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
         } /*
     撤销某次分成，将已分成的收回来
 */
         elseif ($_REQUEST['act'] == 'rollback') {
             $logid = (int)$_REQUEST['logid'];
-            $stat = $db->getRow("SELECT * FROM " . $GLOBALS['ecs']->table('affiliate_log') . " WHERE log_id = '$logid'");
+            $stat = $GLOBALS['db']->getRow("SELECT * FROM " . $GLOBALS['ecs']->table('affiliate_log') . " WHERE log_id = '$logid'");
             if (!empty($stat)) {
                 if ($stat['separate_type'] == 1) {
                     //推荐订单分成
@@ -80,14 +80,14 @@ class AffiliateCk extends Init
                     //推荐注册分成
                     $flag = -1;
                 }
-                log_account_change($stat['user_id'], -$stat['money'], 0, -$stat['point'], 0, $_LANG['loginfo']['cancel']);
+                log_account_change($stat['user_id'], -$stat['money'], 0, -$stat['point'], 0, $GLOBALS['_LANG']['loginfo']['cancel']);
                 $sql = "UPDATE " . $GLOBALS['ecs']->table('affiliate_log') .
                     " SET separate_type = '$flag'" .
                     " WHERE log_id = '$logid'";
-                $db->query($sql);
+                $GLOBALS['db']->query($sql);
             }
-            $links[] = array('text' => $_LANG['affiliate_ck'], 'href' => 'affiliate_ck.php?act=list');
-            sys_msg($_LANG['edit_ok'], 0, $links);
+            $links[] = array('text' => $GLOBALS['_LANG']['affiliate_ck'], 'href' => 'affiliate_ck.php?act=list');
+            sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
         } /*
     分成
 */
@@ -100,7 +100,7 @@ class AffiliateCk extends Init
 
             $oid = (int)$_REQUEST['oid'];
 
-            $row = $db->getRow("SELECT o.order_sn, o.is_separate, (o.goods_amount - o.discount) AS goods_amount, o.user_id FROM " . $GLOBALS['ecs']->table('order_info') . " o" .
+            $row = $GLOBALS['db']->getRow("SELECT o.order_sn, o.is_separate, (o.goods_amount - o.discount) AS goods_amount, o.user_id FROM " . $GLOBALS['ecs']->table('order_info') . " o" .
                 " LEFT JOIN " . $GLOBALS['ecs']->table('users') . " u ON o.user_id = u.user_id" .
                 " WHERE order_id = '$oid'");
 
@@ -137,7 +137,7 @@ class AffiliateCk extends Init
                         }
                         $setmoney = round($money * $affiliate['item'][$i]['level_money'], 2);
                         $setpoint = round($point * $affiliate['item'][$i]['level_point'], 0);
-                        $row = $db->getRow(
+                        $row = $GLOBALS['db']->getRow(
                             "SELECT o.parent_id as user_id,u.user_name FROM " . $GLOBALS['ecs']->table('users') . " o" .
                             " LEFT JOIN" . $GLOBALS['ecs']->table('users') . " u ON o.parent_id = u.user_id" .
                             " WHERE o.user_id = '$row[user_id]'"
@@ -146,35 +146,35 @@ class AffiliateCk extends Init
                         if (empty($up_uid) || empty($row['user_name'])) {
                             break;
                         } else {
-                            $info = sprintf($_LANG['separate_info'], $order_sn, $setmoney, $setpoint);
+                            $info = sprintf($GLOBALS['_LANG']['separate_info'], $order_sn, $setmoney, $setpoint);
                             log_account_change($up_uid, $setmoney, 0, $setpoint, 0, $info);
                             $this->write_affiliate_log($oid, $up_uid, $row['user_name'], $setmoney, $setpoint, $separate_by);
                         }
                     }
                 } else {
                     //推荐订单分成
-                    $row = $db->getRow(
+                    $row = $GLOBALS['db']->getRow(
                         "SELECT o.parent_id, u.user_name FROM " . $GLOBALS['ecs']->table('order_info') . " o" .
                         " LEFT JOIN" . $GLOBALS['ecs']->table('users') . " u ON o.parent_id = u.user_id" .
                         " WHERE o.order_id = '$oid'"
                     );
                     $up_uid = $row['parent_id'];
                     if (!empty($up_uid) && $up_uid > 0) {
-                        $info = sprintf($_LANG['separate_info'], $order_sn, $money, $point);
+                        $info = sprintf($GLOBALS['_LANG']['separate_info'], $order_sn, $money, $point);
                         log_account_change($up_uid, $money, 0, $point, 0, $info);
                         $this->write_affiliate_log($oid, $up_uid, $row['user_name'], $money, $point, $separate_by);
                     } else {
-                        $links[] = array('text' => $_LANG['affiliate_ck'], 'href' => 'affiliate_ck.php?act=list');
-                        sys_msg($_LANG['edit_fail'], 1, $links);
+                        $links[] = array('text' => $GLOBALS['_LANG']['affiliate_ck'], 'href' => 'affiliate_ck.php?act=list');
+                        sys_msg($GLOBALS['_LANG']['edit_fail'], 1, $links);
                     }
                 }
                 $sql = "UPDATE " . $GLOBALS['ecs']->table('order_info') .
                     " SET is_separate = 1,lastmodify='" . gmtime() .
                     "' WHERE order_id = '$oid'";
-                $db->query($sql);
+                $GLOBALS['db']->query($sql);
             }
-            $links[] = array('text' => $_LANG['affiliate_ck'], 'href' => 'affiliate_ck.php?act=list');
-            sys_msg($_LANG['edit_ok'], 0, $links);
+            $links[] = array('text' => $GLOBALS['_LANG']['affiliate_ck'], 'href' => 'affiliate_ck.php?act=list');
+            sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
         }
     }
 

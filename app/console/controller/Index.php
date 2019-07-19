@@ -14,8 +14,8 @@ class Index extends Init
         //-- 框架
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == '') {
-            $smarty->assign('shop_url', urlencode($ecs->url()));
-            $smarty->display('index.htm');
+            $GLOBALS['smarty']->assign('shop_url', urlencode($GLOBALS['ecs']->url()));
+            $GLOBALS['smarty']->display('index.htm');
         }
 
         /*------------------------------------------------------ */
@@ -24,7 +24,7 @@ class Index extends Init
         elseif ($_REQUEST['act'] == 'top') {
             // 获得管理员设置的菜单
             $lst = array();
-            $nav = $db->GetOne('SELECT nav_list FROM ' . $ecs->table('admin_user') . " WHERE user_id = '" . $_SESSION['admin_id'] . "'");
+            $nav = $GLOBALS['db']->GetOne('SELECT nav_list FROM ' . $GLOBALS['ecs']->table('admin_user') . " WHERE user_id = '" . $_SESSION['admin_id'] . "'");
 
             if (!empty($nav)) {
                 $arr = explode(',', $nav);
@@ -35,8 +35,8 @@ class Index extends Init
                 }
             }
 
-            $auth_sql = 'SELECT code, value FROM ' . $ecs->table('shop_config') . ' WHERE code = "authorize"';
-            if ($auth = $db->getRow($auth_sql)) {
+            $auth_sql = 'SELECT code, value FROM ' . $GLOBALS['ecs']->table('shop_config') . ' WHERE code = "authorize"';
+            if ($auth = $GLOBALS['db']->getRow($auth_sql)) {
                 $auth_conf = unserialize($auth['value']);
                 $_SESSION['authorization'] = $auth_conf['authorization'];
                 $_SESSION['authorize_name'] = $auth_conf['authorize_name'];
@@ -45,23 +45,23 @@ class Index extends Init
             // 获得管理员设置的菜单
 
             // 获得管理员ID
-            $smarty->assign('send_mail_on', $_CFG['send_mail_on']);
-            $smarty->assign('nav_list', $lst);
-            $smarty->assign('admin_id', $_SESSION['admin_id']);
+            $GLOBALS['smarty']->assign('send_mail_on', $GLOBALS['_CFG']['send_mail_on']);
+            $GLOBALS['smarty']->assign('nav_list', $lst);
+            $GLOBALS['smarty']->assign('admin_id', $_SESSION['admin_id']);
             if ($certificate['certificate_id']) {
                 $single_page = 'active';
                 $certificate['use_yunqi_authority'] and $single_page = 'detail';
                 $authority_url = $cert->get_authority_url($single_page);
                 $single_url = $cert->get_authority_url('single');
-                $smarty->assign('authority_url', $authority_url);
-                $smarty->assign('single_url', $single_url);
-                $smarty->assign('authorization', $_SESSION['authorization']);//是否授权
-                $smarty->assign('authorize_name', $_SESSION['authorize_name']);//授权名称
+                $GLOBALS['smarty']->assign('authority_url', $authority_url);
+                $GLOBALS['smarty']->assign('single_url', $single_url);
+                $GLOBALS['smarty']->assign('authorization', $_SESSION['authorization']);//是否授权
+                $GLOBALS['smarty']->assign('authorize_name', $_SESSION['authorize_name']);//授权名称
             }
-            $smarty->assign('http_host', $_SERVER['HTTP_HOST']);
-            $smarty->assign('yunqi_login', $_SESSION['yunqi_login']);
-            $smarty->assign('certi', $certificate);
-            $smarty->display('top.htm');
+            $GLOBALS['smarty']->assign('http_host', $_SERVER['HTTP_HOST']);
+            $GLOBALS['smarty']->assign('yunqi_login', $_SESSION['yunqi_login']);
+            $GLOBALS['smarty']->assign('certi', $certificate);
+            $GLOBALS['smarty']->display('top.htm');
         }
 
         /*------------------------------------------------------ */
@@ -69,7 +69,7 @@ class Index extends Init
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'calculator') {
-            $smarty->display('calculator.htm');
+            $GLOBALS['smarty']->display('calculator.htm');
         }
 
         /*------------------------------------------------------ */
@@ -89,7 +89,7 @@ class Index extends Init
             }
             ksort($modules);
             foreach ($modules as $key => $val) {
-                $menus[$key]['label'] = $_LANG[$key];
+                $menus[$key]['label'] = $GLOBALS['_LANG'][$key];
                 $menus[$key]['icon'] = $icon[$key];
                 if (is_array($val)) {
                     foreach ($val as $k => $v) {
@@ -108,10 +108,10 @@ class Index extends Init
                                 }
                             }
                         }
-                        if ($k == 'ucenter_setup' && $_CFG['integrate_code'] != 'ucenter') {
+                        if ($k == 'ucenter_setup' && $GLOBALS['_CFG']['integrate_code'] != 'ucenter') {
                             continue;
                         }
-                        $menus[$key]['children'][$k]['label'] = $_LANG[$k];
+                        $menus[$key]['children'][$k]['label'] = $GLOBALS['_LANG'][$k];
                         $menus[$key]['children'][$k]['action'] = $v;
                     }
                     $menus[$key]['url'] = empty($menus[$key]['children']) ? '' : $menus[$key]['children'][key($menus[$key]['children'])]['action'];
@@ -126,8 +126,8 @@ class Index extends Init
                 }
             }
 
-            $auth_sql = 'SELECT code, value FROM ' . $ecs->table('shop_config') . ' WHERE code = "authorize"';
-            if ($auth = $db->getRow($auth_sql)) {
+            $auth_sql = 'SELECT code, value FROM ' . $GLOBALS['ecs']->table('shop_config') . ' WHERE code = "authorize"';
+            if ($auth = $GLOBALS['db']->getRow($auth_sql)) {
                 $auth_conf = unserialize($auth['value']);
                 $_SESSION['authorization'] = $auth_conf['authorization'];
                 $_SESSION['authorize_name'] = $auth_conf['authorize_name'];
@@ -138,20 +138,20 @@ class Index extends Init
                 $certificate['use_yunqi_authority'] and $single_page = 'detail';
                 $authority_url = $cert->get_authority_url($single_page);
                 $single_url = $cert->get_authority_url('single');
-                $smarty->assign('authority_url', $authority_url);
-                $smarty->assign('single_url', $single_url);
-                $smarty->assign('authorization', $_SESSION['authorization']);//是否授权
-                $smarty->assign('authorize_name', $_SESSION['authorize_name']);//授权名称
+                $GLOBALS['smarty']->assign('authority_url', $authority_url);
+                $GLOBALS['smarty']->assign('single_url', $single_url);
+                $GLOBALS['smarty']->assign('authorization', $_SESSION['authorization']);//是否授权
+                $GLOBALS['smarty']->assign('authorize_name', $_SESSION['authorize_name']);//授权名称
             }
 
-            $smarty->assign('menus', $menus);
-            $smarty->assign('no_help', $_LANG['no_help']);
-            $smarty->assign('help_lang', $_CFG['lang']);
-            $smarty->assign('charset', EC_CHARSET);
-            $smarty->assign('admin_id', $_SESSION['admin_id']);
-            $smarty->assign('admin_name', $_SESSION['admin_name']);
-            $smarty->assign('certi', $certificate);
-            $smarty->display('menu.htm');
+            $GLOBALS['smarty']->assign('menus', $menus);
+            $GLOBALS['smarty']->assign('no_help', $GLOBALS['_LANG']['no_help']);
+            $GLOBALS['smarty']->assign('help_lang', $GLOBALS['_CFG']['lang']);
+            $GLOBALS['smarty']->assign('charset', EC_CHARSET);
+            $GLOBALS['smarty']->assign('admin_id', $_SESSION['admin_id']);
+            $GLOBALS['smarty']->assign('admin_name', $_SESSION['admin_name']);
+            $GLOBALS['smarty']->assign('certi', $certificate);
+            $GLOBALS['smarty']->display('menu.htm');
         }
 
 
@@ -162,7 +162,7 @@ class Index extends Init
         elseif ($_REQUEST['act'] == 'clear_cache') {
             clear_all_files();
 
-            sys_msg($_LANG['caches_cleared']);
+            sys_msg($GLOBALS['_LANG']['caches_cleared']);
         }
 
 
@@ -184,20 +184,20 @@ class Index extends Init
             /* 检查文件目录属性 */
             $warning = array();
 
-            if ($_CFG['shop_closed']) {
-                $warning[] = $_LANG['shop_closed_tips'];
+            if ($GLOBALS['_CFG']['shop_closed']) {
+                $warning[] = $GLOBALS['_LANG']['shop_closed_tips'];
             }
 
             if (file_exists('../install')) {
-                $warning[] = $_LANG['remove_install'];
+                $warning[] = $GLOBALS['_LANG']['remove_install'];
             }
 
             if (file_exists('../upgrade')) {
-                $warning[] = $_LANG['remove_upgrade'];
+                $warning[] = $GLOBALS['_LANG']['remove_upgrade'];
             }
 
             if (file_exists('../demo')) {
-                $warning[] = $_LANG['remove_demo'];
+                $warning[] = $GLOBALS['_LANG']['remove_demo'];
             }
 
             $open_basedir = ini_get('open_basedir');
@@ -216,67 +216,67 @@ class Index extends Init
                 }
 
                 if (!stristr($open_basedir, $upload_tmp_dir)) {
-                    $warning[] = sprintf($_LANG['temp_dir_cannt_read'], $upload_tmp_dir);
+                    $warning[] = sprintf($GLOBALS['_LANG']['temp_dir_cannt_read'], $upload_tmp_dir);
                 }
             }
 
             $result = file_mode_info('../cert');
             if ($result < 2) {
-                $warning[] = sprintf($_LANG['not_writable'], 'cert', $_LANG['cert_cannt_write']);
+                $warning[] = sprintf($GLOBALS['_LANG']['not_writable'], 'cert', $GLOBALS['_LANG']['cert_cannt_write']);
             }
 
             $result = file_mode_info('../' . DATA_DIR);
             if ($result < 2) {
-                $warning[] = sprintf($_LANG['not_writable'], 'data', $_LANG['data_cannt_write']);
+                $warning[] = sprintf($GLOBALS['_LANG']['not_writable'], 'data', $GLOBALS['_LANG']['data_cannt_write']);
             } else {
                 $result = file_mode_info('../' . DATA_DIR . '/afficheimg');
                 if ($result < 2) {
-                    $warning[] = sprintf($_LANG['not_writable'], DATA_DIR . '/afficheimg', $_LANG['afficheimg_cannt_write']);
+                    $warning[] = sprintf($GLOBALS['_LANG']['not_writable'], DATA_DIR . '/afficheimg', $GLOBALS['_LANG']['afficheimg_cannt_write']);
                 }
 
                 $result = file_mode_info('../' . DATA_DIR . '/brandlogo');
                 if ($result < 2) {
-                    $warning[] = sprintf($_LANG['not_writable'], DATA_DIR . '/brandlogo', $_LANG['brandlogo_cannt_write']);
+                    $warning[] = sprintf($GLOBALS['_LANG']['not_writable'], DATA_DIR . '/brandlogo', $GLOBALS['_LANG']['brandlogo_cannt_write']);
                 }
 
                 $result = file_mode_info('../' . DATA_DIR . '/cardimg');
                 if ($result < 2) {
-                    $warning[] = sprintf($_LANG['not_writable'], DATA_DIR . '/cardimg', $_LANG['cardimg_cannt_write']);
+                    $warning[] = sprintf($GLOBALS['_LANG']['not_writable'], DATA_DIR . '/cardimg', $GLOBALS['_LANG']['cardimg_cannt_write']);
                 }
 
                 $result = file_mode_info('../' . DATA_DIR . '/feedbackimg');
                 if ($result < 2) {
-                    $warning[] = sprintf($_LANG['not_writable'], DATA_DIR . '/feedbackimg', $_LANG['feedbackimg_cannt_write']);
+                    $warning[] = sprintf($GLOBALS['_LANG']['not_writable'], DATA_DIR . '/feedbackimg', $GLOBALS['_LANG']['feedbackimg_cannt_write']);
                 }
 
                 $result = file_mode_info('../' . DATA_DIR . '/packimg');
                 if ($result < 2) {
-                    $warning[] = sprintf($_LANG['not_writable'], DATA_DIR . '/packimg', $_LANG['packimg_cannt_write']);
+                    $warning[] = sprintf($GLOBALS['_LANG']['not_writable'], DATA_DIR . '/packimg', $GLOBALS['_LANG']['packimg_cannt_write']);
                 }
             }
 
             $result = file_mode_info('../images');
             if ($result < 2) {
-                $warning[] = sprintf($_LANG['not_writable'], 'images', $_LANG['images_cannt_write']);
+                $warning[] = sprintf($GLOBALS['_LANG']['not_writable'], 'images', $GLOBALS['_LANG']['images_cannt_write']);
             } else {
                 $result = file_mode_info('../' . IMAGE_DIR . '/upload');
                 if ($result < 2) {
-                    $warning[] = sprintf($_LANG['not_writable'], IMAGE_DIR . '/upload', $_LANG['imagesupload_cannt_write']);
+                    $warning[] = sprintf($GLOBALS['_LANG']['not_writable'], IMAGE_DIR . '/upload', $GLOBALS['_LANG']['imagesupload_cannt_write']);
                 }
             }
 
             $result = file_mode_info('../temp');
             if ($result < 2) {
-                $warning[] = sprintf($_LANG['not_writable'], 'images', $_LANG['tpl_cannt_write']);
+                $warning[] = sprintf($GLOBALS['_LANG']['not_writable'], 'images', $GLOBALS['_LANG']['tpl_cannt_write']);
             }
 
             $result = file_mode_info('../temp/backup');
             if ($result < 2) {
-                $warning[] = sprintf($_LANG['not_writable'], 'images', $_LANG['tpl_backup_cannt_write']);
+                $warning[] = sprintf($GLOBALS['_LANG']['not_writable'], 'images', $GLOBALS['_LANG']['tpl_backup_cannt_write']);
             }
 
             if (!is_writeable('../' . DATA_DIR . '/order_print.html')) {
-                $warning[] = $_LANG['order_print_canntwrite'];
+                $warning[] = $GLOBALS['_LANG']['order_print_canntwrite'];
             }
             clearstatcache();
 
@@ -303,123 +303,123 @@ class Index extends Init
                 }
             }
             if ($message) {
-                $smarty->assign('update_message', $message);
+                $GLOBALS['smarty']->assign('update_message', $message);
             }
 
-            $smarty->assign('warning_arr', $warning);
+            $GLOBALS['smarty']->assign('warning_arr', $warning);
 
 
             /* 管理员留言信息 */
             $sql = "SELECT message_id, sender_id, receiver_id, sent_time, readed, deleted, title, message, user_name " .
-                "FROM " . $ecs->table('admin_message') . " AS a, " . $ecs->table('admin_user') . " AS b " .
+                "FROM " . $GLOBALS['ecs']->table('admin_message') . " AS a, " . $GLOBALS['ecs']->table('admin_user') . " AS b " .
                 "WHERE a.sender_id = b.user_id AND a.receiver_id = " . $_SESSION['admin_id'] . " AND " .
                 "a.readed = 0 AND deleted = 0 ORDER BY a.sent_time DESC";
-            $admin_msg = $db->GetAll($sql);
+            $admin_msg = $GLOBALS['db']->GetAll($sql);
 
-            $smarty->assign('admin_msg', $admin_msg);
+            $GLOBALS['smarty']->assign('admin_msg', $admin_msg);
 
             /* 取得支持货到付款和不支持货到付款的支付方式 */
             $ids = get_pay_ids();
 
             /* 已完成的订单 */
-            $order['finished'] = $db->GetOne('SELECT COUNT(*) FROM ' . $ecs->table('order_info') .
+            $order['finished'] = $GLOBALS['db']->GetOne('SELECT COUNT(*) FROM ' . $GLOBALS['ecs']->table('order_info') .
                 " WHERE 1 " . order_query_sql('finished'));
             $status['finished'] = CS_FINISHED;
 
             /* 待发货的订单： */
-            $order['await_ship'] = $db->GetOne('SELECT COUNT(*)' .
-                ' FROM ' . $ecs->table('order_info') .
+            $order['await_ship'] = $GLOBALS['db']->GetOne('SELECT COUNT(*)' .
+                ' FROM ' . $GLOBALS['ecs']->table('order_info') .
                 " WHERE 1 " . order_query_sql('await_ship'));
             $status['await_ship'] = CS_AWAIT_SHIP;
 
             /* 待付款的订单： */
-            $order['await_pay'] = $db->GetOne('SELECT COUNT(*)' .
-                ' FROM ' . $ecs->table('order_info') .
+            $order['await_pay'] = $GLOBALS['db']->GetOne('SELECT COUNT(*)' .
+                ' FROM ' . $GLOBALS['ecs']->table('order_info') .
                 " WHERE 1 " . order_query_sql('await_pay'));
             $status['await_pay'] = CS_AWAIT_PAY;
 
             /* “未确认”的订单 */
-            $order['unconfirmed'] = $db->GetOne('SELECT COUNT(*) FROM ' . $ecs->table('order_info') .
+            $order['unconfirmed'] = $GLOBALS['db']->GetOne('SELECT COUNT(*) FROM ' . $GLOBALS['ecs']->table('order_info') .
                 " WHERE 1 " . order_query_sql('unconfirmed'));
             $status['unconfirmed'] = OS_UNCONFIRMED;
 
             /* “部分发货”的订单 */
-            $order['shipped_part'] = $db->GetOne('SELECT COUNT(*) FROM ' . $ecs->table('order_info') .
+            $order['shipped_part'] = $GLOBALS['db']->GetOne('SELECT COUNT(*) FROM ' . $GLOBALS['ecs']->table('order_info') .
                 " WHERE  shipping_status=" . SS_SHIPPED_PART);
             $status['shipped_part'] = OS_SHIPPED_PART;
 
 //    $today_start = mktime(0,0,0,date('m'),date('d'),date('Y'));
-            $order['stats'] = $db->getRow('SELECT COUNT(*) AS oCount, IFNULL(SUM(order_amount), 0) AS oAmount' .
-                ' FROM ' . $ecs->table('order_info'));
+            $order['stats'] = $GLOBALS['db']->getRow('SELECT COUNT(*) AS oCount, IFNULL(SUM(order_amount), 0) AS oAmount' .
+                ' FROM ' . $GLOBALS['ecs']->table('order_info'));
 
-            $smarty->assign('order', $order);
-            $smarty->assign('status', $status);
+            $GLOBALS['smarty']->assign('order', $order);
+            $GLOBALS['smarty']->assign('status', $status);
 
             /* 商品信息 */
-            $goods['total'] = $db->GetOne('SELECT COUNT(*) FROM ' . $ecs->table('goods') .
+            $goods['total'] = $GLOBALS['db']->GetOne('SELECT COUNT(*) FROM ' . $GLOBALS['ecs']->table('goods') .
                 ' WHERE is_delete = 0 AND is_alone_sale = 1 AND is_real = 1');
-            $virtual_card['total'] = $db->GetOne('SELECT COUNT(*) FROM ' . $ecs->table('goods') .
+            $virtual_card['total'] = $GLOBALS['db']->GetOne('SELECT COUNT(*) FROM ' . $GLOBALS['ecs']->table('goods') .
                 ' WHERE is_delete = 0 AND is_alone_sale = 1 AND is_real=0 AND extension_code=\'virtual_card\'');
 
-            $goods['new'] = $db->GetOne('SELECT COUNT(*) FROM ' . $ecs->table('goods') .
+            $goods['new'] = $GLOBALS['db']->GetOne('SELECT COUNT(*) FROM ' . $GLOBALS['ecs']->table('goods') .
                 ' WHERE is_delete = 0 AND is_new = 1 AND is_real = 1');
-            $virtual_card['new'] = $db->GetOne('SELECT COUNT(*) FROM ' . $ecs->table('goods') .
+            $virtual_card['new'] = $GLOBALS['db']->GetOne('SELECT COUNT(*) FROM ' . $GLOBALS['ecs']->table('goods') .
                 ' WHERE is_delete = 0 AND is_new = 1 AND is_real=0 AND extension_code=\'virtual_card\'');
 
-            $goods['best'] = $db->GetOne('SELECT COUNT(*) FROM ' . $ecs->table('goods') .
+            $goods['best'] = $GLOBALS['db']->GetOne('SELECT COUNT(*) FROM ' . $GLOBALS['ecs']->table('goods') .
                 ' WHERE is_delete = 0 AND is_best = 1 AND is_real = 1');
-            $virtual_card['best'] = $db->GetOne('SELECT COUNT(*) FROM ' . $ecs->table('goods') .
+            $virtual_card['best'] = $GLOBALS['db']->GetOne('SELECT COUNT(*) FROM ' . $GLOBALS['ecs']->table('goods') .
                 ' WHERE is_delete = 0 AND is_best = 1 AND is_real=0 AND extension_code=\'virtual_card\'');
 
-            $goods['hot'] = $db->GetOne('SELECT COUNT(*) FROM ' . $ecs->table('goods') .
+            $goods['hot'] = $GLOBALS['db']->GetOne('SELECT COUNT(*) FROM ' . $GLOBALS['ecs']->table('goods') .
                 ' WHERE is_delete = 0 AND is_hot = 1 AND is_real = 1');
-            $virtual_card['hot'] = $db->GetOne('SELECT COUNT(*) FROM ' . $ecs->table('goods') .
+            $virtual_card['hot'] = $GLOBALS['db']->GetOne('SELECT COUNT(*) FROM ' . $GLOBALS['ecs']->table('goods') .
                 ' WHERE is_delete = 0 AND is_hot = 1 AND is_real=0 AND extension_code=\'virtual_card\'');
 
             $time = gmtime();
-            $goods['promote'] = $db->GetOne('SELECT COUNT(*) FROM ' . $ecs->table('goods') .
+            $goods['promote'] = $GLOBALS['db']->GetOne('SELECT COUNT(*) FROM ' . $GLOBALS['ecs']->table('goods') .
                 ' WHERE is_delete = 0 AND promote_price>0' .
                 " AND promote_start_date <= '$time' AND promote_end_date >= '$time' AND is_real = 1");
-            $virtual_card['promote'] = $db->GetOne('SELECT COUNT(*) FROM ' . $ecs->table('goods') .
+            $virtual_card['promote'] = $GLOBALS['db']->GetOne('SELECT COUNT(*) FROM ' . $GLOBALS['ecs']->table('goods') .
                 ' WHERE is_delete = 0 AND promote_price>0' .
                 " AND promote_start_date <= '$time' AND promote_end_date >= '$time' AND is_real=0 AND extension_code='virtual_card'");
 
             /* 缺货商品 */
-            if ($_CFG['use_storage']) {
-                $sql = 'SELECT COUNT(*) FROM ' . $ecs->table('goods') . ' WHERE is_delete = 0 AND goods_number <= warn_number AND is_real = 1';
-                $goods['warn'] = $db->GetOne($sql);
-                $sql = 'SELECT COUNT(*) FROM ' . $ecs->table('goods') . ' WHERE is_delete = 0 AND goods_number <= warn_number AND is_real=0 AND extension_code=\'virtual_card\'';
-                $virtual_card['warn'] = $db->GetOne($sql);
+            if ($GLOBALS['_CFG']['use_storage']) {
+                $sql = 'SELECT COUNT(*) FROM ' . $GLOBALS['ecs']->table('goods') . ' WHERE is_delete = 0 AND goods_number <= warn_number AND is_real = 1';
+                $goods['warn'] = $GLOBALS['db']->GetOne($sql);
+                $sql = 'SELECT COUNT(*) FROM ' . $GLOBALS['ecs']->table('goods') . ' WHERE is_delete = 0 AND goods_number <= warn_number AND is_real=0 AND extension_code=\'virtual_card\'';
+                $virtual_card['warn'] = $GLOBALS['db']->GetOne($sql);
             } else {
                 $goods['warn'] = 0;
                 $virtual_card['warn'] = 0;
             }
-            $smarty->assign('goods', $goods);
-            $smarty->assign('virtual_card', $virtual_card);
+            $GLOBALS['smarty']->assign('goods', $goods);
+            $GLOBALS['smarty']->assign('virtual_card', $virtual_card);
 
             /* 访问统计信息 */
             $today = local_getdate();
-            $sql = 'SELECT COUNT(*) FROM ' . $ecs->table('stats') .
+            $sql = 'SELECT COUNT(*) FROM ' . $GLOBALS['ecs']->table('stats') .
                 ' WHERE access_time > ' . (mktime(0, 0, 0, $today['mon'], $today['mday'], $today['year']) - date('Z'));
 
-            $today_visit = $db->GetOne($sql);
-            $smarty->assign('today_visit', $today_visit);
+            $today_visit = $GLOBALS['db']->GetOne($sql);
+            $GLOBALS['smarty']->assign('today_visit', $today_visit);
 
-            $online_users = $sess->get_users_count();
-            $smarty->assign('online_users', $online_users);
+            $online_users = $GLOBALS['sess']->get_users_count();
+            $GLOBALS['smarty']->assign('online_users', $online_users);
 
             /* 最近反馈 */
             $sql = "SELECT COUNT(f.msg_id) " .
-                "FROM " . $ecs->table('feedback') . " AS f " .
-                "LEFT JOIN " . $ecs->table('feedback') . " AS r ON r.parent_id=f.msg_id " .
+                "FROM " . $GLOBALS['ecs']->table('feedback') . " AS f " .
+                "LEFT JOIN " . $GLOBALS['ecs']->table('feedback') . " AS r ON r.parent_id=f.msg_id " .
                 'WHERE f.parent_id=0 AND ISNULL(r.msg_id) ';
-            $smarty->assign('feedback_number', $db->GetOne($sql));
+            $GLOBALS['smarty']->assign('feedback_number', $GLOBALS['db']->GetOne($sql));
 
             /* 未审核评论 */
-            $smarty->assign('comment_number', $db->getOne('SELECT COUNT(*) FROM ' . $ecs->table('comment') .
+            $GLOBALS['smarty']->assign('comment_number', $GLOBALS['db']->getOne('SELECT COUNT(*) FROM ' . $GLOBALS['ecs']->table('comment') .
                 ' WHERE status = 0 AND parent_id = 0'));
 
-            $mysql_ver = $db->version();   // 获得 MySQL 版本
+            $mysql_ver = $GLOBALS['db']->version();   // 获得 MySQL 版本
 
             /* 系统信息 */
             $sys_info['os'] = PHP_OS;
@@ -427,11 +427,11 @@ class Index extends Init
             $sys_info['web_server'] = $_SERVER['SERVER_SOFTWARE'];
             $sys_info['php_ver'] = PHP_VERSION;
             $sys_info['mysql_ver'] = $mysql_ver;
-            $sys_info['zlib'] = function_exists('gzclose') ? $_LANG['yes'] : $_LANG['no'];
-            $sys_info['safe_mode'] = (boolean)ini_get('safe_mode') ? $_LANG['yes'] : $_LANG['no'];
-            $sys_info['safe_mode_gid'] = (boolean)ini_get('safe_mode_gid') ? $_LANG['yes'] : $_LANG['no'];
-            $sys_info['timezone'] = function_exists("date_default_timezone_get") ? date_default_timezone_get() : $_LANG['no_timezone'];
-            $sys_info['socket'] = function_exists('fsockopen') ? $_LANG['yes'] : $_LANG['no'];
+            $sys_info['zlib'] = function_exists('gzclose') ? $GLOBALS['_LANG']['yes'] : $GLOBALS['_LANG']['no'];
+            $sys_info['safe_mode'] = (boolean)ini_get('safe_mode') ? $GLOBALS['_LANG']['yes'] : $GLOBALS['_LANG']['no'];
+            $sys_info['safe_mode_gid'] = (boolean)ini_get('safe_mode_gid') ? $GLOBALS['_LANG']['yes'] : $GLOBALS['_LANG']['no'];
+            $sys_info['timezone'] = function_exists("date_default_timezone_get") ? date_default_timezone_get() : $GLOBALS['_LANG']['no_timezone'];
+            $sys_info['socket'] = function_exists('fsockopen') ? $GLOBALS['_LANG']['yes'] : $GLOBALS['_LANG']['no'];
 
             if ($gd == 0) {
                 $sys_info['gd'] = 'N/A';
@@ -466,51 +466,51 @@ class Index extends Init
             /* 允许上传的最大文件大小 */
             $sys_info['max_filesize'] = ini_get('upload_max_filesize');
 
-            $smarty->assign('sys_info', $sys_info);
+            $GLOBALS['smarty']->assign('sys_info', $sys_info);
 
             /* 缺货登记 */
-            $smarty->assign('booking_goods', $db->getOne('SELECT COUNT(*) FROM ' . $ecs->table('booking_goods') . ' WHERE is_dispose = 0'));
+            $GLOBALS['smarty']->assign('booking_goods', $GLOBALS['db']->getOne('SELECT COUNT(*) FROM ' . $GLOBALS['ecs']->table('booking_goods') . ' WHERE is_dispose = 0'));
 
             /* 退款申请 */
-            $smarty->assign('new_repay', $db->getOne('SELECT COUNT(*) FROM ' . $ecs->table('user_account') . ' WHERE process_type = ' . SURPLUS_RETURN . ' AND is_paid = 0 '));
+            $GLOBALS['smarty']->assign('new_repay', $GLOBALS['db']->getOne('SELECT COUNT(*) FROM ' . $GLOBALS['ecs']->table('user_account') . ' WHERE process_type = ' . SURPLUS_RETURN . ' AND is_paid = 0 '));
 
             assign_query_info();
 
-            $smarty->assign('msg', $message);
-            $smarty->assign('ecs_version', VERSION);
-            $smarty->assign('ecs_release', RELEASE);
-            $smarty->assign('ecs_lang', $_CFG['lang']);
-            $smarty->assign('ecs_charset', strtoupper(EC_CHARSET));
-            $smarty->assign('install_date', local_date($_CFG['date_format'], $_CFG['install_date']));
-            $smarty->assign('pmp_desktop', PMP_DESKTOP);
-            $smarty->assign('pmp_market', PMS_MARKET);
-            $smarty->display('start.htm');
+            $GLOBALS['smarty']->assign('msg', $message);
+            $GLOBALS['smarty']->assign('ecs_version', VERSION);
+            $GLOBALS['smarty']->assign('ecs_release', RELEASE);
+            $GLOBALS['smarty']->assign('ecs_lang', $GLOBALS['_CFG']['lang']);
+            $GLOBALS['smarty']->assign('ecs_charset', strtoupper(EC_CHARSET));
+            $GLOBALS['smarty']->assign('install_date', local_date($GLOBALS['_CFG']['date_format'], $GLOBALS['_CFG']['install_date']));
+            $GLOBALS['smarty']->assign('pmp_desktop', PMP_DESKTOP);
+            $GLOBALS['smarty']->assign('pmp_market', PMS_MARKET);
+            $GLOBALS['smarty']->display('start.htm');
         } elseif ($_REQUEST['act'] == 'main_api') {
             load_helper('base');
             $data = read_static_cache('api_str');
 
             if ($data === false || API_TIME < date('Y-m-d H:i:s', time() - 43200)) {
                 $ecs_version = VERSION;
-                $ecs_lang = $_CFG['lang'];
+                $ecs_lang = $GLOBALS['_CFG']['lang'];
                 $ecs_release = RELEASE;
                 $php_ver = PHP_VERSION;
-                $mysql_ver = $db->version();
-                $order['stats'] = $db->getRow('SELECT COUNT(*) AS oCount, IFNULL(SUM(order_amount), 0) AS oAmount' .
-                    ' FROM ' . $ecs->table('order_info'));
+                $mysql_ver = $GLOBALS['db']->version();
+                $order['stats'] = $GLOBALS['db']->getRow('SELECT COUNT(*) AS oCount, IFNULL(SUM(order_amount), 0) AS oAmount' .
+                    ' FROM ' . $GLOBALS['ecs']->table('order_info'));
                 $ocount = $order['stats']['oCount'];
                 $oamount = $order['stats']['oAmount'];
-                $goods['total'] = $db->GetOne('SELECT COUNT(*) FROM ' . $ecs->table('goods') .
+                $goods['total'] = $GLOBALS['db']->GetOne('SELECT COUNT(*) FROM ' . $GLOBALS['ecs']->table('goods') .
                     ' WHERE is_delete = 0 AND is_alone_sale = 1 AND is_real = 1');
                 $gcount = $goods['total'];
                 $ecs_charset = strtoupper(EC_CHARSET);
-                $ecs_user = $db->getOne('SELECT COUNT(*) FROM ' . $ecs->table('users'));
-                $ecs_template = $db->getOne('SELECT value FROM ' . $ecs->table('shop_config') . ' WHERE code = \'template\'');
-                $style = $db->getOne('SELECT value FROM ' . $ecs->table('shop_config') . ' WHERE code = \'stylename\'');
+                $ecs_user = $GLOBALS['db']->getOne('SELECT COUNT(*) FROM ' . $GLOBALS['ecs']->table('users'));
+                $ecs_template = $GLOBALS['db']->getOne('SELECT value FROM ' . $GLOBALS['ecs']->table('shop_config') . ' WHERE code = \'template\'');
+                $style = $GLOBALS['db']->getOne('SELECT value FROM ' . $GLOBALS['ecs']->table('shop_config') . ' WHERE code = \'stylename\'');
                 if ($style == '') {
                     $style = '0';
                 }
                 $ecs_style = $style;
-                $shop_url = urlencode($ecs->url());
+                $shop_url = urlencode($GLOBALS['ecs']->url());
 
                 $patch_file = file_get_contents(ROOT_PATH . ADMIN_PATH . "/patch_num");
 
@@ -536,19 +536,19 @@ class Index extends Init
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'first') {
-            $smarty->assign('countries', get_regions());
-            $smarty->assign('provinces', get_regions(1, 1));
-            $smarty->assign('cities', get_regions(2, 2));
+            $GLOBALS['smarty']->assign('countries', get_regions());
+            $GLOBALS['smarty']->assign('provinces', get_regions(1, 1));
+            $GLOBALS['smarty']->assign('cities', get_regions(2, 2));
 
-            $sql = 'SELECT value from ' . $ecs->table('shop_config') . " WHERE code='shop_name'";
-            $shop_name = $db->getOne($sql);
+            $sql = 'SELECT value from ' . $GLOBALS['ecs']->table('shop_config') . " WHERE code='shop_name'";
+            $shop_name = $GLOBALS['db']->getOne($sql);
 
-            $smarty->assign('shop_name', $shop_name);
+            $GLOBALS['smarty']->assign('shop_name', $shop_name);
 
-            $sql = 'SELECT value from ' . $ecs->table('shop_config') . " WHERE code='shop_title'";
-            $shop_title = $db->getOne($sql);
+            $sql = 'SELECT value from ' . $GLOBALS['ecs']->table('shop_config') . " WHERE code='shop_title'";
+            $shop_title = $GLOBALS['db']->getOne($sql);
 
-            $smarty->assign('shop_title', $shop_title);
+            $GLOBALS['smarty']->assign('shop_title', $shop_title);
 
             //获取配送方式
 //    $modules = read_modules('../includes/modules/shipping');
@@ -573,19 +573,19 @@ class Index extends Init
             ksort($modules);
 
             for ($i = 0; $i < count($modules); $i++) {
-                $lang_file = ROOT_PATH . 'languages/' . $_CFG['lang'] . '/shipping/' . $modules[$i]['code'] . '.php';
+                $lang_file = ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/shipping/' . $modules[$i]['code'] . '.php';
 
                 if (file_exists($lang_file)) {
                     include_once($lang_file);
                 }
 
-                $modules[$i]['name'] = $_LANG[$modules[$i]['code']];
-                $modules[$i]['desc'] = $_LANG[$modules[$i]['desc']];
+                $modules[$i]['name'] = $GLOBALS['_LANG'][$modules[$i]['code']];
+                $modules[$i]['desc'] = $GLOBALS['_LANG'][$modules[$i]['desc']];
                 $modules[$i]['insure_fee'] = empty($modules[$i]['insure']) ? 0 : $modules[$i]['insure'];
                 $modules[$i]['cod'] = $modules[$i]['cod'];
                 $modules[$i]['install'] = 0;
             }
-            $smarty->assign('modules', $modules);
+            $GLOBALS['smarty']->assign('modules', $modules);
 
             unset($modules);
 
@@ -594,19 +594,19 @@ class Index extends Init
 
             for ($i = 0; $i < count($modules); $i++) {
                 $code = $modules[$i]['code'];
-                $modules[$i]['name'] = $_LANG[$modules[$i]['code']];
+                $modules[$i]['name'] = $GLOBALS['_LANG'][$modules[$i]['code']];
                 if (!isset($modules[$i]['pay_fee'])) {
                     $modules[$i]['pay_fee'] = 0;
                 }
-                $modules[$i]['desc'] = $_LANG[$modules[$i]['desc']];
+                $modules[$i]['desc'] = $GLOBALS['_LANG'][$modules[$i]['desc']];
             }
             //        $modules[$i]['install'] = '0';
-            $smarty->assign('modules_payment', $modules);
+            $GLOBALS['smarty']->assign('modules_payment', $modules);
 
             assign_query_info();
 
-            $smarty->assign('ur_here', $_LANG['ur_config']);
-            $smarty->display('setting_first.htm');
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['ur_config']);
+            $GLOBALS['smarty']->display('setting_first.htm');
         }
 
         /*------------------------------------------------------ */
@@ -626,33 +626,33 @@ class Index extends Init
             $payment = empty($_POST['payment']) ? '' : $_POST['payment'];
 
             if (!empty($shop_name)) {
-                $sql = 'UPDATE ' . $ecs->table('shop_config') . " SET value = '$shop_name' WHERE code = 'shop_name'";
-                $db->query($sql);
+                $sql = 'UPDATE ' . $GLOBALS['ecs']->table('shop_config') . " SET value = '$shop_name' WHERE code = 'shop_name'";
+                $GLOBALS['db']->query($sql);
             }
 
             if (!empty($shop_title)) {
-                $sql = 'UPDATE ' . $ecs->table('shop_config') . " SET value = '$shop_title' WHERE code = 'shop_title'";
-                $db->query($sql);
+                $sql = 'UPDATE ' . $GLOBALS['ecs']->table('shop_config') . " SET value = '$shop_title' WHERE code = 'shop_title'";
+                $GLOBALS['db']->query($sql);
             }
 
             if (!empty($shop_address)) {
-                $sql = 'UPDATE ' . $ecs->table('shop_config') . " SET value = '$shop_address' WHERE code = 'shop_address'";
-                $db->query($sql);
+                $sql = 'UPDATE ' . $GLOBALS['ecs']->table('shop_config') . " SET value = '$shop_address' WHERE code = 'shop_address'";
+                $GLOBALS['db']->query($sql);
             }
 
             if (!empty($shop_country)) {
-                $sql = 'UPDATE ' . $ecs->table('shop_config') . "SET value = '$shop_country' WHERE code='shop_country'";
-                $db->query($sql);
+                $sql = 'UPDATE ' . $GLOBALS['ecs']->table('shop_config') . "SET value = '$shop_country' WHERE code='shop_country'";
+                $GLOBALS['db']->query($sql);
             }
 
             if (!empty($shop_province)) {
-                $sql = 'UPDATE ' . $ecs->table('shop_config') . "SET value = '$shop_province' WHERE code='shop_province'";
-                $db->query($sql);
+                $sql = 'UPDATE ' . $GLOBALS['ecs']->table('shop_config') . "SET value = '$shop_province' WHERE code='shop_province'";
+                $GLOBALS['db']->query($sql);
             }
 
             if (!empty($shop_city)) {
-                $sql = 'UPDATE ' . $ecs->table('shop_config') . "SET value = '$shop_city' WHERE code='shop_city'";
-                $db->query($sql);
+                $sql = 'UPDATE ' . $GLOBALS['ecs']->table('shop_config') . "SET value = '$shop_city' WHERE code='shop_city'";
+                $GLOBALS['db']->query($sql);
             }
 
             //设置配送方式
@@ -670,26 +670,26 @@ class Index extends Init
                 } else {
                     include_once(ROOT_PATH . 'includes/modules/shipping/' . $shipping . '.php');
                 }
-                $sql = "SELECT shipping_id FROM " . $ecs->table('shipping') . " WHERE shipping_code = '$shipping'";
-                $shipping_id = $db->GetOne($sql);
+                $sql = "SELECT shipping_id FROM " . $GLOBALS['ecs']->table('shipping') . " WHERE shipping_code = '$shipping'";
+                $shipping_id = $GLOBALS['db']->GetOne($sql);
 
                 if ($shipping_id <= 0) {
                     $insure = empty($modules[0]['insure']) ? 0 : $modules[0]['insure'];
-                    $sql = "INSERT INTO " . $ecs->table('shipping') . " (" .
+                    $sql = "INSERT INTO " . $GLOBALS['ecs']->table('shipping') . " (" .
                         "shipping_code, shipping_name, shipping_desc, insure, support_cod, enabled" .
                         ") VALUES (" .
-                        "'" . addslashes($modules[0]['code']) . "', '" . addslashes($_LANG[$modules[0]['code']]) . "', '" .
-                        addslashes($_LANG[$modules[0]['desc']]) . "', '$insure', '" . intval($modules[0]['cod']) . "', 1)";
-                    $db->query($sql);
-                    $shipping_id = $db->insert_Id();
+                        "'" . addslashes($modules[0]['code']) . "', '" . addslashes($GLOBALS['_LANG'][$modules[0]['code']]) . "', '" .
+                        addslashes($GLOBALS['_LANG'][$modules[0]['desc']]) . "', '$insure', '" . intval($modules[0]['cod']) . "', 1)";
+                    $GLOBALS['db']->query($sql);
+                    $shipping_id = $GLOBALS['db']->insert_Id();
                 }
 
                 //设置配送区域
                 $area_name = empty($_POST['area_name']) ? '' : $_POST['area_name'];
                 if (!empty($area_name)) {
-                    $sql = "SELECT shipping_area_id FROM " . $ecs->table("shipping_area") .
+                    $sql = "SELECT shipping_area_id FROM " . $GLOBALS['ecs']->table("shipping_area") .
                         " WHERE shipping_id='$shipping_id' AND shipping_area_name='$area_name'";
-                    $area_id = $db->getOne($sql);
+                    $area_id = $GLOBALS['db']->getOne($sql);
 
                     if ($area_id <= 0) {
                         $config = array();
@@ -709,11 +709,11 @@ class Index extends Init
                             $config[$count]['value'] = make_semiangle(0);
                         }
 
-                        $sql = "INSERT INTO " . $ecs->table('shipping_area') .
+                        $sql = "INSERT INTO " . $GLOBALS['ecs']->table('shipping_area') .
                             " (shipping_area_name, shipping_id, configure) " .
                             "VALUES" . " ('$area_name', '$shipping_id', '" . serialize($config) . "')";
-                        $db->query($sql);
-                        $area_id = $db->insert_Id();
+                        $GLOBALS['db']->query($sql);
+                        $area_id = $GLOBALS['db']->insert_Id();
                     }
 
                     $region_id = empty($_POST['shipping_country']) ? 1 : intval($_POST['shipping_country']);
@@ -722,8 +722,8 @@ class Index extends Init
                     $region_id = empty($_POST['shipping_district']) ? $region_id : intval($_POST['shipping_district']);
 
                     /* 添加选定的城市和地区 */
-                    $sql = "REPLACE INTO " . $ecs->table('area_region') . " (shipping_area_id, region_id) VALUES ('$area_id', '$region_id')";
-                    $db->query($sql);
+                    $sql = "REPLACE INTO " . $GLOBALS['ecs']->table('area_region') . " (shipping_area_id, region_id) VALUES ('$area_id', '$region_id')";
+                    $GLOBALS['db']->query($sql);
                 }
             }
 
@@ -746,24 +746,24 @@ class Index extends Init
 
                 $pay_config = serialize($pay_config);
                 /* 安装，检查该支付方式是否曾经安装过 */
-                $sql = "SELECT COUNT(*) FROM " . $ecs->table('payment') . " WHERE pay_code = '$payment'";
-                if ($db->GetOne($sql) > 0) {
-                    $sql = "UPDATE " . $ecs->table('payment') .
+                $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('payment') . " WHERE pay_code = '$payment'";
+                if ($GLOBALS['db']->GetOne($sql) > 0) {
+                    $sql = "UPDATE " . $GLOBALS['ecs']->table('payment') .
                         " SET pay_config = '$pay_config'," .
                         " enabled = '1' " .
                         "WHERE pay_code = '$payment' LIMIT 1";
-                    $db->query($sql);
+                    $GLOBALS['db']->query($sql);
                 } else {
 //            $modules = read_modules('../includes/modules/payment');
 
                     $payment_info = array();
-                    $payment_info['name'] = $_LANG[$modules[0]['code']];
+                    $payment_info['name'] = $GLOBALS['_LANG'][$modules[0]['code']];
                     $payment_info['pay_fee'] = empty($modules[0]['pay_fee']) ? 0 : $modules[0]['pay_fee'];
-                    $payment_info['desc'] = $_LANG[$modules[0]['desc']];
+                    $payment_info['desc'] = $GLOBALS['_LANG'][$modules[0]['desc']];
 
-                    $sql = "INSERT INTO " . $ecs->table('payment') . " (pay_code, pay_name, pay_desc, pay_config, is_cod, pay_fee, enabled, is_online)" .
+                    $sql = "INSERT INTO " . $GLOBALS['ecs']->table('payment') . " (pay_code, pay_name, pay_desc, pay_config, is_cod, pay_fee, enabled, is_online)" .
                         "VALUES ('$payment', '$payment_info[name]', '$payment_info[desc]', '$pay_config', '0', '$payment_info[pay_fee]', '1', '1')";
-                    $db->query($sql);
+                    $GLOBALS['db']->query($sql);
                 }
             }
 
@@ -771,8 +771,8 @@ class Index extends Init
 
             assign_query_info();
 
-            $smarty->assign('ur_here', $_LANG['ur_add']);
-            $smarty->display('setting_second.htm');
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['ur_add']);
+            $GLOBALS['smarty']->display('setting_second.htm');
         }
 
         /*------------------------------------------------------ */
@@ -797,41 +797,41 @@ class Index extends Init
             if (!empty($good_category)) {
                 if (cat_exists($good_category, 0)) {
                     /* 同级别下不能有重复的分类名称 */
-                    $link[] = array('text' => $_LANG['go_back'], 'href' => 'javascript:history.back(-1)');
-                    sys_msg($_LANG['catname_exist'], 0, $link);
+                    $link[] = array('text' => $GLOBALS['_LANG']['go_back'], 'href' => 'javascript:history.back(-1)');
+                    sys_msg($GLOBALS['_LANG']['catname_exist'], 0, $link);
                 }
             }
 
             if (!empty($good_brand)) {
                 if (brand_exists($good_brand)) {
                     /* 同级别下不能有重复的品牌名称 */
-                    $link[] = array('text' => $_LANG['go_back'], 'href' => 'javascript:history.back(-1)');
-                    sys_msg($_LANG['brand_name_exist'], 0, $link);
+                    $link[] = array('text' => $GLOBALS['_LANG']['go_back'], 'href' => 'javascript:history.back(-1)');
+                    sys_msg($GLOBALS['_LANG']['brand_name_exist'], 0, $link);
                 }
             }
 
             $brand_id = 0;
             if (!empty($good_brand)) {
-                $sql = 'INSERT INTO ' . $ecs->table('brand') . " (brand_name, is_show)" .
+                $sql = 'INSERT INTO ' . $GLOBALS['ecs']->table('brand') . " (brand_name, is_show)" .
                     " values('" . $good_brand . "', '1')";
-                $db->query($sql);
+                $GLOBALS['db']->query($sql);
 
-                $brand_id = $db->insert_Id();
+                $brand_id = $GLOBALS['db']->insert_Id();
             }
 
             if (!empty($good_category)) {
-                $sql = 'INSERT INTO ' . $ecs->table('category') . " (cat_name, parent_id, is_show)" .
+                $sql = 'INSERT INTO ' . $GLOBALS['ecs']->table('category') . " (cat_name, parent_id, is_show)" .
                     " values('" . $good_category . "', '0', '1')";
-                $db->query($sql);
+                $GLOBALS['db']->query($sql);
 
-                $cat_id = $db->insert_Id();
+                $cat_id = $GLOBALS['db']->insert_Id();
 
                 //货号
                 load_helper('goods', 'console');
-                $max_id = $db->getOne("SELECT MAX(goods_id) + 1 FROM " . $ecs->table('goods'));
+                $max_id = $GLOBALS['db']->getOne("SELECT MAX(goods_id) + 1 FROM " . $GLOBALS['ecs']->table('goods'));
                 $goods_sn = generate_goods_sn($max_id);
 
-                $image = new Image($_CFG['bgcolor']);
+                $image = new Image($GLOBALS['_CFG']['bgcolor']);
 
                 if (!empty($good_name)) {
                     /* 检查图片：如果有错误，检查尺寸是否超过最大值；否则，检查文件类型 */
@@ -843,19 +843,19 @@ class Index extends Init
                         // 商品图片
                         if ($_FILES['goods_img']['error'] == 0) {
                             if (!$image->check_img_type($_FILES['goods_img']['type'])) {
-                                sys_msg($_LANG['invalid_goods_img'], 1, array(), false);
+                                sys_msg($GLOBALS['_LANG']['invalid_goods_img'], 1, array(), false);
                             }
                         } elseif ($_FILES['goods_img']['error'] == 1) {
-                            sys_msg(sprintf($_LANG['goods_img_too_big'], $php_maxsize), 1, array(), false);
+                            sys_msg(sprintf($GLOBALS['_LANG']['goods_img_too_big'], $php_maxsize), 1, array(), false);
                         } elseif ($_FILES['goods_img']['error'] == 2) {
-                            sys_msg(sprintf($_LANG['goods_img_too_big'], $htm_maxsize), 1, array(), false);
+                            sys_msg(sprintf($GLOBALS['_LANG']['goods_img_too_big'], $htm_maxsize), 1, array(), false);
                         }
                     } /* 4。1版本 */
                     else {
                         // 商品图片
                         if ($_FILES['goods_img']['tmp_name'] != 'none') {
                             if (!$image->check_img_type($_FILES['goods_img']['type'])) {
-                                sys_msg($_LANG['invalid_goods_img'], 1, array(), false);
+                                sys_msg($GLOBALS['_LANG']['invalid_goods_img'], 1, array(), false);
                             }
                         }
                     }
@@ -886,7 +886,7 @@ class Index extends Init
                         // 如果系统支持GD，缩放商品图片，且给商品图片和相册图片加水印
                         if ($image->gd_version() > 0 && $image->check_img_function($_FILES['goods_img']['type'])) {
                             // 如果设置大小不为0，缩放图片
-                            if ($_CFG['image_width'] != 0 || $_CFG['image_height'] != 0) {
+                            if ($GLOBALS['_CFG']['image_width'] != 0 || $GLOBALS['_CFG']['image_height'] != 0) {
                                 $goods_img = $image->make_thumb('../' . $goods_img, $GLOBALS['_CFG']['image_width'], $GLOBALS['_CFG']['image_height']);
                                 if ($goods_img === false) {
                                     sys_msg($image->error_msg(), 1, array(), false);
@@ -900,7 +900,7 @@ class Index extends Init
                             $gallery_img = $newname;
 
                             // 加水印
-                            if (intval($_CFG['watermark_place']) > 0 && !empty($GLOBALS['_CFG']['watermark'])) {
+                            if (intval($GLOBALS['_CFG']['watermark_place']) > 0 && !empty($GLOBALS['_CFG']['watermark'])) {
                                 if ($image->add_watermark('../' . $goods_img, '', $GLOBALS['_CFG']['watermark'], $GLOBALS['_CFG']['watermark_place'], $GLOBALS['_CFG']['watermark_alpha']) === false) {
                                     sys_msg($image->error_msg(), 1, array(), false);
                                 }
@@ -911,7 +911,7 @@ class Index extends Init
                             }
 
                             // 相册缩略图
-                            if ($_CFG['thumb_width'] != 0 || $_CFG['thumb_height'] != 0) {
+                            if ($GLOBALS['_CFG']['thumb_width'] != 0 || $GLOBALS['_CFG']['thumb_height'] != 0) {
                                 $gallery_thumb = $image->make_thumb('../' . $img, $GLOBALS['_CFG']['thumb_width'], $GLOBALS['_CFG']['thumb_height']);
                                 if ($gallery_thumb === false) {
                                     sys_msg($image->error_msg(), 1, array(), false);
@@ -930,7 +930,7 @@ class Index extends Init
                     // 未上传，如果自动选择生成，且上传了商品图片，生成所略图
                     if (!empty($original_img)) {
                         // 如果设置缩略图大小不为0，生成缩略图
-                        if ($_CFG['thumb_width'] != 0 || $_CFG['thumb_height'] != 0) {
+                        if ($GLOBALS['_CFG']['thumb_width'] != 0 || $GLOBALS['_CFG']['thumb_height'] != 0) {
                             $goods_thumb = $image->make_thumb('../' . $original_img, $GLOBALS['_CFG']['thumb_width'], $GLOBALS['_CFG']['thumb_height']);
                             if ($goods_thumb === false) {
                                 sys_msg($image->error_msg(), 1, array(), false);
@@ -941,25 +941,25 @@ class Index extends Init
                     }
 
 
-                    $sql = 'INSERT INTO ' . $ecs->table('goods') . "(goods_name, goods_sn, goods_number, cat_id, brand_id, goods_brief, shop_price, market_price, goods_img, goods_thumb, original_img,add_time, last_update,
+                    $sql = 'INSERT INTO ' . $GLOBALS['ecs']->table('goods') . "(goods_name, goods_sn, goods_number, cat_id, brand_id, goods_brief, shop_price, market_price, goods_img, goods_thumb, original_img,add_time, last_update,
                    is_best, is_new, is_hot)" .
                         "VALUES('$good_name', '$goods_sn', '$good_number', '$cat_id', '$brand_id', '$good_brief', '$good_price'," .
                         " '$market_price', '$goods_img', '$goods_thumb', '$original_img','" . gmtime() . "', '" . gmtime() . "', '$is_best', '$is_new', '$is_hot')";
 
-                    $db->query($sql);
-                    $good_id = $db->insert_id();
+                    $GLOBALS['db']->query($sql);
+                    $good_id = $GLOBALS['db']->insert_id();
                     /* 如果有图片，把商品图片加入图片相册 */
                     if (isset($img)) {
-                        $sql = "INSERT INTO " . $ecs->table('goods_gallery') . " (goods_id, img_url, img_desc, thumb_url, img_original) " .
+                        $sql = "INSERT INTO " . $GLOBALS['ecs']->table('goods_gallery') . " (goods_id, img_url, img_desc, thumb_url, img_original) " .
                             "VALUES ('$good_id', '$gallery_img', '', '$gallery_thumb', '$img')";
-                        $db->query($sql);
+                        $GLOBALS['db']->query($sql);
                     }
                 }
             }
 
             assign_query_info();
-            //    $smarty->assign('ur_here', '开店向导－添加商品');
-            $smarty->display('setting_third.htm');
+            //    $GLOBALS['smarty']->assign('ur_here', '开店向导－添加商品');
+            $GLOBALS['smarty']->display('setting_third.htm');
         }
 
         /*------------------------------------------------------ */
@@ -968,7 +968,7 @@ class Index extends Init
 
         elseif ($_REQUEST['act'] == 'about_us') {
             assign_query_info();
-            $smarty->display('about_us.htm');
+            $GLOBALS['smarty']->display('about_us.htm');
         }
 
         /*------------------------------------------------------ */
@@ -976,7 +976,7 @@ class Index extends Init
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'drag') {
-            $smarty->display('drag.htm');
+            $GLOBALS['smarty']->display('drag.htm');
         }
 
         /*------------------------------------------------------ */
@@ -990,19 +990,19 @@ class Index extends Init
             }
 
             /* 新订单 */
-            $sql = 'SELECT COUNT(*) FROM ' . $ecs->table('order_info') .
+            $sql = 'SELECT COUNT(*) FROM ' . $GLOBALS['ecs']->table('order_info') .
                 " WHERE add_time >= '$_SESSION[last_check]'";
-            $arr['new_orders'] = $db->getOne($sql);
+            $arr['new_orders'] = $GLOBALS['db']->getOne($sql);
 
             /* 新付款的订单 */
-            $sql = 'SELECT COUNT(*) FROM ' . $ecs->table('order_info') .
+            $sql = 'SELECT COUNT(*) FROM ' . $GLOBALS['ecs']->table('order_info') .
                 ' WHERE pay_time >= ' . $_SESSION['last_check'];
-            $arr['new_paid'] = $db->getOne($sql);
+            $arr['new_paid'] = $GLOBALS['db']->getOne($sql);
 
             $_SESSION['last_check'] = gmtime();
 
             if (!(is_numeric($arr['new_orders']) && is_numeric($arr['new_paid']))) {
-                make_json_error($db->error());
+                make_json_error($GLOBALS['db']->error());
             } else {
                 make_json_result('', '', $arr);
             }
@@ -1021,29 +1021,29 @@ class Index extends Init
             echo $content;
         } // 邮件群发处理
         elseif ($_REQUEST['act'] == 'send_mail') {
-            if ($_CFG['send_mail_on'] == 'off') {
-                make_json_result('', $_LANG['send_mail_off'], 0);
+            if ($GLOBALS['_CFG']['send_mail_on'] == 'off') {
+                make_json_result('', $GLOBALS['_LANG']['send_mail_off'], 0);
                 exit();
             }
-            $sql = "SELECT * FROM " . $ecs->table('email_sendlist') . " ORDER BY pri DESC, last_send ASC LIMIT 1";
-            $row = $db->getRow($sql);
+            $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('email_sendlist') . " ORDER BY pri DESC, last_send ASC LIMIT 1";
+            $row = $GLOBALS['db']->getRow($sql);
 
             //发送列表为空
             if (empty($row['id'])) {
-                make_json_result('', $_LANG['mailsend_null'], 0);
+                make_json_result('', $GLOBALS['_LANG']['mailsend_null'], 0);
             }
 
             //发送列表不为空，邮件地址为空
             if (!empty($row['id']) && empty($row['email'])) {
-                $sql = "DELETE FROM " . $ecs->table('email_sendlist') . " WHERE id = '$row[id]'";
-                $db->query($sql);
-                $count = $db->getOne("SELECT COUNT(*) FROM " . $ecs->table('email_sendlist'));
-                make_json_result('', $_LANG['mailsend_skip'], array('count' => $count, 'goon' => 1));
+                $sql = "DELETE FROM " . $GLOBALS['ecs']->table('email_sendlist') . " WHERE id = '$row[id]'";
+                $GLOBALS['db']->query($sql);
+                $count = $GLOBALS['db']->getOne("SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('email_sendlist'));
+                make_json_result('', $GLOBALS['_LANG']['mailsend_skip'], array('count' => $count, 'goon' => 1));
             }
 
             //查询相关模板
-            $sql = "SELECT * FROM " . $ecs->table('mail_templates') . " WHERE template_id = '$row[template_id]'";
-            $rt = $db->getRow($sql);
+            $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('mail_templates') . " WHERE template_id = '$row[template_id]'";
+            $rt = $GLOBALS['db']->getRow($sql);
 
             //如果是模板，则将已存入email_sendlist的内容作为邮件内容
             //否则即是杂质，将mail_templates调出的内容作为邮件内容
@@ -1056,16 +1056,16 @@ class Index extends Init
                     //发送成功
 
                     //从列表中删除
-                    $sql = "DELETE FROM " . $ecs->table('email_sendlist') . " WHERE id = '$row[id]'";
-                    $db->query($sql);
+                    $sql = "DELETE FROM " . $GLOBALS['ecs']->table('email_sendlist') . " WHERE id = '$row[id]'";
+                    $GLOBALS['db']->query($sql);
 
                     //剩余列表数
-                    $count = $db->getOne("SELECT COUNT(*) FROM " . $ecs->table('email_sendlist'));
+                    $count = $GLOBALS['db']->getOne("SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('email_sendlist'));
 
                     if ($count > 0) {
-                        $msg = sprintf($_LANG['mailsend_ok'], $row['email'], $count);
+                        $msg = sprintf($GLOBALS['_LANG']['mailsend_ok'], $row['email'], $count);
                     } else {
-                        $msg = sprintf($_LANG['mailsend_finished'], $row['email']);
+                        $msg = sprintf($GLOBALS['_LANG']['mailsend_finished'], $row['email']);
                     }
                     make_json_result('', $msg, array('count' => $count));
                 } else {
@@ -1073,22 +1073,22 @@ class Index extends Init
 
                     if ($row['error'] < 3) {
                         $time = time();
-                        $sql = "UPDATE " . $ecs->table('email_sendlist') . " SET error = error + 1, pri = 0, last_send = '$time' WHERE id = '$row[id]'";
+                        $sql = "UPDATE " . $GLOBALS['ecs']->table('email_sendlist') . " SET error = error + 1, pri = 0, last_send = '$time' WHERE id = '$row[id]'";
                     } else {
                         //将出错超次的纪录删除
-                        $sql = "DELETE FROM " . $ecs->table('email_sendlist') . " WHERE id = '$row[id]'";
+                        $sql = "DELETE FROM " . $GLOBALS['ecs']->table('email_sendlist') . " WHERE id = '$row[id]'";
                     }
-                    $db->query($sql);
+                    $GLOBALS['db']->query($sql);
 
-                    $count = $db->getOne("SELECT COUNT(*) FROM " . $ecs->table('email_sendlist'));
-                    make_json_result('', sprintf($_LANG['mailsend_fail'], $row['email']), array('count' => $count));
+                    $count = $GLOBALS['db']->getOne("SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('email_sendlist'));
+                    make_json_result('', sprintf($GLOBALS['_LANG']['mailsend_fail'], $row['email']), array('count' => $count));
                 }
             } else {
                 //无效的邮件队列
-                $sql = "DELETE FROM " . $ecs->table('email_sendlist') . " WHERE id = '$row[id]'";
-                $db->query($sql);
-                $count = $db->getOne("SELECT COUNT(*) FROM " . $ecs->table('email_sendlist'));
-                make_json_result('', sprintf($_LANG['mailsend_fail'], $row['email']), array('count' => $count));
+                $sql = "DELETE FROM " . $GLOBALS['ecs']->table('email_sendlist') . " WHERE id = '$row[id]'";
+                $GLOBALS['db']->query($sql);
+                $count = $GLOBALS['db']->getOne("SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('email_sendlist'));
+                make_json_result('', sprintf($GLOBALS['_LANG']['mailsend_fail'], $row['email']), array('count' => $count));
             }
         }
 

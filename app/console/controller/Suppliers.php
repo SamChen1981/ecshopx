@@ -21,20 +21,20 @@ class Suppliers extends Init
             $result = $this->suppliers_list();
 
             /* 模板赋值 */
-            $smarty->assign('ur_here', $_LANG['suppliers_list']); // 当前导航
-            $smarty->assign('action_link', array('href' => 'suppliers.php?act=add', 'text' => $_LANG['add_suppliers']));
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['suppliers_list']); // 当前导航
+            $GLOBALS['smarty']->assign('action_link', array('href' => 'suppliers.php?act=add', 'text' => $GLOBALS['_LANG']['add_suppliers']));
 
-            $smarty->assign('full_page', 1); // 翻页参数
+            $GLOBALS['smarty']->assign('full_page', 1); // 翻页参数
 
-            $smarty->assign('suppliers_list', $result['result']);
-            $smarty->assign('filter', $result['filter']);
-            $smarty->assign('record_count', $result['record_count']);
-            $smarty->assign('page_count', $result['page_count']);
-            $smarty->assign('sort_suppliers_id', '<img src="images/sort_desc.png">');
+            $GLOBALS['smarty']->assign('suppliers_list', $result['result']);
+            $GLOBALS['smarty']->assign('filter', $result['filter']);
+            $GLOBALS['smarty']->assign('record_count', $result['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $result['page_count']);
+            $GLOBALS['smarty']->assign('sort_suppliers_id', '<img src="images/sort_desc.png">');
 
             /* 显示模板 */
             assign_query_info();
-            $smarty->display('suppliers_list.htm');
+            $GLOBALS['smarty']->display('suppliers_list.htm');
         }
 
         /*------------------------------------------------------ */
@@ -45,17 +45,17 @@ class Suppliers extends Init
 
             $result = $this->suppliers_list();
 
-            $smarty->assign('suppliers_list', $result['result']);
-            $smarty->assign('filter', $result['filter']);
-            $smarty->assign('record_count', $result['record_count']);
-            $smarty->assign('page_count', $result['page_count']);
+            $GLOBALS['smarty']->assign('suppliers_list', $result['result']);
+            $GLOBALS['smarty']->assign('filter', $result['filter']);
+            $GLOBALS['smarty']->assign('record_count', $result['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $result['page_count']);
 
             /* 排序标记 */
             $sort_flag = sort_flag($result['filter']);
-            $smarty->assign($sort_flag['tag'], $sort_flag['img']);
+            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
             make_json_result(
-                $smarty->fetch('suppliers_list.htm'),
+                $GLOBALS['smarty']->fetch('suppliers_list.htm'),
                 '',
                 array('filter' => $result['filter'], 'page_count' => $result['page_count'])
             );
@@ -72,17 +72,17 @@ class Suppliers extends Init
 
             /* 判断名称是否重复 */
             $sql = "SELECT suppliers_id
-            FROM " . $ecs->table('suppliers') . "
+            FROM " . $GLOBALS['ecs']->table('suppliers') . "
             WHERE suppliers_name = '$name'
             AND suppliers_id <> '$id' ";
-            if ($db->getOne($sql)) {
-                make_json_error(sprintf($_LANG['suppliers_name_exist'], $name));
+            if ($GLOBALS['db']->getOne($sql)) {
+                make_json_error(sprintf($GLOBALS['_LANG']['suppliers_name_exist'], $name));
             } else {
                 /* 保存供货商信息 */
-                $sql = "UPDATE " . $ecs->table('suppliers') . "
+                $sql = "UPDATE " . $GLOBALS['ecs']->table('suppliers') . "
                 SET suppliers_name = '$name'
                 WHERE suppliers_id = '$id'";
-                if ($result = $db->query($sql)) {
+                if ($result = $GLOBALS['db']->query($sql)) {
                     /* 记日志 */
                     admin_log($name, 'edit', 'suppliers');
 
@@ -90,7 +90,7 @@ class Suppliers extends Init
 
                     make_json_result(stripslashes($name));
                 } else {
-                    make_json_result(sprintf($_LANG['agency_edit_fail'], $name));
+                    make_json_result(sprintf($GLOBALS['_LANG']['agency_edit_fail'], $name));
                 }
             }
         }
@@ -103,18 +103,18 @@ class Suppliers extends Init
 
             $id = intval($_REQUEST['id']);
             $sql = "SELECT *
-            FROM " . $ecs->table('suppliers') . "
+            FROM " . $GLOBALS['ecs']->table('suppliers') . "
             WHERE suppliers_id = '$id'";
-            $suppliers = $db->getRow($sql, true);
+            $suppliers = $GLOBALS['db']->getRow($sql, true);
 
             if ($suppliers['suppliers_id']) {
                 /* 判断供货商是否存在订单 */
                 $sql = "SELECT COUNT(*)
-                FROM " . $ecs->table('order_info') . "AS O, " . $ecs->table('order_goods') . " AS OG, " . $ecs->table('goods') . " AS G
+                FROM " . $GLOBALS['ecs']->table('order_info') . "AS O, " . $GLOBALS['ecs']->table('order_goods') . " AS OG, " . $GLOBALS['ecs']->table('goods') . " AS G
                 WHERE O.order_id = OG.order_id
                 AND OG.goods_id = G.goods_id
                 AND G.suppliers_id = '$id'";
-                $order_exists = $db->getOne($sql, true);
+                $order_exists = $GLOBALS['db']->getOne($sql, true);
                 if ($order_exists > 0) {
                     $url = 'suppliers.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
                     ecs_header("Location: $url\n");
@@ -123,24 +123,24 @@ class Suppliers extends Init
 
                 /* 判断供货商是否存在商品 */
                 $sql = "SELECT COUNT(*)
-                FROM " . $ecs->table('goods') . "AS G
+                FROM " . $GLOBALS['ecs']->table('goods') . "AS G
                 WHERE G.suppliers_id = '$id'";
-                $goods_exists = $db->getOne($sql, true);
+                $goods_exists = $GLOBALS['db']->getOne($sql, true);
                 if ($goods_exists > 0) {
                     $url = 'suppliers.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
                     ecs_header("Location: $url\n");
                     exit;
                 }
 
-                $sql = "DELETE FROM " . $ecs->table('suppliers') . "
+                $sql = "DELETE FROM " . $GLOBALS['ecs']->table('suppliers') . "
             WHERE suppliers_id = '$id'";
-                $db->query($sql);
+                $GLOBALS['db']->query($sql);
 
                 /* 删除管理员、发货单关联、退货单关联和订单关联的供货商 */
                 $table_array = array('admin_user', 'delivery_order', 'back_order');
                 foreach ($table_array as $value) {
-                    $sql = "DELETE FROM " . $ecs->table($value) . " WHERE suppliers_id = '$id'";
-                    $db->query($sql, 'SILENT');
+                    $sql = "DELETE FROM " . $GLOBALS['ecs']->table($value) . " WHERE suppliers_id = '$id'";
+                    $GLOBALS['db']->query($sql, 'SILENT');
                 }
 
                 /* 记日志 */
@@ -164,13 +164,13 @@ class Suppliers extends Init
 
             $id = intval($_REQUEST['id']);
             $sql = "SELECT suppliers_id, is_check
-            FROM " . $ecs->table('suppliers') . "
+            FROM " . $GLOBALS['ecs']->table('suppliers') . "
             WHERE suppliers_id = '$id'";
-            $suppliers = $db->getRow($sql, true);
+            $suppliers = $GLOBALS['db']->getRow($sql, true);
 
             if ($suppliers['suppliers_id']) {
                 $_suppliers['is_check'] = empty($suppliers['is_check']) ? 1 : 0;
-                $db->autoExecute($ecs->table('suppliers'), $_suppliers, '', "suppliers_id = '$id'");
+                $GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('suppliers'), $_suppliers, '', "suppliers_id = '$id'");
                 clear_cache_files();
                 make_json_result($_suppliers['is_check']);
             }
@@ -184,7 +184,7 @@ class Suppliers extends Init
         elseif ($_REQUEST['act'] == 'batch') {
             /* 取得要操作的记录编号 */
             if (empty($_POST['checkboxes'])) {
-                sys_msg($_LANG['no_record_selected']);
+                sys_msg($GLOBALS['_LANG']['no_record_selected']);
             } else {
                 /* 检查权限 */
                 admin_priv('suppliers_manage');
@@ -193,45 +193,45 @@ class Suppliers extends Init
 
                 if (isset($_POST['remove'])) {
                     $sql = "SELECT *
-                    FROM " . $ecs->table('suppliers') . "
+                    FROM " . $GLOBALS['ecs']->table('suppliers') . "
                     WHERE suppliers_id " . db_create_in($ids);
-                    $suppliers = $db->getAll($sql);
+                    $suppliers = $GLOBALS['db']->getAll($sql);
 
                     foreach ($suppliers as $key => $value) {
                         /* 判断供货商是否存在订单 */
                         $sql = "SELECT COUNT(*)
-                        FROM " . $ecs->table('order_info') . "AS O, " . $ecs->table('order_goods') . " AS OG, " . $ecs->table('goods') . " AS G
+                        FROM " . $GLOBALS['ecs']->table('order_info') . "AS O, " . $GLOBALS['ecs']->table('order_goods') . " AS OG, " . $GLOBALS['ecs']->table('goods') . " AS G
                         WHERE O.order_id = OG.order_id
                         AND OG.goods_id = G.goods_id
                         AND G.suppliers_id = '" . $value['suppliers_id'] . "'";
-                        $order_exists = $db->getOne($sql, true);
+                        $order_exists = $GLOBALS['db']->getOne($sql, true);
                         if ($order_exists > 0) {
                             unset($suppliers[$key]);
                         }
 
                         /* 判断供货商是否存在商品 */
                         $sql = "SELECT COUNT(*)
-                        FROM " . $ecs->table('goods') . "AS G
+                        FROM " . $GLOBALS['ecs']->table('goods') . "AS G
                         WHERE G.suppliers_id = '" . $value['suppliers_id'] . "'";
-                        $goods_exists = $db->getOne($sql, true);
+                        $goods_exists = $GLOBALS['db']->getOne($sql, true);
                         if ($goods_exists > 0) {
                             unset($suppliers[$key]);
                         }
                     }
                     if (empty($suppliers)) {
-                        sys_msg($_LANG['batch_drop_no']);
+                        sys_msg($GLOBALS['_LANG']['batch_drop_no']);
                     }
 
 
-                    $sql = "DELETE FROM " . $ecs->table('suppliers') . "
+                    $sql = "DELETE FROM " . $GLOBALS['ecs']->table('suppliers') . "
                 WHERE suppliers_id " . db_create_in($ids);
-                    $db->query($sql);
+                    $GLOBALS['db']->query($sql);
 
                     /* 更新管理员、发货单关联、退货单关联和订单关联的供货商 */
                     $table_array = array('admin_user', 'delivery_order', 'back_order');
                     foreach ($table_array as $value) {
-                        $sql = "DELETE FROM " . $ecs->table($value) . " WHERE suppliers_id " . db_create_in($ids) . " ";
-                        $db->query($sql, 'SILENT');
+                        $sql = "DELETE FROM " . $GLOBALS['ecs']->table($value) . " WHERE suppliers_id " . db_create_in($ids) . " ";
+                        $GLOBALS['db']->query($sql, 'SILENT');
                     }
 
                     /* 记日志 */
@@ -244,7 +244,7 @@ class Suppliers extends Init
                     /* 清除缓存 */
                     clear_cache_files();
 
-                    sys_msg($_LANG['batch_drop_ok']);
+                    sys_msg($GLOBALS['_LANG']['batch_drop_ok']);
                 }
             }
         }
@@ -265,27 +265,27 @@ class Suppliers extends Init
                 $sql = "SELECT user_id, user_name, CASE
                 WHEN suppliers_id = 0 THEN 'free'
                 ELSE 'other' END AS type
-                FROM " . $ecs->table('admin_user') . "
+                FROM " . $GLOBALS['ecs']->table('admin_user') . "
                 WHERE agency_id = 0
                 AND action_list <> 'all'";
-                $suppliers['admin_list'] = $db->getAll($sql);
+                $suppliers['admin_list'] = $GLOBALS['db']->getAll($sql);
 
-                $smarty->assign('ur_here', $_LANG['add_suppliers']);
-                $smarty->assign('action_link', array('href' => 'suppliers.php?act=list', 'text' => $_LANG['suppliers_list']));
+                $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['add_suppliers']);
+                $GLOBALS['smarty']->assign('action_link', array('href' => 'suppliers.php?act=list', 'text' => $GLOBALS['_LANG']['suppliers_list']));
 
-                $smarty->assign('form_action', 'insert');
-                $smarty->assign('suppliers', $suppliers);
+                $GLOBALS['smarty']->assign('form_action', 'insert');
+                $GLOBALS['smarty']->assign('suppliers', $suppliers);
 
                 assign_query_info();
 
-                $smarty->display('suppliers_info.htm');
+                $GLOBALS['smarty']->display('suppliers_info.htm');
             } elseif ($_REQUEST['act'] == 'edit') {
                 $suppliers = array();
 
                 /* 取得供货商信息 */
                 $id = $_REQUEST['id'];
-                $sql = "SELECT * FROM " . $ecs->table('suppliers') . " WHERE suppliers_id = '$id'";
-                $suppliers = $db->getRow($sql);
+                $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('suppliers') . " WHERE suppliers_id = '$id'";
+                $suppliers = $GLOBALS['db']->getRow($sql);
                 if (count($suppliers) <= 0) {
                     sys_msg('suppliers does not exist');
                 }
@@ -297,20 +297,20 @@ class Suppliers extends Init
                 WHEN suppliers_id = '$id' THEN 'this'
                 WHEN suppliers_id = 0 THEN 'free'
                 ELSE 'other' END AS type
-                FROM " . $ecs->table('admin_user') . "
+                FROM " . $GLOBALS['ecs']->table('admin_user') . "
                 WHERE agency_id = 0
                 AND action_list <> 'all'";
-                $suppliers['admin_list'] = $db->getAll($sql);
+                $suppliers['admin_list'] = $GLOBALS['db']->getAll($sql);
 
-                $smarty->assign('ur_here', $_LANG['edit_suppliers']);
-                $smarty->assign('action_link', array('href' => 'suppliers.php?act=list', 'text' => $_LANG['suppliers_list']));
+                $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['edit_suppliers']);
+                $GLOBALS['smarty']->assign('action_link', array('href' => 'suppliers.php?act=list', 'text' => $GLOBALS['_LANG']['suppliers_list']));
 
-                $smarty->assign('form_action', 'update');
-                $smarty->assign('suppliers', $suppliers);
+                $GLOBALS['smarty']->assign('form_action', 'update');
+                $GLOBALS['smarty']->assign('suppliers', $suppliers);
 
                 assign_query_info();
 
-                $smarty->display('suppliers_info.htm');
+                $GLOBALS['smarty']->display('suppliers_info.htm');
             }
         }
 
@@ -330,18 +330,18 @@ class Suppliers extends Init
 
                 /* 判断名称是否重复 */
                 $sql = "SELECT suppliers_id
-                FROM " . $ecs->table('suppliers') . "
+                FROM " . $GLOBALS['ecs']->table('suppliers') . "
                 WHERE suppliers_name = '" . $suppliers['suppliers_name'] . "' ";
-                if ($db->getOne($sql)) {
-                    sys_msg($_LANG['suppliers_name_exist']);
+                if ($GLOBALS['db']->getOne($sql)) {
+                    sys_msg($GLOBALS['_LANG']['suppliers_name_exist']);
                 }
 
-                $db->autoExecute($ecs->table('suppliers'), $suppliers, 'INSERT');
-                $suppliers['suppliers_id'] = $db->insert_id();
+                $GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('suppliers'), $suppliers, 'INSERT');
+                $suppliers['suppliers_id'] = $GLOBALS['db']->insert_id();
 
                 if (isset($_POST['admins'])) {
-                    $sql = "UPDATE " . $ecs->table('admin_user') . " SET suppliers_id = '" . $suppliers['suppliers_id'] . "', action_list = '" . SUPPLIERS_ACTION_LIST . "' WHERE user_id " . db_create_in($_POST['admins']);
-                    $db->query($sql);
+                    $sql = "UPDATE " . $GLOBALS['ecs']->table('admin_user') . " SET suppliers_id = '" . $suppliers['suppliers_id'] . "', action_list = '" . SUPPLIERS_ACTION_LIST . "' WHERE user_id " . db_create_in($_POST['admins']);
+                    $GLOBALS['db']->query($sql);
                 }
 
                 /* 记日志 */
@@ -351,10 +351,10 @@ class Suppliers extends Init
                 clear_cache_files();
 
                 /* 提示信息 */
-                $links = array(array('href' => 'suppliers.php?act=add', 'text' => $_LANG['continue_add_suppliers']),
-                    array('href' => 'suppliers.php?act=list', 'text' => $_LANG['back_suppliers_list'])
+                $links = array(array('href' => 'suppliers.php?act=add', 'text' => $GLOBALS['_LANG']['continue_add_suppliers']),
+                    array('href' => 'suppliers.php?act=list', 'text' => $GLOBALS['_LANG']['back_suppliers_list'])
                 );
-                sys_msg($_LANG['add_suppliers_ok'], 0, $links);
+                sys_msg($GLOBALS['_LANG']['add_suppliers_ok'], 0, $links);
             }
 
             if ($_REQUEST['act'] == 'update') {
@@ -366,32 +366,32 @@ class Suppliers extends Init
                 );
 
                 /* 取得供货商信息 */
-                $sql = "SELECT * FROM " . $ecs->table('suppliers') . " WHERE suppliers_id = '" . $suppliers['id'] . "'";
-                $suppliers['old'] = $db->getRow($sql);
+                $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('suppliers') . " WHERE suppliers_id = '" . $suppliers['id'] . "'";
+                $suppliers['old'] = $GLOBALS['db']->getRow($sql);
                 if (empty($suppliers['old']['suppliers_id'])) {
                     sys_msg('suppliers does not exist');
                 }
 
                 /* 判断名称是否重复 */
                 $sql = "SELECT suppliers_id
-                FROM " . $ecs->table('suppliers') . "
+                FROM " . $GLOBALS['ecs']->table('suppliers') . "
                 WHERE suppliers_name = '" . $suppliers['new']['suppliers_name'] . "'
                 AND suppliers_id <> '" . $suppliers['id'] . "'";
-                if ($db->getOne($sql)) {
-                    sys_msg($_LANG['suppliers_name_exist']);
+                if ($GLOBALS['db']->getOne($sql)) {
+                    sys_msg($GLOBALS['_LANG']['suppliers_name_exist']);
                 }
 
                 /* 保存供货商信息 */
-                $db->autoExecute($ecs->table('suppliers'), $suppliers['new'], 'UPDATE', "suppliers_id = '" . $suppliers['id'] . "'");
+                $GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('suppliers'), $suppliers['new'], 'UPDATE', "suppliers_id = '" . $suppliers['id'] . "'");
 
                 /* 清空供货商的管理员 */
-                $sql = "UPDATE " . $ecs->table('admin_user') . " SET suppliers_id = 0, action_list = '" . SUPPLIERS_ACTION_LIST . "' WHERE suppliers_id = '" . $suppliers['id'] . "'";
-                $db->query($sql);
+                $sql = "UPDATE " . $GLOBALS['ecs']->table('admin_user') . " SET suppliers_id = 0, action_list = '" . SUPPLIERS_ACTION_LIST . "' WHERE suppliers_id = '" . $suppliers['id'] . "'";
+                $GLOBALS['db']->query($sql);
 
                 /* 添加供货商的管理员 */
                 if (isset($_POST['admins'])) {
-                    $sql = "UPDATE " . $ecs->table('admin_user') . " SET suppliers_id = '" . $suppliers['old']['suppliers_id'] . "' WHERE user_id " . db_create_in($_POST['admins']);
-                    $db->query($sql);
+                    $sql = "UPDATE " . $GLOBALS['ecs']->table('admin_user') . " SET suppliers_id = '" . $suppliers['old']['suppliers_id'] . "' WHERE user_id " . db_create_in($_POST['admins']);
+                    $GLOBALS['db']->query($sql);
                 }
 
                 /* 记日志 */
@@ -401,8 +401,8 @@ class Suppliers extends Init
                 clear_cache_files();
 
                 /* 提示信息 */
-                $links[] = array('href' => 'suppliers.php?act=list', 'text' => $_LANG['back_suppliers_list']);
-                sys_msg($_LANG['edit_suppliers_ok'], 0, $links);
+                $links[] = array('href' => 'suppliers.php?act=list', 'text' => $GLOBALS['_LANG']['back_suppliers_list']);
+                sys_msg($GLOBALS['_LANG']['edit_suppliers_ok'], 0, $links);
             }
         }
     }

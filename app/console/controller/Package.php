@@ -9,7 +9,7 @@ class Package extends Init
 {
     public function index()
     {
-        $exc = new exchange($ecs->table("goods_activity"), $db, 'act_id', 'act_name');
+        $exc = new Exchange($GLOBALS['ecs']->table("goods_activity"), $db, 'act_id', 'act_name');
 
         /*------------------------------------------------------ */
         //-- 添加活动
@@ -20,34 +20,34 @@ class Package extends Init
 
             /* 组合商品 */
             $group_goods_list = array();
-            $sql = "DELETE FROM " . $ecs->table('package_goods') .
+            $sql = "DELETE FROM " . $GLOBALS['ecs']->table('package_goods') .
                 " WHERE package_id = 0 AND admin_id = '$_SESSION[admin_id]'";
 
-            $db->query($sql);
+            $GLOBALS['db']->query($sql);
 
             /* 初始化信息 */
             $start_time = local_date('Y-m-d H:i');
             $end_time = local_date('Y-m-d H:i', strtotime('+1 month'));
             $package = array('package_price' => '', 'start_time' => $start_time, 'end_time' => $end_time);
 
-            $smarty->assign('package', $package);
-            $smarty->assign('ur_here', $_LANG['package_add']);
-            $smarty->assign('action_link', array('text' => $_LANG['14_package_list'], 'href' => 'package.php?act=list'));
-            $smarty->assign('cat_list', cat_list());
-            $smarty->assign('brand_list', get_brand_list());
-            $smarty->assign('form_action', 'insert');
+            $GLOBALS['smarty']->assign('package', $package);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['package_add']);
+            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['14_package_list'], 'href' => 'package.php?act=list'));
+            $GLOBALS['smarty']->assign('cat_list', cat_list());
+            $GLOBALS['smarty']->assign('brand_list', get_brand_list());
+            $GLOBALS['smarty']->assign('form_action', 'insert');
 
             assign_query_info();
-            $smarty->display('package_info.htm');
+            $GLOBALS['smarty']->display('package_info.htm');
         } elseif ($_REQUEST['act'] == 'insert') {
             /* 权限判断 */
             admin_priv('package_manage');
 
             $sql = "SELECT COUNT(*) " .
-                " FROM " . $ecs->table('goods_activity') .
+                " FROM " . $GLOBALS['ecs']->table('goods_activity') .
                 " WHERE act_type='" . GAT_PACKAGE . "' AND act_name='" . $_POST['package_name'] . "'";
-            if ($db->getOne($sql)) {
-                sys_msg(sprintf($_LANG['package_exist'], $_POST['package_name']), 1);
+            if ($GLOBALS['db']->getOne($sql)) {
+                sys_msg(sprintf($GLOBALS['_LANG']['package_exist'], $_POST['package_name']), 1);
             }
 
 
@@ -67,17 +67,17 @@ class Package extends Init
                 'act_type' => GAT_PACKAGE, 'start_time' => $_POST['start_time'],
                 'end_time' => $_POST['end_time'], 'is_finished' => 0, 'ext_info' => serialize($info));
 
-            $db->AutoExecute($ecs->table('goods_activity'), $record, 'INSERT');
+            $GLOBALS['db']->AutoExecute($GLOBALS['ecs']->table('goods_activity'), $record, 'INSERT');
 
             /* 礼包编号 */
-            $package_id = $db->insert_id();
+            $package_id = $GLOBALS['db']->insert_id();
 
             $this->handle_packagep_goods($package_id);
 
             admin_log($_POST['package_name'], 'add', 'package');
-            $link[] = array('text' => $_LANG['back_list'], 'href' => 'package.php?act=list');
-            $link[] = array('text' => $_LANG['continue_add'], 'href' => 'package.php?act=add');
-            sys_msg($_LANG['add_succeed'], 0, $link);
+            $link[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'package.php?act=list');
+            $link[] = array('text' => $GLOBALS['_LANG']['continue_add'], 'href' => 'package.php?act=add');
+            sys_msg($GLOBALS['_LANG']['add_succeed'], 0, $link);
         }
 
         /*------------------------------------------------------ */
@@ -90,16 +90,16 @@ class Package extends Init
             $package = get_package_info($_REQUEST['id']);
             $package_goods_list = get_package_goods($_REQUEST['id']); // 礼包商品
 
-            $smarty->assign('package', $package);
-            $smarty->assign('ur_here', $_LANG['package_edit']);
-            $smarty->assign('action_link', array('text' => $_LANG['14_package_list'], 'href' => 'package.php?act=list&' . list_link_postfix()));
-            $smarty->assign('cat_list', cat_list());
-            $smarty->assign('brand_list', get_brand_list());
-            $smarty->assign('form_action', 'update');
-            $smarty->assign('package_goods_list', $package_goods_list);
+            $GLOBALS['smarty']->assign('package', $package);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['package_edit']);
+            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['14_package_list'], 'href' => 'package.php?act=list&' . list_link_postfix()));
+            $GLOBALS['smarty']->assign('cat_list', cat_list());
+            $GLOBALS['smarty']->assign('brand_list', get_brand_list());
+            $GLOBALS['smarty']->assign('form_action', 'update');
+            $GLOBALS['smarty']->assign('package_goods_list', $package_goods_list);
 
             assign_query_info();
-            $smarty->display('package_info.htm');
+            $GLOBALS['smarty']->display('package_info.htm');
         } elseif ($_REQUEST['act'] == 'update') {
             /* 权限判断 */
             admin_priv('package_manage');
@@ -115,10 +115,10 @@ class Package extends Init
 
             /* 检查活动重名 */
             $sql = "SELECT COUNT(*) " .
-                " FROM " . $ecs->table('goods_activity') .
+                " FROM " . $GLOBALS['ecs']->table('goods_activity') .
                 " WHERE act_type='" . GAT_PACKAGE . "' AND act_name='" . $_POST['package_name'] . "' AND act_id <> '" . $_POST['id'] . "'";
-            if ($db->getOne($sql)) {
-                sys_msg(sprintf($_LANG['package_exist'], $_POST['package_name']), 1);
+            if ($GLOBALS['db']->getOne($sql)) {
+                sys_msg(sprintf($GLOBALS['_LANG']['package_exist'], $_POST['package_name']), 1);
             }
 
 
@@ -127,11 +127,11 @@ class Package extends Init
             /* 更新数据 */
             $record = array('act_name' => $_POST['package_name'], 'start_time' => $_POST['start_time'], 'end_time' => $_POST['end_time'],
                 'act_desc' => $_POST['desc'], 'ext_info' => serialize($info));
-            $db->autoExecute($ecs->table('goods_activity'), $record, 'UPDATE', "act_id = '" . $_POST['id'] . "' AND act_type = " . GAT_PACKAGE);
+            $GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('goods_activity'), $record, 'UPDATE', "act_id = '" . $_POST['id'] . "' AND act_type = " . GAT_PACKAGE);
 
             admin_log($_POST['package_name'], 'edit', 'package');
-            $link[] = array('text' => $_LANG['back_list'], 'href' => 'package.php?act=list&' . list_link_postfix());
-            sys_msg($_LANG['edit_succeed'], 0, $link);
+            $link[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'package.php?act=list&' . list_link_postfix());
+            sys_msg($GLOBALS['_LANG']['edit_succeed'], 0, $link);
         }
 
         /*------------------------------------------------------ */
@@ -145,9 +145,9 @@ class Package extends Init
 
             $exc->drop($id);
 
-            $sql = "DELETE FROM " . $ecs->table('package_goods') .
+            $sql = "DELETE FROM " . $GLOBALS['ecs']->table('package_goods') .
                 " WHERE package_id='$id'";
-            $db->query($sql);
+            $GLOBALS['db']->query($sql);
 
             $url = 'package.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
 
@@ -159,22 +159,22 @@ class Package extends Init
         //-- 活动列表
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'list') {
-            $smarty->assign('ur_here', $_LANG['14_package_list']);
-            $smarty->assign('action_link', array('text' => $_LANG['package_add'], 'href' => 'package.php?act=add'));
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['14_package_list']);
+            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['package_add'], 'href' => 'package.php?act=add'));
 
             $packages = $this->get_packagelist();
 
-            $smarty->assign('package_list', $packages['packages']);
-            $smarty->assign('filter', $packages['filter']);
-            $smarty->assign('record_count', $packages['record_count']);
-            $smarty->assign('page_count', $packages['page_count']);
+            $GLOBALS['smarty']->assign('package_list', $packages['packages']);
+            $GLOBALS['smarty']->assign('filter', $packages['filter']);
+            $GLOBALS['smarty']->assign('record_count', $packages['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $packages['page_count']);
 
             $sort_flag = sort_flag($packages['filter']);
-            $smarty->assign($sort_flag['tag'], $sort_flag['img']);
+            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
-            $smarty->assign('full_page', 1);
+            $GLOBALS['smarty']->assign('full_page', 1);
             assign_query_info();
-            $smarty->display('package_list.htm');
+            $GLOBALS['smarty']->display('package_list.htm');
         }
 
         /*------------------------------------------------------ */
@@ -184,16 +184,16 @@ class Package extends Init
         elseif ($_REQUEST['act'] == 'query') {
             $packages = $this->get_packagelist();
 
-            $smarty->assign('package_list', $packages['packages']);
-            $smarty->assign('filter', $packages['filter']);
-            $smarty->assign('record_count', $packages['record_count']);
-            $smarty->assign('page_count', $packages['page_count']);
+            $GLOBALS['smarty']->assign('package_list', $packages['packages']);
+            $GLOBALS['smarty']->assign('filter', $packages['filter']);
+            $GLOBALS['smarty']->assign('record_count', $packages['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $packages['page_count']);
 
             $sort_flag = sort_flag($packages['filter']);
-            $smarty->assign($sort_flag['tag'], $sort_flag['img']);
+            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
             make_json_result(
-                $smarty->fetch('package_list.htm'),
+                $GLOBALS['smarty']->fetch('package_list.htm'),
                 '',
                 array('filter' => $packages['filter'], 'page_count' => $packages['page_count'])
             );
@@ -211,10 +211,10 @@ class Package extends Init
 
             /* 检查活动重名 */
             $sql = "SELECT COUNT(*) " .
-                " FROM " . $ecs->table('goods_activity') .
+                " FROM " . $GLOBALS['ecs']->table('goods_activity') .
                 " WHERE act_type='" . GAT_PACKAGE . "' AND act_name='$val' AND act_id <> '$id'";
-            if ($db->getOne($sql)) {
-                make_json_error(sprintf($_LANG['package_exist'], $val));
+            if ($GLOBALS['db']->getOne($sql)) {
+                make_json_error(sprintf($GLOBALS['_LANG']['package_exist'], $val));
             }
 
             $exc->edit("act_name='$val'", $id);
@@ -284,9 +284,9 @@ class Package extends Init
                     $val_array[1] = 0;
                 }
 
-                $sql = "INSERT INTO " . $ecs->table('package_goods') . " (package_id, goods_id, product_id, goods_number, admin_id) " .
+                $sql = "INSERT INTO " . $GLOBALS['ecs']->table('package_goods') . " (package_id, goods_id, product_id, goods_number, admin_id) " .
                     "VALUES ('$package_id', '" . $val_array[0] . "', '" . $val_array[1] . "', '$number', '$_SESSION[admin_id]')";
-                $db->query($sql, 'SILENT');
+                $GLOBALS['db']->query($sql, 'SILENT');
             }
 
             $arr = get_package_goods($package_id);
@@ -326,21 +326,21 @@ class Package extends Init
             }
 
             if (!empty($goods)) {
-                $sql = "DELETE FROM " . $ecs->table('package_goods') .
+                $sql = "DELETE FROM " . $GLOBALS['ecs']->table('package_goods') .
                     " WHERE package_id='$package_id' AND " . db_create_in($goods, 'goods_id');
                 if ($package_id == 0) {
                     $sql .= " AND admin_id = '$_SESSION[admin_id]'";
                 }
-                $db->query($sql);
+                $GLOBALS['db']->query($sql);
             }
 
             if (!empty($g_p)) {
-                $sql = "DELETE FROM " . $ecs->table('package_goods') .
+                $sql = "DELETE FROM " . $GLOBALS['ecs']->table('package_goods') .
                     " WHERE package_id='$package_id' AND " . db_create_in($g_p['goods_id'], 'goods_id') . " AND " . db_create_in($g_p['product_id'], 'product_id');
                 if ($package_id == 0) {
                     $sql .= " AND admin_id = '$_SESSION[admin_id]'";
                 }
-                $db->query($sql);
+                $GLOBALS['db']->query($sql);
             }
 
             $arr = get_package_goods($package_id);

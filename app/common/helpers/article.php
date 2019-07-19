@@ -63,11 +63,10 @@ function get_cat_articles($cat_id, $page = 1, $size = 20, $requirement = '')
  */
 function get_article_count($cat_id, $requirement = '')
 {
-    global $db, $ecs;
     if ($requirement != '') {
-        $count = $db->getOne('SELECT COUNT(*) FROM ' . $ecs->table('article') . ' WHERE ' . get_article_children($cat_id) . ' AND  title like \'%' . $requirement . '%\'  AND is_open = 1');
+        $count = $GLOBALS['db']->getOne('SELECT COUNT(*) FROM ' . $GLOBALS['ecs']->table('article') . ' WHERE ' . get_article_children($cat_id) . ' AND  title like \'%' . $requirement . '%\'  AND is_open = 1');
     } else {
-        $count = $db->getOne("SELECT COUNT(*) FROM " . $ecs->table('article') . " WHERE " . get_article_children($cat_id) . " AND is_open = 1");
+        $count = $GLOBALS['db']->getOne("SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('article') . " WHERE " . get_article_children($cat_id) . " AND is_open = 1");
     }
     return $count;
 }

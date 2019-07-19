@@ -12,7 +12,7 @@ class Article extends Init
         require_once(ROOT_PATH . "includes/fckeditor/fckeditor.php");
 
         /*初始化数据交换对象 */
-        $exc = new exchange($ecs->table("article"), $db, 'article_id', 'title');
+        $exc = new Exchange($GLOBALS['ecs']->table("article"), $db, 'article_id', 'title');
         //$image = new Image();
 
         /* 允许上传的文件类型 */
@@ -24,24 +24,24 @@ class Article extends Init
         if ($_REQUEST['act'] == 'list') {
             /* 取得过滤条件 */
             $filter = array();
-            $smarty->assign('cat_select', article_cat_list(0));
-            $smarty->assign('ur_here', $_LANG['03_article_list']);
-            $smarty->assign('action_link', array('text' => $_LANG['article_add'], 'href' => 'article.php?act=add'));
-            $smarty->assign('full_page', 1);
-            $smarty->assign('filter', $filter);
+            $GLOBALS['smarty']->assign('cat_select', article_cat_list(0));
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['03_article_list']);
+            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['article_add'], 'href' => 'article.php?act=add'));
+            $GLOBALS['smarty']->assign('full_page', 1);
+            $GLOBALS['smarty']->assign('filter', $filter);
 
             $article_list = $this->get_articleslist();
 
-            $smarty->assign('article_list', $article_list['arr']);
-            $smarty->assign('filter', $article_list['filter']);
-            $smarty->assign('record_count', $article_list['record_count']);
-            $smarty->assign('page_count', $article_list['page_count']);
+            $GLOBALS['smarty']->assign('article_list', $article_list['arr']);
+            $GLOBALS['smarty']->assign('filter', $article_list['filter']);
+            $GLOBALS['smarty']->assign('record_count', $article_list['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $article_list['page_count']);
 
             $sort_flag = sort_flag($article_list['filter']);
-            $smarty->assign($sort_flag['tag'], $sort_flag['img']);
+            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
             assign_query_info();
-            $smarty->display('article_list.htm');
+            $GLOBALS['smarty']->display('article_list.htm');
         }
 
         /*------------------------------------------------------ */
@@ -52,16 +52,16 @@ class Article extends Init
 
             $article_list = $this->get_articleslist();
 
-            $smarty->assign('article_list', $article_list['arr']);
-            $smarty->assign('filter', $article_list['filter']);
-            $smarty->assign('record_count', $article_list['record_count']);
-            $smarty->assign('page_count', $article_list['page_count']);
+            $GLOBALS['smarty']->assign('article_list', $article_list['arr']);
+            $GLOBALS['smarty']->assign('filter', $article_list['filter']);
+            $GLOBALS['smarty']->assign('record_count', $article_list['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $article_list['page_count']);
 
             $sort_flag = sort_flag($article_list['filter']);
-            $smarty->assign($sort_flag['tag'], $sort_flag['img']);
+            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
             make_json_result(
-                $smarty->fetch('article_list.htm'),
+                $GLOBALS['smarty']->fetch('article_list.htm'),
                 '',
                 array('filter' => $article_list['filter'], 'page_count' => $article_list['page_count'])
             );
@@ -82,24 +82,24 @@ class Article extends Init
             $article['is_open'] = 1;
 
             /* 取得分类、品牌 */
-            $smarty->assign('goods_cat_list', cat_list());
-            $smarty->assign('brand_list', get_brand_list());
+            $GLOBALS['smarty']->assign('goods_cat_list', cat_list());
+            $GLOBALS['smarty']->assign('brand_list', get_brand_list());
 
             /* 清理关联商品 */
-            $sql = "DELETE FROM " . $ecs->table('goods_article') . " WHERE article_id = 0";
-            $db->query($sql);
+            $sql = "DELETE FROM " . $GLOBALS['ecs']->table('goods_article') . " WHERE article_id = 0";
+            $GLOBALS['db']->query($sql);
 
             if (isset($_GET['id'])) {
-                $smarty->assign('cur_id', $_GET['id']);
+                $GLOBALS['smarty']->assign('cur_id', $_GET['id']);
             }
-            $smarty->assign('article', $article);
-            $smarty->assign('cat_select', article_cat_list(0));
-            $smarty->assign('ur_here', $_LANG['article_add']);
-            $smarty->assign('action_link', array('text' => $_LANG['03_article_list'], 'href' => 'article.php?act=list'));
-            $smarty->assign('form_action', 'insert');
+            $GLOBALS['smarty']->assign('article', $article);
+            $GLOBALS['smarty']->assign('cat_select', article_cat_list(0));
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['article_add']);
+            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['03_article_list'], 'href' => 'article.php?act=list'));
+            $GLOBALS['smarty']->assign('form_action', 'insert');
 
             assign_query_info();
-            $smarty->display('article_info.htm');
+            $GLOBALS['smarty']->display('article_info.htm');
         }
 
         /*------------------------------------------------------ */
@@ -113,7 +113,7 @@ class Article extends Init
             $is_only = $exc->is_only('title', $_POST['title'], 0, " cat_id ='$_POST[article_cat]'");
 
             if (!$is_only) {
-                sys_msg(sprintf($_LANG['title_exist'], stripslashes($_POST['title'])), 1);
+                sys_msg(sprintf($GLOBALS['_LANG']['title_exist'], stripslashes($_POST['title'])), 1);
             }
 
             /* 取得文件地址 */
@@ -121,7 +121,7 @@ class Article extends Init
             if ((isset($_FILES['file']['error']) && $_FILES['file']['error'] == 0) || (!isset($_FILES['file']['error']) && isset($_FILES['file']['tmp_name']) && $_FILES['file']['tmp_name'] != 'none')) {
                 // 检查文件格式
                 if (!check_file_type($_FILES['file']['tmp_name'], $_FILES['file']['name'], $allow_file_types)) {
-                    sys_msg($_LANG['invalid_file']);
+                    sys_msg($GLOBALS['_LANG']['invalid_file']);
                 }
 
                 // 复制文件
@@ -147,29 +147,29 @@ class Article extends Init
             if (empty($_POST['cat_id'])) {
                 $_POST['cat_id'] = 0;
             }
-            $sql = "INSERT INTO " . $ecs->table('article') . "(title, cat_id, article_type, is_open, author, " .
+            $sql = "INSERT INTO " . $GLOBALS['ecs']->table('article') . "(title, cat_id, article_type, is_open, author, " .
                 "author_email, keywords, content, add_time, file_url, open_type, link, description) " .
                 "VALUES ('$_POST[title]', '$_POST[article_cat]', '$_POST[article_type]', '$_POST[is_open]', " .
                 "'$_POST[author]', '$_POST[author_email]', '$_POST[keywords]', '$_POST[FCKeditor1]', " .
                 "'$add_time', '$file_url', '$open_type', '$_POST[link_url]', '$_POST[description]')";
-            $db->query($sql);
+            $GLOBALS['db']->query($sql);
 
             /* 处理关联商品 */
-            $article_id = $db->insert_id();
-            $sql = "UPDATE " . $ecs->table('goods_article') . " SET article_id = '$article_id' WHERE article_id = 0";
-            $db->query($sql);
+            $article_id = $GLOBALS['db']->insert_id();
+            $sql = "UPDATE " . $GLOBALS['ecs']->table('goods_article') . " SET article_id = '$article_id' WHERE article_id = 0";
+            $GLOBALS['db']->query($sql);
 
-            $link[0]['text'] = $_LANG['continue_add'];
+            $link[0]['text'] = $GLOBALS['_LANG']['continue_add'];
             $link[0]['href'] = 'article.php?act=add';
 
-            $link[1]['text'] = $_LANG['back_list'];
+            $link[1]['text'] = $GLOBALS['_LANG']['back_list'];
             $link[1]['href'] = 'article.php?act=list';
 
             admin_log($_POST['title'], 'add', 'article');
 
             clear_cache_files(); // 清除相关的缓存文件
 
-            sys_msg($_LANG['articleadd_succeed'], 0, $link);
+            sys_msg($GLOBALS['_LANG']['articleadd_succeed'], 0, $link);
         }
 
         /*------------------------------------------------------ */
@@ -180,28 +180,28 @@ class Article extends Init
             admin_priv('article_manage');
 
             /* 取文章数据 */
-            $sql = "SELECT * FROM " . $ecs->table('article') . " WHERE article_id='$_REQUEST[id]'";
-            $article = $db->GetRow($sql);
+            $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('article') . " WHERE article_id='$_REQUEST[id]'";
+            $article = $GLOBALS['db']->GetRow($sql);
 
             /* 创建 html editor */
             create_html_editor('FCKeditor1', $article['content']);
 
             /* 取得分类、品牌 */
-            $smarty->assign('goods_cat_list', cat_list());
-            $smarty->assign('brand_list', get_brand_list());
+            $GLOBALS['smarty']->assign('goods_cat_list', cat_list());
+            $GLOBALS['smarty']->assign('brand_list', get_brand_list());
 
             /* 取得关联商品 */
             $goods_list = $this->get_article_goods($_REQUEST['id']);
-            $smarty->assign('goods_list', $goods_list);
+            $GLOBALS['smarty']->assign('goods_list', $goods_list);
 
-            $smarty->assign('article', $article);
-            $smarty->assign('cat_select', article_cat_list(0, $article['cat_id']));
-            $smarty->assign('ur_here', $_LANG['article_edit']);
-            $smarty->assign('action_link', array('text' => $_LANG['03_article_list'], 'href' => 'article.php?act=list&' . list_link_postfix()));
-            $smarty->assign('form_action', 'update');
+            $GLOBALS['smarty']->assign('article', $article);
+            $GLOBALS['smarty']->assign('cat_select', article_cat_list(0, $article['cat_id']));
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['article_edit']);
+            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['03_article_list'], 'href' => 'article.php?act=list&' . list_link_postfix()));
+            $GLOBALS['smarty']->assign('form_action', 'update');
 
             assign_query_info();
-            $smarty->display('article_info.htm');
+            $GLOBALS['smarty']->display('article_info.htm');
         }
 
         if ($_REQUEST['act'] == 'update') {
@@ -212,7 +212,7 @@ class Article extends Init
             $is_only = $exc->is_only('title', $_POST['title'], $_POST['id'], "cat_id = '$_POST[article_cat]'");
 
             if (!$is_only) {
-                sys_msg(sprintf($_LANG['title_exist'], stripslashes($_POST['title'])), 1);
+                sys_msg(sprintf($GLOBALS['_LANG']['title_exist'], stripslashes($_POST['title'])), 1);
             }
 
 
@@ -225,7 +225,7 @@ class Article extends Init
             if (empty($_FILES['file']['error']) || (!isset($_FILES['file']['error']) && isset($_FILES['file']['tmp_name']) && $_FILES['file']['tmp_name'] != 'none')) {
                 // 检查文件格式
                 if (!check_file_type($_FILES['file']['tmp_name'], $_FILES['file']['name'], $allow_file_types)) {
-                    sys_msg($_LANG['invalid_file']);
+                    sys_msg($GLOBALS['_LANG']['invalid_file']);
                 }
 
                 // 复制文件
@@ -247,24 +247,24 @@ class Article extends Init
             }
 
             /* 如果 file_url 跟以前不一样，且原来的文件是本地文件，删除原来的文件 */
-            $sql = "SELECT file_url FROM " . $ecs->table('article') . " WHERE article_id = '$_POST[id]'";
-            $old_url = $db->getOne($sql);
+            $sql = "SELECT file_url FROM " . $GLOBALS['ecs']->table('article') . " WHERE article_id = '$_POST[id]'";
+            $old_url = $GLOBALS['db']->getOne($sql);
             if ($old_url != '' && $old_url != $file_url && strpos($old_url, 'http://') === false && strpos($old_url, 'https://') === false) {
                 @unlink(ROOT_PATH . $old_url);
             }
 
             if ($exc->edit("title='$_POST[title]', cat_id='$_POST[article_cat]', article_type='$_POST[article_type]', is_open='$_POST[is_open]', author='$_POST[author]', author_email='$_POST[author_email]', keywords ='$_POST[keywords]', file_url ='$file_url', open_type='$open_type', content='$_POST[FCKeditor1]', link='$_POST[link_url]', description = '$_POST[description]'", $_POST['id'])) {
-                $link[0]['text'] = $_LANG['back_list'];
+                $link[0]['text'] = $GLOBALS['_LANG']['back_list'];
                 $link[0]['href'] = 'article.php?act=list&' . list_link_postfix();
 
-                $note = sprintf($_LANG['articleedit_succeed'], stripslashes($_POST['title']));
+                $note = sprintf($GLOBALS['_LANG']['articleedit_succeed'], stripslashes($_POST['title']));
                 admin_log($_POST['title'], 'edit', 'article');
 
                 clear_cache_files();
 
                 sys_msg($note, 0, $link);
             } else {
-                die($db->error());
+                die($GLOBALS['db']->error());
             }
         }
 
@@ -279,14 +279,14 @@ class Article extends Init
 
             /* 检查文章标题是否重复 */
             if ($exc->num("title", $title, $id) != 0) {
-                make_json_error(sprintf($_LANG['title_exist'], $title));
+                make_json_error(sprintf($GLOBALS['_LANG']['title_exist'], $title));
             } else {
                 if ($exc->edit("title = '$title'", $id)) {
                     clear_cache_files();
                     admin_log($title, 'edit', 'article');
                     make_json_result(stripslashes($title));
                 } else {
-                    make_json_error($db->error());
+                    make_json_error($GLOBALS['db']->error());
                 }
             }
         }
@@ -332,15 +332,15 @@ class Article extends Init
             $id = intval($_GET['id']);
 
             /* 删除原来的文件 */
-            $sql = "SELECT file_url FROM " . $ecs->table('article') . " WHERE article_id = '$id'";
-            $old_url = $db->getOne($sql);
+            $sql = "SELECT file_url FROM " . $GLOBALS['ecs']->table('article') . " WHERE article_id = '$id'";
+            $old_url = $GLOBALS['db']->getOne($sql);
             if ($old_url != '' && strpos($old_url, 'http://') === false && strpos($old_url, 'https://') === false) {
                 @unlink(ROOT_PATH . $old_url);
             }
 
             $name = $exc->get_name($id);
             if ($exc->drop($id)) {
-                $db->query("DELETE FROM " . $ecs->table('comment') . " WHERE " . "comment_type = 1 AND id_value = $id");
+                $GLOBALS['db']->query("DELETE FROM " . $GLOBALS['ecs']->table('comment') . " WHERE " . "comment_type = 1 AND id_value = $id");
 
                 admin_log(addslashes($name), 'remove', 'article');
                 clear_cache_files();
@@ -363,13 +363,13 @@ class Article extends Init
             $article_id = $args[0];
 
             if ($article_id == 0) {
-                $article_id = $db->getOne('SELECT MAX(article_id)+1 AS article_id FROM ' . $ecs->table('article'));
+                $article_id = $GLOBALS['db']->getOne('SELECT MAX(article_id)+1 AS article_id FROM ' . $GLOBALS['ecs']->table('article'));
             }
 
             foreach ($add_ids as $key => $val) {
-                $sql = 'INSERT INTO ' . $ecs->table('goods_article') . ' (goods_id, article_id) ' .
+                $sql = 'INSERT INTO ' . $GLOBALS['ecs']->table('goods_article') . ' (goods_id, article_id) ' .
                     "VALUES ('$val', '$article_id')";
-                $db->query($sql, 'SILENT') or make_json_error($db->error());
+                $GLOBALS['db']->query($sql, 'SILENT') or make_json_error($GLOBALS['db']->error());
             }
 
             /* 重新载入 */
@@ -396,12 +396,12 @@ class Article extends Init
             $article_id = $arguments[0];
 
             if ($article_id == 0) {
-                $article_id = $db->getOne('SELECT MAX(article_id)+1 AS article_id FROM ' . $ecs->table('article'));
+                $article_id = $GLOBALS['db']->getOne('SELECT MAX(article_id)+1 AS article_id FROM ' . $GLOBALS['ecs']->table('article'));
             }
 
-            $sql = "DELETE FROM " . $ecs->table('goods_article') .
+            $sql = "DELETE FROM " . $GLOBALS['ecs']->table('goods_article') .
                 " WHERE article_id = '$article_id' AND goods_id " . db_create_in($drop_goods);
-            $db->query($sql, 'SILENT') or make_json_error($db->error());
+            $GLOBALS['db']->query($sql, 'SILENT') or make_json_error($GLOBALS['db']->error());
 
             /* 重新载入 */
             $arr = $this->get_article_goods($article_id);
@@ -444,16 +444,16 @@ class Article extends Init
                     admin_priv('article_manage');
 
                     if (!isset($_POST['checkboxes']) || !is_array($_POST['checkboxes'])) {
-                        sys_msg($_LANG['no_select_article'], 1);
+                        sys_msg($GLOBALS['_LANG']['no_select_article'], 1);
                     }
 
                     /* 删除原来的文件 */
-                    $sql = "SELECT file_url FROM " . $ecs->table('article') .
+                    $sql = "SELECT file_url FROM " . $GLOBALS['ecs']->table('article') .
                         " WHERE article_id " . db_create_in(join(',', $_POST['checkboxes'])) .
                         " AND file_url <> ''";
 
-                    $res = $db->query($sql);
-                    while ($row = $db->fetchRow($res)) {
+                    $res = $GLOBALS['db']->query($sql);
+                    while ($row = $GLOBALS['db']->fetchRow($res)) {
                         $old_url = $row['file_url'];
                         if (strpos($old_url, 'http://') === false && strpos($old_url, 'https://') === false) {
                             @unlink(ROOT_PATH . $old_url);
@@ -472,7 +472,7 @@ class Article extends Init
                 if ($_POST['type'] == 'button_hide') {
                     check_authz_json('article_manage');
                     if (!isset($_POST['checkboxes']) || !is_array($_POST['checkboxes'])) {
-                        sys_msg($_LANG['no_select_article'], 1);
+                        sys_msg($GLOBALS['_LANG']['no_select_article'], 1);
                     }
 
                     foreach ($_POST['checkboxes'] as $key => $id) {
@@ -484,7 +484,7 @@ class Article extends Init
                 if ($_POST['type'] == 'button_show') {
                     check_authz_json('article_manage');
                     if (!isset($_POST['checkboxes']) || !is_array($_POST['checkboxes'])) {
-                        sys_msg($_LANG['no_select_article'], 1);
+                        sys_msg($GLOBALS['_LANG']['no_select_article'], 1);
                     }
 
                     foreach ($_POST['checkboxes'] as $key => $id) {
@@ -496,11 +496,11 @@ class Article extends Init
                 if ($_POST['type'] == 'move_to') {
                     check_authz_json('article_manage');
                     if (!isset($_POST['checkboxes']) || !is_array($_POST['checkboxes'])) {
-                        sys_msg($_LANG['no_select_article'], 1);
+                        sys_msg($GLOBALS['_LANG']['no_select_article'], 1);
                     }
 
                     if (!$_POST['target_cat']) {
-                        sys_msg($_LANG['no_select_act'], 1);
+                        sys_msg($GLOBALS['_LANG']['no_select_act'], 1);
                     }
 
                     foreach ($_POST['checkboxes'] as $key => $id) {
@@ -511,8 +511,8 @@ class Article extends Init
 
             /* 清除缓存 */
             clear_cache_files();
-            $lnk[] = array('text' => $_LANG['back_list'], 'href' => 'article.php?act=list');
-            sys_msg($_LANG['batch_handle_ok'], 0, $lnk);
+            $lnk[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'article.php?act=list');
+            sys_msg($GLOBALS['_LANG']['batch_handle_ok'], 0, $lnk);
         }
     }
 

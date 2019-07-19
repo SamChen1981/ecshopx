@@ -12,7 +12,6 @@ namespace app\common\libraries;
  */
 function dump_escape_string($str)
 {
-    global $db;
     /* 取得参数 */
     return cls_mysql::escape_string($str, $db);
 }

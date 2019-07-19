@@ -9,7 +9,7 @@ class SearchengineStats extends Init
 {
     public function index()
     {
-        require_once(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/admin/statistic.php');
+        require_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/admin/statistic.php');
 
         /* act操作项的初始化 */
         if (empty($_REQUEST['act'])) {
@@ -34,19 +34,19 @@ class SearchengineStats extends Init
             /* --综合流量
             /* ------------------------------------- */
             $max = 0;
-            $general_xml = "<chart caption='$_LANG[tab_keywords]' shownames='1' showvalues='0' decimals='0' numberPrefix='' outCnvBaseFontSize='12' baseFontSize='12'>";
+            $general_xml = "<chart caption='$GLOBALS['_LANG'][tab_keywords]' shownames='1' showvalues='0' decimals='0' numberPrefix='' outCnvBaseFontSize='12' baseFontSize='12'>";
             $sql = "SELECT keyword, count, searchengine " .
-                " FROM " . $ecs->table('keywords') .
+                " FROM " . $GLOBALS['ecs']->table('keywords') .
                 " WHERE date >= '$start_date' AND date <= '" . $end_date . "'";
             if (isset($_POST['filter'])) {
                 $sql .= ' AND ' . db_create_in($_POST['filter'], 'searchengine');
             }
-            $res = $db->query($sql);
+            $res = $GLOBALS['db']->query($sql);
             $search = array();
             $searchengine = array();
             $keyword = array();
 
-            while ($val = $db->fetchRow($res)) {
+            while ($val = $GLOBALS['db']->fetchRow($res)) {
                 $keyword[$val['keyword']] = 1;
                 $searchengine[$val['searchengine']][$val['keyword']] = $val['count'];
             }
@@ -79,8 +79,8 @@ class SearchengineStats extends Init
             $general_xml .= '</chart>';
 
             /* 模板赋值 */
-            $smarty->assign('ur_here', $_LANG['searchengine_stats']);
-            $smarty->assign('general_data', $general_xml);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['searchengine_stats']);
+            $GLOBALS['smarty']->assign('general_data', $general_xml);
 
             $searchengines = array('ecshop' => false,
                 'MSLIVE' => false,
@@ -95,33 +95,33 @@ class SearchengineStats extends Init
                     $searchengines[$v] = true;
                 }
             }
-            $smarty->assign('searchengines', $searchengines);
+            $GLOBALS['smarty']->assign('searchengines', $searchengines);
 
             /* 显示日期 */
-            $smarty->assign('start_date', $start_date);
-            $smarty->assign('end_date', $end_date);
+            $GLOBALS['smarty']->assign('start_date', $start_date);
+            $GLOBALS['smarty']->assign('end_date', $end_date);
 
             $filename = local_date('Ymd', $start_date) . '_' . local_date('Ymd', $end_date);
-            $smarty->assign('action_link', array('text' => $_LANG['down_search_stats'], 'href' => 'searchengine_stats.php?act=download&start_date=' . $start_date . '&end_date=' . $end_date . '&filename=' . $filename));
+            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['down_search_stats'], 'href' => 'searchengine_stats.php?act=download&start_date=' . $start_date . '&end_date=' . $end_date . '&filename=' . $filename));
 
-            $smarty->assign('lang', $_LANG);
+            $GLOBALS['smarty']->assign('lang', $GLOBALS['_LANG']);
             /* 显示页面 */
             assign_query_info();
-            $smarty->display('searchengine_stats.htm');
+            $GLOBALS['smarty']->display('searchengine_stats.htm');
         } elseif ($_REQUEST['act'] == 'download') {
             $start_date = empty($_REQUEST['start_date']) ? strtotime('-20 day') : intval($_REQUEST['start_date']);
             $end_date = empty($_REQUEST['end_date']) ? time() : intval($_REQUEST['end_date']);
 
             $filename = $start_date . '_' . $end_date;
             $sql = "SELECT keyword, count,searchengine " .
-                " FROM " . $ecs->table('keywords') .
+                " FROM " . $GLOBALS['ecs']->table('keywords') .
                 " WHERE date >= '$start_date' AND date <= '$end_date'";
-            $res = $db->query($sql);
+            $res = $GLOBALS['db']->query($sql);
 
             $searchengine = array();
             $keyword = array();
 
-            while ($val = $db->fetchRow($res)) {
+            while ($val = $GLOBALS['db']->fetchRow($res)) {
                 $keyword[$val['keyword']] = 1;
                 $searchengine[$val['searchengine']][$val['keyword']] = $val['count'];
             }

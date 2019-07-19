@@ -9,42 +9,42 @@ class Pack extends Init
 {
     public function index()
     {
-        $image = new Image($_CFG['bgcolor']);
+        $image = new Image($GLOBALS['_CFG']['bgcolor']);
 
-        $exc = new exchange($ecs->table("pack"), $db, 'pack_id', 'pack_name');
+        $exc = new Exchange($GLOBALS['ecs']->table("pack"), $db, 'pack_id', 'pack_name');
 
         /*------------------------------------------------------ */
         //-- 包装列表
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
-            $smarty->assign('ur_here', $_LANG['06_pack_list']);
-            $smarty->assign('action_link', array('text' => $_LANG['pack_add'], 'href' => 'pack.php?act=add'));
-            $smarty->assign('full_page', 1);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['06_pack_list']);
+            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['pack_add'], 'href' => 'pack.php?act=add'));
+            $GLOBALS['smarty']->assign('full_page', 1);
 
             $packs_list = $this->packs_list();
 
-            $smarty->assign('packs_list', $packs_list['packs_list']);
-            $smarty->assign('filter', $packs_list['filter']);
-            $smarty->assign('record_count', $packs_list['record_count']);
-            $smarty->assign('page_count', $packs_list['page_count']);
+            $GLOBALS['smarty']->assign('packs_list', $packs_list['packs_list']);
+            $GLOBALS['smarty']->assign('filter', $packs_list['filter']);
+            $GLOBALS['smarty']->assign('record_count', $packs_list['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $packs_list['page_count']);
 
             assign_query_info();
-            $smarty->display('pack_list.htm');
+            $GLOBALS['smarty']->display('pack_list.htm');
         }
         /*------------------------------------------------------ */
         //-- ajax 列表
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'query') {
             $packs_list = $this->packs_list();
-            $smarty->assign('packs_list', $packs_list['packs_list']);
-            $smarty->assign('filter', $packs_list['filter']);
-            $smarty->assign('record_count', $packs_list['record_count']);
-            $smarty->assign('page_count', $packs_list['page_count']);
+            $GLOBALS['smarty']->assign('packs_list', $packs_list['packs_list']);
+            $GLOBALS['smarty']->assign('filter', $packs_list['filter']);
+            $GLOBALS['smarty']->assign('record_count', $packs_list['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $packs_list['page_count']);
 
             $sort_flag = sort_flag($packs_list['filter']);
-            $smarty->assign($sort_flag['tag'], $sort_flag['img']);
+            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
-            make_json_result($smarty->fetch('pack_list.htm'), '', array('filter' => $packs_list['filter'], 'page_count' => $packs_list['page_count']));
+            make_json_result($GLOBALS['smarty']->fetch('pack_list.htm'), '', array('filter' => $packs_list['filter'], 'page_count' => $packs_list['page_count']));
         }
         /*------------------------------------------------------ */
         //-- 添加新包装
@@ -56,13 +56,13 @@ class Pack extends Init
             $pack['pack_fee'] = 0;
             $pack['free_money'] = 0;
 
-            $smarty->assign('pack', $pack);
-            $smarty->assign('ur_here', $_LANG['pack_add']);
-            $smarty->assign('form_action', 'insert');
-            $smarty->assign('action_link', array('text' => $_LANG['06_pack_list'], 'href' => 'pack.php?act=list'));
+            $GLOBALS['smarty']->assign('pack', $pack);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['pack_add']);
+            $GLOBALS['smarty']->assign('form_action', 'insert');
+            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['06_pack_list'], 'href' => 'pack.php?act=list'));
 
             assign_query_info();
-            $smarty->display('pack_info.htm');
+            $GLOBALS['smarty']->display('pack_info.htm');
         }
         if ($_REQUEST['act'] == 'insert') {
             /* 权限判断 */
@@ -72,7 +72,7 @@ class Pack extends Init
             $is_only = $exc->is_only('pack_name', $_POST['pack_name']);
 
             if (!$is_only) {
-                sys_msg(sprintf($_LANG['packname_exist'], stripslashes($_POST['pack_name'])), 1);
+                sys_msg(sprintf($GLOBALS['_LANG']['packname_exist'], stripslashes($_POST['pack_name'])), 1);
             }
 
             /* 处理图片 */
@@ -87,16 +87,16 @@ class Pack extends Init
             }
 
             /*插入数据*/
-            $sql = "INSERT INTO " . $ecs->table('pack') . "(pack_name, pack_fee, free_money, pack_desc, pack_img)
+            $sql = "INSERT INTO " . $GLOBALS['ecs']->table('pack') . "(pack_name, pack_fee, free_money, pack_desc, pack_img)
             VALUES ('$_POST[pack_name]', '$_POST[pack_fee]', '$_POST[free_money]', '$_POST[pack_desc]', '$img_name')";
-            $db->query($sql);
+            $GLOBALS['db']->query($sql);
 
             /*添加链接*/
-            $link[0]['text'] = $_LANG['back_list'];
+            $link[0]['text'] = $GLOBALS['_LANG']['back_list'];
             $link[0]['href'] = 'pack.php?act=list';
-            $link[1]['text'] = $_LANG['continue_add'];
+            $link[1]['text'] = $GLOBALS['_LANG']['continue_add'];
             $link[1]['href'] = 'pack.php?act=add';
-            sys_msg($_POST['pack_name'] . $_LANG['packadd_succed'], 0, $link);
+            sys_msg($_POST['pack_name'] . $GLOBALS['_LANG']['packadd_succed'], 0, $link);
             admin_log($_POST['pack_name'], 'add', 'pack');
         }
 
@@ -107,13 +107,13 @@ class Pack extends Init
             /* 权限判断 */
             admin_priv('pack');
 
-            $sql = "SELECT pack_id, pack_name, pack_fee, free_money, pack_desc, pack_img FROM " . $ecs->table('pack') . " WHERE pack_id='$_REQUEST[id]'";
-            $pack = $db->GetRow($sql);
-            $smarty->assign('ur_here', $_LANG['pack_edit']);
-            $smarty->assign('action_link', array('text' => $_LANG['06_pack_list'], 'href' => 'pack.php?act=list&' . list_link_postfix()));
-            $smarty->assign('pack', $pack);
-            $smarty->assign('form_action', 'update');
-            $smarty->display('pack_info.htm');
+            $sql = "SELECT pack_id, pack_name, pack_fee, free_money, pack_desc, pack_img FROM " . $GLOBALS['ecs']->table('pack') . " WHERE pack_id='$_REQUEST[id]'";
+            $pack = $GLOBALS['db']->GetRow($sql);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['pack_edit']);
+            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['06_pack_list'], 'href' => 'pack.php?act=list&' . list_link_postfix()));
+            $GLOBALS['smarty']->assign('pack', $pack);
+            $GLOBALS['smarty']->assign('form_action', 'update');
+            $GLOBALS['smarty']->display('pack_info.htm');
         }
         if ($_REQUEST['act'] == 'update') {
             /* 权限判断 */
@@ -123,7 +123,7 @@ class Pack extends Init
                 $is_only = $exc->is_only('pack_name', $_POST['pack_name'], $_POST['id']);
 
                 if (!$is_only) {
-                    sys_msg(sprintf($_LANG['packname_exist'], stripslashes($_POST['pack_name'])), 1);
+                    sys_msg(sprintf($GLOBALS['_LANG']['packname_exist'], stripslashes($_POST['pack_name'])), 1);
                 }
             }
 
@@ -144,13 +144,13 @@ class Pack extends Init
             }
 
             if ($exc->edit($param, $_POST['id'])) {
-                $link[0]['text'] = $_LANG['back_list'];
+                $link[0]['text'] = $GLOBALS['_LANG']['back_list'];
                 $link[0]['href'] = 'pack.php?act=list&' . list_link_postfix();
-                $note = sprintf($_LANG['packedit_succed'], $_POST['pack_name']);
+                $note = sprintf($GLOBALS['_LANG']['packedit_succed'], $_POST['pack_name']);
                 sys_msg($note, 0, $link);
                 admin_log($_POST['pack_name'], 'edit', 'pack');
             } else {
-                die($db->error());
+                die($GLOBALS['db']->error());
             }
         }
 
@@ -161,16 +161,16 @@ class Pack extends Init
             $pack_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
             /* 取得logo名称 */
-            $sql = "SELECT pack_img FROM " . $ecs->table('pack') . " WHERE pack_id = '$pack_id'";
-            $img_name = $db->getOne($sql);
+            $sql = "SELECT pack_img FROM " . $GLOBALS['ecs']->table('pack') . " WHERE pack_id = '$pack_id'";
+            $img_name = $GLOBALS['db']->getOne($sql);
 
             if (!empty($img_name)) {
                 @unlink(ROOT_PATH . DATA_DIR . '/packimg/' . $img_name);
-                $sql = "UPDATE " . $ecs->table('pack') . " SET pack_img = '' WHERE pack_id = '$pack_id'";
-                $db->query($sql);
+                $sql = "UPDATE " . $GLOBALS['ecs']->table('pack') . " SET pack_img = '' WHERE pack_id = '$pack_id'";
+                $GLOBALS['db']->query($sql);
             }
-            $link = array(array('text' => $_LANG['pack_edit_lnk'], 'href' => 'pack.php?act=edit&id=' . $pack_id), array('text' => $_LANG['pack_list_lnk'], 'href' => 'pack.php?act=list'));
-            sys_msg($_LANG['drop_pack_img_success'], 0, $link);
+            $link = array(array('text' => $GLOBALS['_LANG']['pack_edit_lnk'], 'href' => 'pack.php?act=edit&id=' . $pack_id), array('text' => $GLOBALS['_LANG']['pack_list_lnk'], 'href' => 'pack.php?act=list'));
+            sys_msg($GLOBALS['_LANG']['drop_pack_img_success'], 0, $link);
         }
 
         /*------------------------------------------------------ */
@@ -187,7 +187,7 @@ class Pack extends Init
             $pack_name = $exc->get_name($id);
 
             if (!$exc->is_only('pack_name', $val, $id)) {
-                make_json_error(sprintf($_LANG['packname_exist'], $pack_name));
+                make_json_error(sprintf($GLOBALS['_LANG']['packname_exist'], $pack_name));
             } else {
                 $exc->edit("pack_name='$val'", $id);
 
@@ -255,7 +255,7 @@ class Pack extends Init
                 ecs_header("Location: $url\n");
                 exit;
             } else {
-                make_json_error($_LANG['packremove_falure']);
+                make_json_error($GLOBALS['_LANG']['packremove_falure']);
                 return false;
             }
         }

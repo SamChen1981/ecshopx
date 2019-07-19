@@ -9,7 +9,7 @@ class Payment extends Init
 {
     public function index()
     {
-        $exc = new exchange($ecs->table('payment'), $db, 'pay_code', 'pay_name');
+        $exc = new Exchange($GLOBALS['ecs']->table('payment'), $db, 'pay_code', 'pay_name');
 
         /*------------------------------------------------------ */
         //-- 支付方式列表 ?act=list
@@ -18,9 +18,9 @@ class Payment extends Init
         if ($_REQUEST['act'] == 'list') {
             /* 查询数据库中启用的支付方式 */
             $pay_list = array();
-            $sql = "SELECT * FROM " . $ecs->table('payment') . " WHERE enabled = '1' ORDER BY pay_order";
-            $res = $db->query($sql);
-            while ($row = $db->fetchRow($res)) {
+            $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('payment') . " WHERE enabled = '1' ORDER BY pay_order";
+            $res = $GLOBALS['db']->query($sql);
+            while ($row = $GLOBALS['db']->fetchRow($res)) {
                 $pay_list[$row['pay_code']] = $row;
             }
 
@@ -40,11 +40,11 @@ class Payment extends Init
                     $modules[$i]['pay_order'] = $pay_list[$code]['pay_order'];
                     $modules[$i]['install'] = '1';
                 } else {
-                    $modules[$i]['name'] = $_LANG[$modules[$i]['code']];
+                    $modules[$i]['name'] = $GLOBALS['_LANG'][$modules[$i]['code']];
                     if (!isset($modules[$i]['pay_fee'])) {
                         $modules[$i]['pay_fee'] = 0;
                     }
-                    $modules[$i]['desc'] = $_LANG[$modules[$i]['desc']];
+                    $modules[$i]['desc'] = $GLOBALS['_LANG'][$modules[$i]['desc']];
                     $modules[$i]['install'] = '0';
                 }
                 if ($modules[$i]['pay_code'] == 'tenpayc2c') {
@@ -61,12 +61,12 @@ class Payment extends Init
             $yunqi_payment and array_unshift($modules, $yunqi_payment);
 
             assign_query_info();
-            $smarty->assign('certi', $certificate);
-            $smarty->assign('ur_here', $_LANG['02_payment_list']);
-            $smarty->assign('modules', $modules);
-            $smarty->assign('tenpayc2c', $tenpayc2c);
-            $smarty->assign('account_url', TEEGON_PASSPORT_URL);
-            $smarty->display('payment_list.htm');
+            $GLOBALS['smarty']->assign('certi', $certificate);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['02_payment_list']);
+            $GLOBALS['smarty']->assign('modules', $modules);
+            $GLOBALS['smarty']->assign('tenpayc2c', $tenpayc2c);
+            $GLOBALS['smarty']->assign('account_url', TEEGON_PASSPORT_URL);
+            $GLOBALS['smarty']->display('payment_list.htm');
         }
 
         /*------------------------------------------------------ */
@@ -112,29 +112,29 @@ class Payment extends Init
             }
 
             $pay['pay_code'] = $data['code'];
-            $pay['pay_name'] = $_LANG[$data['code']];
-            $pay['pay_desc'] = $_LANG[$data['desc']];
+            $pay['pay_name'] = $GLOBALS['_LANG'][$data['code']];
+            $pay['pay_desc'] = $GLOBALS['_LANG'][$data['desc']];
             $pay['is_cod'] = $data['is_cod'];
             $pay['pay_fee'] = $data['pay_fee'];
             $pay['is_online'] = $data['is_online'];
             $pay['pay_config'] = array();
 
             foreach ($data['config'] as $key => $value) {
-                $config_desc = (isset($_LANG[$value['name'] . '_desc'])) ? $_LANG[$value['name'] . '_desc'] : '';
+                $config_desc = (isset($GLOBALS['_LANG'][$value['name'] . '_desc'])) ? $GLOBALS['_LANG'][$value['name'] . '_desc'] : '';
                 $pay['pay_config'][$key] = $value +
-                    array('label' => $_LANG[$value['name']], 'value' => $value['value'], 'desc' => $config_desc);
+                    array('label' => $GLOBALS['_LANG'][$value['name']], 'value' => $value['value'], 'desc' => $config_desc);
 
                 if ($pay['pay_config'][$key]['type'] == 'select' ||
                     $pay['pay_config'][$key]['type'] == 'radiobox') {
-                    $pay['pay_config'][$key]['range'] = $_LANG[$pay['pay_config'][$key]['name'] . '_range'];
+                    $pay['pay_config'][$key]['range'] = $GLOBALS['_LANG'][$pay['pay_config'][$key]['name'] . '_range'];
                 }
             }
 
             assign_query_info();
 
-            $smarty->assign('action_link', array('text' => $_LANG['02_payment_list'], 'href' => 'payment.php?act=list'));
-            $smarty->assign('pay', $pay);
-            $smarty->display('payment_edit.htm');
+            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['02_payment_list'], 'href' => 'payment.php?act=list'));
+            $GLOBALS['smarty']->assign('pay', $pay);
+            $GLOBALS['smarty']->display('payment_edit.htm');
         } elseif ($_REQUEST['act'] == 'get_config') {
             check_authz_json('payment');
 
@@ -148,18 +148,18 @@ class Payment extends Init
             $range = '';
             foreach ($data as $key => $value) {
                 $config .= "<tr><td width=80><span class='label'>";
-                $config .= $_LANG[$data[$key]['name']];
+                $config .= $GLOBALS['_LANG'][$data[$key]['name']];
                 $config .= "</span></td>";
                 if ($data[$key]['type'] == 'text') {
                     if ($data[$key]['name'] == 'alipay_account') {
-                        $config .= "<td><input name='cfg_value[]' type='text' value='" . $data[$key]['value'] . "' /><a href=\"https://www.alipay.com/himalayas/practicality.htm\" target=\"_blank\">" . $_LANG['alipay_look'] . "</a></td>";
+                        $config .= "<td><input name='cfg_value[]' type='text' value='" . $data[$key]['value'] . "' /><a href=\"https://www.alipay.com/himalayas/practicality.htm\" target=\"_blank\">" . $GLOBALS['_LANG']['alipay_look'] . "</a></td>";
                     } elseif ($data[$key]['name'] == 'tenpay_account') {
-                        $config .= "<td><input name='cfg_value[]' type='text' value='" . $data[$key]['value'] . "' />" . $_LANG['penpay_register'] . "</td>";
+                        $config .= "<td><input name='cfg_value[]' type='text' value='" . $data[$key]['value'] . "' />" . $GLOBALS['_LANG']['penpay_register'] . "</td>";
                     } else {
                         $config .= "<td><input name='cfg_value[]' type='text' value='" . $data[$key]['value'] . "' /></td>";
                     }
                 } elseif ($data[$key]['type'] == 'select') {
-                    $range = $_LANG[$data[$key]['name'] . '_range'];
+                    $range = $GLOBALS['_LANG'][$data[$key]['name'] . '_range'];
                     $config .= "<td><select name='cfg_value[]'>";
                     foreach ($range as $index => $val) {
                         $config .= "<option value='$index'>" . $range[$index] . "</option>";
@@ -190,11 +190,11 @@ class Payment extends Init
                 die('invalid parameter');
             }
 
-            $sql = "SELECT * FROM " . $ecs->table('payment') . " WHERE pay_code = '$_REQUEST[code]' AND enabled = '1'";
-            $pay = $db->getRow($sql);
+            $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('payment') . " WHERE pay_code = '$_REQUEST[code]' AND enabled = '1'";
+            $pay = $GLOBALS['db']->getRow($sql);
             if (empty($pay)) {
-                $links[] = array('text' => $_LANG['back_list'], 'href' => 'payment.php?act=list');
-                sys_msg($_LANG['payment_not_available'], 0, $links);
+                $links[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'payment.php?act=list');
+                sys_msg($GLOBALS['_LANG']['payment_not_available'], 0, $links);
             }
 
             /* 取相应插件信息 */
@@ -217,8 +217,8 @@ class Payment extends Init
 
                 /* 循环插件中所有属性 */
                 foreach ($data['config'] as $key => $value) {
-                    $pay['pay_config'][$key]['desc'] = (isset($_LANG[$value['name'] . '_desc'])) ? $_LANG[$value['name'] . '_desc'] : '';
-                    $pay['pay_config'][$key]['label'] = $_LANG[$value['name']];
+                    $pay['pay_config'][$key]['desc'] = (isset($GLOBALS['_LANG'][$value['name'] . '_desc'])) ? $GLOBALS['_LANG'][$value['name'] . '_desc'] : '';
+                    $pay['pay_config'][$key]['label'] = $GLOBALS['_LANG'][$value['name']];
                     $pay['pay_config'][$key]['name'] = $value['name'];
                     $pay['pay_config'][$key]['type'] = $value['type'];
 
@@ -230,7 +230,7 @@ class Payment extends Init
 
                     if ($pay['pay_config'][$key]['type'] == 'select' ||
                         $pay['pay_config'][$key]['type'] == 'radiobox') {
-                        $pay['pay_config'][$key]['range'] = $_LANG[$pay['pay_config'][$key]['name'] . '_range'];
+                        $pay['pay_config'][$key]['range'] = $GLOBALS['_LANG'][$pay['pay_config'][$key]['name'] . '_range'];
                     }
                 }
             }
@@ -240,11 +240,11 @@ class Payment extends Init
             if ($pay['pay_code'] == 'yunqi') {
                 $teegon_data = $cert->get_yunqi_account();
                 $pay['pay_config'][0]['name'] = 'appkey';
-                $pay['pay_config'][0]['label'] = $_LANG['appkey'];
+                $pay['pay_config'][0]['label'] = $GLOBALS['_LANG']['appkey'];
                 $pay['pay_config'][0]['type'] = 'text';
                 $pay['pay_config'][0]['value'] = $teegon_data['appkey'];
                 $pay['pay_config'][1]['name'] = 'appsecret';
-                $pay['pay_config'][1]['label'] = $_LANG['appsecret'];
+                $pay['pay_config'][1]['label'] = $GLOBALS['_LANG']['appsecret'];
                 $pay['pay_config'][1]['type'] = 'text';
                 $pay['pay_config'][1]['value'] = $teegon_data['appsecret'];
             }
@@ -259,10 +259,10 @@ class Payment extends Init
 
             assign_query_info();
 
-            $smarty->assign('action_link', array('text' => $_LANG['02_payment_list'], 'href' => 'payment.php?act=list'));
-            $smarty->assign('ur_here', $_LANG['edit'] . $_LANG['payment']);
-            $smarty->assign('pay', $pay);
-            $smarty->display('payment_edit.htm');
+            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['02_payment_list'], 'href' => 'payment.php?act=list'));
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['edit'] . $GLOBALS['_LANG']['payment']);
+            $GLOBALS['smarty']->assign('pay', $pay);
+            $GLOBALS['smarty']->display('payment_edit.htm');
         }
 
         /*------------------------------------------------------ */
@@ -272,13 +272,13 @@ class Payment extends Init
             admin_priv('payment');
             /* 检查输入 */
             if (empty($_POST['pay_name'])) {
-                sys_msg($_LANG['payment_name'] . $_LANG['empty']);
+                sys_msg($GLOBALS['_LANG']['payment_name'] . $GLOBALS['_LANG']['empty']);
             }
 
-            $sql = "SELECT COUNT(*) FROM " . $ecs->table('payment') .
+            $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('payment') .
                 " WHERE pay_name = '$_POST[pay_name]' AND pay_code <> '$_POST[pay_code]'";
-            if ($db->GetOne($sql) > 0) {
-                sys_msg($_LANG['payment_name'] . $_LANG['repeat'], 1);
+            if ($GLOBALS['db']->GetOne($sql) > 0) {
+                sys_msg($GLOBALS['_LANG']['payment_name'] . $GLOBALS['_LANG']['repeat'], 1);
             }
 
             /* 取得配置信息 */
@@ -297,13 +297,13 @@ class Payment extends Init
                 if ($_FILES['upop_cert']['size'] > 0) {
                     $pathinfo = pathinfo($_FILES['upop_cert']['name']);
                     if ($pathinfo['extension'] != 'pfx') {
-                        sys_msg($_LANG['cert_invalid_file'], 1);
+                        sys_msg($GLOBALS['_LANG']['cert_invalid_file'], 1);
                     }
                     $destination = 'cert/' . $_FILES['upop_cert']['name'];
                     if (move_upload_file($_FILES['upop_cert']['tmp_name'], ROOT_PATH . $destination)) {
                         $upop_cert_path = $destination;
                     } else {
-                        sys_msg($_LANG['fail_upload'], 1);
+                        sys_msg($GLOBALS['_LANG']['fail_upload'], 1);
                     }
                 }
                 foreach ($pay_config as $key => &$value) {
@@ -312,7 +312,7 @@ class Payment extends Init
                             $value['value'] = $upop_cert_path;
                         } else {
                             if (empty($value['value'])) {
-                                sys_msg($_LANG['lack_cert_file'], 1);
+                                sys_msg($GLOBALS['_LANG']['lack_cert_file'], 1);
                             }
                         }
                     }
@@ -326,25 +326,25 @@ class Payment extends Init
                 if ($_FILES['chinapay_pfx']['size'] > 0) {
                     $pathinfo = pathinfo($_FILES['chinapay_pfx']['name']);
                     if ($pathinfo['extension'] != 'pfx') {
-                        sys_msg($_LANG['cert_invalid_file'], 1);
+                        sys_msg($GLOBALS['_LANG']['cert_invalid_file'], 1);
                     }
                     $destination = 'cert/' . $_FILES['chinapay_pfx']['name'];
                     if (move_upload_file($_FILES['chinapay_pfx']['tmp_name'], ROOT_PATH . $destination)) {
                         $pfx_path = $destination;
                     } else {
-                        sys_msg($_LANG['fail_upload'], 1);
+                        sys_msg($GLOBALS['_LANG']['fail_upload'], 1);
                     }
                 }
                 if ($_FILES['chinapay_cer']['size'] > 0) {
                     $pathinfo = pathinfo($_FILES['chinapay_cer']['name']);
                     if ($pathinfo['extension'] != 'cer') {
-                        sys_msg($_LANG['cert_invalid_file'], 1);
+                        sys_msg($GLOBALS['_LANG']['cert_invalid_file'], 1);
                     }
                     $destination = 'cert/' . $_FILES['chinapay_cer']['name'];
                     if (move_upload_file($_FILES['chinapay_cer']['tmp_name'], ROOT_PATH . $destination)) {
                         $cer_path = $destination;
                     } else {
-                        sys_msg($_LANG['fail_upload'], 1);
+                        sys_msg($GLOBALS['_LANG']['fail_upload'], 1);
                     }
                 }
                 foreach ($pay_config as $key => $value) {
@@ -353,7 +353,7 @@ class Payment extends Init
                             $pay_config[$key]['value'] = $pfx_path;
                         } else {
                             if (empty($value['value'])) {
-                                sys_msg($_LANG['lack_cert_file'], 1);
+                                sys_msg($GLOBALS['_LANG']['lack_cert_file'], 1);
                             }
                         }
                     } elseif ($value['name'] == 'chinapay_cer') {
@@ -361,7 +361,7 @@ class Payment extends Init
                             $pay_config[$key]['value'] = $cer_path;
                         } else {
                             if (empty($value['value'])) {
-                                sys_msg($_LANG['lack_cert_file'], 1);
+                                sys_msg($GLOBALS['_LANG']['lack_cert_file'], 1);
                             }
                         }
                     } elseif ($value['name'] = 'chinapay_pfx_pwd') {
@@ -371,7 +371,7 @@ class Payment extends Init
                     }
                 }
                 if (!$pfx_pwd) {
-                    sys_msg($_LANG['pfx_pwd_null'], 1);
+                    sys_msg($GLOBALS['_LANG']['pfx_pwd_null'], 1);
                 }
 
                 // 重新编写 security.properties 配置文件
@@ -427,47 +427,47 @@ class Payment extends Init
             $pay_fee = empty($_POST['pay_fee']) ? 0 : $_POST['pay_fee'];
 
             /* 检查是编辑还是安装 */
-            $link[] = array('text' => $_LANG['back_list'], 'href' => 'payment.php?act=list');
+            $link[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'payment.php?act=list');
             if ($_POST['pay_id']) {
 
                 /* 编辑 */
-                $sql = "UPDATE " . $ecs->table('payment') .
+                $sql = "UPDATE " . $GLOBALS['ecs']->table('payment') .
                     "SET pay_name = '$_POST[pay_name]'," .
                     "    pay_desc = '$_POST[pay_desc]'," .
                     "    pay_config = '$pay_config', " .
                     "    pay_fee    =  '$pay_fee' " .
                     "WHERE pay_code = '$_POST[pay_code]' LIMIT 1";
-                $db->query($sql);
+                $GLOBALS['db']->query($sql);
 
                 /* 记录日志 */
                 admin_log($_POST['pay_name'], 'edit', 'payment');
 
-                sys_msg($_LANG['edit_ok'], 0, $link);
+                sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $link);
             } else {
                 /* 安装，检查该支付方式是否曾经安装过 */
-                $sql = "SELECT COUNT(*) FROM " . $ecs->table('payment') . " WHERE pay_code = '$_REQUEST[pay_code]'";
-                if ($db->GetOne($sql) > 0) {
+                $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('payment') . " WHERE pay_code = '$_REQUEST[pay_code]'";
+                if ($GLOBALS['db']->GetOne($sql) > 0) {
                     /* 该支付方式已经安装过, 将该支付方式的状态设置为 enable */
-                    $sql = "UPDATE " . $ecs->table('payment') .
+                    $sql = "UPDATE " . $GLOBALS['ecs']->table('payment') .
                         "SET pay_name = '$_POST[pay_name]'," .
                         "    pay_desc = '$_POST[pay_desc]'," .
                         "    pay_config = '$pay_config'," .
                         "    pay_fee    =  '$pay_fee', " .
                         "    enabled = '1' " .
                         "WHERE pay_code = '$_POST[pay_code]' LIMIT 1";
-                    $db->query($sql);
+                    $GLOBALS['db']->query($sql);
                 } else {
 
                     /* 该支付方式没有安装过, 将该支付方式的信息添加到数据库 */
-                    $sql = "INSERT INTO " . $ecs->table('payment') . " (pay_code, pay_name, pay_desc, pay_config, is_cod, pay_fee, enabled, is_online)" .
+                    $sql = "INSERT INTO " . $GLOBALS['ecs']->table('payment') . " (pay_code, pay_name, pay_desc, pay_config, is_cod, pay_fee, enabled, is_online)" .
                         "VALUES ('$_POST[pay_code]', '$_POST[pay_name]', '$_POST[pay_desc]', '$pay_config', '$_POST[is_cod]', '$pay_fee', 1, '$_POST[is_online]')";
-                    $db->query($sql);
+                    $GLOBALS['db']->query($sql);
                 }
 
                 /* 记录日志 */
                 admin_log($_POST['pay_name'], 'install', 'payment');
 
-                sys_msg($_LANG['install_ok'], 0, $link);
+                sys_msg($GLOBALS['_LANG']['install_ok'], 0, $link);
             }
         }
 
@@ -478,21 +478,21 @@ class Payment extends Init
             admin_priv('payment');
 
             /* 把 enabled 设为 0 */
-            $sql = "UPDATE " . $ecs->table('payment') .
+            $sql = "UPDATE " . $GLOBALS['ecs']->table('payment') .
                 "SET enabled = '0' " .
                 "WHERE pay_code = '$_REQUEST[code]' LIMIT 1";
-            $db->query($sql);
+            $GLOBALS['db']->query($sql);
 
             if ($_REQUEST['code'] == 'yunqi') {
                 $dSql = "DELETE FROM " . $GLOBALS['ecs']->table('shop_config') . " WHERE code='yunqi_account'";
-                $db->query($dSql);
+                $GLOBALS['db']->query($dSql);
             }
 
             /* 记录日志 */
             admin_log($_REQUEST['code'], 'uninstall', 'payment');
 
-            $link[] = array('text' => $_LANG['back_list'], 'href' => 'payment.php?act=list');
-            sys_msg($_LANG['uninstall_ok'], 0, $link);
+            $link[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'payment.php?act=list');
+            sys_msg($GLOBALS['_LANG']['uninstall_ok'], 0, $link);
         }
 
         /*------------------------------------------------------ */
@@ -509,12 +509,12 @@ class Payment extends Init
 
             /* 检查名称是否为空 */
             if (empty($name)) {
-                make_json_error($_LANG['name_is_null']);
+                make_json_error($GLOBALS['_LANG']['name_is_null']);
             }
 
             /* 检查名称是否重复 */
             if (!$exc->is_only('pay_name', $name, $code)) {
-                make_json_error($_LANG['name_exists']);
+                make_json_error($GLOBALS['_LANG']['name_exists']);
             }
 
             /* 更新支付方式名称 */

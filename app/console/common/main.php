@@ -13,8 +13,6 @@
  */
 function read_modules($directory = '.')
 {
-    global $_LANG;
-
     $dir = @opendir($directory);
     $set_modules = true;
     $modules = array();
@@ -131,14 +129,12 @@ function set_admin_session($user_id, $username, $action_list, $last_time)
  */
 function insert_config($parent, $code, $value)
 {
-    global $ecs, $db, $_LANG;
+    $sql = 'SELECT id FROM ' . $GLOBALS['ecs']->table('shop_config') . " WHERE code = '$parent' AND type = 1";
+    $parent_id = $GLOBALS['db']->getOne($sql);
 
-    $sql = 'SELECT id FROM ' . $ecs->table('shop_config') . " WHERE code = '$parent' AND type = 1";
-    $parent_id = $db->getOne($sql);
-
-    $sql = 'INSERT INTO ' . $ecs->table('shop_config') . ' (parent_id, code, value) ' .
+    $sql = 'INSERT INTO ' . $GLOBALS['ecs']->table('shop_config') . ' (parent_id, code, value) ' .
         "VALUES('$parent_id', '$code', '$value')";
-    $db->query($sql);
+    $GLOBALS['db']->query($sql);
 }
 
 /**
@@ -151,16 +147,14 @@ function insert_config($parent, $code, $value)
  */
 function admin_priv($priv_str, $msg_type = '', $msg_output = true)
 {
-    global $_LANG;
-
     if ($_SESSION['action_list'] == 'all') {
         return true;
     }
 
     if (strpos(',' . $_SESSION['action_list'] . ',', ',' . $priv_str . ',') === false) {
-        $link[] = array('text' => $_LANG['go_back'], 'href' => 'javascript:history.back(-1)');
+        $link[] = array('text' => $GLOBALS['_LANG']['go_back'], 'href' => 'javascript:history.back(-1)');
         if ($msg_output) {
-            sys_msg($_LANG['priv_error'], 0, $link);
+            sys_msg($GLOBALS['_LANG']['priv_error'], 0, $link);
         }
         return false;
     } else {
@@ -281,8 +275,6 @@ function get_position_list()
  */
 function create_html_editor($input_name, $input_value = '')
 {
-    global $smarty;
-
     $editor = new FCKeditor($input_name);
     $editor->BasePath = '../includes/fckeditor/';
     $editor->ToolbarSet = 'Normal';
@@ -290,7 +282,7 @@ function create_html_editor($input_name, $input_value = '')
     $editor->Height = '320';
     $editor->Value = $input_value;
     $FCKeditor = $editor->CreateHtml();
-    $smarty->assign('FCKeditor', $FCKeditor);
+    $GLOBALS['smarty']->assign('FCKeditor', $FCKeditor);
 }
 
 /**

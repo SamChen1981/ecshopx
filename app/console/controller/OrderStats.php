@@ -10,10 +10,10 @@ class OrderStats extends Init
     public function index()
     {
         load_helper('order');
-        require_once(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/admin/statistic.php');
-        require_once(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/admin/order.php');
+        require_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/admin/statistic.php');
+        require_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/admin/order.php');
 
-        $smarty->assign('lang', $_LANG);
+        $GLOBALS['smarty']->assign('lang', $GLOBALS['_LANG']);
 
         /* act操作项的初始化 */
         if (empty($_REQUEST['act'])) {
@@ -36,14 +36,14 @@ class OrderStats extends Init
 
             /* 取得订单转化率数据 */
             $sql = "SELECT COUNT(*) AS total_order_num, " . $total_fee .
-                " FROM " . $ecs->table('order_info') .
+                " FROM " . $GLOBALS['ecs']->table('order_info') .
                 " WHERE 1 " . order_query_sql('finished');
-            $order_general = $db->getRow($sql);
+            $order_general = $GLOBALS['db']->getRow($sql);
             $order_general['total_turnover'] = floatval($order_general['total_turnover']);
 
             /* 取得商品总点击数量 */
-            $sql = 'SELECT SUM(click_count) FROM ' . $ecs->table('goods') . ' WHERE is_delete = 0';
-            $click_count = floatval($db->getOne($sql));
+            $sql = 'SELECT SUM(click_count) FROM ' . $GLOBALS['ecs']->table('goods') . ' WHERE is_delete = 0';
+            $click_count = floatval($GLOBALS['db']->getOne($sql));
 
             /* 每千个点击的订单数 */
             $click_ordernum = $click_count > 0 ? round(($order_general['total_order_num'] * 1000) / $click_count, 2) : 0;
@@ -91,16 +91,16 @@ class OrderStats extends Init
             /* 按月份交叉查询 */
             if ($is_multi) {
                 /* 订单概况 */
-                $order_general_xml = "<chart caption='$_LANG[order_circs]' shownames='1' showvalues='0' decimals='0' outCnvBaseFontSize='12' baseFontSize='12' >";
-                $order_general_xml .= "<categories><category label='{$_LANG['cs'][OS_UNCONFIRMED]}' />" .
-                    "<category label='{$_LANG['cs'][CS_AWAIT_PAY]}' />" .
-                    "<category label='{$_LANG['cs'][CS_AWAIT_SHIP]}' />" .
-                    "<category label='{$_LANG['cs'][CS_FINISHED]}' />" .
-                    "<category label='{$_LANG['cs'][PS_PAYING]}' />" .
-                    "<category label='{$_LANG['cs'][OS_CANCELED]}' />" .
-                    "<category label='{$_LANG['cs'][OS_INVALID]}' />" .
-                    "<category label='{$_LANG['cs'][OS_RETURNED]}' />" .
-                    "<category label='{$_LANG['cs'][OS_SHIPPED_PART]}' /></categories>";
+                $order_general_xml = "<chart caption='$GLOBALS['_LANG'][order_circs]' shownames='1' showvalues='0' decimals='0' outCnvBaseFontSize='12' baseFontSize='12' >";
+                $order_general_xml .= "<categories><category label='{$GLOBALS['_LANG']['cs'][OS_UNCONFIRMED]}' />" .
+                    "<category label='{$GLOBALS['_LANG']['cs'][CS_AWAIT_PAY]}' />" .
+                    "<category label='{$GLOBALS['_LANG']['cs'][CS_AWAIT_SHIP]}' />" .
+                    "<category label='{$GLOBALS['_LANG']['cs'][CS_FINISHED]}' />" .
+                    "<category label='{$GLOBALS['_LANG']['cs'][PS_PAYING]}' />" .
+                    "<category label='{$GLOBALS['_LANG']['cs'][OS_CANCELED]}' />" .
+                    "<category label='{$GLOBALS['_LANG']['cs'][OS_INVALID]}' />" .
+                    "<category label='{$GLOBALS['_LANG']['cs'][OS_RETURNED]}' />" .
+                    "<category label='{$GLOBALS['_LANG']['cs'][OS_SHIPPED_PART]}' /></categories>";
                 foreach ($start_date_arr as $k => $val) {
                     $seriesName = local_date('Y-m', $val);
                     $order_info = $this->get_orderinfo($start_date_arr[$k], $end_date_arr[$k]);
@@ -119,20 +119,20 @@ class OrderStats extends Init
                 $order_general_xml .= "</chart>";
 
                 /* 支付方式 */
-                $pay_xml = "<chart caption='$_LANG[pay_method]' shownames='1' showvalues='0' decimals='0' outCnvBaseFontSize='12' baseFontSize='12' >";
+                $pay_xml = "<chart caption='$GLOBALS['_LANG'][pay_method]' shownames='1' showvalues='0' decimals='0' outCnvBaseFontSize='12' baseFontSize='12' >";
 
                 $payment = array();
                 $payment_count = array();
 
                 foreach ($start_date_arr as $k => $val) {
                     $sql = 'SELECT i.pay_id, p.pay_name, i.pay_time, COUNT(i.order_id) AS order_num ' .
-                        'FROM ' . $ecs->table('payment') . ' AS p, ' . $ecs->table('order_info') . ' AS i ' .
+                        'FROM ' . $GLOBALS['ecs']->table('payment') . ' AS p, ' . $GLOBALS['ecs']->table('order_info') . ' AS i ' .
                         "WHERE p.pay_id = i.pay_id AND i.order_status = '" . OS_CONFIRMED . "' " .
                         "AND i.pay_status > '" . PS_UNPAYED . "' AND i.shipping_status > '" . SS_UNSHIPPED . "' " .
                         "AND i.add_time >= '$start_date_arr[$k]' AND i.add_time <= '$end_date_arr[$k]'" .
                         "GROUP BY i.pay_id ORDER BY order_num DESC";
-                    $pay_res = $db->query($sql);
-                    while ($pay_item = $db->FetchRow($pay_res)) {
+                    $pay_res = $GLOBALS['db']->query($sql);
+                    while ($pay_item = $GLOBALS['db']->FetchRow($pay_res)) {
                         $payment[strip_tags($pay_item['pay_name'])] = null;
 
                         $paydate = local_date('Y-m', $pay_item['pay_time']);
@@ -166,17 +166,17 @@ class OrderStats extends Init
                 $ship = array();
                 $ship_count = array();
 
-                $ship_xml = "<chart caption='$_LANG[shipping_method]' shownames='1' showvalues='0' decimals='0' outCnvBaseFontSize='12' baseFontSize='12' >";
+                $ship_xml = "<chart caption='$GLOBALS['_LANG'][shipping_method]' shownames='1' showvalues='0' decimals='0' outCnvBaseFontSize='12' baseFontSize='12' >";
 
                 foreach ($start_date_arr as $k => $val) {
                     $sql = 'SELECT sp.shipping_id, sp.shipping_name AS ship_name, i.shipping_time, COUNT(i.order_id) AS order_num ' .
-                        'FROM ' . $ecs->table('shipping') . ' AS sp, ' . $ecs->table('order_info') . ' AS i ' .
+                        'FROM ' . $GLOBALS['ecs']->table('shipping') . ' AS sp, ' . $GLOBALS['ecs']->table('order_info') . ' AS i ' .
                         'WHERE sp.shipping_id = i.shipping_id ' . order_query_sql('finished') .
                         "AND i.add_time >= '$start_date_arr[$k]' AND i.add_time <= '$end_date_arr[$k]' " .
                         "GROUP BY i.shipping_id ORDER BY order_num DESC";
 
-                    $ship_res = $db->query($sql);
-                    while ($ship_item = $db->FetchRow($ship_res)) {
+                    $ship_res = $GLOBALS['db']->query($sql);
+                    while ($ship_item = $GLOBALS['db']->FetchRow($ship_res)) {
                         $ship[$ship_item['ship_name']] = null;
 
                         $shipdate = local_date('Y-m', $ship_item['shipping_time']);
@@ -210,66 +210,66 @@ class OrderStats extends Init
                 /* 订单概况 */
                 $order_info = $this->get_orderinfo($start_date, $end_date);
 
-                $order_general_xml = "<graph caption='" . $_LANG['order_circs'] . "' decimalPrecision='2' showPercentageValues='0' showNames='1' showValues='1' showPercentageInLabel='0' pieYScale='45' pieBorderAlpha='40' pieFillAlpha='70' pieSliceDepth='15' pieRadius='100' outCnvBaseFontSize='13' baseFontSize='12'>";
+                $order_general_xml = "<graph caption='" . $GLOBALS['_LANG']['order_circs'] . "' decimalPrecision='2' showPercentageValues='0' showNames='1' showValues='1' showPercentageInLabel='0' pieYScale='45' pieBorderAlpha='40' pieFillAlpha='70' pieSliceDepth='15' pieRadius='100' outCnvBaseFontSize='13' baseFontSize='12'>";
 
-                $order_general_xml .= "<set value='" . $order_info['unconfirmed_num'] . "' name='" . $_LANG['cs'][OS_UNCONFIRMED] . "' color='" . $color_array[5] . "' />";
-                $order_general_xml .= "<set value='" . $order_info['await_pay_num'] . "' name='" . $_LANG['cs'][CS_AWAIT_PAY] . "' color='" . $color_array[0] . "' />";
-                $order_general_xml .= "<set value='" . $order_info['await_ship_num'] . "' name='" . $_LANG['cs'][CS_AWAIT_SHIP] . "' color='" . $color_array[1] . "'  />";
-                $order_general_xml .= "<set value='" . $order_info['finished_num'] . "' name='" . $_LANG['cs'][CS_FINISHED] . "' color='" . $color_array[4] . "' />";
-                $order_general_xml .= "<set value='" . $order_info['paying_num'] . "' name='" . $_LANG['cs'][PS_PAYING] . "' color='" . $color_array[1] . "' />";
-                $order_general_xml .= "<set value='" . $order_info['canceled_num'] . "' name='" . $_LANG['cs'][OS_CANCELED] . "' color='" . $color_array[2] . "' />";
-                $order_general_xml .= "<set value='" . $order_info['invalid_num'] . "' name='" . $_LANG['cs'][OS_INVALID] . "' color='" . $color_array[3] . "' />";
-                $order_general_xml .= "<set value='" . $order_info['returned_num'] . "' name='" . $_LANG['cs'][OS_RETURNED] . "' color='" . $color_array[6] . "' />";
-                $order_general_xml .= "<set value='" . $order_info['shipped_payt_num'] . "' name='" . $_LANG['cs'][OS_SHIPPED_PART] . "' color='" . $color_array[4] . "' />";
+                $order_general_xml .= "<set value='" . $order_info['unconfirmed_num'] . "' name='" . $GLOBALS['_LANG']['cs'][OS_UNCONFIRMED] . "' color='" . $color_array[5] . "' />";
+                $order_general_xml .= "<set value='" . $order_info['await_pay_num'] . "' name='" . $GLOBALS['_LANG']['cs'][CS_AWAIT_PAY] . "' color='" . $color_array[0] . "' />";
+                $order_general_xml .= "<set value='" . $order_info['await_ship_num'] . "' name='" . $GLOBALS['_LANG']['cs'][CS_AWAIT_SHIP] . "' color='" . $color_array[1] . "'  />";
+                $order_general_xml .= "<set value='" . $order_info['finished_num'] . "' name='" . $GLOBALS['_LANG']['cs'][CS_FINISHED] . "' color='" . $color_array[4] . "' />";
+                $order_general_xml .= "<set value='" . $order_info['paying_num'] . "' name='" . $GLOBALS['_LANG']['cs'][PS_PAYING] . "' color='" . $color_array[1] . "' />";
+                $order_general_xml .= "<set value='" . $order_info['canceled_num'] . "' name='" . $GLOBALS['_LANG']['cs'][OS_CANCELED] . "' color='" . $color_array[2] . "' />";
+                $order_general_xml .= "<set value='" . $order_info['invalid_num'] . "' name='" . $GLOBALS['_LANG']['cs'][OS_INVALID] . "' color='" . $color_array[3] . "' />";
+                $order_general_xml .= "<set value='" . $order_info['returned_num'] . "' name='" . $GLOBALS['_LANG']['cs'][OS_RETURNED] . "' color='" . $color_array[6] . "' />";
+                $order_general_xml .= "<set value='" . $order_info['shipped_payt_num'] . "' name='" . $GLOBALS['_LANG']['cs'][OS_SHIPPED_PART] . "' color='" . $color_array[4] . "' />";
                 $order_general_xml .= "</graph>";
 
                 /* 支付方式 */
-                $pay_xml = "<graph caption='" . $_LANG['pay_method'] . "' decimalPrecision='2' showPercentageValues='0' showNames='1' numberPrefix='' showValues='1' showPercentageInLabel='0' pieYScale='45' pieBorderAlpha='40' pieFillAlpha='70' pieSliceDepth='15' pieRadius='100' outCnvBaseFontSize='13' baseFontSize='12'>";
+                $pay_xml = "<graph caption='" . $GLOBALS['_LANG']['pay_method'] . "' decimalPrecision='2' showPercentageValues='0' showNames='1' numberPrefix='' showValues='1' showPercentageInLabel='0' pieYScale='45' pieBorderAlpha='40' pieFillAlpha='70' pieSliceDepth='15' pieRadius='100' outCnvBaseFontSize='13' baseFontSize='12'>";
 
                 $sql = 'SELECT i.pay_id, p.pay_name, COUNT(i.order_id) AS order_num ' .
-                    'FROM ' . $ecs->table('payment') . ' AS p, ' . $ecs->table('order_info') . ' AS i ' .
+                    'FROM ' . $GLOBALS['ecs']->table('payment') . ' AS p, ' . $GLOBALS['ecs']->table('order_info') . ' AS i ' .
                     "WHERE p.pay_id = i.pay_id " . order_query_sql('await_ship', 'i.') .
                     "AND i.add_time >= '$start_date' AND i.add_time <= '$end_date' " .
                     "GROUP BY i.pay_id ORDER BY order_num DESC";
-                $pay_res = $db->query($sql);
+                $pay_res = $GLOBALS['db']->query($sql);
 
-                while ($pay_item = $db->FetchRow($pay_res)) {
+                while ($pay_item = $GLOBALS['db']->FetchRow($pay_res)) {
                     $pay_xml .= "<set value='" . $pay_item['order_num'] . "' name='" . strip_tags($pay_item['pay_name']) . "' color='" . $color_array[mt_rand(0, 7)] . "'/>";
                 }
                 $pay_xml .= "</graph>";
 
                 /* 配送方式 */
-                $ship_xml = "<graph caption='" . $_LANG['shipping_method'] . "' decimalPrecision='2' showPercentageValues='0' showNames='1' numberPrefix='' showValues='1' showPercentageInLabel='0' pieYScale='45' pieBorderAlpha='40' pieFillAlpha='70' pieSliceDepth='15' pieRadius='100' outCnvBaseFontSize='13' baseFontSize='12'>";
+                $ship_xml = "<graph caption='" . $GLOBALS['_LANG']['shipping_method'] . "' decimalPrecision='2' showPercentageValues='0' showNames='1' numberPrefix='' showValues='1' showPercentageInLabel='0' pieYScale='45' pieBorderAlpha='40' pieFillAlpha='70' pieSliceDepth='15' pieRadius='100' outCnvBaseFontSize='13' baseFontSize='12'>";
 
                 $sql = 'SELECT sp.shipping_id, sp.shipping_name AS ship_name, COUNT(i.order_id) AS order_num ' .
-                    'FROM ' . $ecs->table('shipping') . ' AS sp, ' . $ecs->table('order_info') . ' AS i ' .
+                    'FROM ' . $GLOBALS['ecs']->table('shipping') . ' AS sp, ' . $GLOBALS['ecs']->table('order_info') . ' AS i ' .
                     'WHERE sp.shipping_id = i.shipping_id ' . order_query_sql('finished') .
                     "AND i.add_time >= '$start_date' AND i.add_time <= '$end_date' " .
                     "GROUP BY i.shipping_id ORDER BY order_num DESC";
-                $ship_res = $db->query($sql);
+                $ship_res = $GLOBALS['db']->query($sql);
 
-                while ($ship_item = $db->fetchRow($ship_res)) {
+                while ($ship_item = $GLOBALS['db']->fetchRow($ship_res)) {
                     $ship_xml .= "<set value='" . $ship_item['order_num'] . "' name='" . $ship_item['ship_name'] . "' color='" . $color_array[mt_rand(0, 7)] . "' />";
                 }
 
                 $ship_xml .= "</graph>";
             }
             /* 赋值到模板 */
-            $smarty->assign('order_general', $order_general);
-            $smarty->assign('total_turnover', price_format($order_general['total_turnover']));
-            $smarty->assign('click_count', $click_count);         //商品总点击数
-            $smarty->assign('click_ordernum', $click_ordernum);      //每千点订单数
-            $smarty->assign('click_turnover', price_format($click_turnover));  //每千点购物额
+            $GLOBALS['smarty']->assign('order_general', $order_general);
+            $GLOBALS['smarty']->assign('total_turnover', price_format($order_general['total_turnover']));
+            $GLOBALS['smarty']->assign('click_count', $click_count);         //商品总点击数
+            $GLOBALS['smarty']->assign('click_ordernum', $click_ordernum);      //每千点订单数
+            $GLOBALS['smarty']->assign('click_turnover', price_format($click_turnover));  //每千点购物额
 
-            $smarty->assign('is_multi', $is_multi);
+            $GLOBALS['smarty']->assign('is_multi', $is_multi);
 
-            $smarty->assign('order_general_xml', $order_general_xml);
-            $smarty->assign('ship_xml', $ship_xml);
-            $smarty->assign('pay_xml', $pay_xml);
+            $GLOBALS['smarty']->assign('order_general_xml', $order_general_xml);
+            $GLOBALS['smarty']->assign('ship_xml', $ship_xml);
+            $GLOBALS['smarty']->assign('pay_xml', $pay_xml);
 
-            $smarty->assign('ur_here', $_LANG['report_order']);
-            $smarty->assign('start_date', local_date($_CFG['date_format'], $start_date));
-            $smarty->assign('end_date', local_date($_CFG['date_format'], $end_date));
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['report_order']);
+            $GLOBALS['smarty']->assign('start_date', local_date($GLOBALS['_CFG']['date_format'], $start_date));
+            $GLOBALS['smarty']->assign('end_date', local_date($GLOBALS['_CFG']['date_format'], $end_date));
 
             for ($i = 0; $i < 5; $i++) {
                 if (isset($start_date_arr[$i])) {
@@ -278,15 +278,15 @@ class OrderStats extends Init
                     $start_date_arr[$i] = null;
                 }
             }
-            $smarty->assign('start_date_arr', $start_date_arr);
+            $GLOBALS['smarty']->assign('start_date_arr', $start_date_arr);
 
             if (!$is_multi) {
                 $filename = local_date('Ymd', $start_date) . '_' . local_date('Ymd', $end_date);
-                $smarty->assign('action_link', array('text' => $_LANG['down_order_statistics'], 'href' => 'order_stats.php?act=download&start_date=' . $start_date . '&end_date=' . $end_date . '&filename=' . $filename));
+                $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['down_order_statistics'], 'href' => 'order_stats.php?act=download&start_date=' . $start_date . '&end_date=' . $end_date . '&filename=' . $filename));
             }
 
             assign_query_info();
-            $smarty->display('order_stats.htm');
+            $GLOBALS['smarty']->display('order_stats.htm');
         } elseif ($act = 'download') {
             $filename = !empty($_REQUEST['filename']) ? trim($_REQUEST['filename']) : '';
 
@@ -296,20 +296,20 @@ class OrderStats extends Init
             $end_date = empty($_REQUEST['end_date']) ? time() : intval($_REQUEST['end_date']);
             /* 订单概况 */
             $order_info = $this->get_orderinfo($start_date, $end_date);
-            $data = $_LANG['order_circs'] . "\n";
-            $data .= "{$_LANG['cs'][OS_UNCONFIRMED]} \t {$_LANG['cs'][CS_AWAIT_PAY]} \t {$_LANG['cs'][CS_AWAIT_SHIP]} \t {$_LANG['cs'][CS_FINISHED]} \t {$_LANG['cs'][PS_PAYING]} \t {$_LANG['cs'][OS_CANCELED]} \t {$_LANG['cs'][OS_INVALID]} \t {$_LANG['cs'][OS_RETURNED]} \t {$_LANG['cs'][OS_SHIPPED_PART]}\n";
+            $data = $GLOBALS['_LANG']['order_circs'] . "\n";
+            $data .= "{$GLOBALS['_LANG']['cs'][OS_UNCONFIRMED]} \t {$GLOBALS['_LANG']['cs'][CS_AWAIT_PAY]} \t {$GLOBALS['_LANG']['cs'][CS_AWAIT_SHIP]} \t {$GLOBALS['_LANG']['cs'][CS_FINISHED]} \t {$GLOBALS['_LANG']['cs'][PS_PAYING]} \t {$GLOBALS['_LANG']['cs'][OS_CANCELED]} \t {$GLOBALS['_LANG']['cs'][OS_INVALID]} \t {$GLOBALS['_LANG']['cs'][OS_RETURNED]} \t {$GLOBALS['_LANG']['cs'][OS_SHIPPED_PART]}\n";
 
             $data .= "$order_info[unconfirmed_num] \t $order_info[await_pay_num] \t $order_info[await_ship_num] \t $order_info[finished_num] \t $order_info[paying_num] \t $order_info[canceled_num] \t $order_info[invalid_num] \t $order_info[returned_num]\t $order_info[shipped_payt_num]\n";
 
-            $data .= "\n$_LANG[pay_method]\n";
+            $data .= "\n$GLOBALS['_LANG'][pay_method]\n";
 
             /* 支付方式 */
             $sql = 'SELECT i.pay_id, p.pay_name, COUNT(i.order_id) AS order_num ' .
-                'FROM ' . $ecs->table('payment') . ' AS p, ' . $ecs->table('order_info') . ' AS i ' .
+                'FROM ' . $GLOBALS['ecs']->table('payment') . ' AS p, ' . $GLOBALS['ecs']->table('order_info') . ' AS i ' .
                 "WHERE p.pay_id = i.pay_id " . order_query_sql('finished') .
                 "AND i.add_time >= '$start_date' AND i.add_time <= '$end_date' " .
                 "GROUP BY i.pay_id ORDER BY order_num DESC";
-            $pay_res = $db->getAll($sql);
+            $pay_res = $GLOBALS['db']->getAll($sql);
             foreach ($pay_res as $val) {
                 $data .= strip_tags($val['pay_name']) . "\t";
             }
@@ -320,13 +320,13 @@ class OrderStats extends Init
 
             /* 配送方式 */
             $sql = 'SELECT sp.shipping_id, sp.shipping_name AS ship_name, COUNT(i.order_id) AS order_num ' .
-                'FROM ' . $ecs->table('shipping') . ' AS sp, ' . $ecs->table('order_info') . ' AS i ' .
+                'FROM ' . $GLOBALS['ecs']->table('shipping') . ' AS sp, ' . $GLOBALS['ecs']->table('order_info') . ' AS i ' .
                 'WHERE sp.shipping_id = i.shipping_id ' . order_query_sql('finished') .
                 "AND i.add_time >= '$start_date' AND i.add_time <= '$end_date' " .
                 "GROUP BY i.shipping_id ORDER BY order_num DESC";
-            $ship_res = $db->getAll($sql);
+            $ship_res = $GLOBALS['db']->getAll($sql);
 
-            $data .= "\n$_LANG[shipping_method]\n";
+            $data .= "\n$GLOBALS['_LANG'][shipping_method]\n";
             foreach ($ship_res as $val) {
                 $data .= $val['ship_name'] . "\t";
             }

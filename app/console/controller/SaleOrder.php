@@ -10,8 +10,8 @@ class SaleOrder extends Init
     public function index()
     {
         load_helper('order');
-        require_once(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/admin/statistic.php');
-        $smarty->assign('lang', $_LANG);
+        require_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/admin/statistic.php');
+        $GLOBALS['smarty']->assign('lang', $GLOBALS['_LANG']);
 
         if (isset($_REQUEST['act']) && ($_REQUEST['act'] == 'query' || $_REQUEST['act'] == 'download')) {
             /* 检查权限 */
@@ -31,8 +31,8 @@ class SaleOrder extends Init
                 header("Content-type: application/vnd.ms-excel; charset=utf-8");
                 header("Content-Disposition: attachment; filename=$filename.xls");
 
-                $data = "$_LANG[sell_stats]\t\n";
-                $data .= "$_LANG[order_by]\t$_LANG[goods_name]\t$_LANG[goods_sn]\t$_LANG[sell_amount]\t$_LANG[sell_sum]\t$_LANG[percent_count]\n";
+                $data = "$GLOBALS['_LANG'][sell_stats]\t\n";
+                $data .= "$GLOBALS['_LANG'][order_by]\t$GLOBALS['_LANG'][goods_name]\t$GLOBALS['_LANG'][goods_sn]\t$GLOBALS['_LANG'][sell_amount]\t$GLOBALS['_LANG'][sell_sum]\t$GLOBALS['_LANG'][percent_count]\n";
 
                 foreach ($goods_order_data as $k => $row) {
                     $order_by = $k + 1;
@@ -47,15 +47,15 @@ class SaleOrder extends Init
                 exit;
             }
             $goods_order_data = $this->get_sales_order();
-            $smarty->assign('goods_order_data', $goods_order_data['sales_order_data']);
-            $smarty->assign('filter', $goods_order_data['filter']);
-            $smarty->assign('record_count', $goods_order_data['record_count']);
-            $smarty->assign('page_count', $goods_order_data['page_count']);
+            $GLOBALS['smarty']->assign('goods_order_data', $goods_order_data['sales_order_data']);
+            $GLOBALS['smarty']->assign('filter', $goods_order_data['filter']);
+            $GLOBALS['smarty']->assign('record_count', $goods_order_data['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $goods_order_data['page_count']);
 
             $sort_flag = sort_flag($goods_order_data['filter']);
-            $smarty->assign($sort_flag['tag'], $sort_flag['img']);
+            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
-            make_json_result($smarty->fetch('sale_order.htm'), '', array('filter' => $goods_order_data['filter'], 'page_count' => $goods_order_data['page_count']));
+            make_json_result($GLOBALS['smarty']->fetch('sale_order.htm'), '', array('filter' => $goods_order_data['filter'], 'page_count' => $goods_order_data['page_count']));
         } else {
             /* 权限检查 */
             admin_priv('sale_order_stats');
@@ -70,21 +70,21 @@ class SaleOrder extends Init
             $goods_order_data = $this->get_sales_order();
 
             /* 赋值到模板 */
-            $smarty->assign('ur_here', $_LANG['sell_stats']);
-            $smarty->assign('goods_order_data', $goods_order_data['sales_order_data']);
-            $smarty->assign('filter', $goods_order_data['filter']);
-            $smarty->assign('record_count', $goods_order_data['record_count']);
-            $smarty->assign('page_count', $goods_order_data['page_count']);
-            $smarty->assign('filter', $goods_order_data['filter']);
-            $smarty->assign('full_page', 1);
-            $smarty->assign('sort_goods_num', '<img src="images/sort_desc.png">');
-            $smarty->assign('start_date', local_date('Y-m-d', $_REQUEST['start_date']));
-            $smarty->assign('end_date', local_date('Y-m-d', $_REQUEST['end_date']));
-            $smarty->assign('action_link', array('text' => $_LANG['download_sale_sort'], 'href' => '#download'));
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['sell_stats']);
+            $GLOBALS['smarty']->assign('goods_order_data', $goods_order_data['sales_order_data']);
+            $GLOBALS['smarty']->assign('filter', $goods_order_data['filter']);
+            $GLOBALS['smarty']->assign('record_count', $goods_order_data['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $goods_order_data['page_count']);
+            $GLOBALS['smarty']->assign('filter', $goods_order_data['filter']);
+            $GLOBALS['smarty']->assign('full_page', 1);
+            $GLOBALS['smarty']->assign('sort_goods_num', '<img src="images/sort_desc.png">');
+            $GLOBALS['smarty']->assign('start_date', local_date('Y-m-d', $_REQUEST['start_date']));
+            $GLOBALS['smarty']->assign('end_date', local_date('Y-m-d', $_REQUEST['end_date']));
+            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['download_sale_sort'], 'href' => '#download'));
 
             /* 显示页面 */
             assign_query_info();
-            $smarty->display('sale_order.htm');
+            $GLOBALS['smarty']->display('sale_order.htm');
         }
     }
 

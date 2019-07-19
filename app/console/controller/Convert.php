@@ -22,13 +22,13 @@ class Convert extends Init
             $modules = read_modules('../includes/modules/convert');
             for ($i = 0; $i < count($modules); $i++) {
                 $code = $modules[$i]['code'];
-                $lang_file = ROOT_PATH . 'languages/' . $_CFG['lang'] . '/convert/' . $code . '.php';
+                $lang_file = ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/convert/' . $code . '.php';
                 if (file_exists($lang_file)) {
                     include_once($lang_file);
                 }
-                $modules[$i]['desc'] = $_LANG[$modules[$i]['desc']];
+                $modules[$i]['desc'] = $GLOBALS['_LANG'][$modules[$i]['desc']];
             }
-            $smarty->assign('module_list', $modules);
+            $GLOBALS['smarty']->assign('module_list', $modules);
 
             /* 设置默认值 */
             $def_val = array(
@@ -39,15 +39,15 @@ class Convert extends Init
                 'prefix' => 'sdb_',
                 'path' => ''
             );
-            $smarty->assign('def_val', $def_val);
+            $GLOBALS['smarty']->assign('def_val', $def_val);
 
             /* 取得字符集数组 */
-            $smarty->assign('charset_list', get_charset_list());
+            $GLOBALS['smarty']->assign('charset_list', get_charset_list());
 
             /* 显示模板 */
-            $smarty->assign('ur_here', $_LANG['convert']);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['convert']);
             assign_query_info();
-            $smarty->display('convert_main.htm');
+            $GLOBALS['smarty']->display('convert_main.htm');
         }
 
         /*------------------------------------------------------ */
@@ -77,7 +77,7 @@ class Convert extends Init
 
             $diff_arr = array_diff($required_table_list, $table_list);
             if ($diff_arr) {
-                make_json_error(sprintf($_LANG['table_error'], join(',', $table_list)));
+                make_json_error(sprintf($GLOBALS['_LANG']['table_error'], join(',', $table_list)));
             }
 
             /* 检查源目录是否存在，是否可读 */
@@ -85,16 +85,16 @@ class Convert extends Init
             foreach ($dir_list as $dir) {
                 $cur_dir = ($config->path . $dir);
                 if (!file_exists($cur_dir) || !is_dir($cur_dir)) {
-                    make_json_error(sprintf($_LANG['dir_error'], $cur_dir));
+                    make_json_error(sprintf($GLOBALS['_LANG']['dir_error'], $cur_dir));
                 }
 
                 if (file_mode_info($cur_dir) & 1 != 1) {
-                    make_json_error(sprintf($_LANG['dir_not_readable'], $cur_dir));
+                    make_json_error(sprintf($GLOBALS['_LANG']['dir_not_readable'], $cur_dir));
                 }
 
                 $res = $this->check_files_readable($cur_dir);
                 if ($res !== true) {
-                    make_json_error(sprintf($_LANG['file_not_readable'], $res));
+                    make_json_error(sprintf($GLOBALS['_LANG']['file_not_readable'], $res));
                 }
             }
 
@@ -115,11 +115,11 @@ class Convert extends Init
             /* 检查目的目录是否存在，是否可写 */
             foreach ($to_dir_list as $to_dir) {
                 if (!file_exists($to_dir) || !is_dir($to_dir)) {
-                    make_json_error(sprintf($_LANG['dir_error'], $to_dir));
+                    make_json_error(sprintf($GLOBALS['_LANG']['dir_error'], $to_dir));
                 }
 
                 if (file_mode_info($to_dir) & 4 != 4) {
-                    make_json_error(sprintf($_LANG['dir_not_writable'], $to_dir));
+                    make_json_error(sprintf($GLOBALS['_LANG']['dir_not_writable'], $to_dir));
                 }
             }
 
@@ -127,13 +127,13 @@ class Convert extends Init
             $_SESSION['convert_config'] = $config;
 
             /* 包含插件语言文件 */
-            include_once(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/convert/' . $config->code . '.php');
+            include_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/convert/' . $config->code . '.php');
 
             /* 取得第一步操作 */
             $step = $convert->next_step('');
 
             /* 返回 */
-            make_json_result($step, $_LANG[$step]);
+            make_json_result($step, $GLOBALS['_LANG'][$step]);
         }
 
         /*------------------------------------------------------ */
@@ -161,7 +161,7 @@ class Convert extends Init
             $convert = new $config->code($sdb, $config->prefix, $config->path, $config->charset);
 
             /* 包含插件语言文件 */
-            include_once(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/convert/' . $config->code . '.php');
+            include_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/convert/' . $config->code . '.php');
 
             /* 执行步骤 */
             $result = $convert->process($step);
@@ -173,7 +173,7 @@ class Convert extends Init
             $step = $convert->next_step($step);
 
             /* 返回 */
-            make_json_result($step, empty($_LANG[$step]) ? '' : $_LANG[$step]);
+            make_json_result($step, empty($GLOBALS['_LANG'][$step]) ? '' : $GLOBALS['_LANG'][$step]);
         }
     }
 

@@ -6,8 +6,6 @@
 
 $cron_lang = ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/cron/auto_cancel.php';
 if (file_exists($cron_lang)) {
-    global $_LANG;
-
     include_once($cron_lang);
 }
 
@@ -41,21 +39,21 @@ cancel_log("begin");
 empty($cron['auto_cancel_day']) && $cron['auto_cancel_day'] = 12;
 $cancel_time = gmtime() - $cron['auto_cancel_day'] * 3600;
 load_helper('order');
-$sql = "SELECT pay_id FROM " . $ecs->table('payment') . " WHERE is_cod = 1";
-$pay_id_list = $db->getCol($sql);
+$sql = "SELECT pay_id FROM " . $GLOBALS['ecs']->table('payment') . " WHERE is_cod = 1";
+$pay_id_list = $GLOBALS['db']->getCol($sql);
 $order_status = [OS_UNCONFIRMED, OS_CONFIRMED, OS_SPLITED, OS_SPLITING_PART];
 $pay_status = [PS_UNPAYED];
 $shipping_status = [SS_UNSHIPPED];
 $where = "order_status in (" . implode(',', $order_status) . ") AND pay_status in (" . implode(',', $pay_status) . ") AND shipping_status in (" . implode(',', $shipping_status) . ") AND pay_id not in (" . implode(',', $pay_id_list) . ") AND add_time < " . $cancel_time;
-$sql = "SELECT count(*) FROM " . $ecs->table('order_info') . " WHERE " . $where;
-$count = $db->GetOne($sql);
+$sql = "SELECT count(*) FROM " . $GLOBALS['ecs']->table('order_info') . " WHERE " . $where;
+$count = $GLOBALS['db']->GetOne($sql);
 cancel_log("select_count:" . $count);
 $page_size = 100;
 $total = ceil($count / $page_size);
 $i = 1;
 while ($i <= $total) {
-    $sql = "SELECT * FROM " . $ecs->table('order_info') . " WHERE " . $where . " limit 0," . $page_size;
-    $rows = $db->getAll($sql);
+    $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('order_info') . " WHERE " . $where . " limit 0," . $page_size;
+    $rows = $GLOBALS['db']->getAll($sql);
     cancel_log("select_sql:" . $sql);
     cancel_log("select_rows:", $rows);
     foreach ($rows as $key => $order) {
@@ -68,18 +66,18 @@ while ($i <= $total) {
         order_action($order['order_sn'], OS_CANCELED, $order['shipping_status'], PS_UNPAYED, 'system', 'system');
 
         /* 如果使用库存，且下订单时减库存，则增加库存 */
-        if ($_CFG['use_storage'] == '1' && $_CFG['stock_dec_time'] == SDT_PLACE) {
+        if ($GLOBALS['_CFG']['use_storage'] == '1' && $GLOBALS['_CFG']['stock_dec_time'] == SDT_PLACE) {
             change_order_goods_storage($order_id, false, SDT_PLACE);
         }
 
         /* 发送邮件 */
-        if ($_CFG['send_cancel_email'] == '1') {
+        if ($GLOBALS['_CFG']['send_cancel_email'] == '1') {
             $tpl = get_mail_template('order_cancel');
-            $smarty->assign('order', $order);
-            $smarty->assign('shop_name', $_CFG['shop_name']);
-            $smarty->assign('send_date', local_date($_CFG['date_format']));
-            $smarty->assign('sent_date', local_date($_CFG['date_format']));
-            $content = $smarty->fetch('str:' . $tpl['template_content']);
+            $GLOBALS['smarty']->assign('order', $order);
+            $GLOBALS['smarty']->assign('shop_name', $GLOBALS['_CFG']['shop_name']);
+            $GLOBALS['smarty']->assign('send_date', local_date($GLOBALS['_CFG']['date_format']));
+            $GLOBALS['smarty']->assign('sent_date', local_date($GLOBALS['_CFG']['date_format']));
+            $content = $GLOBALS['smarty']->fetch('str:' . $tpl['template_content']);
             send_mail($order['consignee'], $order['email'], $tpl['template_subject'], $content, $tpl['is_html']);
         }
 

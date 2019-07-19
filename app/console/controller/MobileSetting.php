@@ -9,7 +9,7 @@ class MobileSetting extends Init
 {
     public function index()
     {
-        $uri = $ecs->url();
+        $uri = $GLOBALS['ecs']->url();
         $allow_suffix = array('gif', 'jpg', 'png', 'jpeg', 'bmp');
 
         /*------------------------------------------------------ */
@@ -18,7 +18,7 @@ class MobileSetting extends Init
         if ($_REQUEST['act'] == 'list') {
             /* 检查权限 */
             admin_priv('mobile_setting');
-            $smarty->assign('ur_here', $_LANG['banner_mobile']);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['banner_mobile']);
             $cert = new certificate;
             $isOpenWap = $cert->is_open_sn('fy');
             if ($isOpenWap == false && $_SESSION['yunqi_login'] && $_SESSION['TOKEN']) {
@@ -44,9 +44,9 @@ class MobileSetting extends Init
             assign_query_info();
             $flash_dir = ROOT_PATH . 'data/flashdata/';
 
-            $smarty->assign('playerdb', $playerdb);
-            $smarty->assign('group_list', $grouplist);
-            $smarty->display('banner_config.html');
+            $GLOBALS['smarty']->assign('playerdb', $playerdb);
+            $GLOBALS['smarty']->assign('group_list', $grouplist);
+            $GLOBALS['smarty']->display('banner_config.html');
         } elseif ($_REQUEST['act'] == 'del') {
             admin_priv('flash_manage');
 
@@ -56,7 +56,7 @@ class MobileSetting extends Init
                 $rt = $flashdb[$id];
             } else {
                 $links[] = array('text' => '移动端轮播图配置', 'href' => 'mobile_setting.php?act=list');
-                sys_msg($_LANG['id_error'], 0, $links);
+                sys_msg($GLOBALS['_LANG']['id_error'], 0, $links);
             }
 
             if (strpos($rt['src'], 'http') === false) {
@@ -70,7 +70,7 @@ class MobileSetting extends Init
             }
             $this->put_flash_xml($temp);
             $error_msg = '';
-            $this->set_flash_data($_CFG['flash_theme'], $error_msg);
+            $this->set_flash_data($GLOBALS['_CFG']['flash_theme'], $error_msg);
             ecs_header("Location: mobile_setting.php?act=list\n");
             exit;
         } elseif ($_REQUEST['act'] == 'add') {
@@ -85,17 +85,17 @@ class MobileSetting extends Init
                 $width_height = $this->get_width_height();
                 assign_query_info();
                 if (isset($width_height['width']) || isset($width_height['height'])) {
-                    $smarty->assign('width_height', sprintf($_LANG['width_height'], $width_height['width'], $width_height['height']));
+                    $GLOBALS['smarty']->assign('width_height', sprintf($GLOBALS['_LANG']['width_height'], $width_height['width'], $width_height['height']));
                 }
 
-                $smarty->assign('action_link', array('text' => $_LANG['go_url'], 'href' => 'mobile_setting.php?act=list'));
-                $smarty->assign('rt', $rt);
-                $smarty->assign('ur_here', $_LANG['add_picad']);
-                $smarty->display('flashplay_add.htm');
+                $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['go_url'], 'href' => 'mobile_setting.php?act=list'));
+                $GLOBALS['smarty']->assign('rt', $rt);
+                $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['add_picad']);
+                $GLOBALS['smarty']->display('flashplay_add.htm');
             } elseif ($_POST['step'] == 2) {
                 if (!empty($_FILES['img_file_src']['name'])) {
                     if (!get_file_suffix($_FILES['img_file_src']['name'], $allow_suffix)) {
-                        sys_msg($_LANG['invalid_type']);
+                        sys_msg($GLOBALS['_LANG']['invalid_type']);
                     }
                     $name = date('Ymd');
                     for ($i = 0; $i < 6; $i++) {
@@ -109,20 +109,20 @@ class MobileSetting extends Init
                     }
                 } elseif (!empty($_POST['img_src'])) {
                     if (!get_file_suffix($_POST['img_src'], $allow_suffix)) {
-                        sys_msg($_LANG['invalid_type']);
+                        sys_msg($GLOBALS['_LANG']['invalid_type']);
                     }
                     $src = $_POST['img_src'];
                     if (strstr($src, 'http') && !strstr($src, $_SERVER['SERVER_NAME'])) {
                         $src = $this->get_url_image($src);
                     }
                 } else {
-                    $links[] = array('text' => $_LANG['add_new'], 'href' => 'mobile_setting.php?act=add');
-                    sys_msg($_LANG['src_empty'], 0, $links);
+                    $links[] = array('text' => $GLOBALS['_LANG']['add_new'], 'href' => 'mobile_setting.php?act=add');
+                    sys_msg($GLOBALS['_LANG']['src_empty'], 0, $links);
                 }
 
                 if (empty($_POST['img_url'])) {
-                    $links[] = array('text' => $_LANG['add_new'], 'href' => 'mobile_setting.php?act=add');
-                    sys_msg($_LANG['link_empty'], 0, $links);
+                    $links[] = array('text' => $GLOBALS['_LANG']['add_new'], 'href' => 'mobile_setting.php?act=add');
+                    sys_msg($GLOBALS['_LANG']['link_empty'], 0, $links);
                 }
 
                 // 获取flash播放器数据
@@ -145,9 +145,9 @@ class MobileSetting extends Init
 
                 $this->put_flash_xml($_flashdb);
                 $error_msg = '';
-                $this->set_flash_data($_CFG['flash_theme'], $error_msg);
-                $links[] = array('text' => $_LANG['go_url'], 'href' => 'mobile_setting.php?act=list');
-                sys_msg($_LANG['edit_ok'], 0, $links);
+                $this->set_flash_data($GLOBALS['_CFG']['flash_theme'], $error_msg);
+                $links[] = array('text' => $GLOBALS['_LANG']['go_url'], 'href' => 'mobile_setting.php?act=list');
+                sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
             }
         } elseif ($_REQUEST['act'] == 'edit') {
             admin_priv('flash_manage');
@@ -157,8 +157,8 @@ class MobileSetting extends Init
             if (isset($flashdb[$id])) {
                 $rt = $flashdb[$id];
             } else {
-                $links[] = array('text' => $_LANG['go_url'], 'href' => 'mobile_setting.php?act=list');
-                sys_msg($_LANG['id_error'], 0, $links);
+                $links[] = array('text' => $GLOBALS['_LANG']['go_url'], 'href' => 'mobile_setting.php?act=list');
+                sys_msg($GLOBALS['_LANG']['id_error'], 0, $links);
             }
             if (empty($_POST['step'])) {
                 $rt['act'] = 'edit';
@@ -168,21 +168,21 @@ class MobileSetting extends Init
                 $rt['img_sort'] = empty($rt['sort']) ? 0 : $rt['sort'];
 
                 $rt['id'] = $id;
-                $smarty->assign('action_link', array('text' => $_LANG['go_url'], 'href' => 'mobile_setting.php?act=list'));
-                $smarty->assign('rt', $rt);
-                $smarty->assign('ur_here', $_LANG['edit_picad']);
-                $smarty->display('flashplay_add.htm');
+                $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['go_url'], 'href' => 'mobile_setting.php?act=list'));
+                $GLOBALS['smarty']->assign('rt', $rt);
+                $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['edit_picad']);
+                $GLOBALS['smarty']->display('flashplay_add.htm');
             } elseif ($_POST['step'] == 2) {
                 // if (empty($_POST['img_url']))
                 // {
                 //     //若链接地址为空
-                //     $links[] = array('text' => $_LANG['return_edit'], 'href' => 'mobile_setting.php?act=edit&id=' . $id);
-                //     sys_msg($_LANG['link_empty'], 0, $links);
+                //     $links[] = array('text' => $GLOBALS['_LANG']['return_edit'], 'href' => 'mobile_setting.php?act=edit&id=' . $id);
+                //     sys_msg($GLOBALS['_LANG']['link_empty'], 0, $links);
                 // }
 
                 if (!empty($_FILES['img_file_src']['name'])) {
                     if (!get_file_suffix($_FILES['img_file_src']['name'], $allow_suffix)) {
-                        sys_msg($_LANG['invalid_type']);
+                        sys_msg($GLOBALS['_LANG']['invalid_type']);
                     }
                     //有上传
                     $name = date('Ymd');
@@ -199,14 +199,14 @@ class MobileSetting extends Init
                 } elseif (!empty($_POST['img_src'])) {
                     $src = $_POST['img_src'];
                     if (!get_file_suffix($_POST['img_src'], $allow_suffix)) {
-                        sys_msg($_LANG['invalid_type']);
+                        sys_msg($GLOBALS['_LANG']['invalid_type']);
                     }
                     if (strstr($src, 'http') && !strstr($src, $_SERVER['SERVER_NAME'])) {
                         $src = $this->get_url_image($src);
                     }
                 } else {
-                    $links[] = array('text' => $_LANG['return_edit'], 'href' => 'mobile_setting.php?act=edit&id=' . $id);
-                    sys_msg($_LANG['src_empty'], 0, $links);
+                    $links[] = array('text' => $GLOBALS['_LANG']['return_edit'], 'href' => 'mobile_setting.php?act=edit&id=' . $id);
+                    sys_msg($GLOBALS['_LANG']['src_empty'], 0, $links);
                 }
 
                 if (strpos($rt['src'], 'http') === false && $rt['src'] != $src) {
@@ -228,9 +228,9 @@ class MobileSetting extends Init
 
                 $this->put_flash_xml($_flashdb);
                 $error_msg = '';
-                $this->set_flash_data($_CFG['flash_theme'], $error_msg);
-                $links[] = array('text' => $_LANG['go_url'], 'href' => 'mobile_setting.php?act=list');
-                sys_msg($_LANG['edit_ok'], 0, $links);
+                $this->set_flash_data($GLOBALS['_CFG']['flash_theme'], $error_msg);
+                $links[] = array('text' => $GLOBALS['_LANG']['go_url'], 'href' => 'mobile_setting.php?act=list');
+                sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
             }
         }
     }

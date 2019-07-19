@@ -13,17 +13,17 @@ class EmailList extends Init
 
         if ($_REQUEST['act'] == 'list') {
             $emaildb = $this->get_email_list();
-            $smarty->assign('full_page', 1);
-            $smarty->assign('ur_here', $_LANG['email_list']);
-            $smarty->assign('emaildb', $emaildb['emaildb']);
-            $smarty->assign('filter', $emaildb['filter']);
-            $smarty->assign('record_count', $emaildb['record_count']);
-            $smarty->assign('page_count', $emaildb['page_count']);
+            $GLOBALS['smarty']->assign('full_page', 1);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['email_list']);
+            $GLOBALS['smarty']->assign('emaildb', $emaildb['emaildb']);
+            $GLOBALS['smarty']->assign('filter', $emaildb['filter']);
+            $GLOBALS['smarty']->assign('record_count', $emaildb['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $emaildb['page_count']);
             assign_query_info();
-            $smarty->display('email_list.htm');
+            $GLOBALS['smarty']->display('email_list.htm');
         } elseif ($_REQUEST['act'] == 'export') {
-            $sql = "SELECT email FROM " . $ecs->table('email_list') . "WHERE stat = 1";
-            $emails = $db->getAll($sql);
+            $sql = "SELECT email FROM " . $GLOBALS['ecs']->table('email_list') . "WHERE stat = 1";
+            $emails = $GLOBALS['db']->getAll($sql);
             $out = '';
             foreach ($emails as $key => $val) {
                 $out .= "$val[email]\n";
@@ -40,16 +40,16 @@ class EmailList extends Init
             exit;
         } elseif ($_REQUEST['act'] == 'query') {
             $emaildb = $this->get_email_list();
-            $smarty->assign('emaildb', $emaildb['emaildb']);
-            $smarty->assign('filter', $emaildb['filter']);
-            $smarty->assign('record_count', $emaildb['record_count']);
-            $smarty->assign('page_count', $emaildb['page_count']);
+            $GLOBALS['smarty']->assign('emaildb', $emaildb['emaildb']);
+            $GLOBALS['smarty']->assign('filter', $emaildb['filter']);
+            $GLOBALS['smarty']->assign('record_count', $emaildb['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $emaildb['page_count']);
 
             $sort_flag = sort_flag($emaildb['filter']);
-            $smarty->assign($sort_flag['tag'], $sort_flag['img']);
+            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
             make_json_result(
-                $smarty->fetch('email_list.htm'),
+                $GLOBALS['smarty']->fetch('email_list.htm'),
                 '',
                 array('filter' => $emaildb['filter'], 'page_count' => $emaildb['page_count'])
             );
@@ -60,15 +60,15 @@ class EmailList extends Init
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'batch_remove') {
             if (!isset($_POST['checkboxes']) || !is_array($_POST['checkboxes'])) {
-                sys_msg($_LANG['no_select_email'], 1);
+                sys_msg($GLOBALS['_LANG']['no_select_email'], 1);
             }
 
-            $sql = "DELETE FROM " . $ecs->table('email_list') .
+            $sql = "DELETE FROM " . $GLOBALS['ecs']->table('email_list') .
                 " WHERE id " . db_create_in(join(',', $_POST['checkboxes']));
-            $db->query($sql);
+            $GLOBALS['db']->query($sql);
 
-            $lnk[] = array('text' => $_LANG['back_list'], 'href' => 'email_list.php?act=list');
-            sys_msg(sprintf($_LANG['batch_remove_succeed'], $db->affected_rows()), 0, $lnk);
+            $lnk[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'email_list.php?act=list');
+            sys_msg(sprintf($GLOBALS['_LANG']['batch_remove_succeed'], $GLOBALS['db']->affected_rows()), 0, $lnk);
         }
 
         /*------------------------------------------------------ */
@@ -76,15 +76,15 @@ class EmailList extends Init
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'batch_unremove') {
             if (!isset($_POST['checkboxes']) || !is_array($_POST['checkboxes'])) {
-                sys_msg($_LANG['no_select_email'], 1);
+                sys_msg($GLOBALS['_LANG']['no_select_email'], 1);
             }
 
-            $sql = "UPDATE " . $ecs->table('email_list') .
+            $sql = "UPDATE " . $GLOBALS['ecs']->table('email_list') .
                 " SET stat = 1 WHERE stat <> 1 AND id " . db_create_in(join(',', $_POST['checkboxes']));
-            $db->query($sql);
+            $GLOBALS['db']->query($sql);
 
-            $lnk[] = array('text' => $_LANG['back_list'], 'href' => 'email_list.php?act=list');
-            sys_msg(sprintf($_LANG['batch_unremove_succeed'], $db->affected_rows()), 0, $lnk);
+            $lnk[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'email_list.php?act=list');
+            sys_msg(sprintf($GLOBALS['_LANG']['batch_unremove_succeed'], $GLOBALS['db']->affected_rows()), 0, $lnk);
         }
 
         /*------------------------------------------------------ */
@@ -92,15 +92,15 @@ class EmailList extends Init
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'batch_exit') {
             if (!isset($_POST['checkboxes']) || !is_array($_POST['checkboxes'])) {
-                sys_msg($_LANG['no_select_email'], 1);
+                sys_msg($GLOBALS['_LANG']['no_select_email'], 1);
             }
 
-            $sql = "UPDATE " . $ecs->table('email_list') .
+            $sql = "UPDATE " . $GLOBALS['ecs']->table('email_list') .
                 " SET stat = 2 WHERE stat <> 2 AND id " . db_create_in(join(',', $_POST['checkboxes']));
-            $db->query($sql);
+            $GLOBALS['db']->query($sql);
 
-            $lnk[] = array('text' => $_LANG['back_list'], 'href' => 'email_list.php?act=list');
-            sys_msg(sprintf($_LANG['batch_exit_succeed'], $db->affected_rows()), 0, $lnk);
+            $lnk[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'email_list.php?act=list');
+            sys_msg(sprintf($GLOBALS['_LANG']['batch_exit_succeed'], $GLOBALS['db']->affected_rows()), 0, $lnk);
         }
     }
 

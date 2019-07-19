@@ -7,7 +7,6 @@
 $shipping_lang = ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/shipping/sf_express.php';
 
 if (file_exists($shipping_lang)) {
-    global $_LANG;
     include_once($shipping_lang);
 }
 
@@ -49,7 +48,7 @@ if (isset($set_modules) && $set_modules == true) {
     $modules[$i]['print_bg'] = '/images/receipt/dly_sf_express.jpg';
 
     /* 打印快递单标签位置信息 */
-    $modules[$i]['config_lable'] = 't_shop_name,' . $_LANG['lable_box']['shop_name'] . ',150,29,112,137,b_shop_name||,||t_shop_address,' . $_LANG['lable_box']['shop_address'] . ',268,55,105,168,b_shop_address||,||t_shop_tel,' . $_LANG['lable_box']['shop_tel'] . ',55,25,177,224,b_shop_tel||,||t_customer_name,' . $_LANG['lable_box']['customer_name'] . ',78,23,299,265,b_customer_name||,||t_customer_address,' . $_LANG['lable_box']['customer_address'] . ',271,94,104,293,b_customer_address||,||';
+    $modules[$i]['config_lable'] = 't_shop_name,' . $GLOBALS['_LANG']['lable_box']['shop_name'] . ',150,29,112,137,b_shop_name||,||t_shop_address,' . $GLOBALS['_LANG']['lable_box']['shop_address'] . ',268,55,105,168,b_shop_address||,||t_shop_tel,' . $GLOBALS['_LANG']['lable_box']['shop_tel'] . ',55,25,177,224,b_shop_tel||,||t_customer_name,' . $GLOBALS['_LANG']['lable_box']['customer_name'] . ',78,23,299,265,b_customer_name||,||t_customer_address,' . $GLOBALS['_LANG']['lable_box']['customer_address'] . ',271,94,104,293,b_customer_address||,||';
 
     return;
 }

@@ -18,16 +18,16 @@ class Affiliate extends Init
         if ($_REQUEST['act'] == 'list') {
             assign_query_info();
             if (empty($_REQUEST['is_ajax'])) {
-                $smarty->assign('full_page', 1);
+                $GLOBALS['smarty']->assign('full_page', 1);
             }
 
-            $smarty->assign('ur_here', $_LANG['affiliate']);
-            $smarty->assign('config', $config);
-            $smarty->display('affiliate.htm');
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['affiliate']);
+            $GLOBALS['smarty']->assign('config', $config);
+            $GLOBALS['smarty']->display('affiliate.htm');
         } elseif ($_REQUEST['act'] == 'query') {
-            $smarty->assign('ur_here', $_LANG['affiliate']);
-            $smarty->assign('config', $config);
-            make_json_result($smarty->fetch('affiliate.htm'), '', null);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['affiliate']);
+            $GLOBALS['smarty']->assign('config', $config);
+            make_json_result($GLOBALS['smarty']->fetch('affiliate.htm'), '', null);
         }
         /*------------------------------------------------------ */
         //-- 增加下线分配方案
@@ -51,14 +51,14 @@ class Affiliate extends Init
                     $_POST['level_money'] .= '%';
                 }
                 $items = array('level_point' => $_POST['level_point'], 'level_money' => $_POST['level_money']);
-                $links[] = array('text' => $_LANG['affiliate'], 'href' => 'affiliate.php?act=list');
+                $links[] = array('text' => $GLOBALS['_LANG']['affiliate'], 'href' => 'affiliate.php?act=list');
                 $config['item'][] = $items;
                 $config['on'] = 1;
                 $config['config']['separate_by'] = 0;
 
                 $this->put_affiliate($config);
             } else {
-                make_json_error($_LANG['level_error']);
+                make_json_error($GLOBALS['_LANG']['level_error']);
             }
 
             ecs_header("Location: affiliate.php?act=query\n");
@@ -96,8 +96,8 @@ class Affiliate extends Init
             $temp['item'] = $config['item'];
             $temp['on'] = 1;
             $this->put_affiliate($temp);
-            $links[] = array('text' => $_LANG['affiliate'], 'href' => 'affiliate.php?act=list');
-            sys_msg($_LANG['edit_ok'], 0, $links);
+            $links[] = array('text' => $GLOBALS['_LANG']['affiliate'], 'href' => 'affiliate.php?act=list');
+            sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
         }
         /*------------------------------------------------------ */
         //-- 推荐开关
@@ -107,8 +107,8 @@ class Affiliate extends Init
 
             $config['on'] = $on;
             $this->put_affiliate($config);
-            $links[] = array('text' => $_LANG['affiliate'], 'href' => 'affiliate.php?act=list');
-            sys_msg($_LANG['edit_ok'], 0, $links);
+            $links[] = array('text' => $GLOBALS['_LANG']['affiliate'], 'href' => 'affiliate.php?act=list');
+            sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
         }
         /*------------------------------------------------------ */
         //-- Ajax修改设置

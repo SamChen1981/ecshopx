@@ -12,23 +12,23 @@ class AttentionList extends Init
         admin_priv('attention_list');
         if ($_REQUEST['act'] == 'list') {
             $goodsdb = $this->get_attention();
-            $smarty->assign('full_page', 1);
-            $smarty->assign('ur_here', $_LANG['attention_list']);
-            $smarty->assign('goodsdb', $goodsdb['goodsdb']);
-            $smarty->assign('filter', $goodsdb['filter']);
-            $smarty->assign('cfg_lang', $_CFG['lang']);
-            $smarty->assign('record_count', $goodsdb['record_count']);
-            $smarty->assign('page_count', $goodsdb['page_count']);
+            $GLOBALS['smarty']->assign('full_page', 1);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['attention_list']);
+            $GLOBALS['smarty']->assign('goodsdb', $goodsdb['goodsdb']);
+            $GLOBALS['smarty']->assign('filter', $goodsdb['filter']);
+            $GLOBALS['smarty']->assign('cfg_lang', $GLOBALS['_CFG']['lang']);
+            $GLOBALS['smarty']->assign('record_count', $goodsdb['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $goodsdb['page_count']);
             assign_query_info();
-            $smarty->display('attention_list.htm');
+            $GLOBALS['smarty']->display('attention_list.htm');
         } elseif ($_REQUEST['act'] == 'query') {
             $goodsdb = $this->get_attention();
-            $smarty->assign('goodsdb', $goodsdb['goodsdb']);
-            $smarty->assign('filter', $goodsdb['filter']);
-            $smarty->assign('record_count', $goodsdb['record_count']);
-            $smarty->assign('page_count', $goodsdb['page_count']);
+            $GLOBALS['smarty']->assign('goodsdb', $goodsdb['goodsdb']);
+            $GLOBALS['smarty']->assign('filter', $goodsdb['filter']);
+            $GLOBALS['smarty']->assign('record_count', $goodsdb['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $goodsdb['page_count']);
             make_json_result(
-                $smarty->fetch('attention_list.htm'),
+                $GLOBALS['smarty']->fetch('attention_list.htm'),
                 '',
                 array('filter' => $goodsdb['filter'], 'page_count' => $goodsdb['page_count'])
             );
@@ -44,38 +44,38 @@ class AttentionList extends Init
                 . " ON c.user_id = u.user_id" .
                 " WHERE c.is_attention = 1 AND g.is_delete = 0 AND c.goods_id = '$id'";
 
-            $count = $db->getOne($sql);
+            $count = $GLOBALS['db']->getOne($sql);
 
             if ($count > $start) {
                 $sql = "SELECT u.user_name, u.email, g.goods_name, g.goods_id FROM " . $GLOBALS['ecs']->table('goods') . " g LEFT JOIN " . $GLOBALS['ecs']->table('collect_goods') . " c ON g.goods_id = c.goods_id LEFT JOIN " . $GLOBALS['ecs']->table('users') . " u ON c.user_id = u.user_id" .
                     " WHERE c.is_attention = 1 AND g.is_delete = 0 AND c.goods_id = '$id' LIMIT $start,100";
-                $query = $db->query($sql);
+                $query = $GLOBALS['db']->query($sql);
                 $add = '';
-                $template = $db->getRow("SELECT * FROM " . $ecs->table('mail_templates') . " WHERE  template_code = 'attention_list' AND type = 'template'");
+                $template = $GLOBALS['db']->getRow("SELECT * FROM " . $GLOBALS['ecs']->table('mail_templates') . " WHERE  template_code = 'attention_list' AND type = 'template'");
 
                 $i = 0;
-                while ($rt = $db->fetch_array($query)) {
+                while ($rt = $GLOBALS['db']->fetch_array($query)) {
                     $time = time();
-                    $goods_url = $ecs->url() . build_uri('goods', array('gid' => $id), $rt['goods_name']);
-                    $smarty->assign(array('user_name' => $rt['user_name'], 'goods_name' => $rt['goods_name'], 'goods_url' => $goods_url, 'shop_name' => $_CFG['shop_title'], 'send_date' => local_date($_CFG['date_format'])));
-                    $content = $smarty->fetch("str:$template[template_content]");
+                    $goods_url = $GLOBALS['ecs']->url() . build_uri('goods', array('gid' => $id), $rt['goods_name']);
+                    $GLOBALS['smarty']->assign(array('user_name' => $rt['user_name'], 'goods_name' => $rt['goods_name'], 'goods_url' => $goods_url, 'shop_name' => $GLOBALS['_CFG']['shop_title'], 'send_date' => local_date($GLOBALS['_CFG']['date_format'])));
+                    $content = $GLOBALS['smarty']->fetch("str:$template[template_content]");
                     $add .= $add ? ",('$rt[email]','$template[template_id]','$content','$pri','$time')" : "('$rt[email]','$template[template_id]','$content','$pri','$time')";
                     $i++;
                 }
                 if ($add) {
-                    $sql = "INSERT INTO " . $ecs->table('email_sendlist') . " (email,template_id,email_content,pri,last_send) VALUES " . $add;
-                    $db->query($sql);
+                    $sql = "INSERT INTO " . $GLOBALS['ecs']->table('email_sendlist') . " (email,template_id,email_content,pri,last_send) VALUES " . $add;
+                    $GLOBALS['db']->query($sql);
                 }
                 if ($i == 100) {
                     $start = $start + 100;
                 } else {
                     $start = $start + $i;
                 }
-                $links[] = array('text' => sprintf($_LANG['finish_list'], $start), 'href' => "attention_list.php?act=addtolist&id=$id&pri=$pri&start=$start");
-                sys_msg($_LANG['finishing'], 0, $links);
+                $links[] = array('text' => sprintf($GLOBALS['_LANG']['finish_list'], $start), 'href' => "attention_list.php?act=addtolist&id=$id&pri=$pri&start=$start");
+                sys_msg($GLOBALS['_LANG']['finishing'], 0, $links);
             } else {
-                $links[] = array('text' => $_LANG['attention_list'], 'href' => 'attention_list.php?act=list');
-                sys_msg($_LANG['edit_ok'], 0, $links);
+                $links[] = array('text' => $GLOBALS['_LANG']['attention_list'], 'href' => 'attention_list.php?act=list');
+                sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
             }
         } elseif ($_REQUEST['act'] == 'batch_addtolist') {
             $olddate = $_REQUEST['date'];
@@ -90,41 +90,41 @@ class AttentionList extends Init
                 . " ON c.user_id = u.user_id" .
                 " WHERE c.is_attention = 1 AND g.is_delete = 0 AND g.last_update >= '$date'";
 
-            $count = $db->getOne($sql);
+            $count = $GLOBALS['db']->getOne($sql);
 
             if ($count > $start) {
                 $sql = "SELECT u.user_name, u.email, g.goods_name, g.goods_id FROM " . $GLOBALS['ecs']->table('goods') . " g LEFT JOIN " . $GLOBALS['ecs']->table('collect_goods') . " c ON g.goods_id = c.goods_id LEFT JOIN " . $GLOBALS['ecs']->table('users') . " u ON c.user_id = u.user_id" .
                     " WHERE c.is_attention = 1 AND g.is_delete = 0 AND g.last_update >= '$date' LIMIT $start,100";
-                $query = $db->query($sql);
+                $query = $GLOBALS['db']->query($sql);
                 $add = '';
 
-                $template = $db->getRow("SELECT * FROM " . $ecs->table('mail_templates') . " WHERE  template_code = 'attention_list' AND type = 'template'");
+                $template = $GLOBALS['db']->getRow("SELECT * FROM " . $GLOBALS['ecs']->table('mail_templates') . " WHERE  template_code = 'attention_list' AND type = 'template'");
 
                 $i = 0;
-                while ($rt = $db->fetch_array($query)) {
+                while ($rt = $GLOBALS['db']->fetch_array($query)) {
                     $time = time();
 
-                    $goods_url = $ecs->url() . build_uri('goods', array('gid' => $rt['goods_id']), $rt['user_name']);
+                    $goods_url = $GLOBALS['ecs']->url() . build_uri('goods', array('gid' => $rt['goods_id']), $rt['user_name']);
 
-                    $smarty->assign(array('user_name' => $rt['user_name'], 'goods_name' => $rt['goods_name'], 'goods_url' => $goods_url));
-                    $content = $smarty->fetch("str:$template[template_content]");
+                    $GLOBALS['smarty']->assign(array('user_name' => $rt['user_name'], 'goods_name' => $rt['goods_name'], 'goods_url' => $goods_url));
+                    $content = $GLOBALS['smarty']->fetch("str:$template[template_content]");
                     $add .= $add ? ",('$rt[email]','$template[template_id]','$content','$pri','$time')" : "('$rt[email]','$template[template_id]','$content','$pri','$time')";
                     $i++;
                 }
                 if ($add) {
-                    $sql = "INSERT INTO " . $ecs->table('email_sendlist') . " (email,template_id,email_content,pri,last_send) VALUES " . $add;
-                    $db->query($sql);
+                    $sql = "INSERT INTO " . $GLOBALS['ecs']->table('email_sendlist') . " (email,template_id,email_content,pri,last_send) VALUES " . $add;
+                    $GLOBALS['db']->query($sql);
                 }
                 if ($i == 100) {
                     $start = $start + 100;
                 } else {
                     $start = $start + $i;
                 }
-                $links[] = array('text' => sprintf($_LANG['finish_list'], $start), 'href' => "attention_list.php?act=batch_addtolist&date=$olddate&pri=$pri&start=$start");
-                sys_msg($_LANG['finishing'], 0, $links);
+                $links[] = array('text' => sprintf($GLOBALS['_LANG']['finish_list'], $start), 'href' => "attention_list.php?act=batch_addtolist&date=$olddate&pri=$pri&start=$start");
+                sys_msg($GLOBALS['_LANG']['finishing'], 0, $links);
             } else {
-                $links[] = array('text' => $_LANG['attention_list'], 'href' => 'attention_list.php?act=list');
-                sys_msg($_LANG['edit_ok'], 0, $links);
+                $links[] = array('text' => $GLOBALS['_LANG']['attention_list'], 'href' => 'attention_list.php?act=list');
+                sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
             }
         }
     }

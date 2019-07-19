@@ -26,13 +26,13 @@ class EditLanguages extends Init
         if ($_REQUEST['act'] == 'list') {
             //从languages目录下获取语言项文件
             $lang_arr = array();
-            $lang_path = '../languages/' . $_CFG['lang'];
+            $lang_path = '../languages/' . $GLOBALS['_CFG']['lang'];
             $lang_dir = @opendir($lang_path);
 
             while ($file = @readdir($lang_dir)) {
                 if (substr($file, -3) == "php") {
                     $filename = substr($file, 0, -4);
-                    $lang_arr[$filename] = $file . ' - ' . @$_LANG['language_files'][$filename];
+                    $lang_arr[$filename] = $file . ' - ' . @$GLOBALS['_LANG']['language_files'][$filename];
                 }
             }
 
@@ -42,16 +42,16 @@ class EditLanguages extends Init
             /* 获得需要操作的语言包文件 */
             $lang_file = isset($_POST['lang_file']) ? trim($_POST['lang_file']) : '';
             if ($lang_file == 'common') {
-                $file_path = '../languages/' . $_CFG['lang'] . '/common.php';
+                $file_path = '../languages/' . $GLOBALS['_CFG']['lang'] . '/common.php';
             } elseif ($lang_file == 'shopping_flow') {
-                $file_path = '../languages/' . $_CFG['lang'] . '/shopping_flow.php';
+                $file_path = '../languages/' . $GLOBALS['_CFG']['lang'] . '/shopping_flow.php';
             } else {
-                $file_path = '../languages/' . $_CFG['lang'] . '/user.php';
+                $file_path = '../languages/' . $GLOBALS['_CFG']['lang'] . '/user.php';
             }
 
             $file_attr = '';
             if (file_mode_info($file_path) < 7) {
-                $file_attr = $lang_file . '.php：' . $_LANG['file_attribute'];
+                $file_attr = $lang_file . '.php：' . $GLOBALS['_LANG']['file_attribute'];
             }
 
             /* 搜索的关键字 */
@@ -61,17 +61,17 @@ class EditLanguages extends Init
             $language_arr = $this->get_language_item_list($file_path, $keyword);
 
             /* 模板赋值 */
-            $smarty->assign('ur_here', $_LANG['edit_languages']);
-            $smarty->assign('keyword', $keyword);  //关键字
-            $smarty->assign('action_link', array());
-            $smarty->assign('file_attr', $file_attr);//文件权限
-            $smarty->assign('lang_arr', $lang_arr); //语言文件列表
-            $smarty->assign('file_path', $file_path);//语言文件
-            $smarty->assign('lang_file', $lang_file);//语言文件
-            $smarty->assign('language_arr', $language_arr); //需要编辑的语言项列表
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['edit_languages']);
+            $GLOBALS['smarty']->assign('keyword', $keyword);  //关键字
+            $GLOBALS['smarty']->assign('action_link', array());
+            $GLOBALS['smarty']->assign('file_attr', $file_attr);//文件权限
+            $GLOBALS['smarty']->assign('lang_arr', $lang_arr); //语言文件列表
+            $GLOBALS['smarty']->assign('file_path', $file_path);//语言文件
+            $GLOBALS['smarty']->assign('lang_file', $lang_file);//语言文件
+            $GLOBALS['smarty']->assign('language_arr', $language_arr); //需要编辑的语言项列表
 
             assign_query_info();
-            $smarty->display('language_list.htm');
+            $GLOBALS['smarty']->display('language_list.htm');
         }
 
         /*------------------------------------------------------ */
@@ -104,8 +104,8 @@ class EditLanguages extends Init
 
             if ($result === false) {
                 /* 修改失败提示信息 */
-                $link[] = array('text' => $_LANG['back_list'], 'href' => 'javascript:history.back(-1)');
-                sys_msg($_LANG['edit_languages_false'], 0, $link);
+                $link[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'javascript:history.back(-1)');
+                sys_msg($GLOBALS['_LANG']['edit_languages_false'], 0, $link);
             } else {
                 /* 记录管理员操作 */
                 admin_log('', 'edit', 'languages');
@@ -114,8 +114,8 @@ class EditLanguages extends Init
                 clear_cache_files();
 
                 /* 成功提示信息 */
-                $link[] = array('text' => $_LANG['back_list'], 'href' => 'edit_languages.php?act=list');
-                sys_msg($_LANG['edit_languages_success'], 0, $link);
+                $link[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'edit_languages.php?act=list');
+                sys_msg($GLOBALS['_LANG']['edit_languages_success'], 0, $link);
             }
         }
     }
@@ -144,7 +144,7 @@ class EditLanguages extends Init
 
             $matches = array();
             $pattern = '/\\[[\'|"](.*?)' . $keyword . '(.*?)[\'|"]\\]\\s|=\\s?[\'|"](.*?)' . $keyword . '(.*?)[\'|"];/';
-            $regx = '/(?P<item>(?P<item_id>\\$_LANG\\[[\'|"].*[\'|"]\\])\\s*?=\\s*?[\'|"](?P<item_content>.*)[\'|"];)/';
+            $regx = '/(?P<item>(?P<item_id>\\$GLOBALS['_LANG']\\[[\'|"].*[\'|"]\\])\\s*?=\\s*?[\'|"](?P<item_content>.*)[\'|"];)/';
 
             foreach ($line_array as $lang) {
                 if (preg_match($pattern, $lang)) {

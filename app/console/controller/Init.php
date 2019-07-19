@@ -97,8 +97,8 @@ class Init extends Controller
 
         /* 创建 ECSHOP 对象 */
         $ecs = new ECS($db_name, $prefix);
-        define('DATA_DIR', $ecs->data_dir());
-        define('IMAGE_DIR', $ecs->image_dir());
+        define('DATA_DIR', $GLOBALS['ecs']->data_dir());
+        define('IMAGE_DIR', $GLOBALS['ecs']->image_dir());
 
         /* 初始化数据库类 */
         $db = new Mysql($db_host, $db_user, $db_pass, $db_name);
@@ -107,7 +107,7 @@ class Init extends Controller
         $err = new Error('message.htm');
 
         /* 初始化session */
-        $sess = new Session($db, $ecs->table('sessions'), $ecs->table('sessions_data'), 'ECSCP_ID');
+        $sess = new Session($db, $GLOBALS['ecs']->table('sessions'), $GLOBALS['ecs']->table('sessions_data'), 'ECSCP_ID');
 
         /* 初始化 action */
         if (!isset($_REQUEST['act'])) {
@@ -121,7 +121,7 @@ class Init extends Controller
         }
 
         /* 载入系统参数 */
-        $_CFG = load_config();
+        $GLOBALS['_CFG'] = load_config();
 
         // TODO : 登录部分准备拿出去做，到时候把以下操作一起挪过去
         if ($_REQUEST['act'] == 'captcha') {
@@ -132,11 +132,11 @@ class Init extends Controller
             exit;
         }
 
-        require(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/admin/common.php');
-        require(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/admin/log_action.php');
+        require(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/admin/common.php');
+        require(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/admin/log_action.php');
 
-        if (file_exists(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/admin/' . basename(PHP_SELF))) {
-            include(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/admin/' . basename(PHP_SELF));
+        if (file_exists(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/admin/' . basename(PHP_SELF))) {
+            include(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/admin/' . basename(PHP_SELF));
         }
 
         if (!file_exists('../temp/caches')) {
@@ -152,13 +152,13 @@ class Init extends Controller
         clearstatcache();
 
         /* 如果有新版本，升级 */
-        if (!isset($_CFG['ecs_version'])) {
-            $_CFG['ecs_version'] = 'v4.0.0';
+        if (!isset($GLOBALS['_CFG']['ecs_version'])) {
+            $GLOBALS['_CFG']['ecs_version'] = 'v4.0.0';
         }
 
-        if (preg_replace('/(?:\.|\s+)[a-z]*$/i', '', $_CFG['ecs_version']) != preg_replace('/(?:\.|\s+)[a-z]*$/i', '', VERSION)
+        if (preg_replace('/(?:\.|\s+)[a-z]*$/i', '', $GLOBALS['_CFG']['ecs_version']) != preg_replace('/(?:\.|\s+)[a-z]*$/i', '', VERSION)
             && file_exists('../upgrade/index.php')) {
-            // echo "<pre>";var_dump($_CFG['ecs_version'],VERSION,preg_replace('/(?:\.|\s+)[a-z]*$/i', '', $_CFG['ecs_version']),preg_replace('/(?:\.|\s+)[a-z]*$/i', '', VERSION));exit;
+            // echo "<pre>";var_dump($GLOBALS['_CFG']['ecs_version'],VERSION,preg_replace('/(?:\.|\s+)[a-z]*$/i', '', $GLOBALS['_CFG']['ecs_version']),preg_replace('/(?:\.|\s+)[a-z]*$/i', '', VERSION));exit;
             // 转到升级文件
             ecs_header("Location: ../upgrade/index.php\n");
 
@@ -168,16 +168,16 @@ class Init extends Controller
         /* 创建 Smarty 对象。*/
         $smarty = new Template();
 
-        $smarty->template_dir = ROOT_PATH . ADMIN_PATH . '/templates';
-        $smarty->compile_dir = ROOT_PATH . 'temp/compiled/admin';
+        $GLOBALS['smarty']->template_dir = ROOT_PATH . ADMIN_PATH . '/templates';
+        $GLOBALS['smarty']->compile_dir = ROOT_PATH . 'temp/compiled/admin';
 
-        $smarty->assign('lang', $_LANG);
-        $smarty->assign('help_open', $_CFG['help_open']);
+        $GLOBALS['smarty']->assign('lang', $GLOBALS['_LANG']);
+        $GLOBALS['smarty']->assign('help_open', $GLOBALS['_CFG']['help_open']);
 
-        if (isset($_CFG['enable_order_check'])) {  // 为了从旧版本顺利升级到2.5.0
-            $smarty->assign('enable_order_check', $_CFG['enable_order_check']);
+        if (isset($GLOBALS['_CFG']['enable_order_check'])) {  // 为了从旧版本顺利升级到2.5.0
+            $GLOBALS['smarty']->assign('enable_order_check', $GLOBALS['_CFG']['enable_order_check']);
         } else {
-            $smarty->assign('enable_order_check', 0);
+            $GLOBALS['smarty']->assign('enable_order_check', 0);
         }
 
         /* 验证通行证信息 */
@@ -186,19 +186,19 @@ class Init extends Controller
             $ent_ac = trim($_GET['ent_ac']);
             $ent_sign = trim($_GET['ent_sign']);
             $ent_email = trim($_GET['ent_email']);
-            $certificate_id = trim($_CFG['certificate_id']);
-            $domain_url = $ecs->url();
+            $certificate_id = trim($GLOBALS['_CFG']['certificate_id']);
+            $domain_url = $GLOBALS['ecs']->url();
             $token = $_GET['token'];
-            if ($token == md5(md5($_CFG['token']) . $domain_url . ADMIN_PATH)) {
+            if ($token == md5(md5($GLOBALS['_CFG']['token']) . $domain_url . ADMIN_PATH)) {
                 $t = new transport('-1', 5);
                 $apiget = "act=ent_sign&ent_id= $ent_id & certificate_id=$certificate_id";
 
                 // $t->request('https://cloud-ecshop.xyunqi.com/api.php', $apiget);
                 $t->request('https://cloud-ecshop.xyunqi.com/api.php', $apiget);
-                $db->query('UPDATE ' . $ecs->table('shop_config') . ' SET value = "' . $ent_id . '" WHERE code = "ent_id"');
-                $db->query('UPDATE ' . $ecs->table('shop_config') . ' SET value = "' . $ent_ac . '" WHERE code = "ent_ac"');
-                $db->query('UPDATE ' . $ecs->table('shop_config') . ' SET value = "' . $ent_sign . '" WHERE code = "ent_sign"');
-                $db->query('UPDATE ' . $ecs->table('shop_config') . ' SET value = "' . $ent_email . '" WHERE code = "ent_email"');
+                $GLOBALS['db']->query('UPDATE ' . $GLOBALS['ecs']->table('shop_config') . ' SET value = "' . $ent_id . '" WHERE code = "ent_id"');
+                $GLOBALS['db']->query('UPDATE ' . $GLOBALS['ecs']->table('shop_config') . ' SET value = "' . $ent_ac . '" WHERE code = "ent_ac"');
+                $GLOBALS['db']->query('UPDATE ' . $GLOBALS['ecs']->table('shop_config') . ' SET value = "' . $ent_sign . '" WHERE code = "ent_sign"');
+                $GLOBALS['db']->query('UPDATE ' . $GLOBALS['ecs']->table('shop_config') . ' SET value = "' . $ent_email . '" WHERE code = "ent_email"');
                 clear_cache_files();
                 ecs_header("Location: ./index.php\n");
             }
@@ -212,9 +212,9 @@ class Init extends Controller
             if (!empty($_COOKIE['ECSCP']['admin_id']) && !empty($_COOKIE['ECSCP']['admin_pass'])) {
                 // 找到了cookie, 验证cookie信息
                 $sql = 'SELECT user_id, user_name, password, add_time, action_list, last_login ' .
-                    ' FROM ' . $ecs->table('admin_user') .
+                    ' FROM ' . $GLOBALS['ecs']->table('admin_user') .
                     " WHERE user_id = '" . intval($_COOKIE['ECSCP']['admin_id']) . "'";
-                $row = $db->GetRow($sql);
+                $row = $GLOBALS['db']->GetRow($sql);
 
                 if (!$row) {
                     // 没有找到这个记录
@@ -222,7 +222,7 @@ class Init extends Controller
                     setcookie($_COOKIE['ECSCP']['admin_pass'], '', 1, null, null, null, true);
 
                     if (!empty($_REQUEST['is_ajax'])) {
-                        make_json_error($_LANG['priv_error']);
+                        make_json_error($GLOBALS['_LANG']['priv_error']);
                     } else {
                         ecs_header("Location: privilege.php?act=login\n");
                     }
@@ -230,12 +230,12 @@ class Init extends Controller
                     exit;
                 } else {
                     // 检查密码是否正确
-                    if (md5($row['password'] . $_CFG['hash_code'] . $row['add_time']) == $_COOKIE['ECSCP']['admin_pass']) {
+                    if (md5($row['password'] . $GLOBALS['_CFG']['hash_code'] . $row['add_time']) == $_COOKIE['ECSCP']['admin_pass']) {
                         !isset($row['last_time']) && $row['last_time'] = '';
                         set_admin_session($row['user_id'], $row['user_name'], $row['action_list'], $row['last_time']);
 
                         // 更新最后登录时间和IP
-                        $db->query('UPDATE ' . $ecs->table('admin_user') .
+                        $GLOBALS['db']->query('UPDATE ' . $GLOBALS['ecs']->table('admin_user') .
                             " SET last_login = '" . gmtime() . "', last_ip = '" . real_ip() . "'" .
                             " WHERE user_id = '" . $_SESSION['admin_id'] . "'");
                     } else {
@@ -243,7 +243,7 @@ class Init extends Controller
                         setcookie($_COOKIE['ECSCP']['admin_pass'], '', 1, null, null, null, true);
 
                         if (!empty($_REQUEST['is_ajax'])) {
-                            make_json_error($_LANG['priv_error']);
+                            make_json_error($GLOBALS['_LANG']['priv_error']);
                         } else {
                             ecs_header("Location: privilege.php?act=login\n");
                         }
@@ -253,7 +253,7 @@ class Init extends Controller
                 }
             } else {
                 if (!empty($_REQUEST['is_ajax'])) {
-                    make_json_error($_LANG['priv_error']);
+                    make_json_error($GLOBALS['_LANG']['priv_error']);
                 } else {
                     ecs_header("Location: privilege.php?act=login\n");
                 }
@@ -262,15 +262,15 @@ class Init extends Controller
             }
         }
 
-        $smarty->assign('token', $_CFG['token']);
+        $GLOBALS['smarty']->assign('token', $GLOBALS['_CFG']['token']);
 
         if ($_REQUEST['act'] != 'login' && $_REQUEST['act'] != 'signin' &&
             $_REQUEST['act'] != 'forget_pwd' && $_REQUEST['act'] != 'reset_pwd' && $_REQUEST['act'] != 'check_order') {
-            $admin_path = preg_replace('/:\d+/', '', $ecs->url()) . ADMIN_PATH;
+            $admin_path = preg_replace('/:\d+/', '', $GLOBALS['ecs']->url()) . ADMIN_PATH;
             if (!empty($_SERVER['HTTP_REFERER']) &&
                 strpos(preg_replace('/:\d+/', '', $_SERVER['HTTP_REFERER']), $admin_path) === false) {
                 if (!empty($_REQUEST['is_ajax'])) {
-                    make_json_error($_LANG['priv_error']);
+                    make_json_error($GLOBALS['_LANG']['priv_error']);
                 } else {
                     ecs_header("Location: privilege.php?act=login\n");
                 }

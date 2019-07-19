@@ -9,9 +9,9 @@
 <script type="text/javascript" src="js/draggable.js"></script>
 <script type="text/javascript" src="js/setting.js"></script>
 <script type="text/javascript">
-var $_LANG = {};
+var $GLOBALS['_LANG'] = {};
 <?php foreach ($lang['js_languages'] as $key => $item): ?>
-$_LANG["<?php echo $key;?>"] = "<?php echo $item;?>";
+$GLOBALS['_LANG']["<?php echo $key;?>"] = "<?php echo $item;?>";
 <?php endforeach; ?>
 </script>
 </head>
@@ -44,7 +44,7 @@ function setting_ui_api(result)
         var list = getDbList();
         for (var i = 0; i < list.length; i++) {
             if (f["js-db-name"].value === list[i]) {
-                var answer = confirm($_LANG["db_exists"]);
+                var answer = confirm($GLOBALS['_LANG']["db_exists"]);
                 if (answer === false) {
                     f["js-db-name"].value = "";
                 }
@@ -58,11 +58,11 @@ function setting_ui_api(result)
             {
                 $("js-install-at-once").setAttribute("disabled", "true");
                 if (!(password.length >= 8)){
-                    $("js-admin-password-result").innerHTML="<span class='comment'><img src='images\/no.gif'>"+$_LANG["password_short"]+"<\/span>";
+                    $("js-admin-password-result").innerHTML="<span class='comment'><img src='images\/no.gif'>"+$GLOBALS['_LANG']["password_short"]+"<\/span>";
                 }
                 else
                 {
-                    $("js-admin-password-result").innerHTML="<span class='comment'><img src='images\/no.gif'>"+$_LANG["password_invaild"]+"<\/span>";
+                    $("js-admin-password-result").innerHTML="<span class='comment'><img src='images\/no.gif'>"+$GLOBALS['_LANG']["password_invaild"]+"<\/span>";
                 }
             }
             else
@@ -78,7 +78,7 @@ function setting_ui_api(result)
                     $("js-install-at-once").setAttribute("disabled", "true");
                     if (confirm_password!='')
                     {
-                    $("js-admin-confirmpassword-result").innerHTML="<span class='comment'><img src='images\/no.gif'>"+$_LANG["password_not_eq"]+"<\/span>";
+                    $("js-admin-confirmpassword-result").innerHTML="<span class='comment'><img src='images\/no.gif'>"+$GLOBALS['_LANG']["password_not_eq"]+"<\/span>";
                     }
                 }
             }
@@ -91,16 +91,16 @@ function setting_ui_api(result)
           $("js-install-at-once").setAttribute("disabled", "true");
             
           if (!(confirm_password.length >= 8)){
-                    $("js-admin-confirmpassword-result").innerHTML="<span class='comment'><img src='images\/no.gif'>"+$_LANG["password_short"]+"<\/span>";
+                    $("js-admin-confirmpassword-result").innerHTML="<span class='comment'><img src='images\/no.gif'>"+$GLOBALS['_LANG']["password_short"]+"<\/span>";
           }
           else
           {
                     if (password==confirm_password){
-                        $("js-admin-confirmpassword-result").innerHTML="<span class='comment'><img src='images\/no.gif'>"+$_LANG["password_invaild"]+"<\/span>";
+                        $("js-admin-confirmpassword-result").innerHTML="<span class='comment'><img src='images\/no.gif'>"+$GLOBALS['_LANG']["password_invaild"]+"<\/span>";
                     }
                     else
                     {
-                        $("js-admin-confirmpassword-result").innerHTML="<span class='comment'><img src='images\/no.gif'>"+$_LANG["password_not_eq"]+"<\/span>";
+                        $("js-admin-confirmpassword-result").innerHTML="<span class='comment'><img src='images\/no.gif'>"+$GLOBALS['_LANG']["password_not_eq"]+"<\/span>";
                     }
           }
         }
@@ -185,15 +185,15 @@ function setting_ui_api(result)
     };
 
     var detail = $("js-monitor-view-detail")
-    detail.innerHTML = $_LANG["display_detail"];
+    detail.innerHTML = $GLOBALS['_LANG']["display_detail"];
     detail.onclick = function () {
         var mn = $("js-monitor-notice");
         if (mn.style.display === "block") {
             mn.style.display = "none"
-            this.innerHTML = $_LANG["display_detail"];
+            this.innerHTML = $GLOBALS['_LANG']["display_detail"];
         } else {
             mn.style.display = "block"
-            this.innerHTML = $_LANG["hide_detail"];
+            this.innerHTML = $GLOBALS['_LANG']["hide_detail"];
         }
     };
 //alert(1);

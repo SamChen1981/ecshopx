@@ -9,7 +9,7 @@ class Articlecat extends Init
 {
     public function index()
     {
-        $exc = new exchange($ecs->table("article_cat"), $db, 'cat_id', 'cat_name');
+        $exc = new Exchange($GLOBALS['ecs']->table("article_cat"), $db, 'cat_id', 'cat_name');
         /* act操作项的初始化 */
         $_REQUEST['act'] = trim($_REQUEST['act']);
         if (empty($_REQUEST['act'])) {
@@ -22,15 +22,15 @@ class Articlecat extends Init
         if ($_REQUEST['act'] == 'list') {
             $articlecat = article_cat_list(0, 0, false);
             foreach ($articlecat as $key => $cat) {
-                $articlecat[$key]['type_name'] = $_LANG['type_name'][$cat['cat_type']];
+                $articlecat[$key]['type_name'] = $GLOBALS['_LANG']['type_name'][$cat['cat_type']];
             }
-            $smarty->assign('ur_here', $_LANG['02_articlecat_list']);
-            $smarty->assign('action_link', array('text' => $_LANG['articlecat_add'], 'href' => 'articlecat.php?act=add'));
-            $smarty->assign('full_page', 1);
-            $smarty->assign('articlecat', $articlecat);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['02_articlecat_list']);
+            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['articlecat_add'], 'href' => 'articlecat.php?act=add'));
+            $GLOBALS['smarty']->assign('full_page', 1);
+            $GLOBALS['smarty']->assign('articlecat', $articlecat);
 
             assign_query_info();
-            $smarty->display('articlecat_list.htm');
+            $GLOBALS['smarty']->display('articlecat_list.htm');
         }
 
         /*------------------------------------------------------ */
@@ -39,11 +39,11 @@ class Articlecat extends Init
         elseif ($_REQUEST['act'] == 'query') {
             $articlecat = article_cat_list(0, 0, false);
             foreach ($articlecat as $key => $cat) {
-                $articlecat[$key]['type_name'] = $_LANG['type_name'][$cat['cat_type']];
+                $articlecat[$key]['type_name'] = $GLOBALS['_LANG']['type_name'][$cat['cat_type']];
             }
-            $smarty->assign('articlecat', $articlecat);
+            $GLOBALS['smarty']->assign('articlecat', $articlecat);
 
-            make_json_result($smarty->fetch('articlecat_list.htm'));
+            make_json_result($GLOBALS['smarty']->fetch('articlecat_list.htm'));
         }
 
         /*------------------------------------------------------ */
@@ -53,13 +53,13 @@ class Articlecat extends Init
             /* 权限判断 */
             admin_priv('article_cat');
 
-            $smarty->assign('cat_select', article_cat_list(0));
-            $smarty->assign('ur_here', $_LANG['articlecat_add']);
-            $smarty->assign('action_link', array('text' => $_LANG['02_articlecat_list'], 'href' => 'articlecat.php?act=list'));
-            $smarty->assign('form_action', 'insert');
+            $GLOBALS['smarty']->assign('cat_select', article_cat_list(0));
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['articlecat_add']);
+            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['02_articlecat_list'], 'href' => 'articlecat.php?act=list'));
+            $GLOBALS['smarty']->assign('form_action', 'insert');
 
             assign_query_info();
-            $smarty->display('articlecat_info.htm');
+            $GLOBALS['smarty']->display('articlecat_info.htm');
         } elseif ($_REQUEST['act'] == 'insert') {
             /* 权限判断 */
             admin_priv('article_cat');
@@ -68,42 +68,42 @@ class Articlecat extends Init
             $is_only = $exc->is_only('cat_name', $_POST['cat_name']);
 
             if (!$is_only) {
-                sys_msg(sprintf($_LANG['catname_exist'], stripslashes($_POST['cat_name'])), 1);
+                sys_msg(sprintf($GLOBALS['_LANG']['catname_exist'], stripslashes($_POST['cat_name'])), 1);
             }
 
             $cat_type = 1;
             if ($_POST['parent_id'] > 0) {
-                $sql = "SELECT cat_type FROM " . $ecs->table('article_cat') . " WHERE cat_id = '$_POST[parent_id]'";
-                $p_cat_type = $db->getOne($sql);
+                $sql = "SELECT cat_type FROM " . $GLOBALS['ecs']->table('article_cat') . " WHERE cat_id = '$_POST[parent_id]'";
+                $p_cat_type = $GLOBALS['db']->getOne($sql);
                 if ($p_cat_type == 2 || $p_cat_type == 3 || $p_cat_type == 5) {
-                    sys_msg($_LANG['not_allow_add'], 0);
+                    sys_msg($GLOBALS['_LANG']['not_allow_add'], 0);
                 } elseif ($p_cat_type == 4) {
                     $cat_type = 5;
                 }
             }
 
 
-            $sql = "INSERT INTO " . $ecs->table('article_cat') . "(cat_name, cat_type, cat_desc,keywords, parent_id, sort_order, show_in_nav)
+            $sql = "INSERT INTO " . $GLOBALS['ecs']->table('article_cat') . "(cat_name, cat_type, cat_desc,keywords, parent_id, sort_order, show_in_nav)
            VALUES ('$_POST[cat_name]', '$cat_type',  '$_POST[cat_desc]','$_POST[keywords]', '$_POST[parent_id]', '$_POST[sort_order]', '$_POST[show_in_nav]')";
-            $db->query($sql);
+            $GLOBALS['db']->query($sql);
 
             if ($_POST['show_in_nav'] == 1) {
-                $vieworder = $db->getOne("SELECT max(vieworder) FROM " . $ecs->table('nav') . " WHERE type = 'middle'");
+                $vieworder = $GLOBALS['db']->getOne("SELECT max(vieworder) FROM " . $GLOBALS['ecs']->table('nav') . " WHERE type = 'middle'");
                 $vieworder += 2;
                 //显示在自定义导航栏中
-                $sql = "INSERT INTO " . $ecs->table('nav') . " (name,ctype,cid,ifshow,vieworder,opennew,url,type) VALUES('" . $_POST['cat_name'] . "', 'a', '" . $db->insert_id() . "','1','$vieworder','0', '" . build_uri('article_cat', array('acid' => $db->insert_id()), $_POST['cat_name']) . "','middle')";
-                $db->query($sql);
+                $sql = "INSERT INTO " . $GLOBALS['ecs']->table('nav') . " (name,ctype,cid,ifshow,vieworder,opennew,url,type) VALUES('" . $_POST['cat_name'] . "', 'a', '" . $GLOBALS['db']->insert_id() . "','1','$vieworder','0', '" . build_uri('article_cat', array('acid' => $GLOBALS['db']->insert_id()), $_POST['cat_name']) . "','middle')";
+                $GLOBALS['db']->query($sql);
             }
 
             admin_log($_POST['cat_name'], 'add', 'articlecat');
 
-            $link[0]['text'] = $_LANG['continue_add'];
+            $link[0]['text'] = $GLOBALS['_LANG']['continue_add'];
             $link[0]['href'] = 'articlecat.php?act=add';
 
-            $link[1]['text'] = $_LANG['back_list'];
+            $link[1]['text'] = $GLOBALS['_LANG']['back_list'];
             $link[1]['href'] = 'articlecat.php?act=list';
             clear_cache_files();
-            sys_msg($_POST['cat_name'] . $_LANG['catadd_succed'], 0, $link);
+            sys_msg($_POST['cat_name'] . $GLOBALS['_LANG']['catadd_succed'], 0, $link);
         }
 
         /*------------------------------------------------------ */
@@ -114,11 +114,11 @@ class Articlecat extends Init
             admin_priv('article_cat');
 
             $sql = "SELECT cat_id, cat_name, cat_type, cat_desc, show_in_nav, keywords, parent_id,sort_order FROM " .
-                $ecs->table('article_cat') . " WHERE cat_id='$_REQUEST[id]'";
-            $cat = $db->GetRow($sql);
+                $GLOBALS['ecs']->table('article_cat') . " WHERE cat_id='$_REQUEST[id]'";
+            $cat = $GLOBALS['db']->GetRow($sql);
 
             if ($cat['cat_type'] == 2 || $cat['cat_type'] == 3 || $cat['cat_type'] == 4) {
-                $smarty->assign('disabled', 1);
+                $GLOBALS['smarty']->assign('disabled', 1);
             }
             $options = article_cat_list(0, $cat['parent_id'], false);
             $select = '';
@@ -137,14 +137,14 @@ class Articlecat extends Init
                 $select .= htmlspecialchars($var['cat_name']) . '</option>';
             }
             unset($options);
-            $smarty->assign('cat', $cat);
-            $smarty->assign('cat_select', $select);
-            $smarty->assign('ur_here', $_LANG['articlecat_edit']);
-            $smarty->assign('action_link', array('text' => $_LANG['02_articlecat_list'], 'href' => 'articlecat.php?act=list'));
-            $smarty->assign('form_action', 'update');
+            $GLOBALS['smarty']->assign('cat', $cat);
+            $GLOBALS['smarty']->assign('cat_select', $select);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['articlecat_edit']);
+            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['02_articlecat_list'], 'href' => 'articlecat.php?act=list'));
+            $GLOBALS['smarty']->assign('form_action', 'update');
 
             assign_query_info();
-            $smarty->display('articlecat_info.htm');
+            $GLOBALS['smarty']->display('articlecat_info.htm');
         } elseif ($_REQUEST['act'] == 'update') {
             /* 权限判断 */
             admin_priv('article_cat');
@@ -154,7 +154,7 @@ class Articlecat extends Init
                 $is_only = $exc->is_only('cat_name', $_POST['cat_name'], $_POST['id']);
 
                 if (!$is_only) {
-                    sys_msg(sprintf($_LANG['catname_exist'], stripslashes($_POST['cat_name'])), 1);
+                    sys_msg(sprintf($GLOBALS['_LANG']['catname_exist'], stripslashes($_POST['cat_name'])), 1);
                 }
             }
 
@@ -162,7 +162,7 @@ class Articlecat extends Init
                 $_POST['parent_id'] = 0;
             }
 
-            $row = $db->getRow("SELECT cat_type, parent_id FROM " . $ecs->table('article_cat') . " WHERE cat_id='$_POST[id]'");
+            $row = $GLOBALS['db']->getRow("SELECT cat_type, parent_id FROM " . $GLOBALS['ecs']->table('article_cat') . " WHERE cat_id='$_POST[id]'");
             $cat_type = $row['cat_type'];
             if ($cat_type == 3 || $cat_type == 4) {
                 $_POST['parent_id'] = $row['parent_id'];
@@ -176,13 +176,13 @@ class Articlecat extends Init
                 }
             }
             if (in_array($_POST['parent_id'], $catid_array)) {
-                sys_msg(sprintf($_LANG['parent_id_err'], stripslashes($_POST['cat_name'])), 1);
+                sys_msg(sprintf($GLOBALS['_LANG']['parent_id_err'], stripslashes($_POST['cat_name'])), 1);
             }
 
             if ($cat_type == 1 || $cat_type == 5) {
                 if ($_POST['parent_id'] > 0) {
-                    $sql = "SELECT cat_type FROM " . $ecs->table('article_cat') . " WHERE cat_id = '$_POST[parent_id]'";
-                    $p_cat_type = $db->getOne($sql);
+                    $sql = "SELECT cat_type FROM " . $GLOBALS['ecs']->table('article_cat') . " WHERE cat_id = '$_POST[parent_id]'";
+                    $p_cat_type = $GLOBALS['db']->getOne($sql);
                     if ($p_cat_type == 4) {
                         $cat_type = 5;
                     } else {
@@ -193,42 +193,42 @@ class Articlecat extends Init
                 }
             }
 
-            $dat = $db->getOne("SELECT cat_name, show_in_nav FROM " . $ecs->table('article_cat') . " WHERE cat_id = '" . $_POST['id'] . "'");
+            $dat = $GLOBALS['db']->getOne("SELECT cat_name, show_in_nav FROM " . $GLOBALS['ecs']->table('article_cat') . " WHERE cat_id = '" . $_POST['id'] . "'");
             if ($exc->edit("cat_name = '$_POST[cat_name]', cat_desc ='$_POST[cat_desc]', keywords='$_POST[keywords]',parent_id = '$_POST[parent_id]', cat_type='$cat_type', sort_order='$_POST[sort_order]', show_in_nav = '$_POST[show_in_nav]'", $_POST['id'])) {
                 if ($_POST['cat_name'] != $dat['cat_name']) {
                     //如果分类名称发生了改变
-                    $sql = "UPDATE " . $ecs->table('nav') . " SET name = '" . $_POST['cat_name'] . "' WHERE ctype = 'a' AND cid = '" . $_POST['id'] . "' AND type = 'middle'";
-                    $db->query($sql);
+                    $sql = "UPDATE " . $GLOBALS['ecs']->table('nav') . " SET name = '" . $_POST['cat_name'] . "' WHERE ctype = 'a' AND cid = '" . $_POST['id'] . "' AND type = 'middle'";
+                    $GLOBALS['db']->query($sql);
                 }
                 if ($_POST['show_in_nav'] != $dat['show_in_nav']) {
                     if ($_POST['show_in_nav'] == 1) {
                         //显示
-                        $nid = $db->getOne("SELECT id FROM " . $ecs->table('nav') . " WHERE ctype = 'a' AND cid = '" . $_POST['id'] . "' AND type = 'middle'");
+                        $nid = $GLOBALS['db']->getOne("SELECT id FROM " . $GLOBALS['ecs']->table('nav') . " WHERE ctype = 'a' AND cid = '" . $_POST['id'] . "' AND type = 'middle'");
                         if (empty($nid)) {
-                            $vieworder = $db->getOne("SELECT max(vieworder) FROM " . $ecs->table('nav') . " WHERE type = 'middle'");
+                            $vieworder = $GLOBALS['db']->getOne("SELECT max(vieworder) FROM " . $GLOBALS['ecs']->table('nav') . " WHERE type = 'middle'");
                             $vieworder += 2;
                             $uri = build_uri('article_cat', array('acid' => $_POST['id']), $_POST['cat_name']);
                             //不存在
-                            $sql = "INSERT INTO " . $ecs->table('nav') .
+                            $sql = "INSERT INTO " . $GLOBALS['ecs']->table('nav') .
                                 " (name,ctype,cid,ifshow,vieworder,opennew,url,type) " .
                                 "VALUES('" . $_POST['cat_name'] . "', 'a', '" . $_POST['id'] . "','1','$vieworder','0', '" . $uri . "','middle')";
                         } else {
-                            $sql = "UPDATE " . $ecs->table('nav') . " SET ifshow = 1 WHERE ctype = 'a' AND cid = '" . $_POST['id'] . "' AND type = 'middle'";
+                            $sql = "UPDATE " . $GLOBALS['ecs']->table('nav') . " SET ifshow = 1 WHERE ctype = 'a' AND cid = '" . $_POST['id'] . "' AND type = 'middle'";
                         }
-                        $db->query($sql);
+                        $GLOBALS['db']->query($sql);
                     } else {
                         //去除
-                        $db->query("UPDATE " . $ecs->table('nav') . " SET ifshow = 0 WHERE ctype = 'a' AND cid = '" . $_POST['id'] . "' AND type = 'middle'");
+                        $GLOBALS['db']->query("UPDATE " . $GLOBALS['ecs']->table('nav') . " SET ifshow = 0 WHERE ctype = 'a' AND cid = '" . $_POST['id'] . "' AND type = 'middle'");
                     }
                 }
-                $link[0]['text'] = $_LANG['back_list'];
+                $link[0]['text'] = $GLOBALS['_LANG']['back_list'];
                 $link[0]['href'] = 'articlecat.php?act=list';
-                $note = sprintf($_LANG['catedit_succed'], $_POST['cat_name']);
+                $note = sprintf($GLOBALS['_LANG']['catedit_succed'], $_POST['cat_name']);
                 admin_log($_POST['cat_name'], 'edit', 'articlecat');
                 clear_cache_files();
                 sys_msg($note, 0, $link);
             } else {
-                die($db->error());
+                die($GLOBALS['db']->error());
             }
         }
 
@@ -245,13 +245,13 @@ class Articlecat extends Init
 
             /* 检查输入的值是否合法 */
             if (!preg_match("/^[0-9]+$/", $order)) {
-                make_json_error(sprintf($_LANG['enter_int'], $order));
+                make_json_error(sprintf($GLOBALS['_LANG']['enter_int'], $order));
             } else {
                 if ($exc->edit("sort_order = '$order'", $id)) {
                     clear_cache_files();
                     make_json_result(stripslashes($order));
                 } else {
-                    make_json_error($db->error());
+                    make_json_error($GLOBALS['db']->error());
                 }
             }
         }
@@ -264,26 +264,26 @@ class Articlecat extends Init
 
             $id = intval($_GET['id']);
 
-            $sql = "SELECT cat_type FROM " . $ecs->table('article_cat') . " WHERE cat_id = '$id'";
-            $cat_type = $db->getOne($sql);
+            $sql = "SELECT cat_type FROM " . $GLOBALS['ecs']->table('article_cat') . " WHERE cat_id = '$id'";
+            $cat_type = $GLOBALS['db']->getOne($sql);
             if ($cat_type == 2 || $cat_type == 3 || $cat_type == 4) {
                 /* 系统保留分类，不能删除 */
-                make_json_error($_LANG['not_allow_remove']);
+                make_json_error($GLOBALS['_LANG']['not_allow_remove']);
             }
 
-            $sql = "SELECT COUNT(*) FROM " . $ecs->table('article_cat') . " WHERE parent_id = '$id'";
-            if ($db->getOne($sql) > 0) {
+            $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('article_cat') . " WHERE parent_id = '$id'";
+            if ($GLOBALS['db']->getOne($sql) > 0) {
                 /* 还有子分类，不能删除 */
-                make_json_error($_LANG['is_fullcat']);
+                make_json_error($GLOBALS['_LANG']['is_fullcat']);
             }
 
             /* 非空的分类不允许删除 */
-            $sql = "SELECT COUNT(*) FROM " . $ecs->table('article') . " WHERE cat_id = '$id'";
-            if ($db->getOne($sql) > 0) {
-                make_json_error(sprintf($_LANG['not_emptycat']));
+            $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('article') . " WHERE cat_id = '$id'";
+            if ($GLOBALS['db']->getOne($sql) > 0) {
+                make_json_error(sprintf($GLOBALS['_LANG']['not_emptycat']));
             } else {
                 $exc->drop($id);
-                $db->query("DELETE FROM " . $ecs->table('nav') . "WHERE  ctype = 'a' AND cid = '$id' AND type = 'middle'");
+                $GLOBALS['db']->query("DELETE FROM " . $GLOBALS['ecs']->table('nav') . "WHERE  ctype = 'a' AND cid = '$id' AND type = 'middle'");
                 clear_cache_files();
                 admin_log($cat_name, 'remove', 'category');
             }
@@ -306,28 +306,28 @@ class Articlecat extends Init
             if ($this->cat_update($id, array('show_in_nav' => $val)) != false) {
                 if ($val == 1) {
                     //显示
-                    $nid = $db->getOne("SELECT id FROM " . $ecs->table('nav') . " WHERE ctype='a' AND cid='$id' AND type = 'middle'");
+                    $nid = $GLOBALS['db']->getOne("SELECT id FROM " . $GLOBALS['ecs']->table('nav') . " WHERE ctype='a' AND cid='$id' AND type = 'middle'");
                     if (empty($nid)) {
                         //不存在
-                        $vieworder = $db->getOne("SELECT max(vieworder) FROM " . $ecs->table('nav') . " WHERE type = 'middle'");
+                        $vieworder = $GLOBALS['db']->getOne("SELECT max(vieworder) FROM " . $GLOBALS['ecs']->table('nav') . " WHERE type = 'middle'");
                         $vieworder += 2;
-                        $catname = $db->getOne("SELECT cat_name FROM " . $ecs->table('article_cat') . " WHERE cat_id = '$id'");
+                        $catname = $GLOBALS['db']->getOne("SELECT cat_name FROM " . $GLOBALS['ecs']->table('article_cat') . " WHERE cat_id = '$id'");
                         $uri = build_uri('article_cat', array('acid' => $id), $_POST['cat_name']);
 
-                        $sql = "INSERT INTO " . $ecs->table('nav') . " (name,ctype,cid,ifshow,vieworder,opennew,url,type) " .
+                        $sql = "INSERT INTO " . $GLOBALS['ecs']->table('nav') . " (name,ctype,cid,ifshow,vieworder,opennew,url,type) " .
                             "VALUES('" . $catname . "', 'a', '$id','1','$vieworder','0', '" . $uri . "','middle')";
                     } else {
-                        $sql = "UPDATE " . $ecs->table('nav') . " SET ifshow = 1 WHERE ctype='a' AND cid='$id' AND type = 'middle'";
+                        $sql = "UPDATE " . $GLOBALS['ecs']->table('nav') . " SET ifshow = 1 WHERE ctype='a' AND cid='$id' AND type = 'middle'";
                     }
-                    $db->query($sql);
+                    $GLOBALS['db']->query($sql);
                 } else {
                     //去除
-                    $db->query("UPDATE " . $ecs->table('nav') . " SET ifshow = 0 WHERE ctype='a' AND cid='$id' AND type = 'middle'");
+                    $GLOBALS['db']->query("UPDATE " . $GLOBALS['ecs']->table('nav') . " SET ifshow = 0 WHERE ctype='a' AND cid='$id' AND type = 'middle'");
                 }
                 clear_cache_files();
                 make_json_result($val);
             } else {
-                make_json_error($db->error());
+                make_json_error($GLOBALS['db']->error());
             }
         }
     }

@@ -49,7 +49,7 @@ class Respond extends Init
         }
         /* 参数是否为空 */
         if (empty($pay_code)) {
-            $msg = $_LANG['pay_not_exist'];
+            $msg = $GLOBALS['_LANG']['pay_not_exist'];
         } else {
             /* 检查code里面有没有问号 */
             if (strpos($pay_code, '?') !== false) {
@@ -64,9 +64,9 @@ class Respond extends Init
             }
 
             /* 判断是否启用 */
-            $sql = "SELECT COUNT(*) FROM " . $ecs->table('payment') . " WHERE pay_code = '$pay_code' AND enabled = 1";
-            if ($db->getOne($sql) == 0) {
-                $msg = $_LANG['pay_disabled'];
+            $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('payment') . " WHERE pay_code = '$pay_code' AND enabled = 1";
+            if ($GLOBALS['db']->getOne($sql) == 0) {
+                $msg = $GLOBALS['_LANG']['pay_disabled'];
             } else {
                 $plugin_file = dirname(__FILE__) . '/includes/modules/payment/' . $pay_code . '.php';
                 /* 检查插件文件是否存在，如果存在则验证支付是否成功，否则则返回失败信息 */
@@ -75,24 +75,24 @@ class Respond extends Init
                     include_once($plugin_file);
 
                     $payment = new $pay_code();
-                    $msg = (@$payment->respond()) ? $_LANG['pay_success'] : $_LANG['pay_fail'];
+                    $msg = (@$payment->respond()) ? $GLOBALS['_LANG']['pay_success'] : $GLOBALS['_LANG']['pay_fail'];
                 } else {
-                    $msg = $_LANG['pay_not_exist'];
+                    $msg = $GLOBALS['_LANG']['pay_not_exist'];
                 }
             }
         }
 
         assign_template();
         $position = assign_ur_here();
-        $smarty->assign('page_title', $position['title']);   // 页面标题
-        $smarty->assign('ur_here', $position['ur_here']); // 当前位置
-        $smarty->assign('page_title', $position['title']);   // 页面标题
-        $smarty->assign('ur_here', $position['ur_here']); // 当前位置
-        $smarty->assign('helps', get_shop_help());      // 网店帮助
+        $GLOBALS['smarty']->assign('page_title', $position['title']);   // 页面标题
+        $GLOBALS['smarty']->assign('ur_here', $position['ur_here']); // 当前位置
+        $GLOBALS['smarty']->assign('page_title', $position['title']);   // 页面标题
+        $GLOBALS['smarty']->assign('ur_here', $position['ur_here']); // 当前位置
+        $GLOBALS['smarty']->assign('helps', get_shop_help());      // 网店帮助
 
-        $smarty->assign('message', $msg);
-        $smarty->assign('shop_url', $ecs->url());
+        $GLOBALS['smarty']->assign('message', $msg);
+        $GLOBALS['smarty']->assign('shop_url', $GLOBALS['ecs']->url());
 
-        $smarty->display('respond.dwt');
+        $GLOBALS['smarty']->display('respond.dwt');
     }
 }

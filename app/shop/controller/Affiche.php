@@ -28,16 +28,16 @@ class Affiche extends Init
 
             header('Content-type: application/x-javascript; charset=' . ($_GET['charset'] == 'UTF8' ? 'utf-8' : $_GET['charset']));
 
-            $url = $ecs->url();
+            $url = $GLOBALS['ecs']->url();
             $str = "";
 
             /* 取得广告的信息 */
             $sql = 'SELECT ad.ad_id, ad.ad_name, ad.ad_link, ad.ad_code ' .
-                'FROM ' . $ecs->table('ad') . ' AS ad ' .
-                'LEFT JOIN ' . $ecs->table('ad_position') . ' AS p ON ad.position_id = p.position_id ' .
+                'FROM ' . $GLOBALS['ecs']->table('ad') . ' AS ad ' .
+                'LEFT JOIN ' . $GLOBALS['ecs']->table('ad_position') . ' AS p ON ad.position_id = p.position_id ' .
                 "WHERE ad.ad_id = '$ad_id' and " . gmtime() . " >= ad.start_time and " . gmtime() . "<= ad.end_time";
 
-            $ad_info = $db->getRow($sql);
+            $ad_info = $GLOBALS['db']->getRow($sql);
 
             if (!empty($ad_info)) {
                 /* 转换编码 */
@@ -80,7 +80,7 @@ class Affiche extends Init
         } else {
             /* 获取投放站点的名称 */
 
-            $site_name = !empty($_GET['from']) ? htmlspecialchars($_GET['from']) : addslashes($_LANG['self_site']);
+            $site_name = !empty($_GET['from']) ? htmlspecialchars($_GET['from']) : addslashes($GLOBALS['_LANG']['self_site']);
 
             /* 商品的ID */
             $goods_id = !empty($_GET['goods_id']) ? intval($_GET['goods_id']) : 0;
@@ -91,18 +91,18 @@ class Affiche extends Init
 
             /* 如果是商品的站外JS */
             if ($ad_id == '-1') {
-                $sql = "SELECT count(*) FROM " . $ecs->table('adsense') . " WHERE from_ad = '-1' AND referer = '" . $site_name . "'";
-                if ($db->getOne($sql) > 0) {
-                    $sql = "UPDATE " . $ecs->table('adsense') . " SET clicks = clicks + 1 WHERE from_ad = '-1' AND referer = '" . $site_name . "'";
+                $sql = "SELECT count(*) FROM " . $GLOBALS['ecs']->table('adsense') . " WHERE from_ad = '-1' AND referer = '" . $site_name . "'";
+                if ($GLOBALS['db']->getOne($sql) > 0) {
+                    $sql = "UPDATE " . $GLOBALS['ecs']->table('adsense') . " SET clicks = clicks + 1 WHERE from_ad = '-1' AND referer = '" . $site_name . "'";
                 } else {
-                    $sql = "INSERT INTO " . $ecs->table('adsense') . "(from_ad, referer, clicks) VALUES ('-1', '" . $site_name . "', '1')";
+                    $sql = "INSERT INTO " . $GLOBALS['ecs']->table('adsense') . "(from_ad, referer, clicks) VALUES ('-1', '" . $site_name . "', '1')";
                 }
-                $db->query($sql);
-                //$db->autoReplace($ecs->table('adsense'), array('from_ad' => -1, 'referer' => $site_name, 'clicks' => 1), array('clicks' => 1));
-                $sql = "SELECT goods_name FROM " . $ecs->table('goods') . " WHERE goods_id = $goods_id";
-                $res = $db->query($sql);
+                $GLOBALS['db']->query($sql);
+                //$GLOBALS['db']->autoReplace($GLOBALS['ecs']->table('adsense'), array('from_ad' => -1, 'referer' => $site_name, 'clicks' => 1), array('clicks' => 1));
+                $sql = "SELECT goods_name FROM " . $GLOBALS['ecs']->table('goods') . " WHERE goods_id = $goods_id";
+                $res = $GLOBALS['db']->query($sql);
 
-                $row = $db->fetchRow($res);
+                $row = $GLOBALS['db']->fetchRow($res);
 
                 $uri = build_uri('goods', array('gid' => $goods_id), $row['goods_name']);
 
@@ -111,23 +111,23 @@ class Affiche extends Init
                 exit;
             } else {
                 /* 更新站内广告的点击次数 */
-                $db->query('UPDATE ' . $ecs->table('ad') . " SET click_count = click_count + 1 WHERE ad_id = '$ad_id'");
+                $GLOBALS['db']->query('UPDATE ' . $GLOBALS['ecs']->table('ad') . " SET click_count = click_count + 1 WHERE ad_id = '$ad_id'");
 
-                $sql = "SELECT count(*) FROM " . $ecs->table('adsense') . " WHERE from_ad = '" . $ad_id . "' AND referer = '" . $site_name . "'";
-                if ($db->getOne($sql) > 0) {
-                    $sql = "UPDATE " . $ecs->table('adsense') . " SET clicks = clicks + 1 WHERE from_ad = '" . $ad_id . "' AND referer = '" . $site_name . "'";
+                $sql = "SELECT count(*) FROM " . $GLOBALS['ecs']->table('adsense') . " WHERE from_ad = '" . $ad_id . "' AND referer = '" . $site_name . "'";
+                if ($GLOBALS['db']->getOne($sql) > 0) {
+                    $sql = "UPDATE " . $GLOBALS['ecs']->table('adsense') . " SET clicks = clicks + 1 WHERE from_ad = '" . $ad_id . "' AND referer = '" . $site_name . "'";
                 } else {
-                    $sql = "INSERT INTO " . $ecs->table('adsense') . "(from_ad, referer, clicks) VALUES ('" . $ad_id . "', '" . $site_name . "', '1')";
+                    $sql = "INSERT INTO " . $GLOBALS['ecs']->table('adsense') . "(from_ad, referer, clicks) VALUES ('" . $ad_id . "', '" . $site_name . "', '1')";
                 }
-                $db->query($sql);
+                $GLOBALS['db']->query($sql);
 
-                $sql = "SELECT * FROM " . $ecs->table('ad') . " WHERE ad_id = '$ad_id'";
-                $ad_info = $db->getRow($sql);
+                $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('ad') . " WHERE ad_id = '$ad_id'";
+                $ad_info = $GLOBALS['db']->getRow($sql);
                 /* 跳转到广告的链接页面 */
                 if (!empty($ad_info['ad_link'])) {
-                    $uri = (strpos($ad_info['ad_link'], 'http://') === false && strpos($ad_info['ad_link'], 'https://') === false) ? $ecs->http() . urldecode($ad_info['ad_link']) : urldecode($ad_info['ad_link']);
+                    $uri = (strpos($ad_info['ad_link'], 'http://') === false && strpos($ad_info['ad_link'], 'https://') === false) ? $GLOBALS['ecs']->http() . urldecode($ad_info['ad_link']) : urldecode($ad_info['ad_link']);
                 } else {
-                    $uri = $ecs->url();
+                    $uri = $GLOBALS['ecs']->url();
                 }
 
                 ecs_header("Location: $uri\n");

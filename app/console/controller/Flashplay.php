@@ -9,7 +9,7 @@ class Flashplay extends Init
 {
     public function index()
     {
-        $uri = $ecs->url();
+        $uri = $GLOBALS['ecs']->url();
         $allow_suffix = array('gif', 'jpg', 'png', 'jpeg', 'bmp');
 
         /*------------------------------------------------------ */
@@ -17,7 +17,7 @@ class Flashplay extends Init
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
             /* 判断系统当前设置 如果为用户自定义 则跳转到自定义 */
-            if ($_CFG['index_ad'] == 'cus') {
+            if ($GLOBALS['_CFG']['index_ad'] == 'cus') {
                 ecs_header("Location: flashplay.php?act=custom_list\n");
                 exit;
             }
@@ -31,23 +31,23 @@ class Flashplay extends Init
 
             /* 标签初始化 */
             $group_list = array(
-                'sys' => array('text' => $_LANG['system_set'], 'url' => ''),
-                'cus' => array('text' => $_LANG['custom_set'], 'url' => 'flashplay.php?act=custom_list')
+                'sys' => array('text' => $GLOBALS['_LANG']['system_set'], 'url' => ''),
+                'cus' => array('text' => $GLOBALS['_LANG']['custom_set'], 'url' => 'flashplay.php?act=custom_list')
             );
 
             assign_query_info();
             $flash_dir = ROOT_PATH . 'data/flashdata/';
 
-            $smarty->assign('current', 'sys');
-            $smarty->assign('group_list', $group_list);
-            $smarty->assign('group_selected', $_CFG['index_ad']);
-            $smarty->assign('uri', $uri);
-            $smarty->assign('ur_here', $_LANG['flashplay']);
-            $smarty->assign('action_link_special', array('text' => $_LANG['add_new'], 'href' => 'flashplay.php?act=add'));
-            $smarty->assign('flashtpls', $this->get_flash_templates($flash_dir));
-            $smarty->assign('current_flashtpl', $_CFG['flash_theme']);
-            $smarty->assign('playerdb', $playerdb);
-            $smarty->display('flashplay_list.htm');
+            $GLOBALS['smarty']->assign('current', 'sys');
+            $GLOBALS['smarty']->assign('group_list', $group_list);
+            $GLOBALS['smarty']->assign('group_selected', $GLOBALS['_CFG']['index_ad']);
+            $GLOBALS['smarty']->assign('uri', $uri);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['flashplay']);
+            $GLOBALS['smarty']->assign('action_link_special', array('text' => $GLOBALS['_LANG']['add_new'], 'href' => 'flashplay.php?act=add'));
+            $GLOBALS['smarty']->assign('flashtpls', $this->get_flash_templates($flash_dir));
+            $GLOBALS['smarty']->assign('current_flashtpl', $GLOBALS['_CFG']['flash_theme']);
+            $GLOBALS['smarty']->assign('playerdb', $playerdb);
+            $GLOBALS['smarty']->display('flashplay_list.htm');
         } elseif ($_REQUEST['act'] == 'del') {
             admin_priv('flash_manage');
 
@@ -56,8 +56,8 @@ class Flashplay extends Init
             if (isset($flashdb[$id])) {
                 $rt = $flashdb[$id];
             } else {
-                $links[] = array('text' => $_LANG['go_url'], 'href' => 'flashplay.php?act=list');
-                sys_msg($_LANG['id_error'], 0, $links);
+                $links[] = array('text' => $GLOBALS['_LANG']['go_url'], 'href' => 'flashplay.php?act=list');
+                sys_msg($GLOBALS['_LANG']['id_error'], 0, $links);
             }
 
             if (strpos($rt['src'], 'http') === false) {
@@ -71,7 +71,7 @@ class Flashplay extends Init
             }
             $this->put_flash_xml($temp);
             $error_msg = '';
-            $this->set_flash_data($_CFG['flash_theme'], $error_msg);
+            $this->set_flash_data($GLOBALS['_CFG']['flash_theme'], $error_msg);
             ecs_header("Location: flashplay.php?act=list\n");
             exit;
         } elseif ($_REQUEST['act'] == 'add') {
@@ -85,17 +85,17 @@ class Flashplay extends Init
                 $width_height = $this->get_width_height();
                 assign_query_info();
                 if (isset($width_height['width']) || isset($width_height['height'])) {
-                    $smarty->assign('width_height', sprintf($_LANG['width_height'], $width_height['width'], $width_height['height']));
+                    $GLOBALS['smarty']->assign('width_height', sprintf($GLOBALS['_LANG']['width_height'], $width_height['width'], $width_height['height']));
                 }
 
-                $smarty->assign('action_link', array('text' => $_LANG['go_url'], 'href' => 'flashplay.php?act=list'));
-                $smarty->assign('rt', $rt);
-                $smarty->assign('ur_here', $_LANG['add_picad']);
-                $smarty->display('flashplay_add.htm');
+                $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['go_url'], 'href' => 'flashplay.php?act=list'));
+                $GLOBALS['smarty']->assign('rt', $rt);
+                $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['add_picad']);
+                $GLOBALS['smarty']->display('flashplay_add.htm');
             } elseif ($_POST['step'] == 2) {
                 if (!empty($_FILES['img_file_src']['name'])) {
                     if (!get_file_suffix($_FILES['img_file_src']['name'], $allow_suffix)) {
-                        sys_msg($_LANG['invalid_type']);
+                        sys_msg($GLOBALS['_LANG']['invalid_type']);
                     }
                     $name = date('Ymd');
                     for ($i = 0; $i < 6; $i++) {
@@ -109,20 +109,20 @@ class Flashplay extends Init
                     }
                 } elseif (!empty($_POST['img_src'])) {
                     if (!get_file_suffix($_POST['img_src'], $allow_suffix)) {
-                        sys_msg($_LANG['invalid_type']);
+                        sys_msg($GLOBALS['_LANG']['invalid_type']);
                     }
                     $src = $_POST['img_src'];
                     if (strstr($src, 'http') && !strstr($src, $_SERVER['SERVER_NAME'])) {
                         $src = $this->get_url_image($src);
                     }
                 } else {
-                    $links[] = array('text' => $_LANG['add_new'], 'href' => 'flashplay.php?act=add');
-                    sys_msg($_LANG['src_empty'], 0, $links);
+                    $links[] = array('text' => $GLOBALS['_LANG']['add_new'], 'href' => 'flashplay.php?act=add');
+                    sys_msg($GLOBALS['_LANG']['src_empty'], 0, $links);
                 }
 
                 if (empty($_POST['img_url'])) {
-                    $links[] = array('text' => $_LANG['add_new'], 'href' => 'flashplay.php?act=add');
-                    sys_msg($_LANG['link_empty'], 0, $links);
+                    $links[] = array('text' => $GLOBALS['_LANG']['add_new'], 'href' => 'flashplay.php?act=add');
+                    sys_msg($GLOBALS['_LANG']['link_empty'], 0, $links);
                 }
 
                 // 获取flash播放器数据
@@ -145,9 +145,9 @@ class Flashplay extends Init
 
                 $this->put_flash_xml($_flashdb);
                 $error_msg = '';
-                $this->set_flash_data($_CFG['flash_theme'], $error_msg);
-                $links[] = array('text' => $_LANG['go_url'], 'href' => 'flashplay.php?act=list');
-                sys_msg($_LANG['edit_ok'], 0, $links);
+                $this->set_flash_data($GLOBALS['_CFG']['flash_theme'], $error_msg);
+                $links[] = array('text' => $GLOBALS['_LANG']['go_url'], 'href' => 'flashplay.php?act=list');
+                sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
             }
         } elseif ($_REQUEST['act'] == 'edit') {
             admin_priv('flash_manage');
@@ -157,8 +157,8 @@ class Flashplay extends Init
             if (isset($flashdb[$id])) {
                 $rt = $flashdb[$id];
             } else {
-                $links[] = array('text' => $_LANG['go_url'], 'href' => 'flashplay.php?act=list');
-                sys_msg($_LANG['id_error'], 0, $links);
+                $links[] = array('text' => $GLOBALS['_LANG']['go_url'], 'href' => 'flashplay.php?act=list');
+                sys_msg($GLOBALS['_LANG']['id_error'], 0, $links);
             }
             if (empty($_POST['step'])) {
                 $rt['act'] = 'edit';
@@ -168,20 +168,20 @@ class Flashplay extends Init
                 $rt['img_sort'] = empty($rt['sort']) ? 0 : $rt['sort'];
 
                 $rt['id'] = $id;
-                $smarty->assign('action_link', array('text' => $_LANG['go_url'], 'href' => 'flashplay.php?act=list'));
-                $smarty->assign('rt', $rt);
-                $smarty->assign('ur_here', $_LANG['edit_picad']);
-                $smarty->display('flashplay_add.htm');
+                $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['go_url'], 'href' => 'flashplay.php?act=list'));
+                $GLOBALS['smarty']->assign('rt', $rt);
+                $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['edit_picad']);
+                $GLOBALS['smarty']->display('flashplay_add.htm');
             } elseif ($_POST['step'] == 2) {
                 if (empty($_POST['img_url'])) {
                     //若链接地址为空
-                    $links[] = array('text' => $_LANG['return_edit'], 'href' => 'flashplay.php?act=edit&id=' . $id);
-                    sys_msg($_LANG['link_empty'], 0, $links);
+                    $links[] = array('text' => $GLOBALS['_LANG']['return_edit'], 'href' => 'flashplay.php?act=edit&id=' . $id);
+                    sys_msg($GLOBALS['_LANG']['link_empty'], 0, $links);
                 }
 
                 if (!empty($_FILES['img_file_src']['name'])) {
                     if (!get_file_suffix($_FILES['img_file_src']['name'], $allow_suffix)) {
-                        sys_msg($_LANG['invalid_type']);
+                        sys_msg($GLOBALS['_LANG']['invalid_type']);
                     }
                     //有上传
                     $name = date('Ymd');
@@ -198,14 +198,14 @@ class Flashplay extends Init
                 } elseif (!empty($_POST['img_src'])) {
                     $src = $_POST['img_src'];
                     if (!get_file_suffix($_POST['img_src'], $allow_suffix)) {
-                        sys_msg($_LANG['invalid_type']);
+                        sys_msg($GLOBALS['_LANG']['invalid_type']);
                     }
                     if (strstr($src, 'http') && !strstr($src, $_SERVER['SERVER_NAME'])) {
                         $src = $this->get_url_image($src);
                     }
                 } else {
-                    $links[] = array('text' => $_LANG['return_edit'], 'href' => 'flashplay.php?act=edit&id=' . $id);
-                    sys_msg($_LANG['src_empty'], 0, $links);
+                    $links[] = array('text' => $GLOBALS['_LANG']['return_edit'], 'href' => 'flashplay.php?act=edit&id=' . $id);
+                    sys_msg($GLOBALS['_LANG']['src_empty'], 0, $links);
                 }
 
                 if (strpos($rt['src'], 'http') === false && $rt['src'] != $src) {
@@ -227,29 +227,29 @@ class Flashplay extends Init
 
                 $this->put_flash_xml($_flashdb);
                 $error_msg = '';
-                $this->set_flash_data($_CFG['flash_theme'], $error_msg);
-                $links[] = array('text' => $_LANG['go_url'], 'href' => 'flashplay.php?act=list');
-                sys_msg($_LANG['edit_ok'], 0, $links);
+                $this->set_flash_data($GLOBALS['_CFG']['flash_theme'], $error_msg);
+                $links[] = array('text' => $GLOBALS['_LANG']['go_url'], 'href' => 'flashplay.php?act=list');
+                sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
             }
         } elseif ($_REQUEST['act'] == 'install') {
             check_authz_json('flash_manage');
             $flash_theme = trim($_GET['flashtpl']);
-            if ($_CFG['flash_theme'] != $flash_theme) {
+            if ($GLOBALS['_CFG']['flash_theme'] != $flash_theme) {
                 $sql = "UPDATE " . $GLOBALS['ecs']->table('shop_config') . " SET value = '$flash_theme' WHERE code = 'flash_theme'";
-                if ($db->query($sql, 'SILENT')) {
+                if ($GLOBALS['db']->query($sql, 'SILENT')) {
                     clear_all_files(); //清除模板编译文件
 
                     $error_msg = '';
                     if ($this->set_flash_data($flash_theme, $error_msg)) {
                         make_json_error($error_msg);
                     } else {
-                        make_json_result($flash_theme, $_LANG['install_success']);
+                        make_json_result($flash_theme, $GLOBALS['_LANG']['install_success']);
                     }
                 } else {
-                    make_json_error($db->error());
+                    make_json_error($GLOBALS['db']->error());
                 }
             } else {
-                make_json_result($flash_theme, $_LANG['install_success']);
+                make_json_result($flash_theme, $GLOBALS['_LANG']['install_success']);
             }
         }
 
@@ -260,35 +260,35 @@ class Flashplay extends Init
         elseif ($_REQUEST['act'] == 'custom_list') {
             /* 标签初始化 */
             $group_list = array(
-                'sys' => array('text' => $_LANG['system_set'], 'url' => ($_CFG['index_ad'] == 'cus') ? 'javascript:system_set();void(0);' : 'flashplay.php?act=list'),
-                'cus' => array('text' => $_LANG['custom_set'], 'url' => '')
+                'sys' => array('text' => $GLOBALS['_LANG']['system_set'], 'url' => ($GLOBALS['_CFG']['index_ad'] == 'cus') ? 'javascript:system_set();void(0);' : 'flashplay.php?act=list'),
+                'cus' => array('text' => $GLOBALS['_LANG']['custom_set'], 'url' => '')
             );
 
             /* 列表 */
             $ad_list = $this->ad_list();
-            $smarty->assign('ad_list', $ad_list['ad']);
+            $GLOBALS['smarty']->assign('ad_list', $ad_list['ad']);
 
             assign_query_info();
             $width_height = $this->get_width_height();
 //        if(isset($width_height['width'])|| isset($width_height['height']))
 //        {
-            $smarty->assign('width_height', sprintf($_LANG['width_height'], $width_height['width'], $width_height['height']));
+            $GLOBALS['smarty']->assign('width_height', sprintf($GLOBALS['_LANG']['width_height'], $width_height['width'], $width_height['height']));
 //        }
-            $smarty->assign('full_page', 1);
-            $smarty->assign('current', 'cus');
-            $smarty->assign('group_list', $group_list);
-            $smarty->assign('group_selected', $_CFG['index_ad']);
-            $smarty->assign('uri', $uri);
-            $smarty->assign('ur_here', $_LANG['flashplay']);
-            $smarty->assign('action_link_special', array('text' => $_LANG['add_flash'], 'href' => 'flashplay.php?act=custom_add'));
+            $GLOBALS['smarty']->assign('full_page', 1);
+            $GLOBALS['smarty']->assign('current', 'cus');
+            $GLOBALS['smarty']->assign('group_list', $group_list);
+            $GLOBALS['smarty']->assign('group_selected', $GLOBALS['_CFG']['index_ad']);
+            $GLOBALS['smarty']->assign('uri', $uri);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['flashplay']);
+            $GLOBALS['smarty']->assign('action_link_special', array('text' => $GLOBALS['_LANG']['add_flash'], 'href' => 'flashplay.php?act=custom_add'));
 
             /* 添加 */
             $ad = array('ad_name' => '', 'ad_type' => 0, 'ad_url' => 'http://', 'htmls' => '',
                 'ad_status' => '1', 'ad_id' => '0', 'url' => 'http://');
-            $smarty->assign('ad', $ad);
-            $smarty->assign('form_act', 'custom_insert');
+            $GLOBALS['smarty']->assign('ad', $ad);
+            $GLOBALS['smarty']->assign('form_act', 'custom_insert');
 
-            $smarty->display('flashplay_custom.htm');
+            $GLOBALS['smarty']->display('flashplay_custom.htm');
         }
 
         /*------------------------------------------------------ */
@@ -298,35 +298,35 @@ class Flashplay extends Init
         elseif ($_REQUEST['act'] == 'custom_add') {
             /* 标签初始化 */
             $group_list = array(
-                'sys' => array('text' => $_LANG['system_set'], 'url' => ($_CFG['index_ad'] == 'cus') ? 'javascript:system_set();void(0);' : 'flashplay.php?act=list'),
-                'cus' => array('text' => $_LANG['custom_set'], 'url' => '')
+                'sys' => array('text' => $GLOBALS['_LANG']['system_set'], 'url' => ($GLOBALS['_CFG']['index_ad'] == 'cus') ? 'javascript:system_set();void(0);' : 'flashplay.php?act=list'),
+                'cus' => array('text' => $GLOBALS['_LANG']['custom_set'], 'url' => '')
             );
 
             /* 列表 */
             $ad_list = $this->ad_list();
-            $smarty->assign('ad_list', $ad_list['ad']);
+            $GLOBALS['smarty']->assign('ad_list', $ad_list['ad']);
 
             assign_query_info();
             $width_height = $this->get_width_height();
 //        if(isset($width_height['width'])|| isset($width_height['height']))
 //        {
-            $smarty->assign('width_height', sprintf($_LANG['width_height'], $width_height['width'], $width_height['height']));
+            $GLOBALS['smarty']->assign('width_height', sprintf($GLOBALS['_LANG']['width_height'], $width_height['width'], $width_height['height']));
 //        }
-            $smarty->assign('full_page', 1);
-            $smarty->assign('current', 'cus');
-            $smarty->assign('group_list', $group_list);
-            $smarty->assign('group_selected', $_CFG['index_ad']);
-            $smarty->assign('uri', $uri);
-            $smarty->assign('ur_here', $_LANG['add_ad']);
-            $smarty->assign('action_link_special', array('text' => $_LANG['add_flash'], 'href' => 'flashplay.php?act=custom_add'));
-            $smarty->assign('action_link', array('text' => $_LANG['ad_play_url'], 'href' => 'flashplay.php?act=custom_list'));
+            $GLOBALS['smarty']->assign('full_page', 1);
+            $GLOBALS['smarty']->assign('current', 'cus');
+            $GLOBALS['smarty']->assign('group_list', $group_list);
+            $GLOBALS['smarty']->assign('group_selected', $GLOBALS['_CFG']['index_ad']);
+            $GLOBALS['smarty']->assign('uri', $uri);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['add_ad']);
+            $GLOBALS['smarty']->assign('action_link_special', array('text' => $GLOBALS['_LANG']['add_flash'], 'href' => 'flashplay.php?act=custom_add'));
+            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['ad_play_url'], 'href' => 'flashplay.php?act=custom_list'));
             /* 添加 */
             $ad = array('ad_name' => '', 'ad_type' => 0, 'ad_url' => 'http://', 'htmls' => '',
                 'ad_status' => '1', 'ad_id' => '0', 'url' => 'http://');
-            $smarty->assign('ad', $ad);
-            $smarty->assign('form_act', 'custom_insert');
+            $GLOBALS['smarty']->assign('ad', $ad);
+            $GLOBALS['smarty']->assign('form_act', 'custom_insert');
 
-            $smarty->display('flashplay_custom_add.htm');
+            $GLOBALS['smarty']->display('flashplay_custom_add.htm');
         }
 
 
@@ -342,8 +342,8 @@ class Flashplay extends Init
             define('GMTIME_UTC', gmtime()); // 获取 UTC 时间戳
 
             if (empty($_POST['ad']) || empty($_POST['content']) || empty($_POST['ad']['ad_name'])) {
-                $links[] = array('text' => $_LANG['back'], 'href' => 'flashplay.php?act=custom_list');
-                sys_msg($_LANG['form_none'], 0, $links);
+                $links[] = array('text' => $GLOBALS['_LANG']['back'], 'href' => 'flashplay.php?act=custom_list');
+                sys_msg($GLOBALS['_LANG']['form_none'], 0, $links);
             }
 
             $filter = array();
@@ -365,7 +365,7 @@ class Flashplay extends Init
             if ($ad_img['ad_img']['name'] && $ad_img['ad_img']['size'] > 0) {
                 /* 检查文件合法性 */
                 if (!get_file_suffix($ad_img['ad_img']['name'], $allow_suffix)) {
-                    sys_msg($_LANG['invalid_type']);
+                    sys_msg($GLOBALS['_LANG']['invalid_type']);
                 }
 
                 /* 处理 */
@@ -386,7 +386,7 @@ class Flashplay extends Init
                     /* 取互联网图片至本地 */
                     $src = $this->get_url_image($filter['content']['url']);
                 } else {
-                    sys_msg($_LANG['web_url_no']);
+                    sys_msg($GLOBALS['_LANG']['web_url_no']);
                 }
             }
 
@@ -411,8 +411,8 @@ class Flashplay extends Init
                 'url' => $filter['ad']['url'],
                 'ad_status' => $filter['ad']['ad_status']
             );
-            $db->autoExecute($ecs->table('ad_custom'), $ad, 'INSERT', '', 'SILENT');
-            $ad_id = $db->insert_id();
+            $GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('ad_custom'), $ad, 'INSERT', '', 'SILENT');
+            $ad_id = $GLOBALS['db']->insert_id();
 
             /* 修改状态 */
             $this->modfiy_ad_status($ad_id, $filter['ad']['ad_status']);
@@ -422,8 +422,8 @@ class Flashplay extends Init
                 clear_all_files();
             }
 
-            $links[] = array('text' => $_LANG['back_custom_set'], 'href' => 'flashplay.php?act=custom_list');
-            sys_msg($_LANG['edit_ok'], 0, $links);
+            $links[] = array('text' => $GLOBALS['_LANG']['back_custom_set'], 'href' => 'flashplay.php?act=custom_list');
+            sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
         }
 
         /*------------------------------------------------------ */
@@ -435,8 +435,8 @@ class Flashplay extends Init
 
             $id = empty($_GET['id']) ? 0 : intval(trim($_GET['id']));
             if (!$id) {
-                $links[] = array('text' => $_LANG['back_custom_set'], 'href' => 'flashplay.php?act=custom_list');
-                sys_msg($_LANG['form_none'], 0, $links);
+                $links[] = array('text' => $GLOBALS['_LANG']['back_custom_set'], 'href' => 'flashplay.php?act=custom_list');
+                sys_msg($GLOBALS['_LANG']['form_none'], 0, $links);
             }
 
             /* 修改状态 */
@@ -445,13 +445,13 @@ class Flashplay extends Init
             /* 清除模板编译文件 */
             clear_all_files();
 
-            $query = $db->query("DELETE FROM " . $ecs->table('ad_custom') . " WHERE ad_id = $id");
+            $query = $GLOBALS['db']->query("DELETE FROM " . $GLOBALS['ecs']->table('ad_custom') . " WHERE ad_id = $id");
 
-            $links[] = array('text' => $_LANG['back_custom_set'], 'href' => 'flashplay.php?act=custom_list');
+            $links[] = array('text' => $GLOBALS['_LANG']['back_custom_set'], 'href' => 'flashplay.php?act=custom_list');
             if ($query) {
-                sys_msg($_LANG['edit_ok'], 0, $links);
+                sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
             } else {
-                sys_msg($_LANG['edit_no'], 0, $links);
+                sys_msg($GLOBALS['_LANG']['edit_no'], 0, $links);
             }
         }
 
@@ -466,43 +466,43 @@ class Flashplay extends Init
             $id = empty($_GET['id']) ? 0 : intval(trim($_GET['id']));
             $is_ajax = $_GET['is_ajax'];
             if (!$id || $is_ajax != '1') {
-                make_json_error($_LANG['edit_no']);
+                make_json_error($GLOBALS['_LANG']['edit_no']);
             }
 
             /* 修改状态 */
-            $links[] = array('text' => $_LANG['back_custom_set'], 'href' => 'flashplay.php?act=custom_list');
+            $links[] = array('text' => $GLOBALS['_LANG']['back_custom_set'], 'href' => 'flashplay.php?act=custom_list');
             if ($this->modfiy_ad_status($id, $ad_status)) {
                 /* 清除模板编译文件 */
                 clear_all_files();
 
                 /* 标签初始化 */
-                $sql = "SELECT  value FROM " . $ecs->table("shop_config") . " WHERE id =337";
-                $shop_config = $db->getRow($sql);
+                $sql = "SELECT  value FROM " . $GLOBALS['ecs']->table("shop_config") . " WHERE id =337";
+                $shop_config = $GLOBALS['db']->getRow($sql);
                 $group_list = array(
-                    'sys' => array('text' => $_LANG['system_set'], 'url' => ($shop_config['value'] == 'cus') ? 'javascript:system_set();void(0);' : 'flashplay.php?act=list'),
-                    'cus' => array('text' => $_LANG['custom_set'], 'url' => '')
+                    'sys' => array('text' => $GLOBALS['_LANG']['system_set'], 'url' => ($shop_config['value'] == 'cus') ? 'javascript:system_set();void(0);' : 'flashplay.php?act=list'),
+                    'cus' => array('text' => $GLOBALS['_LANG']['custom_set'], 'url' => '')
                 );
 
                 /* 列表 */
                 $ad_list = $this->ad_list();
-                $smarty->assign('ad_list', $ad_list['ad']);
-                $smarty->assign('current', 'cus');
-                $smarty->assign('group_list', $group_list);
-                $smarty->assign('group_selected', $_CFG['index_ad']);
-                $smarty->assign('uri', $uri);
-                $smarty->assign('ur_here', $_LANG['flashplay']);
-                $smarty->assign('action_link_special', array('text' => $_LANG['add_flash'], 'href' => 'flashplay.php?act=custom_add'));
+                $GLOBALS['smarty']->assign('ad_list', $ad_list['ad']);
+                $GLOBALS['smarty']->assign('current', 'cus');
+                $GLOBALS['smarty']->assign('group_list', $group_list);
+                $GLOBALS['smarty']->assign('group_selected', $GLOBALS['_CFG']['index_ad']);
+                $GLOBALS['smarty']->assign('uri', $uri);
+                $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['flashplay']);
+                $GLOBALS['smarty']->assign('action_link_special', array('text' => $GLOBALS['_LANG']['add_flash'], 'href' => 'flashplay.php?act=custom_add'));
                 /* 添加 */
                 $ad = array('ad_name' => '', 'ad_type' => 0, 'ad_url' => 'http://', 'htmls' => '',
                     'ad_status' => '1', 'ad_id' => '0', 'url' => 'http://');
-                $smarty->assign('ad', $ad);
-                $smarty->assign('form_act', 'custom_insert');
+                $GLOBALS['smarty']->assign('ad', $ad);
+                $GLOBALS['smarty']->assign('form_act', 'custom_insert');
 
-                $smarty->fetch('flashplay_custom.htm');
+                $GLOBALS['smarty']->fetch('flashplay_custom.htm');
 
-                make_json_result($smarty->fetch('flashplay_custom.htm'));
+                make_json_result($GLOBALS['smarty']->fetch('flashplay_custom.htm'));
             } else {
-                make_json_error($_LANG['edit_no']);
+                make_json_error($GLOBALS['_LANG']['edit_no']);
             }
         }
 
@@ -519,17 +519,17 @@ class Flashplay extends Init
 
             assign_query_info();
             $width_height = $this->get_width_height();
-            $smarty->assign('width_height', sprintf($_LANG['width_height'], $width_height['width'], $width_height['height']));
+            $GLOBALS['smarty']->assign('width_height', sprintf($GLOBALS['_LANG']['width_height'], $width_height['width'], $width_height['height']));
 
-            $smarty->assign('group_selected', $_CFG['index_ad']);
-            $smarty->assign('uri', $uri);
-            $smarty->assign('ur_here', $_LANG['flashplay']);
-            $smarty->assign('action_link', array('text' => $_LANG['ad_play_url'], 'href' => 'flashplay.php?act=custom_list'));
-            $smarty->assign('ur_here', $_LANG['edit_ad']);
+            $GLOBALS['smarty']->assign('group_selected', $GLOBALS['_CFG']['index_ad']);
+            $GLOBALS['smarty']->assign('uri', $uri);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['flashplay']);
+            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['ad_play_url'], 'href' => 'flashplay.php?act=custom_list'));
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['edit_ad']);
 
             /* 添加 */
-            $smarty->assign('ad', $ad);
-            $smarty->display('flashplay_ccustom_edit.htm');
+            $GLOBALS['smarty']->assign('ad', $ad);
+            $GLOBALS['smarty']->display('flashplay_ccustom_edit.htm');
         }
 
         /*------------------------------------------------------ */
@@ -540,8 +540,8 @@ class Flashplay extends Init
             admin_priv('flash_manage');
 
             if (empty($_POST['ad']) || empty($_POST['content']) || empty($_POST['ad']['ad_name']) || empty($_POST['ad']['id'])) {
-                $links[] = array('text' => $_LANG['back'], 'href' => 'flashplay.php?act=custom_list');
-                sys_msg($_LANG['form_none'], 0, $links);
+                $links[] = array('text' => $GLOBALS['_LANG']['back'], 'href' => 'flashplay.php?act=custom_list');
+                sys_msg($GLOBALS['_LANG']['form_none'], 0, $links);
             }
 
             $filter = array();
@@ -567,7 +567,7 @@ class Flashplay extends Init
             if ($ad_img['ad_img']['name'] && $ad_img['ad_img']['size'] > 0) {
                 /* 检查文件合法性 */
                 if (!get_file_suffix($ad_img['ad_img']['name'], $allow_suffix)) {
-                    sys_msg($_LANG['invalid_type']);
+                    sys_msg($GLOBALS['_LANG']['invalid_type']);
                 }
 
                 /* 处理 */
@@ -588,7 +588,7 @@ class Flashplay extends Init
                     /* 取互联网图片至本地 */
                     $src = $this->get_url_image($filter['content']['url']);
                 } else {
-                    sys_msg($_LANG['web_url_no']);
+                    sys_msg($GLOBALS['_LANG']['web_url_no']);
                 }
             }
 
@@ -612,7 +612,7 @@ class Flashplay extends Init
                 'url' => $filter['ad']['url'],
                 'ad_status' => $filter['ad']['ad_status']
             );
-            $db->autoExecute($ecs->table('ad_custom'), $ad, 'UPDATE', 'ad_id = ' . $ad_info['ad_id'], 'SILENT');
+            $GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('ad_custom'), $ad, 'UPDATE', 'ad_id = ' . $ad_info['ad_id'], 'SILENT');
 
             /* 修改状态 */
             $this->modfiy_ad_status($ad_info['ad_id'], $filter['ad']['ad_status']);
@@ -622,8 +622,8 @@ class Flashplay extends Init
                 clear_all_files();
             }
 
-            $links[] = array('text' => $_LANG['back_custom_set'], 'href' => 'flashplay.php?act=custom_list');
-            sys_msg($_LANG['edit_ok'], 0, $links);
+            $links[] = array('text' => $GLOBALS['_LANG']['back_custom_set'], 'href' => 'flashplay.php?act=custom_list');
+            sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
         }
     }
 

@@ -13,7 +13,7 @@ class Wholesale extends Init
 
         /* 如果没登录，提示登录 */
         if ($_SESSION['user_rank'] <= 0) {
-            show_message($_LANG['ws_user_rank'], $_LANG['ws_return_home'], 'index.php');
+            show_message($GLOBALS['_LANG']['ws_user_rank'], $GLOBALS['_LANG']['ws_return_home'], 'index.php');
         }
 
         /*------------------------------------------------------ */
@@ -41,28 +41,28 @@ class Wholesale extends Init
             if ($search_category) {
                 $where .= " AND g.cat_id = '$search_category' ";
                 $param['search_category'] = $search_category;
-                $smarty->assign('search_category', $search_category);
+                $GLOBALS['smarty']->assign('search_category', $search_category);
             }
             /* 搜索商品名称和关键字 */
             if ($search_keywords) {
                 $where .= " AND (g.keywords LIKE '%$search_keywords%'
                     OR g.goods_name LIKE '%$search_keywords%') ";
                 $param['search_keywords'] = $search_keywords;
-                $smarty->assign('search_keywords', $search_keywords);
+                $GLOBALS['smarty']->assign('search_keywords', $search_keywords);
             }
 
             /* 取得批发商品总数 */
-            $sql = "SELECT COUNT(*) FROM " . $ecs->table('wholesale') . " AS w, " . $ecs->table('goods') . " AS g " . $where;
-            $count = $db->getOne($sql);
+            $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('wholesale') . " AS w, " . $GLOBALS['ecs']->table('goods') . " AS g " . $where;
+            $count = $GLOBALS['db']->getOne($sql);
 
             if ($count > 0) {
-                $default_display_type = $_CFG['show_order_type'] == '0' ? 'list' : 'text';
+                $default_display_type = $GLOBALS['_CFG']['show_order_type'] == '0' ? 'list' : 'text';
                 $display = (isset($_REQUEST['display']) && in_array(trim(strtolower($_REQUEST['display'])), array('list', 'text'))) ? trim($_REQUEST['display']) : (isset($_COOKIE['ECS']['display']) ? $_COOKIE['ECS']['display'] : $default_display_type);
                 $display = in_array($display, array('list', 'text')) ? $display : 'text';
                 setcookie('ECS[display]', $display, gmtime() + 86400 * 7, null, null, null, true);
 
                 /* 取得每页记录数 */
-                $size = isset($_CFG['page_size']) && intval($_CFG['page_size']) > 0 ? intval($_CFG['page_size']) : 10;
+                $size = isset($GLOBALS['_CFG']['page_size']) && intval($GLOBALS['_CFG']['page_size']) > 0 ? intval($GLOBALS['_CFG']['page_size']) : 10;
 
                 /* 计算总页数 */
                 $page_count = ceil($count / $size);
@@ -73,47 +73,47 @@ class Wholesale extends Init
 
                 /* 取得当前页的批发商品 */
                 $wholesale_list = $this->wholesale_list($size, $page, $where);
-                $smarty->assign('wholesale_list', $wholesale_list);
+                $GLOBALS['smarty']->assign('wholesale_list', $wholesale_list);
 
                 $param['act'] = 'list';
                 $pager = get_pager('wholesale.php', array_reverse($param, true), $count, $page, $size);
                 $pager['display'] = $display;
-                $smarty->assign('pager', $pager);
+                $GLOBALS['smarty']->assign('pager', $pager);
 
                 /* 批发商品购物车 */
-                $smarty->assign('cart_goods', isset($_SESSION['wholesale_goods']) ? $_SESSION['wholesale_goods'] : array());
+                $GLOBALS['smarty']->assign('cart_goods', isset($_SESSION['wholesale_goods']) ? $_SESSION['wholesale_goods'] : array());
             }
 
             /* 模板赋值 */
             assign_template();
             $position = assign_ur_here();
-            $smarty->assign('page_title', $position['title']);    // 页面标题
-            $smarty->assign('ur_here', $position['ur_here']);  // 当前位置
-            $smarty->assign('categories', get_categories_tree()); // 分类树
-            $smarty->assign('helps', get_shop_help());       // 网店帮助
-            $smarty->assign('top_goods', get_top10());           // 销售排行
+            $GLOBALS['smarty']->assign('page_title', $position['title']);    // 页面标题
+            $GLOBALS['smarty']->assign('ur_here', $position['ur_here']);  // 当前位置
+            $GLOBALS['smarty']->assign('categories', get_categories_tree()); // 分类树
+            $GLOBALS['smarty']->assign('helps', get_shop_help());       // 网店帮助
+            $GLOBALS['smarty']->assign('top_goods', get_top10());           // 销售排行
 
             assign_dynamic('wholesale');
 
             /* 显示模板 */
-            $smarty->display('wholesale_list.dwt');
+            $GLOBALS['smarty']->display('wholesale_list.dwt');
         }
 
         /*------------------------------------------------------ */
         //-- 下载价格单
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'price_list') {
-            $data = $_LANG['goods_name'] . "\t" . $_LANG['goods_attr'] . "\t" . $_LANG['number'] . "\t" . $_LANG['ws_price'] . "\t\n";
-            $sql = "SELECT * FROM " . $ecs->table('wholesale') .
+            $data = $GLOBALS['_LANG']['goods_name'] . "\t" . $GLOBALS['_LANG']['goods_attr'] . "\t" . $GLOBALS['_LANG']['number'] . "\t" . $GLOBALS['_LANG']['ws_price'] . "\t\n";
+            $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('wholesale') .
                 "WHERE enabled = 1 AND CONCAT(',', rank_ids, ',') LIKE '" . '%,' . $_SESSION['user_rank'] . ',%' . "'";
-            $res = $db->query($sql);
-            while ($row = $db->fetchRow($res)) {
+            $res = $GLOBALS['db']->query($sql);
+            while ($row = $GLOBALS['db']->fetchRow($res)) {
                 $price_list = unserialize($row['prices']);
                 foreach ($price_list as $attr_price) {
                     if ($attr_price['attr']) {
-                        $sql = "SELECT attr_value FROM " . $ecs->table('goods_attr') .
+                        $sql = "SELECT attr_value FROM " . $GLOBALS['ecs']->table('goods_attr') .
                             " WHERE goods_attr_id " . db_create_in($attr_price['attr']);
-                        $goods_attr = join(',', $db->getCol($sql));
+                        $goods_attr = join(',', $GLOBALS['db']->getCol($sql));
                     } else {
                         $goods_attr = '';
                     }
@@ -148,7 +148,7 @@ class Wholesale extends Init
 
             /* 检查数量 */
             if (empty($goods_number) || (is_array($goods_number) && array_sum($goods_number) <= 0)) {
-                show_message($_LANG['ws_invalid_goods_number']);
+                show_message($GLOBALS['_LANG']['ws_invalid_goods_number']);
             }
 
             /* 确定购买商品列表 */
@@ -174,9 +174,9 @@ class Wholesale extends Init
                 foreach ($_SESSION['wholesale_goods'] as $goods) {
                     if ($goods['goods_id'] == $wholesale['goods_id']) {
                         if (empty($goods_attr)) {
-                            show_message($_LANG['ws_goods_attr_exists']);
+                            show_message($GLOBALS['_LANG']['ws_goods_attr_exists']);
                         } elseif (in_array($goods['goods_attr_id'], $goods_attr)) {
-                            show_message($_LANG['ws_goods_attr_exists']);
+                            show_message($GLOBALS['_LANG']['ws_goods_attr_exists']);
                         }
                     }
                 }
@@ -197,13 +197,13 @@ class Wholesale extends Init
                 }
             }
             if (!$attr_matching) {
-                show_message($_LANG['ws_attr_not_matching']);
+                show_message($GLOBALS['_LANG']['ws_attr_not_matching']);
             }
 
             /* 检查数量是否达到最低要求 */
             foreach ($goods_list as $goods_key => $goods) {
                 if ($goods['number'] < $goods['qp_list'][0]['quantity']) {
-                    show_message($_LANG['ws_goods_number_not_enough']);
+                    show_message($GLOBALS['_LANG']['ws_goods_number_not_enough']);
                 } else {
                     $goods_price = 0;
                     foreach ($goods['qp_list'] as $qp) {
@@ -276,12 +276,12 @@ class Wholesale extends Init
 
             /* 检查购物车中是否有商品 */
             if (count($_SESSION['wholesale_goods']) == 0) {
-                show_message($_LANG['no_goods_in_cart'] . "d");
+                show_message($GLOBALS['_LANG']['no_goods_in_cart'] . "d");
             }
 
             /* 检查备注信息 */
             if (empty($_POST['remark'])) {
-                show_message($_LANG['ws_remark']);
+                show_message($GLOBALS['_LANG']['ws_remark']);
             }
 
             /* 计算商品总额 */
@@ -314,7 +314,7 @@ class Wholesale extends Init
                 }
             } while ($error_no == 1062); //如果是订单号重复则重新提交数据
 
-            $new_order_id = $db->insert_id();
+            $new_order_id = $GLOBALS['db']->insert_id();
             $order['order_id'] = $new_order_id;
 
             /* 插入订单商品 */
@@ -330,42 +330,42 @@ class Wholesale extends Init
                     ksort($goods_attr_id);
                     $goods_attr = implode('|', $goods_attr_id);
 
-                    $sql = "SELECT product_id FROM " . $ecs->table('products') . " WHERE goods_attr = '$goods_attr' AND goods_id = '" . $goods['goods_id'] . "'";
-                    $product_id = $db->getOne($sql);
+                    $sql = "SELECT product_id FROM " . $GLOBALS['ecs']->table('products') . " WHERE goods_attr = '$goods_attr' AND goods_id = '" . $goods['goods_id'] . "'";
+                    $product_id = $GLOBALS['db']->getOne($sql);
                 }
 
-                $sql = "INSERT INTO " . $ecs->table('order_goods') . "( " .
+                $sql = "INSERT INTO " . $GLOBALS['ecs']->table('order_goods') . "( " .
                     "order_id, goods_id, goods_name, goods_sn, product_id, goods_number, market_price, " .
                     "goods_price, goods_attr, is_real, extension_code, parent_id, is_gift) " .
                     " SELECT '$new_order_id', goods_id, goods_name, goods_sn, '$product_id','$goods[goods_number]', market_price, " .
                     "'$goods[goods_price]', '$goods[goods_attr]', is_real, extension_code, 0, 0 " .
-                    " FROM " . $ecs->table('goods') .
+                    " FROM " . $GLOBALS['ecs']->table('goods') .
                     " WHERE goods_id = '$goods[goods_id]'";
-                $db->query($sql);
+                $GLOBALS['db']->query($sql);
             }
 
             /* 给商家发邮件 */
-            if ($_CFG['service_email'] != '') {
+            if ($GLOBALS['_CFG']['service_email'] != '') {
                 $tpl = get_mail_template('remind_of_new_order');
-                $smarty->assign('order', $order);
-                $smarty->assign('shop_name', $_CFG['shop_name']);
-                $smarty->assign('send_date', date($_CFG['time_format']));
-                $content = $smarty->fetch('str:' . $tpl['template_content']);
-                send_mail($_CFG['shop_name'], $_CFG['service_email'], $tpl['template_subject'], $content, $tpl['is_html']);
+                $GLOBALS['smarty']->assign('order', $order);
+                $GLOBALS['smarty']->assign('shop_name', $GLOBALS['_CFG']['shop_name']);
+                $GLOBALS['smarty']->assign('send_date', date($GLOBALS['_CFG']['time_format']));
+                $content = $GLOBALS['smarty']->fetch('str:' . $tpl['template_content']);
+                send_mail($GLOBALS['_CFG']['shop_name'], $GLOBALS['_CFG']['service_email'], $tpl['template_subject'], $content, $tpl['is_html']);
             }
 
             /* 如果需要，发短信 */
-            if ($_CFG['sms_order_placed'] == '1' && $_CFG['sms_shop_mobile'] != '') {
+            if ($GLOBALS['_CFG']['sms_order_placed'] == '1' && $GLOBALS['_CFG']['sms_shop_mobile'] != '') {
                 $sms = new Sms();
-                $msg = $_LANG['order_placed_sms'];
-                $sms->send($_CFG['sms_shop_mobile'], sprintf($msg, $order['consignee'], $order['tel']), '', 13, 1);
+                $msg = $GLOBALS['_LANG']['order_placed_sms'];
+                $sms->send($GLOBALS['_CFG']['sms_shop_mobile'], sprintf($msg, $order['consignee'], $order['tel']), '', 13, 1);
             }
 
             /* 清空购物车 */
             unset($_SESSION['wholesale_goods']);
 
             /* 提示 */
-            show_message(sprintf($_LANG['ws_order_submitted'], $order['order_sn']), $_LANG['ws_return_home'], 'index.php');
+            show_message(sprintf($GLOBALS['_LANG']['ws_order_submitted'], $order['order_sn']), $GLOBALS['_LANG']['ws_return_home'], 'index.php');
         }
     }
 

@@ -10,24 +10,24 @@ class GoodsExport extends Init
             /* 检查权限 */
             admin_priv('goods_export');
 
-            $smarty->assign('ur_here', $_LANG['14_goods_export']);
-            $smarty->assign('cat_list', cat_list());
-            $smarty->assign('brand_list', get_brand_list());
-            $smarty->assign('goods_type_list', goods_type_list(0));
-            $goods_fields = $this->my_array_merge($_LANG['custom'], $this->get_attributes());
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['14_goods_export']);
+            $GLOBALS['smarty']->assign('cat_list', cat_list());
+            $GLOBALS['smarty']->assign('brand_list', get_brand_list());
+            $GLOBALS['smarty']->assign('goods_type_list', goods_type_list(0));
+            $goods_fields = $this->my_array_merge($GLOBALS['_LANG']['custom'], $this->get_attributes());
             $data_format_array = array(
-                'ecshop' => $_LANG['export_ecshop'],
-                'taobao V4.3' => $_LANG['export_taobao_v43'],
-                'taobao V4.6' => $_LANG['export_taobao_v46'],
-                'taobao' => $_LANG['export_taobao'],
-                'paipai' => $_LANG['export_paipai'],
-                'paipai4' => $_LANG['export_paipai4'],
-                'custom' => $_LANG['export_custom'],
+                'ecshop' => $GLOBALS['_LANG']['export_ecshop'],
+                'taobao V4.3' => $GLOBALS['_LANG']['export_taobao_v43'],
+                'taobao V4.6' => $GLOBALS['_LANG']['export_taobao_v46'],
+                'taobao' => $GLOBALS['_LANG']['export_taobao'],
+                'paipai' => $GLOBALS['_LANG']['export_paipai'],
+                'paipai4' => $GLOBALS['_LANG']['export_paipai4'],
+                'custom' => $GLOBALS['_LANG']['export_custom'],
             );
-            $smarty->assign('data_format', $data_format_array);
-            $smarty->assign('goods_fields', $goods_fields);
+            $GLOBALS['smarty']->assign('data_format', $data_format_array);
+            $GLOBALS['smarty']->assign('goods_fields', $goods_fields);
             assign_query_info();
-            $smarty->display('goods_export.htm');
+            $GLOBALS['smarty']->display('goods_export.htm');
         } elseif ($_REQUEST['act'] == 'act_export_taobao') {
             /* 检查权限 */
             admin_priv('goods_export');
@@ -42,19 +42,19 @@ class GoodsExport extends Init
 
             $shop_province = '""';
             $shop_city = '""';
-            if ($_CFG['shop_province'] || $_CFG['shop_city']) {
-                $sql = "SELECT region_id,  region_name FROM " . $ecs->table('region') . " WHERE region_id IN ('$_CFG[shop_province]',  '$_CFG[shop_city]')";
-                $arr = $db->getAll($sql);
+            if ($GLOBALS['_CFG']['shop_province'] || $GLOBALS['_CFG']['shop_city']) {
+                $sql = "SELECT region_id,  region_name FROM " . $GLOBALS['ecs']->table('region') . " WHERE region_id IN ('$GLOBALS['_CFG'][shop_province]',  '$GLOBALS['_CFG'][shop_city]')";
+                $arr = $GLOBALS['db']->getAll($sql);
 
                 if ($arr) {
                     if (count($arr) == 1) {
-                        if ($arr[0]['region_id'] == $_CFG['shop_province']) {
+                        if ($arr[0]['region_id'] == $GLOBALS['_CFG']['shop_province']) {
                             $shop_province = '"' . $arr[0]['region_name'] . '"';
                         } else {
                             $shop_city = '"' . $arr[0]['region_name'] . '"';
                         }
                     } else {
-                        if ($arr[0]['region_id'] == $_CFG['shop_province']) {
+                        if ($arr[0]['region_id'] == $GLOBALS['_CFG']['shop_province']) {
                             $shop_province = '"' . $arr[0]['region_name'] . '"';
                             $shop_city = '"' . $arr[1]['region_name'] . '"';
                         } else {
@@ -66,16 +66,16 @@ class GoodsExport extends Init
             }
 
             $sql = "SELECT g.goods_id, g.goods_name, g.shop_price, g.goods_number, g.goods_desc, g.goods_img " .
-                " FROM " . $ecs->table('goods') . " AS g " . $where;
+                " FROM " . $GLOBALS['ecs']->table('goods') . " AS g " . $where;
 
-            $res = $db->query($sql);
+            $res = $GLOBALS['db']->query($sql);
 
             /* csv文件数组 */
             $goods_value = array('goods_name' => '""', 'goods_class' => $goods_class, 'shop_class' => 0, 'new_level' => 5, 'province' => $shop_province, 'city' => $shop_city, 'sell_type' => '"b"', 'shop_price' => 0, 'add_price' => 0, 'goods_number' => 0, 'die_day' => 14, 'load_type' => 1, 'post_express' => $post_express, 'ems' => $ems, 'express' => $express, 'pay_type' => 2, 'allow_alipay' => 1, 'invoice' => 0, 'repair' => 0, 'resend' => 1, 'is_store' => 0, 'window' => 0, 'add_time' => '"1980-1-1  0:00:00"', 'story' => '""', 'goods_desc' => '""', 'goods_img' => '""', 'goods_attr' => '""', 'group_buy' => 0, 'group_buy_num' => 0, 'template' => 0, 'discount' => 0, 'modify_time' => '""', 'upload_status' => 100, 'img_status' => 1);
 
-            $content = implode(",", $_LANG['taobao']) . "\n";
+            $content = implode(",", $GLOBALS['_LANG']['taobao']) . "\n";
 
-            while ($row = $db->fetchRow($res)) {
+            while ($row = $GLOBALS['db']->fetchRow($res)) {
                 $goods_value['goods_name'] = '"' . $row['goods_name'] . '"';
                 $goods_value['shop_price'] = $row['shop_price'];
                 $goods_value['goods_number'] = $row['goods_number'];
@@ -112,19 +112,19 @@ class GoodsExport extends Init
 
             $shop_province = '""';
             $shop_city = '""';
-            if ($_CFG['shop_province'] || $_CFG['shop_city']) {
-                $sql = "SELECT region_id,  region_name FROM " . $ecs->table('region') . " WHERE region_id IN ('$_CFG[shop_province]',  '$_CFG[shop_city]')";
-                $arr = $db->getAll($sql);
+            if ($GLOBALS['_CFG']['shop_province'] || $GLOBALS['_CFG']['shop_city']) {
+                $sql = "SELECT region_id,  region_name FROM " . $GLOBALS['ecs']->table('region') . " WHERE region_id IN ('$GLOBALS['_CFG'][shop_province]',  '$GLOBALS['_CFG'][shop_city]')";
+                $arr = $GLOBALS['db']->getAll($sql);
 
                 if ($arr) {
                     if (count($arr) == 1) {
-                        if ($arr[0]['region_id'] == $_CFG['shop_province']) {
+                        if ($arr[0]['region_id'] == $GLOBALS['_CFG']['shop_province']) {
                             $shop_province = '"' . $arr[0]['region_name'] . '"';
                         } else {
                             $shop_city = '"' . $arr[0]['region_name'] . '"';
                         }
                     } else {
-                        if ($arr[0]['region_id'] == $_CFG['shop_province']) {
+                        if ($arr[0]['region_id'] == $GLOBALS['_CFG']['shop_province']) {
                             $shop_province = '"' . $arr[0]['region_name'] . '"';
                             $shop_city = '"' . $arr[1]['region_name'] . '"';
                         } else {
@@ -136,16 +136,16 @@ class GoodsExport extends Init
             }
 
             $sql = "SELECT g.goods_id, g.goods_name, g.shop_price, g.goods_number, g.goods_desc, g.goods_img " .
-                " FROM " . $ecs->table('goods') . " AS g " . $where;
+                " FROM " . $GLOBALS['ecs']->table('goods') . " AS g " . $where;
 
-            $res = $db->query($sql);
+            $res = $GLOBALS['db']->query($sql);
 
             /* csv文件数组 */
             $goods_value = array('goods_name' => '""', 'goods_class' => $goods_class, 'shop_class' => 0, 'new_level' => 5, 'province' => $shop_province, 'city' => $shop_city, 'sell_type' => '"b"', 'shop_price' => 0, 'add_price' => 0, 'goods_number' => 0, 'die_day' => 14, 'load_type' => 1, 'post_express' => $post_express, 'ems' => $ems, 'express' => $express, 'pay_type' => 2, 'allow_alipay' => 1, 'invoice' => 0, 'repair' => 0, 'resend' => 1, 'is_store' => 0, 'window' => 0, 'add_time' => '"1980-1-1  0:00:00"', 'story' => '""', 'goods_desc' => '""', 'goods_img' => '""', 'goods_attr' => '""', 'group_buy' => 0, 'group_buy_num' => 0, 'template' => 0, 'discount' => 0, 'modify_time' => '""', 'upload_status' => 100, 'img_status' => 1);
 
-            $content = implode("\t", $_LANG['taobao']) . "\n";
+            $content = implode("\t", $GLOBALS['_LANG']['taobao']) . "\n";
 
-            while ($row = $db->fetchRow($res)) {
+            while ($row = $GLOBALS['db']->fetchRow($res)) {
                 $goods_value['goods_name'] = '"' . $row['goods_name'] . '"';
                 $goods_value['shop_price'] = $row['shop_price'];
                 $goods_value['goods_number'] = $row['goods_number'];
@@ -169,7 +169,7 @@ class GoodsExport extends Init
             die($zip->file());
         } /* 从淘宝导入数据 */
         elseif ($_REQUEST['act'] == 'import_taobao') {
-            $smarty->display('import_taobao.htm');
+            $GLOBALS['smarty']->display('import_taobao.htm');
         } elseif ($_REQUEST['act'] == 'act_export_ecshop') {
             /* 检查权限 */
             admin_priv('goods_export');
@@ -179,10 +179,10 @@ class GoodsExport extends Init
             $where = $this->get_export_where_sql($_POST);
 
             $sql = "SELECT g.*, b.brand_name as brandname " .
-                " FROM " . $ecs->table('goods') . " AS g LEFT JOIN " . $ecs->table('brand') . " AS b " .
+                " FROM " . $GLOBALS['ecs']->table('goods') . " AS g LEFT JOIN " . $GLOBALS['ecs']->table('brand') . " AS b " .
                 "ON g.brand_id = b.brand_id" . $where;
 
-            $res = $db->query($sql);
+            $res = $GLOBALS['db']->query($sql);
 
             /* csv文件数组 */
             $goods_value = array();
@@ -207,9 +207,9 @@ class GoodsExport extends Init
             $goods_value['is_on_sale'] = 1;
             $goods_value['is_alone_sale'] = 1;
             $goods_value['is_real'] = 1;
-            $content = '"' . implode('","', $_LANG['ecshop']) . "\"\n";
+            $content = '"' . implode('","', $GLOBALS['_LANG']['ecshop']) . "\"\n";
 
-            while ($row = $db->fetchRow($res)) {
+            while ($row = $GLOBALS['db']->fetchRow($res)) {
                 $goods_value['goods_name'] = '"' . $row['goods_name'] . '"';
                 $goods_value['goods_sn'] = '"' . $row['goods_sn'] . '"';
                 $goods_value['brand_name'] = '"' . $row['brandname'] . '"';
@@ -271,19 +271,19 @@ class GoodsExport extends Init
 
             $shop_province = '""';
             $shop_city = '""';
-            if ($_CFG['shop_province'] || $_CFG['shop_city']) {
-                $sql = "SELECT region_id,  region_name FROM " . $ecs->table('region') . " WHERE region_id IN ('$_CFG[shop_province]',  '$_CFG[shop_city]')";
-                $arr = $db->getAll($sql);
+            if ($GLOBALS['_CFG']['shop_province'] || $GLOBALS['_CFG']['shop_city']) {
+                $sql = "SELECT region_id,  region_name FROM " . $GLOBALS['ecs']->table('region') . " WHERE region_id IN ('$GLOBALS['_CFG'][shop_province]',  '$GLOBALS['_CFG'][shop_city]')";
+                $arr = $GLOBALS['db']->getAll($sql);
 
                 if ($arr) {
                     if (count($arr) == 1) {
-                        if ($arr[0]['region_id'] == $_CFG['shop_province']) {
+                        if ($arr[0]['region_id'] == $GLOBALS['_CFG']['shop_province']) {
                             $shop_province = '"' . $arr[0]['region_name'] . '"';
                         } else {
                             $shop_city = '"' . $arr[0]['region_name'] . '"';
                         }
                     } else {
-                        if ($arr[0]['region_id'] == $_CFG['shop_province']) {
+                        if ($arr[0]['region_id'] == $GLOBALS['_CFG']['shop_province']) {
                             $shop_province = '"' . $arr[0]['region_name'] . '"';
                             $shop_city = '"' . $arr[1]['region_name'] . '"';
                         } else {
@@ -295,9 +295,9 @@ class GoodsExport extends Init
             }
 
             $sql = "SELECT g.goods_id, g.goods_name, g.shop_price, g.goods_number, g.goods_desc, g.goods_img " .
-                " FROM " . $ecs->table('goods') . " AS g " . $where;
+                " FROM " . $GLOBALS['ecs']->table('goods') . " AS g " . $where;
 
-            $res = $db->query($sql);
+            $res = $GLOBALS['db']->query($sql);
 
 
             $goods_value = array();
@@ -340,9 +340,9 @@ class GoodsExport extends Init
             $goods_value['prop'] = '""';
 
 
-            $content = '"' . implode('","', $_LANG['paipai']) . "\"\n";
+            $content = '"' . implode('","', $GLOBALS['_LANG']['paipai']) . "\"\n";
 
-            while ($row = $db->fetchRow($res)) {
+            while ($row = $GLOBALS['db']->fetchRow($res)) {
                 $goods_value['title'] = '"' . $row['goods_name'] . '"';
                 $goods_value['price'] = $row['shop_price'];
                 $goods_value['quantity'] = $row['goods_number'];
@@ -385,19 +385,19 @@ class GoodsExport extends Init
 
             $shop_province = '""';
             $shop_city = '""';
-            if ($_CFG['shop_province'] || $_CFG['shop_city']) {
-                $sql = "SELECT region_id,  region_name FROM " . $ecs->table('region') . " WHERE region_id IN ('$_CFG[shop_province]',  '$_CFG[shop_city]')";
-                $arr = $db->getAll($sql);
+            if ($GLOBALS['_CFG']['shop_province'] || $GLOBALS['_CFG']['shop_city']) {
+                $sql = "SELECT region_id,  region_name FROM " . $GLOBALS['ecs']->table('region') . " WHERE region_id IN ('$GLOBALS['_CFG'][shop_province]',  '$GLOBALS['_CFG'][shop_city]')";
+                $arr = $GLOBALS['db']->getAll($sql);
 
                 if ($arr) {
                     if (count($arr) == 1) {
-                        if ($arr[0]['region_id'] == $_CFG['shop_province']) {
+                        if ($arr[0]['region_id'] == $GLOBALS['_CFG']['shop_province']) {
                             $shop_province = '"' . $arr[0]['region_name'] . '"';
                         } else {
                             $shop_city = '"' . $arr[0]['region_name'] . '"';
                         }
                     } else {
-                        if ($arr[0]['region_id'] == $_CFG['shop_province']) {
+                        if ($arr[0]['region_id'] == $GLOBALS['_CFG']['shop_province']) {
                             $shop_province = '"' . $arr[0]['region_name'] . '"';
                             $shop_city = '"' . $arr[1]['region_name'] . '"';
                         } else {
@@ -409,9 +409,9 @@ class GoodsExport extends Init
             }
 
             $sql = "SELECT g.goods_id, g.goods_name, g.shop_price, g.goods_number, g.goods_desc, g.goods_img " .
-                " FROM " . $ecs->table('goods') . " AS g " . $where;
+                " FROM " . $GLOBALS['ecs']->table('goods') . " AS g " . $where;
 
-            $res = $db->query($sql);
+            $res = $GLOBALS['db']->query($sql);
 
 
             $goods_value = array();
@@ -446,9 +446,9 @@ class GoodsExport extends Init
             $goods_value['chengBao'] = '""';
             $goods_value['shopWindow'] = 0;
 
-            $content = '"' . implode('","', $_LANG['paipai4']) . "\"\n";
+            $content = '"' . implode('","', $GLOBALS['_LANG']['paipai4']) . "\"\n";
 
-            while ($row = $db->fetchRow($res)) {
+            while ($row = $GLOBALS['db']->fetchRow($res)) {
                 $goods_value['goods_name'] = '"' . $row['goods_name'] . '"';
                 $goods_value['price'] = $row['shop_price'];
                 $goods_value['quantity'] = $row['goods_number'];
@@ -474,16 +474,16 @@ class GoodsExport extends Init
             die($zip->file());
         } /* 从拍拍网导入数据 */
         elseif ($_REQUEST['act'] == 'import_paipai') {
-            $smarty->display('import_paipai.htm');
+            $GLOBALS['smarty']->display('import_paipai.htm');
         } /* 处理Ajax调用 */
         elseif ($_REQUEST['act'] == 'get_goods_fields') {
             $cat_id = isset($_REQUEST['cat_id']) ? intval($_REQUEST['cat_id']) : 0;
-            $goods_fields = $this->my_array_merge($_LANG['custom'], $this->get_attributes($cat_id));
+            $goods_fields = $this->my_array_merge($GLOBALS['_LANG']['custom'], $this->get_attributes($cat_id));
             make_json_result($goods_fields);
         } elseif ($_REQUEST['act'] == 'act_export_custom') {
             /* 检查输出列 */
             if (empty($_POST['custom_goods_export'])) {
-                sys_msg($_LANG['custom_goods_field_not_null'], 1, array(), false);
+                sys_msg($GLOBALS['_LANG']['custom_goods_field_not_null'], 1, array(), false);
             }
 
             /* 检查权限 */
@@ -494,13 +494,13 @@ class GoodsExport extends Init
             $where = $this->get_export_where_sql($_POST);
 
             $sql = "SELECT g.*, b.brand_name as brandname " .
-                " FROM " . $ecs->table('goods') . " AS g LEFT JOIN " . $ecs->table('brand') . " AS b " .
+                " FROM " . $GLOBALS['ecs']->table('goods') . " AS g LEFT JOIN " . $GLOBALS['ecs']->table('brand') . " AS b " .
                 "ON g.brand_id = b.brand_id" . $where;
 
-            $res = $db->query($sql);
+            $res = $GLOBALS['db']->query($sql);
 
             $goods_fields = explode(',', $_POST['custom_goods_export']);
-            $goods_field_name = $this->set_goods_field_name($goods_fields, $_LANG['custom']);
+            $goods_field_name = $this->set_goods_field_name($goods_fields, $GLOBALS['_LANG']['custom']);
 
             /* csv文件数组 */
             $goods_field_value = array();
@@ -515,7 +515,7 @@ class GoodsExport extends Init
             }
 
             $content = '"' . implode('","', $goods_field_name) . "\"\n";
-            while ($row = $db->fetchRow($res)) {
+            while ($row = $GLOBALS['db']->fetchRow($res)) {
                 $goods_value = $goods_field_value;
                 isset($goods_value['goods_name']) && ($goods_value['goods_name'] = '"' . $row['goods_name'] . '"');
                 isset($goods_value['goods_sn']) && ($goods_value['goods_sn'] = '"' . $row['goods_sn'] . '"');
@@ -537,9 +537,9 @@ class GoodsExport extends Init
                 isset($goods_value['is_alone_sale']) && ($goods_value['is_alone_sale'] = $row['is_alone_sale']);
                 isset($goods_value['is_real']) && ($goods_value['is_real'] = $row['is_real']);
 
-                $sql = "SELECT `attr_id`, `attr_value` FROM " . $ecs->table('goods_attr') . " WHERE `goods_id` = '" . $row['goods_id'] . "'";
-                $query = $db->query($sql);
-                while ($attr = $db->fetchRow($query)) {
+                $sql = "SELECT `attr_id`, `attr_value` FROM " . $GLOBALS['ecs']->table('goods_attr') . " WHERE `goods_id` = '" . $row['goods_id'] . "'";
+                $query = $GLOBALS['db']->query($sql);
+                while ($attr = $GLOBALS['db']->fetchRow($query)) {
                     if (in_array($attr['attr_id'], $goods_fields)) {
                         $goods_value[$attr['attr_id']] = '"' . $attr['attr_value'] . '"';
                     }
@@ -583,19 +583,19 @@ class GoodsExport extends Init
 
             $shop_province = '""';
             $shop_city = '""';
-            if ($_CFG['shop_province'] || $_CFG['shop_city']) {
-                $sql = "SELECT region_id,  region_name FROM " . $ecs->table('region') . " WHERE region_id IN ('$_CFG[shop_province]',  '$_CFG[shop_city]')";
-                $arr = $db->getAll($sql);
+            if ($GLOBALS['_CFG']['shop_province'] || $GLOBALS['_CFG']['shop_city']) {
+                $sql = "SELECT region_id,  region_name FROM " . $GLOBALS['ecs']->table('region') . " WHERE region_id IN ('$GLOBALS['_CFG'][shop_province]',  '$GLOBALS['_CFG'][shop_city]')";
+                $arr = $GLOBALS['db']->getAll($sql);
 
                 if ($arr) {
                     if (count($arr) == 1) {
-                        if ($arr[0]['region_id'] == $_CFG['shop_province']) {
+                        if ($arr[0]['region_id'] == $GLOBALS['_CFG']['shop_province']) {
                             $shop_province = '"' . $arr[0]['region_name'] . '"';
                         } else {
                             $shop_city = '"' . $arr[0]['region_name'] . '"';
                         }
                     } else {
-                        if ($arr[0]['region_id'] == $_CFG['shop_province']) {
+                        if ($arr[0]['region_id'] == $GLOBALS['_CFG']['shop_province']) {
                             $shop_province = '"' . $arr[0]['region_name'] . '"';
                             $shop_city = '"' . $arr[1]['region_name'] . '"';
                         } else {
@@ -607,16 +607,16 @@ class GoodsExport extends Init
             }
 
             $sql = "SELECT g.goods_id, g.goods_name, g.shop_price, g.goods_number, g.goods_desc, g.goods_img " .
-                " FROM " . $ecs->table('goods') . " AS g " . $where;
+                " FROM " . $GLOBALS['ecs']->table('goods') . " AS g " . $where;
 
-            $res = $db->query($sql);
+            $res = $GLOBALS['db']->query($sql);
 
             /* csv文件数组 */
             $goods_value = array('goods_name' => '', 'goods_class' => $goods_class, 'shop_class' => 0, 'new_level' => 0, 'province' => $shop_province, 'city' => $shop_city, 'sell_type' => '"b"', 'shop_price' => 0, 'add_price' => 0, 'goods_number' => 0, 'die_day' => 14, 'load_type' => 1, 'post_express' => $post_express, 'ems' => $ems, 'express' => $express, 'pay_type' => '', 'allow_alipay' => '', 'invoice' => 0, 'repair' => 0, 'resend' => 1, 'is_store' => 0, 'window' => 0, 'add_time' => '"1980-1-1  0:00:00"', 'story' => '', 'goods_desc' => '', 'goods_img' => '', 'goods_attr' => '', 'group_buy' => '', 'group_buy_num' => '', 'template' => 0, 'discount' => 0, 'modify_time' => '"2011-5-1  0:00:00"', 'upload_status' => 100, 'img_status' => 1, 'img_status' => '', 'rebate_proportion' => 0, 'new_goods_img' => '', 'video' => '', 'marketing_property_mix' => '', 'user_input_ID_numbers' => '', 'input_user_name_value' => '', 'sellers_code' => '', 'another_of_marketing_property' => '', 'charge_type' => '0', 'treasure_number' => '', 'ID_number' => '',);
 
-            $content = implode("\t", $_LANG['taobao46']) . "\n";
+            $content = implode("\t", $GLOBALS['_LANG']['taobao46']) . "\n";
 
-            while ($row = $db->fetchRow($res)) {
+            while ($row = $GLOBALS['db']->fetchRow($res)) {
 
                 /* 压缩图片 */
                 if (!empty($row['goods_img']) && is_file(ROOT_PATH . $row['goods_img'])) {

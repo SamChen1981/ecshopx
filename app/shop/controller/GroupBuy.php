@@ -24,7 +24,7 @@ class GroupBuy extends Init
             $count = $this->group_buy_count();
             if ($count > 0) {
                 /* 取得每页记录数 */
-                $size = isset($_CFG['page_size']) && intval($_CFG['page_size']) > 0 ? intval($_CFG['page_size']) : 10;
+                $size = isset($GLOBALS['_CFG']['page_size']) && intval($GLOBALS['_CFG']['page_size']) > 0 ? intval($GLOBALS['_CFG']['page_size']) : 10;
 
                 /* 计算总页数 */
                 $page_count = ceil($count / $size);
@@ -34,43 +34,43 @@ class GroupBuy extends Init
                 $page = $page > $page_count ? $page_count : $page;
 
                 /* 缓存id：语言 - 每页记录数 - 当前页 */
-                $cache_id = $_CFG['lang'] . '-' . $size . '-' . $page;
+                $cache_id = $GLOBALS['_CFG']['lang'] . '-' . $size . '-' . $page;
                 $cache_id = sprintf('%X', crc32($cache_id));
             } else {
                 /* 缓存id：语言 */
-                $cache_id = $_CFG['lang'];
+                $cache_id = $GLOBALS['_CFG']['lang'];
                 $cache_id = sprintf('%X', crc32($cache_id));
             }
 
             /* 如果没有缓存，生成缓存 */
-            if (!$smarty->is_cached('group_buy_list.dwt', $cache_id)) {
+            if (!$GLOBALS['smarty']->is_cached('group_buy_list.dwt', $cache_id)) {
                 if ($count > 0) {
                     /* 取得当前页的团购活动 */
                     $gb_list = $this->group_buy_list($size, $page);
-                    $smarty->assign('gb_list', $gb_list);
+                    $GLOBALS['smarty']->assign('gb_list', $gb_list);
 
                     /* 设置分页链接 */
                     $pager = get_pager('group_buy.php', array('act' => 'list'), $count, $page, $size);
-                    $smarty->assign('pager', $pager);
+                    $GLOBALS['smarty']->assign('pager', $pager);
                 }
 
                 /* 模板赋值 */
-                $smarty->assign('cfg', $_CFG);
+                $GLOBALS['smarty']->assign('cfg', $GLOBALS['_CFG']);
                 assign_template();
                 $position = assign_ur_here();
-                $smarty->assign('page_title', $position['title']);    // 页面标题
-                $smarty->assign('ur_here', $position['ur_here']);  // 当前位置
-                $smarty->assign('categories', get_categories_tree()); // 分类树
-                $smarty->assign('helps', get_shop_help());       // 网店帮助
-                $smarty->assign('top_goods', get_top10());           // 销售排行
-                $smarty->assign('promotion_info', get_promotion_info());
-                $smarty->assign('feed_url', ($_CFG['rewrite'] == 1) ? "feed-typegroup_buy.xml" : 'feed.php?type=group_buy'); // RSS URL
+                $GLOBALS['smarty']->assign('page_title', $position['title']);    // 页面标题
+                $GLOBALS['smarty']->assign('ur_here', $position['ur_here']);  // 当前位置
+                $GLOBALS['smarty']->assign('categories', get_categories_tree()); // 分类树
+                $GLOBALS['smarty']->assign('helps', get_shop_help());       // 网店帮助
+                $GLOBALS['smarty']->assign('top_goods', get_top10());           // 销售排行
+                $GLOBALS['smarty']->assign('promotion_info', get_promotion_info());
+                $GLOBALS['smarty']->assign('feed_url', ($GLOBALS['_CFG']['rewrite'] == 1) ? "feed-typegroup_buy.xml" : 'feed.php?type=group_buy'); // RSS URL
 
                 assign_dynamic('group_buy_list');
             }
 
             /* 显示模板 */
-            $smarty->display('group_buy_list.dwt', $cache_id);
+            $GLOBALS['smarty']->display('group_buy_list.dwt', $cache_id);
         }
 
         /*------------------------------------------------------ */
@@ -98,16 +98,16 @@ class GroupBuy extends Init
 //    }
 
             /* 缓存id：语言，团购活动id，状态，（如果是进行中）当前数量和是否登录 */
-            $cache_id = $_CFG['lang'] . '-' . $group_buy_id . '-' . $group_buy['status'];
+            $cache_id = $GLOBALS['_CFG']['lang'] . '-' . $group_buy_id . '-' . $group_buy['status'];
             if ($group_buy['status'] == GBS_UNDER_WAY) {
                 $cache_id = $cache_id . '-' . $group_buy['valid_goods'] . '-' . intval($_SESSION['user_id'] > 0);
             }
             $cache_id = sprintf('%X', crc32($cache_id));
 
             /* 如果没有缓存，生成缓存 */
-            if (!$smarty->is_cached('group_buy_goods.dwt', $cache_id)) {
+            if (!$GLOBALS['smarty']->is_cached('group_buy_goods.dwt', $cache_id)) {
                 $group_buy['gmt_end_date'] = $group_buy['end_date'];
-                $smarty->assign('group_buy', $group_buy);
+                $GLOBALS['smarty']->assign('group_buy', $group_buy);
 
                 /* 取得团购商品信息 */
                 $goods_id = $group_buy['goods_id'];
@@ -117,34 +117,34 @@ class GroupBuy extends Init
                     exit;
                 }
                 $goods['url'] = build_uri('goods', array('gid' => $goods_id), $goods['goods_name']);
-                $smarty->assign('gb_goods', $goods);
+                $GLOBALS['smarty']->assign('gb_goods', $goods);
 
                 /* 取得商品的规格 */
                 $properties = get_goods_properties($goods_id);
-                $smarty->assign('specification', $properties['spe']); // 商品规格
+                $GLOBALS['smarty']->assign('specification', $properties['spe']); // 商品规格
 
                 //模板赋值
-                $smarty->assign('cfg', $_CFG);
+                $GLOBALS['smarty']->assign('cfg', $GLOBALS['_CFG']);
                 assign_template();
 
                 $position = assign_ur_here(0, $goods['goods_name']);
-                $smarty->assign('page_title', $position['title']);    // 页面标题
-                $smarty->assign('ur_here', $position['ur_here']);  // 当前位置
+                $GLOBALS['smarty']->assign('page_title', $position['title']);    // 页面标题
+                $GLOBALS['smarty']->assign('ur_here', $position['ur_here']);  // 当前位置
 
-                $smarty->assign('categories', get_categories_tree()); // 分类树
-                $smarty->assign('helps', get_shop_help());       // 网店帮助
-                $smarty->assign('top_goods', get_top10());           // 销售排行
-                $smarty->assign('promotion_info', get_promotion_info());
+                $GLOBALS['smarty']->assign('categories', get_categories_tree()); // 分类树
+                $GLOBALS['smarty']->assign('helps', get_shop_help());       // 网店帮助
+                $GLOBALS['smarty']->assign('top_goods', get_top10());           // 销售排行
+                $GLOBALS['smarty']->assign('promotion_info', get_promotion_info());
                 assign_dynamic('group_buy_goods');
             }
 
             //更新商品点击次数
-            $sql = 'UPDATE ' . $ecs->table('goods') . ' SET click_count = click_count + 1 ' .
+            $sql = 'UPDATE ' . $GLOBALS['ecs']->table('goods') . ' SET click_count = click_count + 1 ' .
                 "WHERE goods_id = '" . $group_buy['goods_id'] . "'";
-            $db->query($sql);
+            $GLOBALS['db']->query($sql);
 
-            $smarty->assign('now_time', gmtime());           // 当前系统时间
-            $smarty->display('group_buy_goods.dwt', $cache_id);
+            $GLOBALS['smarty']->assign('now_time', gmtime());           // 当前系统时间
+            $GLOBALS['smarty']->display('group_buy_goods.dwt', $cache_id);
         }
 
         /*------------------------------------------------------ */
@@ -154,7 +154,7 @@ class GroupBuy extends Init
         elseif ($_REQUEST['act'] == 'buy') {
             /* 查询：判断是否登录 */
             if ($_SESSION['user_id'] <= 0) {
-                show_message($_LANG['gb_error_login'], '', '', 'error');
+                show_message($GLOBALS['_LANG']['gb_error_login'], '', '', 'error');
             }
 
             /* 查询：取得参数：团购活动id */
@@ -178,7 +178,7 @@ class GroupBuy extends Init
 
             /* 查询：检查团购活动是否是进行中 */
             if ($group_buy['status'] != GBS_UNDER_WAY) {
-                show_message($_LANG['gb_error_status'], '', '', 'error');
+                show_message($GLOBALS['_LANG']['gb_error_status'], '', '', 'error');
             }
 
             /* 查询：取得团购商品信息 */
@@ -190,7 +190,7 @@ class GroupBuy extends Init
 
             /* 查询：判断数量是否足够 */
             if (($group_buy['restrict_amount'] > 0 && $number > ($group_buy['restrict_amount'] - $group_buy['valid_goods'])) || $number > $goods['goods_number']) {
-                show_message($_LANG['gb_error_goods_lacking'], '', '', 'error');
+                show_message($GLOBALS['_LANG']['gb_error_goods_lacking'], '', '', 'error');
             }
 
             /* 查询：取得规格 */
@@ -212,18 +212,18 @@ class GroupBuy extends Init
 
             /* 查询：判断指定规格的货品数量是否足够 */
             if ($specs && $number > $product_info['product_number']) {
-                show_message($_LANG['gb_error_goods_lacking'], '', '', 'error');
+                show_message($GLOBALS['_LANG']['gb_error_goods_lacking'], '', '', 'error');
             }
 
             /* 查询：查询规格名称和值，不考虑价格 */
             $attr_list = array();
             $sql = "SELECT a.attr_name, g.attr_value " .
-                "FROM " . $ecs->table('goods_attr') . " AS g, " .
-                $ecs->table('attribute') . " AS a " .
+                "FROM " . $GLOBALS['ecs']->table('goods_attr') . " AS g, " .
+                $GLOBALS['ecs']->table('attribute') . " AS a " .
                 "WHERE g.attr_id = a.attr_id " .
                 "AND g.goods_attr_id " . db_create_in($specs);
-            $res = $db->query($sql);
-            while ($row = $db->fetchRow($res)) {
+            $res = $GLOBALS['db']->query($sql);
+            while ($row = $GLOBALS['db']->fetchRow($res)) {
                 $attr_list[] = $row['attr_name'] . ': ' . $row['attr_value'];
             }
             $goods_attr = join(chr(13) . chr(10), $attr_list);
@@ -253,7 +253,7 @@ class GroupBuy extends Init
                 'rec_type' => CART_GROUP_BUY_GOODS,
                 'is_gift' => 0
             );
-            $db->autoExecute($ecs->table('cart'), $cart, 'INSERT');
+            $GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('cart'), $cart, 'INSERT');
 
             /* 更新：记录购物流程类型：团购 */
             $_SESSION['flow_type'] = CART_GROUP_BUY_GOODS;

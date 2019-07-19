@@ -35,12 +35,10 @@ function has_supported_gd()
  */
 function file_types_exists($file_types)
 {
-    global $_LANG;
-
     $msg = '';
     foreach ($file_types as $file_type => $file_path) {
         if (!file_exists($file_path)) {
-            $msg .= $_LANG['cannt_support_' . $file_type] . ', ';
+            $msg .= $GLOBALS['_LANG']['cannt_support_' . $file_type] . ', ';
         }
     }
 
@@ -57,47 +55,45 @@ function file_types_exists($file_types)
  */
 function get_system_info()
 {
-    global $_LANG;
-
     $system_info = array();
 
     /* 检查系统基本参数 */
-    $system_info[] = array($_LANG['php_os'], PHP_OS);
-    $system_info[] = array($_LANG['php_ver'], PHP_VERSION);
+    $system_info[] = array($GLOBALS['_LANG']['php_os'], PHP_OS);
+    $system_info[] = array($GLOBALS['_LANG']['php_ver'], PHP_VERSION);
 
     /* 检查MYSQL支持情况 */
-    $mysql_enabled = function_exists('mysqli_connect') ? $_LANG['support'] : $_LANG['not_support'];
-    $system_info[] = array($_LANG['does_support_mysql'], $mysql_enabled);
+    $mysql_enabled = function_exists('mysqli_connect') ? $GLOBALS['_LANG']['support'] : $GLOBALS['_LANG']['not_support'];
+    $system_info[] = array($GLOBALS['_LANG']['does_support_mysql'], $mysql_enabled);
 
     /* 检查图片处理函数库 */
     $gd_ver = get_gd_version();
-    $gd_ver = empty($gd_ver) ? $_LANG['not_support'] : $gd_ver;
+    $gd_ver = empty($gd_ver) ? $GLOBALS['_LANG']['not_support'] : $gd_ver;
     if ($gd_ver > 0) {
         if (PHP_VERSION >= '4.3' && function_exists('gd_info')) {
             $gd_info = gd_info();
-            $jpeg_enabled = ($gd_info['JPEG Support'] === true) ? $_LANG['support'] : $_LANG['not_support'];
-            $gif_enabled = ($gd_info['GIF Create Support'] === true) ? $_LANG['support'] : $_LANG['not_support'];
-            $png_enabled = ($gd_info['PNG Support'] === true) ? $_LANG['support'] : $_LANG['not_support'];
+            $jpeg_enabled = ($gd_info['JPEG Support'] === true) ? $GLOBALS['_LANG']['support'] : $GLOBALS['_LANG']['not_support'];
+            $gif_enabled = ($gd_info['GIF Create Support'] === true) ? $GLOBALS['_LANG']['support'] : $GLOBALS['_LANG']['not_support'];
+            $png_enabled = ($gd_info['PNG Support'] === true) ? $GLOBALS['_LANG']['support'] : $GLOBALS['_LANG']['not_support'];
         } else {
             if (function_exists('imagetypes')) {
-                $jpeg_enabled = ((imagetypes() & IMG_JPG) > 0) ? $_LANG['support'] : $_LANG['not_support'];
-                $gif_enabled = ((imagetypes() & IMG_GIF) > 0) ? $_LANG['support'] : $_LANG['not_support'];
-                $png_enabled = ((imagetypes() & IMG_PNG) > 0) ? $_LANG['support'] : $_LANG['not_support'];
+                $jpeg_enabled = ((imagetypes() & IMG_JPG) > 0) ? $GLOBALS['_LANG']['support'] : $GLOBALS['_LANG']['not_support'];
+                $gif_enabled = ((imagetypes() & IMG_GIF) > 0) ? $GLOBALS['_LANG']['support'] : $GLOBALS['_LANG']['not_support'];
+                $png_enabled = ((imagetypes() & IMG_PNG) > 0) ? $GLOBALS['_LANG']['support'] : $GLOBALS['_LANG']['not_support'];
             } else {
-                $jpeg_enabled = $_LANG['not_support'];
-                $gif_enabled = $_LANG['not_support'];
-                $png_enabled = $_LANG['not_support'];
+                $jpeg_enabled = $GLOBALS['_LANG']['not_support'];
+                $gif_enabled = $GLOBALS['_LANG']['not_support'];
+                $png_enabled = $GLOBALS['_LANG']['not_support'];
             }
         }
     } else {
-        $jpeg_enabled = $_LANG['not_support'];
-        $gif_enabled = $_LANG['not_support'];
-        $png_enabled = $_LANG['not_support'];
+        $jpeg_enabled = $GLOBALS['_LANG']['not_support'];
+        $gif_enabled = $GLOBALS['_LANG']['not_support'];
+        $png_enabled = $GLOBALS['_LANG']['not_support'];
     }
-    $system_info[] = array($_LANG['gd_version'], $gd_ver);
-    $system_info[] = array($_LANG['jpeg'], $jpeg_enabled);
-    $system_info[] = array($_LANG['gif'], $gif_enabled);
-    $system_info[] = array($_LANG['png'], $png_enabled);
+    $system_info[] = array($GLOBALS['_LANG']['gd_version'], $gd_ver);
+    $system_info[] = array($GLOBALS['_LANG']['jpeg'], $jpeg_enabled);
+    $system_info[] = array($GLOBALS['_LANG']['gif'], $gif_enabled);
+    $system_info[] = array($GLOBALS['_LANG']['png'], $png_enabled);
 
     /* 检查系统是否支持以dwt,lib,dat为扩展名的文件 */
     $file_types = array(
@@ -106,12 +102,12 @@ function get_system_info()
         'dat' => ROOT_PATH . 'includes/codetable/ipdata.dat'
     );
     $exists_info = file_types_exists($file_types);
-    $exists_info = empty($exists_info) ? $_LANG['support_dld'] : $exists_info;
-    $system_info[] = array($_LANG['does_support_dld'], $exists_info);
+    $exists_info = empty($exists_info) ? $GLOBALS['_LANG']['support_dld'] : $exists_info;
+    $system_info[] = array($GLOBALS['_LANG']['does_support_dld'], $exists_info);
 
     /* 服务器是否安全模式开启 */
-    $safe_mode = ini_get('safe_mode') == '1' ? $_LANG['safe_mode_on'] : $_LANG['safe_mode_off'];
-    $system_info[] = array($_LANG['safe_mode'], $safe_mode);
+    $safe_mode = ini_get('safe_mode') == '1' ? $GLOBALS['_LANG']['safe_mode_on'] : $GLOBALS['_LANG']['safe_mode_off'];
+    $system_info[] = array($GLOBALS['_LANG']['safe_mode'], $safe_mode);
 
     return $system_info;
 }
@@ -128,14 +124,13 @@ function get_system_info()
  */
 function get_db_list($db_host, $db_port, $db_user, $db_pass)
 {
-    global $err, $_LANG;
     $databases = array();
     $filter_dbs = array('information_schema', 'mysql');
     $db_host = construct_db_host($db_host, $db_port);
     $conn = @mysqli_connect($db_host, $db_user, $db_pass);
 
     if ($conn === false) {
-        $err->add($_LANG['connect_failed']);
+        $GLOBALS['err']->add($GLOBALS['_LANG']['connect_failed']);
         return false;
     }
     keep_right_conn($conn);
@@ -150,7 +145,7 @@ function get_db_list($db_host, $db_port, $db_user, $db_pass)
             $databases[] = $row['Database'];
         }
     } else {
-        $err->add($_LANG['query_failed']);
+        $GLOBALS['err']->add($GLOBALS['_LANG']['query_failed']);
         return false;
     }
     @mysqli_close($conn);
@@ -205,12 +200,11 @@ function get_local_timezone()
  */
 function create_database($db_host, $db_port, $db_user, $db_pass, $db_name)
 {
-    global $err, $_LANG;
     $db_host = construct_db_host($db_host, $db_port);
     $conn = @mysqli_connect($db_host, $db_user, $db_pass);
 
     if ($conn === false) {
-        $err->add($_LANG['connect_failed']);
+        $GLOBALS['err']->add($GLOBALS['_LANG']['connect_failed']);
 
         return false;
     }
@@ -220,7 +214,7 @@ function create_database($db_host, $db_port, $db_user, $db_pass, $db_name)
     if (mysqli_select_db($conn, $db_name) === false) {
         $sql = $mysql_version >= '4.1' ? "CREATE DATABASE $db_name DEFAULT CHARACTER SET " . EC_DB_CHARSET : "CREATE DATABASE $db_name";
         if (mysqli_query($conn, $sql) === false) {
-            $err->add($_LANG['cannt_create_database']);
+            $GLOBALS['err']->add($GLOBALS['_LANG']['cannt_create_database']);
             return false;
         }
     }
@@ -267,7 +261,6 @@ function keep_right_conn($conn, $mysql_version = '')
  */
 function create_config_file($db_host, $db_port, $db_user, $db_pass, $db_name, $prefix, $timezone)
 {
-    global $err, $_LANG;
     $db_host = construct_db_host($db_host, $db_port);
 
     $content = '<?' . "php\n";
@@ -296,11 +289,11 @@ function create_config_file($db_host, $db_port, $db_user, $db_pass, $db_name, $p
 
     $fp = @fopen(ROOT_PATH . 'data/config.php', 'wb+');
     if (!$fp) {
-        $err->add($_LANG['open_config_file_failed']);
+        $GLOBALS['err']->add($GLOBALS['_LANG']['open_config_file_failed']);
         return false;
     }
     if (!@fwrite($fp, trim($content))) {
-        $err->add($_LANG['write_config_file_failed']);
+        $GLOBALS['err']->add($GLOBALS['_LANG']['write_config_file_failed']);
         return false;
     }
     @fclose($fp);
@@ -330,15 +323,13 @@ function construct_db_host($db_host, $db_port)
  */
 function install_data($sql_files)
 {
-    global $err;
-
     include(ROOT_PATH . 'data/config.php');
 
     $db = new Mysql($db_host, $db_user, $db_pass, $db_name);
     $se = new sql_executor($db, EC_DB_CHARSET, 'ecs_', $prefix);
     $result = $se->run_all($sql_files);
     if ($result === false) {
-        $err->add($se->error);
+        $GLOBALS['err']->add($se->error);
         return false;
     }
 
@@ -358,45 +349,43 @@ function install_data($sql_files)
 function create_admin_passport($admin_name, $admin_password, $admin_password2, $admin_email)
 {
     if (trim($_REQUEST['lang']) != 'zh_cn') {
-        global $err;
         $system_lang = isset($_REQUEST['lang']) ? $_REQUEST['lang'] : 'zh_cn';
         include(ROOT_PATH . 'install/languages/' . $system_lang . '.php');
     } else {
-        global $err, $_LANG;
     }
 
     if ($admin_password === '') {
-        $err->add($_LANG['password_empty_error']);
+        $GLOBALS['err']->add($GLOBALS['_LANG']['password_empty_error']);
         return false;
     }
 
     if ($admin_password === '') {
-        $err->add($_LANG['password_empty_error']);
+        $GLOBALS['err']->add($GLOBALS['_LANG']['password_empty_error']);
         return false;
     }
 
     if (!(strlen($admin_password) >= 8 && preg_match("/\d+/", $admin_password) && preg_match("/[a-zA-Z]+/", $admin_password))) {
-        $err->add($_LANG['js_languages']['password_invaild']);
+        $GLOBALS['err']->add($GLOBALS['_LANG']['js_languages']['password_invaild']);
         return false;
     }
 
     if ($admin_password !== $admin_password2) {
-        $err->add($_LANG['passwords_not_eq']);
+        $GLOBALS['err']->add($GLOBALS['_LANG']['passwords_not_eq']);
         return false;
     }
 
     include(ROOT_PATH . 'data/config.php');
     load_helper('common');
 
-    $nav_list = join(',', $_LANG['admin_user']);
+    $nav_list = join(',', $GLOBALS['_LANG']['admin_user']);
 
     $db = new Mysql($db_host, $db_user, $db_pass, $db_name);
     $sql = "INSERT INTO $prefix" . "admin_user " .
         "(user_name, email, password, add_time, action_list, nav_list)" .
         "VALUES " .
         "('$admin_name', '$admin_email', '" . md5($admin_password) . "', " . gmtime() . ", 'all', '$nav_list')";
-    if (!$db->query($sql, 'SILENT')) {
-        $err->add($_LANG['create_passport_failed']);
+    if (!$GLOBALS['db']->query($sql, 'SILENT')) {
+        $GLOBALS['err']->add($GLOBALS['_LANG']['create_passport_failed']);
         return false;
     }
 
@@ -413,8 +402,6 @@ function create_admin_passport($admin_name, $admin_password, $admin_password2, $
  */
 function install_goods_types($goods_types, $lang)
 {
-    global $err;
-
     if (!$goods_types) {
         return true;
     }
@@ -432,15 +419,15 @@ function install_goods_types($goods_types, $lang)
             continue;
         }
 
-        if (!$db->query($val['cat'], 'SILENT')) {
-            $err->add($db->errno() . ' ' . $db->error());
+        if (!$GLOBALS['db']->query($val['cat'], 'SILENT')) {
+            $GLOBALS['err']->add($GLOBALS['db']->errno() . ' ' . $GLOBALS['db']->error());
             return false;
         }
-        $cat_id = $db->Insert_ID();
+        $cat_id = $GLOBALS['db']->Insert_ID();
 
         $sql = str_replace("{cat_id}", $cat_id, $val['attr']);
-        if (!$db->query($sql, 'SILENT')) {
-            $err->add($db->errno() . ' ' . $db->error());
+        if (!$GLOBALS['db']->query($sql, 'SILENT')) {
+            $GLOBALS['err']->add($GLOBALS['db']->errno() . ' ' . $GLOBALS['db']->error());
             return false;
         }
     }
@@ -458,12 +445,10 @@ function install_goods_types($goods_types, $lang)
  */
 function copy_files($source, $target)
 {
-    global $err, $_LANG;
-
     if (!file_exists($target)) {
         //if (!mkdir(rtrim($target, '/'), 0777))
         if (!mkdir($target, 0777)) {
-            $err->add($_LANG['cannt_mk_dir']);
+            $GLOBALS['err']->add($GLOBALS['_LANG']['cannt_mk_dir']);
             return false;
         }
         @chmod($target, 0777);
@@ -473,7 +458,7 @@ function copy_files($source, $target)
     while (($file = @readdir($dir)) !== false) {
         if (is_file($source . $file)) {
             if (!copy($source . $file, $target . $file)) {
-                $err->add($_LANG['cannt_copy_file']);
+                $GLOBALS['err']->add($GLOBALS['_LANG']['cannt_copy_file']);
                 return false;
             }
             @chmod($target . $file, 0777);
@@ -497,11 +482,10 @@ function copy_files($source, $target)
  */
 function do_others($system_lang, $captcha, $goods_types, $install_demo, $integrate_code)
 {
-    global $err, $_LANG;
 
     /* 安装预选商品类型 */
     if (!install_goods_types($goods_types, $system_lang)) {
-        $err->add(implode('', $err->last_message()));
+        $GLOBALS['err']->add(implode('', $GLOBALS['err']->last_message()));
         return false;
     }
 
@@ -513,35 +497,35 @@ function do_others($system_lang, $captcha, $goods_types, $install_demo, $integra
             $sql_files = array(ROOT_PATH . 'demo/zh_cn.sql');
         }
         if (!install_data($sql_files)) {
-            $err->add(implode('', $err->last_message()));
+            $GLOBALS['err']->add(implode('', $GLOBALS['err']->last_message()));
             return false;
         }
         if (!copy_files(ROOT_PATH . 'demo/brandlogo/', ROOT_PATH . 'data/brandlogo/')) {
-            $err->add(implode('', $err->last_message()));
+            $GLOBALS['err']->add(implode('', $GLOBALS['err']->last_message()));
             return false;
         }
         if (!copy_files(ROOT_PATH . 'demo/200905/goods_img/', ROOT_PATH . 'images/200905/goods_img/')) {
-            $err->add(implode('', $err->last_message()));
+            $GLOBALS['err']->add(implode('', $GLOBALS['err']->last_message()));
             return false;
         }
         if (!copy_files(ROOT_PATH . 'demo/200905/thumb_img/', ROOT_PATH . 'images/200905/thumb_img/')) {
-            $err->add(implode('', $err->last_message()));
+            $GLOBALS['err']->add(implode('', $GLOBALS['err']->last_message()));
             return false;
         }
         if (!copy_files(ROOT_PATH . 'demo/200905/source_img/', ROOT_PATH . 'images/200905/source_img/')) {
-            $err->add(implode('', $err->last_message()));
+            $GLOBALS['err']->add(implode('', $GLOBALS['err']->last_message()));
             return false;
         }
         if (!copy_files(ROOT_PATH . 'demo/afficheimg/', ROOT_PATH . 'data/afficheimg/')) {
-            $err->add(implode('', $err->last_message()));
+            $GLOBALS['err']->add(implode('', $GLOBALS['err']->last_message()));
             return false;
         }
         if (!copy_files(ROOT_PATH . 'demo/packimg/', ROOT_PATH . 'data/packimg/')) {
-            $err->add(implode('', $err->last_message()));
+            $GLOBALS['err']->add(implode('', $GLOBALS['err']->last_message()));
             return false;
         }
         if (!copy_files(ROOT_PATH . 'demo/cardimg/', ROOT_PATH . 'data/cardimg/')) {
-            $err->add(implode('', $err->last_message()));
+            $GLOBALS['err']->add(implode('', $GLOBALS['err']->last_message()));
             return false;
         }
     }
@@ -551,16 +535,16 @@ function do_others($system_lang, $captcha, $goods_types, $install_demo, $integra
 
     /* 更新 ECSHOP 语言 */
     $sql = "UPDATE $prefix" . "shop_config SET value='" . $system_lang . "' WHERE code='lang'";
-    if (!$db->query($sql, 'SILENT')) {
-        $err->add($db->errno() . ' ' . $db->error());
+    if (!$GLOBALS['db']->query($sql, 'SILENT')) {
+        $GLOBALS['err']->add($GLOBALS['db']->errno() . ' ' . $GLOBALS['db']->error());
         return false;
     }
 
     /* 更新用户接口 */
     if (!empty($integrate_code)) {
         $sql = "UPDATE $prefix" . "shop_config SET value='" . $integrate_code . "' WHERE code='integrate_code'";
-        if (!$db->query($sql, 'SILENT')) {
-            $err->add($db->errno() . ' ' . $db->error());
+        if (!$GLOBALS['db']->query($sql, 'SILENT')) {
+            $GLOBALS['err']->add($GLOBALS['db']->errno() . ' ' . $GLOBALS['db']->error());
             return false;
         }
     }
@@ -568,8 +552,8 @@ function do_others($system_lang, $captcha, $goods_types, $install_demo, $integra
     /* 处理验证码 */
     if (!empty($captcha)) {
         $sql = "UPDATE $prefix" . "shop_config SET value = '12' WHERE code = 'captcha'";
-        if (!$db->query($sql, 'SILENT')) {
-            $err->add($db->errno() . ' ' . $db->error());
+        if (!$GLOBALS['db']->query($sql, 'SILENT')) {
+            $GLOBALS['err']->add($GLOBALS['db']->errno() . ' ' . $GLOBALS['db']->error());
             return false;
         }
     }
@@ -578,8 +562,8 @@ function do_others($system_lang, $captcha, $goods_types, $install_demo, $integra
     if (file_exists(ROOT_PATH . 'data/config_temp.php')) {
         include(ROOT_PATH . 'data/config_temp.php');
         $sql = "UPDATE $prefix" . "shop_config SET value = '" . serialize($cfg) . "' WHERE code = 'integrate_config'";
-        if (!$db->query($sql, 'SILENT')) {
-            $err->add($db->errno() . ' ' . $db->error());
+        if (!$GLOBALS['db']->query($sql, 'SILENT')) {
+            $GLOBALS['err']->add($GLOBALS['db']->errno() . ' ' . $GLOBALS['db']->error());
             return false;
         }
     }
@@ -595,8 +579,6 @@ function do_others($system_lang, $captcha, $goods_types, $install_demo, $integra
  */
 function deal_aftermath()
 {
-    global $err, $_LANG;
-
     include(ROOT_PATH . 'data/config.php');
 
     $db = new Mysql($db_host, $db_user, $db_pass, $db_name);
@@ -605,54 +587,54 @@ function deal_aftermath()
     $sql = "INSERT INTO $prefix" . "friend_link " .
         "(link_name, link_url, link_logo, show_order)" .
         "VALUES " .
-        "('" . $_LANG['default_friend_link'] . "', 'http://www.ecshop.com/', 'http://www.ecshop.com/bundles/shopexyunqi/images/logo.jpg','50')";
-    if (!$db->query($sql, 'SILENT')) {
-        $err->add($db->errno() . ' ' . $db->error());
+        "('" . $GLOBALS['_LANG']['default_friend_link'] . "', 'http://www.ecshop.com/', 'http://www.ecshop.com/bundles/shopexyunqi/images/logo.jpg','50')";
+    if (!$GLOBALS['db']->query($sql, 'SILENT')) {
+        $GLOBALS['err']->add($GLOBALS['db']->errno() . ' ' . $GLOBALS['db']->error());
     }
 
     $sql = "INSERT INTO $prefix" . "friend_link " .
         "(link_name, link_url, show_order)" .
         "VALUES " .
-        "('" . $_LANG['maifou_friend_link'] . "', 'http://www.maifou.net/','51')";
-    if (!$db->query($sql, 'SILENT')) {
-        $err->add($db->errno() . ' ' . $db->error());
+        "('" . $GLOBALS['_LANG']['maifou_friend_link'] . "', 'http://www.maifou.net/','51')";
+    if (!$GLOBALS['db']->query($sql, 'SILENT')) {
+        $GLOBALS['err']->add($GLOBALS['db']->errno() . ' ' . $GLOBALS['db']->error());
     }
     $sql = "INSERT INTO $prefix" . "friend_link " .
         "(link_name, link_url, show_order)" .
         "VALUES " .
-        "('" . $_LANG['wdwd_friend_link'] . "', 'https://www.wdwd.com/','52')";
-    if (!$db->query($sql, 'SILENT')) {
-        $err->add($db->errno() . ' ' . $db->error());
+        "('" . $GLOBALS['_LANG']['wdwd_friend_link'] . "', 'https://www.wdwd.com/','52')";
+    if (!$GLOBALS['db']->query($sql, 'SILENT')) {
+        $GLOBALS['err']->add($GLOBALS['db']->errno() . ' ' . $GLOBALS['db']->error());
     }
     /* 更新 ECSHOP 安装日期 */
     $sql = "UPDATE $prefix" . "shop_config SET value='" . time() . "' WHERE code='install_date'";
-    if (!$db->query($sql, 'SILENT')) {
-        $err->add($db->errno() . ' ' . $db->error());
+    if (!$GLOBALS['db']->query($sql, 'SILENT')) {
+        $GLOBALS['err']->add($GLOBALS['db']->errno() . ' ' . $GLOBALS['db']->error());
     }
 
     /* 更新 ECSHOP 版本 */
     $sql = "UPDATE $prefix" . "shop_config SET value='" . VERSION . "' WHERE code='ecs_version'";
-    if (!$db->query($sql, 'SILENT')) {
-        $err->add($db->errno() . ' ' . $db->error());
+    if (!$GLOBALS['db']->query($sql, 'SILENT')) {
+        $GLOBALS['err']->add($GLOBALS['db']->errno() . ' ' . $GLOBALS['db']->error());
         return false;
     }
 
     /* 写入 hash_code，做为网站唯一性密钥 */
-    $hash_code = md5(md5(time()) . md5($db->dbhash) . md5(time()));
+    $hash_code = md5(md5(time()) . md5($GLOBALS['db']->dbhash) . md5(time()));
     $sql = "UPDATE $prefix" . "shop_config SET value = '$hash_code' WHERE code = 'hash_code' ";
-    if (!$db->query($sql, 'SILENT')) {
-        $err->add($db->errno() . ' ' . $db->error());
+    if (!$GLOBALS['db']->query($sql, 'SILENT')) {
+        $GLOBALS['err']->add($GLOBALS['db']->errno() . ' ' . $GLOBALS['db']->error());
         return false;
     }
 
     /* 写入安装锁定文件 */
     $fp = @fopen(ROOT_PATH . 'data/install.lock', 'wb+');
     if (!$fp) {
-        $err->add($_LANG['open_installlock_failed']);
+        $GLOBALS['err']->add($GLOBALS['_LANG']['open_installlock_failed']);
         return false;
     }
     if (!@fwrite($fp, "ECSHOP INSTALLED")) {
-        $err->add($_LANG['write_installlock_failed']);
+        $GLOBALS['err']->add($GLOBALS['_LANG']['write_installlock_failed']);
         return false;
     }
     @fclose($fp);
@@ -671,9 +653,9 @@ function get_spt_code()
     include(ROOT_PATH . 'data/config.php');
     $db = new Mysql($db_host, $db_user, $db_pass, $db_name);
     $ecs = new ECS($db_name, $prefix);
-    $hash_code = $db->getOne("SELECT value FROM " . $ecs->table('shop_config') . " WHERE code='hash_code'");
+    $hash_code = $GLOBALS['db']->getOne("SELECT value FROM " . $GLOBALS['ecs']->table('shop_config') . " WHERE code='hash_code'");
     $spt = '<script type="text/javascript" src="https://api-ecshop.xyunqi.com/record.php?';
-    $spt .= "url=" . urlencode($ecs->url()) . "&mod=install&version=" . VERSION . "&hash_code=" . $hash_code . "&charset=" . EC_CHARSET . "&language=" . $GLOBALS['installer_lang'] . "\"></script>";
+    $spt .= "url=" . urlencode($GLOBALS['ecs']->url()) . "&mod=install&version=" . VERSION . "&hash_code=" . $hash_code . "&charset=" . EC_CHARSET . "&language=" . $GLOBALS['installer_lang'] . "\"></script>";
 
     return $spt;
 }
@@ -888,12 +870,12 @@ function save_uc_config($config)
     $fp = @fopen(ROOT_PATH . 'data/config_temp.php', 'wb+');
     if (!$fp) {
         $result['error'] = 1;
-        $result['message'] = $_LANG['ucenter_datadir_access'];
+        $result['message'] = $GLOBALS['_LANG']['ucenter_datadir_access'];
         die($GLOBALS['json']->encode($result));
     }
     if (!@fwrite($fp, $content)) {
         $result['error'] = 1;
-        $result['message'] = $_LANG['ucenter_tmp_config_error'];
+        $result['message'] = $GLOBALS['_LANG']['ucenter_tmp_config_error'];
         die($GLOBALS['json']->encode($result));
     }
     @fclose($fp);

@@ -18,9 +18,9 @@ class Template extends Init
             admin_priv('template_select');
 
             /* 获得当前的模版的信息 */
-            $curr_template = $_CFG['template'];
+            $curr_template = $GLOBALS['_CFG']['template'];
 
-            $curr_style = $_CFG['stylename'];
+            $curr_style = $GLOBALS['_CFG']['stylename'];
 
             /* 获得可用的模版 */
             $available_templates = array();
@@ -43,7 +43,7 @@ class Template extends Init
 
             /* 清除不需要的模板设置 */
             $available_code = array();
-            $sql = "DELETE FROM " . $ecs->table('template') . " WHERE 1 ";
+            $sql = "DELETE FROM " . $GLOBALS['ecs']->table('template') . " WHERE 1 ";
             foreach ($available_templates as $tmp) {
                 $sql .= " AND theme <> '" . $tmp['code'] . "' ";
                 $available_code[] = $tmp['code'];
@@ -58,17 +58,17 @@ class Template extends Init
                 }
             }
 
-            $db->query($sql);
+            $GLOBALS['db']->query($sql);
 
             assign_query_info();
 
-            $smarty->assign('ur_here', $_LANG['template_manage']);
-            $smarty->assign('curr_tpl_style', $curr_style);
-            $smarty->assign('template_style', $templates_style);
-            $smarty->assign('curr_template', get_template_info($curr_template, $curr_style));
-            $smarty->assign('available_templates', $available_templates);
-            $smarty->assign('theme_online_url', YUNQI_SERVICE_URL . 'cid=40&source=' . iframe_source_encode('ecshop'));
-            $smarty->display('templates_list.htm');
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['template_manage']);
+            $GLOBALS['smarty']->assign('curr_tpl_style', $curr_style);
+            $GLOBALS['smarty']->assign('template_style', $templates_style);
+            $GLOBALS['smarty']->assign('curr_template', get_template_info($curr_template, $curr_style));
+            $GLOBALS['smarty']->assign('available_templates', $available_templates);
+            $GLOBALS['smarty']->assign('theme_online_url', YUNQI_SERVICE_URL . 'cid=40&source=' . iframe_source_encode('ecshop'));
+            $GLOBALS['smarty']->display('templates_list.htm');
         }
 
         /*------------------------------------------------------ */
@@ -78,7 +78,7 @@ class Template extends Init
         if ($_REQUEST['act'] == 'setup') {
             admin_priv('template_setup');
 
-            $template_theme = $_CFG['template'];
+            $template_theme = $GLOBALS['_CFG']['template'];
             $curr_template = empty($_REQUEST['template_file']) ? 'index' : $_REQUEST['template_file'];
 
             $temp_options = array();
@@ -95,7 +95,7 @@ class Template extends Init
                     if (!in_array($lib, $GLOBALS['dyna_libs'])) {
                         /* 先排除动态内容 */
                         $temp_options[$lib] = get_setted($val, $temp_libs);
-                        $temp_options[$lib]['desc'] = $_LANG['template_libs'][$lib];
+                        $temp_options[$lib]['desc'] = $GLOBALS['_LANG']['template_libs'][$lib];
                         $temp_options[$lib]['library'] = $val;
                         $temp_options[$lib]['number_enabled'] = $number_enabled > 0 ? 1 : 0;
                         $temp_options[$lib]['number'] = $number_enabled;
@@ -109,7 +109,7 @@ class Template extends Init
                     if (!in_array($lib, $GLOBALS['dyna_libs'])) {
                         /* 先排除动态内容 */
                         $temp_options[$lib] = get_setted($val, $temp_libs);
-                        $temp_options[$lib]['desc'] = $_LANG['template_libs'][$lib];
+                        $temp_options[$lib]['desc'] = $GLOBALS['_LANG']['template_libs'][$lib];
                         $temp_options[$lib]['library'] = $val;
                         $temp_options[$lib]['number_enabled'] = $number_enabled > 0 ? 1 : 0;
                         $temp_options[$lib]['number'] = $number_enabled;
@@ -127,13 +127,13 @@ class Template extends Init
             $cat_articles = array();
             $ad_positions = array();
 
-            $sql = "SELECT region, library, sort_order, id, number, type FROM " . $ecs->table('template') . " " .
+            $sql = "SELECT region, library, sort_order, id, number, type FROM " . $GLOBALS['ecs']->table('template') . " " .
                 "WHERE theme='$template_theme' AND filename='$curr_template' AND remarks='' " .
                 "ORDER BY region, sort_order ASC ";
 
-            $rc = $db->query($sql);
+            $rc = $GLOBALS['db']->query($sql);
             $db_dyna_libs = array();
-            while ($row = $db->FetchRow($rc)) {
+            while ($row = $GLOBALS['db']->FetchRow($rc)) {
                 if ($row['type'] > 0) {
                     /* 动态内容 */
                     $db_dyna_libs[$row['region']][$row['library']][] = array('id' => $row['id'], 'number' => $row['number'], 'type' => $row['type']);
@@ -180,19 +180,19 @@ class Template extends Init
             }
 
             assign_query_info();
-            $smarty->assign('ur_here', $_LANG['03_template_setup']);
-            $smarty->assign('curr_template_file', $curr_template);
-            $smarty->assign('temp_options', $temp_options);
-            $smarty->assign('temp_regions', $temp_regions);
-            $smarty->assign('cate_goods', $cate_goods);
-            $smarty->assign('brand_goods', $brand_goods);
-            $smarty->assign('cat_articles', $cat_articles);
-            $smarty->assign('ad_positions', $ad_positions);
-            $smarty->assign('arr_cates', cat_list(0, 0, true));
-            $smarty->assign('arr_brands', get_brand_list());
-            $smarty->assign('arr_article_cats', article_cat_list(0, 0, true));
-            $smarty->assign('arr_ad_positions', get_position_list());
-            $smarty->display('template_setup.htm');
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['03_template_setup']);
+            $GLOBALS['smarty']->assign('curr_template_file', $curr_template);
+            $GLOBALS['smarty']->assign('temp_options', $temp_options);
+            $GLOBALS['smarty']->assign('temp_regions', $temp_regions);
+            $GLOBALS['smarty']->assign('cate_goods', $cate_goods);
+            $GLOBALS['smarty']->assign('brand_goods', $brand_goods);
+            $GLOBALS['smarty']->assign('cat_articles', $cat_articles);
+            $GLOBALS['smarty']->assign('ad_positions', $ad_positions);
+            $GLOBALS['smarty']->assign('arr_cates', cat_list(0, 0, true));
+            $GLOBALS['smarty']->assign('arr_brands', get_brand_list());
+            $GLOBALS['smarty']->assign('arr_article_cats', article_cat_list(0, 0, true));
+            $GLOBALS['smarty']->assign('arr_ad_positions', get_position_list());
+            $GLOBALS['smarty']->display('template_setup.htm');
         }
 
         /*------------------------------------------------------ */
@@ -202,18 +202,18 @@ class Template extends Init
         if ($_REQUEST['act'] == 'setting') {
             admin_priv('template_setup');
 
-            $curr_template = $_CFG['template'];
-            $db->query("DELETE FROM " . $ecs->table('template') . " WHERE remarks = '' AND filename = '$_POST[template_file]' AND theme = '$curr_template'");
+            $curr_template = $GLOBALS['_CFG']['template'];
+            $GLOBALS['db']->query("DELETE FROM " . $GLOBALS['ecs']->table('template') . " WHERE remarks = '' AND filename = '$_POST[template_file]' AND theme = '$curr_template'");
 
             /* 先处理固定内容 */
             foreach ($_POST['regions'] as $key => $val) {
                 $number = isset($_POST['number'][$key]) ? intval($_POST['number'][$key]) : 0;
                 if (!in_array($key, $GLOBALS['dyna_libs']) and (isset($_POST['display'][$key]) and $_POST['display'][$key] == 1 or $number > 0)) {
-                    $sql = "INSERT INTO " . $ecs->table('template') .
+                    $sql = "INSERT INTO " . $GLOBALS['ecs']->table('template') .
                         "(theme, filename, region, library, sort_order, number)" .
                         " VALUES " .
                         "('$curr_template', '$_POST[template_file]', '$val', '" . $_POST['map'][$key] . "', '" . @$_POST['sort_order'][$key] . "', '$number')";
-                    $db->query($sql);
+                    $GLOBALS['db']->query($sql);
                 }
             }
 
@@ -221,7 +221,7 @@ class Template extends Init
             if (isset($_POST['regions']['cat_goods'])) {
                 foreach ($_POST['regions']['cat_goods'] as $key => $val) {
                     if ($_POST['categories']['cat_goods'][$key] != '' && intval($_POST['categories']['cat_goods'][$key]) > 0) {
-                        $sql = "INSERT INTO " . $ecs->table('template') . " (" .
+                        $sql = "INSERT INTO " . $GLOBALS['ecs']->table('template') . " (" .
                             "theme, filename, region, library, sort_order, type, id, number" .
                             ") VALUES (" .
                             "'$curr_template', " .
@@ -229,7 +229,7 @@ class Template extends Init
                             "'" . $_POST['sort_order']['cat_goods'][$key] . "', 1, '" . $_POST['categories']['cat_goods'][$key] .
                             "', '" . $_POST['number']['cat_goods'][$key] . "'" .
                             ")";
-                        $db->query($sql);
+                        $GLOBALS['db']->query($sql);
                     }
                 }
             }
@@ -238,7 +238,7 @@ class Template extends Init
             if (isset($_POST['regions']['brand_goods'])) {
                 foreach ($_POST['regions']['brand_goods'] as $key => $val) {
                     if ($_POST['brands']['brand_goods'][$key] != '' && intval($_POST['brands']['brand_goods'][$key]) > 0) {
-                        $sql = "INSERT INTO " . $ecs->table('template') . " (" .
+                        $sql = "INSERT INTO " . $GLOBALS['ecs']->table('template') . " (" .
                             "theme, filename, region, library, sort_order, type, id, number" .
                             ") VALUES (" .
                             "'$curr_template', " .
@@ -246,7 +246,7 @@ class Template extends Init
                             "'" . $_POST['sort_order']['brand_goods'][$key] . "', 2, '" . $_POST['brands']['brand_goods'][$key] .
                             "', '" . $_POST['number']['brand_goods'][$key] . "'" .
                             ")";
-                        $db->query($sql);
+                        $GLOBALS['db']->query($sql);
                     }
                 }
             }
@@ -255,7 +255,7 @@ class Template extends Init
             if (isset($_POST['regions']['cat_articles'])) {
                 foreach ($_POST['regions']['cat_articles'] as $key => $val) {
                     if ($_POST['article_cat']['cat_articles'][$key] != '' && intval($_POST['article_cat']['cat_articles'][$key]) > 0) {
-                        $sql = "INSERT INTO " . $ecs->table('template') . " (" .
+                        $sql = "INSERT INTO " . $GLOBALS['ecs']->table('template') . " (" .
                             "theme, filename, region, library, sort_order, type, id, number" .
                             ") VALUES (" .
                             "'$curr_template', " .
@@ -263,7 +263,7 @@ class Template extends Init
                             "'" . $_POST['sort_order']['cat_articles'][$key] . "', 3, '" . $_POST['article_cat']['cat_articles'][$key] .
                             "', '" . $_POST['number']['cat_articles'][$key] . "'" .
                             ")";
-                        $db->query($sql);
+                        $GLOBALS['db']->query($sql);
                     }
                 }
             }
@@ -272,7 +272,7 @@ class Template extends Init
             if (isset($_POST['regions']['ad_position'])) {
                 foreach ($_POST['regions']['ad_position'] as $key => $val) {
                     if ($_POST['ad_position'][$key] != '' && intval($_POST['ad_position'][$key]) > 0) {
-                        $sql = "INSERT INTO " . $ecs->table('template') . " (" .
+                        $sql = "INSERT INTO " . $GLOBALS['ecs']->table('template') . " (" .
                             "theme, filename, region, library, sort_order, type, id, number" .
                             ") VALUES (" .
                             "'$curr_template', " .
@@ -280,7 +280,7 @@ class Template extends Init
                             "'" . $_POST['sort_order']['ad_position'][$key] . "', 4, '" . $_POST['ad_position'][$key] .
                             "', '" . $_POST['number']['ad_position'][$key] . "'" .
                             ")";
-                        $db->query($sql);
+                        $GLOBALS['db']->query($sql);
                     }
                 }
             }
@@ -385,10 +385,10 @@ class Template extends Init
             if (file_put_contents($template_file, $template_content)) {
                 //clear_tpl_files(false, '.dwt.php'); // 清除对应的编译文件
                 clear_cache_files();
-                $lnk[] = array('text' => $_LANG['go_back'], 'href' => 'template.php?act=setup&template_file=' . $_POST['template_file']);
-                sys_msg($_LANG['setup_success'], 0, $lnk);
+                $lnk[] = array('text' => $GLOBALS['_LANG']['go_back'], 'href' => 'template.php?act=setup&template_file=' . $_POST['template_file']);
+                sys_msg($GLOBALS['_LANG']['setup_success'], 0, $lnk);
             } else {
-                sys_msg(sprintf($_LANG['modify_dwt_failed'], 'themes/' . $curr_template . '/' . $_POST['template_file'] . '.dwt'), 1, null, false);
+                sys_msg(sprintf($GLOBALS['_LANG']['modify_dwt_failed'], 'themes/' . $curr_template . '/' . $_POST['template_file'] . '.dwt'), 1, null, false);
             }
         }
 
@@ -400,15 +400,15 @@ class Template extends Init
             admin_priv('library_manage');
 
             /* 包含插件语言项 */
-            $sql = "SELECT code FROM " . $ecs->table('plugins');
-            $rs = $db->query($sql);
-            while ($row = $db->FetchRow($rs)) {
+            $sql = "SELECT code FROM " . $GLOBALS['ecs']->table('plugins');
+            $rs = $GLOBALS['db']->query($sql);
+            while ($row = $GLOBALS['db']->FetchRow($rs)) {
                 /* 取得语言项 */
-                if (file_exists(ROOT_PATH . 'plugins/' . $row['code'] . '/languages/common_' . $_CFG['lang'] . '.php')) {
-                    include_once(ROOT_PATH . 'plugins/' . $row['code'] . '/languages/common_' . $_CFG['lang'] . '.php');
+                if (file_exists(ROOT_PATH . 'plugins/' . $row['code'] . '/languages/common_' . $GLOBALS['_CFG']['lang'] . '.php')) {
+                    include_once(ROOT_PATH . 'plugins/' . $row['code'] . '/languages/common_' . $GLOBALS['_CFG']['lang'] . '.php');
                 }
             }
-            $curr_template = $_CFG['template'];
+            $curr_template = $GLOBALS['_CFG']['template'];
             $arr_library = array();
             $library_path = '../themes/' . $curr_template . '/library';
             $library_dir = @opendir($library_path);
@@ -417,7 +417,7 @@ class Template extends Init
             while ($file = @readdir($library_dir)) {
                 if (substr($file, -3) == "lbi") {
                     $filename = substr($file, 0, -4);
-                    $arr_library[$filename] = $file . ' - ' . @$_LANG['template_libs'][$filename];
+                    $arr_library[$filename] = $file . ' - ' . @$GLOBALS['_LANG']['template_libs'][$filename];
 
                     if ($curr_library == '') {
                         $curr_library = $filename;
@@ -432,11 +432,11 @@ class Template extends Init
             $lib = $this->load_library($curr_template, $curr_library);
 
             assign_query_info();
-            $smarty->assign('ur_here', $_LANG['04_template_library']);
-            $smarty->assign('curr_library', $curr_library);
-            $smarty->assign('libraries', $arr_library);
-            $smarty->assign('library_html', $lib['html']);
-            $smarty->display('template_library.htm');
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['04_template_library']);
+            $GLOBALS['smarty']->assign('curr_library', $curr_library);
+            $GLOBALS['smarty']->assign('libraries', $arr_library);
+            $GLOBALS['smarty']->assign('library_html', $lib['html']);
+            $GLOBALS['smarty']->display('template_library.htm');
         }
 
         /*------------------------------------------------------ */
@@ -451,9 +451,9 @@ class Template extends Init
             $tpl_fg = trim($_GET['tpl_fg']);
 
             $sql = "UPDATE " . $GLOBALS['ecs']->table('shop_config') . " SET value = '$tpl_name' WHERE code = 'template'";
-            $step_one = $db->query($sql, 'SILENT');
+            $step_one = $GLOBALS['db']->query($sql, 'SILENT');
             $sql = "UPDATE " . $GLOBALS['ecs']->table('shop_config') . " SET value = '$tpl_fg' WHERE code = 'stylename'";
-            $step_two = $db->query($sql, 'SILENT');
+            $step_two = $GLOBALS['db']->query($sql, 'SILENT');
 
             if ($step_one && $step_two) {
                 clear_all_files(); //清除模板编译文件
@@ -462,10 +462,10 @@ class Template extends Init
                 if (move_plugin_library($tpl_name, $error_msg)) {
                     make_json_error($error_msg);
                 } else {
-                    make_json_result($this->read_style_and_tpl($tpl_name, $tpl_fg), $_LANG['install_template_success']);
+                    make_json_result($this->read_style_and_tpl($tpl_name, $tpl_fg), $GLOBALS['_LANG']['install_template_success']);
                 }
             } else {
-                make_json_error($db->error());
+                make_json_error($GLOBALS['db']->error());
             }
         }
 
@@ -474,7 +474,7 @@ class Template extends Init
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'backup') {
             check_authz_json('backup_setting');
-            $template = $_CFG['template'];
+            $template = $GLOBALS['_CFG']['template'];
             $folder = $template;
             @chdir('..' . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . $template);
             $filename = ROOT_PATH . 'temp' . DIRECTORY_SEPARATOR . 'backup' . DIRECTORY_SEPARATOR . $template . '_' . date('Ymd') . '.tgz';
@@ -486,7 +486,7 @@ class Template extends Init
             if ($done) {
                 make_json_result('..' . DIRECTORY_SEPARATOR . 'temp' . DIRECTORY_SEPARATOR . 'backup' . DIRECTORY_SEPARATOR . $template . '_' . date('Ymd') . '.tgz');
             } else {
-                make_json_error($_LANG['backup_failed']);
+                make_json_error($GLOBALS['_LANG']['backup_failed']);
             }
         }
 
@@ -495,8 +495,8 @@ class Template extends Init
         /*------------------------------------------------------ */
 
         if ($_REQUEST['act'] == 'load_library') {
-            $library = $this->load_library($_CFG['template'], trim($_GET['lib']));
-            $message = ($library['mark'] & 7) ? '' : $_LANG['library_not_written'];
+            $library = $this->load_library($GLOBALS['_CFG']['template'], trim($_GET['lib']));
+            $message = ($library['mark'] & 7) ? '' : $GLOBALS['_LANG']['library_not_written'];
 
             make_json_result($library['html'], $message);
         }
@@ -509,17 +509,17 @@ class Template extends Init
             check_authz_json('library_manage');
 
             $html = stripslashes(json_str_iconv($_POST['html']));
-            $lib_file = '../themes/' . $_CFG['template'] . '/library/' . $_POST['lib'] . '.lbi';
+            $lib_file = '../themes/' . $GLOBALS['_CFG']['template'] . '/library/' . $_POST['lib'] . '.lbi';
             $lib_file = str_replace("0xa", '', $lib_file); // 过滤 0xa 非法字符
 
             $org_html = str_replace("\xEF\xBB\xBF", '', file_get_contents($lib_file));
 
             if (@file_exists($lib_file) === true && @file_put_contents($lib_file, $html)) {
-                @file_put_contents('../temp/backup/library/' . $_CFG['template'] . '-' . $_POST['lib'] . '.lbi', $org_html);
+                @file_put_contents('../temp/backup/library/' . $GLOBALS['_CFG']['template'] . '-' . $_POST['lib'] . '.lbi', $org_html);
 
-                make_json_result('', $_LANG['update_lib_success']);
+                make_json_result('', $GLOBALS['_LANG']['update_lib_success']);
             } else {
-                make_json_error(sprintf($_LANG['update_lib_failed'], 'themes/' . $_CFG['template'] . '/library'));
+                make_json_error(sprintf($GLOBALS['_LANG']['update_lib_failed'], 'themes/' . $GLOBALS['_CFG']['template'] . '/library'));
             }
         }
 
@@ -529,9 +529,9 @@ class Template extends Init
         if ($_REQUEST['act'] == 'restore_library') {
             admin_priv('backup_setting');
             $lib_name = trim($_GET['lib']);
-            $lib_file = '../themes/' . $_CFG['template'] . '/library/' . $lib_name . '.lbi';
+            $lib_file = '../themes/' . $GLOBALS['_CFG']['template'] . '/library/' . $lib_name . '.lbi';
             $lib_file = str_replace("0xa", '', $lib_file); // 过滤 0xa 非法字符
-            $lib_backup = '../temp/backup/library/' . $_CFG['template'] . '-' . $lib_name . '.lbi';
+            $lib_backup = '../temp/backup/library/' . $GLOBALS['_CFG']['template'] . '-' . $lib_name . '.lbi';
             $lib_backup = str_replace("0xa", '', $lib_backup); // 过滤 0xa 非法字符
 
             if (file_exists($lib_backup) && filemtime($lib_backup) >= filemtime($lib_file)) {
@@ -548,29 +548,29 @@ class Template extends Init
         if ($_REQUEST['act'] == 'backup_setting') {
             admin_priv('backup_setting');
 
-            $sql = "SELECT DISTINCT(remarks) FROM " . $ecs->table('template') . " WHERE theme = '" . $_CFG['template'] . "' AND remarks > ''";
-            $col = $db->getCol($sql);
+            $sql = "SELECT DISTINCT(remarks) FROM " . $GLOBALS['ecs']->table('template') . " WHERE theme = '" . $GLOBALS['_CFG']['template'] . "' AND remarks > ''";
+            $col = $GLOBALS['db']->getCol($sql);
             $remarks = array();
             foreach ($col as $val) {
                 $remarks[] = array('content' => $val, 'url' => urlencode($val));
             }
 
-            $sql = "SELECT DISTINCT(filename) FROM " . $ecs->table('template') . " WHERE theme = '" . $_CFG['template'] . "' AND remarks = ''";
-            $col = $db->getCol($sql);
+            $sql = "SELECT DISTINCT(filename) FROM " . $GLOBALS['ecs']->table('template') . " WHERE theme = '" . $GLOBALS['_CFG']['template'] . "' AND remarks = ''";
+            $col = $GLOBALS['db']->getCol($sql);
             $files = array();
             foreach ($col as $val) {
-                $files[$val] = $_LANG['template_files'][$val];
+                $files[$val] = $GLOBALS['_LANG']['template_files'][$val];
             }
 
             assign_query_info();
-            $smarty->assign('ur_here', $_LANG['backup_setting']);
-            $smarty->assign('list', $remarks);
-            $smarty->assign('files', $files);
-            $smarty->display('templates_backup.htm');
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['backup_setting']);
+            $GLOBALS['smarty']->assign('list', $remarks);
+            $GLOBALS['smarty']->assign('files', $files);
+            $GLOBALS['smarty']->display('templates_backup.htm');
         }
 
         if ($_REQUEST['act'] == 'act_backup_setting') {
-            $remarks = empty($_POST['remarks']) ? local_date($_CFG['time_format']) : trim($_POST['remarks']);
+            $remarks = empty($_POST['remarks']) ? local_date($GLOBALS['_CFG']['time_format']) : trim($_POST['remarks']);
 
             if (empty($_POST['files'])) {
                 $files = array();
@@ -578,43 +578,43 @@ class Template extends Init
                 $files = $_POST['files'];
             }
 
-            $sql = "SELECT COUNT(*) FROM " . $ecs->table('template') . " WHERE remarks='$remarks' AND theme = '" . $_CFG['template'] . "'";
-            if ($db->getOne($sql) > 0) {
-                sys_msg(sprintf($_LANG['remarks_exist'], $remarks), 1);
+            $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('template') . " WHERE remarks='$remarks' AND theme = '" . $GLOBALS['_CFG']['template'] . "'";
+            if ($GLOBALS['db']->getOne($sql) > 0) {
+                sys_msg(sprintf($GLOBALS['_LANG']['remarks_exist'], $remarks), 1);
             }
 
-            $sql = "INSERT INTO " . $ecs->table('template') .
+            $sql = "INSERT INTO " . $GLOBALS['ecs']->table('template') .
                 " (filename, region, library, sort_order, id, number, type, theme, remarks)" .
                 " SELECT filename, region, library, sort_order, id, number, type, theme, '$remarks'" .
-                " FROM " . $ecs->table('template') .
-                " WHERE remarks = '' AND theme = '" . $_CFG['template'] . "'" .
+                " FROM " . $GLOBALS['ecs']->table('template') .
+                " WHERE remarks = '' AND theme = '" . $GLOBALS['_CFG']['template'] . "'" .
                 " AND " . db_create_in($files, 'filename');
 
-            $db->query($sql);
-            sys_msg($_LANG['backup_template_ok'], 0, array(array('text' => $_LANG['backup_setting'], 'href' => 'template.php?act=backup_setting')));
+            $GLOBALS['db']->query($sql);
+            sys_msg($GLOBALS['_LANG']['backup_template_ok'], 0, array(array('text' => $GLOBALS['_LANG']['backup_setting'], 'href' => 'template.php?act=backup_setting')));
         }
 
         if ($_REQUEST['act'] == 'del_backup') {
             $remarks = empty($_GET['remarks']) ? '' : trim($_GET['remarks']);
             if ($remarks) {
-                $sql = "DELETE FROM " . $ecs->table('template') . " WHERE remarks='$remarks' AND theme = '" . $_CFG['template'] . "'";
-                $db->query($sql);
+                $sql = "DELETE FROM " . $GLOBALS['ecs']->table('template') . " WHERE remarks='$remarks' AND theme = '" . $GLOBALS['_CFG']['template'] . "'";
+                $GLOBALS['db']->query($sql);
             }
-            sys_msg($_LANG['del_backup_ok'], 0, array(array('text' => $_LANG['backup_setting'], 'href' => 'template.php?act=backup_setting')));
+            sys_msg($GLOBALS['_LANG']['del_backup_ok'], 0, array(array('text' => $GLOBALS['_LANG']['backup_setting'], 'href' => 'template.php?act=backup_setting')));
         }
 
         if ($_REQUEST['act'] == 'restore_backup') {
             $remarks = empty($_GET['remarks']) ? '' : trim($_GET['remarks']);
             if ($remarks) {
                 $sql = "SELECT filename, region, library, sort_order " .
-                    " FROM " . $ecs->table('template') .
-                    " WHERE remarks='$remarks' AND theme = '" . $_CFG['template'] . "'" .
+                    " FROM " . $GLOBALS['ecs']->table('template') .
+                    " WHERE remarks='$remarks' AND theme = '" . $GLOBALS['_CFG']['template'] . "'" .
                     " ORDER BY filename, region, sort_order";
-                $arr = $db->getAll($sql);
+                $arr = $GLOBALS['db']->getAll($sql);
                 if ($arr) {
                     $data = array();
                     foreach ($arr as $val) {
-                        $lib_content = file_get_contents(ROOT_PATH . 'themes/' . $_CFG['template'] . $val['library']);
+                        $lib_content = file_get_contents(ROOT_PATH . 'themes/' . $GLOBALS['_CFG']['template'] . $val['library']);
                         //去除lib头部
                         $lib_content = preg_replace('/<meta\\shttp-equiv=["|\']Content-Type["|\']\\scontent=["|\']text\/html;\\scharset=utf-8"|\']>/i', '', $lib_content);
                         //去除utf bom
@@ -630,7 +630,7 @@ class Template extends Init
 
                     foreach ($data as $file => $regions) {
                         $pattern = '/(?:<!--\\s*TemplateBeginEditable\\sname="(' . implode('|', array_keys($regions)) . ')"\\s*-->)(?:.*?)(?:<!--\\s*TemplateEndEditable\\s*-->)/s';
-                        $temple_file = ROOT_PATH . 'themes/' . $_CFG['template'] . '/' . $file . '.dwt';
+                        $temple_file = ROOT_PATH . 'themes/' . $GLOBALS['_CFG']['template'] . '/' . $file . '.dwt';
                         $template_content = file_get_contents($temple_file);
                         $match = array();
                         if (!function_exists('version_compare') || version_compare(phpversion(), '5.3.0', '<')) {
@@ -642,19 +642,19 @@ class Template extends Init
                     }
 
                     /* 文件修改成功后，恢复数据库 */
-                    $sql = "DELETE FROM " . $ecs->table('template') .
-                        " WHERE remarks = '' AND  theme = '" . $_CFG['template'] . "'" .
+                    $sql = "DELETE FROM " . $GLOBALS['ecs']->table('template') .
+                        " WHERE remarks = '' AND  theme = '" . $GLOBALS['_CFG']['template'] . "'" .
                         " AND " . db_create_in(array_keys($data), 'filename');
-                    $db->query($sql);
-                    $sql = "INSERT INTO " . $ecs->table('template') .
+                    $GLOBALS['db']->query($sql);
+                    $sql = "INSERT INTO " . $GLOBALS['ecs']->table('template') .
                         " (filename, region, library, sort_order, id, number, type, theme, remarks)" .
                         " SELECT filename, region, library, sort_order, id, number, type, theme, ''" .
-                        " FROM " . $ecs->table('template') .
-                        " WHERE remarks = '$remarks' AND theme = '" . $_CFG['template'] . "'";
-                    $db->query($sql);
+                        " FROM " . $GLOBALS['ecs']->table('template') .
+                        " WHERE remarks = '$remarks' AND theme = '" . $GLOBALS['_CFG']['template'] . "'";
+                    $GLOBALS['db']->query($sql);
                 }
             }
-            sys_msg($_LANG['restore_backup_ok'], 0, array(array('text' => $_LANG['backup_setting'], 'href' => 'template.php?act=backup_setting')));
+            sys_msg($GLOBALS['_LANG']['restore_backup_ok'], 0, array(array('text' => $GLOBALS['_LANG']['backup_setting'], 'href' => 'template.php?act=backup_setting')));
         }
 
         /*------------------------------------------------------ */
@@ -686,7 +686,7 @@ class Template extends Init
         if ($_REQUEST['act'] == 'delete') {
             admin_priv('delete');
             $template = trim($_GET['tpl_name']);
-            $curr_template = $_CFG['template'];
+            $curr_template = $GLOBALS['_CFG']['template'];
             $template = str_replace(['..', '/', '\/'], ['', '', ''], $template);
             $folder = ROOT_PATH . 'themes' . '/' . $template;
             if ($template != $curr_template && file_exists($folder) && $this->delete_tree($folder)) {

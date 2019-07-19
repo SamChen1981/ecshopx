@@ -11,28 +11,28 @@ class Shopinfo extends Init
     {
         require_once(ROOT_PATH . "includes/fckeditor/fckeditor.php");
 
-        $exc = new exchange($ecs->table("article"), $db, 'article_id', 'title');
+        $exc = new Exchange($GLOBALS['ecs']->table("article"), $db, 'article_id', 'title');
 
         /*------------------------------------------------------ */
         //-- 文章列表
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
-            $smarty->assign('ur_here', $_LANG['shop_info']);
-            $smarty->assign('action_link', array('text' => $_LANG['shopinfo_add'], 'href' => 'shopinfo.php?act=add'));
-            $smarty->assign('full_page', 1);
-            $smarty->assign('list', $this->shopinfo_article_list());
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['shop_info']);
+            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['shopinfo_add'], 'href' => 'shopinfo.php?act=add'));
+            $GLOBALS['smarty']->assign('full_page', 1);
+            $GLOBALS['smarty']->assign('list', $this->shopinfo_article_list());
 
             assign_query_info();
-            $smarty->display('shopinfo_list.htm');
+            $GLOBALS['smarty']->display('shopinfo_list.htm');
         }
 
         /*------------------------------------------------------ */
         //-- 查询
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'query') {
-            $smarty->assign('list', $this->shopinfo_article_list());
+            $GLOBALS['smarty']->assign('list', $this->shopinfo_article_list());
 
-            make_json_result($smarty->fetch('shopinfo_list.htm'));
+            make_json_result($GLOBALS['smarty']->fetch('shopinfo_list.htm'));
         }
 
         /*------------------------------------------------------ */
@@ -49,12 +49,12 @@ class Shopinfo extends Init
             /* 初始化 */
             $article['article_type'] = 0;
 
-            $smarty->assign('ur_here', $_LANG['shopinfo_add']);
-            $smarty->assign('action_link', array('text' => $_LANG['shopinfo_list'], 'href' => 'shopinfo.php?act=list'));
-            $smarty->assign('form_action', 'insert');
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['shopinfo_add']);
+            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['shopinfo_list'], 'href' => 'shopinfo.php?act=list'));
+            $GLOBALS['smarty']->assign('form_action', 'insert');
 
             assign_query_info();
-            $smarty->display('shopinfo_info.htm');
+            $GLOBALS['smarty']->display('shopinfo_info.htm');
         }
         if ($_REQUEST['act'] == 'insert') {
             /* 权限判断 */
@@ -65,25 +65,25 @@ class Shopinfo extends Init
             $is_only = $exc->is_only('title', $_POST['title']);
 
             if (!$is_only) {
-                sys_msg(sprintf($_LANG['title_exist'], stripslashes($_POST['title'])), 1);
+                sys_msg(sprintf($GLOBALS['_LANG']['title_exist'], stripslashes($_POST['title'])), 1);
             }
 
             /* 插入数据 */
             $add_time = gmtime();
-            $sql = "INSERT INTO " . $ecs->table('article') . "(title, cat_id, content, add_time) VALUES('$_POST[title]', '0', '$_POST[FCKeditor1]','$add_time' )";
-            $db->query($sql);
+            $sql = "INSERT INTO " . $GLOBALS['ecs']->table('article') . "(title, cat_id, content, add_time) VALUES('$_POST[title]', '0', '$_POST[FCKeditor1]','$add_time' )";
+            $GLOBALS['db']->query($sql);
 
-            $link[0]['text'] = $_LANG['continue_add'];
+            $link[0]['text'] = $GLOBALS['_LANG']['continue_add'];
             $link[0]['href'] = 'shopinfo.php?act=add';
 
-            $link[1]['text'] = $_LANG['back_list'];
+            $link[1]['text'] = $GLOBALS['_LANG']['back_list'];
             $link[1]['href'] = 'shopinfo.php?act=list';
 
             /* 清除缓存 */
             clear_cache_files();
 
             admin_log($_POST['title'], 'add', 'shopinfo');
-            sys_msg($_LANG['articleadd_succeed'], 0, $link);
+            sys_msg($GLOBALS['_LANG']['articleadd_succeed'], 0, $link);
         }
 
         /*------------------------------------------------------ */
@@ -95,17 +95,17 @@ class Shopinfo extends Init
             $_REQUEST['id'] = intval($_REQUEST['id']);
 
             /* 取得文章数据 */
-            $sql = "SELECT article_id, title, content FROM " . $ecs->table('article') . "WHERE article_id =" . $_REQUEST['id'];
-            $article = $db->GetRow($sql);
+            $sql = "SELECT article_id, title, content FROM " . $GLOBALS['ecs']->table('article') . "WHERE article_id =" . $_REQUEST['id'];
+            $article = $GLOBALS['db']->GetRow($sql);
 
             /* 创建 html editor */
             create_html_editor('FCKeditor1', $article['content']);
 
-            $smarty->assign('ur_here', $_LANG['article_add']);
-            $smarty->assign('action_link', array('text' => $_LANG['shopinfo_list'], 'href' => 'shopinfo.php?act=list'));
-            $smarty->assign('article', $article);
-            $smarty->assign('form_action', 'update');
-            $smarty->display('shopinfo_info.htm');
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['article_add']);
+            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['shopinfo_list'], 'href' => 'shopinfo.php?act=list'));
+            $GLOBALS['smarty']->assign('article', $article);
+            $GLOBALS['smarty']->assign('form_action', 'update');
+            $GLOBALS['smarty']->display('shopinfo_info.htm');
         }
         if ($_REQUEST['act'] == 'update') {
             /* 权限判断 */
@@ -117,7 +117,7 @@ class Shopinfo extends Init
                 $is_only = $exc->is_only('title', $_POST['title'], $_POST['id']);
 
                 if (!$is_only) {
-                    sys_msg(sprintf($_LANG['title_exist'], stripslashes($_POST['title'])), 1);
+                    sys_msg(sprintf($GLOBALS['_LANG']['title_exist'], stripslashes($_POST['title'])), 1);
                 }
             }
 
@@ -127,10 +127,10 @@ class Shopinfo extends Init
                 /* 清除缓存 */
                 clear_cache_files();
 
-                $link[0]['text'] = $_LANG['back_list'];
+                $link[0]['text'] = $GLOBALS['_LANG']['back_list'];
                 $link[0]['href'] = 'shopinfo.php?act=list';
 
-                sys_msg(sprintf($_LANG['articleedit_succeed'], $_POST['title']), 0, $link);
+                sys_msg(sprintf($GLOBALS['_LANG']['articleedit_succeed'], $_POST['title']), 0, $link);
                 admin_log($_POST['title'], 'edit', 'shopinfo');
             }
         }
@@ -152,7 +152,7 @@ class Shopinfo extends Init
                     make_json_result(stripslashes($title));
                 }
             } else {
-                make_json_error(sprintf($_LANG['title_exist'], $title));
+                make_json_error(sprintf($GLOBALS['_LANG']['title_exist'], $title));
             }
         }
 

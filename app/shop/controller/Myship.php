@@ -13,8 +13,8 @@ class Myship extends Init
         load_helper('transaction');
 
         /* 载入语言文件 */
-        require_once(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/shopping_flow.php');
-        require_once(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/user.php');
+        require_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/shopping_flow.php');
+        require_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/user.php');
 
         /*------------------------------------------------------ */
         //-- INPUT
@@ -28,7 +28,7 @@ class Myship extends Init
             $choose['city'] = isset($_POST['city']) ? intval($_POST['city']) : $consignee_list[0]['city'];
             $choose['district'] = isset($_POST['district']) ? intval($_POST['district']) : (isset($consignee_list[0]['district']) ? $consignee_list[0]['district'] : 0);
         } else {
-            $choose['country'] = isset($_POST['country']) ? intval($_POST['country']) : $_CFG['shop_country'];
+            $choose['country'] = isset($_POST['country']) ? intval($_POST['country']) : $GLOBALS['_CFG']['shop_country'];
             $choose['province'] = isset($_POST['province']) ? intval($_POST['province']) : 2;
             $choose['city'] = isset($_POST['city']) ? intval($_POST['city']) : 35;
             $choose['district'] = isset($_POST['district']) ? intval($_POST['district']) : 417;
@@ -40,25 +40,25 @@ class Myship extends Init
 
         assign_template();
         assign_dynamic('myship');
-        $position = assign_ur_here(0, $_LANG['shopping_myship']);
-        $smarty->assign('page_title', $position['title']);    // 页面标题
-        $smarty->assign('ur_here', $position['ur_here']);  // 当前位置
+        $position = assign_ur_here(0, $GLOBALS['_LANG']['shopping_myship']);
+        $GLOBALS['smarty']->assign('page_title', $position['title']);    // 页面标题
+        $GLOBALS['smarty']->assign('ur_here', $position['ur_here']);  // 当前位置
 
-        $smarty->assign('helps', get_shop_help());       // 网店帮助
-        $smarty->assign('lang', $_LANG);
+        $GLOBALS['smarty']->assign('helps', get_shop_help());       // 网店帮助
+        $GLOBALS['smarty']->assign('lang', $GLOBALS['_LANG']);
 
-        $smarty->assign('choose', $choose);
+        $GLOBALS['smarty']->assign('choose', $choose);
 
         $province_list[null] = get_regions(1, $choose['country']);
         $city_list[null] = get_regions(2, $choose['province']);
         $district_list[null] = get_regions(3, $choose['city']);
 
-        $smarty->assign('province_list', $province_list);
-        $smarty->assign('city_list', $city_list);
-        $smarty->assign('district_list', $district_list);
+        $GLOBALS['smarty']->assign('province_list', $province_list);
+        $GLOBALS['smarty']->assign('city_list', $city_list);
+        $GLOBALS['smarty']->assign('district_list', $district_list);
 
         /* 取得国家列表、商店所在国家、商店所在国家的省列表 */
-        $smarty->assign('country_list', get_regions());
+        $GLOBALS['smarty']->assign('country_list', get_regions());
 
         /* 取得配送列表 */
         $region = array($choose['country'], $choose['province'], $choose['city'], $choose['district']);
@@ -83,8 +83,8 @@ class Myship extends Init
                 price_format($val['insure'], false) : $val['insure'];
         }
 
-        $smarty->assign('shipping_list', $shipping_list);
+        $GLOBALS['smarty']->assign('shipping_list', $shipping_list);
 
-        $smarty->display('myship.dwt');
+        $GLOBALS['smarty']->display('myship.dwt');
     }
 }

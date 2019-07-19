@@ -36,52 +36,52 @@ class Topic extends Init
         if ($_REQUEST['act'] == 'list') {
             admin_priv('topic_manage');
 
-            $smarty->assign('ur_here', $_LANG['09_topic']);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['09_topic']);
 
-            $smarty->assign('full_page', 1);
+            $GLOBALS['smarty']->assign('full_page', 1);
             $list = $this->get_topic_list();
 
-            $smarty->assign('topic_list', $list['item']);
-            $smarty->assign('filter', $list['filter']);
-            $smarty->assign('record_count', $list['record_count']);
-            $smarty->assign('page_count', $list['page_count']);
+            $GLOBALS['smarty']->assign('topic_list', $list['item']);
+            $GLOBALS['smarty']->assign('filter', $list['filter']);
+            $GLOBALS['smarty']->assign('record_count', $list['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $list['page_count']);
 
             $sort_flag = sort_flag($list['filter']);
-            $smarty->assign($sort_flag['tag'], $sort_flag['img']);
+            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
             assign_query_info();
-            $smarty->assign('action_link', array('text' => $_LANG['topic_add'], 'href' => 'topic.php?act=add'));
-            $smarty->display('topic_list.htm');
+            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['topic_add'], 'href' => 'topic.php?act=add'));
+            $GLOBALS['smarty']->display('topic_list.htm');
         }
         /* 添加,编辑 */
         if ($_REQUEST['act'] == 'add' || $_REQUEST['act'] == 'edit') {
             admin_priv('topic_manage');
 
             $isadd = $_REQUEST['act'] == 'add';
-            $smarty->assign('isadd', $isadd);
+            $GLOBALS['smarty']->assign('isadd', $isadd);
             $topic_id = empty($_REQUEST['topic_id']) ? 0 : intval($_REQUEST['topic_id']);
 
             include_once(ROOT_PATH . 'includes/fckeditor/fckeditor.php'); // 包含 html editor 类文件
 
-            $smarty->assign('ur_here', $_LANG['09_topic']);
-            $smarty->assign('action_link', $this->list_link($isadd));
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['09_topic']);
+            $GLOBALS['smarty']->assign('action_link', $this->list_link($isadd));
 
-            $smarty->assign('cat_list', cat_list(0, 1));
-            $smarty->assign('brand_list', get_brand_list());
-            $smarty->assign('cfg_lang', $_CFG['lang']);
-            $smarty->assign('topic_style_color', $topic_style_color);
+            $GLOBALS['smarty']->assign('cat_list', cat_list(0, 1));
+            $GLOBALS['smarty']->assign('brand_list', get_brand_list());
+            $GLOBALS['smarty']->assign('cfg_lang', $GLOBALS['_CFG']['lang']);
+            $GLOBALS['smarty']->assign('topic_style_color', $topic_style_color);
 
             $width_height = $this->get_toppic_width_height();
             if (isset($width_height['pic']['width']) && isset($width_height['pic']['height'])) {
-                $smarty->assign('width_height', sprintf($_LANG['tips_width_height'], $width_height['pic']['width'], $width_height['pic']['height']));
+                $GLOBALS['smarty']->assign('width_height', sprintf($GLOBALS['_LANG']['tips_width_height'], $width_height['pic']['width'], $width_height['pic']['height']));
             }
             if (isset($width_height['title_pic']['width']) && isset($width_height['title_pic']['height'])) {
-                $smarty->assign('title_width_height', sprintf($_LANG['tips_title_width_height'], $width_height['title_pic']['width'], $width_height['title_pic']['height']));
+                $GLOBALS['smarty']->assign('title_width_height', sprintf($GLOBALS['_LANG']['tips_title_width_height'], $width_height['title_pic']['width'], $width_height['title_pic']['height']));
             }
 
             if (!$isadd) {
-                $sql = "SELECT * FROM " . $ecs->table('topic') . " WHERE topic_id = '$topic_id'";
-                $topic = $db->getRow($sql);
+                $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('topic') . " WHERE topic_id = '$topic_id'";
+                $topic = $GLOBALS['db']->getRow($sql);
                 $topic['start_time'] = local_date('Y-m-d', $topic['start_time']);
                 $topic['end_time'] = local_date('Y-m-d', $topic['end_time']);
 
@@ -102,16 +102,16 @@ class Topic extends Init
                     $topic['topic_type'] = '';
                 }
 
-                $smarty->assign('topic', $topic);
-                $smarty->assign('act', "update");
+                $GLOBALS['smarty']->assign('topic', $topic);
+                $GLOBALS['smarty']->assign('act', "update");
             } else {
                 $topic = array('title' => '', 'topic_type' => 0, 'url' => defined('FORCE_SSL_LOGIN') ? 'https://' : 'http://');
-                $smarty->assign('topic', $topic);
+                $GLOBALS['smarty']->assign('topic', $topic);
 
                 create_html_editor('topic_intro');
-                $smarty->assign('act', "insert");
+                $GLOBALS['smarty']->assign('act', "insert");
             }
-            $smarty->display('topic_edit.htm');
+            $GLOBALS['smarty']->display('topic_edit.htm');
         } elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update') {
             admin_priv('topic_manage');
 
@@ -127,7 +127,7 @@ class Topic extends Init
                     if ($_FILES['topic_img']['name'] && $_FILES['topic_img']['size'] > 0) {
                         /* 检查文件合法性 */
                         if (!get_file_suffix($_FILES['topic_img']['name'], $allow_suffix)) {
-                            sys_msg($_LANG['invalid_type']);
+                            sys_msg($GLOBALS['_LANG']['invalid_type']);
                         }
 
                         /* 处理 */
@@ -148,7 +148,7 @@ class Topic extends Init
                             /* 取互联网图片至本地 */
                             $topic_img = $this->get_url_image($_REQUEST['url']);
                         } else {
-                            sys_msg($_LANG['web_url_no']);
+                            sys_msg($GLOBALS['_LANG']['web_url_no']);
                         }
                     }
                     unset($name, $target);
@@ -171,7 +171,7 @@ class Topic extends Init
             if ($_FILES['title_pic']['name'] && $_FILES['title_pic']['size'] > 0) {
                 /* 检查文件合法性 */
                 if (!get_file_suffix($_FILES['title_pic']['name'], $allow_suffix)) {
-                    sys_msg($_LANG['invalid_type']);
+                    sys_msg($GLOBALS['_LANG']['invalid_type']);
                 }
 
                 /* 处理 */
@@ -192,7 +192,7 @@ class Topic extends Init
                     /* 取互联网图片至本地 */
                     $title_pic = $this->get_url_image($_REQUEST['title_url']);
                 } else {
-                    sys_msg($_LANG['web_url_no']);
+                    sys_msg($GLOBALS['_LANG']['web_url_no']);
                 }
             }
             unset($name, $target);
@@ -210,20 +210,20 @@ class Topic extends Init
             $description = $_POST['description'];
 
             if ($is_insert) {
-                $sql = "INSERT INTO " . $ecs->table('topic') . " (title,start_time,end_time,data,intro,template,css,topic_img,title_pic,base_style, htmls,keywords,description)" .
+                $sql = "INSERT INTO " . $GLOBALS['ecs']->table('topic') . " (title,start_time,end_time,data,intro,template,css,topic_img,title_pic,base_style, htmls,keywords,description)" .
                     "VALUES ('$_POST[topic_name]','$start_time','$end_time','$data','$_POST[topic_intro]','$_POST[topic_template_file]','$_POST[topic_css]', '$topic_img', '$title_pic', '$base_style', '$htmls','$keywords','$description')";
             } else {
-                $sql = "UPDATE " . $ecs->table('topic') .
+                $sql = "UPDATE " . $GLOBALS['ecs']->table('topic') .
                     "SET title='$_POST[topic_name]',start_time='$start_time',end_time='$end_time',data='$data',intro='$_POST[topic_intro]',template='$_POST[topic_template_file]',css='$_POST[topic_css]', topic_img='$topic_img', title_pic='$title_pic', base_style='$base_style', htmls='$htmls', keywords='$keywords', description='$description'" .
                     " WHERE topic_id='$topic_id' LIMIT 1";
             }
 
-            $db->query($sql);
+            $GLOBALS['db']->query($sql);
 
             clear_cache_files();
 
-            $links[] = array('href' => 'topic.php', 'text' => $_LANG['back_list']);
-            sys_msg($_LANG['succed'], 0, $links);
+            $links[] = array('href' => 'topic.php', 'text' => $GLOBALS['_LANG']['back_list']);
+            sys_msg($GLOBALS['_LANG']['succed'], 0, $links);
         } elseif ($_REQUEST['act'] == 'get_goods_list') {
             $filters = json_decode($_GET['JSON']);
 
@@ -239,7 +239,7 @@ class Topic extends Init
         } elseif ($_REQUEST["act"] == "delete") {
             admin_priv('topic_manage');
 
-            $sql = "DELETE FROM " . $ecs->table('topic') . " WHERE ";
+            $sql = "DELETE FROM " . $GLOBALS['ecs']->table('topic') . " WHERE ";
 
             if (!empty($_POST['checkboxs'])) {
                 $sql .= db_create_in($_POST['checkboxs'], 'topic_id');
@@ -250,7 +250,7 @@ class Topic extends Init
                 exit;
             }
 
-            $db->query($sql);
+            $GLOBALS['db']->query($sql);
 
             clear_cache_files();
 
@@ -260,22 +260,22 @@ class Topic extends Init
                 exit;
             }
 
-            $links[] = array('href' => 'topic.php', 'text' => $_LANG['back_list']);
-            sys_msg($_LANG['succed'], 0, $links);
+            $links[] = array('href' => 'topic.php', 'text' => $GLOBALS['_LANG']['back_list']);
+            sys_msg($GLOBALS['_LANG']['succed'], 0, $links);
         } elseif ($_REQUEST["act"] == "query") {
             $topic_list = $this->get_topic_list();
-            $smarty->assign('topic_list', $topic_list['item']);
-            $smarty->assign('filter', $topic_list['filter']);
-            $smarty->assign('record_count', $topic_list['record_count']);
-            $smarty->assign('page_count', $topic_list['page_count']);
-            $smarty->assign('use_storage', empty($_CFG['use_storage']) ? 0 : 1);
+            $GLOBALS['smarty']->assign('topic_list', $topic_list['item']);
+            $GLOBALS['smarty']->assign('filter', $topic_list['filter']);
+            $GLOBALS['smarty']->assign('record_count', $topic_list['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $topic_list['page_count']);
+            $GLOBALS['smarty']->assign('use_storage', empty($GLOBALS['_CFG']['use_storage']) ? 0 : 1);
 
             /* 排序标记 */
             $sort_flag = sort_flag($topic_list['filter']);
-            $smarty->assign($sort_flag['tag'], $sort_flag['img']);
+            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
             $tpl = 'topic_list.htm';
-            make_json_result($smarty->fetch($tpl), '', array('filter' => $topic_list['filter'], 'page_count' => $topic_list['page_count']));
+            make_json_result($GLOBALS['smarty']->fetch($tpl), '', array('filter' => $topic_list['filter'], 'page_count' => $topic_list['page_count']));
         }
     }
 

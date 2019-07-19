@@ -23,24 +23,24 @@ class Vote extends Init
 
         if ($this->vote_already_submited($vote_id, $ip_address)) {
             $res['error'] = 1;
-            $res['message'] = $_LANG['vote_ip_same'];
+            $res['message'] = $GLOBALS['_LANG']['vote_ip_same'];
         } else {
             $this->save_vote($vote_id, $ip_address, $options);
 
             $vote = get_vote($vote_id);
             if (!empty($vote)) {
-                $smarty->assign('vote_id', $vote['id']);
-                $smarty->assign('vote', $vote['content']);
+                $GLOBALS['smarty']->assign('vote_id', $vote['id']);
+                $GLOBALS['smarty']->assign('vote', $vote['content']);
             }
 
-            $str = $smarty->fetch("library/vote.lbi");
+            $str = $GLOBALS['smarty']->fetch("library/vote.lbi");
 
             $pattern = '/(?:<(\w+)[^>]*> .*?)?<div\s+id="ECS_VOTE">(.*)<\/div>(?:.*?<\/\1>)?/is';
 
             if (preg_match($pattern, $str, $match)) {
                 $res['content'] = $match[2];
             }
-            $res['message'] = $_LANG['vote_success'];
+            $res['message'] = $GLOBALS['_LANG']['vote_success'];
         }
 
 

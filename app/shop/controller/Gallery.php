@@ -16,8 +16,8 @@ class Gallery extends Init
         $_REQUEST['img'] = isset($_REQUEST['img']) ? intval($_REQUEST['img']) : 0; // 图片编号
 
         /* 获得商品名称 */
-        $sql = 'SELECT goods_name FROM ' . $ecs->table('goods') . "WHERE goods_id = '$_REQUEST[id]'";
-        $goods_name = $db->getOne($sql);
+        $sql = 'SELECT goods_name FROM ' . $GLOBALS['ecs']->table('goods') . "WHERE goods_id = '$_REQUEST[id]'";
+        $goods_name = $GLOBALS['db']->getOne($sql);
 
         /* 如果该商品不存在，返回首页 */
         if ($goods_name === false) {
@@ -28,9 +28,9 @@ class Gallery extends Init
 
         /* 获得所有的图片 */
         $sql = 'SELECT img_id, img_desc, thumb_url, img_url' .
-            ' FROM ' . $ecs->table('goods_gallery') .
+            ' FROM ' . $GLOBALS['ecs']->table('goods_gallery') .
             " WHERE goods_id = '$_REQUEST[id]' ORDER BY img_id";
-        $img_list = $db->getAll($sql);
+        $img_list = $GLOBALS['db']->getAll($sql);
 
         $img_count = count($img_list);
 
@@ -49,9 +49,9 @@ class Gallery extends Init
             }
         }
 
-        $smarty->assign('shop_name', $_CFG['shop_name']);
-        $smarty->assign('watermark', str_replace('../', './', $_CFG['watermark']));
-        $smarty->assign('gallery', $gallery);
-        $smarty->display('gallery.dwt');
+        $GLOBALS['smarty']->assign('shop_name', $GLOBALS['_CFG']['shop_name']);
+        $GLOBALS['smarty']->assign('watermark', str_replace('../', './', $GLOBALS['_CFG']['watermark']));
+        $GLOBALS['smarty']->assign('gallery', $gallery);
+        $GLOBALS['smarty']->display('gallery.dwt');
     }
 }

@@ -11,7 +11,7 @@ class Auction extends Init
     {
         load_helper('goods');
 
-        $exc = new exchange($ecs->table('goods_activity'), $db, 'act_id', 'act_name');
+        $exc = new Exchange($GLOBALS['ecs']->table('goods_activity'), $db, 'act_id', 'act_name');
 
         /*------------------------------------------------------ */
         //-- 活动列表页
@@ -22,23 +22,23 @@ class Auction extends Init
             admin_priv('auction');
 
             /* 模板赋值 */
-            $smarty->assign('full_page', 1);
-            $smarty->assign('ur_here', $_LANG['auction_list']);
-            $smarty->assign('action_link', array('href' => 'auction.php?act=add', 'text' => $_LANG['add_auction']));
+            $GLOBALS['smarty']->assign('full_page', 1);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['auction_list']);
+            $GLOBALS['smarty']->assign('action_link', array('href' => 'auction.php?act=add', 'text' => $GLOBALS['_LANG']['add_auction']));
 
             $list = $this->auction_list();
 
-            $smarty->assign('auction_list', $list['item']);
-            $smarty->assign('filter', $list['filter']);
-            $smarty->assign('record_count', $list['record_count']);
-            $smarty->assign('page_count', $list['page_count']);
+            $GLOBALS['smarty']->assign('auction_list', $list['item']);
+            $GLOBALS['smarty']->assign('filter', $list['filter']);
+            $GLOBALS['smarty']->assign('record_count', $list['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $list['page_count']);
 
             $sort_flag = sort_flag($list['filter']);
-            $smarty->assign($sort_flag['tag'], $sort_flag['img']);
+            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
             /* 显示商品列表页面 */
             assign_query_info();
-            $smarty->display('auction_list.htm');
+            $GLOBALS['smarty']->display('auction_list.htm');
         }
 
         /*------------------------------------------------------ */
@@ -48,16 +48,16 @@ class Auction extends Init
         elseif ($_REQUEST['act'] == 'query') {
             $list = $this->auction_list();
 
-            $smarty->assign('auction_list', $list['item']);
-            $smarty->assign('filter', $list['filter']);
-            $smarty->assign('record_count', $list['record_count']);
-            $smarty->assign('page_count', $list['page_count']);
+            $GLOBALS['smarty']->assign('auction_list', $list['item']);
+            $GLOBALS['smarty']->assign('filter', $list['filter']);
+            $GLOBALS['smarty']->assign('record_count', $list['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $list['page_count']);
 
             $sort_flag = sort_flag($list['filter']);
-            $smarty->assign($sort_flag['tag'], $sort_flag['img']);
+            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
             make_json_result(
-                $smarty->fetch('auction_list.htm'),
+                $GLOBALS['smarty']->fetch('auction_list.htm'),
                 '',
                 array('filter' => $list['filter'], 'page_count' => $list['page_count'])
             );
@@ -72,10 +72,10 @@ class Auction extends Init
             $id = intval($_GET['id']);
             $auction = auction_info($id);
             if (empty($auction)) {
-                make_json_error($_LANG['auction_not_exist']);
+                make_json_error($GLOBALS['_LANG']['auction_not_exist']);
             }
             if ($auction['bid_user_count'] > 0) {
-                make_json_error($_LANG['auction_cannot_remove']);
+                make_json_error($GLOBALS['_LANG']['auction_cannot_remove']);
             }
             $name = $auction['act_name'];
             $exc->drop($id);
@@ -98,7 +98,7 @@ class Auction extends Init
         elseif ($_REQUEST['act'] == 'batch') {
             /* 取得要操作的记录编号 */
             if (empty($_POST['checkboxes'])) {
-                sys_msg($_LANG['no_record_selected']);
+                sys_msg($GLOBALS['_LANG']['no_record_selected']);
             } else {
                 /* 检查权限 */
                 admin_priv('auction');
@@ -107,15 +107,15 @@ class Auction extends Init
 
                 if (isset($_POST['drop'])) {
                     /* 查询哪些拍卖活动已经有人出价 */
-                    $sql = "SELECT DISTINCT act_id FROM " . $ecs->table('auction_log') .
+                    $sql = "SELECT DISTINCT act_id FROM " . $GLOBALS['ecs']->table('auction_log') .
                         " WHERE act_id " . db_create_in($ids);
-                    $ids = array_diff($ids, $db->getCol($sql));
+                    $ids = array_diff($ids, $GLOBALS['db']->getCol($sql));
                     if (!empty($ids)) {
                         /* 删除记录 */
-                        $sql = "DELETE FROM " . $ecs->table('goods_activity') .
+                        $sql = "DELETE FROM " . $GLOBALS['ecs']->table('goods_activity') .
                             " WHERE act_id " . db_create_in($ids) .
                             " AND act_type = '" . GAT_AUCTION . "'";
-                        $db->query($sql);
+                        $GLOBALS['db']->query($sql);
 
                         /* 记日志 */
                         admin_log('', 'batch_remove', 'auction');
@@ -123,8 +123,8 @@ class Auction extends Init
                         /* 清除缓存 */
                         clear_cache_files();
                     }
-                    $links[] = array('text' => $_LANG['back_auction_list'], 'href' => 'auction.php?act=list&' . list_link_postfix());
-                    sys_msg($_LANG['batch_drop_ok'], 0, $links);
+                    $links[] = array('text' => $GLOBALS['_LANG']['back_auction_list'], 'href' => 'auction.php?act=list&' . list_link_postfix());
+                    sys_msg($GLOBALS['_LANG']['batch_drop_ok'], 0, $links);
                 }
             }
         }
@@ -144,18 +144,18 @@ class Auction extends Init
             $id = intval($_GET['id']);
             $auction = auction_info($id);
             if (empty($auction)) {
-                sys_msg($_LANG['auction_not_exist']);
+                sys_msg($GLOBALS['_LANG']['auction_not_exist']);
             }
-            $smarty->assign('auction', auction_info($id));
+            $GLOBALS['smarty']->assign('auction', auction_info($id));
 
             /* 出价记录 */
-            $smarty->assign('auction_log', auction_log($id));
+            $GLOBALS['smarty']->assign('auction_log', auction_log($id));
 
             /* 模板赋值 */
-            $smarty->assign('ur_here', $_LANG['auction_log']);
-            $smarty->assign('action_link', array('href' => 'auction.php?act=list&' . list_link_postfix(), 'text' => $_LANG['auction_list']));
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['auction_log']);
+            $GLOBALS['smarty']->assign('action_link', array('href' => 'auction.php?act=list&' . list_link_postfix(), 'text' => $GLOBALS['_LANG']['auction_list']));
             assign_query_info();
-            $smarty->display('auction_log.htm');
+            $GLOBALS['smarty']->display('auction_log.htm');
         }
 
         /*------------------------------------------------------ */
@@ -168,7 +168,7 @@ class Auction extends Init
 
             /* 是否添加 */
             $is_add = $_REQUEST['act'] == 'add';
-            $smarty->assign('form_action', $is_add ? 'insert' : 'update');
+            $GLOBALS['smarty']->assign('form_action', $is_add ? 'insert' : 'update');
 
             /* 初始化、取得拍卖活动信息 */
             if ($is_add) {
@@ -178,7 +178,7 @@ class Auction extends Init
                     'act_desc' => '',
                     'goods_id' => 0,
                     'product_id' => 0,
-                    'goods_name' => $_LANG['pls_search_goods'],
+                    'goods_name' => $GLOBALS['_LANG']['pls_search_goods'],
                     'start_time' => date('Y-m-d', time() + 86400),
                     'end_time' => date('Y-m-d', time() + 4 * 86400),
                     'deposit' => 0,
@@ -193,28 +193,28 @@ class Auction extends Init
                 $id = intval($_GET['id']);
                 $auction = auction_info($id, true);
                 if (empty($auction)) {
-                    sys_msg($_LANG['auction_not_exist']);
+                    sys_msg($GLOBALS['_LANG']['auction_not_exist']);
                 }
-                $auction['status'] = $_LANG['auction_status'][$auction['status_no']];
-                $smarty->assign('bid_user_count', sprintf($_LANG['bid_user_count'], $auction['bid_user_count']));
+                $auction['status'] = $GLOBALS['_LANG']['auction_status'][$auction['status_no']];
+                $GLOBALS['smarty']->assign('bid_user_count', sprintf($GLOBALS['_LANG']['bid_user_count'], $auction['bid_user_count']));
             }
-            $smarty->assign('auction', $auction);
+            $GLOBALS['smarty']->assign('auction', $auction);
 
             /* 赋值时间控件的语言 */
-            $smarty->assign('cfg_lang', $_CFG['lang']);
+            $GLOBALS['smarty']->assign('cfg_lang', $GLOBALS['_CFG']['lang']);
 
             /* 商品货品表 */
-            $smarty->assign('good_products_select', get_good_products_select($auction['goods_id']));
+            $GLOBALS['smarty']->assign('good_products_select', get_good_products_select($auction['goods_id']));
 
             /* 显示模板 */
             if ($is_add) {
-                $smarty->assign('ur_here', $_LANG['add_auction']);
+                $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['add_auction']);
             } else {
-                $smarty->assign('ur_here', $_LANG['edit_auction']);
+                $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['edit_auction']);
             }
-            $smarty->assign('action_link', $this->list_link($is_add));
+            $GLOBALS['smarty']->assign('action_link', $this->list_link($is_add));
             assign_query_info();
-            $smarty->display('auction_info.htm');
+            $GLOBALS['smarty']->display('auction_info.htm');
         }
 
         /*------------------------------------------------------ */
@@ -231,12 +231,12 @@ class Auction extends Init
             /* 检查是否选择了商品 */
             $goods_id = intval($_POST['goods_id']);
             if ($goods_id <= 0) {
-                sys_msg($_LANG['pls_select_goods']);
+                sys_msg($GLOBALS['_LANG']['pls_select_goods']);
             }
-            $sql = "SELECT goods_name FROM " . $ecs->table('goods') . " WHERE goods_id = '$goods_id'";
-            $row = $db->getRow($sql);
+            $sql = "SELECT goods_name FROM " . $GLOBALS['ecs']->table('goods') . " WHERE goods_id = '$goods_id'";
+            $row = $GLOBALS['db']->getRow($sql);
             if (empty($row)) {
-                sys_msg($_LANG['goods_not_exist']);
+                sys_msg($GLOBALS['_LANG']['goods_not_exist']);
             }
             $goods_name = $row['goods_name'];
 
@@ -263,10 +263,10 @@ class Auction extends Init
             /* 保存数据 */
             if ($is_add) {
                 $auction['is_finished'] = 0;
-                $db->autoExecute($ecs->table('goods_activity'), $auction, 'INSERT');
-                $auction['act_id'] = $db->insert_id();
+                $GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('goods_activity'), $auction, 'INSERT');
+                $auction['act_id'] = $GLOBALS['db']->insert_id();
             } else {
-                $db->autoExecute($ecs->table('goods_activity'), $auction, 'UPDATE', "act_id = '$auction[act_id]'");
+                $GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('goods_activity'), $auction, 'UPDATE', "act_id = '$auction[act_id]'");
             }
 
             /* 记日志 */
@@ -282,15 +282,15 @@ class Auction extends Init
             /* 提示信息 */
             if ($is_add) {
                 $links = array(
-                    array('href' => 'auction.php?act=add', 'text' => $_LANG['continue_add_auction']),
-                    array('href' => 'auction.php?act=list', 'text' => $_LANG['back_auction_list'])
+                    array('href' => 'auction.php?act=add', 'text' => $GLOBALS['_LANG']['continue_add_auction']),
+                    array('href' => 'auction.php?act=list', 'text' => $GLOBALS['_LANG']['back_auction_list'])
                 );
-                sys_msg($_LANG['add_auction_ok'], 0, $links);
+                sys_msg($GLOBALS['_LANG']['add_auction_ok'], 0, $links);
             } else {
                 $links = array(
-                    array('href' => 'auction.php?act=list&' . list_link_postfix(), 'text' => $_LANG['back_auction_list'])
+                    array('href' => 'auction.php?act=list&' . list_link_postfix(), 'text' => $GLOBALS['_LANG']['back_auction_list'])
                 );
-                sys_msg($_LANG['edit_auction_ok'], 0, $links);
+                sys_msg($GLOBALS['_LANG']['edit_auction_ok'], 0, $links);
             }
         }
 
@@ -309,13 +309,13 @@ class Auction extends Init
             $id = intval($_POST['id']);
             $auction = auction_info($id);
             if (empty($auction)) {
-                sys_msg($_LANG['auction_not_exist']);
+                sys_msg($GLOBALS['_LANG']['auction_not_exist']);
             }
             if ($auction['status_no'] != FINISHED) {
-                sys_msg($_LANG['invalid_status']);
+                sys_msg($GLOBALS['_LANG']['invalid_status']);
             }
             if ($auction['deposit'] <= 0) {
-                sys_msg($_LANG['no_deposit']);
+                sys_msg($GLOBALS['_LANG']['no_deposit']);
             }
 
             /* 处理保证金 */
@@ -328,7 +328,7 @@ class Auction extends Init
                     (-1) * $auction['deposit'],
                     0,
                     0,
-                    sprintf($_LANG['unfreeze_auction_deposit'], $auction['act_name'])
+                    sprintf($GLOBALS['_LANG']['unfreeze_auction_deposit'], $auction['act_name'])
                 );
             } else {
                 /* 扣除 */
@@ -338,7 +338,7 @@ class Auction extends Init
                     (-1) * $auction['deposit'],
                     0,
                     0,
-                    sprintf($_LANG['deduct_auction_deposit'], $auction['act_name'])
+                    sprintf($GLOBALS['_LANG']['deduct_auction_deposit'], $auction['act_name'])
                 );
             }
 
@@ -349,7 +349,7 @@ class Auction extends Init
             clear_cache_files();
 
             /* 提示信息 */
-            sys_msg($_LANG['settle_deposit_ok']);
+            sys_msg($GLOBALS['_LANG']['settle_deposit_ok']);
         }
 
         /*------------------------------------------------------ */

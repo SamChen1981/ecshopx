@@ -9,28 +9,28 @@ class Agency extends Init
 {
     public function index()
     {
-        $exc = new exchange($ecs->table('agency'), $db, 'agency_id', 'agency_name');
+        $exc = new Exchange($GLOBALS['ecs']->table('agency'), $db, 'agency_id', 'agency_name');
 
         /*------------------------------------------------------ */
         //-- 办事处列表
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
-            $smarty->assign('ur_here', $_LANG['agency_list']);
-            $smarty->assign('action_link', array('text' => $_LANG['add_agency'], 'href' => 'agency.php?act=add'));
-            $smarty->assign('full_page', 1);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['agency_list']);
+            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['add_agency'], 'href' => 'agency.php?act=add'));
+            $GLOBALS['smarty']->assign('full_page', 1);
 
             $agency_list = $this->get_agencylist();
-            $smarty->assign('agency_list', $agency_list['agency']);
-            $smarty->assign('filter', $agency_list['filter']);
-            $smarty->assign('record_count', $agency_list['record_count']);
-            $smarty->assign('page_count', $agency_list['page_count']);
+            $GLOBALS['smarty']->assign('agency_list', $agency_list['agency']);
+            $GLOBALS['smarty']->assign('filter', $agency_list['filter']);
+            $GLOBALS['smarty']->assign('record_count', $agency_list['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $agency_list['page_count']);
 
             /* 排序标记 */
             $sort_flag = sort_flag($agency_list['filter']);
-            $smarty->assign($sort_flag['tag'], $sort_flag['img']);
+            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
             assign_query_info();
-            $smarty->display('agency_list.htm');
+            $GLOBALS['smarty']->display('agency_list.htm');
         }
 
         /*------------------------------------------------------ */
@@ -38,17 +38,17 @@ class Agency extends Init
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'query') {
             $agency_list = $this->get_agencylist();
-            $smarty->assign('agency_list', $agency_list['agency']);
-            $smarty->assign('filter', $agency_list['filter']);
-            $smarty->assign('record_count', $agency_list['record_count']);
-            $smarty->assign('page_count', $agency_list['page_count']);
+            $GLOBALS['smarty']->assign('agency_list', $agency_list['agency']);
+            $GLOBALS['smarty']->assign('filter', $agency_list['filter']);
+            $GLOBALS['smarty']->assign('record_count', $agency_list['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $agency_list['page_count']);
 
             /* 排序标记 */
             $sort_flag = sort_flag($agency_list['filter']);
-            $smarty->assign($sort_flag['tag'], $sort_flag['img']);
+            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
             make_json_result(
-                $smarty->fetch('agency_list.htm'),
+                $GLOBALS['smarty']->fetch('agency_list.htm'),
                 '',
                 array('filter' => $agency_list['filter'], 'page_count' => $agency_list['page_count'])
             );
@@ -65,14 +65,14 @@ class Agency extends Init
 
             /* 检查名称是否重复 */
             if ($exc->num("agency_name", $name, $id) != 0) {
-                make_json_error(sprintf($_LANG['agency_name_exist'], $name));
+                make_json_error(sprintf($GLOBALS['_LANG']['agency_name_exist'], $name));
             } else {
                 if ($exc->edit("agency_name = '$name'", $id)) {
                     admin_log($name, 'edit', 'agency');
                     clear_cache_files();
                     make_json_result(stripslashes($name));
                 } else {
-                    make_json_result(sprintf($_LANG['agency_edit_fail'], $name));
+                    make_json_result(sprintf($GLOBALS['_LANG']['agency_edit_fail'], $name));
                 }
             }
         }
@@ -90,8 +90,8 @@ class Agency extends Init
             /* 更新管理员、配送地区、发货单、退货单和订单关联的办事处 */
             $table_array = array('admin_user', 'region', 'order_info', 'delivery_order', 'back_order');
             foreach ($table_array as $value) {
-                $sql = "UPDATE " . $ecs->table($value) . " SET agency_id = 0 WHERE agency_id = '$id'";
-                $db->query($sql);
+                $sql = "UPDATE " . $GLOBALS['ecs']->table($value) . " SET agency_id = 0 WHERE agency_id = '$id'";
+                $GLOBALS['db']->query($sql);
             }
 
             /* 记日志 */
@@ -112,7 +112,7 @@ class Agency extends Init
         elseif ($_REQUEST['act'] == 'batch') {
             /* 取得要操作的记录编号 */
             if (empty($_POST['checkboxes'])) {
-                sys_msg($_LANG['no_record_selected']);
+                sys_msg($GLOBALS['_LANG']['no_record_selected']);
             } else {
                 /* 检查权限 */
                 admin_priv('agency_manage');
@@ -121,15 +121,15 @@ class Agency extends Init
 
                 if (isset($_POST['remove'])) {
                     /* 删除记录 */
-                    $sql = "DELETE FROM " . $ecs->table('agency') .
+                    $sql = "DELETE FROM " . $GLOBALS['ecs']->table('agency') .
                         " WHERE agency_id " . db_create_in($ids);
-                    $db->query($sql);
+                    $GLOBALS['db']->query($sql);
 
                     /* 更新管理员、配送地区、发货单、退货单和订单关联的办事处 */
                     $table_array = array('admin_user', 'region', 'order_info', 'delivery_order', 'back_order');
                     foreach ($table_array as $value) {
-                        $sql = "UPDATE " . $ecs->table($value) . " SET agency_id = 0 WHERE agency_id " . db_create_in($ids) . " ";
-                        $db->query($sql);
+                        $sql = "UPDATE " . $GLOBALS['ecs']->table($value) . " SET agency_id = 0 WHERE agency_id " . db_create_in($ids) . " ";
+                        $GLOBALS['db']->query($sql);
                     }
 
                     /* 记日志 */
@@ -138,7 +138,7 @@ class Agency extends Init
                     /* 清除缓存 */
                     clear_cache_files();
 
-                    sys_msg($_LANG['batch_drop_ok']);
+                    sys_msg($GLOBALS['_LANG']['batch_drop_ok']);
                 }
             }
         }
@@ -152,7 +152,7 @@ class Agency extends Init
 
             /* 是否添加 */
             $is_add = $_REQUEST['act'] == 'add';
-            $smarty->assign('form_action', $is_add ? 'insert' : 'update');
+            $GLOBALS['smarty']->assign('form_action', $is_add ? 'insert' : 'update');
 
             /* 初始化、取得办事处信息 */
             if ($is_add) {
@@ -168,16 +168,16 @@ class Agency extends Init
                 }
 
                 $id = $_GET['id'];
-                $sql = "SELECT * FROM " . $ecs->table('agency') . " WHERE agency_id = '$id'";
-                $agency = $db->getRow($sql);
+                $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('agency') . " WHERE agency_id = '$id'";
+                $agency = $GLOBALS['db']->getRow($sql);
                 if (empty($agency)) {
                     sys_msg('agency does not exist');
                 }
 
                 /* 关联的地区 */
-                $sql = "SELECT region_id, region_name FROM " . $ecs->table('region') .
+                $sql = "SELECT region_id, region_name FROM " . $GLOBALS['ecs']->table('region') .
                     " WHERE agency_id = '$id'";
-                $agency['region_list'] = $db->getAll($sql);
+                $agency['region_list'] = $GLOBALS['db']->getAll($sql);
             }
 
             /* 取得所有管理员，标注哪些是该办事处的('this')，哪些是空闲的('free')，哪些是别的办事处的('other') */
@@ -186,29 +186,29 @@ class Agency extends Init
                 "WHEN agency_id = '$agency[agency_id]' THEN 'this' " .
                 "ELSE 'other' END " .
                 "AS type " .
-                "FROM " . $ecs->table('admin_user');
-            $agency['admin_list'] = $db->getAll($sql);
+                "FROM " . $GLOBALS['ecs']->table('admin_user');
+            $agency['admin_list'] = $GLOBALS['db']->getAll($sql);
 
-            $smarty->assign('agency', $agency);
+            $GLOBALS['smarty']->assign('agency', $agency);
 
             /* 取得地区 */
             $country_list = get_regions();
-            $smarty->assign('countries', $country_list);
+            $GLOBALS['smarty']->assign('countries', $country_list);
 
             /* 显示模板 */
             if ($is_add) {
-                $smarty->assign('ur_here', $_LANG['add_agency']);
+                $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['add_agency']);
             } else {
-                $smarty->assign('ur_here', $_LANG['edit_agency']);
+                $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['edit_agency']);
             }
             if ($is_add) {
                 $href = 'agency.php?act=list';
             } else {
                 $href = 'agency.php?act=list&' . list_link_postfix();
             }
-            $smarty->assign('action_link', array('href' => $href, 'text' => $_LANG['agency_list']));
+            $GLOBALS['smarty']->assign('action_link', array('href' => $href, 'text' => $GLOBALS['_LANG']['agency_list']));
             assign_query_info();
-            $smarty->display('agency_info.htm');
+            $GLOBALS['smarty']->display('agency_info.htm');
         }
 
         /*------------------------------------------------------ */
@@ -230,39 +230,39 @@ class Agency extends Init
 
             /* 判断名称是否重复 */
             if (!$exc->is_only('agency_name', $agency['agency_name'], $agency['agency_id'])) {
-                sys_msg($_LANG['agency_name_exist']);
+                sys_msg($GLOBALS['_LANG']['agency_name_exist']);
             }
 
             /* 检查是否选择了地区 */
             if (empty($_POST['regions'])) {
-                sys_msg($_LANG['no_regions']);
+                sys_msg($GLOBALS['_LANG']['no_regions']);
             }
 
             /* 保存办事处信息 */
             if ($is_add) {
-                $db->autoExecute($ecs->table('agency'), $agency, 'INSERT');
-                $agency['agency_id'] = $db->insert_id();
+                $GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('agency'), $agency, 'INSERT');
+                $agency['agency_id'] = $GLOBALS['db']->insert_id();
             } else {
-                $db->autoExecute($ecs->table('agency'), $agency, 'UPDATE', "agency_id = '$agency[agency_id]'");
+                $GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('agency'), $agency, 'UPDATE', "agency_id = '$agency[agency_id]'");
             }
 
             /* 更新管理员表和地区表 */
             if (!$is_add) {
-                $sql = "UPDATE " . $ecs->table('admin_user') . " SET agency_id = 0 WHERE agency_id = '$agency[agency_id]'";
-                $db->query($sql);
+                $sql = "UPDATE " . $GLOBALS['ecs']->table('admin_user') . " SET agency_id = 0 WHERE agency_id = '$agency[agency_id]'";
+                $GLOBALS['db']->query($sql);
 
-                $sql = "UPDATE " . $ecs->table('region') . " SET agency_id = 0 WHERE agency_id = '$agency[agency_id]'";
-                $db->query($sql);
+                $sql = "UPDATE " . $GLOBALS['ecs']->table('region') . " SET agency_id = 0 WHERE agency_id = '$agency[agency_id]'";
+                $GLOBALS['db']->query($sql);
             }
 
             if (isset($_POST['admins'])) {
-                $sql = "UPDATE " . $ecs->table('admin_user') . " SET agency_id = '$agency[agency_id]' WHERE user_id " . db_create_in($_POST['admins']);
-                $db->query($sql);
+                $sql = "UPDATE " . $GLOBALS['ecs']->table('admin_user') . " SET agency_id = '$agency[agency_id]' WHERE user_id " . db_create_in($_POST['admins']);
+                $GLOBALS['db']->query($sql);
             }
 
             if (isset($_POST['regions'])) {
-                $sql = "UPDATE " . $ecs->table('region') . " SET agency_id = '$agency[agency_id]' WHERE region_id " . db_create_in($_POST['regions']);
-                $db->query($sql);
+                $sql = "UPDATE " . $GLOBALS['ecs']->table('region') . " SET agency_id = '$agency[agency_id]' WHERE region_id " . db_create_in($_POST['regions']);
+                $GLOBALS['db']->query($sql);
             }
 
             /* 记日志 */
@@ -278,15 +278,15 @@ class Agency extends Init
             /* 提示信息 */
             if ($is_add) {
                 $links = array(
-                    array('href' => 'agency.php?act=add', 'text' => $_LANG['continue_add_agency']),
-                    array('href' => 'agency.php?act=list', 'text' => $_LANG['back_agency_list'])
+                    array('href' => 'agency.php?act=add', 'text' => $GLOBALS['_LANG']['continue_add_agency']),
+                    array('href' => 'agency.php?act=list', 'text' => $GLOBALS['_LANG']['back_agency_list'])
                 );
-                sys_msg($_LANG['add_agency_ok'], 0, $links);
+                sys_msg($GLOBALS['_LANG']['add_agency_ok'], 0, $links);
             } else {
                 $links = array(
-                    array('href' => 'agency.php?act=list&' . list_link_postfix(), 'text' => $_LANG['back_agency_list'])
+                    array('href' => 'agency.php?act=list&' . list_link_postfix(), 'text' => $GLOBALS['_LANG']['back_agency_list'])
                 );
-                sys_msg($_LANG['edit_agency_ok'], 0, $links);
+                sys_msg($GLOBALS['_LANG']['edit_agency_ok'], 0, $links);
             }
         }
     }

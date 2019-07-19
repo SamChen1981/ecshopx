@@ -6,8 +6,6 @@
 
 $cron_lang = ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/cron/auto_manage.php';
 if (file_exists($cron_lang)) {
-    global $_LANG;
-
     include_once($cron_lang);
 }
 
@@ -40,7 +38,7 @@ if (isset($set_modules) && $set_modules == true) {
 $time = gmtime();
 $limit = !empty($cron['auto_manage_count']) ? $cron['auto_manage_count'] : 5;
 $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('auto_manage') . " WHERE starttime > '0' AND starttime <= '$time' OR endtime > '0' AND endtime <= '$time' LIMIT $limit";
-$autodb = $db->getAll($sql);
+$autodb = $GLOBALS['db']->getAll($sql);
 foreach ($autodb as $key => $val) {
     $del = $up = false;
     if ($val['type'] == 'goods') {
@@ -66,7 +64,7 @@ foreach ($autodb as $key => $val) {
         } elseif ($val['starttime'] == $time && $time == $val['endtime']) {
             //下架时间 == 当前时间 == 上架时间
             $sql = "DELETE FROM " . $GLOBALS['ecs']->table('auto_manage') . "WHERE item_id = '$val[item_id]' AND type = '$val[type]'";
-            $db->query($sql);
+            $GLOBALS['db']->query($sql);
             continue;
         } elseif ($val['starttime'] > $val['endtime']) {
             // 下架时间 < 上架时间 < 当前时间
@@ -79,7 +77,7 @@ foreach ($autodb as $key => $val) {
         } else {
             // 上架时间 = 下架时间 < 当前时间
             $sql = "DELETE FROM " . $GLOBALS['ecs']->table('auto_manage') . "WHERE item_id = '$val[item_id]' AND type = '$val[type]'";
-            $db->query($sql);
+            $GLOBALS['db']->query($sql);
 
             continue;
         }
@@ -106,16 +104,16 @@ foreach ($autodb as $key => $val) {
             $sql = "UPDATE " . $GLOBALS['ecs']->table('article') . " SET is_open = 0 $where";
         }
     }
-    $db->query($sql);
+    $GLOBALS['db']->query($sql);
     if ($del) {
         $sql = "DELETE FROM " . $GLOBALS['ecs']->table('auto_manage') . "WHERE item_id = '$val[item_id]' AND type = '$val[type]'";
-        $db->query($sql);
+        $GLOBALS['db']->query($sql);
     } else {
         if ($up) {
             $sql = "UPDATE " . $GLOBALS['ecs']->table('auto_manage') . " SET starttime = 0 WHERE item_id = '$val[item_id]' AND type = '$val[type]'";
         } else {
             $sql = "UPDATE " . $GLOBALS['ecs']->table('auto_manage') . " SET endtime = 0 WHERE item_id = '$val[item_id]' AND type = '$val[type]'";
         }
-        $db->query($sql);
+        $GLOBALS['db']->query($sql);
     }
 }

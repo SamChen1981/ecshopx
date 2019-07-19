@@ -56,29 +56,29 @@ class Init extends Controller
         }
 
         /* 创建 SHOP 对象 */
-        $ecs = new Shop(config('database.database'), config('database.db_prefix'));
-        define('DATA_DIR', $ecs->data_dir());
-        define('IMAGE_DIR', $ecs->image_dir());
+        $GLOBALS['ecs'] = new Shop(config('database.database'), config('database.db_prefix'));
+        define('DATA_DIR', $GLOBALS['ecs']->data_dir());
+        define('IMAGE_DIR', $GLOBALS['ecs']->image_dir());
 
         /* 初始化数据库类 */
-        $db = new Mysql(config('database.database'), config('database.database'), config('database.database'), config('database.database'));
-        $db->set_disable_cache_tables(array($ecs->table('sessions'), $ecs->table('sessions_data'), $ecs->table('cart')));
+        $GLOBALS['db'] = new Mysql(config('database.database'), config('database.database'), config('database.database'), config('database.database'));
+        $GLOBALS['db']->set_disable_cache_tables(array($GLOBALS['ecs']->table('sessions'), $GLOBALS['ecs']->table('sessions_data'), $GLOBALS['ecs']->table('cart')));
 
         /* 创建错误处理对象 */
-        $err = new Error('message.dwt');
+        $GLOBALS['err'] = new Error('message.dwt');
 
         /* 载入系统参数 */
-        $_CFG = load_config();
+        $GLOBALS['_CFG'] = load_config();
         /* 载入语言文件 */
-        require(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/common.php');
+        require(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/common.php');
 
         $document_uri = $_SERVER['DOCUMENT_URI'];
         $document_uris = ['/captcha.php', '/yunqi_check.php'];
-        if ($_CFG['shop_closed'] == 1 && !in_array($document_uri, $document_uris)) {
+        if ($GLOBALS['_CFG']['shop_closed'] == 1 && !in_array($document_uri, $document_uris)) {
             /* 商店关闭了，输出关闭的消息 */
             header('Content-type: text/html; charset=' . EC_CHARSET);
 
-            die('<div style="margin: 150px; text-align: center; font-size: 14px"><p>' . $_LANG['shop_closed'] . '</p><p>' . $_CFG['close_comment'] . '</p></div>');
+            die('<div style="margin: 150px; text-align: center; font-size: 14px"><p>' . $GLOBALS['_LANG']['shop_closed'] . '</p><p>' . $GLOBALS['_CFG']['close_comment'] . '</p></div>');
         }
 
         if (is_spider()) {
@@ -86,8 +86,8 @@ class Init extends Controller
             if (!defined('INIT_NO_USERS')) {
                 define('INIT_NO_USERS', true);
                 /* 整合UC后，如果是蜘蛛访问，初始化UC需要的常量 */
-                if ($_CFG['integrate_code'] == 'ucenter') {
-                    $user = init_users();
+                if ($GLOBALS['_CFG']['integrate_code'] == 'ucenter') {
+                    $GLOBALS['user'] = init_users();
                 }
             }
             $_SESSION = array();
@@ -100,10 +100,9 @@ class Init extends Controller
 
         if (!defined('INIT_NO_USERS')) {
             /* 初始化session */
+            $GLOBALS['sess'] = new Session($db, $GLOBALS['ecs']->table('sessions'), $GLOBALS['ecs']->table('sessions_data'));
 
-            $sess = new Session($db, $ecs->table('sessions'), $ecs->table('sessions_data'));
-
-            define('SESS_ID', $sess->get_session_id());
+            define('SESS_ID', $GLOBALS['sess']->get_session_id());
         }
         if (isset($_SERVER['PHP_SELF'])) {
             $_SERVER['PHP_SELF'] = htmlspecialchars($_SERVER['PHP_SELF']);
@@ -113,38 +112,38 @@ class Init extends Controller
             header('Content-type: text/html; charset=' . EC_CHARSET);
 
             /* 创建 Smarty 对象。*/
-            $smarty = new Template();
+            $GLOBALS['smarty'] = new Template();
 
-            $smarty->cache_lifetime = $_CFG['cache_time'];
-            $smarty->template_dir = ROOT_PATH . 'themes/' . $_CFG['template'];
-            $smarty->cache_dir = ROOT_PATH . 'temp/caches';
-            $smarty->compile_dir = ROOT_PATH . 'temp/compiled';
+            $GLOBALS['smarty']->cache_lifetime = $GLOBALS['_CFG']['cache_time'];
+            $GLOBALS['smarty']->template_dir = ROOT_PATH . 'themes/' . $GLOBALS['_CFG']['template'];
+            $GLOBALS['smarty']->cache_dir = ROOT_PATH . 'temp/caches';
+            $GLOBALS['smarty']->compile_dir = ROOT_PATH . 'temp/compiled';
 
             if ((DEBUG_MODE & 2) == 2) {
-                $smarty->direct_output = true;
-                $smarty->force_compile = true;
+                $GLOBALS['smarty']->direct_output = true;
+                $GLOBALS['smarty']->force_compile = true;
             } else {
-                $smarty->direct_output = false;
-                $smarty->force_compile = false;
+                $GLOBALS['smarty']->direct_output = false;
+                $GLOBALS['smarty']->force_compile = false;
             }
 
-            $smarty->assign('lang', $_LANG);
-            $smarty->assign('ecs_charset', EC_CHARSET);
-            $smarty->assign('template_dir', 'themes/' . $_CFG['template']);
-            if (!empty($_CFG['stylename'])) {
-                $smarty->assign('ecs_css_path', 'themes/' . $_CFG['template'] . '/style_' . $_CFG['stylename'] . '.css');
+            $GLOBALS['smarty']->assign('lang', $GLOBALS['_LANG']);
+            $GLOBALS['smarty']->assign('ecs_charset', EC_CHARSET);
+            $GLOBALS['smarty']->assign('template_dir', 'themes/' . $GLOBALS['_CFG']['template']);
+            if (!empty($GLOBALS['_CFG']['stylename'])) {
+                $GLOBALS['smarty']->assign('ecs_css_path', 'themes/' . $GLOBALS['_CFG']['template'] . '/style_' . $GLOBALS['_CFG']['stylename'] . '.css');
             } else {
-                $smarty->assign('ecs_css_path', 'themes/' . $_CFG['template'] . '/style.css');
+                $GLOBALS['smarty']->assign('ecs_css_path', 'themes/' . $GLOBALS['_CFG']['template'] . '/style.css');
             }
         }
 
         if (!defined('INIT_NO_USERS')) {
             /* 会员信息 */
-            $user = init_users();
+            $GLOBALS['user'] = init_users();
 
             if (!isset($_SESSION['user_id'])) {
                 /* 获取投放站点的名称 */
-                $site_name = isset($_GET['from']) ? htmlspecialchars($_GET['from']) : addslashes($_LANG['self_site']);
+                $site_name = isset($_GET['from']) ? htmlspecialchars($_GET['from']) : addslashes($GLOBALS['_LANG']['self_site']);
                 $from_ad = !empty($_GET['ad_id']) ? intval($_GET['ad_id']) : 0;
 
                 $_SESSION['from_ad'] = $from_ad; // 用户点击的广告ID
@@ -158,7 +157,7 @@ class Init extends Controller
             }
 
             if (empty($_SESSION['user_id'])) {
-                if ($user->get_cookie()) {
+                if ($GLOBALS['user']->get_cookie()) {
                     /* 如果会员已经登录并且还没有获得会员的帐户余额、积分以及优惠券 */
                     if ($_SESSION['user_id'] > 0) {
                         update_user_info();
@@ -184,10 +183,10 @@ class Init extends Controller
             if (!empty($_COOKIE['ECS']['user_id']) && !empty($_COOKIE['ECS']['password'])) {
                 // 找到了cookie, 验证cookie信息
                 $sql = 'SELECT user_id, user_name, password ' .
-                    ' FROM ' . $ecs->table('users') .
+                    ' FROM ' . $GLOBALS['ecs']->table('users') .
                     " WHERE user_id = '" . intval($_COOKIE['ECS']['user_id']) . "' AND password = '" . $_COOKIE['ECS']['password'] . "'";
 
-                $row = $db->GetRow($sql);
+                $row = $GLOBALS['db']->GetRow($sql);
 
                 if (!$row) {
                     // 没有找到这个记录
@@ -202,7 +201,7 @@ class Init extends Controller
             }
 
             if (isset($smarty)) {
-                $smarty->assign('ecs_session', $_SESSION);
+                $GLOBALS['smarty']->assign('ecs_session', $_SESSION);
             }
         }
 

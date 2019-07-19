@@ -8,8 +8,6 @@ require(ROOT_PATH . 'includes/safety.php');
 $payment_lang = ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/payment/alipay.php';
 
 if (file_exists($payment_lang)) {
-    global $_LANG;
-
     include_once($payment_lang);
 }
 

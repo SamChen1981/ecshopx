@@ -32,14 +32,14 @@ class Affiliate extends Init
 
 
         $tpl = ROOT_PATH . DATA_DIR . '/affiliate.html';
-        if (!$smarty->is_cached($tpl, $cache_id)) {
+        if (!$GLOBALS['smarty']->is_cached($tpl, $cache_id)) {
             $time = gmtime();
             /* 根据参数生成查询语句 */
 
-            $goods_url = $ecs->url() . "goods.php?u=$userid&id=";
+            $goods_url = $GLOBALS['ecs']->url() . "goods.php?u=$userid&id=";
             $goods = get_goods_info($goodsid);
-            $goods['goods_thumb'] = (strpos($goods['goods_thumb'], 'http://') === false && strpos($goods['goods_thumb'], 'https://') === false) ? $ecs->url() . $goods['goods_thumb'] : $goods['goods_thumb'];
-            $goods['goods_img'] = (strpos($goods['goods_img'], 'http://') === false && strpos($goods['goods_img'], 'https://') === false) ? $ecs->url() . $goods['goods_img'] : $goods['goods_img'];
+            $goods['goods_thumb'] = (strpos($goods['goods_thumb'], 'http://') === false && strpos($goods['goods_thumb'], 'https://') === false) ? $GLOBALS['ecs']->url() . $goods['goods_thumb'] : $goods['goods_thumb'];
+            $goods['goods_img'] = (strpos($goods['goods_img'], 'http://') === false && strpos($goods['goods_img'], 'https://') === false) ? $GLOBALS['ecs']->url() . $goods['goods_img'] : $goods['goods_img'];
             $goods['shop_price'] = price_format($goods['shop_price']);
 
             /*if ($charset != 'UTF8')
@@ -48,14 +48,14 @@ class Affiliate extends Init
                 $goods['shop_price'] = ecs_iconv('UTF8', $charset, $goods['shop_price']);
             }*/
 
-            $smarty->assign('goods', $goods);
-            $smarty->assign('userid', $userid);
-            $smarty->assign('type', $type);
+            $GLOBALS['smarty']->assign('goods', $goods);
+            $GLOBALS['smarty']->assign('userid', $userid);
+            $GLOBALS['smarty']->assign('type', $type);
 
-            $smarty->assign('url', $ecs->url());
-            $smarty->assign('goods_url', $goods_url);
+            $GLOBALS['smarty']->assign('url', $GLOBALS['ecs']->url());
+            $GLOBALS['smarty']->assign('goods_url', $goods_url);
         }
-        $output = $smarty->fetch($tpl, $cache_id);
+        $output = $GLOBALS['smarty']->fetch($tpl, $cache_id);
         $output = str_replace("\r", '', $output);
         $output = str_replace("\n", '', $output);
 

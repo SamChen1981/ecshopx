@@ -1370,36 +1370,34 @@ function assign_comment($id, $type, $page = 1)
 
 function assign_template($ctype = '', $catlist = array())
 {
-    global $smarty;
-
-    $smarty->assign('image_width', $GLOBALS['_CFG']['image_width']);
-    $smarty->assign('image_height', $GLOBALS['_CFG']['image_height']);
-    $smarty->assign('points_name', $GLOBALS['_CFG']['integral_name']);
-    $smarty->assign('qq', explode(',', $GLOBALS['_CFG']['qq']));
-    $smarty->assign('ww', explode(',', $GLOBALS['_CFG']['ww']));
-    $smarty->assign('ym', explode(',', $GLOBALS['_CFG']['ym']));
-    $smarty->assign('msn', explode(',', $GLOBALS['_CFG']['msn']));
-    $smarty->assign('skype', explode(',', $GLOBALS['_CFG']['skype']));
-    $smarty->assign('stats_code', $GLOBALS['_CFG']['stats_code']);
-    $smarty->assign('copyright', sprintf($GLOBALS['_LANG']['copyright'], date('Y'), $GLOBALS['_CFG']['shop_name']));
-    $smarty->assign('shop_name', $GLOBALS['_CFG']['shop_name']);
-    $smarty->assign('service_email', $GLOBALS['_CFG']['service_email']);
-    $smarty->assign('service_phone', $GLOBALS['_CFG']['service_phone']);
-    $smarty->assign('shop_address', $GLOBALS['_CFG']['shop_address']);
-    $smarty->assign('licensed', license_info());
-    $smarty->assign('ecs_version', VERSION);
-    $smarty->assign('icp_number', $GLOBALS['_CFG']['icp_number']);
-    $smarty->assign('username', !empty($_SESSION['user_name']) ? $_SESSION['user_name'] : '');
-    $smarty->assign('category_list', cat_list(0, 0, true, 2, false));
-    $smarty->assign('catalog_list', cat_list(0, 0, false, 1, false));
-    $smarty->assign('navigator_list', get_navigator($ctype, $catlist));  //自定义导航栏
+    $GLOBALS['smarty']->assign('image_width', $GLOBALS['_CFG']['image_width']);
+    $GLOBALS['smarty']->assign('image_height', $GLOBALS['_CFG']['image_height']);
+    $GLOBALS['smarty']->assign('points_name', $GLOBALS['_CFG']['integral_name']);
+    $GLOBALS['smarty']->assign('qq', explode(',', $GLOBALS['_CFG']['qq']));
+    $GLOBALS['smarty']->assign('ww', explode(',', $GLOBALS['_CFG']['ww']));
+    $GLOBALS['smarty']->assign('ym', explode(',', $GLOBALS['_CFG']['ym']));
+    $GLOBALS['smarty']->assign('msn', explode(',', $GLOBALS['_CFG']['msn']));
+    $GLOBALS['smarty']->assign('skype', explode(',', $GLOBALS['_CFG']['skype']));
+    $GLOBALS['smarty']->assign('stats_code', $GLOBALS['_CFG']['stats_code']);
+    $GLOBALS['smarty']->assign('copyright', sprintf($GLOBALS['_LANG']['copyright'], date('Y'), $GLOBALS['_CFG']['shop_name']));
+    $GLOBALS['smarty']->assign('shop_name', $GLOBALS['_CFG']['shop_name']);
+    $GLOBALS['smarty']->assign('service_email', $GLOBALS['_CFG']['service_email']);
+    $GLOBALS['smarty']->assign('service_phone', $GLOBALS['_CFG']['service_phone']);
+    $GLOBALS['smarty']->assign('shop_address', $GLOBALS['_CFG']['shop_address']);
+    $GLOBALS['smarty']->assign('licensed', license_info());
+    $GLOBALS['smarty']->assign('ecs_version', VERSION);
+    $GLOBALS['smarty']->assign('icp_number', $GLOBALS['_CFG']['icp_number']);
+    $GLOBALS['smarty']->assign('username', !empty($_SESSION['user_name']) ? $_SESSION['user_name'] : '');
+    $GLOBALS['smarty']->assign('category_list', cat_list(0, 0, true, 2, false));
+    $GLOBALS['smarty']->assign('catalog_list', cat_list(0, 0, false, 1, false));
+    $GLOBALS['smarty']->assign('navigator_list', get_navigator($ctype, $catlist));  //自定义导航栏
 
     if (!empty($GLOBALS['_CFG']['search_keywords'])) {
         $searchkeywords = explode(',', trim($GLOBALS['_CFG']['search_keywords']));
     } else {
         $searchkeywords = array();
     }
-    $smarty->assign('searchkeywords', $searchkeywords);
+    $GLOBALS['smarty']->assign('searchkeywords', $searchkeywords);
 }
 
 /**
@@ -1596,8 +1594,6 @@ function get_article_parent_cats($cat)
  */
 function get_library_number($library, $template = null)
 {
-    global $page_libs;
-
     if (empty($template)) {
         $template = basename(PHP_SELF);
         $template = substr($template, 0, strrpos($template, '.'));

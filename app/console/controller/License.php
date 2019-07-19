@@ -22,16 +22,16 @@ class License extends Init
 
             $license = get_shop_license();
 
-            $smarty->assign('ur_here', $_LANG['license_here']);
-            $smarty->assign('is_download', '0');
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['license_here']);
+            $GLOBALS['smarty']->assign('is_download', '0');
             if ($license['certificate_id'] != '' && $license['token'] != '') {
-                $smarty->assign('is_download', '1');
+                $GLOBALS['smarty']->assign('is_download', '1');
             }
 
-            $smarty->assign('certificate_id', $license['certificate_id']);
-            $smarty->assign('token', $license['token']);
+            $GLOBALS['smarty']->assign('certificate_id', $license['certificate_id']);
+            $GLOBALS['smarty']->assign('token', $license['token']);
 
-            $smarty->display('license.htm');
+            $GLOBALS['smarty']->display('license.htm');
         }
 
         /*------------------------------------------------------ */
@@ -47,8 +47,8 @@ class License extends Init
             $license = get_shop_license();
 
             if ($license['certificate_id'] == '' || $license['token'] == '') {
-                $links[] = array('text' => $_LANG['back'], 'href' => 'license.php?act=list_edit');
-                sys_msg($_LANG['no_license_down'], 0, $links);
+                $links[] = array('text' => $GLOBALS['_LANG']['back'], 'href' => 'license.php?act=list_edit');
+                sys_msg($GLOBALS['_LANG']['no_license_down'], 0, $links);
             }
             /* 文件下载 */
             ecs_header("Content-Type:text/plain");
@@ -85,8 +85,8 @@ class License extends Init
 
             /* 恢复证书 */
             if (count($license_arr) != 2 || $license_arr[0] == '' || $license_arr[1] == '') {
-                $links[] = array('text' => $_LANG['back'], 'href' => 'license.php?act=list_edit');
-                sys_msg($_LANG['fail_license'], 1, $links);
+                $links[] = array('text' => $GLOBALS['_LANG']['back'], 'href' => 'license.php?act=list_edit');
+                sys_msg($GLOBALS['_LANG']['fail_license'], 1, $links);
             } else {
                 load_helper('main');
                 load_helper('license');
@@ -94,21 +94,21 @@ class License extends Init
                 // 证书登录
                 $login_result = license_login();
                 if ($login_result['flag'] != 'login_succ') {
-                    $links[] = array('text' => $_LANG['back'], 'href' => 'license.php?act=list_edit');
-                    sys_msg($_LANG['fail_license_login'], 1, $links);
+                    $links[] = array('text' => $GLOBALS['_LANG']['back'], 'href' => 'license.php?act=list_edit');
+                    sys_msg($GLOBALS['_LANG']['fail_license_login'], 1, $links);
                 }
 
-                $sql = "UPDATE " . $ecs->table('shop_config') . "
+                $sql = "UPDATE " . $GLOBALS['ecs']->table('shop_config') . "
                 SET value = '" . $license_arr[0] . "'
                 WHERE code = 'certificate_id'";
-                $db->query($sql);
-                $sql = "UPDATE " . $ecs->table('shop_config') . "
+                $GLOBALS['db']->query($sql);
+                $sql = "UPDATE " . $GLOBALS['ecs']->table('shop_config') . "
                 SET value = '" . $license_arr[1] . "'
                 WHERE code = 'token'";
-                $db->query($sql);
+                $GLOBALS['db']->query($sql);
 
-                $links[] = array('text' => $_LANG['back'], 'href' => 'license.php?act=list_edit');
-                sys_msg($_LANG['recover_license'], 0, $links);
+                $links[] = array('text' => $GLOBALS['_LANG']['back'], 'href' => 'license.php?act=list_edit');
+                sys_msg($GLOBALS['_LANG']['recover_license'], 0, $links);
             }
         }
 
@@ -120,13 +120,13 @@ class License extends Init
             /* 检查权限 */
             admin_priv('shop_authorized');
 
-            $sql = "UPDATE " . $ecs->table('shop_config') . "
+            $sql = "UPDATE " . $GLOBALS['ecs']->table('shop_config') . "
             SET value = ''
             WHERE code IN('certificate_id', 'token')";
-            $db->query($sql);
+            $GLOBALS['db']->query($sql);
 
-            $links[] = array('text' => $_LANG['back'], 'href' => 'license.php?act=list_edit');
-            sys_msg($_LANG['delete_license'], 0, $links);
+            $links[] = array('text' => $GLOBALS['_LANG']['back'], 'href' => 'license.php?act=list_edit');
+            sys_msg($GLOBALS['_LANG']['delete_license'], 0, $links);
         }
     }
 }

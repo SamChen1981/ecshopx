@@ -9,7 +9,7 @@ class Pm extends Init
 {
     public function index()
     {
-        if (empty($_SESSION['user_id']) || $_CFG['integrate_code'] == 'ecshop') {
+        if (empty($_SESSION['user_id']) || $GLOBALS['_CFG']['integrate_code'] == 'ecshop') {
             ecs_header('Location:./');
         }
 

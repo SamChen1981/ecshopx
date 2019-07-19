@@ -17,7 +17,7 @@ class Attribute extends Init
             $_REQUEST['act'] = 'list';
         }
 
-        $exc = new exchange($ecs->table("attribute"), $db, 'attr_id', 'attr_name');
+        $exc = new Exchange($GLOBALS['ecs']->table("attribute"), $db, 'attr_id', 'attr_name');
 
         /*------------------------------------------------------ */
         //-- 属性列表
@@ -25,24 +25,24 @@ class Attribute extends Init
         if ($_REQUEST['act'] == 'list') {
             $goods_type = isset($_GET['goods_type']) ? intval($_GET['goods_type']) : 0;
 
-            $smarty->assign('ur_here', $_LANG['09_attribute_list']);
-            $smarty->assign('action_link', array('href' => 'attribute.php?act=add&goods_type=' . $goods_type, 'text' => $_LANG['10_attribute_add']));
-            $smarty->assign('goods_type_list', goods_type_list($goods_type)); // 取得商品类型
-            $smarty->assign('full_page', 1);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['09_attribute_list']);
+            $GLOBALS['smarty']->assign('action_link', array('href' => 'attribute.php?act=add&goods_type=' . $goods_type, 'text' => $GLOBALS['_LANG']['10_attribute_add']));
+            $GLOBALS['smarty']->assign('goods_type_list', goods_type_list($goods_type)); // 取得商品类型
+            $GLOBALS['smarty']->assign('full_page', 1);
 
             $list = $this->get_attrlist();
 
-            $smarty->assign('attr_list', $list['item']);
-            $smarty->assign('filter', $list['filter']);
-            $smarty->assign('record_count', $list['record_count']);
-            $smarty->assign('page_count', $list['page_count']);
+            $GLOBALS['smarty']->assign('attr_list', $list['item']);
+            $GLOBALS['smarty']->assign('filter', $list['filter']);
+            $GLOBALS['smarty']->assign('record_count', $list['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $list['page_count']);
 
             $sort_flag = sort_flag($list['filter']);
-            $smarty->assign($sort_flag['tag'], $sort_flag['img']);
+            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
             /* 显示模板 */
             assign_query_info();
-            $smarty->display('attribute_list.htm');
+            $GLOBALS['smarty']->display('attribute_list.htm');
         }
 
         /*------------------------------------------------------ */
@@ -52,16 +52,16 @@ class Attribute extends Init
         elseif ($_REQUEST['act'] == 'query') {
             $list = $this->get_attrlist();
 
-            $smarty->assign('attr_list', $list['item']);
-            $smarty->assign('filter', $list['filter']);
-            $smarty->assign('record_count', $list['record_count']);
-            $smarty->assign('page_count', $list['page_count']);
+            $GLOBALS['smarty']->assign('attr_list', $list['item']);
+            $GLOBALS['smarty']->assign('filter', $list['filter']);
+            $GLOBALS['smarty']->assign('record_count', $list['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $list['page_count']);
 
             $sort_flag = sort_flag($list['filter']);
-            $smarty->assign($sort_flag['tag'], $sort_flag['img']);
+            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
             make_json_result(
-                $smarty->fetch('attribute_list.htm'),
+                $GLOBALS['smarty']->fetch('attribute_list.htm'),
                 '',
                 array('filter' => $list['filter'], 'page_count' => $list['page_count'])
             );
@@ -76,7 +76,7 @@ class Attribute extends Init
 
             /* 添加还是编辑的标识 */
             $is_add = $_REQUEST['act'] == 'add';
-            $smarty->assign('form_act', $is_add ? 'insert' : 'update');
+            $GLOBALS['smarty']->assign('form_act', $is_add ? 'insert' : 'update');
 
             /* 取得属性信息 */
             if ($is_add) {
@@ -92,23 +92,23 @@ class Attribute extends Init
                     'is_linked' => 0,
                 );
             } else {
-                $sql = "SELECT * FROM " . $ecs->table('attribute') . " WHERE attr_id = '$_REQUEST[attr_id]'";
-                $attr = $db->getRow($sql);
+                $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('attribute') . " WHERE attr_id = '$_REQUEST[attr_id]'";
+                $attr = $GLOBALS['db']->getRow($sql);
             }
 
-            $smarty->assign('attr', $attr);
-            $smarty->assign('attr_groups', get_attr_groups($attr['cat_id']));
+            $GLOBALS['smarty']->assign('attr', $attr);
+            $GLOBALS['smarty']->assign('attr_groups', get_attr_groups($attr['cat_id']));
 
             /* 取得商品分类列表 */
-            $smarty->assign('goods_type_list', goods_type_list($attr['cat_id']));
+            $GLOBALS['smarty']->assign('goods_type_list', goods_type_list($attr['cat_id']));
 
             /* 模板赋值 */
-            $smarty->assign('ur_here', $is_add ? $_LANG['10_attribute_add'] : $_LANG['52_attribute_add']);
-            $smarty->assign('action_link', array('href' => 'attribute.php?act=list', 'text' => $_LANG['09_attribute_list']));
+            $GLOBALS['smarty']->assign('ur_here', $is_add ? $GLOBALS['_LANG']['10_attribute_add'] : $GLOBALS['_LANG']['52_attribute_add']);
+            $GLOBALS['smarty']->assign('action_link', array('href' => 'attribute.php?act=list', 'text' => $GLOBALS['_LANG']['09_attribute_list']));
 
             /* 显示模板 */
             assign_query_info();
-            $smarty->display('attribute_info.htm');
+            $GLOBALS['smarty']->display('attribute_info.htm');
         }
 
         /*------------------------------------------------------ */
@@ -125,7 +125,7 @@ class Attribute extends Init
             /* 检查名称是否重复 */
             $exclude = empty($_POST['attr_id']) ? 0 : intval($_POST['attr_id']);
             if (!$exc->is_only('attr_name', $_POST['attr_name'], $exclude, " cat_id = '$_POST[cat_id]'")) {
-                sys_msg($_LANG['name_exist'], 1);
+                sys_msg($GLOBALS['_LANG']['name_exist'], 1);
             }
 
             $cat_id = $_REQUEST['cat_id'];
@@ -144,20 +144,20 @@ class Attribute extends Init
 
             /* 入库、记录日志、提示信息 */
             if ($is_insert) {
-                $db->autoExecute($ecs->table('attribute'), $attr, 'INSERT');
+                $GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('attribute'), $attr, 'INSERT');
                 admin_log($_POST['attr_name'], 'add', 'attribute');
                 $links = array(
-                    array('text' => $_LANG['add_next'], 'href' => '?act=add&goods_type=' . $_POST['cat_id']),
-                    array('text' => $_LANG['back_list'], 'href' => '?act=list'),
+                    array('text' => $GLOBALS['_LANG']['add_next'], 'href' => '?act=add&goods_type=' . $_POST['cat_id']),
+                    array('text' => $GLOBALS['_LANG']['back_list'], 'href' => '?act=list'),
                 );
-                sys_msg(sprintf($_LANG['add_ok'], $attr['attr_name']), 0, $links);
+                sys_msg(sprintf($GLOBALS['_LANG']['add_ok'], $attr['attr_name']), 0, $links);
             } else {
-                $db->autoExecute($ecs->table('attribute'), $attr, 'UPDATE', "attr_id = '$_POST[attr_id]'");
+                $GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('attribute'), $attr, 'UPDATE', "attr_id = '$_POST[attr_id]'");
                 admin_log($_POST['attr_name'], 'edit', 'attribute');
                 $links = array(
-                    array('text' => $_LANG['back_list'], 'href' => '?act=list&amp;goods_type=' . $_POST['cat_id'] . ''),
+                    array('text' => $GLOBALS['_LANG']['back_list'], 'href' => '?act=list&amp;goods_type=' . $_POST['cat_id'] . ''),
                 );
-                sys_msg(sprintf($_LANG['edit_ok'], $attr['attr_name']), 0, $links);
+                sys_msg(sprintf($GLOBALS['_LANG']['edit_ok'], $attr['attr_name']), 0, $links);
             }
         }
 
@@ -173,21 +173,21 @@ class Attribute extends Init
                 $count = count($_POST['checkboxes']);
                 $ids = isset($_POST['checkboxes']) ? join(',', $_POST['checkboxes']) : 0;
 
-                $sql = "DELETE FROM " . $ecs->table('attribute') . " WHERE attr_id " . db_create_in($ids);
-                $db->query($sql);
+                $sql = "DELETE FROM " . $GLOBALS['ecs']->table('attribute') . " WHERE attr_id " . db_create_in($ids);
+                $GLOBALS['db']->query($sql);
 
-                $sql = "DELETE FROM " . $ecs->table('goods_attr') . " WHERE attr_id " . db_create_in($ids);
-                $db->query($sql);
+                $sql = "DELETE FROM " . $GLOBALS['ecs']->table('goods_attr') . " WHERE attr_id " . db_create_in($ids);
+                $GLOBALS['db']->query($sql);
 
                 /* 记录日志 */
                 admin_log('', 'batch_remove', 'attribute');
                 clear_cache_files();
 
-                $link[] = array('text' => $_LANG['back_list'], 'href' => 'attribute.php?act=list');
-                sys_msg(sprintf($_LANG['drop_ok'], $count), 0, $link);
+                $link[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'attribute.php?act=list');
+                sys_msg(sprintf($GLOBALS['_LANG']['drop_ok'], $count), 0, $link);
             } else {
-                $link[] = array('text' => $_LANG['back_list'], 'href' => 'attribute.php?act=list');
-                sys_msg($_LANG['no_select_arrt'], 0, $link);
+                $link[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'attribute.php?act=list');
+                sys_msg($GLOBALS['_LANG']['no_select_arrt'], 0, $link);
             }
         }
 
@@ -206,7 +206,7 @@ class Attribute extends Init
 
             /* 检查属性名称是否重复 */
             if (!$exc->is_only('attr_name', $val, $id, " cat_id = '$cat_id'")) {
-                make_json_error($_LANG['name_exist']);
+                make_json_error($GLOBALS['_LANG']['name_exist']);
             }
 
             $exc->edit("attr_name='$val'", $id);
@@ -241,8 +241,8 @@ class Attribute extends Init
 
             $id = intval($_GET['id']);
 
-            $db->query("DELETE FROM " . $ecs->table('attribute') . " WHERE attr_id='$id'");
-            $db->query("DELETE FROM " . $ecs->table('goods_attr') . " WHERE attr_id='$id'");
+            $GLOBALS['db']->query("DELETE FROM " . $GLOBALS['ecs']->table('attribute') . " WHERE attr_id='$id'");
+            $GLOBALS['db']->query("DELETE FROM " . $GLOBALS['ecs']->table('goods_attr') . " WHERE attr_id='$id'");
 
             $url = 'attribute.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
 
@@ -259,16 +259,16 @@ class Attribute extends Init
             $id = intval($_GET['attr_id']);
 
             $sql = "SELECT COUNT(*) " .
-                " FROM " . $ecs->table('goods_attr') . " AS a, " .
-                $ecs->table('goods') . " AS g " .
+                " FROM " . $GLOBALS['ecs']->table('goods_attr') . " AS a, " .
+                $GLOBALS['ecs']->table('goods') . " AS g " .
                 " WHERE g.goods_id = a.goods_id AND g.is_delete = 0 AND attr_id = '$id' ";
 
-            $goods_num = $db->getOne($sql);
+            $goods_num = $GLOBALS['db']->getOne($sql);
 
             if ($goods_num > 0) {
-                $drop_confirm = sprintf($_LANG['notice_drop_confirm'], $goods_num);
+                $drop_confirm = sprintf($GLOBALS['_LANG']['notice_drop_confirm'], $goods_num);
             } else {
-                $drop_confirm = $_LANG['drop_confirm'];
+                $drop_confirm = $GLOBALS['_LANG']['drop_confirm'];
             }
 
             make_json_result(array('attr_id' => $id, 'drop_confirm' => $drop_confirm));

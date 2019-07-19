@@ -9,9 +9,9 @@ class FriendLink extends Init
 {
     public function index()
     {
-        $image = new Image($_CFG['bgcolor']);
+        $image = new Image($GLOBALS['_CFG']['bgcolor']);
 
-        $exc = new exchange($ecs->table('friend_link'), $db, 'link_id', 'link_name');
+        $exc = new Exchange($GLOBALS['ecs']->table('friend_link'), $db, 'link_id', 'link_name');
 
         /* act操作项的初始化 */
         if (empty($_REQUEST['act'])) {
@@ -25,23 +25,23 @@ class FriendLink extends Init
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
             /* 模板赋值 */
-            $smarty->assign('ur_here', $_LANG['list_link']);
-            $smarty->assign('action_link', array('text' => $_LANG['add_link'], 'href' => 'friend_link.php?act=add'));
-            $smarty->assign('full_page', 1);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['list_link']);
+            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['add_link'], 'href' => 'friend_link.php?act=add'));
+            $GLOBALS['smarty']->assign('full_page', 1);
 
             /* 获取友情链接数据 */
             $links_list = $this->get_links_list();
 
-            $smarty->assign('links_list', $links_list['list']);
-            $smarty->assign('filter', $links_list['filter']);
-            $smarty->assign('record_count', $links_list['record_count']);
-            $smarty->assign('page_count', $links_list['page_count']);
+            $GLOBALS['smarty']->assign('links_list', $links_list['list']);
+            $GLOBALS['smarty']->assign('filter', $links_list['filter']);
+            $GLOBALS['smarty']->assign('record_count', $links_list['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $links_list['page_count']);
 
             $sort_flag = sort_flag($links_list['filter']);
-            $smarty->assign($sort_flag['tag'], $sort_flag['img']);
+            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
             assign_query_info();
-            $smarty->display('link_list.htm');
+            $GLOBALS['smarty']->display('link_list.htm');
         }
 
         /*------------------------------------------------------ */
@@ -51,16 +51,16 @@ class FriendLink extends Init
             /* 获取友情链接数据 */
             $links_list = $this->get_links_list();
 
-            $smarty->assign('links_list', $links_list['list']);
-            $smarty->assign('filter', $links_list['filter']);
-            $smarty->assign('record_count', $links_list['record_count']);
-            $smarty->assign('page_count', $links_list['page_count']);
+            $GLOBALS['smarty']->assign('links_list', $links_list['list']);
+            $GLOBALS['smarty']->assign('filter', $links_list['filter']);
+            $GLOBALS['smarty']->assign('record_count', $links_list['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $links_list['page_count']);
 
             $sort_flag = sort_flag($links_list['filter']);
-            $smarty->assign($sort_flag['tag'], $sort_flag['img']);
+            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
             make_json_result(
-                $smarty->fetch('link_list.htm'),
+                $GLOBALS['smarty']->fetch('link_list.htm'),
                 '',
                 array('filter' => $links_list['filter'], 'page_count' => $links_list['page_count'])
             );
@@ -72,13 +72,13 @@ class FriendLink extends Init
         elseif ($_REQUEST['act'] == 'add') {
             admin_priv('friendlink');
 
-            $smarty->assign('ur_here', $_LANG['add_link']);
-            $smarty->assign('action_link', array('href' => 'friend_link.php?act=list', 'text' => $_LANG['list_link']));
-            $smarty->assign('action', 'add');
-            $smarty->assign('form_act', 'insert');
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['add_link']);
+            $GLOBALS['smarty']->assign('action_link', array('href' => 'friend_link.php?act=list', 'text' => $GLOBALS['_LANG']['list_link']));
+            $GLOBALS['smarty']->assign('action', 'add');
+            $GLOBALS['smarty']->assign('form_act', 'insert');
 
             assign_query_info();
-            $smarty->display('link_info.htm');
+            $GLOBALS['smarty']->display('link_info.htm');
         }
 
         /*------------------------------------------------------ */
@@ -120,9 +120,9 @@ class FriendLink extends Init
                 }
 
                 /* 插入数据 */
-                $sql = "INSERT INTO " . $ecs->table('friend_link') . " (link_name, link_url, link_logo, show_order) " .
+                $sql = "INSERT INTO " . $GLOBALS['ecs']->table('friend_link') . " (link_name, link_url, link_logo, show_order) " .
                     "VALUES ('$link_name', '$link_url', '$link_logo', '$show_order')";
-                $db->query($sql);
+                $GLOBALS['db']->query($sql);
 
                 /* 记录管理员操作 */
                 admin_log($_POST['link_name'], 'add', 'friendlink');
@@ -131,16 +131,16 @@ class FriendLink extends Init
                 clear_cache_files();
 
                 /* 提示信息 */
-                $link[0]['text'] = $_LANG['continue_add'];
+                $link[0]['text'] = $GLOBALS['_LANG']['continue_add'];
                 $link[0]['href'] = 'friend_link.php?act=add';
 
-                $link[1]['text'] = $_LANG['back_list'];
+                $link[1]['text'] = $GLOBALS['_LANG']['back_list'];
                 $link[1]['href'] = 'friend_link.php?act=list';
 
-                sys_msg($_LANG['add'] . "&nbsp;" . stripcslashes($_POST['link_name']) . " " . $_LANG['attradd_succed'], 0, $link);
+                sys_msg($GLOBALS['_LANG']['add'] . "&nbsp;" . stripcslashes($_POST['link_name']) . " " . $GLOBALS['_LANG']['attradd_succed'], 0, $link);
             } else {
-                $link[] = array('text' => $_LANG['go_back'], 'href' => 'javascript:history.back(-1)');
-                sys_msg($_LANG['link_name_exist'], 0, $link);
+                $link[] = array('text' => $GLOBALS['_LANG']['go_back'], 'href' => 'javascript:history.back(-1)');
+                sys_msg($GLOBALS['_LANG']['link_name_exist'], 0, $link);
             }
         }
 
@@ -152,8 +152,8 @@ class FriendLink extends Init
 
             /* 取得友情链接数据 */
             $sql = "SELECT link_id, link_name, link_url, link_logo, show_order " .
-                "FROM " . $ecs->table('friend_link') . " WHERE link_id = '" . intval($_REQUEST['id']) . "'";
-            $link_arr = $db->getRow($sql);
+                "FROM " . $GLOBALS['ecs']->table('friend_link') . " WHERE link_id = '" . intval($_REQUEST['id']) . "'";
+            $link_arr = $GLOBALS['db']->getRow($sql);
 
             /* 标记为图片链接还是文字链接 */
             if (!empty($link_arr['link_logo'])) {
@@ -167,17 +167,17 @@ class FriendLink extends Init
             $link_arr['link_name'] = sub_str($link_arr['link_name'], 250, false); // 截取字符串为250个字符避免出现非法字符的情况
 
             /* 模板赋值 */
-            $smarty->assign('ur_here', $_LANG['edit_link']);
-            $smarty->assign('action_link', array('href' => 'friend_link.php?act=list&' . list_link_postfix(), 'text' => $_LANG['list_link']));
-            $smarty->assign('form_act', 'update');
-            $smarty->assign('action', 'edit');
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['edit_link']);
+            $GLOBALS['smarty']->assign('action_link', array('href' => 'friend_link.php?act=list&' . list_link_postfix(), 'text' => $GLOBALS['_LANG']['list_link']));
+            $GLOBALS['smarty']->assign('form_act', 'update');
+            $GLOBALS['smarty']->assign('action', 'edit');
 
-            $smarty->assign('type', $type);
-            $smarty->assign('link_logo', $link_logo);
-            $smarty->assign('link_arr', $link_arr);
+            $GLOBALS['smarty']->assign('type', $type);
+            $GLOBALS['smarty']->assign('link_logo', $link_logo);
+            $GLOBALS['smarty']->assign('link_arr', $link_arr);
 
             assign_query_info();
-            $smarty->display('link_info.htm');
+            $GLOBALS['smarty']->display('link_info.htm');
         }
 
         /*------------------------------------------------------ */
@@ -203,7 +203,7 @@ class FriendLink extends Init
             //如果要修改链接图片, 删除原来的图片
             if (!empty($img_up_info)) {
                 //获取链子LOGO,并删除
-                $old_logo = $db->getOne("SELECT link_logo FROM " . $ecs->table('friend_link') . " WHERE link_id = '$id'");
+                $old_logo = $GLOBALS['db']->getOne("SELECT link_logo FROM " . $GLOBALS['ecs']->table('friend_link') . " WHERE link_id = '$id'");
                 if ((strpos($old_logo, 'http://') === false) && (strpos($old_logo, 'https://') === false)) {
                     $img_name = basename($old_logo);
                     @unlink(ROOT_PATH . DATA_DIR . '/afficheimg/' . $img_name);
@@ -218,14 +218,14 @@ class FriendLink extends Init
             }
 
             /* 更新信息 */
-            $sql = "UPDATE " . $ecs->table('friend_link') . " SET " .
+            $sql = "UPDATE " . $GLOBALS['ecs']->table('friend_link') . " SET " .
                 "link_name = '$link_name', " .
                 "link_url = '$link_url' " .
                 $link_logo . ',' .
                 "show_order = '$show_order' " .
                 "WHERE link_id = '$id'";
 
-            $db->query($sql);
+            $GLOBALS['db']->query($sql);
             /* 记录管理员操作 */
             admin_log($_POST['link_name'], 'edit', 'friendlink');
 
@@ -233,10 +233,10 @@ class FriendLink extends Init
             clear_cache_files();
 
             /* 提示信息 */
-            $link[0]['text'] = $_LANG['back_list'];
+            $link[0]['text'] = $GLOBALS['_LANG']['back_list'];
             $link[0]['href'] = 'friend_link.php?act=list&' . list_link_postfix();
 
-            sys_msg($_LANG['edit'] . "&nbsp;" . stripcslashes($_POST['link_name']) . "&nbsp;" . $_LANG['attradd_succed'], 0, $link);
+            sys_msg($GLOBALS['_LANG']['edit'] . "&nbsp;" . stripcslashes($_POST['link_name']) . "&nbsp;" . $GLOBALS['_LANG']['attradd_succed'], 0, $link);
         }
 
         /*------------------------------------------------------ */
@@ -250,14 +250,14 @@ class FriendLink extends Init
 
             /* 检查链接名称是否重复 */
             if ($exc->num("link_name", $link_name, $id) != 0) {
-                make_json_error(sprintf($_LANG['link_name_exist'], $link_name));
+                make_json_error(sprintf($GLOBALS['_LANG']['link_name_exist'], $link_name));
             } else {
                 if ($exc->edit("link_name = '$link_name'", $id)) {
                     admin_log($link_name, 'edit', 'friendlink');
                     clear_cache_files();
                     make_json_result(stripslashes($link_name));
                 } else {
-                    make_json_error($db->error());
+                    make_json_error($GLOBALS['db']->error());
                 }
             }
         }
@@ -299,7 +299,7 @@ class FriendLink extends Init
 
             /* 检查输入的值是否合法 */
             if (!preg_match("/^[0-9]+$/", $order)) {
-                make_json_error(sprintf($_LANG['enter_int'], $order));
+                make_json_error(sprintf($GLOBALS['_LANG']['enter_int'], $order));
             } else {
                 if ($exc->edit("show_order = '$order'", $id)) {
                     clear_cache_files();

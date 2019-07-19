@@ -14,22 +14,22 @@ class Cloud extends Init
         $data['api_ver'] = '1.0';
         $data['version'] = VERSION;
         $data['patch'] = file_get_contents(ROOT_PATH . ADMIN_PATH . "/patch_num");
-        $data['ecs_lang'] = $_CFG['lang'];
+        $data['ecs_lang'] = $GLOBALS['_CFG']['lang'];
         $data['release'] = RELEASE;
         $data['charset'] = strtoupper(EC_CHARSET);
-        $data['certificate_id'] = $_CFG['certificate_id'];
-        $data['token'] = md5($_CFG['token']);
-        $data['certi'] = $_CFG['certi'];
+        $data['certificate_id'] = $GLOBALS['_CFG']['certificate_id'];
+        $data['token'] = md5($GLOBALS['_CFG']['token']);
+        $data['certi'] = $GLOBALS['_CFG']['certi'];
         $data['php_ver'] = PHP_VERSION;
-        $data['mysql_ver'] = $db->version();
-        $data['shop_url'] = urlencode($ecs->url());
-        $data['admin_url'] = urlencode($ecs->url() . ADMIN_PATH);
+        $data['mysql_ver'] = $GLOBALS['db']->version();
+        $data['shop_url'] = urlencode($GLOBALS['ecs']->url());
+        $data['admin_url'] = urlencode($GLOBALS['ecs']->url() . ADMIN_PATH);
         $data['sess_id'] = $GLOBALS['sess']->get_session_id();
         $data['stamp'] = time();
-        $data['ent_id'] = $_CFG['ent_id'];
-        $data['ent_ac'] = $_CFG['ent_ac'];
-        $data['ent_sign'] = $_CFG['ent_sign'];
-        $data['ent_email'] = $_CFG['ent_email'];
+        $data['ent_id'] = $GLOBALS['_CFG']['ent_id'];
+        $data['ent_ac'] = $GLOBALS['_CFG']['ent_ac'];
+        $data['ent_sign'] = $GLOBALS['_CFG']['ent_sign'];
+        $data['ent_email'] = $GLOBALS['_CFG']['ent_email'];
 
         $act = !empty($_REQUEST['act']) ? $_REQUEST['act'] : 'index';
 
@@ -146,7 +146,7 @@ class Cloud extends Init
                     } else {
                         $message = explode('|', $api_arr['content']);
 
-                        $api_arr['content'] = '<li  class="cloud_close">' . $message['0'] . '&nbsp;&nbsp;&nbsp;&nbsp;' . $_LANG['cloud_no_priv'] . '<img onclick="cloud_close( ' . $message['1'] . ')" src="images/no.svg" width="20"></li>';
+                        $api_arr['content'] = '<li  class="cloud_close">' . $message['0'] . '&nbsp;&nbsp;&nbsp;&nbsp;' . $GLOBALS['_LANG']['cloud_no_priv'] . '<img onclick="cloud_close( ' . $message['1'] . ')" src="images/no.svg" width="20"></li>';
 
                         make_json_result($api_arr['content']);
                     }

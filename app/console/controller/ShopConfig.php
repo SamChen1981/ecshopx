@@ -42,25 +42,25 @@ class ShopConfig extends Init
             }
             @closedir($dir);
 
-            $smarty->assign('lang_list', $lang_list);
-            $smarty->assign('ur_here', $_LANG['01_shop_config']);
-            $smarty->assign('group_list', $this->get_settings(null, array('5')));
-            $smarty->assign('countries', get_regions());
+            $GLOBALS['smarty']->assign('lang_list', $lang_list);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['01_shop_config']);
+            $GLOBALS['smarty']->assign('group_list', $this->get_settings(null, array('5')));
+            $GLOBALS['smarty']->assign('countries', get_regions());
 
             if (strpos(strtolower($_SERVER['SERVER_SOFTWARE']), 'iis') !== false) {
-                $rewrite_confirm = $_LANG['rewrite_confirm_iis'];
+                $rewrite_confirm = $GLOBALS['_LANG']['rewrite_confirm_iis'];
             } else {
-                $rewrite_confirm = $_LANG['rewrite_confirm_apache'];
+                $rewrite_confirm = $GLOBALS['_LANG']['rewrite_confirm_apache'];
             }
-            $smarty->assign('rewrite_confirm', $rewrite_confirm);
+            $GLOBALS['smarty']->assign('rewrite_confirm', $rewrite_confirm);
 
-            if ($_CFG['shop_country'] > 0) {
-                $smarty->assign('provinces', get_regions(1, $_CFG['shop_country']));
-                if ($_CFG['shop_province']) {
-                    $smarty->assign('cities', get_regions(2, $_CFG['shop_province']));
+            if ($GLOBALS['_CFG']['shop_country'] > 0) {
+                $GLOBALS['smarty']->assign('provinces', get_regions(1, $GLOBALS['_CFG']['shop_country']));
+                if ($GLOBALS['_CFG']['shop_province']) {
+                    $GLOBALS['smarty']->assign('cities', get_regions(2, $GLOBALS['_CFG']['shop_province']));
                 }
             }
-            $smarty->assign('cfg', $_CFG);
+            $GLOBALS['smarty']->assign('cfg', $GLOBALS['_CFG']);
 
             assign_query_info();
 
@@ -73,20 +73,20 @@ class ShopConfig extends Init
             foreach ($demo_data as $k => $v) {
                 $demo_data[$k] = sprintf("<font color='red'>%s</font>", $v);
             }
-            require_once(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/common.php');
-            require_once(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/shopping_flow.php');
-            require_once(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/admin/order.php');
-            $demo_sms_info['sms_order_placed'] = sprintf($_LANG['order_placed_sms'], $demo_data['name'], $demo_data['mobile']);
-            $demo_sms_info['sms_order_payed'] = sprintf($_LANG['order_payed_sms'], $demo_data['order_sn'], $demo_data['name'], $demo_data['mobile']);
-            $demo_sms_info['sms_order_payed_to_customer'] = sprintf($_LANG['order_payed_to_customer_sms'], $demo_data['order_sn'], $demo_data['order_amount']);
+            require_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/common.php');
+            require_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/shopping_flow.php');
+            require_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/admin/order.php');
+            $demo_sms_info['sms_order_placed'] = sprintf($GLOBALS['_LANG']['order_placed_sms'], $demo_data['name'], $demo_data['mobile']);
+            $demo_sms_info['sms_order_payed'] = sprintf($GLOBALS['_LANG']['order_payed_sms'], $demo_data['order_sn'], $demo_data['name'], $demo_data['mobile']);
+            $demo_sms_info['sms_order_payed_to_customer'] = sprintf($GLOBALS['_LANG']['order_payed_to_customer_sms'], $demo_data['order_sn'], $demo_data['order_amount']);
             $demo_sms_info['sms_order_shipped'] = sprintf(
-                $_LANG['order_shipped_sms'],
+                $GLOBALS['_LANG']['order_shipped_sms'],
                 $demo_data['order_sn'],
                 $demo_data['delivery_time'],
                 $demo_data['sms_sign']
             );
-            $smarty->assign('demo_sms_info', $demo_sms_info);
-            $smarty->display('shop_config.htm');
+            $GLOBALS['smarty']->assign('demo_sms_info', $demo_sms_info);
+            $GLOBALS['smarty']->display('shop_config.htm');
         }
 
         /*------------------------------------------------------ */
@@ -100,9 +100,9 @@ class ShopConfig extends Init
 
             assign_query_info();
 
-            $smarty->assign('ur_here', $_LANG['mail_settings']);
-            $smarty->assign('cfg', $arr[5]['vars']);
-            $smarty->display('shop_config_mail_settings.htm');
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['mail_settings']);
+            $GLOBALS['smarty']->assign('cfg', $arr[5]['vars']);
+            $GLOBALS['smarty']->display('shop_config_mail_settings.htm');
         }
 
         /*------------------------------------------------------ */
@@ -121,15 +121,15 @@ class ShopConfig extends Init
             $count = count($_POST['value']);
 
             $arr = array();
-            $sql = 'SELECT id, value FROM ' . $ecs->table('shop_config');
-            $res = $db->query($sql);
-            while ($row = $db->fetchRow($res)) {
+            $sql = 'SELECT id, value FROM ' . $GLOBALS['ecs']->table('shop_config');
+            $res = $GLOBALS['db']->query($sql);
+            while ($row = $GLOBALS['db']->fetchRow($res)) {
                 $arr[$row['id']] = $row['value'];
             }
             foreach ($_POST['value'] as $key => $val) {
                 if ($arr[$key] != $val) {
-                    $sql = "UPDATE " . $ecs->table('shop_config') . " SET value = '" . trim($val) . "' WHERE id = '" . $key . "'";
-                    $db->query($sql);
+                    $sql = "UPDATE " . $GLOBALS['ecs']->table('shop_config') . " SET value = '" . trim($val) . "' WHERE id = '" . $key . "'";
+                    $GLOBALS['db']->query($sql);
                 }
             }
 
@@ -148,16 +148,16 @@ class ShopConfig extends Init
             if (isset($_POST['value']['247']) and $_POST['value']['247']) {
                 $cert = new certificate();
                 if (false == $cert->open_logistics_trace()) {
-                    $links[] = array('text' => $_LANG['back_shop_config'], 'href' => 'shop_config.php?act=list_edit');
-                    sys_msg($_LANG['open_logistics_trace_fail'], 0, $links);
+                    $links[] = array('text' => $GLOBALS['_LANG']['back_shop_config'], 'href' => 'shop_config.php?act=list_edit');
+                    sys_msg($GLOBALS['_LANG']['open_logistics_trace_fail'], 0, $links);
                 }
             }
 
             /* 处理上传文件 */
             $file_var_list = array();
-            $sql = "SELECT * FROM " . $ecs->table('shop_config') . " WHERE parent_id > 0 AND type = 'file'";
-            $res = $db->query($sql);
-            while ($row = $db->fetchRow($res)) {
+            $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('shop_config') . " WHERE parent_id > 0 AND type = 'file'";
+            $res = $GLOBALS['db']->query($sql);
+            while ($row = $GLOBALS['db']->fetchRow($res)) {
                 $file_var_list[$row['code']] = $row;
             }
 
@@ -166,13 +166,13 @@ class ShopConfig extends Init
                 if ((isset($file['error']) && $file['error'] == 0) || (!isset($file['error']) && $file['tmp_name'] != 'none')) {
                     /* 检查上传的文件类型是否合法 */
                     if (!check_file_type($file['tmp_name'], $file['name'], $allow_file_types)) {
-                        sys_msg(sprintf($_LANG['msg_invalid_file'], $file['name']));
+                        sys_msg(sprintf($GLOBALS['_LANG']['msg_invalid_file'], $file['name']));
                     } else {
                         if ($code == 'shop_logo') {
                             load_helper('template', 'console');
-                            $info = get_template_info($_CFG['template']);
+                            $info = get_template_info($GLOBALS['_CFG']['template']);
 
-                            $file_name = str_replace('{$template}', $_CFG['template'], $file_var_list[$code]['store_dir']) . $info['logo'];
+                            $file_name = str_replace('{$template}', $GLOBALS['_CFG']['template'], $file_var_list[$code]['store_dir']) . $info['logo'];
                         } elseif ($code == 'watermark') {
                             $file_name_arr = explode('.', $file['name']);
                             $ext = array_pop($file_name_arr);
@@ -193,10 +193,10 @@ class ShopConfig extends Init
 
                         /* 判断是否上传成功 */
                         if (move_upload_file($file['tmp_name'], $file_name)) {
-                            $sql = "UPDATE " . $ecs->table('shop_config') . " SET value = '$file_name' WHERE code = '$code'";
-                            $db->query($sql);
+                            $sql = "UPDATE " . $GLOBALS['ecs']->table('shop_config') . " SET value = '$file_name' WHERE code = '$code'";
+                            $GLOBALS['db']->query($sql);
                         } else {
-                            sys_msg(sprintf($_LANG['msg_upload_failed'], $file['name'], $file_var_list[$code]['store_dir']));
+                            sys_msg(sprintf($GLOBALS['_LANG']['msg_upload_failed'], $file['name'], $file_var_list[$code]['store_dir']));
                         }
                     }
                 }
@@ -215,8 +215,8 @@ class ShopConfig extends Init
                     'type' => $_POST['invoice_type'],
                     'rate' => $_POST['invoice_rate']
                 );
-                $sql = "UPDATE " . $ecs->table('shop_config') . " SET value = '" . serialize($invoice) . "' WHERE code = 'invoice_type'";
-                $db->query($sql);
+                $sql = "UPDATE " . $GLOBALS['ecs']->table('shop_config') . " SET value = '" . serialize($invoice) . "' WHERE code = 'invoice_type'";
+                $GLOBALS['db']->query($sql);
             }
 
             /* 记录日志 */
@@ -225,32 +225,32 @@ class ShopConfig extends Init
             /* 清除缓存 */
             clear_all_files();
 
-            $_CFG = load_config();
+            $GLOBALS['_CFG'] = load_config();
 
-            $shop_country = $db->getOne("SELECT region_name FROM " . $ecs->table('region') . " WHERE region_id='$_CFG[shop_country]'");
-            $shop_province = $db->getOne("SELECT region_name FROM " . $ecs->table('region') . " WHERE region_id='$_CFG[shop_province]'");
-            $shop_city = $db->getOne("SELECT region_name FROM " . $ecs->table('region') . " WHERE region_id='$_CFG[shop_city]'");
+            $shop_country = $GLOBALS['db']->getOne("SELECT region_name FROM " . $GLOBALS['ecs']->table('region') . " WHERE region_id='$GLOBALS['_CFG'][shop_country]'");
+            $shop_province = $GLOBALS['db']->getOne("SELECT region_name FROM " . $GLOBALS['ecs']->table('region') . " WHERE region_id='$GLOBALS['_CFG'][shop_province]'");
+            $shop_city = $GLOBALS['db']->getOne("SELECT region_name FROM " . $GLOBALS['ecs']->table('region') . " WHERE region_id='$GLOBALS['_CFG'][shop_city]'");
 
             $spt = '<script type="text/javascript" src="https://api-ecshop.xyunqi.com/record.php?';
-            $spt .= "url=" . urlencode($ecs->url());
-            $spt .= "&shop_name=" . urlencode($_CFG['shop_name']);
-            $spt .= "&shop_title=" . urlencode($_CFG['shop_title']);
-            $spt .= "&shop_desc=" . urlencode($_CFG['shop_desc']);
-            $spt .= "&shop_keywords=" . urlencode($_CFG['shop_keywords']);
+            $spt .= "url=" . urlencode($GLOBALS['ecs']->url());
+            $spt .= "&shop_name=" . urlencode($GLOBALS['_CFG']['shop_name']);
+            $spt .= "&shop_title=" . urlencode($GLOBALS['_CFG']['shop_title']);
+            $spt .= "&shop_desc=" . urlencode($GLOBALS['_CFG']['shop_desc']);
+            $spt .= "&shop_keywords=" . urlencode($GLOBALS['_CFG']['shop_keywords']);
             $spt .= "&country=" . urlencode($shop_country) . "&province=" . urlencode($shop_province) . "&city=" . urlencode($shop_city);
-            $spt .= "&address=" . urlencode($_CFG['shop_address']);
-            $spt .= "&qq=$_CFG[qq]&ww=$_CFG[ww]&ym=$_CFG[ym]&msn=$_CFG[msn]";
-            $spt .= "&email=$_CFG[service_email]&phone=$_CFG[service_phone]&icp=" . urlencode($_CFG['icp_number']);
-            $spt .= "&version=" . VERSION . "&language=$_CFG[lang]&php_ver=" . PHP_VERSION . "&mysql_ver=" . $db->version();
+            $spt .= "&address=" . urlencode($GLOBALS['_CFG']['shop_address']);
+            $spt .= "&qq=$GLOBALS['_CFG'][qq]&ww=$GLOBALS['_CFG'][ww]&ym=$GLOBALS['_CFG'][ym]&msn=$GLOBALS['_CFG'][msn]";
+            $spt .= "&email=$GLOBALS['_CFG'][service_email]&phone=$GLOBALS['_CFG'][service_phone]&icp=" . urlencode($GLOBALS['_CFG']['icp_number']);
+            $spt .= "&version=" . VERSION . "&language=$GLOBALS['_CFG'][lang]&php_ver=" . PHP_VERSION . "&mysql_ver=" . $GLOBALS['db']->version();
             $spt .= "&charset=" . EC_CHARSET;
             $spt .= '"></script>';
 
             if ($type == 'mail_setting') {
-                $links[] = array('text' => $_LANG['back_mail_settings'], 'href' => 'shop_config.php?act=mail_settings');
-                sys_msg($_LANG['mail_save_success'] . $spt, 0, $links);
+                $links[] = array('text' => $GLOBALS['_LANG']['back_mail_settings'], 'href' => 'shop_config.php?act=mail_settings');
+                sys_msg($GLOBALS['_LANG']['mail_save_success'] . $spt, 0, $links);
             } else {
-                $links[] = array('text' => $_LANG['back_shop_config'], 'href' => 'shop_config.php?act=list_edit');
-                sys_msg($_LANG['save_success'] . $spt, 0, $links);
+                $links[] = array('text' => $GLOBALS['_LANG']['back_shop_config'], 'href' => 'shop_config.php?act=list_edit');
+                sys_msg($GLOBALS['_LANG']['save_success'] . $spt, 0, $links);
             }
         }
 
@@ -265,18 +265,18 @@ class ShopConfig extends Init
             $email = trim($_POST['email']);
 
             /* 更新配置 */
-            $_CFG['mail_service'] = intval($_POST['mail_service']);
-            $_CFG['smtp_host'] = trim($_POST['smtp_host']);
-            $_CFG['smtp_port'] = trim($_POST['smtp_port']);
-            $_CFG['smtp_user'] = json_str_iconv(trim($_POST['smtp_user']));
-            $_CFG['smtp_pass'] = trim($_POST['smtp_pass']);
-            $_CFG['smtp_mail'] = trim($_POST['reply_email']);
-            $_CFG['mail_charset'] = trim($_POST['mail_charset']);
+            $GLOBALS['_CFG']['mail_service'] = intval($_POST['mail_service']);
+            $GLOBALS['_CFG']['smtp_host'] = trim($_POST['smtp_host']);
+            $GLOBALS['_CFG']['smtp_port'] = trim($_POST['smtp_port']);
+            $GLOBALS['_CFG']['smtp_user'] = json_str_iconv(trim($_POST['smtp_user']));
+            $GLOBALS['_CFG']['smtp_pass'] = trim($_POST['smtp_pass']);
+            $GLOBALS['_CFG']['smtp_mail'] = trim($_POST['reply_email']);
+            $GLOBALS['_CFG']['mail_charset'] = trim($_POST['mail_charset']);
 
-            if (send_mail('', $email, $_LANG['test_mail_title'], $_LANG['cfg_name']['email_content'], 0)) {
-                make_json_result('', $_LANG['sendemail_success'] . $email);
+            if (send_mail('', $email, $GLOBALS['_LANG']['test_mail_title'], $GLOBALS['_LANG']['cfg_name']['email_content'], 0)) {
+                make_json_result('', $GLOBALS['_LANG']['sendemail_success'] . $email);
             } else {
-                make_json_error(join("\n", $err->_message));
+                make_json_error(join("\n", $GLOBALS['err']->_message));
             }
         }
 
@@ -290,7 +290,7 @@ class ShopConfig extends Init
             /* 取得参数 */
             $code = trim($_GET['code']);
 
-            $filename = $_CFG[$code];
+            $filename = $GLOBALS['_CFG'][$code];
 
             //删除文件
             @unlink($filename);
@@ -304,7 +304,7 @@ class ShopConfig extends Init
             /* 清除缓存 */
             clear_all_files();
 
-            sys_msg($_LANG['save_success'], 0);
+            sys_msg($GLOBALS['_LANG']['save_success'], 0);
         }
     }
 
@@ -337,7 +337,6 @@ class ShopConfig extends Init
      */
     private function get_settings($groups = null, $excludes = null)
     {
-        global $db, $ecs, $_LANG;
 
         $config_groups = '';
         $excludes_groups = '';
@@ -355,16 +354,16 @@ class ShopConfig extends Init
         }
 
         /* 取出全部数据：分组和变量 */
-        $sql = "SELECT * FROM " . $ecs->table('shop_config') .
+        $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('shop_config') .
             " WHERE type<>'hidden' $config_groups $excludes_groups ORDER BY parent_id, sort_order, id";
-        $item_list = $db->getAll($sql);
+        $item_list = $GLOBALS['db']->getAll($sql);
 
         /* 整理数据 */
         $group_list = array();
         foreach ($item_list as $key => $item) {
             $pid = $item['parent_id'];
-            $item['name'] = isset($_LANG['cfg_name'][$item['code']]) ? $_LANG['cfg_name'][$item['code']] : $item['code'];
-            $item['desc'] = isset($_LANG['cfg_desc'][$item['code']]) ? $_LANG['cfg_desc'][$item['code']] : '';
+            $item['name'] = isset($GLOBALS['_LANG']['cfg_name'][$item['code']]) ? $GLOBALS['_LANG']['cfg_name'][$item['code']] : $item['code'];
+            $item['desc'] = isset($GLOBALS['_LANG']['cfg_desc'][$item['code']]) ? $GLOBALS['_LANG']['cfg_desc'][$item['code']] : '';
 
             if ($item['code'] == 'sms_shop_mobile') {
                 $item['url'] = 1;
@@ -381,8 +380,8 @@ class ShopConfig extends Init
                         $item['store_options'] = explode(',', $item['store_range']);
 
                         foreach ($item['store_options'] as $k => $v) {
-                            $item['display_options'][$k] = isset($_LANG['cfg_range'][$item['code']][$v]) ?
-                                $_LANG['cfg_range'][$item['code']][$v] : $v;
+                            $item['display_options'][$k] = isset($GLOBALS['_LANG']['cfg_range'][$item['code']][$v]) ?
+                                $GLOBALS['_LANG']['cfg_range'][$item['code']][$v] : $v;
                         }
                     }
                     $group_list[$pid]['vars'][] = $item;

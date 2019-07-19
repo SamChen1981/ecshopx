@@ -62,26 +62,26 @@ class Search extends Init
         if ($_REQUEST['act'] == 'advanced_search') {
             $goods_type = !empty($_REQUEST['goods_type']) ? intval($_REQUEST['goods_type']) : 0;
             $attributes = $this->get_seachable_attributes($goods_type);
-            $smarty->assign('goods_type_selected', $goods_type);
-            $smarty->assign('goods_type_list', $attributes['cate']);
-            $smarty->assign('goods_attributes', $attributes['attr']);
+            $GLOBALS['smarty']->assign('goods_type_selected', $goods_type);
+            $GLOBALS['smarty']->assign('goods_type_list', $attributes['cate']);
+            $GLOBALS['smarty']->assign('goods_attributes', $attributes['attr']);
 
             assign_template();
             assign_dynamic('search');
-            $position = assign_ur_here(0, $_LANG['advanced_search']);
-            $smarty->assign('page_title', $position['title']);    // 页面标题
-            $smarty->assign('ur_here', $position['ur_here']);  // 当前位置
+            $position = assign_ur_here(0, $GLOBALS['_LANG']['advanced_search']);
+            $GLOBALS['smarty']->assign('page_title', $position['title']);    // 页面标题
+            $GLOBALS['smarty']->assign('ur_here', $position['ur_here']);  // 当前位置
 
-            $smarty->assign('categories', get_categories_tree()); // 分类树
-            $smarty->assign('helps', get_shop_help());       // 网店帮助
-            $smarty->assign('top_goods', get_top10());           // 销售排行
-            $smarty->assign('promotion_info', get_promotion_info());
-            $smarty->assign('cat_list', cat_list(0, 0, true, 2, false));
-            $smarty->assign('brand_list', get_brand_list());
-            $smarty->assign('action', 'form');
-            $smarty->assign('use_storage', $_CFG['use_storage']);
+            $GLOBALS['smarty']->assign('categories', get_categories_tree()); // 分类树
+            $GLOBALS['smarty']->assign('helps', get_shop_help());       // 网店帮助
+            $GLOBALS['smarty']->assign('top_goods', get_top10());           // 销售排行
+            $GLOBALS['smarty']->assign('promotion_info', get_promotion_info());
+            $GLOBALS['smarty']->assign('cat_list', cat_list(0, 0, true, 2, false));
+            $GLOBALS['smarty']->assign('brand_list', get_brand_list());
+            $GLOBALS['smarty']->assign('action', 'form');
+            $GLOBALS['smarty']->assign('use_storage', $GLOBALS['_CFG']['use_storage']);
 
-            $smarty->display('search.dwt');
+            $GLOBALS['smarty']->display('search.dwt');
 
             exit;
         }
@@ -121,16 +121,16 @@ class Search extends Init
                     }
                 }
                 if ($_REQUEST['sc_ds']) {
-                    $smarty->assign('scck', 'checked');
+                    $GLOBALS['smarty']->assign('scck', 'checked');
                 }
-                $smarty->assign('adv_val', $adv_value);
-                $smarty->assign('goods_type_list', $attributes['cate']);
-                $smarty->assign('goods_attributes', $attributes['attr']);
-                $smarty->assign('goods_type_selected', $_REQUEST['goods_type']);
-                $smarty->assign('cat_list', cat_list(0, $adv_value['category'], true, 2, false));
-                $smarty->assign('brand_list', get_brand_list());
-                $smarty->assign('action', 'form');
-                $smarty->assign('use_storage', $_CFG['use_storage']);
+                $GLOBALS['smarty']->assign('adv_val', $adv_value);
+                $GLOBALS['smarty']->assign('goods_type_list', $attributes['cate']);
+                $GLOBALS['smarty']->assign('goods_attributes', $attributes['attr']);
+                $GLOBALS['smarty']->assign('goods_type_selected', $_REQUEST['goods_type']);
+                $GLOBALS['smarty']->assign('cat_list', cat_list(0, $adv_value['category'], true, 2, false));
+                $GLOBALS['smarty']->assign('brand_list', get_brand_list());
+                $GLOBALS['smarty']->assign('action', 'form');
+                $GLOBALS['smarty']->assign('use_storage', $GLOBALS['_CFG']['use_storage']);
 
                 $action = 'form';
             }
@@ -168,13 +168,13 @@ class Search extends Init
                     $sc_dsad = $_REQUEST['sc_ds'] ? " OR goods_desc LIKE '%$val%'" : '';
                     $keywords .= "(goods_name LIKE '%$val%' OR goods_sn LIKE '%$val%' OR keywords LIKE '%$val%' $sc_dsad)";
 
-                    $sql = 'SELECT DISTINCT goods_id FROM ' . $ecs->table('tag') . " WHERE tag_words LIKE '%$val%' ";
-                    $res = $db->query($sql);
-                    while ($row = $db->FetchRow($res)) {
+                    $sql = 'SELECT DISTINCT goods_id FROM ' . $GLOBALS['ecs']->table('tag') . " WHERE tag_words LIKE '%$val%' ";
+                    $res = $GLOBALS['db']->query($sql);
+                    while ($row = $GLOBALS['db']->FetchRow($res)) {
                         $goods_ids[] = $row['goods_id'];
                     }
 
-                    $db->autoReplace($ecs->table('keywords'), array('date' => local_date('Y-m-d'),
+                    $GLOBALS['db']->autoReplace($GLOBALS['ecs']->table('keywords'), array('date' => local_date('Y-m-d'),
                         'searchengine' => 'ecshop', 'keyword' => addslashes(str_replace('%', '', $val)), 'count' => 1), array('count' => 1));
                 }
                 $keywords .= ')';
@@ -195,9 +195,9 @@ class Search extends Init
             $max_price = $_REQUEST['max_price'] != 0 || $_REQUEST['min_price'] < 0 ? " AND g.shop_price <= '$_REQUEST[max_price]'" : '';
 
             /* 排序、显示方式以及类型 */
-            $default_display_type = $_CFG['show_order_type'] == '0' ? 'list' : ($_CFG['show_order_type'] == '1' ? 'grid' : 'text');
-            $default_sort_order_method = $_CFG['sort_order_method'] == '0' ? 'DESC' : 'ASC';
-            $default_sort_order_type = $_CFG['sort_order_type'] == '0' ? 'goods_id' : ($_CFG['sort_order_type'] == '1' ? 'shop_price' : 'last_update');
+            $default_display_type = $GLOBALS['_CFG']['show_order_type'] == '0' ? 'list' : ($GLOBALS['_CFG']['show_order_type'] == '1' ? 'grid' : 'text');
+            $default_sort_order_method = $GLOBALS['_CFG']['sort_order_method'] == '0' ? 'DESC' : 'ASC';
+            $default_sort_order_type = $GLOBALS['_CFG']['sort_order_type'] == '0' ? 'goods_id' : ($GLOBALS['_CFG']['sort_order_type'] == '1' ? 'shop_price' : 'last_update');
 
             $sort = (isset($_REQUEST['sort']) && in_array(trim(strtolower($_REQUEST['sort'])), array('goods_id', 'shop_price', 'last_update'))) ? trim($_REQUEST['sort']) : $default_sort_order_type;
             $order = (isset($_REQUEST['order']) && in_array(trim(strtoupper($_REQUEST['order'])), array('ASC', 'DESC'))) ? trim($_REQUEST['order']) : $default_sort_order_method;
@@ -206,7 +206,7 @@ class Search extends Init
             $_SESSION['display_search'] = $display;
 
             $page = !empty($_REQUEST['page']) && intval($_REQUEST['page']) > 0 ? intval($_REQUEST['page']) : 1;
-            $size = !empty($_CFG['page_size']) && intval($_CFG['page_size']) > 0 ? intval($_CFG['page_size']) : 10;
+            $size = !empty($GLOBALS['_CFG']['page_size']) && intval($GLOBALS['_CFG']['page_size']) > 0 ? intval($GLOBALS['_CFG']['page_size']) : 10;
 
             $intromode = '';    //方式，用于决定搜索结果页标题图片
 
@@ -215,23 +215,23 @@ class Search extends Init
                     case 'best':
                         $intro = ' AND g.is_best = 1';
                         $intromode = 'best';
-                        $ur_here = $_LANG['best_goods'];
+                        $ur_here = $GLOBALS['_LANG']['best_goods'];
                         break;
                     case 'new':
                         $intro = ' AND g.is_new = 1';
                         $intromode = 'new';
-                        $ur_here = $_LANG['new_goods'];
+                        $ur_here = $GLOBALS['_LANG']['new_goods'];
                         break;
                     case 'hot':
                         $intro = ' AND g.is_hot = 1';
                         $intromode = 'hot';
-                        $ur_here = $_LANG['hot_goods'];
+                        $ur_here = $GLOBALS['_LANG']['hot_goods'];
                         break;
                     case 'promotion':
                         $time = gmtime();
                         $intro = " AND g.promote_price > 0 AND g.promote_start_date <= '$time' AND g.promote_end_date >= '$time'";
                         $intromode = 'promotion';
-                        $ur_here = $_LANG['promotion_goods'];
+                        $ur_here = $GLOBALS['_LANG']['promotion_goods'];
                         break;
                     default:
                         $intro = '';
@@ -241,7 +241,7 @@ class Search extends Init
             }
 
             if (empty($ur_here)) {
-                $ur_here = $_LANG['search_goods'];
+                $ur_here = $GLOBALS['_LANG']['search_goods'];
             }
 
             /*------------------------------------------------------ */
@@ -253,7 +253,7 @@ class Search extends Init
             $attr_arg = array();
 
             if (!empty($_REQUEST['attr'])) {
-                $sql = "SELECT goods_id, COUNT(*) AS num FROM " . $ecs->table("goods_attr") . " WHERE 0 ";
+                $sql = "SELECT goods_id, COUNT(*) AS num FROM " . $GLOBALS['ecs']->table("goods_attr") . " WHERE 0 ";
                 foreach ($_REQUEST['attr'] as $key => $val) {
                     if ($this->is_not_null($val) && is_numeric($key)) {
                         $attr_num++;
@@ -288,7 +288,7 @@ class Search extends Init
                 if ($attr_num > 0) {
                     $sql .= " GROUP BY goods_id HAVING num = '$attr_num'";
 
-                    $row = $db->getCol($sql);
+                    $row = $GLOBALS['db']->getCol($sql);
                     if (count($row)) {
                         $attr_in = " AND " . db_create_in($row, 'g.goods_id');
                     } else {
@@ -297,8 +297,8 @@ class Search extends Init
                 }
             } elseif (isset($_REQUEST['pickout'])) {
                 /* 从选购中心进入的链接 */
-                $sql = "SELECT DISTINCT(goods_id) FROM " . $ecs->table('goods_attr');
-                $col = $db->getCol($sql);
+                $sql = "SELECT DISTINCT(goods_id) FROM " . $GLOBALS['ecs']->table('goods_attr');
+                $col = $GLOBALS['db']->getCol($sql);
                 //如果商店没有设置商品属性,那么此检索条件是无效的
                 if (!empty($col)) {
                     $attr_in = " AND " . db_create_in($col, 'g.goods_id');
@@ -306,10 +306,10 @@ class Search extends Init
             }
 
             /* 获得符合条件的商品总数 */
-            $sql = "SELECT COUNT(*) FROM " . $ecs->table('goods') . " AS g " .
+            $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('goods') . " AS g " .
                 "WHERE g.is_delete = 0 AND g.is_on_sale = 1 AND g.is_alone_sale = 1 $attr_in " .
                 "AND (( 1 " . $categories . $keywords . $brand . $min_price . $max_price . $intro . $outstock . " ) " . $tag_where . " )";
-            $count = $db->getOne($sql);
+            $count = $GLOBALS['db']->getOne($sql);
 
             $max_page = ($count > 0) ? ceil($count / $size) : 1;
             if ($page > $max_page) {
@@ -320,16 +320,16 @@ class Search extends Init
             $sql = "SELECT g.goods_id, g.goods_name, g.market_price, g.is_new, g.is_best, g.is_hot, g.shop_price AS org_price, " .
                 "IFNULL(mp.user_price, g.shop_price * '$_SESSION[discount]') AS shop_price, " .
                 "g.promote_price, g.promote_start_date, g.promote_end_date, g.goods_thumb, g.goods_img, g.goods_brief, g.goods_type " .
-                "FROM " . $ecs->table('goods') . " AS g " .
+                "FROM " . $GLOBALS['ecs']->table('goods') . " AS g " .
                 "LEFT JOIN " . $GLOBALS['ecs']->table('member_price') . " AS mp " .
                 "ON mp.goods_id = g.goods_id AND mp.user_rank = '$_SESSION[user_rank]' " .
                 "WHERE g.is_delete = 0 AND g.is_on_sale = 1 AND g.is_alone_sale = 1 $attr_in " .
                 "AND (( 1 " . $categories . $keywords . $brand . $min_price . $max_price . $intro . $outstock . " ) " . $tag_where . " ) " .
                 "ORDER BY $sort $order";
-            $res = $db->SelectLimit($sql, $size, ($page - 1) * $size);
+            $res = $GLOBALS['db']->SelectLimit($sql, $size, ($page - 1) * $size);
 
             $arr = array();
-            while ($row = $db->FetchRow($res)) {
+            while ($row = $GLOBALS['db']->FetchRow($res)) {
                 if ($row['promote_price'] > 0) {
                     $promote_price = bargain_price($row['promote_price'], $row['promote_start_date'], $row['promote_end_date']);
                 } else {
@@ -375,14 +375,14 @@ class Search extends Init
                     $arr[] = array();
                 }
             }
-            $smarty->assign('goods_list', $arr);
-            $smarty->assign('category', $category);
-            $smarty->assign('keywords', htmlspecialchars(stripslashes($_REQUEST['keywords'])));
-            $smarty->assign('search_keywords', stripslashes(htmlspecialchars_decode($_REQUEST['keywords'])));
-            $smarty->assign('brand', $_REQUEST['brand']);
-            $smarty->assign('min_price', $min_price);
-            $smarty->assign('max_price', $max_price);
-            $smarty->assign('outstock', $_REQUEST['outstock']);
+            $GLOBALS['smarty']->assign('goods_list', $arr);
+            $GLOBALS['smarty']->assign('category', $category);
+            $GLOBALS['smarty']->assign('keywords', htmlspecialchars(stripslashes($_REQUEST['keywords'])));
+            $GLOBALS['smarty']->assign('search_keywords', stripslashes(htmlspecialchars_decode($_REQUEST['keywords'])));
+            $GLOBALS['smarty']->assign('brand', $_REQUEST['brand']);
+            $GLOBALS['smarty']->assign('min_price', $min_price);
+            $GLOBALS['smarty']->assign('max_price', $max_price);
+            $GLOBALS['smarty']->assign('outstock', $_REQUEST['outstock']);
 
             /* 分页 */
             $url_format = "search.php?category=$category&amp;keywords=" . urlencode(stripslashes($_REQUEST['keywords'])) . "&amp;brand=" . $_REQUEST['brand'] . "&amp;action=" . $action . "&amp;goods_type=" . $_REQUEST['goods_type'] . "&amp;sc_ds=" . $_REQUEST['sc_ds'];
@@ -415,21 +415,21 @@ class Search extends Init
             $pager = get_pager('search.php', $pager['search'], $count, $page, $size);
             $pager['display'] = $display;
 
-            $smarty->assign('url_format', $url_format);
-            $smarty->assign('pager', $pager);
+            $GLOBALS['smarty']->assign('url_format', $url_format);
+            $GLOBALS['smarty']->assign('pager', $pager);
 
             assign_template();
             assign_dynamic('search');
             $position = assign_ur_here(0, $ur_here . ($_REQUEST['keywords'] ? '_' . $_REQUEST['keywords'] : ''));
-            $smarty->assign('page_title', $position['title']);    // 页面标题
-            $smarty->assign('ur_here', $position['ur_here']);  // 当前位置
-            $smarty->assign('intromode', $intromode);
-            $smarty->assign('categories', get_categories_tree()); // 分类树
-            $smarty->assign('helps', get_shop_help());      // 网店帮助
-            $smarty->assign('top_goods', get_top10());           // 销售排行
-            $smarty->assign('promotion_info', get_promotion_info());
+            $GLOBALS['smarty']->assign('page_title', $position['title']);    // 页面标题
+            $GLOBALS['smarty']->assign('ur_here', $position['ur_here']);  // 当前位置
+            $GLOBALS['smarty']->assign('intromode', $intromode);
+            $GLOBALS['smarty']->assign('categories', get_categories_tree()); // 分类树
+            $GLOBALS['smarty']->assign('helps', get_shop_help());      // 网店帮助
+            $GLOBALS['smarty']->assign('top_goods', get_top10());           // 销售排行
+            $GLOBALS['smarty']->assign('promotion_info', get_promotion_info());
 
-            $smarty->display('search.dwt');
+            $GLOBALS['smarty']->display('search.dwt');
         }
     }
 

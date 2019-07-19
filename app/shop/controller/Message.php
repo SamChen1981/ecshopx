@@ -11,18 +11,18 @@ class Message extends Init
 {
     public function index()
     {
-        if (empty($_CFG['message_board'])) {
-            show_message($_LANG['message_board_close']);
+        if (empty($GLOBALS['_CFG']['message_board'])) {
+            show_message($GLOBALS['_LANG']['message_board_close']);
         }
         $action = isset($_REQUEST['act']) ? trim($_REQUEST['act']) : 'default';
         if ($action == 'act_add_message') {
             load_helper('clips');
 
             /* 验证码防止灌水刷屏 */
-            if ((intval($_CFG['captcha']) & CAPTCHA_MESSAGE) && gd_version() > 0) {
+            if ((intval($GLOBALS['_CFG']['captcha']) & CAPTCHA_MESSAGE) && gd_version() > 0) {
                 $validator = new Captcha();
                 if (!$validator->check_word($_POST['captcha'])) {
-                    show_message($_LANG['invalid_captcha']);
+                    show_message($GLOBALS['_LANG']['invalid_captcha']);
                 }
             } else {
                 /* 没有验证码时，用时间来限制机器人发帖或恶意发评论 */
@@ -32,16 +32,16 @@ class Message extends Init
 
                 $cur_time = gmtime();
                 if (($cur_time - $_SESSION['send_time']) < 30) { // 小于30秒禁止发评论
-                    show_message($_LANG['cmt_spam_warning']);
+                    show_message($GLOBALS['_LANG']['cmt_spam_warning']);
                 }
             }
             $user_name = '';
             if (empty($_POST['anonymous']) && !empty($_SESSION['user_name'])) {
                 $user_name = $_SESSION['user_name'];
             } elseif (!empty($_POST['anonymous']) && !isset($_POST['user_name'])) {
-                $user_name = $_LANG['anonymous'];
+                $user_name = $GLOBALS['_LANG']['anonymous'];
             } elseif (empty($_POST['user_name'])) {
-                $user_name = $_LANG['anonymous'];
+                $user_name = $GLOBALS['_LANG']['anonymous'];
             } else {
                 $user_name = htmlspecialchars(trim($_POST['user_name']));
             }
@@ -60,37 +60,37 @@ class Message extends Init
             );
 
             if (add_message($message)) {
-                if (intval($_CFG['captcha']) & CAPTCHA_MESSAGE) {
+                if (intval($GLOBALS['_CFG']['captcha']) & CAPTCHA_MESSAGE) {
                     unset($_SESSION[$validator->session_word]);
                 } else {
                     $_SESSION['send_time'] = $cur_time;
                 }
-                $msg_info = $_CFG['message_check'] ? $_LANG['message_submit_wait'] : $_LANG['message_submit_done'];
-                show_message($msg_info, $_LANG['message_list_lnk'], 'message.php');
+                $msg_info = $GLOBALS['_CFG']['message_check'] ? $GLOBALS['_LANG']['message_submit_wait'] : $GLOBALS['_LANG']['message_submit_done'];
+                show_message($msg_info, $GLOBALS['_LANG']['message_list_lnk'], 'message.php');
             } else {
-                $err->show($_LANG['message_list_lnk'], 'message.php');
+                $GLOBALS['err']->show($GLOBALS['_LANG']['message_list_lnk'], 'message.php');
             }
         }
 
         if ($action == 'default') {
             assign_template();
-            $position = assign_ur_here(0, $_LANG['message_board']);
-            $smarty->assign('page_title', $position['title']);    // 页面标题
-            $smarty->assign('ur_here', $position['ur_here']);  // 当前位置
-            $smarty->assign('helps', get_shop_help());       // 网店帮助
+            $position = assign_ur_here(0, $GLOBALS['_LANG']['message_board']);
+            $GLOBALS['smarty']->assign('page_title', $position['title']);    // 页面标题
+            $GLOBALS['smarty']->assign('ur_here', $position['ur_here']);  // 当前位置
+            $GLOBALS['smarty']->assign('helps', get_shop_help());       // 网店帮助
 
-            $smarty->assign('categories', get_categories_tree()); // 分类树
-            $smarty->assign('top_goods', get_top10());           // 销售排行
-            $smarty->assign('cat_list', cat_list(0, 0, true, 2, false));
-            $smarty->assign('brand_list', get_brand_list());
-            $smarty->assign('promotion_info', get_promotion_info());
+            $GLOBALS['smarty']->assign('categories', get_categories_tree()); // 分类树
+            $GLOBALS['smarty']->assign('top_goods', get_top10());           // 销售排行
+            $GLOBALS['smarty']->assign('cat_list', cat_list(0, 0, true, 2, false));
+            $GLOBALS['smarty']->assign('brand_list', get_brand_list());
+            $GLOBALS['smarty']->assign('promotion_info', get_promotion_info());
 
-            $smarty->assign('enabled_mes_captcha', (intval($_CFG['captcha']) & CAPTCHA_MESSAGE));
+            $GLOBALS['smarty']->assign('enabled_mes_captcha', (intval($GLOBALS['_CFG']['captcha']) & CAPTCHA_MESSAGE));
 
             $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('comment') . " WHERE STATUS =1 AND comment_type =0 ";
-            $record_count = $db->getOne($sql);
+            $record_count = $GLOBALS['db']->getOne($sql);
             $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('feedback') . " WHERE `msg_area`='1' AND `msg_status` = '1' ";
-            $record_count += $db->getOne($sql);
+            $record_count += $GLOBALS['db']->getOne($sql);
 
             /* 获取留言的数量 */
             $page = isset($_REQUEST['page']) ? intval($_REQUEST['page']) : 1;
@@ -98,10 +98,10 @@ class Message extends Init
             $pager = get_pager('message.php', array(), $record_count, $page, $pagesize);
             $msg_lists = $this->get_msg_list($pagesize, $pager['start']);
             assign_dynamic('message_board');
-            $smarty->assign('rand', mt_rand());
-            $smarty->assign('msg_lists', $msg_lists);
-            $smarty->assign('pager', $pager);
-            $smarty->display('message_board.dwt');
+            $GLOBALS['smarty']->assign('rand', mt_rand());
+            $GLOBALS['smarty']->assign('msg_lists', $msg_lists);
+            $GLOBALS['smarty']->assign('pager', $pager);
+            $GLOBALS['smarty']->display('message_board.dwt');
         }
     }
 

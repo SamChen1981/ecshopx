@@ -28,7 +28,7 @@ class Category extends Init
 
         /* 初始化分页信息 */
         $page = isset($_REQUEST['page']) && intval($_REQUEST['page']) > 0 ? intval($_REQUEST['page']) : 1;
-        $size = isset($_CFG['page_size']) && intval($_CFG['page_size']) > 0 ? intval($_CFG['page_size']) : 10;
+        $size = isset($GLOBALS['_CFG']['page_size']) && intval($GLOBALS['_CFG']['page_size']) > 0 ? intval($GLOBALS['_CFG']['page_size']) : 10;
         $brand = isset($_REQUEST['brand']) && intval($_REQUEST['brand']) > 0 ? intval($_REQUEST['brand']) : 0;
         $price_max = isset($_REQUEST['price_max']) && intval($_REQUEST['price_max']) > 0 ? intval($_REQUEST['price_max']) : 0;
         $price_min = isset($_REQUEST['price_min']) && intval($_REQUEST['price_min']) > 0 ? intval($_REQUEST['price_min']) : 0;
@@ -40,9 +40,9 @@ class Category extends Init
 
 
         /* 排序、显示方式以及类型 */
-        $default_display_type = $_CFG['show_order_type'] == '0' ? 'list' : ($_CFG['show_order_type'] == '1' ? 'grid' : 'text');
-        $default_sort_order_method = $_CFG['sort_order_method'] == '0' ? 'DESC' : 'ASC';
-        $default_sort_order_type = $_CFG['sort_order_type'] == '0' ? 'goods_id' : ($_CFG['sort_order_type'] == '1' ? 'shop_price' : 'last_update');
+        $default_display_type = $GLOBALS['_CFG']['show_order_type'] == '0' ? 'list' : ($GLOBALS['_CFG']['show_order_type'] == '1' ? 'grid' : 'text');
+        $default_sort_order_method = $GLOBALS['_CFG']['sort_order_method'] == '0' ? 'DESC' : 'ASC';
+        $default_sort_order_type = $GLOBALS['_CFG']['sort_order_type'] == '0' ? 'goods_id' : ($GLOBALS['_CFG']['sort_order_type'] == '1' ? 'shop_price' : 'last_update');
 
         $sort = (isset($_REQUEST['sort']) && in_array(trim(strtolower($_REQUEST['sort'])), array('goods_id', 'shop_price', 'last_update'))) ? trim($_REQUEST['sort']) : $default_sort_order_type;
         $order = (isset($_REQUEST['order']) && in_array(trim(strtoupper($_REQUEST['order'])), array('ASC', 'DESC'))) ? trim($_REQUEST['order']) : $default_sort_order_method;
@@ -55,9 +55,9 @@ class Category extends Init
 
         /* 页面的缓存ID */
         $cache_id = sprintf('%X', crc32($cat_id . '-' . $display . '-' . $sort . '-' . $order . '-' . $page . '-' . $size . '-' . $_SESSION['user_rank'] . '-' .
-            $_CFG['lang'] . '-' . $brand . '-' . $price_max . '-' . $price_min . '-' . $filter_attr_str));
+            $GLOBALS['_CFG']['lang'] . '-' . $brand . '-' . $price_max . '-' . $price_min . '-' . $filter_attr_str));
 
-        if (!$smarty->is_cached('category.dwt', $cache_id)) {
+        if (!$GLOBALS['smarty']->is_cached('category.dwt', $cache_id)) {
             /* 如果页面没有被缓存则重新获取页面的内容 */
 
             $children = get_children($cat_id);
@@ -65,9 +65,9 @@ class Category extends Init
             $cat = $this->get_cat_info($cat_id);   // 获得分类的相关信息
 
             if (!empty($cat)) {
-                $smarty->assign('keywords', htmlspecialchars($cat['keywords']));
-                $smarty->assign('description', htmlspecialchars($cat['cat_desc']));
-                $smarty->assign('cat_style', htmlspecialchars($cat['style']));
+                $GLOBALS['smarty']->assign('keywords', htmlspecialchars($cat['keywords']));
+                $GLOBALS['smarty']->assign('description', htmlspecialchars($cat['cat_desc']));
+                $GLOBALS['smarty']->assign('cat_style', htmlspecialchars($cat['style']));
             } else {
                 /* 如果分类不存在则返回首页 */
                 ecs_header("Location: ./\n");
@@ -78,7 +78,7 @@ class Category extends Init
             /* 赋值固定内容 */
             if ($brand > 0) {
                 $sql = "SELECT brand_name FROM " . $GLOBALS['ecs']->table('brand') . " WHERE brand_id = '$brand'";
-                $brand_name = $db->getOne($sql);
+                $brand_name = $GLOBALS['db']->getOne($sql);
             } else {
                 $brand_name = '';
             }
@@ -119,11 +119,11 @@ class Category extends Init
                 */
 
                 $sql = "SELECT min(g.shop_price) AS min, max(g.shop_price) as max " .
-                    " FROM " . $ecs->table('goods') . " AS g " .
+                    " FROM " . $GLOBALS['ecs']->table('goods') . " AS g " .
                     " WHERE ($children OR " . get_extension_goods($children) . ') AND g.is_delete = 0 AND g.is_on_sale = 1 AND g.is_alone_sale = 1  ';
                 //获得当前分类下商品价格的最大值、最小值
 
-                $row = $db->getRow($sql);
+                $row = $GLOBALS['db']->getRow($sql);
 
                 // 取得价格分级最小单位级数，比如，千元商品最小以100为级数
                 $price_grade = 0.0001;
@@ -146,11 +146,11 @@ class Category extends Init
                 $row['max'] = $dx * ($i) + $price_grade * ($j - 1);
 
                 $sql = "SELECT (FLOOR((g.shop_price - $row[min]) / $dx)) AS sn, COUNT(*) AS goods_num  " .
-                    " FROM " . $ecs->table('goods') . " AS g " .
+                    " FROM " . $GLOBALS['ecs']->table('goods') . " AS g " .
                     " WHERE ($children OR " . get_extension_goods($children) . ') AND g.is_delete = 0 AND g.is_on_sale = 1 AND g.is_alone_sale = 1 ' .
                     " GROUP BY sn ";
 
-                $price_grade = $db->getAll($sql);
+                $price_grade = $GLOBALS['db']->getAll($sql);
 
                 foreach ($price_grade as $key => $val) {
                     $temp_key = $key + 1;
@@ -172,11 +172,11 @@ class Category extends Init
 
                 $price_grade[0]['start'] = 0;
                 $price_grade[0]['end'] = 0;
-                $price_grade[0]['price_range'] = $_LANG['all_attribute'];
+                $price_grade[0]['price_range'] = $GLOBALS['_LANG']['all_attribute'];
                 $price_grade[0]['url'] = build_uri('category', array('cid' => $cat_id, 'bid' => $brand, 'price_min' => 0, 'price_max' => 0, 'filter_attr' => $filter_attr_str), $cat['cat_name']);
                 $price_grade[0]['selected'] = empty($price_max) ? 1 : 0;
 
-                $smarty->assign('price_grade', $price_grade);
+                $GLOBALS['smarty']->assign('price_grade', $price_grade);
             }
 
 
@@ -204,11 +204,11 @@ class Category extends Init
                 }
             }
 
-            $brands[0]['brand_name'] = $_LANG['all_attribute'];
+            $brands[0]['brand_name'] = $GLOBALS['_LANG']['all_attribute'];
             $brands[0]['url'] = build_uri('category', array('cid' => $cat_id, 'bid' => 0, 'price_min' => $price_min, 'price_max' => $price_max, 'filter_attr' => $filter_attr_str), $cat['cat_name']);
             $brands[0]['selected'] = empty($brand) ? 1 : 0;
 
-            $smarty->assign('brands', $brands);
+            $GLOBALS['smarty']->assign('brands', $brands);
 
 
             /* 属性筛选 */
@@ -218,17 +218,17 @@ class Category extends Init
                 $all_attr_list = array();
 
                 foreach ($cat_filter_attr as $key => $value) {
-                    $sql = "SELECT a.attr_name FROM " . $ecs->table('attribute') . " AS a, " . $ecs->table('goods_attr') . " AS ga, " . $ecs->table('goods') . " AS g WHERE ($children OR " . get_extension_goods($children) . ") AND a.attr_id = ga.attr_id AND g.goods_id = ga.goods_id AND g.is_delete = 0 AND g.is_on_sale = 1 AND g.is_alone_sale = 1 AND a.attr_id='$value'";
-                    if ($temp_name = $db->getOne($sql)) {
+                    $sql = "SELECT a.attr_name FROM " . $GLOBALS['ecs']->table('attribute') . " AS a, " . $GLOBALS['ecs']->table('goods_attr') . " AS ga, " . $GLOBALS['ecs']->table('goods') . " AS g WHERE ($children OR " . get_extension_goods($children) . ") AND a.attr_id = ga.attr_id AND g.goods_id = ga.goods_id AND g.is_delete = 0 AND g.is_on_sale = 1 AND g.is_alone_sale = 1 AND a.attr_id='$value'";
+                    if ($temp_name = $GLOBALS['db']->getOne($sql)) {
                         $all_attr_list[$key]['filter_attr_name'] = $temp_name;
 
-                        $sql = "SELECT a.attr_id, MIN(a.goods_attr_id ) AS goods_id, a.attr_value AS attr_value FROM " . $ecs->table('goods_attr') . " AS a, " . $ecs->table('goods') .
+                        $sql = "SELECT a.attr_id, MIN(a.goods_attr_id ) AS goods_id, a.attr_value AS attr_value FROM " . $GLOBALS['ecs']->table('goods_attr') . " AS a, " . $GLOBALS['ecs']->table('goods') .
                             " AS g" .
                             " WHERE ($children OR " . get_extension_goods($children) . ') AND g.goods_id = a.goods_id AND g.is_delete = 0 AND g.is_on_sale = 1 AND g.is_alone_sale = 1 ' .
                             " AND a.attr_id='$value' " .
                             " GROUP BY a.attr_value";
 
-                        $attr_list = $db->getAll($sql);
+                        $attr_list = $GLOBALS['db']->getAll($sql);
 
                         $temp_arrt_url_arr = array();
 
@@ -238,7 +238,7 @@ class Category extends Init
 
                         $temp_arrt_url_arr[$key] = 0;                           //“全部”的信息生成
                         $temp_arrt_url = implode('.', $temp_arrt_url_arr);
-                        $all_attr_list[$key]['attr_list'][0]['attr_value'] = $_LANG['all_attribute'];
+                        $all_attr_list[$key]['attr_list'][0]['attr_value'] = $GLOBALS['_LANG']['all_attribute'];
                         $all_attr_list[$key]['attr_list'][0]['url'] = build_uri('category', array('cid' => $cat_id, 'bid' => $brand, 'price_min' => $price_min, 'price_max' => $price_max, 'filter_attr' => $temp_arrt_url), $cat['cat_name']);
                         $all_attr_list[$key]['attr_list'][0]['selected'] = empty($filter_attr[$key]) ? 1 : 0;
 
@@ -259,16 +259,16 @@ class Category extends Init
                     }
                 }
 
-                $smarty->assign('filter_attr_list', $all_attr_list);
+                $GLOBALS['smarty']->assign('filter_attr_list', $all_attr_list);
                 /* 扩展商品查询条件 */
                 if (!empty($filter_attr)) {
-                    $ext_sql = "SELECT DISTINCT(b.goods_id) FROM " . $ecs->table('goods_attr') . " AS a, " . $ecs->table('goods_attr') . " AS b " . "WHERE ";
+                    $ext_sql = "SELECT DISTINCT(b.goods_id) FROM " . $GLOBALS['ecs']->table('goods_attr') . " AS a, " . $GLOBALS['ecs']->table('goods_attr') . " AS b " . "WHERE ";
                     $ext_group_goods = array();
 
                     foreach ($filter_attr as $k => $v) {                      // 查出符合所有筛选属性条件的商品id */
                         if (is_numeric($v) && $v != 0 && isset($cat_filter_attr[$k])) {
                             $sql = $ext_sql . "b.attr_value = a.attr_value AND b.attr_id = " . $cat_filter_attr[$k] . " AND a.goods_attr_id = " . $v;
-                            $ext_group_goods = $db->getColCached($sql);
+                            $ext_group_goods = $GLOBALS['db']->getColCached($sql);
                             $ext .= ' AND ' . db_create_in($ext_group_goods, 'g.goods_id');
                         }
                     }
@@ -278,19 +278,19 @@ class Category extends Init
             assign_template('c', array($cat_id));
 
             $position = assign_ur_here($cat_id, $brand_name);
-            $smarty->assign('page_title', $position['title']);    // 页面标题
-            $smarty->assign('ur_here', $position['ur_here']);  // 当前位置
+            $GLOBALS['smarty']->assign('page_title', $position['title']);    // 页面标题
+            $GLOBALS['smarty']->assign('ur_here', $position['ur_here']);  // 当前位置
 
-            $smarty->assign('categories', get_categories_tree($cat_id)); // 分类树
-            $smarty->assign('helps', get_shop_help());              // 网店帮助
-            $smarty->assign('top_goods', get_top10());                  // 销售排行
-            $smarty->assign('show_marketprice', $_CFG['show_marketprice']);
-            $smarty->assign('category', $cat_id);
-            $smarty->assign('brand_id', $brand);
-            $smarty->assign('price_max', $price_max);
-            $smarty->assign('price_min', $price_min);
-            $smarty->assign('filter_attr', $filter_attr_str);
-            $smarty->assign('feed_url', ($_CFG['rewrite'] == 1) ? "feed-c$cat_id.xml" : 'feed.php?cat=' . $cat_id); // RSS URL
+            $GLOBALS['smarty']->assign('categories', get_categories_tree($cat_id)); // 分类树
+            $GLOBALS['smarty']->assign('helps', get_shop_help());              // 网店帮助
+            $GLOBALS['smarty']->assign('top_goods', get_top10());                  // 销售排行
+            $GLOBALS['smarty']->assign('show_marketprice', $GLOBALS['_CFG']['show_marketprice']);
+            $GLOBALS['smarty']->assign('category', $cat_id);
+            $GLOBALS['smarty']->assign('brand_id', $brand);
+            $GLOBALS['smarty']->assign('price_max', $price_max);
+            $GLOBALS['smarty']->assign('price_min', $price_min);
+            $GLOBALS['smarty']->assign('filter_attr', $filter_attr_str);
+            $GLOBALS['smarty']->assign('feed_url', ($GLOBALS['_CFG']['rewrite'] == 1) ? "feed-c$cat_id.xml" : 'feed.php?cat=' . $cat_id); // RSS URL
 
             if ($brand > 0) {
                 $arr['all'] = array('brand_id' => 0,
@@ -305,21 +305,21 @@ class Category extends Init
 
             $brand_list = array_merge($arr, get_brands($cat_id, 'category'));
 
-            $smarty->assign('data_dir', DATA_DIR);
-            $smarty->assign('brand_list', $brand_list);
-            $smarty->assign('promotion_info', get_promotion_info());
+            $GLOBALS['smarty']->assign('data_dir', DATA_DIR);
+            $GLOBALS['smarty']->assign('brand_list', $brand_list);
+            $GLOBALS['smarty']->assign('promotion_info', get_promotion_info());
 
 
             /* 调查 */
             $vote = get_vote();
             if (!empty($vote)) {
-                $smarty->assign('vote_id', $vote['id']);
-                $smarty->assign('vote', $vote['content']);
+                $GLOBALS['smarty']->assign('vote_id', $vote['id']);
+                $GLOBALS['smarty']->assign('vote', $vote['content']);
             }
 
-            $smarty->assign('best_goods', get_category_recommend_goods('best', $children, $brand, $price_min, $price_max, $ext));
-            $smarty->assign('promotion_goods', get_category_recommend_goods('promote', $children, $brand, $price_min, $price_max, $ext));
-            $smarty->assign('hot_goods', get_category_recommend_goods('hot', $children, $brand, $price_min, $price_max, $ext));
+            $GLOBALS['smarty']->assign('best_goods', get_category_recommend_goods('best', $children, $brand, $price_min, $price_max, $ext));
+            $GLOBALS['smarty']->assign('promotion_goods', get_category_recommend_goods('promote', $children, $brand, $price_min, $price_max, $ext));
+            $GLOBALS['smarty']->assign('hot_goods', get_category_recommend_goods('hot', $children, $brand, $price_min, $price_max, $ext));
 
             $count = $this->get_cagtegory_goods_count($children, $brand, $price_min, $price_max, $ext);
             $max_page = ($count > 0) ? ceil($count / $size) : 1;
@@ -332,15 +332,15 @@ class Category extends Init
                     $goodslist[] = array();
                 }
             }
-            $smarty->assign('goods_list', $goodslist);
-            $smarty->assign('category', $cat_id);
-            $smarty->assign('script_name', 'category');
+            $GLOBALS['smarty']->assign('goods_list', $goodslist);
+            $GLOBALS['smarty']->assign('category', $cat_id);
+            $GLOBALS['smarty']->assign('script_name', 'category');
 
             assign_pager('category', $cat_id, $count, $size, $sort, $order, $page, '', $brand, $price_min, $price_max, $display, $filter_attr_str); // 分页
             assign_dynamic('category'); // 动态内容
         }
 
-        $smarty->display('category.dwt', $cache_id);
+        $GLOBALS['smarty']->display('category.dwt', $cache_id);
     }
 
     /**

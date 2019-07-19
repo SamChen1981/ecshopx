@@ -30,33 +30,33 @@ class Comment extends Init
 
             if (empty($cmt) || !isset($cmt->type) || !isset($cmt->id)) {
                 $result['error'] = 1;
-                $result['message'] = $_LANG['invalid_comments'];
+                $result['message'] = $GLOBALS['_LANG']['invalid_comments'];
             } elseif (!is_email($cmt->email)) {
                 $result['error'] = 1;
-                $result['message'] = $_LANG['error_email'];
+                $result['message'] = $GLOBALS['_LANG']['error_email'];
             } else {
-                if ((intval($_CFG['captcha']) & CAPTCHA_COMMENT) && gd_version() > 0) {
+                if ((intval($GLOBALS['_CFG']['captcha']) & CAPTCHA_COMMENT) && gd_version() > 0) {
                     /* 检查验证码 */
 
                     $validator = new captcha();
                     if (!$validator->check_word($cmt->captcha)) {
                         $result['error'] = 1;
-                        $result['message'] = $_LANG['invalid_captcha'];
+                        $result['message'] = $GLOBALS['_LANG']['invalid_captcha'];
                     } else {
-                        $factor = intval($_CFG['comment_factor']);
+                        $factor = intval($GLOBALS['_CFG']['comment_factor']);
                         if ($cmt->type == 0 && $factor > 0) {
                             /* 只有商品才检查评论条件 */
                             switch ($factor) {
                                 case COMMENT_LOGIN:
                                     if ($_SESSION['user_id'] == 0) {
                                         $result['error'] = 1;
-                                        $result['message'] = $_LANG['comment_login'];
+                                        $result['message'] = $GLOBALS['_LANG']['comment_login'];
                                     }
                                     break;
 
                                 case COMMENT_CUSTOM:
                                     if ($_SESSION['user_id'] > 0) {
-                                        $sql = "SELECT o.order_id FROM " . $ecs->table('order_info') . " AS o " .
+                                        $sql = "SELECT o.order_id FROM " . $GLOBALS['ecs']->table('order_info') . " AS o " .
                                             " WHERE user_id = '" . $_SESSION['user_id'] . "'" .
                                             " AND (o.order_status = '" . OS_CONFIRMED . "' or o.order_status = '" . OS_SPLITED . "') " .
                                             " AND (o.pay_status = '" . PS_PAYED . "' OR o.pay_status = '" . PS_PAYING . "') " .
@@ -64,21 +64,21 @@ class Comment extends Init
                                             " LIMIT 1";
 
 
-                                        $tmp = $db->getOne($sql);
+                                        $tmp = $GLOBALS['db']->getOne($sql);
                                         if (empty($tmp)) {
                                             $result['error'] = 1;
-                                            $result['message'] = $_LANG['comment_custom'];
+                                            $result['message'] = $GLOBALS['_LANG']['comment_custom'];
                                         }
                                     } else {
                                         $result['error'] = 1;
-                                        $result['message'] = $_LANG['comment_custom'];
+                                        $result['message'] = $GLOBALS['_LANG']['comment_custom'];
                                     }
                                     break;
                                 case COMMENT_BOUGHT:
                                     if ($_SESSION['user_id'] > 0) {
                                         $sql = "SELECT o.order_id" .
-                                            " FROM " . $ecs->table('order_info') . " AS o, " .
-                                            $ecs->table('order_goods') . " AS og " .
+                                            " FROM " . $GLOBALS['ecs']->table('order_info') . " AS o, " .
+                                            $GLOBALS['ecs']->table('order_goods') . " AS og " .
                                             " WHERE o.order_id = og.order_id" .
                                             " AND o.user_id = '" . $_SESSION['user_id'] . "'" .
                                             " AND og.goods_id = '" . $cmt->id . "'" .
@@ -86,14 +86,14 @@ class Comment extends Init
                                             " AND (o.pay_status = '" . PS_PAYED . "' OR o.pay_status = '" . PS_PAYING . "') " .
                                             " AND (o.shipping_status = '" . SS_SHIPPED . "' OR o.shipping_status = '" . SS_RECEIVED . "') " .
                                             " LIMIT 1";
-                                        $tmp = $db->getOne($sql);
+                                        $tmp = $GLOBALS['db']->getOne($sql);
                                         if (empty($tmp)) {
                                             $result['error'] = 1;
-                                            $result['message'] = $_LANG['comment_brought'];
+                                            $result['message'] = $GLOBALS['_LANG']['comment_brought'];
                                         }
                                     } else {
                                         $result['error'] = 1;
-                                        $result['message'] = $_LANG['comment_brought'];
+                                        $result['message'] = $GLOBALS['_LANG']['comment_brought'];
                                     }
                             }
                         }
@@ -112,22 +112,22 @@ class Comment extends Init
                     $cur_time = gmtime();
                     if (($cur_time - $_SESSION['send_time']) < 30) { // 小于30秒禁止发评论
                         $result['error'] = 1;
-                        $result['message'] = $_LANG['cmt_spam_warning'];
+                        $result['message'] = $GLOBALS['_LANG']['cmt_spam_warning'];
                     } else {
-                        $factor = intval($_CFG['comment_factor']);
+                        $factor = intval($GLOBALS['_CFG']['comment_factor']);
                         if ($cmt->type == 0 && $factor > 0) {
                             /* 只有商品才检查评论条件 */
                             switch ($factor) {
                                 case COMMENT_LOGIN:
                                     if ($_SESSION['user_id'] == 0) {
                                         $result['error'] = 1;
-                                        $result['message'] = $_LANG['comment_login'];
+                                        $result['message'] = $GLOBALS['_LANG']['comment_login'];
                                     }
                                     break;
 
                                 case COMMENT_CUSTOM:
                                     if ($_SESSION['user_id'] > 0) {
-                                        $sql = "SELECT o.order_id FROM " . $ecs->table('order_info') . " AS o " .
+                                        $sql = "SELECT o.order_id FROM " . $GLOBALS['ecs']->table('order_info') . " AS o " .
                                             " WHERE user_id = '" . $_SESSION['user_id'] . "'" .
                                             " AND (o.order_status = '" . OS_CONFIRMED . "' or o.order_status = '" . OS_SPLITED . "') " .
                                             " AND (o.pay_status = '" . PS_PAYED . "' OR o.pay_status = '" . PS_PAYING . "') " .
@@ -135,22 +135,22 @@ class Comment extends Init
                                             " LIMIT 1";
 
 
-                                        $tmp = $db->getOne($sql);
+                                        $tmp = $GLOBALS['db']->getOne($sql);
                                         if (empty($tmp)) {
                                             $result['error'] = 1;
-                                            $result['message'] = $_LANG['comment_custom'];
+                                            $result['message'] = $GLOBALS['_LANG']['comment_custom'];
                                         }
                                     } else {
                                         $result['error'] = 1;
-                                        $result['message'] = $_LANG['comment_custom'];
+                                        $result['message'] = $GLOBALS['_LANG']['comment_custom'];
                                     }
                                     break;
 
                                 case COMMENT_BOUGHT:
                                     if ($_SESSION['user_id'] > 0) {
                                         $sql = "SELECT o.order_id" .
-                                            " FROM " . $ecs->table('order_info') . " AS o, " .
-                                            $ecs->table('order_goods') . " AS og " .
+                                            " FROM " . $GLOBALS['ecs']->table('order_info') . " AS o, " .
+                                            $GLOBALS['ecs']->table('order_goods') . " AS og " .
                                             " WHERE o.order_id = og.order_id" .
                                             " AND o.user_id = '" . $_SESSION['user_id'] . "'" .
                                             " AND og.goods_id = '" . $cmt->id . "'" .
@@ -158,14 +158,14 @@ class Comment extends Init
                                             " AND (o.pay_status = '" . PS_PAYED . "' OR o.pay_status = '" . PS_PAYING . "') " .
                                             " AND (o.shipping_status = '" . SS_SHIPPED . "' OR o.shipping_status = '" . SS_RECEIVED . "') " .
                                             " LIMIT 1";
-                                        $tmp = $db->getOne($sql);
+                                        $tmp = $GLOBALS['db']->getOne($sql);
                                         if (empty($tmp)) {
                                             $result['error'] = 1;
-                                            $result['message'] = $_LANG['comment_brought'];
+                                            $result['message'] = $GLOBALS['_LANG']['comment_brought'];
                                         }
                                     } else {
                                         $result['error'] = 1;
-                                        $result['message'] = $_LANG['comment_brought'];
+                                        $result['message'] = $GLOBALS['_LANG']['comment_brought'];
                                     }
                             }
                         }
@@ -192,21 +192,21 @@ class Comment extends Init
         if ($result['error'] == 0) {
             $comments = assign_comment($cmt->id, $cmt->type, $cmt->page);
 
-            $smarty->assign('comment_type', $cmt->type);
-            $smarty->assign('id', $cmt->id);
-            $smarty->assign('username', $_SESSION['user_name']);
-            $smarty->assign('email', $_SESSION['email']);
-            $smarty->assign('comments', $comments['comments']);
-            $smarty->assign('pager', $comments['pager']);
+            $GLOBALS['smarty']->assign('comment_type', $cmt->type);
+            $GLOBALS['smarty']->assign('id', $cmt->id);
+            $GLOBALS['smarty']->assign('username', $_SESSION['user_name']);
+            $GLOBALS['smarty']->assign('email', $_SESSION['email']);
+            $GLOBALS['smarty']->assign('comments', $comments['comments']);
+            $GLOBALS['smarty']->assign('pager', $comments['pager']);
 
             /* 验证码相关设置 */
-            if ((intval($_CFG['captcha']) & CAPTCHA_COMMENT) && gd_version() > 0) {
-                $smarty->assign('enabled_captcha', 1);
-                $smarty->assign('rand', mt_rand());
+            if ((intval($GLOBALS['_CFG']['captcha']) & CAPTCHA_COMMENT) && gd_version() > 0) {
+                $GLOBALS['smarty']->assign('enabled_captcha', 1);
+                $GLOBALS['smarty']->assign('rand', mt_rand());
             }
 
-            $result['message'] = $_CFG['comment_check'] ? $_LANG['cmt_submit_wait'] : $_LANG['cmt_submit_done'];
-            $result['content'] = $smarty->fetch("library/comments_list.lbi");
+            $result['message'] = $GLOBALS['_CFG']['comment_check'] ? $GLOBALS['_LANG']['cmt_submit_wait'] : $GLOBALS['_LANG']['cmt_submit_done'];
+            $result['content'] = $GLOBALS['smarty']->fetch("library/comments_list.lbi");
         }
 
         echo json_encode($result);

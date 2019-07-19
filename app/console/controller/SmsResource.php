@@ -11,7 +11,7 @@ class SmsResource extends Init
     {
         define('SOURCE_ID', '620386');
 
-        $smarty->assign('ur_here', $_LANG['sms_resource_here']);
+        $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['sms_resource_here']);
         $data[] = base64_encode(SOURCE_ID);
         $data[] = get_certificate_info('passport_uid');
         $data[] = get_certificate_info('yunqi_code');
@@ -19,8 +19,8 @@ class SmsResource extends Init
         $data[] = getRandChar(6);
         $data[] = getRandChar(6);
         $source_str = implode('|', $data);
-        $smarty->assign('resource_url', SMS_RESOURCE_URL . '/index.php?source=' . base64_encode($source_str));
-        $smarty->display('sms_resource.htm');
+        $GLOBALS['smarty']->assign('resource_url', SMS_RESOURCE_URL . '/index.php?source=' . base64_encode($source_str));
+        $GLOBALS['smarty']->display('sms_resource.htm');
 
         function getRandChar($length)
         {

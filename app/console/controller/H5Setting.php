@@ -9,7 +9,7 @@ class H5Setting extends Init
 {
     public function index()
     {
-        $uri = $ecs->url();
+        $uri = $GLOBALS['ecs']->url();
         $allow_suffix = array('gif', 'jpg', 'png', 'jpeg', 'bmp');
 
         /*------------------------------------------------------ */
@@ -18,14 +18,14 @@ class H5Setting extends Init
         if ($_REQUEST['act'] == 'list') {
             /* 检查权限 */
             admin_priv('h5_setting');
-            $smarty->assign('ur_here', $_LANG['h5_setting']);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['h5_setting']);
             $auth_sql = 'SELECT * FROM ' . $GLOBALS['ecs']->table('shop_config') . ' WHERE code = "authorize"';
             $auth = $GLOBALS['db']->getRow($auth_sql);
             $params = unserialize($auth['value']);
             if ($params['authorize_code'] != 'NDE') {
                 $url = $params['authorize_code'] == 'NCH' ? 'https://account.shopex.cn/order/confirm/goods_2460-946 ' : 'https://account.shopex.cn/order/confirm/goods_2540-1050 ';
-                $smarty->assign('url', $url);
-                $smarty->display('accredit.html');
+                $GLOBALS['smarty']->assign('url', $url);
+                $GLOBALS['smarty']->display('accredit.html');
                 exit;
             }
             $cert = new certificate;
@@ -39,8 +39,8 @@ class H5Setting extends Init
             }
             $tab = !$isOpenWap ? 'open' : 'enter';
             $charset = EC_CHARSET == 'utf-8' ? "utf8" : 'gbk';
-            $sql = "SELECT * FROM " . $ecs->table('config') . " WHERE 1";
-            $group_items = $db->getAll($sql);
+            $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('config') . " WHERE 1";
+            $group_items = $GLOBALS['db']->getAll($sql);
             $grouplist = $this->get_params();
 
             foreach ($grouplist as $key => $value) {
@@ -72,15 +72,15 @@ class H5Setting extends Init
             $flash_dir = ROOT_PATH . 'data/flashdata/';
             $api_url = get_h5_api_host();
 
-            $smarty->assign('api_url', $api_url);
-            $smarty->assign('error_msg', $_REQUEST['error_msg']);
-            $smarty->assign('playerdb', $playerdb);
-            $smarty->assign('group_list', $grouplist);
-            $smarty->display('h5_config.html');
+            $GLOBALS['smarty']->assign('api_url', $api_url);
+            $GLOBALS['smarty']->assign('error_msg', $_REQUEST['error_msg']);
+            $GLOBALS['smarty']->assign('playerdb', $playerdb);
+            $GLOBALS['smarty']->assign('group_list', $grouplist);
+            $GLOBALS['smarty']->display('h5_config.html');
         } elseif ($_REQUEST['act'] == 'post') {
             /* 检查权限 */
             admin_priv('mobile_setting');
-            $links[] = array('text' => $_LANG['h5_setting'], 'href' => 'h5_setting.php?act=list');
+            $links[] = array('text' => $GLOBALS['_LANG']['h5_setting'], 'href' => 'h5_setting.php?act=list');
 
             foreach ($_POST['value'] as $key => $value) {
                 $_POST['value'][$key] = trim($value);
@@ -98,8 +98,8 @@ class H5Setting extends Init
                     }
                 }
             }
-            $sql = "SELECT * FROM " . $ecs->table('config') . " WHERE `code` = '" . $_POST['code'] . "'";
-            $res = $db->getRow($sql);
+            $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('config') . " WHERE `code` = '" . $_POST['code'] . "'";
+            $res = $GLOBALS['db']->getRow($sql);
             $items = $this->get_items($_POST['code']);
 
             $type = $items['type'];
@@ -109,22 +109,22 @@ class H5Setting extends Init
 
             //微信支付获取微信登录里的app_id/app_secret
             if ($code == 'wxpay.web') {
-                $sql = "SELECT * FROM " . $ecs->table('config') . " WHERE `code` = 'wechat.web'";
-                $result = $db->getRow($sql);
+                $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('config') . " WHERE `code` = 'wechat.web'";
+                $result = $GLOBALS['db']->getRow($sql);
                 if ($result) {
                     $wechat_config = json_decode($result['config'], 1);
                     $_POST['value']['app_id'] = $wechat_config['app_id'] ? $wechat_config['app_id'] : '';
                     $_POST['value']['app_secret'] = $wechat_config['app_secret'] ? $wechat_config['app_secret'] : '';
                 }
             } elseif ($code == 'wechat.web') {
-                $sql = $sql = "SELECT * FROM " . $ecs->table('config') . " WHERE `code` = 'wxpay.web'";
-                $result = $db->getRow($sql);
+                $sql = $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('config') . " WHERE `code` = 'wxpay.web'";
+                $result = $GLOBALS['db']->getRow($sql);
                 if ($result) {
                     $wechat_config = json_decode($result['config'], 1);
                     $wechat_config['app_id'] = $_POST['value']['app_id'] ? $_POST['value']['app_id'] : '';
                     $wechat_config['app_secret'] = $_POST['value']['app_secret'] ? $_POST['value']['app_secret'] : '';
-                    $sql = "UPDATE " . $ecs->table('config') . " SET `config` = '" . json_encode($wechat_config) . "' WHERE `code` = 'wxpay.web'";
-                    $db->query($sql);
+                    $sql = "UPDATE " . $GLOBALS['ecs']->table('config') . " SET `config` = '" . json_encode($wechat_config) . "' WHERE `code` = 'wxpay.web'";
+                    $GLOBALS['db']->query($sql);
                 }
             }
 
@@ -133,30 +133,30 @@ class H5Setting extends Init
             $time = date('Y-m-d H:i:s', time());
 
             if ($res) {
-                $sql = "UPDATE " . $ecs->table('config') . " SET `updated_at` = '$time',`status` = '$status' ,`config` = '" . json_encode($_POST['value']) . "' WHERE `code` = '$code'";
+                $sql = "UPDATE " . $GLOBALS['ecs']->table('config') . " SET `updated_at` = '$time',`status` = '$status' ,`config` = '" . json_encode($_POST['value']) . "' WHERE `code` = '$code'";
             } else {
-                $sql = "INSERT INTO " . $ecs->table('config') . " (`name`,`type`,`description`,`code`,`config`,`created_at`,`updated_at`,`status`) VALUES ('$name','$type','$description','$code','$config','$time','$time','$status')";
+                $sql = "INSERT INTO " . $GLOBALS['ecs']->table('config') . " (`name`,`type`,`description`,`code`,`config`,`created_at`,`updated_at`,`status`) VALUES ('$name','$type','$description','$code','$config','$time','$time','$status')";
             }
-            $db->query($sql);
+            $GLOBALS['db']->query($sql);
             if ($type == 'payment') {
                 save_payment($code, $name, $description, $config, $status, PAY_TYPE_H5);
             }
             if ($cert_steam) {
                 //处理文件
-                $sql = "SELECT * FROM " . $ecs->table('config') . " WHERE `code` = '" . $_POST['code'] . "'";
-                $setting = $db->getRow($sql);
+                $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('config') . " WHERE `code` = '" . $_POST['code'] . "'";
+                $setting = $GLOBALS['db']->getRow($sql);
                 if ($setting['id']) {
                     $id = $setting['id'];
-                    $cert_tmp = $db->getRow("SELECT * FROM " . $ecs->table('cert') . " WHERE `config_id` = '$id'");
+                    $cert_tmp = $GLOBALS['db']->getRow("SELECT * FROM " . $GLOBALS['ecs']->table('cert') . " WHERE `config_id` = '$id'");
                     if ($cert_tmp) {
-                        $db->query("UPDATE " . $ecs->table('cert') . " SET `file` = '$cert_steam' WHERE `config_id` = '$id'");
+                        $GLOBALS['db']->query("UPDATE " . $GLOBALS['ecs']->table('cert') . " SET `file` = '$cert_steam' WHERE `config_id` = '$id'");
                     } else {
-                        $db->query("INSERT INTO " . $ecs->table('cert') . " (`config_id`,`file`) VALUES ($id,'$cert_steam')");
+                        $GLOBALS['db']->query("INSERT INTO " . $GLOBALS['ecs']->table('cert') . " (`config_id`,`file`) VALUES ($id,'$cert_steam')");
                     }
                 }
             }
 
-            sys_msg($_LANG['attradd_succed'], 0, $links);
+            sys_msg($GLOBALS['_LANG']['attradd_succed'], 0, $links);
         } elseif ($_REQUEST['act'] == 'del') {
             admin_priv('flash_manage');
 
@@ -166,8 +166,8 @@ class H5Setting extends Init
                 $rt = $flashdb[$id];
             } else {
                 $links[] = array('text' => 'H5配置', 'href' => 'h5_setting.php?act=list');
-//        $links[] = array('text' => $_LANG['go_url'], 'href' => 'h5_setting.php?act=list');
-                sys_msg($_LANG['id_error'], 0, $links);
+//        $links[] = array('text' => $GLOBALS['_LANG']['go_url'], 'href' => 'h5_setting.php?act=list');
+                sys_msg($GLOBALS['_LANG']['id_error'], 0, $links);
             }
 
             if (strpos($rt['src'], 'http') === false) {
@@ -181,7 +181,7 @@ class H5Setting extends Init
             }
             $this->put_flash_xml($temp);
             $error_msg = '';
-            $this->set_flash_data($_CFG['flash_theme'], $error_msg);
+            $this->set_flash_data($GLOBALS['_CFG']['flash_theme'], $error_msg);
             ecs_header("Location: h5_setting.php?act=list\n");
             exit;
         } elseif ($_REQUEST['act'] == 'add') {
@@ -196,17 +196,17 @@ class H5Setting extends Init
                 $width_height = $this->get_width_height();
                 assign_query_info();
                 if (isset($width_height['width']) || isset($width_height['height'])) {
-                    $smarty->assign('width_height', sprintf($_LANG['width_height'], $width_height['width'], $width_height['height']));
+                    $GLOBALS['smarty']->assign('width_height', sprintf($GLOBALS['_LANG']['width_height'], $width_height['width'], $width_height['height']));
                 }
 
-                $smarty->assign('action_link', array('text' => $_LANG['go_url'], 'href' => 'h5_setting.php?act=list'));
-                $smarty->assign('rt', $rt);
-                $smarty->assign('ur_here', $_LANG['add_picad']);
-                $smarty->display('flashplay_add.htm');
+                $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['go_url'], 'href' => 'h5_setting.php?act=list'));
+                $GLOBALS['smarty']->assign('rt', $rt);
+                $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['add_picad']);
+                $GLOBALS['smarty']->display('flashplay_add.htm');
             } elseif ($_POST['step'] == 2) {
                 if (!empty($_FILES['img_file_src']['name'])) {
                     if (!get_file_suffix($_FILES['img_file_src']['name'], $allow_suffix)) {
-                        sys_msg($_LANG['invalid_type']);
+                        sys_msg($GLOBALS['_LANG']['invalid_type']);
                     }
                     $name = date('Ymd');
                     for ($i = 0; $i < 6; $i++) {
@@ -220,20 +220,20 @@ class H5Setting extends Init
                     }
                 } elseif (!empty($_POST['img_src'])) {
                     if (!get_file_suffix($_POST['img_src'], $allow_suffix)) {
-                        sys_msg($_LANG['invalid_type']);
+                        sys_msg($GLOBALS['_LANG']['invalid_type']);
                     }
                     $src = $_POST['img_src'];
                     if (strstr($src, 'http') && !strstr($src, $_SERVER['SERVER_NAME'])) {
                         $src = $this->get_url_image($src);
                     }
                 } else {
-                    $links[] = array('text' => $_LANG['add_new'], 'href' => 'h5_setting.php?act=add');
-                    sys_msg($_LANG['src_empty'], 0, $links);
+                    $links[] = array('text' => $GLOBALS['_LANG']['add_new'], 'href' => 'h5_setting.php?act=add');
+                    sys_msg($GLOBALS['_LANG']['src_empty'], 0, $links);
                 }
 
                 if (empty($_POST['img_url'])) {
-                    $links[] = array('text' => $_LANG['add_new'], 'href' => 'h5_setting.php?act=add');
-                    sys_msg($_LANG['link_empty'], 0, $links);
+                    $links[] = array('text' => $GLOBALS['_LANG']['add_new'], 'href' => 'h5_setting.php?act=add');
+                    sys_msg($GLOBALS['_LANG']['link_empty'], 0, $links);
                 }
 
                 // 获取flash播放器数据
@@ -256,9 +256,9 @@ class H5Setting extends Init
 
                 $this->put_flash_xml($_flashdb);
                 $error_msg = '';
-                $this->set_flash_data($_CFG['flash_theme'], $error_msg);
-                $links[] = array('text' => $_LANG['go_url'], 'href' => 'h5_setting.php?act=list');
-                sys_msg($_LANG['edit_ok'], 0, $links);
+                $this->set_flash_data($GLOBALS['_CFG']['flash_theme'], $error_msg);
+                $links[] = array('text' => $GLOBALS['_LANG']['go_url'], 'href' => 'h5_setting.php?act=list');
+                sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
             }
         } elseif ($_REQUEST['act'] == 'edit') {
             admin_priv('flash_manage');
@@ -268,8 +268,8 @@ class H5Setting extends Init
             if (isset($flashdb[$id])) {
                 $rt = $flashdb[$id];
             } else {
-                $links[] = array('text' => $_LANG['go_url'], 'href' => 'h5_setting.php?act=list');
-                sys_msg($_LANG['id_error'], 0, $links);
+                $links[] = array('text' => $GLOBALS['_LANG']['go_url'], 'href' => 'h5_setting.php?act=list');
+                sys_msg($GLOBALS['_LANG']['id_error'], 0, $links);
             }
             if (empty($_POST['step'])) {
                 $rt['act'] = 'edit';
@@ -279,20 +279,20 @@ class H5Setting extends Init
                 $rt['img_sort'] = empty($rt['sort']) ? 0 : $rt['sort'];
 
                 $rt['id'] = $id;
-                $smarty->assign('action_link', array('text' => $_LANG['go_url'], 'href' => 'h5_setting.php?act=list'));
-                $smarty->assign('rt', $rt);
-                $smarty->assign('ur_here', $_LANG['edit_picad']);
-                $smarty->display('flashplay_add.htm');
+                $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['go_url'], 'href' => 'h5_setting.php?act=list'));
+                $GLOBALS['smarty']->assign('rt', $rt);
+                $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['edit_picad']);
+                $GLOBALS['smarty']->display('flashplay_add.htm');
             } elseif ($_POST['step'] == 2) {
                 if (empty($_POST['img_url'])) {
                     //若链接地址为空
-                    $links[] = array('text' => $_LANG['return_edit'], 'href' => 'h5_setting.php?act=edit&id=' . $id);
-                    sys_msg($_LANG['link_empty'], 0, $links);
+                    $links[] = array('text' => $GLOBALS['_LANG']['return_edit'], 'href' => 'h5_setting.php?act=edit&id=' . $id);
+                    sys_msg($GLOBALS['_LANG']['link_empty'], 0, $links);
                 }
 
                 if (!empty($_FILES['img_file_src']['name'])) {
                     if (!get_file_suffix($_FILES['img_file_src']['name'], $allow_suffix)) {
-                        sys_msg($_LANG['invalid_type']);
+                        sys_msg($GLOBALS['_LANG']['invalid_type']);
                     }
                     //有上传
                     $name = date('Ymd');
@@ -309,14 +309,14 @@ class H5Setting extends Init
                 } elseif (!empty($_POST['img_src'])) {
                     $src = $_POST['img_src'];
                     if (!get_file_suffix($_POST['img_src'], $allow_suffix)) {
-                        sys_msg($_LANG['invalid_type']);
+                        sys_msg($GLOBALS['_LANG']['invalid_type']);
                     }
                     if (strstr($src, 'http') && !strstr($src, $_SERVER['SERVER_NAME'])) {
                         $src = $this->get_url_image($src);
                     }
                 } else {
-                    $links[] = array('text' => $_LANG['return_edit'], 'href' => 'h5_setting.php?act=edit&id=' . $id);
-                    sys_msg($_LANG['src_empty'], 0, $links);
+                    $links[] = array('text' => $GLOBALS['_LANG']['return_edit'], 'href' => 'h5_setting.php?act=edit&id=' . $id);
+                    sys_msg($GLOBALS['_LANG']['src_empty'], 0, $links);
                 }
 
                 if (strpos($rt['src'], 'http') === false && $rt['src'] != $src) {
@@ -338,9 +338,9 @@ class H5Setting extends Init
 
                 $this->put_flash_xml($_flashdb);
                 $error_msg = '';
-                $this->set_flash_data($_CFG['flash_theme'], $error_msg);
-                $links[] = array('text' => $_LANG['go_url'], 'href' => 'h5_setting.php?act=list');
-                sys_msg($_LANG['edit_ok'], 0, $links);
+                $this->set_flash_data($GLOBALS['_CFG']['flash_theme'], $error_msg);
+                $links[] = array('text' => $GLOBALS['_LANG']['go_url'], 'href' => 'h5_setting.php?act=list');
+                sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
             }
         } elseif ($_REQUEST['act'] == 'checkapi') {
             $result = test_api();

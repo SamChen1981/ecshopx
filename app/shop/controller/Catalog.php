@@ -9,7 +9,7 @@ class Catalog extends Init
 {
     public function index()
     {
-        if (!$smarty->is_cached('catalog.dwt')) {
+        if (!$GLOBALS['smarty']->is_cached('catalog.dwt')) {
             /* 取出所有分类 */
             $cat_list = cat_list(0, 0, false);
 
@@ -21,17 +21,17 @@ class Catalog extends Init
 
             assign_template();
             assign_dynamic('catalog');
-            $position = assign_ur_here(0, $_LANG['catalog']);
-            $smarty->assign('page_title', $position['title']);   // 页面标题
-            $smarty->assign('ur_here', $position['ur_here']); // 当前位置
+            $position = assign_ur_here(0, $GLOBALS['_LANG']['catalog']);
+            $GLOBALS['smarty']->assign('page_title', $position['title']);   // 页面标题
+            $GLOBALS['smarty']->assign('ur_here', $position['ur_here']); // 当前位置
 
-            $smarty->assign('helps', get_shop_help()); // 网店帮助
-            $smarty->assign('cat_list', $cat_list);       // 分类列表
-            $smarty->assign('brand_list', get_brands());    // 所以品牌赋值
-            $smarty->assign('promotion_info', get_promotion_info());
+            $GLOBALS['smarty']->assign('helps', get_shop_help()); // 网店帮助
+            $GLOBALS['smarty']->assign('cat_list', $cat_list);       // 分类列表
+            $GLOBALS['smarty']->assign('brand_list', get_brands());    // 所以品牌赋值
+            $GLOBALS['smarty']->assign('promotion_info', get_promotion_info());
         }
 
-        $smarty->display('catalog.dwt');
+        $GLOBALS['smarty']->display('catalog.dwt');
     }
 
     /**

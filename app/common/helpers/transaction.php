@@ -76,7 +76,6 @@ function edit_profile($profile)
  */
 function get_profile($user_id)
 {
-    global $user;
 
 
     /* 会员帐号信息 */
@@ -88,7 +87,7 @@ function get_profile($user_id)
     $infos = $GLOBALS['db']->getRow($sql);
     $infos['user_name'] = addslashes($infos['user_name']);
 
-    $row = $user->get_profile_by_name($infos['user_name']); //获取用户帐号信息
+    $row = $GLOBALS['user']->get_profile_by_name($infos['user_name']); //获取用户帐号信息
     $_SESSION['email'] = $row['email'];    //注册SESSION
 
     /* 会员等级 */

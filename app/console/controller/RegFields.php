@@ -9,7 +9,7 @@ class RegFields extends Init
 {
     public function index()
     {
-        $exc = new exchange($ecs->table("reg_fields"), $db, 'id', 'reg_field_name');
+        $exc = new Exchange($GLOBALS['ecs']->table("reg_fields"), $db, 'id', 'reg_field_name');
 
         /*------------------------------------------------------ */
         //-- 会员注册项列表
@@ -17,16 +17,16 @@ class RegFields extends Init
 
         if ($_REQUEST['act'] == 'list') {
             $fields = array();
-            $fields = $db->getAll("SELECT * FROM " . $ecs->table('reg_fields') . " ORDER BY dis_order, id");
+            $fields = $GLOBALS['db']->getAll("SELECT * FROM " . $GLOBALS['ecs']->table('reg_fields') . " ORDER BY dis_order, id");
 
-            $smarty->assign('ur_here', $_LANG['021_reg_fields']);
-            $smarty->assign('action_link', array('text' => $_LANG['add_reg_field'], 'href' => 'reg_fields.php?act=add'));
-            $smarty->assign('full_page', 1);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['021_reg_fields']);
+            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['add_reg_field'], 'href' => 'reg_fields.php?act=add'));
+            $GLOBALS['smarty']->assign('full_page', 1);
 
-            $smarty->assign('reg_fields', $fields);
+            $GLOBALS['smarty']->assign('reg_fields', $fields);
 
             assign_query_info();
-            $smarty->display('reg_fields.htm');
+            $GLOBALS['smarty']->display('reg_fields.htm');
         }
 
 
@@ -35,10 +35,10 @@ class RegFields extends Init
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'query') {
             $fields = array();
-            $fields = $db->getAll("SELECT * FROM " . $ecs->table('reg_fields') . "ORDER BY id");
+            $fields = $GLOBALS['db']->getAll("SELECT * FROM " . $GLOBALS['ecs']->table('reg_fields') . "ORDER BY id");
 
-            $smarty->assign('reg_fields', $fields);
-            make_json_result($smarty->fetch('reg_fields.htm'));
+            $GLOBALS['smarty']->assign('reg_fields', $fields);
+            make_json_result($GLOBALS['smarty']->fetch('reg_fields.htm'));
         }
 
         /*------------------------------------------------------ */
@@ -54,13 +54,13 @@ class RegFields extends Init
             $reg_field['reg_field_display'] = 1;
             $reg_field['reg_field_need'] = 1;
 
-            $smarty->assign('reg_field', $reg_field);
-            $smarty->assign('ur_here', $_LANG['add_reg_field']);
-            $smarty->assign('action_link', array('text' => $_LANG['021_reg_fields'], 'href' => 'reg_fields.php?act=list'));
-            $smarty->assign('form_action', $form_action);
+            $GLOBALS['smarty']->assign('reg_field', $reg_field);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['add_reg_field']);
+            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['021_reg_fields'], 'href' => 'reg_fields.php?act=list'));
+            $GLOBALS['smarty']->assign('form_action', $form_action);
 
             assign_query_info();
-            $smarty->display('reg_field_info.htm');
+            $GLOBALS['smarty']->display('reg_field_info.htm');
         }
 
         /*------------------------------------------------------ */
@@ -72,22 +72,22 @@ class RegFields extends Init
 
             /* 检查是否存在重名的会员注册项 */
             if (!$exc->is_only('reg_field_name', trim($_POST['reg_field_name']))) {
-                sys_msg(sprintf($_LANG['field_name_exist'], trim($_POST['reg_field_name'])), 1);
+                sys_msg(sprintf($GLOBALS['_LANG']['field_name_exist'], trim($_POST['reg_field_name'])), 1);
             }
 
-            $sql = "INSERT INTO " . $ecs->table('reg_fields') . "( " .
+            $sql = "INSERT INTO " . $GLOBALS['ecs']->table('reg_fields') . "( " .
                 "reg_field_name, dis_order, display, is_need" .
                 ") VALUES (" .
                 "'$_POST[reg_field_name]', '$_POST[reg_field_order]', '$_POST[reg_field_display]', '$_POST[reg_field_need]')";
-            $db->query($sql);
+            $GLOBALS['db']->query($sql);
 
             /* 管理员日志 */
             admin_log(trim($_POST['reg_field_name']), 'add', 'reg_fields');
             clear_cache_files();
 
-            $lnk[] = array('text' => $_LANG['back_list'], 'href' => 'reg_fields.php?act=list');
-            $lnk[] = array('text' => $_LANG['add_continue'], 'href' => 'reg_fields.php?act=add');
-            sys_msg($_LANG['add_field_success'], 0, $lnk);
+            $lnk[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'reg_fields.php?act=list');
+            $lnk[] = array('text' => $GLOBALS['_LANG']['add_continue'], 'href' => 'reg_fields.php?act=add');
+            sys_msg($GLOBALS['_LANG']['add_field_success'], 0, $lnk);
         }
 
         /*------------------------------------------------------ */
@@ -100,16 +100,16 @@ class RegFields extends Init
             $form_action = 'update';
 
             $sql = "SELECT id AS reg_field_id, reg_field_name, dis_order AS reg_field_order, display AS reg_field_display, is_need AS reg_field_need FROM " .
-                $ecs->table('reg_fields') . " WHERE id='$_REQUEST[id]'";
-            $reg_field = $db->GetRow($sql);
+                $GLOBALS['ecs']->table('reg_fields') . " WHERE id='$_REQUEST[id]'";
+            $reg_field = $GLOBALS['db']->GetRow($sql);
 
-            $smarty->assign('reg_field', $reg_field);
-            $smarty->assign('ur_here', $_LANG['add_reg_field']);
-            $smarty->assign('action_link', array('text' => $_LANG['021_reg_fields'], 'href' => 'reg_fields.php?act=list'));
-            $smarty->assign('form_action', $form_action);
+            $GLOBALS['smarty']->assign('reg_field', $reg_field);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['add_reg_field']);
+            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['021_reg_fields'], 'href' => 'reg_fields.php?act=list'));
+            $GLOBALS['smarty']->assign('form_action', $form_action);
 
             assign_query_info();
-            $smarty->display('reg_field_info.htm');
+            $GLOBALS['smarty']->display('reg_field_info.htm');
         }
 
         /*------------------------------------------------------ */
@@ -121,18 +121,18 @@ class RegFields extends Init
 
             /* 检查是否存在重名的会员注册项 */
             if ($_POST['reg_field_name'] != $_POST['old_field_name'] && !$exc->is_only('reg_field_name', trim($_POST['reg_field_name']))) {
-                sys_msg(sprintf($_LANG['field_name_exist'], trim($_POST['reg_field_name'])), 1);
+                sys_msg(sprintf($GLOBALS['_LANG']['field_name_exist'], trim($_POST['reg_field_name'])), 1);
             }
 
-            $sql = "UPDATE " . $ecs->table('reg_fields') . " SET `reg_field_name` = '$_POST[reg_field_name]', `dis_order` = '$_POST[reg_field_order]', `display` = '$_POST[reg_field_display]', `is_need` = '$_POST[reg_field_need]' WHERE `id` = '$_POST[id]'";
-            $db->query($sql);
+            $sql = "UPDATE " . $GLOBALS['ecs']->table('reg_fields') . " SET `reg_field_name` = '$_POST[reg_field_name]', `dis_order` = '$_POST[reg_field_order]', `display` = '$_POST[reg_field_display]', `is_need` = '$_POST[reg_field_need]' WHERE `id` = '$_POST[id]'";
+            $GLOBALS['db']->query($sql);
 
             /* 管理员日志 */
             admin_log(trim($_POST['reg_field_name']), 'edit', 'reg_fields');
             clear_cache_files();
 
-            $lnk[] = array('text' => $_LANG['back_list'], 'href' => 'reg_fields.php?act=list');
-            sys_msg($_LANG['update_field_success'], 0, $lnk);
+            $lnk[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'reg_fields.php?act=list');
+            sys_msg($GLOBALS['_LANG']['update_field_success'], 0, $lnk);
         }
 
         /*------------------------------------------------------ */
@@ -171,10 +171,10 @@ class RegFields extends Init
                     clear_cache_files();
                     make_json_result(stripcslashes($val));
                 } else {
-                    make_json_error($db->error());
+                    make_json_error($GLOBALS['db']->error());
                 }
             } else {
-                make_json_error(sprintf($_LANG['field_name_exist'], htmlspecialchars($val)));
+                make_json_error(sprintf($GLOBALS['_LANG']['field_name_exist'], htmlspecialchars($val)));
             }
         } /*
  *  编辑会员注册项排序权值
@@ -190,10 +190,10 @@ class RegFields extends Init
                     clear_cache_files();
                     make_json_result(stripcslashes($val));
                 } else {
-                    make_json_error($db->error());
+                    make_json_error($GLOBALS['db']->error());
                 }
             } else {
-                make_json_error($_LANG['order_not_num']);
+                make_json_error($GLOBALS['_LANG']['order_not_num']);
             }
         }
 

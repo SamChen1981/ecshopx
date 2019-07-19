@@ -13,9 +13,9 @@ class Package extends Init
         load_helper('transaction');
 
         /* 载入语言文件 */
-        require_once(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/shopping_flow.php');
-        require_once(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/user.php');
-        require_once(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/admin/package.php');
+        require_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/shopping_flow.php');
+        require_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/user.php');
+        require_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/admin/package.php');
 
         /*------------------------------------------------------ */
         //-- PROCESSOR
@@ -23,19 +23,19 @@ class Package extends Init
 
         assign_template();
         assign_dynamic('package');
-        $position = assign_ur_here(0, $_LANG['shopping_package']);
-        $smarty->assign('page_title', $position['title']);    // 页面标题
-        $smarty->assign('ur_here', $position['ur_here']);  // 当前位置
+        $position = assign_ur_here(0, $GLOBALS['_LANG']['shopping_package']);
+        $GLOBALS['smarty']->assign('page_title', $position['title']);    // 页面标题
+        $GLOBALS['smarty']->assign('ur_here', $position['ur_here']);  // 当前位置
 
         /* 读出所有礼包信息 */
 
         $now = gmtime();
 
-        $sql = "SELECT * FROM " . $ecs->table('goods_activity') . " WHERE `start_time` <= '$now' AND `end_time` >= '$now' AND `act_type` = '4' ORDER BY `end_time`";
-        $res = $db->query($sql);
+        $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('goods_activity') . " WHERE `start_time` <= '$now' AND `end_time` >= '$now' AND `act_type` = '4' ORDER BY `end_time`";
+        $res = $GLOBALS['db']->query($sql);
 
         $list = array();
-        while ($row = $db->fetchRow($res)) {
+        while ($row = $GLOBALS['db']->fetchRow($res)) {
             $row['start_time'] = local_date('Y-m-d H:i', $row['start_time']);
             $row['end_time'] = local_date('Y-m-d H:i', $row['end_time']);
             $ext_arr = unserialize($row['ext_info']);
@@ -76,12 +76,12 @@ class Package extends Init
             $list[] = $row;
         }
 
-        $smarty->assign('list', $list);
+        $GLOBALS['smarty']->assign('list', $list);
 
-        $smarty->assign('helps', get_shop_help());       // 网店帮助
-        $smarty->assign('lang', $_LANG);
+        $GLOBALS['smarty']->assign('helps', get_shop_help());       // 网店帮助
+        $GLOBALS['smarty']->assign('lang', $GLOBALS['_LANG']);
 
-        $smarty->assign('feed_url', ($_CFG['rewrite'] == 1) ? "feed-typepackage.xml" : 'feed.php?type=package'); // RSS URL
-        $smarty->display('package.dwt');
+        $GLOBALS['smarty']->assign('feed_url', ($GLOBALS['_CFG']['rewrite'] == 1) ? "feed-typepackage.xml" : 'feed.php?type=package'); // RSS URL
+        $GLOBALS['smarty']->display('package.dwt');
     }
 }

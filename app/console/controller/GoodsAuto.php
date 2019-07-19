@@ -10,38 +10,38 @@ class GoodsAuto extends Init
     public function index()
     {
         admin_priv('goods_auto');
-        $smarty->assign('thisfile', 'goods_auto.php');
+        $GLOBALS['smarty']->assign('thisfile', 'goods_auto.php');
         if ($_REQUEST['act'] == 'list') {
             $goodsdb = $this->get_auto_goods();
-            $crons_enable = $db->getOne("SELECT enable FROM " . $GLOBALS['ecs']->table('crons') . " WHERE cron_code='auto_manage'");
-            $smarty->assign('crons_enable', $crons_enable);
-            $smarty->assign('full_page', 1);
-            $smarty->assign('ur_here', $_LANG['goods_auto']);
-            $smarty->assign('cfg_lang', $_CFG['lang']);
-            $smarty->assign('goodsdb', $goodsdb['goodsdb']);
-            $smarty->assign('filter', $goodsdb['filter']);
-            $smarty->assign('record_count', $goodsdb['record_count']);
-            $smarty->assign('page_count', $goodsdb['page_count']);
+            $crons_enable = $GLOBALS['db']->getOne("SELECT enable FROM " . $GLOBALS['ecs']->table('crons') . " WHERE cron_code='auto_manage'");
+            $GLOBALS['smarty']->assign('crons_enable', $crons_enable);
+            $GLOBALS['smarty']->assign('full_page', 1);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['goods_auto']);
+            $GLOBALS['smarty']->assign('cfg_lang', $GLOBALS['_CFG']['lang']);
+            $GLOBALS['smarty']->assign('goodsdb', $goodsdb['goodsdb']);
+            $GLOBALS['smarty']->assign('filter', $goodsdb['filter']);
+            $GLOBALS['smarty']->assign('record_count', $goodsdb['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $goodsdb['page_count']);
             assign_query_info();
-            $smarty->display('goods_auto.htm');
+            $GLOBALS['smarty']->display('goods_auto.htm');
         } elseif ($_REQUEST['act'] == 'query') {
             $goodsdb = $this->get_auto_goods();
-            $smarty->assign('goodsdb', $goodsdb['goodsdb']);
-            $smarty->assign('filter', $goodsdb['filter']);
-            $smarty->assign('cfg_lang', $_CFG['lang']);
-            $smarty->assign('record_count', $goodsdb['record_count']);
-            $smarty->assign('page_count', $goodsdb['page_count']);
+            $GLOBALS['smarty']->assign('goodsdb', $goodsdb['goodsdb']);
+            $GLOBALS['smarty']->assign('filter', $goodsdb['filter']);
+            $GLOBALS['smarty']->assign('cfg_lang', $GLOBALS['_CFG']['lang']);
+            $GLOBALS['smarty']->assign('record_count', $goodsdb['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $goodsdb['page_count']);
 
             $sort_flag = sort_flag($goodsdb['filter']);
-            $smarty->assign($sort_flag['tag'], $sort_flag['img']);
+            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
-            make_json_result($smarty->fetch('goods_auto.htm'), '', array('filter' => $goodsdb['filter'], 'page_count' => $goodsdb['page_count']));
+            make_json_result($GLOBALS['smarty']->fetch('goods_auto.htm'), '', array('filter' => $goodsdb['filter'], 'page_count' => $goodsdb['page_count']));
         } elseif ($_REQUEST['act'] == 'del') {
             $goods_id = (int)$_REQUEST['goods_id'];
-            $sql = "DELETE FROM " . $ecs->table('auto_manage') . " WHERE item_id = '$goods_id' AND type = 'goods'";
-            $db->query($sql);
-            $links[] = array('text' => $_LANG['goods_auto'], 'href' => 'goods_auto.php?act=list');
-            sys_msg($_LANG['edit_ok'], 0, $links);
+            $sql = "DELETE FROM " . $GLOBALS['ecs']->table('auto_manage') . " WHERE item_id = '$goods_id' AND type = 'goods'";
+            $GLOBALS['db']->query($sql);
+            $links[] = array('text' => $GLOBALS['_LANG']['goods_auto'], 'href' => 'goods_auto.php?act=list');
+            sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
         } elseif ($_REQUEST['act'] == 'edit_starttime') {
             check_authz_json('goods_auto');
 
@@ -55,7 +55,7 @@ class GoodsAuto extends Init
                 make_json_error('');
             }
 
-            $db->autoReplace($ecs->table('auto_manage'), array('item_id' => $id, 'type' => 'goods',
+            $GLOBALS['db']->autoReplace($GLOBALS['ecs']->table('auto_manage'), array('item_id' => $id, 'type' => 'goods',
                 'starttime' => $time), array('starttime' => (string)$time));
 
             clear_cache_files();
@@ -73,7 +73,7 @@ class GoodsAuto extends Init
                 make_json_error('');
             }
 
-            $db->autoReplace($ecs->table('auto_manage'), array('item_id' => $id, 'type' => 'goods',
+            $GLOBALS['db']->autoReplace($GLOBALS['ecs']->table('auto_manage'), array('item_id' => $id, 'type' => 'goods',
                 'endtime' => $time), array('endtime' => (string)$time));
 
             clear_cache_files();
@@ -83,7 +83,7 @@ class GoodsAuto extends Init
             admin_priv('goods_auto');
 
             if (!isset($_POST['checkboxes']) || !is_array($_POST['checkboxes'])) {
-                sys_msg($_LANG['no_select_goods'], 1);
+                sys_msg($GLOBALS['_LANG']['no_select_goods'], 1);
             }
 
             if ($_POST['date'] == '0000-00-00') {
@@ -93,18 +93,18 @@ class GoodsAuto extends Init
             }
 
             foreach ($_POST['checkboxes'] as $id) {
-                $db->autoReplace($ecs->table('auto_manage'), array('item_id' => $id, 'type' => 'goods',
+                $GLOBALS['db']->autoReplace($GLOBALS['ecs']->table('auto_manage'), array('item_id' => $id, 'type' => 'goods',
                     'starttime' => $_POST['date']), array('starttime' => (string)$_POST['date']));
             }
 
-            $lnk[] = array('text' => $_LANG['back_list'], 'href' => 'goods_auto.php?act=list');
-            sys_msg($_LANG['batch_start_succeed'], 0, $lnk);
+            $lnk[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'goods_auto.php?act=list');
+            sys_msg($GLOBALS['_LANG']['batch_start_succeed'], 0, $lnk);
         } //批量下架
         elseif ($_REQUEST['act'] == 'batch_end') {
             admin_priv('goods_auto');
 
             if (!isset($_POST['checkboxes']) || !is_array($_POST['checkboxes'])) {
-                sys_msg($_LANG['no_select_goods'], 1);
+                sys_msg($GLOBALS['_LANG']['no_select_goods'], 1);
             }
 
             if ($_POST['date'] == '0000-00-00') {
@@ -114,12 +114,12 @@ class GoodsAuto extends Init
             }
 
             foreach ($_POST['checkboxes'] as $id) {
-                $db->autoReplace($ecs->table('auto_manage'), array('item_id' => $id, 'type' => 'goods',
+                $GLOBALS['db']->autoReplace($GLOBALS['ecs']->table('auto_manage'), array('item_id' => $id, 'type' => 'goods',
                     'endtime' => $_POST['date']), array('endtime' => (string)$_POST['date']));
             }
 
-            $lnk[] = array('text' => $_LANG['back_list'], 'href' => 'goods_auto.php?act=list');
-            sys_msg($_LANG['batch_end_succeed'], 0, $lnk);
+            $lnk[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'goods_auto.php?act=list');
+            sys_msg($GLOBALS['_LANG']['batch_end_succeed'], 0, $lnk);
         }
     }
 

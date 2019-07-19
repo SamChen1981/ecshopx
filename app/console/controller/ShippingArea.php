@@ -9,7 +9,7 @@ class ShippingArea extends Init
 {
     public function index()
     {
-        $exc = new exchange($ecs->table('shipping_area'), $db, 'shipping_area_id', 'shipping_area_name');
+        $exc = new Exchange($GLOBALS['ecs']->table('shipping_area'), $db, 'shipping_area_id', 'shipping_area_name');
 
         /*------------------------------------------------------ */
         //-- 配送区域列表
@@ -18,16 +18,16 @@ class ShippingArea extends Init
             $shipping_id = intval($_REQUEST['shipping']);
 
             $list = $this->get_shipping_area_list($shipping_id);
-            $smarty->assign('areas', $list);
+            $GLOBALS['smarty']->assign('areas', $list);
 
-            $smarty->assign('ur_here', '<a href="shipping.php?act=list">' .
-                $_LANG['03_shipping_list'] . '</a> - ' . $_LANG['shipping_area_list'] . '</a>');
-            $smarty->assign('action_link', array('href' => 'shipping_area.php?act=add&shipping=' . $shipping_id,
-                'text' => $_LANG['new_area']));
-            $smarty->assign('full_page', 1);
+            $GLOBALS['smarty']->assign('ur_here', '<a href="shipping.php?act=list">' .
+                $GLOBALS['_LANG']['03_shipping_list'] . '</a> - ' . $GLOBALS['_LANG']['shipping_area_list'] . '</a>');
+            $GLOBALS['smarty']->assign('action_link', array('href' => 'shipping_area.php?act=add&shipping=' . $shipping_id,
+                'text' => $GLOBALS['_LANG']['new_area']));
+            $GLOBALS['smarty']->assign('full_page', 1);
 
             assign_query_info();
-            $smarty->display('shipping_area_list.htm');
+            $GLOBALS['smarty']->display('shipping_area_list.htm');
         }
 
         /*------------------------------------------------------ */
@@ -37,7 +37,7 @@ class ShippingArea extends Init
         elseif ($_REQUEST['act'] == 'add' && !empty($_REQUEST['shipping'])) {
             admin_priv('shiparea_manage');
 
-            $shipping = $db->getRow("SELECT shipping_name, shipping_code FROM " . $ecs->table('shipping') . " WHERE shipping_id='$_REQUEST[shipping]'");
+            $shipping = $GLOBALS['db']->getRow("SELECT shipping_name, shipping_code FROM " . $GLOBALS['ecs']->table('shipping') . " WHERE shipping_id='$_REQUEST[shipping]'");
 
             $set_modules = 1;
             include_once(ROOT_PATH . 'includes/modules/shipping/' . $shipping['shipping_code'] . '.php');
@@ -46,47 +46,47 @@ class ShippingArea extends Init
             foreach ($modules[0]['configure'] as $key => $val) {
                 $fields[$key]['name'] = $val['name'];
                 $fields[$key]['value'] = $val['value'];
-                $fields[$key]['label'] = $_LANG[$val['name']];
+                $fields[$key]['label'] = $GLOBALS['_LANG'][$val['name']];
             }
             $count = count($fields);
             $fields[$count]['name'] = "free_money";
             $fields[$count]['value'] = "0";
-            $fields[$count]['label'] = $_LANG["free_money"];
+            $fields[$count]['label'] = $GLOBALS['_LANG']["free_money"];
 
             /* 如果支持货到付款，则允许设置货到付款支付费用 */
             if ($modules[0]['cod']) {
                 $count++;
                 $fields[$count]['name'] = "pay_fee";
                 $fields[$count]['value'] = "0";
-                $fields[$count]['label'] = $_LANG['pay_fee'];
+                $fields[$count]['label'] = $GLOBALS['_LANG']['pay_fee'];
             }
 
             $shipping_area['shipping_id'] = 0;
             $shipping_area['free_money'] = 0;
 
-            $smarty->assign('ur_here', $shipping['shipping_name'] . ' - ' . $_LANG['new_area']);
-            $smarty->assign('shipping_area', array('shipping_id' => $_REQUEST['shipping'], 'shipping_code' => $shipping['shipping_code']));
-            $smarty->assign('fields', $fields);
-            $smarty->assign('form_action', 'insert');
-            $smarty->assign('countries', get_regions());
-            $smarty->assign('default_country', $_CFG['shop_country']);
+            $GLOBALS['smarty']->assign('ur_here', $shipping['shipping_name'] . ' - ' . $GLOBALS['_LANG']['new_area']);
+            $GLOBALS['smarty']->assign('shipping_area', array('shipping_id' => $_REQUEST['shipping'], 'shipping_code' => $shipping['shipping_code']));
+            $GLOBALS['smarty']->assign('fields', $fields);
+            $GLOBALS['smarty']->assign('form_action', 'insert');
+            $GLOBALS['smarty']->assign('countries', get_regions());
+            $GLOBALS['smarty']->assign('default_country', $GLOBALS['_CFG']['shop_country']);
             assign_query_info();
-            $smarty->display('shipping_area_info.htm');
+            $GLOBALS['smarty']->display('shipping_area_info.htm');
         } elseif ($_REQUEST['act'] == 'insert') {
             admin_priv('shiparea_manage');
 
             /* 检查同类型的配送方式下有没有重名的配送区域 */
-            $sql = "SELECT COUNT(*) FROM " . $ecs->table("shipping_area") .
+            $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table("shipping_area") .
                 " WHERE shipping_id='$_POST[shipping]' AND shipping_area_name='$_POST[shipping_area_name]'";
-            if ($db->getOne($sql) > 0) {
-                sys_msg($_LANG['repeat_area_name'], 1);
+            if ($GLOBALS['db']->getOne($sql) > 0) {
+                sys_msg($GLOBALS['_LANG']['repeat_area_name'], 1);
             } else {
-                $shipping_code = $db->getOne("SELECT shipping_code FROM " . $ecs->table('shipping') .
+                $shipping_code = $GLOBALS['db']->getOne("SELECT shipping_code FROM " . $GLOBALS['ecs']->table('shipping') .
                     " WHERE shipping_id='$_POST[shipping]'");
                 $plugin = '../includes/modules/shipping/' . $shipping_code . ".php";
 
                 if (!file_exists($plugin)) {
-                    sys_msg($_LANG['not_find_plugin'], 1);
+                    sys_msg($GLOBALS['_LANG']['not_find_plugin'], 1);
                 } else {
                     $set_modules = 1;
                     include_once($plugin);
@@ -111,29 +111,29 @@ class ShippingArea extends Init
                     $config[$count]['value'] = make_semiangle(empty($_POST['pay_fee']) ? '' : $_POST['pay_fee']);
                 }
 
-                $sql = "INSERT INTO " . $ecs->table('shipping_area') .
+                $sql = "INSERT INTO " . $GLOBALS['ecs']->table('shipping_area') .
                     " (shipping_area_name, shipping_id, configure) " .
                     "VALUES" .
                     " ('$_POST[shipping_area_name]', '$_POST[shipping]', '" . serialize($config) . "')";
 
-                $db->query($sql);
+                $GLOBALS['db']->query($sql);
 
-                $new_id = $db->insert_Id();
+                $new_id = $GLOBALS['db']->insert_Id();
 
                 /* 添加选定的城市和地区 */
                 if (isset($_POST['regions']) && is_array($_POST['regions'])) {
                     foreach ($_POST['regions'] as $key => $val) {
-                        $sql = "INSERT INTO " . $ecs->table('area_region') . " (shipping_area_id, region_id) VALUES ('$new_id', '$val')";
-                        $db->query($sql);
+                        $sql = "INSERT INTO " . $GLOBALS['ecs']->table('area_region') . " (shipping_area_id, region_id) VALUES ('$new_id', '$val')";
+                        $GLOBALS['db']->query($sql);
                     }
                 }
 
                 admin_log($_POST['shipping_area_name'], 'add', 'shipping_area');
 
-                //$lnk[] = array('text' => $_LANG['add_area_region'], 'href'=>'shipping_area.php?act=region&id='.$new_id);
-                $lnk[] = array('text' => $_LANG['back_list'], 'href' => 'shipping_area.php?act=list&shipping=' . $_POST['shipping']);
-                $lnk[] = array('text' => $_LANG['add_continue'], 'href' => 'shipping_area.php?act=add&shipping=' . $_POST['shipping']);
-                sys_msg($_LANG['add_area_success'], 0, $lnk);
+                //$lnk[] = array('text' => $GLOBALS['_LANG']['add_area_region'], 'href'=>'shipping_area.php?act=region&id='.$new_id);
+                $lnk[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'shipping_area.php?act=list&shipping=' . $_POST['shipping']);
+                $lnk[] = array('text' => $GLOBALS['_LANG']['add_continue'], 'href' => 'shipping_area.php?act=add&shipping=' . $_POST['shipping']);
+                sys_msg($GLOBALS['_LANG']['add_area_success'], 0, $lnk);
             }
         }
 
@@ -145,9 +145,9 @@ class ShippingArea extends Init
             admin_priv('shiparea_manage');
 
             $sql = "SELECT a.shipping_name, a.shipping_code, a.support_cod, b.* " .
-                "FROM " . $ecs->table('shipping') . " AS a, " . $ecs->table('shipping_area') . " AS b " .
+                "FROM " . $GLOBALS['ecs']->table('shipping') . " AS a, " . $GLOBALS['ecs']->table('shipping_area') . " AS b " .
                 "WHERE b.shipping_id=a.shipping_id AND b.shipping_area_id='$_REQUEST[id]'";
-            $row = $db->getRow($sql);
+            $row = $GLOBALS['db']->getRow($sql);
 
             $set_modules = 1;
             include_once(ROOT_PATH . 'includes/modules/shipping/' . $row['shipping_code'] . '.php');
@@ -176,16 +176,16 @@ class ShippingArea extends Init
                     $item_fee = 1;
                 }
                 if ($val['name'] == 'fee_compute_mode') {
-                    $smarty->assign('fee_compute_mode', $val['value']);
+                    $GLOBALS['smarty']->assign('fee_compute_mode', $val['value']);
                     unset($fields[$key]);
                 } else {
                     $fields[$key]['name'] = $val['name'];
-                    $fields[$key]['label'] = $_LANG[$val['name']];
+                    $fields[$key]['label'] = $GLOBALS['_LANG'][$val['name']];
                 }
             }
 
             if (empty($item_fee)) {
-                $field = array('name' => 'item_fee', 'value' => '0', 'label' => empty($_LANG['item_fee']) ? '' : $_LANG['item_fee']);
+                $field = array('name' => 'item_fee', 'value' => '0', 'label' => empty($GLOBALS['_LANG']['item_fee']) ? '' : $GLOBALS['_LANG']['item_fee']);
                 array_unshift($fields, $field);
             }
 
@@ -193,39 +193,39 @@ class ShippingArea extends Init
             $regions = array();
 
             $sql = "SELECT a.region_id, r.region_name " .
-                "FROM " . $ecs->table('area_region') . " AS a, " . $ecs->table('region') . " AS r " .
+                "FROM " . $GLOBALS['ecs']->table('area_region') . " AS a, " . $GLOBALS['ecs']->table('region') . " AS r " .
                 "WHERE r.region_id=a.region_id AND a.shipping_area_id='$_REQUEST[id]'";
-            $res = $db->query($sql);
-            while ($arr = $db->fetchRow($res)) {
+            $res = $GLOBALS['db']->query($sql);
+            while ($arr = $GLOBALS['db']->fetchRow($res)) {
                 $regions[$arr['region_id']] = $arr['region_name'];
             }
 
             assign_query_info();
-            $smarty->assign('ur_here', $row['shipping_name'] . ' - ' . $_LANG['edit_area']);
-            $smarty->assign('id', $_REQUEST['id']);
-            $smarty->assign('fields', $fields);
-            $smarty->assign('shipping_area', $row);
-            $smarty->assign('regions', $regions);
-            $smarty->assign('form_action', 'update');
-            $smarty->assign('countries', get_regions());
-            $smarty->assign('default_country', 1);
-            $smarty->display('shipping_area_info.htm');
+            $GLOBALS['smarty']->assign('ur_here', $row['shipping_name'] . ' - ' . $GLOBALS['_LANG']['edit_area']);
+            $GLOBALS['smarty']->assign('id', $_REQUEST['id']);
+            $GLOBALS['smarty']->assign('fields', $fields);
+            $GLOBALS['smarty']->assign('shipping_area', $row);
+            $GLOBALS['smarty']->assign('regions', $regions);
+            $GLOBALS['smarty']->assign('form_action', 'update');
+            $GLOBALS['smarty']->assign('countries', get_regions());
+            $GLOBALS['smarty']->assign('default_country', 1);
+            $GLOBALS['smarty']->display('shipping_area_info.htm');
         } elseif ($_REQUEST['act'] == 'update') {
             admin_priv('shiparea_manage');
 
             /* 检查同类型的配送方式下有没有重名的配送区域 */
-            $sql = "SELECT COUNT(*) FROM " . $ecs->table("shipping_area") .
+            $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table("shipping_area") .
                 " WHERE shipping_id='$_POST[shipping]' AND " .
                 "shipping_area_name='$_POST[shipping_area_name]' AND " .
                 "shipping_area_id<>'$_POST[id]'";
-            if ($db->getOne($sql) > 0) {
-                sys_msg($_LANG['repeat_area_name'], 1);
+            if ($GLOBALS['db']->getOne($sql) > 0) {
+                sys_msg($GLOBALS['_LANG']['repeat_area_name'], 1);
             } else {
-                $shipping_code = $db->getOne("SELECT shipping_code FROM " . $ecs->table('shipping') . " WHERE shipping_id='$_POST[shipping]'");
+                $shipping_code = $GLOBALS['db']->getOne("SELECT shipping_code FROM " . $GLOBALS['ecs']->table('shipping') . " WHERE shipping_id='$_POST[shipping]'");
                 $plugin = '../includes/modules/shipping/' . $shipping_code . ".php";
 
                 if (!file_exists($plugin)) {
-                    sys_msg($_LANG['not_find_plugin'], 1);
+                    sys_msg($GLOBALS['_LANG']['not_find_plugin'], 1);
                 } else {
                     $set_modules = 1;
                     include_once($plugin);
@@ -249,12 +249,12 @@ class ShippingArea extends Init
                     $config[$count]['value'] = make_semiangle(empty($_POST['pay_fee']) ? '' : $_POST['pay_fee']);
                 }
 
-                $sql = "UPDATE " . $ecs->table('shipping_area') .
+                $sql = "UPDATE " . $GLOBALS['ecs']->table('shipping_area') .
                     " SET shipping_area_name='$_POST[shipping_area_name]', " .
                     "configure='" . serialize($config) . "' " .
                     "WHERE shipping_area_id='$_POST[id]'";
 
-                $db->query($sql);
+                $GLOBALS['db']->query($sql);
 
                 admin_log($_POST['shipping_area_name'], 'edit', 'shipping_area');
 
@@ -267,9 +267,9 @@ class ShippingArea extends Init
                 }
 
                 // 查询所有区域 region_id => parent_id
-                $sql = "SELECT region_id, parent_id FROM " . $ecs->table('region');
-                $res = $db->query($sql);
-                while ($row = $db->fetchRow($res)) {
+                $sql = "SELECT region_id, parent_id FROM " . $GLOBALS['ecs']->table('region');
+                $res = $GLOBALS['db']->query($sql);
+                while ($row = $GLOBALS['db']->fetchRow($res)) {
                     $region_list[$row['region_id']] = $row['parent_id'];
                 }
 
@@ -286,17 +286,17 @@ class ShippingArea extends Init
                 }
 
                 /* 清除原有的城市和地区 */
-                $db->query("DELETE FROM " . $ecs->table("area_region") . " WHERE shipping_area_id='$_POST[id]'");
+                $GLOBALS['db']->query("DELETE FROM " . $GLOBALS['ecs']->table("area_region") . " WHERE shipping_area_id='$_POST[id]'");
 
                 /* 添加选定的城市和地区 */
                 foreach ($selected_regions as $key => $val) {
-                    $sql = "INSERT INTO " . $ecs->table('area_region') . " (shipping_area_id, region_id) VALUES ('$_POST[id]', '$val')";
-                    $db->query($sql);
+                    $sql = "INSERT INTO " . $GLOBALS['ecs']->table('area_region') . " (shipping_area_id, region_id) VALUES ('$_POST[id]', '$val')";
+                    $GLOBALS['db']->query($sql);
                 }
 
-                $lnk[] = array('text' => $_LANG['back_list'], 'href' => 'shipping_area.php?act=list&shipping=' . $_POST['shipping']);
+                $lnk[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'shipping_area.php?act=list&shipping=' . $_POST['shipping']);
 
-                sys_msg($_LANG['edit_area_success'], 0, $lnk);
+                sys_msg($GLOBALS['_LANG']['edit_area_success'], 0, $lnk);
             }
         }
 
@@ -309,7 +309,7 @@ class ShippingArea extends Init
             if (isset($_POST['areas']) && count($_POST['areas']) > 0) {
                 $i = 0;
                 foreach ($_POST['areas'] as $v) {
-                    $db->query("DELETE FROM " . $ecs->table('shipping_area') . " WHERE shipping_area_id='$v'");
+                    $GLOBALS['db']->query("DELETE FROM " . $GLOBALS['ecs']->table('shipping_area') . " WHERE shipping_area_id='$v'");
                     $i++;
                 }
 
@@ -317,8 +317,8 @@ class ShippingArea extends Init
                 admin_log('', 'batch_remove', 'shipping_area');
             }
             /* 返回 */
-            $links[0] = array('href' => 'shipping_area.php?act=list&shipping=' . intval($_REQUEST['shipping']), 'text' => $_LANG['go_back']);
-            sys_msg($_LANG['remove_success'], 0, $links);
+            $links[0] = array('href' => 'shipping_area.php?act=list&shipping=' . intval($_REQUEST['shipping']), 'text' => $GLOBALS['_LANG']['go_back']);
+            sys_msg($GLOBALS['_LANG']['remove_success'], 0, $links);
         }
 
         /*------------------------------------------------------ */
@@ -338,7 +338,7 @@ class ShippingArea extends Init
 
             /* 检查是否有重复的配送区域名称 */
             if (!$exc->is_only('shipping_area_name', $val, $id, "shipping_id = '$shipping_id'")) {
-                make_json_error($_LANG['repeat_area_name']);
+                make_json_error($GLOBALS['_LANG']['repeat_area_name']);
             }
 
             /* 更新名称 */
@@ -363,13 +363,13 @@ class ShippingArea extends Init
             $shipping_id = $exc->get_name($id, 'shipping_id');
 
             $exc->drop($id);
-            $db->query('DELETE FROM ' . $ecs->table('area_region') . ' WHERE shipping_area_id=' . $id);
+            $GLOBALS['db']->query('DELETE FROM ' . $GLOBALS['ecs']->table('area_region') . ' WHERE shipping_area_id=' . $id);
 
             admin_log($name, 'remove', 'shipping_area');
 
             $list = $this->get_shipping_area_list($shipping_id);
-            $smarty->assign('areas', $list);
-            make_json_result($smarty->fetch('shipping_area_list.htm'));
+            $GLOBALS['smarty']->assign('areas', $list);
+            make_json_result($GLOBALS['smarty']->fetch('shipping_area_list.htm'));
         }
     }
 

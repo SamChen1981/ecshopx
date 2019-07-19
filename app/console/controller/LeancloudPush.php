@@ -11,16 +11,16 @@ function delivery_msg_push($id, $db, $ecs)
         return false;
     }
 
-    $delivery_info = $db->getRow("SELECT * FROM " . $ecs->table('delivery_order') . " WHERE delivery_id = '$id'");
+    $delivery_info = $GLOBALS['db']->getRow("SELECT * FROM " . $GLOBALS['ecs']->table('delivery_order') . " WHERE delivery_id = '$id'");
     if ($delivery_info) {
         $user_id = $delivery_info['user_id'];
         $time = date('Y-m-d H:i:s');
         $title = '您的订单已发货';
         $content = '您的订单号：' . $delivery_info['order_sn'] . ',已经由' . $delivery_info['shipping_name'] . '发出,物流单号' . $delivery_info['invoice_no'];
         $link = 'deeplink://goto/shipping/:' . $delivery_info['order_id'];
-        $sql = "INSERT INTO " . $ecs->table('push') . " (`user_id`,`title`,`content`,`link`,`platform`,`push_type`,`message_type`,`push_at`,`created_at`,`updated_at`) VALUES ('$user_id','$title','$content','$link','0','0','2','$time','$time','$time')";
-        $db->query($sql);
-        $msg_id = $db->getRow("SELECT id FROM " . $ecs->table('push') . " ORDER BY `id` DESC LIMIT 1");
+        $sql = "INSERT INTO " . $GLOBALS['ecs']->table('push') . " (`user_id`,`title`,`content`,`link`,`platform`,`push_type`,`message_type`,`push_at`,`created_at`,`updated_at`) VALUES ('$user_id','$title','$content','$link','0','0','2','$time','$time','$time')";
+        $GLOBALS['db']->query($sql);
+        $msg_id = $GLOBALS['db']->getRow("SELECT id FROM " . $GLOBALS['ecs']->table('push') . " ORDER BY `id` DESC LIMIT 1");
         $is_push = push($msg_id['id'], $db, $ecs);
         return $is_push;
     }
@@ -44,7 +44,7 @@ function push($message_id, $db, $ecs)
     //物流信息定向推送
     if ($messageInfo['user_id'] != '0') {
         $user_id = $messageInfo['user_id'];
-        $user_info = $db->getRow("SELECT * FROM " . $ecs->table('device') . " WHERE user_id = '$user_id'");
+        $user_info = $GLOBALS['db']->getRow("SELECT * FROM " . $GLOBALS['ecs']->table('device') . " WHERE user_id = '$user_id'");
         if ($user_info) {
             $messageInfo['platform'] = $user_info['platform_type'];
             $device_id = $user_info['device_id'];
@@ -98,11 +98,11 @@ function push($message_id, $db, $ecs)
     $res_objectId = $res['objectId'];
     if ($res_objectId) {
         if ($messageInfo['push_type'] == 0) {
-            $sql = "UPDATE " . $ecs->table('push') . " SET `isPush`='1',`objectId`='$res_objectId' WHERE id = '$message_id'";
+            $sql = "UPDATE " . $GLOBALS['ecs']->table('push') . " SET `isPush`='1',`objectId`='$res_objectId' WHERE id = '$message_id'";
         } else {
-            $sql = "UPDATE " . $ecs->table('push') . " SET `isPush`='0',`objectId`='$res_objectId' WHERE id = '$message_id'";
+            $sql = "UPDATE " . $GLOBALS['ecs']->table('push') . " SET `isPush`='0',`objectId`='$res_objectId' WHERE id = '$message_id'";
         }
-        $db->query($sql);
+        $GLOBALS['db']->query($sql);
         return true;
     } else {
         return false;
@@ -111,8 +111,8 @@ function push($message_id, $db, $ecs)
 
 function get_config($db, $ecs)
 {
-    $sql = "SELECT * FROM " . $ecs->table('config') . " WHERE code = 'leancloud' AND status = '1'";
-    $res = $db->getAll($sql);
+    $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('config') . " WHERE code = 'leancloud' AND status = '1'";
+    $res = $GLOBALS['db']->getAll($sql);
     if ($res) {
         return $res[0];
     } else {
@@ -122,8 +122,8 @@ function get_config($db, $ecs)
 
 function get_msginfo($msg_id, $db, $ecs)
 {
-    $sql = "SELECT * FROM " . $ecs->table('push') . " WHERE id = '$msg_id'";
-    $res = $db->getAll($sql);
+    $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('push') . " WHERE id = '$msg_id'";
+    $res = $GLOBALS['db']->getAll($sql);
     if ($res) {
         return $res[0];
     } else {

@@ -21,22 +21,22 @@ class Message extends Init
         //-- 留言列表页面
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
-            $smarty->assign('full_page', 1);
-            $smarty->assign('ur_here', $_LANG['msg_list']);
-            $smarty->assign('action_link', array('text' => $_LANG['send_msg'], 'href' => 'message.php?act=send'));
+            $GLOBALS['smarty']->assign('full_page', 1);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['msg_list']);
+            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['send_msg'], 'href' => 'message.php?act=send'));
 
             $list = $this->get_message_list();
 
-            $smarty->assign('message_list', $list['item']);
-            $smarty->assign('filter', $list['filter']);
-            $smarty->assign('record_count', $list['record_count']);
-            $smarty->assign('page_count', $list['page_count']);
+            $GLOBALS['smarty']->assign('message_list', $list['item']);
+            $GLOBALS['smarty']->assign('filter', $list['filter']);
+            $GLOBALS['smarty']->assign('record_count', $list['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $list['page_count']);
 
             $sort_flag = sort_flag($list['filter']);
-            $smarty->assign($sort_flag['tag'], $sort_flag['img']);
+            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
             assign_query_info();
-            $smarty->display('message_list.htm');
+            $GLOBALS['smarty']->display('message_list.htm');
         }
 
         /*------------------------------------------------------ */
@@ -45,16 +45,16 @@ class Message extends Init
         elseif ($_REQUEST['act'] == 'query') {
             $list = $this->get_message_list();
 
-            $smarty->assign('message_list', $list['item']);
-            $smarty->assign('filter', $list['filter']);
-            $smarty->assign('record_count', $list['record_count']);
-            $smarty->assign('page_count', $list['page_count']);
+            $GLOBALS['smarty']->assign('message_list', $list['item']);
+            $GLOBALS['smarty']->assign('filter', $list['filter']);
+            $GLOBALS['smarty']->assign('record_count', $list['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $list['page_count']);
 
             $sort_flag = sort_flag($list['filter']);
-            $smarty->assign($sort_flag['tag'], $sort_flag['img']);
+            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
             make_json_result(
-                $smarty->fetch('message_list.htm'),
+                $GLOBALS['smarty']->fetch('message_list.htm'),
                 '',
                 array('filter' => $list['filter'], 'page_count' => $list['page_count'])
             );
@@ -65,16 +65,16 @@ class Message extends Init
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'send') {
             /* 获取管理员列表 */
-            $admin_list = $db->getAll('SELECT user_id, user_name FROM ' . $ecs->table('admin_user'));
+            $admin_list = $GLOBALS['db']->getAll('SELECT user_id, user_name FROM ' . $GLOBALS['ecs']->table('admin_user'));
 
-            $smarty->assign('ur_here', $_LANG['send_msg']);
-            $smarty->assign('action_link', array('href' => 'message.php?act=list', 'text' => $_LANG['msg_list']));
-            $smarty->assign('action', 'add');
-            $smarty->assign('form_act', 'insert');
-            $smarty->assign('admin_list', $admin_list);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['send_msg']);
+            $GLOBALS['smarty']->assign('action_link', array('href' => 'message.php?act=list', 'text' => $GLOBALS['_LANG']['msg_list']));
+            $GLOBALS['smarty']->assign('action', 'add');
+            $GLOBALS['smarty']->assign('form_act', 'insert');
+            $GLOBALS['smarty']->assign('admin_list', $admin_list);
 
             assign_query_info();
-            $smarty->display('message_info.htm');
+            $GLOBALS['smarty']->display('message_info.htm');
         }
 
         /*------------------------------------------------------ */
@@ -86,43 +86,43 @@ class Message extends Init
             /* 向所有管理员发送留言 */
             if ($rec_arr[0] == 0) {
                 /* 获取管理员信息 */
-                $result = $db->query('SELECT user_id FROM ' . $ecs->table('admin_user') . 'WHERE user_id !=' . $_SESSION['admin_id']);
-                while ($rows = $db->FetchRow($result)) {
-                    $sql = "INSERT INTO " . $ecs->table('admin_message') . " (sender_id, receiver_id, sent_time, " .
+                $result = $GLOBALS['db']->query('SELECT user_id FROM ' . $GLOBALS['ecs']->table('admin_user') . 'WHERE user_id !=' . $_SESSION['admin_id']);
+                while ($rows = $GLOBALS['db']->FetchRow($result)) {
+                    $sql = "INSERT INTO " . $GLOBALS['ecs']->table('admin_message') . " (sender_id, receiver_id, sent_time, " .
                         "read_time, readed, deleted, title, message) " .
                         "VALUES ('" . $_SESSION['admin_id'] . "', '" . $rows['user_id'] . "', '" . gmtime() . "', " .
                         "0, '0', '0', '$_POST[title]', '$_POST[message]')";
-                    $db->query($sql);
+                    $GLOBALS['db']->query($sql);
                 }
 
                 /*添加链接*/
-                $link[0]['text'] = $_LANG['back_list'];
+                $link[0]['text'] = $GLOBALS['_LANG']['back_list'];
                 $link[0]['href'] = 'message.php?act=list';
 
-                $link[1]['text'] = $_LANG['continue_send_msg'];
+                $link[1]['text'] = $GLOBALS['_LANG']['continue_send_msg'];
                 $link[1]['href'] = 'message.php?act=send';
 
-                sys_msg($_LANG['send_msg'] . "&nbsp;" . $_LANG['action_succeed'], 0, $link);
+                sys_msg($GLOBALS['_LANG']['send_msg'] . "&nbsp;" . $GLOBALS['_LANG']['action_succeed'], 0, $link);
 
                 /* 记录管理员操作 */
-                admin_log(admin_log($_LANG['send_msg']), 'add', 'admin_message');
+                admin_log(admin_log($GLOBALS['_LANG']['send_msg']), 'add', 'admin_message');
             } else {
                 /* 如果是发送给指定的管理员 */
                 foreach ($rec_arr as $key => $id) {
-                    $sql = "INSERT INTO " . $ecs->table('admin_message') . " (sender_id, receiver_id, " .
+                    $sql = "INSERT INTO " . $GLOBALS['ecs']->table('admin_message') . " (sender_id, receiver_id, " .
                         "sent_time, read_time, readed, deleted, title, message) " .
                         "VALUES ('" . $_SESSION['admin_id'] . "', '$id', '" . gmtime() . "', " .
                         "'0', '0', '0', '$_POST[title]', '$_POST[message]')";
-                    $db->query($sql);
+                    $GLOBALS['db']->query($sql);
                 }
-                admin_log(addslashes($_LANG['send_msg']), 'add', 'admin_message');
+                admin_log(addslashes($GLOBALS['_LANG']['send_msg']), 'add', 'admin_message');
 
-                $link[0]['text'] = $_LANG['back_list'];
+                $link[0]['text'] = $GLOBALS['_LANG']['back_list'];
                 $link[0]['href'] = 'message.php?act=list';
-                $link[1]['text'] = $_LANG['continue_send_msg'];
+                $link[1]['text'] = $GLOBALS['_LANG']['continue_send_msg'];
                 $link[1]['href'] = 'message.php?act=send';
 
-                sys_msg($_LANG['send_msg'] . "&nbsp;" . $_LANG['action_succeed'], 0, $link);
+                sys_msg($GLOBALS['_LANG']['send_msg'] . "&nbsp;" . $GLOBALS['_LANG']['action_succeed'], 0, $link);
             }
         }
         /*------------------------------------------------------ */
@@ -132,39 +132,39 @@ class Message extends Init
             $id = intval($_REQUEST['id']);
 
             /* 获取管理员列表 */
-            $admin_list = $db->getAll('SELECT user_id, user_name FROM ' . $ecs->table('admin_user'));
+            $admin_list = $GLOBALS['db']->getAll('SELECT user_id, user_name FROM ' . $GLOBALS['ecs']->table('admin_user'));
 
             /* 获得留言数据*/
             $sql = 'SELECT message_id, receiver_id, title, message' .
-                'FROM ' . $ecs->table('admin_message') . " WHERE message_id='$id'";
-            $msg_arr = $db->getRow($sql);
+                'FROM ' . $GLOBALS['ecs']->table('admin_message') . " WHERE message_id='$id'";
+            $msg_arr = $GLOBALS['db']->getRow($sql);
 
-            $smarty->assign('ur_here', $_LANG['edit_msg']);
-            $smarty->assign('action_link', array('href' => 'message.php?act=list', 'text' => $_LANG['msg_list']));
-            $smarty->assign('form_act', 'update');
-            $smarty->assign('admin_list', $admin_list);
-            $smarty->assign('msg_arr', $msg_arr);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['edit_msg']);
+            $GLOBALS['smarty']->assign('action_link', array('href' => 'message.php?act=list', 'text' => $GLOBALS['_LANG']['msg_list']));
+            $GLOBALS['smarty']->assign('form_act', 'update');
+            $GLOBALS['smarty']->assign('admin_list', $admin_list);
+            $GLOBALS['smarty']->assign('msg_arr', $msg_arr);
 
             assign_query_info();
-            $smarty->display('message_info.htm');
+            $GLOBALS['smarty']->display('message_info.htm');
         } elseif ($_REQUEST['act'] == 'update') {
             /* 获得留言数据*/
             $msg_arr = array();
-            $msg_arr = $db->getRow('SELECT * FROM ' . $ecs->table('admin_message') . " WHERE message_id='$_POST[id]'");
+            $msg_arr = $GLOBALS['db']->getRow('SELECT * FROM ' . $GLOBALS['ecs']->table('admin_message') . " WHERE message_id='$_POST[id]'");
 
-            $sql = "UPDATE " . $ecs->table('admin_message') . " SET " .
+            $sql = "UPDATE " . $GLOBALS['ecs']->table('admin_message') . " SET " .
                 "title = '$_POST[title]'," .
                 "message = '$_POST[message]'" .
                 "WHERE sender_id = '$msg_arr[sender_id]' AND sent_time='$msg_arr[send_time]'";
-            $db->query($sql);
+            $GLOBALS['db']->query($sql);
 
-            $link[0]['text'] = $_LANG['back_list'];
+            $link[0]['text'] = $GLOBALS['_LANG']['back_list'];
             $link[0]['href'] = 'message.php?act=list';
 
-            sys_msg($_LANG['edit_msg'] . ' ' . $_LANG['action_succeed'], 0, $link);
+            sys_msg($GLOBALS['_LANG']['edit_msg'] . ' ' . $GLOBALS['_LANG']['action_succeed'], 0, $link);
 
             /* 记录管理员操作 */
-            admin_log(addslashes($_LANG['edit_msg']), 'edit', 'admin_message');
+            admin_log(addslashes($GLOBALS['_LANG']['edit_msg']), 'edit', 'admin_message');
         }
 
         /*------------------------------------------------------ */
@@ -176,10 +176,10 @@ class Message extends Init
             /* 获得管理员留言数据 */
             $msg_arr = array();
             $sql = "SELECT a.*, b.user_name " .
-                "FROM " . $ecs->table('admin_message') . " AS a " .
-                "LEFT JOIN " . $ecs->table('admin_user') . " AS b ON b.user_id = a.sender_id " .
+                "FROM " . $GLOBALS['ecs']->table('admin_message') . " AS a " .
+                "LEFT JOIN " . $GLOBALS['ecs']->table('admin_user') . " AS b ON b.user_id = a.sender_id " .
                 "WHERE a.message_id = '$msg_id'";
-            $msg_arr = $db->getRow($sql);
+            $msg_arr = $GLOBALS['db']->getRow($sql);
             $msg_arr['title'] = nl2br(htmlspecialchars($msg_arr['title']));
             $msg_arr['message'] = nl2br(htmlspecialchars($msg_arr['message']));
 
@@ -188,21 +188,21 @@ class Message extends Init
                 $msg_arr['read_time'] = gmtime(); //阅读日期为当前日期
 
                 //更新阅读日期和阅读状态
-                $sql = "UPDATE " . $ecs->table('admin_message') . " SET " .
+                $sql = "UPDATE " . $GLOBALS['ecs']->table('admin_message') . " SET " .
                     "read_time = '" . $msg_arr['read_time'] . "', " .
                     "readed = '1' " .
                     "WHERE message_id = '$msg_id'";
-                $db->query($sql);
+                $GLOBALS['db']->query($sql);
             }
 
             //模板赋值，显示
-            $smarty->assign('ur_here', $_LANG['view_msg']);
-            $smarty->assign('action_link', array('href' => 'message.php?act=list', 'text' => $_LANG['msg_list']));
-            $smarty->assign('admin_user', $_SESSION['admin_name']);
-            $smarty->assign('msg_arr', $msg_arr);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['view_msg']);
+            $GLOBALS['smarty']->assign('action_link', array('href' => 'message.php?act=list', 'text' => $GLOBALS['_LANG']['msg_list']));
+            $GLOBALS['smarty']->assign('admin_user', $_SESSION['admin_name']);
+            $GLOBALS['smarty']->assign('msg_arr', $msg_arr);
 
             assign_query_info();
-            $smarty->display('message_view.htm');
+            $GLOBALS['smarty']->display('message_view.htm');
         }
 
         /*------------------------------------------------------ */
@@ -214,39 +214,39 @@ class Message extends Init
             /* 获得留言数据 */
             $msg_val = array();
             $sql = "SELECT a.*, b.user_name " .
-                "FROM " . $ecs->table('admin_message') . " AS a " .
-                "LEFT JOIN " . $ecs->table('admin_user') . " AS b ON b.user_id = a.sender_id " .
+                "FROM " . $GLOBALS['ecs']->table('admin_message') . " AS a " .
+                "LEFT JOIN " . $GLOBALS['ecs']->table('admin_user') . " AS b ON b.user_id = a.sender_id " .
                 "WHERE a.message_id = '$msg_id'";
-            $msg_val = $db->getRow($sql);
+            $msg_val = $GLOBALS['db']->getRow($sql);
 
-            $smarty->assign('ur_here', $_LANG['reply_msg']);
-            $smarty->assign('action_link', array('href' => 'message.php?act=list', 'text' => $_LANG['msg_list']));
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['reply_msg']);
+            $GLOBALS['smarty']->assign('action_link', array('href' => 'message.php?act=list', 'text' => $GLOBALS['_LANG']['msg_list']));
 
-            $smarty->assign('action', 'reply');
-            $smarty->assign('form_act', 're_msg');
-            $smarty->assign('msg_val', $msg_val);
+            $GLOBALS['smarty']->assign('action', 'reply');
+            $GLOBALS['smarty']->assign('form_act', 're_msg');
+            $GLOBALS['smarty']->assign('msg_val', $msg_val);
 
             assign_query_info();
-            $smarty->display('message_info.htm');
+            $GLOBALS['smarty']->display('message_info.htm');
         }
 
         /*------------------------------------------------------ */
         //--留言回复的处理
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 're_msg') {
-            $sql = "INSERT INTO " . $ecs->table('admin_message') . " (sender_id, receiver_id, sent_time, " .
+            $sql = "INSERT INTO " . $GLOBALS['ecs']->table('admin_message') . " (sender_id, receiver_id, sent_time, " .
                 "read_time, readed, deleted, title, message) " .
                 "VALUES ('" . $_SESSION['admin_id'] . "', '$_POST[receiver_id]', '" . gmtime() . "', " .
                 "0, '0', '0', '$_POST[title]', '$_POST[message]')";
-            $db->query($sql);
+            $GLOBALS['db']->query($sql);
 
-            $link[0]['text'] = $_LANG['back_list'];
+            $link[0]['text'] = $GLOBALS['_LANG']['back_list'];
             $link[0]['href'] = 'message.php?act=list';
 
-            sys_msg($_LANG['send_msg'] . ' ' . $_LANG['action_succeed'], 0, $link);
+            sys_msg($GLOBALS['_LANG']['send_msg'] . ' ' . $GLOBALS['_LANG']['action_succeed'], 0, $link);
 
             /* 记录管理员操作 */
-            admin_log(addslashes($_LANG['send_msg']), 'add', 'admin_message');
+            admin_log(addslashes($GLOBALS['_LANG']['send_msg']), 'add', 'admin_message');
         }
 
         /*------------------------------------------------------ */
@@ -256,19 +256,19 @@ class Message extends Init
             if (isset($_POST['checkboxes'])) {
                 $count = 0;
                 foreach ($_POST['checkboxes'] as $key => $id) {
-                    $sql = "UPDATE " . $ecs->table('admin_message') . " SET " .
+                    $sql = "UPDATE " . $GLOBALS['ecs']->table('admin_message') . " SET " .
                         "deleted = '1'" .
                         "WHERE message_id = '$id' AND (sender_id='$_SESSION[admin_id]' OR receiver_id='$_SESSION[admin_id]')";
-                    $db->query($sql);
+                    $GLOBALS['db']->query($sql);
 
                     $count++;
                 }
 
                 admin_log('', 'remove', 'admin_message');
-                $link[] = array('text' => $_LANG['back_list'], 'href' => 'message.php?act=list');
-                sys_msg(sprintf($_LANG['batch_drop_success'], $count), 0, $link);
+                $link[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'message.php?act=list');
+                sys_msg(sprintf($GLOBALS['_LANG']['batch_drop_success'], $count), 0, $link);
             } else {
-                sys_msg($_LANG['no_select_msg'], 1);
+                sys_msg($GLOBALS['_LANG']['no_select_msg'], 1);
             }
         }
 
@@ -278,9 +278,9 @@ class Message extends Init
         elseif ($_REQUEST['act'] == 'remove') {
             $id = intval($_GET['id']);
 
-            $sql = "UPDATE " . $ecs->table('admin_message') . " SET deleted=1 " .
+            $sql = "UPDATE " . $GLOBALS['ecs']->table('admin_message') . " SET deleted=1 " .
                 " WHERE message_id=$id AND (sender_id='$_SESSION[admin_id]' OR receiver_id='$_SESSION[admin_id]')";
-            $db->query($sql);
+            $GLOBALS['db']->query($sql);
 
             $url = 'message.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
 

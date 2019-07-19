@@ -26,15 +26,15 @@ class Exchange extends Init
         if ($_REQUEST['act'] == 'list') {
             /* 初始化分页信息 */
             $page = isset($_REQUEST['page']) && intval($_REQUEST['page']) > 0 ? intval($_REQUEST['page']) : 1;
-            $size = isset($_CFG['page_size']) && intval($_CFG['page_size']) > 0 ? intval($_CFG['page_size']) : 10;
+            $size = isset($GLOBALS['_CFG']['page_size']) && intval($GLOBALS['_CFG']['page_size']) > 0 ? intval($GLOBALS['_CFG']['page_size']) : 10;
             $cat_id = isset($_REQUEST['cat_id']) && intval($_REQUEST['cat_id']) > 0 ? intval($_REQUEST['cat_id']) : 0;
             $integral_max = isset($_REQUEST['integral_max']) && intval($_REQUEST['integral_max']) > 0 ? intval($_REQUEST['integral_max']) : 0;
             $integral_min = isset($_REQUEST['integral_min']) && intval($_REQUEST['integral_min']) > 0 ? intval($_REQUEST['integral_min']) : 0;
 
             /* 排序、显示方式以及类型 */
-            $default_display_type = $_CFG['show_order_type'] == '0' ? 'list' : ($_CFG['show_order_type'] == '1' ? 'grid' : 'text');
-            $default_sort_order_method = $_CFG['sort_order_method'] == '0' ? 'DESC' : 'ASC';
-            $default_sort_order_type = $_CFG['sort_order_type'] == '0' ? 'goods_id' : ($_CFG['sort_order_type'] == '1' ? 'exchange_integral' : 'last_update');
+            $default_display_type = $GLOBALS['_CFG']['show_order_type'] == '0' ? 'list' : ($GLOBALS['_CFG']['show_order_type'] == '1' ? 'grid' : 'text');
+            $default_sort_order_method = $GLOBALS['_CFG']['sort_order_method'] == '0' ? 'DESC' : 'ASC';
+            $default_sort_order_type = $GLOBALS['_CFG']['sort_order_type'] == '0' ? 'goods_id' : ($GLOBALS['_CFG']['sort_order_type'] == '1' ? 'exchange_integral' : 'last_update');
 
             $sort = (isset($_REQUEST['sort']) && in_array(trim(strtolower($_REQUEST['sort'])), array('goods_id', 'exchange_integral', 'last_update'))) ? trim($_REQUEST['sort']) : $default_sort_order_type;
             $order = (isset($_REQUEST['order']) && in_array(trim(strtoupper($_REQUEST['order'])), array('ASC', 'DESC'))) ? trim($_REQUEST['order']) : $default_sort_order_method;
@@ -44,9 +44,9 @@ class Exchange extends Init
 
             /* 页面的缓存ID */
             $cache_id = sprintf('%X', crc32($cat_id . '-' . $display . '-' . $sort . '-' . $order . '-' . $page . '-' . $size . '-' . $_SESSION['user_rank'] . '-' .
-                $_CFG['lang'] . '-' . $integral_max . '-' . $integral_min));
+                $GLOBALS['_CFG']['lang'] . '-' . $integral_max . '-' . $integral_min));
 
-            if (!$smarty->is_cached('exchange.dwt', $cache_id)) {
+            if (!$GLOBALS['smarty']->is_cached('exchange.dwt', $cache_id)) {
                 /* 如果页面没有被缓存则重新获取页面的内容 */
 
                 $children = get_children($cat_id);
@@ -54,33 +54,33 @@ class Exchange extends Init
                 $cat = $this->get_cat_info($cat_id);   // 获得分类的相关信息
 
                 if (!empty($cat)) {
-                    $smarty->assign('keywords', htmlspecialchars($cat['keywords']));
-                    $smarty->assign('description', htmlspecialchars($cat['cat_desc']));
+                    $GLOBALS['smarty']->assign('keywords', htmlspecialchars($cat['keywords']));
+                    $GLOBALS['smarty']->assign('description', htmlspecialchars($cat['cat_desc']));
                 }
 
                 assign_template();
 
                 $position = assign_ur_here('exchange');
-                $smarty->assign('page_title', $position['title']);    // 页面标题
-                $smarty->assign('ur_here', $position['ur_here']);  // 当前位置
+                $GLOBALS['smarty']->assign('page_title', $position['title']);    // 页面标题
+                $GLOBALS['smarty']->assign('ur_here', $position['ur_here']);  // 当前位置
 
-                $smarty->assign('categories', get_categories_tree());        // 分类树
-                $smarty->assign('helps', get_shop_help());              // 网店帮助
-                $smarty->assign('top_goods', get_top10());                  // 销售排行
-                $smarty->assign('promotion_info', get_promotion_info());         // 促销活动信息
+                $GLOBALS['smarty']->assign('categories', get_categories_tree());        // 分类树
+                $GLOBALS['smarty']->assign('helps', get_shop_help());              // 网店帮助
+                $GLOBALS['smarty']->assign('top_goods', get_top10());                  // 销售排行
+                $GLOBALS['smarty']->assign('promotion_info', get_promotion_info());         // 促销活动信息
 
                 /* 调查 */
                 $vote = get_vote();
                 if (!empty($vote)) {
-                    $smarty->assign('vote_id', $vote['id']);
-                    $smarty->assign('vote', $vote['content']);
+                    $GLOBALS['smarty']->assign('vote_id', $vote['id']);
+                    $GLOBALS['smarty']->assign('vote', $vote['content']);
                 }
 
                 $ext = ''; //商品查询条件扩展
 
-                //$smarty->assign('best_goods',      $this->get_exchange_recommend_goods('best', $children, $integral_min, $integral_max));
-                //$smarty->assign('new_goods',       $this->get_exchange_recommend_goods('new',  $children, $integral_min, $integral_max));
-                $smarty->assign('hot_goods', $this->get_exchange_recommend_goods('hot', $children, $integral_min, $integral_max));
+                //$GLOBALS['smarty']->assign('best_goods',      $this->get_exchange_recommend_goods('best', $children, $integral_min, $integral_max));
+                //$GLOBALS['smarty']->assign('new_goods',       $this->get_exchange_recommend_goods('new',  $children, $integral_min, $integral_max));
+                $GLOBALS['smarty']->assign('hot_goods', $this->get_exchange_recommend_goods('hot', $children, $integral_min, $integral_max));
 
 
                 $count = $this->get_exchange_goods_count($children, $integral_min, $integral_max);
@@ -94,18 +94,18 @@ class Exchange extends Init
                         $goodslist[] = array();
                     }
                 }
-                $smarty->assign('goods_list', $goodslist);
-                $smarty->assign('category', $cat_id);
-                $smarty->assign('integral_max', $integral_max);
-                $smarty->assign('integral_min', $integral_min);
+                $GLOBALS['smarty']->assign('goods_list', $goodslist);
+                $GLOBALS['smarty']->assign('category', $cat_id);
+                $GLOBALS['smarty']->assign('integral_max', $integral_max);
+                $GLOBALS['smarty']->assign('integral_min', $integral_min);
 
 
                 assign_pager('exchange', $cat_id, $count, $size, $sort, $order, $page, '', '', $integral_min, $integral_max, $display); // 分页
                 assign_dynamic('exchange_list'); // 动态内容
             }
 
-            $smarty->assign('feed_url', ($_CFG['rewrite'] == 1) ? "feed-typeexchange.xml" : 'feed.php?type=exchange'); // RSS URL
-            $smarty->display('exchange_list.dwt', $cache_id);
+            $GLOBALS['smarty']->assign('feed_url', ($GLOBALS['_CFG']['rewrite'] == 1) ? "feed-typeexchange.xml" : 'feed.php?type=exchange'); // RSS URL
+            $GLOBALS['smarty']->display('exchange_list.dwt', $cache_id);
         }
 
         /*------------------------------------------------------ */
@@ -114,16 +114,16 @@ class Exchange extends Init
         elseif ($_REQUEST['act'] == 'view') {
             $goods_id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 
-            $cache_id = $goods_id . '-' . $_SESSION['user_rank'] . '-' . $_CFG['lang'] . '-exchange';
+            $cache_id = $goods_id . '-' . $_SESSION['user_rank'] . '-' . $GLOBALS['_CFG']['lang'] . '-exchange';
             $cache_id = sprintf('%X', crc32($cache_id));
 
-            if (!$smarty->is_cached('exchange_goods.dwt', $cache_id)) {
-                $smarty->assign('image_width', $_CFG['image_width']);
-                $smarty->assign('image_height', $_CFG['image_height']);
-                $smarty->assign('helps', get_shop_help()); // 网店帮助
-                $smarty->assign('id', $goods_id);
-                $smarty->assign('type', 0);
-                $smarty->assign('cfg', $_CFG);
+            if (!$GLOBALS['smarty']->is_cached('exchange_goods.dwt', $cache_id)) {
+                $GLOBALS['smarty']->assign('image_width', $GLOBALS['_CFG']['image_width']);
+                $GLOBALS['smarty']->assign('image_height', $GLOBALS['_CFG']['image_height']);
+                $GLOBALS['smarty']->assign('helps', get_shop_help()); // 网店帮助
+                $GLOBALS['smarty']->assign('id', $goods_id);
+                $GLOBALS['smarty']->assign('type', 0);
+                $GLOBALS['smarty']->assign('cfg', $GLOBALS['_CFG']);
 
                 /* 获得商品的信息 */
                 $goods = $this->get_exchange_goods_info($goods_id);
@@ -139,47 +139,47 @@ class Exchange extends Init
 
                     $goods['goods_style_name'] = add_style($goods['goods_name'], $goods['goods_name_style']);
 
-                    $smarty->assign('goods', $goods);
-                    $smarty->assign('goods_id', $goods['goods_id']);
-                    $smarty->assign('categories', get_categories_tree());  // 分类树
+                    $GLOBALS['smarty']->assign('goods', $goods);
+                    $GLOBALS['smarty']->assign('goods_id', $goods['goods_id']);
+                    $GLOBALS['smarty']->assign('categories', get_categories_tree());  // 分类树
 
                     /* meta */
-                    $smarty->assign('keywords', htmlspecialchars($goods['keywords']));
-                    $smarty->assign('description', htmlspecialchars($goods['goods_brief']));
+                    $GLOBALS['smarty']->assign('keywords', htmlspecialchars($goods['keywords']));
+                    $GLOBALS['smarty']->assign('description', htmlspecialchars($goods['goods_brief']));
 
                     assign_template();
 
                     /* 上一个商品下一个商品 */
-                    $sql = "SELECT eg.goods_id FROM " . $ecs->table('exchange_goods') . " AS eg," . $GLOBALS['ecs']->table('goods') . " AS g WHERE eg.goods_id = g.goods_id AND eg.goods_id > " . $goods['goods_id'] . " AND eg.is_exchange = 1 AND g.is_delete = 0 LIMIT 1";
-                    $prev_gid = $db->getOne($sql);
+                    $sql = "SELECT eg.goods_id FROM " . $GLOBALS['ecs']->table('exchange_goods') . " AS eg," . $GLOBALS['ecs']->table('goods') . " AS g WHERE eg.goods_id = g.goods_id AND eg.goods_id > " . $goods['goods_id'] . " AND eg.is_exchange = 1 AND g.is_delete = 0 LIMIT 1";
+                    $prev_gid = $GLOBALS['db']->getOne($sql);
                     if (!empty($prev_gid)) {
                         $prev_good['url'] = build_uri('exchange_goods', array('gid' => $prev_gid), $goods['goods_name']);
-                        $smarty->assign('prev_good', $prev_good);//上一个商品
+                        $GLOBALS['smarty']->assign('prev_good', $prev_good);//上一个商品
                     }
 
-                    $sql = "SELECT max(eg.goods_id) FROM " . $ecs->table('exchange_goods') . " AS eg," . $GLOBALS['ecs']->table('goods') . " AS g WHERE eg.goods_id = g.goods_id AND eg.goods_id < " . $goods['goods_id'] . " AND eg.is_exchange = 1 AND g.is_delete = 0";
-                    $next_gid = $db->getOne($sql);
+                    $sql = "SELECT max(eg.goods_id) FROM " . $GLOBALS['ecs']->table('exchange_goods') . " AS eg," . $GLOBALS['ecs']->table('goods') . " AS g WHERE eg.goods_id = g.goods_id AND eg.goods_id < " . $goods['goods_id'] . " AND eg.is_exchange = 1 AND g.is_delete = 0";
+                    $next_gid = $GLOBALS['db']->getOne($sql);
                     if (!empty($next_gid)) {
                         $next_good['url'] = build_uri('exchange_goods', array('gid' => $next_gid), $goods['goods_name']);
-                        $smarty->assign('next_good', $next_good);//下一个商品
+                        $GLOBALS['smarty']->assign('next_good', $next_good);//下一个商品
                     }
 
                     /* current position */
                     $position = assign_ur_here('exchange', $goods['goods_name']);
-                    $smarty->assign('page_title', $position['title']);                    // 页面标题
-                    $smarty->assign('ur_here', $position['ur_here']);                  // 当前位置
+                    $GLOBALS['smarty']->assign('page_title', $position['title']);                    // 页面标题
+                    $GLOBALS['smarty']->assign('ur_here', $position['ur_here']);                  // 当前位置
 
                     $properties = get_goods_properties($goods_id);  // 获得商品的规格和属性
-                    $smarty->assign('properties', $properties['pro']);                              // 商品属性
-                    $smarty->assign('specification', $properties['spe']);                              // 商品规格
+                    $GLOBALS['smarty']->assign('properties', $properties['pro']);                              // 商品属性
+                    $GLOBALS['smarty']->assign('specification', $properties['spe']);                              // 商品规格
 
-                    $smarty->assign('pictures', get_goods_gallery($goods_id));                    // 商品相册
+                    $GLOBALS['smarty']->assign('pictures', get_goods_gallery($goods_id));                    // 商品相册
 
                     assign_dynamic('exchange_goods');
                 }
             }
 
-            $smarty->display('exchange_goods.dwt', $cache_id);
+            $GLOBALS['smarty']->display('exchange_goods.dwt', $cache_id);
         }
 
         /*------------------------------------------------------ */
@@ -194,7 +194,7 @@ class Exchange extends Init
 
             /* 查询：判断是否登录 */
             if ($_SESSION['user_id'] <= 0) {
-                show_message($_LANG['eg_error_login'], array($_LANG['back_up_page']), array($back_act), 'error');
+                show_message($GLOBALS['_LANG']['eg_error_login'], array($GLOBALS['_LANG']['back_up_page']), array($back_act), 'error');
             }
 
             /* 查询：取得参数：商品id */
@@ -211,18 +211,18 @@ class Exchange extends Init
                 exit;
             }
             /* 查询：检查兑换商品是否有库存 */
-            if ($goods['goods_number'] == 0 && $_CFG['use_storage'] == 1) {
-                show_message($_LANG['eg_error_number'], array($_LANG['back_up_page']), array($back_act), 'error');
+            if ($goods['goods_number'] == 0 && $GLOBALS['_CFG']['use_storage'] == 1) {
+                show_message($GLOBALS['_LANG']['eg_error_number'], array($GLOBALS['_LANG']['back_up_page']), array($back_act), 'error');
             }
             /* 查询：检查兑换商品是否是取消 */
             if ($goods['is_exchange'] == 0) {
-                show_message($_LANG['eg_error_status'], array($_LANG['back_up_page']), array($back_act), 'error');
+                show_message($GLOBALS['_LANG']['eg_error_status'], array($GLOBALS['_LANG']['back_up_page']), array($back_act), 'error');
             }
 
             $user_info = get_user_info($_SESSION['user_id']);
             $user_points = $user_info['pay_points']; // 用户的积分总数
             if ($goods['exchange_integral'] > $user_points) {
-                show_message($_LANG['eg_error_integral'], array($_LANG['back_up_page']), array($back_act), 'error');
+                show_message($GLOBALS['_LANG']['eg_error_integral'], array($GLOBALS['_LANG']['back_up_page']), array($back_act), 'error');
             }
 
             /* 查询：取得规格 */
@@ -245,19 +245,19 @@ class Exchange extends Init
             }
 
             //查询：商品存在规格 是货品 检查该货品库存
-            if ((!empty($specs)) && ($product_info['product_number'] == 0) && ($_CFG['use_storage'] == 1)) {
-                show_message($_LANG['eg_error_number'], array($_LANG['back_up_page']), array($back_act), 'error');
+            if ((!empty($specs)) && ($product_info['product_number'] == 0) && ($GLOBALS['_CFG']['use_storage'] == 1)) {
+                show_message($GLOBALS['_LANG']['eg_error_number'], array($GLOBALS['_LANG']['back_up_page']), array($back_act), 'error');
             }
 
             /* 查询：查询规格名称和值，不考虑价格 */
             $attr_list = array();
             $sql = "SELECT a.attr_name, g.attr_value " .
-                "FROM " . $ecs->table('goods_attr') . " AS g, " .
-                $ecs->table('attribute') . " AS a " .
+                "FROM " . $GLOBALS['ecs']->table('goods_attr') . " AS g, " .
+                $GLOBALS['ecs']->table('attribute') . " AS a " .
                 "WHERE g.attr_id = a.attr_id " .
                 "AND g.goods_attr_id " . db_create_in($specs);
-            $res = $db->query($sql);
-            while ($row = $db->fetchRow($res)) {
+            $res = $GLOBALS['db']->query($sql);
+            while ($row = $GLOBALS['db']->fetchRow($res)) {
                 $attr_list[] = $row['attr_name'] . ': ' . $row['attr_value'];
             }
             $goods_attr = join(chr(13) . chr(10), $attr_list);
@@ -286,7 +286,7 @@ class Exchange extends Init
                 'rec_type' => CART_EXCHANGE_GOODS,
                 'is_gift' => 0
             );
-            $db->autoExecute($ecs->table('cart'), $cart, 'INSERT');
+            $GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('cart'), $cart, 'INSERT');
 
             /* 记录购物流程类型：团购 */
             $_SESSION['flow_type'] = CART_EXCHANGE_GOODS;

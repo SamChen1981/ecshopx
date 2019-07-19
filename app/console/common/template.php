@@ -257,12 +257,12 @@ $dyna_libs = array(
 );
 
 ///* 插件的 library */
-//$sql = 'SELECT code, library FROM ' . $ecs->table('plugins') . " WHERE assign = 1 AND library > ''";
-//$res = $db->query($sql);
+//$sql = 'SELECT code, library FROM ' . $GLOBALS['ecs']->table('plugins') . " WHERE assign = 1 AND library > ''";
+//$res = $GLOBALS['db']->query($sql);
 //
-//while ($row = $db->fetchRow($res))
+//while ($row = $GLOBALS['db']->fetchRow($res))
 //{
-//    include_once('../plugins/' . $row['code'] . '/languages/common_' . $_CFG['lang'] . '.php');
+//    include_once('../plugins/' . $row['code'] . '/languages/common_' . $GLOBALS['_CFG']['lang'] . '.php');
 //
 //    $page_libs['index'][] = $row['library'];
 //}
@@ -354,8 +354,6 @@ function get_template_info($template_name, $template_style = '')
  */
 function get_template_region($tmp_name, $tmp_file, $lib = true)
 {
-    global $dyna_libs;
-
     $file = '../themes/' . $tmp_name . '/' . $tmp_file;
 
     /* 将模版文件的内容读入内存 */
@@ -472,11 +470,10 @@ function get_setted($lib, &$arr)
  */
 function get_editable_libs($curr_template, $curr_page_libs)
 {
-    global $_CFG;
     $vals = array();
     $edit_libs = array();
 
-    if ($xml_content = @file_get_contents(ROOT_PATH . 'themes/' . $_CFG['template'] . '/libs.xml')) {
+    if ($xml_content = @file_get_contents(ROOT_PATH . 'themes/' . $GLOBALS['_CFG']['template'] . '/libs.xml')) {
         $p = xml_parser_create();                                                   //把xml解析到数组
         xml_parse_into_struct($p, $xml_content, $vals, $index);
         xml_parser_free($p);

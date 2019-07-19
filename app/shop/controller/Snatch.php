@@ -42,11 +42,11 @@ class Snatch extends Init
                 $myprice = $this->get_myprice($id);
                 if ($goods['is_end']) {
                     //如果活动已经结束,获取活动结果
-                    $smarty->assign('result', get_snatch_result($id));
+                    $GLOBALS['smarty']->assign('result', get_snatch_result($id));
                 }
-                $smarty->assign('id', $id);
-                $smarty->assign('snatch_goods', $goods); // 竞价商品
-                $smarty->assign('myprice', $this->get_myprice($id));
+                $GLOBALS['smarty']->assign('id', $id);
+                $GLOBALS['smarty']->assign('snatch_goods', $goods); // 竞价商品
+                $GLOBALS['smarty']->assign('myprice', $this->get_myprice($id));
                 if ($goods['product_id'] > 0) {
                     $goods_specifications = get_specifications_list($goods['goods_id']);
 
@@ -57,39 +57,39 @@ class Snatch extends Init
                     foreach ($_good_products as $value) {
                         $products_info .= ' ' . $goods_specifications[$value]['attr_name'] . '：' . $goods_specifications[$value]['attr_value'];
                     }
-                    $smarty->assign('products_info', $products_info);
+                    $GLOBALS['smarty']->assign('products_info', $products_info);
                     unset($goods_specifications, $good_products, $_good_products, $products_info);
                 }
             } else {
-                show_message($_LANG['now_not_snatch']);
+                show_message($GLOBALS['_LANG']['now_not_snatch']);
             }
 
             /* 调查 */
             $vote = get_vote();
             if (!empty($vote)) {
-                $smarty->assign('vote_id', $vote['id']);
-                $smarty->assign('vote', $vote['content']);
+                $GLOBALS['smarty']->assign('vote_id', $vote['id']);
+                $GLOBALS['smarty']->assign('vote', $vote['content']);
             }
 
             assign_template();
             assign_dynamic('snatch');
-            $smarty->assign('page_title', $position['title']);
-            $smarty->assign('ur_here', $position['ur_here']);
-            $smarty->assign('categories', get_categories_tree()); // 分类树
-            $smarty->assign('helps', get_shop_help());       // 网店帮助
-            $smarty->assign('snatch_list', $this->get_snatch_list());     //所有有效的夺宝奇兵列表
-            $smarty->assign('price_list', $this->get_price_list($id));
-            $smarty->assign('promotion_info', get_promotion_info());
-            $smarty->assign('feed_url', ($_CFG['rewrite'] == 1) ? "feed-typesnatch.xml" : 'feed.php?type=snatch'); // RSS URL
-            $smarty->display('snatch.dwt');
+            $GLOBALS['smarty']->assign('page_title', $position['title']);
+            $GLOBALS['smarty']->assign('ur_here', $position['ur_here']);
+            $GLOBALS['smarty']->assign('categories', get_categories_tree()); // 分类树
+            $GLOBALS['smarty']->assign('helps', get_shop_help());       // 网店帮助
+            $GLOBALS['smarty']->assign('snatch_list', $this->get_snatch_list());     //所有有效的夺宝奇兵列表
+            $GLOBALS['smarty']->assign('price_list', $this->get_price_list($id));
+            $GLOBALS['smarty']->assign('promotion_info', get_promotion_info());
+            $GLOBALS['smarty']->assign('feed_url', ($GLOBALS['_CFG']['rewrite'] == 1) ? "feed-typesnatch.xml" : 'feed.php?type=snatch'); // RSS URL
+            $GLOBALS['smarty']->display('snatch.dwt');
 
             exit;
         }
 
         /* 最新出价列表 */
         if ($_REQUEST['act'] == 'new_price_list') {
-            $smarty->assign('price_list', $this->get_price_list($id));
-            $smarty->display('library/snatch_price.lbi');
+            $GLOBALS['smarty']->assign('price_list', $this->get_price_list($id));
+            $GLOBALS['smarty']->display('library/snatch_price.lbi');
 
             exit;
         }
@@ -104,13 +104,13 @@ class Snatch extends Init
             /* 测试是否登陆 */
             if (empty($_SESSION['user_id'])) {
                 $result['error'] = 1;
-                $result['content'] = $_LANG['not_login'];
+                $result['content'] = $GLOBALS['_LANG']['not_login'];
                 die(json_encode($result));
             }
 
             /* 获取活动基本信息用于校验 */
             $sql = 'SELECT act_name AS snatch_name, end_time, ext_info FROM ' . $GLOBALS['ecs']->table('goods_activity') . " WHERE act_id ='$id'";
-            $row = $db->getRow($sql, 'SILENT');
+            $row = $GLOBALS['db']->getRow($sql, 'SILENT');
 
             if ($row) {
                 $info = unserialize($row['ext_info']);
@@ -123,13 +123,13 @@ class Snatch extends Init
 
             if (empty($row)) {
                 $result['error'] = 1;
-                $result['content'] = $db->error();
+                $result['content'] = $GLOBALS['db']->error();
                 die(json_encode($result));
             }
 
             if ($row['end_time'] < gmtime()) {
                 $result['error'] = 1;
-                $result['content'] = $_LANG['snatch_is_end'];
+                $result['content'] = $GLOBALS['_LANG']['snatch_is_end'];
                 die(json_encode($result));
             }
 
@@ -149,22 +149,22 @@ class Snatch extends Init
             }
 
             /* 检查用户积分是否足够 */
-            $sql = 'SELECT pay_points FROM ' . $ecs->table('users') . " WHERE user_id = '" . $_SESSION['user_id'] . "'";
-            $pay_points = $db->getOne($sql);
+            $sql = 'SELECT pay_points FROM ' . $GLOBALS['ecs']->table('users') . " WHERE user_id = '" . $_SESSION['user_id'] . "'";
+            $pay_points = $GLOBALS['db']->getOne($sql);
             if ($row['cost_points'] > $pay_points) {
                 $result['error'] = 1;
-                $result['content'] = $_LANG['lack_pay_points'];
+                $result['content'] = $GLOBALS['_LANG']['lack_pay_points'];
                 die(json_encode($result));
             }
 
-            log_account_change($_SESSION['user_id'], 0, 0, 0, 0 - $row['cost_points'], sprintf($_LANG['snatch_log'], $row['snatch_name'])); //扣除用户积分
-            $sql = 'INSERT INTO ' . $ecs->table('snatch_log') . '(snatch_id, user_id, bid_price, bid_time) VALUES' .
+            log_account_change($_SESSION['user_id'], 0, 0, 0, 0 - $row['cost_points'], sprintf($GLOBALS['_LANG']['snatch_log'], $row['snatch_name'])); //扣除用户积分
+            $sql = 'INSERT INTO ' . $GLOBALS['ecs']->table('snatch_log') . '(snatch_id, user_id, bid_price, bid_time) VALUES' .
                 "('$id', '" . $_SESSION['user_id'] . "', '" . $price . "', " . gmtime() . ")";
-            $db->query($sql);
+            $GLOBALS['db']->query($sql);
 
-            $smarty->assign('myprice', $this->get_myprice($id));
-            $smarty->assign('id', $id);
-            $result['content'] = $smarty->fetch('library/snatch.lbi');
+            $GLOBALS['smarty']->assign('myprice', $this->get_myprice($id));
+            $GLOBALS['smarty']->assign('id', $id);
+            $result['content'] = $GLOBALS['smarty']->fetch('library/snatch.lbi');
             die(json_encode($result));
         }
 
@@ -178,7 +178,7 @@ class Snatch extends Init
             }
 
             if (empty($_SESSION['user_id'])) {
-                show_message($_LANG['not_login']);
+                show_message($GLOBALS['_LANG']['not_login']);
             }
 
             $snatch = $this->get_snatch($id);
@@ -199,12 +199,12 @@ class Snatch extends Init
             $result = get_snatch_result($id);
 
             if ($_SESSION['user_id'] != $result['user_id']) {
-                show_message($_LANG['not_for_you']);
+                show_message($GLOBALS['_LANG']['not_for_you']);
             }
 
             //检查是否已经购买过
             if ($result['order_count'] > 0) {
-                show_message($_LANG['order_placed']);
+                show_message($GLOBALS['_LANG']['order_placed']);
             }
 
             /* 处理规格属性 */
@@ -217,12 +217,12 @@ class Snatch extends Init
 
                 $attr_list = array();
                 $sql = "SELECT a.attr_name, g.attr_value " .
-                    "FROM " . $ecs->table('goods_attr') . " AS g, " .
-                    $ecs->table('attribute') . " AS a " .
+                    "FROM " . $GLOBALS['ecs']->table('goods_attr') . " AS g, " .
+                    $GLOBALS['ecs']->table('attribute') . " AS a " .
                     "WHERE g.attr_id = a.attr_id " .
                     "AND g.goods_attr_id " . db_create_in($goods_attr_id);
-                $res = $db->query($sql);
-                while ($row = $db->fetchRow($res)) {
+                $res = $GLOBALS['db']->query($sql);
+                while ($row = $GLOBALS['db']->fetchRow($res)) {
                     $attr_list[] = $row['attr_name'] . ': ' . $row['attr_value'];
                 }
                 $goods_attr = join('', $attr_list);
@@ -254,7 +254,7 @@ class Snatch extends Init
                 'is_gift' => 0
             );
 
-            $db->autoExecute($ecs->table('cart'), $cart, 'INSERT');
+            $GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('cart'), $cart, 'INSERT');
 
             /* 记录购物流程类型：夺宝奇兵 */
             $_SESSION['flow_type'] = CART_SNATCH_GOODS;

@@ -24,22 +24,22 @@ class VirtualCard extends Init
             admin_priv('virualcard');
             /* 验证goods_id是否合法 */
             if (empty($_REQUEST['goods_id'])) {
-                $link[] = array('text' => $_LANG['go_back'], 'href' => 'virtual_card.php?act=list');
-                sys_msg($_LANG['replenish_no_goods_id'], 1, $link);
+                $link[] = array('text' => $GLOBALS['_LANG']['go_back'], 'href' => 'virtual_card.php?act=list');
+                sys_msg($GLOBALS['_LANG']['replenish_no_goods_id'], 1, $link);
             } else {
-                $goods_name = $db->GetOne("SELECT goods_name From " . $ecs->table('goods') . " WHERE goods_id='" . $_REQUEST['goods_id'] . "' AND is_real = 0 AND extension_code='virtual_card' ");
+                $goods_name = $GLOBALS['db']->GetOne("SELECT goods_name From " . $GLOBALS['ecs']->table('goods') . " WHERE goods_id='" . $_REQUEST['goods_id'] . "' AND is_real = 0 AND extension_code='virtual_card' ");
                 if (empty($goods_name)) {
-                    $link[] = array('text' => $_LANG['go_back'], 'href' => 'virtual_card.php?act=list');
-                    sys_msg($_LANG['replenish_no_get_goods_name'], 1, $link);
+                    $link[] = array('text' => $GLOBALS['_LANG']['go_back'], 'href' => 'virtual_card.php?act=list');
+                    sys_msg($GLOBALS['_LANG']['replenish_no_get_goods_name'], 1, $link);
                 }
             }
 
             $card = array('goods_id' => $_REQUEST['goods_id'], 'goods_name' => $goods_name, 'end_date' => date('Y-m-d', strtotime('+1 year')));
-            $smarty->assign('card', $card);
+            $GLOBALS['smarty']->assign('card', $card);
 
-            $smarty->assign('ur_here', $_LANG['replenish']);
-            $smarty->assign('action_link', array('text' => $_LANG['go_list'], 'href' => 'virtual_card.php?act=card&goods_id=' . $card['goods_id']));
-            $smarty->display('replenish_info.htm');
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['replenish']);
+            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['go_list'], 'href' => 'virtual_card.php?act=card&goods_id=' . $card['goods_id']));
+            $GLOBALS['smarty']->display('replenish_info.htm');
         }
 
         /*------------------------------------------------------ */
@@ -50,9 +50,9 @@ class VirtualCard extends Init
             admin_priv('virualcard');
             /* 获取卡片信息 */
             $sql = "SELECT T1.card_id, T1.goods_id, T2.goods_name,T1.card_sn, T1.card_password, T1.end_date, T1.crc32 FROM " .
-                $ecs->table('virtual_card') . " AS T1, " . $ecs->table('goods') . " AS T2 " .
+                $GLOBALS['ecs']->table('virtual_card') . " AS T1, " . $GLOBALS['ecs']->table('goods') . " AS T2 " .
                 "WHERE T1.goods_id = T2.goods_id AND T1.card_id = '$_REQUEST[card_id]'";
-            $card = $db->GetRow($sql);
+            $card = $GLOBALS['db']->GetRow($sql);
             if ($card['crc32'] == 0 || $card['crc32'] == crc32(AUTH_KEY)) {
                 $card['card_sn'] = decrypt($card['card_sn']);
                 $card['card_password'] = decrypt($card['card_password']);
@@ -64,10 +64,10 @@ class VirtualCard extends Init
                 $card['card_password'] = '***';
             }
 
-            $smarty->assign('ur_here', $_LANG['replenish']);
-            $smarty->assign('action_link', array('text' => $_LANG['go_list'], 'href' => 'virtual_card.php?act=card&goods_id=' . $card['goods_id']));
-            $smarty->assign('card', $card);
-            $smarty->display('replenish_info.htm');
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['replenish']);
+            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['go_list'], 'href' => 'virtual_card.php?act=card&goods_id=' . $card['goods_id']));
+            $GLOBALS['smarty']->assign('card', $card);
+            $GLOBALS['smarty']->display('replenish_info.htm');
         } elseif ($_REQUEST['act'] == 'action') {
             /* 检查权限 */
             admin_priv('virualcard');
@@ -81,11 +81,11 @@ class VirtualCard extends Init
 
             /* 在前后两次card_sn不一致时，检查是否有重复记录,一致时直接更新数据 */
             if ($_POST['card_sn'] != $_POST['old_card_sn']) {
-                $sql = "SELECT count(*) FROM " . $ecs->table('virtual_card') . " WHERE goods_id='" . $_POST['goods_id'] . "' AND card_sn='$coded_card_sn'";
+                $sql = "SELECT count(*) FROM " . $GLOBALS['ecs']->table('virtual_card') . " WHERE goods_id='" . $_POST['goods_id'] . "' AND card_sn='$coded_card_sn'";
 
-                if ($db->GetOne($sql) > 0) {
-                    $link[] = array('text' => $_LANG['go_back'], 'href' => 'virtual_card.php?act=replenish&goods_id=' . $_POST['goods_id']);
-                    sys_msg(sprintf($_LANG['card_sn_exist'], $_POST['card_sn']), 1, $link);
+                if ($GLOBALS['db']->GetOne($sql) > 0) {
+                    $link[] = array('text' => $GLOBALS['_LANG']['go_back'], 'href' => 'virtual_card.php?act=replenish&goods_id=' . $_POST['goods_id']);
+                    sys_msg(sprintf($GLOBALS['_LANG']['card_sn_exist'], $_POST['card_sn']), 1, $link);
                 }
             }
 
@@ -94,29 +94,29 @@ class VirtualCard extends Init
                 /* 插入一条新记录 */
                 $end_date = strtotime($_POST['end_dateYear'] . "-" . $_POST['end_dateMonth'] . "-" . $_POST['end_dateDay']);
                 $add_date = gmtime();
-                $sql = "INSERT INTO " . $ecs->table('virtual_card') . " (goods_id, card_sn, card_password, end_date, add_date, crc32) " .
+                $sql = "INSERT INTO " . $GLOBALS['ecs']->table('virtual_card') . " (goods_id, card_sn, card_password, end_date, add_date, crc32) " .
                     "VALUES ('$_POST[goods_id]', '$coded_card_sn', '$coded_card_password', '$end_date', '$add_date', '" . crc32(AUTH_KEY) . "')";
-                $db->query($sql);
+                $GLOBALS['db']->query($sql);
 
                 /* 如果添加成功且原卡号为空时商品库存加1 */
                 if (empty($_POST['old_card_sn'])) {
-                    $sql = "UPDATE " . $ecs->table('goods') . " SET goods_number= goods_number+1 WHERE goods_id='$_POST[goods_id]'";
-                    $db->query($sql);
+                    $sql = "UPDATE " . $GLOBALS['ecs']->table('goods') . " SET goods_number= goods_number+1 WHERE goods_id='$_POST[goods_id]'";
+                    $GLOBALS['db']->query($sql);
                 }
 
-                $link[] = array('text' => $_LANG['go_list'], 'href' => 'virtual_card.php?act=card&goods_id=' . $_POST['goods_id']);
-                $link[] = array('text' => $_LANG['continue_add'], 'href' => 'virtual_card.php?act=replenish&goods_id=' . $_POST['goods_id']);
-                sys_msg($_LANG['action_success'], 0, $link);
+                $link[] = array('text' => $GLOBALS['_LANG']['go_list'], 'href' => 'virtual_card.php?act=card&goods_id=' . $_POST['goods_id']);
+                $link[] = array('text' => $GLOBALS['_LANG']['continue_add'], 'href' => 'virtual_card.php?act=replenish&goods_id=' . $_POST['goods_id']);
+                sys_msg($GLOBALS['_LANG']['action_success'], 0, $link);
             } else {
                 /* 更新数据 */
                 $end_date = strtotime($_POST['end_dateYear'] . "-" . $_POST['end_dateMonth'] . "-" . $_POST['end_dateDay']);
-                $sql = "UPDATE " . $ecs->table('virtual_card') . " SET card_sn='$coded_card_sn', card_password='$coded_card_password', end_date='$end_date' " .
+                $sql = "UPDATE " . $GLOBALS['ecs']->table('virtual_card') . " SET card_sn='$coded_card_sn', card_password='$coded_card_password', end_date='$end_date' " .
                     "WHERE card_id='$_POST[card_id]'";
-                $db->query($sql);
+                $GLOBALS['db']->query($sql);
 
-                $link[] = array('text' => $_LANG['go_list'], 'href' => 'virtual_card.php?act=card&goods_id=' . $_POST['goods_id']);
-                $link[] = array('text' => $_LANG['continue_add'], 'href' => 'virtual_card.php?act=replenish&goods_id=' . $_POST['goods_id']);
-                sys_msg($_LANG['action_success'], 0, $link);
+                $link[] = array('text' => $GLOBALS['_LANG']['go_list'], 'href' => 'virtual_card.php?act=card&goods_id=' . $_POST['goods_id']);
+                $link[] = array('text' => $GLOBALS['_LANG']['continue_add'], 'href' => 'virtual_card.php?act=replenish&goods_id=' . $_POST['goods_id']);
+                sys_msg($GLOBALS['_LANG']['action_success'], 0, $link);
             }
         }
         /*------------------------------------------------------ */
@@ -128,13 +128,13 @@ class VirtualCard extends Init
 
             /* 验证goods_id是否合法 */
             if (empty($_REQUEST['goods_id'])) {
-                $link[] = array('text' => $_LANG['go_back'], 'href' => 'virtual_card.php?act=list');
-                sys_msg($_LANG['replenish_no_goods_id'], 1, $link);
+                $link[] = array('text' => $GLOBALS['_LANG']['go_back'], 'href' => 'virtual_card.php?act=list');
+                sys_msg($GLOBALS['_LANG']['replenish_no_goods_id'], 1, $link);
             } else {
-                $goods_name = $db->GetOne("SELECT goods_name From " . $ecs->table('goods') . " WHERE goods_id='" . $_REQUEST['goods_id'] . "' AND is_real = 0 AND extension_code='virtual_card' ");
+                $goods_name = $GLOBALS['db']->GetOne("SELECT goods_name From " . $GLOBALS['ecs']->table('goods') . " WHERE goods_id='" . $_REQUEST['goods_id'] . "' AND is_real = 0 AND extension_code='virtual_card' ");
                 if (empty($goods_name)) {
-                    $link[] = array('text' => $_LANG['go_back'], 'href' => 'virtual_card.php?act=list');
-                    sys_msg($_LANG['replenish_no_get_goods_name'], 1, $link);
+                    $link[] = array('text' => $GLOBALS['_LANG']['go_back'], 'href' => 'virtual_card.php?act=list');
+                    sys_msg($GLOBALS['_LANG']['replenish_no_get_goods_name'], 1, $link);
                 }
             }
 
@@ -142,26 +142,26 @@ class VirtualCard extends Init
                 $_REQUEST['order_sn'] = '';
             }
 
-            $smarty->assign('goods_id', $_REQUEST['goods_id']);
-            $smarty->assign('full_page', 1);
-            $smarty->assign('lang', $_LANG);
-            $smarty->assign('ur_here', $goods_name);
-            $smarty->assign('action_link', array('text' => $_LANG['replenish'],
+            $GLOBALS['smarty']->assign('goods_id', $_REQUEST['goods_id']);
+            $GLOBALS['smarty']->assign('full_page', 1);
+            $GLOBALS['smarty']->assign('lang', $GLOBALS['_LANG']);
+            $GLOBALS['smarty']->assign('ur_here', $goods_name);
+            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['replenish'],
                 'href' => 'virtual_card.php?act=replenish&goods_id=' . $_REQUEST['goods_id']));
-            $smarty->assign('goods_id', $_REQUEST['goods_id']);
+            $GLOBALS['smarty']->assign('goods_id', $_REQUEST['goods_id']);
 
             $list = $this->get_replenish_list();
 
-            $smarty->assign('card_list', $list['item']);
-            $smarty->assign('filter', $list['filter']);
-            $smarty->assign('record_count', $list['record_count']);
-            $smarty->assign('page_count', $list['page_count']);
+            $GLOBALS['smarty']->assign('card_list', $list['item']);
+            $GLOBALS['smarty']->assign('filter', $list['filter']);
+            $GLOBALS['smarty']->assign('record_count', $list['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $list['page_count']);
 
             $sort_flag = sort_flag($list['filter']);
-            $smarty->assign($sort_flag['tag'], $sort_flag['img']);
+            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
             assign_query_info();
-            $smarty->display('replenish_list.htm');
+            $GLOBALS['smarty']->display('replenish_list.htm');
         }
 
         /*------------------------------------------------------ */
@@ -171,16 +171,16 @@ class VirtualCard extends Init
         elseif ($_REQUEST['act'] == 'query_card') {
             $list = $this->get_replenish_list();
 
-            $smarty->assign('card_list', $list['item']);
-            $smarty->assign('filter', $list['filter']);
-            $smarty->assign('record_count', $list['record_count']);
-            $smarty->assign('page_count', $list['page_count']);
+            $GLOBALS['smarty']->assign('card_list', $list['item']);
+            $GLOBALS['smarty']->assign('filter', $list['filter']);
+            $GLOBALS['smarty']->assign('record_count', $list['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $list['page_count']);
 
             $sort_flag = sort_flag($list['filter']);
-            $smarty->assign($sort_flag['tag'], $sort_flag['img']);
+            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
             make_json_result(
-                $smarty->fetch('replenish_list.htm'),
+                $GLOBALS['smarty']->fetch('replenish_list.htm'),
                 '',
                 array('filter' => $list['filter'], 'page_count' => $list['page_count'])
             );
@@ -190,12 +190,12 @@ class VirtualCard extends Init
             admin_priv('virualcard');
 
             $num = count($_POST['checkboxes']);
-            $sql = "DELETE FROM " . $ecs->table('virtual_card') . " WHERE card_id " . db_create_in(implode(',', $_POST['checkboxes']));
-            if ($db->query($sql)) {
+            $sql = "DELETE FROM " . $GLOBALS['ecs']->table('virtual_card') . " WHERE card_id " . db_create_in(implode(',', $_POST['checkboxes']));
+            if ($GLOBALS['db']->query($sql)) {
                 /* 商品数量减$num */
                 $this->update_goods_number(intval($_REQUEST['goods_id']));
-                $link[] = array('text' => $_LANG['go_list'], 'href' => 'virtual_card.php?act=card&goods_id=' . $_REQUEST['goods_id']);
-                sys_msg($_LANG['action_success'], 0, $link);
+                $link[] = array('text' => $GLOBALS['_LANG']['go_list'], 'href' => 'virtual_card.php?act=card&goods_id=' . $_REQUEST['goods_id']);
+                sys_msg($GLOBALS['_LANG']['action_success'], 0, $link);
             }
         } /* 批量上传页面 */
 
@@ -203,14 +203,14 @@ class VirtualCard extends Init
             /* 检查权限 */
             admin_priv('virualcard');
 
-            $smarty->assign('ur_here', $_LANG['batch_card_add']);
-            $smarty->assign('action_link', array('text' => $_LANG['virtual_card_list'], 'href' => 'goods.php?act=list&extension_code=virtual_card'));
-            $smarty->assign('goods_id', $_REQUEST['goods_id']);
-            $smarty->display('batch_card_info.htm');
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['batch_card_add']);
+            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['virtual_card_list'], 'href' => 'goods.php?act=list&extension_code=virtual_card'));
+            $GLOBALS['smarty']->assign('goods_id', $_REQUEST['goods_id']);
+            $GLOBALS['smarty']->display('batch_card_info.htm');
         } elseif ($_REQUEST['act'] == 'batch_confirm') {
             /* 检查上传是否成功 */
             if ($_FILES['uploadfile']['tmp_name'] == '' || $_FILES['uploadfile']['tmp_name'] == 'none') {
-                sys_msg($_LANG['uploadfile_fail'], 1);
+                sys_msg($GLOBALS['_LANG']['uploadfile_fail'], 1);
             }
 
             $data = file($_FILES['uploadfile']['tmp_name']);
@@ -238,10 +238,10 @@ class VirtualCard extends Init
                 $i++;
             }
 
-            $smarty->assign('ur_here', $_LANG['batch_card_add']);
-            $smarty->assign('action_link', array('text' => $_LANG['batch_card_add'], 'href' => 'virtual_card.php?act=batch_card_add&goods_id=' . $_REQUEST['goods_id']));
-            $smarty->assign('list', $rec);
-            $smarty->display('batch_card_confirm.htm');
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['batch_card_add']);
+            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['batch_card_add'], 'href' => 'virtual_card.php?act=batch_card_add&goods_id=' . $_REQUEST['goods_id']));
+            $GLOBALS['smarty']->assign('list', $rec);
+            $GLOBALS['smarty']->display('batch_card_confirm.htm');
         } /* 批量上传处理 */
         elseif ($_REQUEST['act'] == 'batch_insert') {
             /* 检查权限 */
@@ -256,14 +256,14 @@ class VirtualCard extends Init
                 $rec['end_date'] = empty($_POST['end_date'][$key]) ? 0 : strtotime($_POST['end_date'][$key]);
                 $rec['goods_id'] = $_POST['goods_id'];
                 $rec['add_date'] = $add_time;
-                $db->AutoExecute($ecs->table('virtual_card'), $rec, 'INSERT');
+                $GLOBALS['db']->AutoExecute($GLOBALS['ecs']->table('virtual_card'), $rec, 'INSERT');
                 $i++;
             }
 
             /* 更新商品库存 */
             $this->update_goods_number(intval($_REQUEST['goods_id']));
-            $link[] = array('text' => $_LANG['card'], 'href' => 'virtual_card.php?act=card&goods_id=' . $_POST['goods_id']);
-            sys_msg(sprintf($_LANG['batch_card_add_ok'], $i), 0, $link);
+            $link[] = array('text' => $GLOBALS['_LANG']['card'], 'href' => 'virtual_card.php?act=card&goods_id=' . $_POST['goods_id']);
+            sys_msg(sprintf($GLOBALS['_LANG']['batch_card_add_ok'], $i), 0, $link);
         }
 
         /*------------------------------------------------------ */
@@ -274,10 +274,10 @@ class VirtualCard extends Init
             /* 检查权限 */
             admin_priv('virualcard');
 
-            $smarty->assign('ur_here', $_LANG['virtual_card_change']);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['virtual_card_change']);
 
             assign_query_info();
-            $smarty->display('virtual_card_change.htm');
+            $GLOBALS['smarty']->display('virtual_card_change.htm');
         }
 
         /*------------------------------------------------------ */
@@ -291,37 +291,37 @@ class VirtualCard extends Init
             if (isset($_POST['old_string']) && isset($_POST['new_string'])) {
                 // 检查原加密串是否正确
                 if ($_POST['old_string'] != OLD_AUTH_KEY) {
-                    sys_msg($_LANG['invalid_old_string'], 1);
+                    sys_msg($GLOBALS['_LANG']['invalid_old_string'], 1);
                 }
 
                 // 检查新加密串是否正确
                 if ($_POST['new_string'] != AUTH_KEY) {
-                    sys_msg($_LANG['invalid_new_string'], 1);
+                    sys_msg($GLOBALS['_LANG']['invalid_new_string'], 1);
                 }
 
                 // 检查原加密串和新加密串是否相同
                 if ($_POST['old_string'] == $_POST['new_string'] || crc32($_POST['old_string']) == crc32($_POST['new_string'])) {
-                    sys_msg($_LANG['same_string'], 1);
+                    sys_msg($GLOBALS['_LANG']['same_string'], 1);
                 }
 
 
                 // 重新加密卡号和密码
                 $old_crc32 = crc32($_POST['old_string']);
                 $new_crc32 = crc32($_POST['new_string']);
-                $sql = "SELECT card_id, card_sn, card_password FROM " . $ecs->table('virtual_card') . " WHERE crc32 = '$old_crc32'";
-                $res = $db->query($sql);
-                while ($row = $db->fetchRow($res)) {
+                $sql = "SELECT card_id, card_sn, card_password FROM " . $GLOBALS['ecs']->table('virtual_card') . " WHERE crc32 = '$old_crc32'";
+                $res = $GLOBALS['db']->query($sql);
+                while ($row = $GLOBALS['db']->fetchRow($res)) {
                     $row['card_sn'] = encrypt(decrypt($row['card_sn'], $_POST['old_string']), $_POST['new_string']);
                     $row['card_password'] = encrypt(decrypt($row['card_password'], $_POST['old_string']), $_POST['new_string']);
                     $row['crc32'] = $new_crc32;
-                    $db->autoExecute($ecs->table('virtual_card'), $row, 'UPDATE', 'card_id = ' . $row['card_id']);
+                    $GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('virtual_card'), $row, 'UPDATE', 'card_id = ' . $row['card_id']);
                 }
 
                 // 记录日志
                 //admin_log();
 
                 // 返回
-                sys_msg($_LANG['change_key_ok'], 0, array(array('href' => 'virtual_card.php?act=list', 'text' => $_LANG['virtual_card_list'])));
+                sys_msg($GLOBALS['_LANG']['change_key_ok'], 0, array(array('href' => 'virtual_card.php?act=list', 'text' => $GLOBALS['_LANG']['virtual_card_list'])));
             }
         }
 
@@ -335,17 +335,17 @@ class VirtualCard extends Init
             $id = intval($_POST['id']);
             $val = intval($_POST['val']);
 
-            $sql = "UPDATE " . $ecs->table('virtual_card') . " SET is_saled= '$val' WHERE card_id='$id'";
+            $sql = "UPDATE " . $GLOBALS['ecs']->table('virtual_card') . " SET is_saled= '$val' WHERE card_id='$id'";
 
-            if ($db->query($sql, 'SILENT')) {
+            if ($GLOBALS['db']->query($sql, 'SILENT')) {
                 /* 修改商品库存 */
-                $sql = "SELECT goods_id FROM " . $ecs->table('virtual_card') . " WHERE card_id = '$id' LIMIT 1";
-                $goods_id = $db->getOne($sql);
+                $sql = "SELECT goods_id FROM " . $GLOBALS['ecs']->table('virtual_card') . " WHERE card_id = '$id' LIMIT 1";
+                $goods_id = $GLOBALS['db']->getOne($sql);
 
                 $this->update_goods_number($goods_id);
                 make_json_result($val);
             } else {
-                make_json_error($_LANG['action_fail'] . "\n" . $db->error());
+                make_json_error($GLOBALS['_LANG']['action_fail'] . "\n" . $GLOBALS['db']->error());
             }
         }
 
@@ -357,10 +357,10 @@ class VirtualCard extends Init
 
             $id = intval($_GET['id']);
 
-            $row = $db->GetRow('SELECT card_sn, goods_id FROM ' . $ecs->table('virtual_card') . " WHERE card_id = '$id'");
+            $row = $GLOBALS['db']->GetRow('SELECT card_sn, goods_id FROM ' . $GLOBALS['ecs']->table('virtual_card') . " WHERE card_id = '$id'");
 
-            $sql = 'DELETE FROM ' . $ecs->table('virtual_card') . " WHERE card_id = '$id'";
-            if ($db->query($sql, 'SILENT')) {
+            $sql = 'DELETE FROM ' . $GLOBALS['ecs']->table('virtual_card') . " WHERE card_id = '$id'";
+            if ($GLOBALS['db']->query($sql, 'SILENT')) {
                 /* 修改商品数量 */
                 $this->update_goods_number($row['goods_id']);
 
@@ -369,7 +369,7 @@ class VirtualCard extends Init
                 ecs_header("Location: $url\n");
                 exit;
             } else {
-                make_json_error($db->error());
+                make_json_error($GLOBALS['db']->error());
             }
         }
 
@@ -396,9 +396,9 @@ class VirtualCard extends Init
 
             // 查询统计信息：总记录，使用原串的记录，使用新串的记录，使用未知串的记录
             $stat = array('all' => 0, 'new' => 0, 'old' => 0, 'unknown' => 0);
-            $sql = "SELECT crc32, count(*) AS cnt FROM " . $ecs->table('virtual_card') . " GROUP BY crc32";
+            $sql = "SELECT crc32, count(*) AS cnt FROM " . $GLOBALS['ecs']->table('virtual_card') . " GROUP BY crc32";
             $res = $GLOBALS['db']->query($sql);
-            while ($row = $db->fetchRow($res)) {
+            while ($row = $GLOBALS['db']->fetchRow($res)) {
                 $stat['all'] += $row['cnt'];
                 if (crc32($new_key) == $row['crc32']) {
                     $stat['new'] += $row['cnt'];
@@ -424,25 +424,25 @@ class VirtualCard extends Init
             $updated = intval($_GET['updated']);
 
             $sql = "SELECT card_id, card_sn, card_password " .
-                " FROM " . $ecs->table('virtual_card') .
+                " FROM " . $GLOBALS['ecs']->table('virtual_card') .
                 " WHERE crc32 = '$old_crc32' LIMIT $each_num";
-            $res = $db->query($sql);
+            $res = $GLOBALS['db']->query($sql);
 
-            while ($row = $db->fetchRow($res)) {
+            while ($row = $GLOBALS['db']->fetchRow($res)) {
                 $row['card_sn'] = encrypt(decrypt($row['card_sn'], OLD_AUTH_KEY));
                 $row['card_password'] = encrypt(decrypt($row['card_password'], OLD_AUTH_KEY));
                 $row['crc32'] = $new_crc32;
 
-                if (!$db->autoExecute($ecs->table('virtual_card'), $row, 'UPDATE', 'card_id = ' . $row['card_id'])) {
-                    make_json_error($updated, 0, $_LANG['update_error'] . "\n" . $db->error());
+                if (!$GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('virtual_card'), $row, 'UPDATE', 'card_id = ' . $row['card_id'])) {
+                    make_json_error($updated, 0, $GLOBALS['_LANG']['update_error'] . "\n" . $GLOBALS['db']->error());
                 }
 
                 $updated++;
             }
 
             // 查询是否还有未更新的
-            $sql = "SELECT COUNT(*) FROM " . $ecs->table('virtual_card') . " WHERE crc32 = '$old_crc32' ";
-            $left_num = $db->getOne($sql);
+            $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('virtual_card') . " WHERE crc32 = '$old_crc32' ";
+            $left_num = $GLOBALS['db']->getOne($sql);
 
             if ($left_num > 0) {
                 make_json_result($updated);
@@ -451,7 +451,7 @@ class VirtualCard extends Init
                 $stat = array('new' => 0, 'unknown' => 0);
                 $sql = "SELECT crc32, count(*) AS cnt FROM " . $GLOBALS['ecs']->table('virtual_card') . " GROUP BY crc32";
                 $res = $GLOBALS['db']->query($sql);
-                while ($row = $db->fetchRow($res)) {
+                while ($row = $GLOBALS['db']->fetchRow($res)) {
                     if ($new_crc32 == $row['crc32']) {
                         $stat['new'] += $row['cnt'];
                     } else {
@@ -459,7 +459,7 @@ class VirtualCard extends Init
                     }
                 }
 
-                make_json_result($updated, sprintf($_LANG['new_stat'], $stat['new'], $stat['unknown']));
+                make_json_result($updated, sprintf($GLOBALS['_LANG']['new_stat'], $stat['new'], $stat['unknown']));
             }
         }
     }

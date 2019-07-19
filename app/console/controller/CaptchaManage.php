@@ -19,11 +19,11 @@ class CaptchaManage extends Init
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'main') {
             if (gd_version() == 0) {
-                sys_msg($_LANG['captcha_note'], 1);
+                sys_msg($GLOBALS['_LANG']['captcha_note'], 1);
             }
 
             assign_query_info();
-            $captcha = intval($_CFG['captcha']);
+            $captcha = intval($GLOBALS['_CFG']['captcha']);
 
             $captcha_check = array();
             if ($captcha & CAPTCHA_REGISTER) {
@@ -47,11 +47,11 @@ class CaptchaManage extends Init
                 $captcha_check['login_fail_no'] = 'checked="checked"';
             }
 
-            $smarty->assign('captcha', $captcha_check);
-            $smarty->assign('captcha_width', $_CFG['captcha_width']);
-            $smarty->assign('captcha_height', $_CFG['captcha_height']);
-            $smarty->assign('ur_here', $_LANG['captcha_manage']);
-            $smarty->display('captcha_manage.htm');
+            $GLOBALS['smarty']->assign('captcha', $captcha_check);
+            $GLOBALS['smarty']->assign('captcha_width', $GLOBALS['_CFG']['captcha_width']);
+            $GLOBALS['smarty']->assign('captcha_height', $GLOBALS['_CFG']['captcha_height']);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['captcha_manage']);
+            $GLOBALS['smarty']->display('captcha_manage.htm');
         }
 
         /*------------------------------------------------------ */
@@ -70,16 +70,16 @@ class CaptchaManage extends Init
             $captcha_width = empty($_POST['captcha_width']) ? 145 : intval($_POST['captcha_width']);
             $captcha_height = empty($_POST['captcha_height']) ? 20 : intval($_POST['captcha_height']);
 
-            $sql = "UPDATE " . $ecs->table('shop_config') . " SET value='$captcha' WHERE code='captcha'";
-            $db->query($sql);
-            $sql = "UPDATE " . $ecs->table('shop_config') . " SET value='$captcha_width' WHERE code='captcha_width'";
-            $db->query($sql);
-            $sql = "UPDATE " . $ecs->table('shop_config') . " SET value='$captcha_height' WHERE code='captcha_height'";
-            $db->query($sql);
+            $sql = "UPDATE " . $GLOBALS['ecs']->table('shop_config') . " SET value='$captcha' WHERE code='captcha'";
+            $GLOBALS['db']->query($sql);
+            $sql = "UPDATE " . $GLOBALS['ecs']->table('shop_config') . " SET value='$captcha_width' WHERE code='captcha_width'";
+            $GLOBALS['db']->query($sql);
+            $sql = "UPDATE " . $GLOBALS['ecs']->table('shop_config') . " SET value='$captcha_height' WHERE code='captcha_height'";
+            $GLOBALS['db']->query($sql);
 
             clear_cache_files();
 
-            sys_msg($_LANG['save_ok'], 0, array(array('href' => 'captcha_manage.php?act=main', 'text' => $_LANG['captcha_manage'])));
+            sys_msg($GLOBALS['_LANG']['save_ok'], 0, array(array('href' => 'captcha_manage.php?act=main', 'text' => $GLOBALS['_LANG']['captcha_manage'])));
         }
     }
 }

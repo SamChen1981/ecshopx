@@ -283,9 +283,9 @@ class Mysql
     public static function escape_string($unescaped_string, $db)
     {
         if (PHP_VERSION >= '4.3') {
-            return mysqli_real_escape_string($db->link_id, $unescaped_string);
+            return mysqli_real_escape_string($GLOBALS['db']->link_id, $unescaped_string);
         } else {
-            return mysqli_escape_string($db->link_id, $unescaped_string);
+            return mysqli_escape_string($GLOBALS['db']->link_id, $unescaped_string);
         }
     }
 

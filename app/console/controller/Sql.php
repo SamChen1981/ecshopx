@@ -22,19 +22,19 @@ class Sql extends Init
         if ($_REQUEST['act'] == 'main') {
             admin_priv('sql_query');
             assign_query_info();
-            $smarty->assign('type', -1);
-            $smarty->assign('ur_here', $_LANG['04_sql_query']);
+            $GLOBALS['smarty']->assign('type', -1);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['04_sql_query']);
 
-            $smarty->display('sql.htm');
+            $GLOBALS['smarty']->display('sql.htm');
         }
 
         if ($_REQUEST['act'] == 'query') {
             admin_priv('sql_query');
             $this->assign_sql($_POST['sql']);
             assign_query_info();
-            $smarty->assign('ur_here', $_LANG['04_sql_query']);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['04_sql_query']);
 
-            $smarty->display('sql.htm');
+            $GLOBALS['smarty']->display('sql.htm');
         }
     }
 
@@ -48,10 +48,8 @@ class Sql extends Init
      */
     private function assign_sql($sql)
     {
-        global $db, $smarty, $_LANG;
-
         $sql = stripslashes($sql);
-        $smarty->assign('sql', $sql);
+        $GLOBALS['smarty']->assign('sql', $sql);
 
         /* 解析查询项 */
         $sql = str_replace("\r", '', $sql);
@@ -64,11 +62,11 @@ class Sql extends Init
         /* 如果是多条语句，拆开来执行 */
         if (count($query_items) > 1) {
             foreach ($query_items as $key => $value) {
-                if ($db->query($value, 'SILENT')) {
-                    $smarty->assign('type', 1);
+                if ($GLOBALS['db']->query($value, 'SILENT')) {
+                    $GLOBALS['smarty']->assign('type', 1);
                 } else {
-                    $smarty->assign('type', 0);
-                    $smarty->assign('error', $db->error());
+                    $GLOBALS['smarty']->assign('type', 0);
+                    $GLOBALS['smarty']->assign('error', $GLOBALS['db']->error());
                     return;
                 }
             }
@@ -77,17 +75,17 @@ class Sql extends Init
 
         /* 单独一条sql语句处理 */
         if (preg_match("/^(?:UPDATE|DELETE|TRUNCATE|ALTER|DROP|FLUSH|INSERT|REPLACE|SET|CREATE)\\s+/i", $sql)) {
-            if ($db->query($sql, 'SILENT')) {
-                $smarty->assign('type', 1);
+            if ($GLOBALS['db']->query($sql, 'SILENT')) {
+                $GLOBALS['smarty']->assign('type', 1);
             } else {
-                $smarty->assign('type', 0);
-                $smarty->assign('error', $db->error());
+                $GLOBALS['smarty']->assign('type', 0);
+                $GLOBALS['smarty']->assign('error', $GLOBALS['db']->error());
             }
         } else {
-            $data = $db->GetAll($sql);
+            $data = $GLOBALS['db']->GetAll($sql);
             if ($data === false) {
-                $smarty->assign('type', 0);
-                $smarty->assign('error', $db->error());
+                $GLOBALS['smarty']->assign('type', 0);
+                $GLOBALS['smarty']->assign('error', $GLOBALS['db']->error());
             } else {
                 $result = '';
                 if (is_array($data) && isset($data[0]) === true) {
@@ -106,11 +104,11 @@ class Sql extends Init
                     }
                     $result .= "</table>\n";
                 } else {
-                    $result = "<center><h3>" . $_LANG['no_data'] . "</h3></center>";
+                    $result = "<center><h3>" . $GLOBALS['_LANG']['no_data'] . "</h3></center>";
                 }
 
-                $smarty->assign('type', 2);
-                $smarty->assign('result', $result);
+                $GLOBALS['smarty']->assign('type', 2);
+                $GLOBALS['smarty']->assign('result', $result);
             }
         }
     }

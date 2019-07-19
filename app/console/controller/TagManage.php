@@ -25,22 +25,22 @@ class TagManage extends Init
             admin_priv('tag_manage');
 
             /* 模板赋值 */
-            $smarty->assign('ur_here', $_LANG['tag_list']);
-            $smarty->assign('action_link', array('href' => 'tag_manage.php?act=add', 'text' => $_LANG['add_tag']));
-            $smarty->assign('full_page', 1);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['tag_list']);
+            $GLOBALS['smarty']->assign('action_link', array('href' => 'tag_manage.php?act=add', 'text' => $GLOBALS['_LANG']['add_tag']));
+            $GLOBALS['smarty']->assign('full_page', 1);
 
             $tag_list = $this->get_tag_list();
-            $smarty->assign('tag_list', $tag_list['tags']);
-            $smarty->assign('filter', $tag_list['filter']);
-            $smarty->assign('record_count', $tag_list['record_count']);
-            $smarty->assign('page_count', $tag_list['page_count']);
+            $GLOBALS['smarty']->assign('tag_list', $tag_list['tags']);
+            $GLOBALS['smarty']->assign('filter', $tag_list['filter']);
+            $GLOBALS['smarty']->assign('record_count', $tag_list['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $tag_list['page_count']);
 
             $sort_flag = sort_flag($tag_list['filter']);
-            $smarty->assign($sort_flag['tag'], $sort_flag['img']);
+            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
             /* 页面显示 */
             assign_query_info();
-            $smarty->display('tag_manage.htm');
+            $GLOBALS['smarty']->display('tag_manage.htm');
         }
 
         /*------------------------------------------------------ */
@@ -51,27 +51,27 @@ class TagManage extends Init
             admin_priv('tag_manage');
 
             $is_add = $_REQUEST['act'] == 'add';
-            $smarty->assign('insert_or_update', $is_add ? 'insert' : 'update');
+            $GLOBALS['smarty']->assign('insert_or_update', $is_add ? 'insert' : 'update');
 
             if ($is_add) {
                 $tag = array(
                     'tag_id' => 0,
                     'tag_words' => '',
                     'goods_id' => 0,
-                    'goods_name' => $_LANG['pls_select_goods']
+                    'goods_name' => $GLOBALS['_LANG']['pls_select_goods']
                 );
-                $smarty->assign('ur_here', $_LANG['add_tag']);
+                $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['add_tag']);
             } else {
                 $tag_id = $_GET['id'];
                 $tag = $this->get_tag_info($tag_id);
                 $tag['tag_words'] = htmlspecialchars($tag['tag_words']);
-                $smarty->assign('ur_here', $_LANG['tag_edit']);
+                $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['tag_edit']);
             }
-            $smarty->assign('tag', $tag);
-            $smarty->assign('action_link', array('href' => 'tag_manage.php?act=list', 'text' => $_LANG['tag_list']));
+            $GLOBALS['smarty']->assign('tag', $tag);
+            $GLOBALS['smarty']->assign('action_link', array('href' => 'tag_manage.php?act=list', 'text' => $GLOBALS['_LANG']['tag_list']));
 
             assign_query_info();
-            $smarty->display('tag_edit.htm');
+            $GLOBALS['smarty']->display('tag_edit.htm');
         }
 
         /*------------------------------------------------------ */
@@ -87,37 +87,37 @@ class TagManage extends Init
             $id = intval($_POST['id']);
             $goods_id = intval($_POST['goods_id']);
             if ($goods_id <= 0) {
-                sys_msg($_LANG['pls_select_goods']);
+                sys_msg($GLOBALS['_LANG']['pls_select_goods']);
             }
 
             if (!$this->tag_is_only($tag_words, $id, $goods_id)) {
-                sys_msg(sprintf($_LANG['tagword_exist'], $tag_words));
+                sys_msg(sprintf($GLOBALS['_LANG']['tagword_exist'], $tag_words));
             }
 
             if ($is_insert) {
-                $sql = 'INSERT INTO ' . $ecs->table('tag') . '(tag_id, goods_id, tag_words)' .
+                $sql = 'INSERT INTO ' . $GLOBALS['ecs']->table('tag') . '(tag_id, goods_id, tag_words)' .
                     " VALUES('$id', '$goods_id', '$tag_words')";
-                $db->query($sql);
+                $GLOBALS['db']->query($sql);
 
                 admin_log($tag_words, 'add', 'tag');
 
                 /* 清除缓存 */
                 clear_cache_files();
 
-                $link[0]['text'] = $_LANG['back_list'];
+                $link[0]['text'] = $GLOBALS['_LANG']['back_list'];
                 $link[0]['href'] = 'tag_manage.php?act=list';
 
-                sys_msg($_LANG['tag_add_success'], 0, $link);
+                sys_msg($GLOBALS['_LANG']['tag_add_success'], 0, $link);
             } else {
                 $this->edit_tag($tag_words, $id, $goods_id);
 
                 /* 清除缓存 */
                 clear_cache_files();
 
-                $link[0]['text'] = $_LANG['back_list'];
+                $link[0]['text'] = $GLOBALS['_LANG']['back_list'];
                 $link[0]['href'] = 'tag_manage.php?act=list';
 
-                sys_msg($_LANG['tag_edit_success'], 0, $link);
+                sys_msg($GLOBALS['_LANG']['tag_edit_success'], 0, $link);
             }
         }
 
@@ -129,16 +129,16 @@ class TagManage extends Init
             check_authz_json('tag_manage');
 
             $tag_list = $this->get_tag_list();
-            $smarty->assign('tag_list', $tag_list['tags']);
-            $smarty->assign('filter', $tag_list['filter']);
-            $smarty->assign('record_count', $tag_list['record_count']);
-            $smarty->assign('page_count', $tag_list['page_count']);
+            $GLOBALS['smarty']->assign('tag_list', $tag_list['tags']);
+            $GLOBALS['smarty']->assign('filter', $tag_list['filter']);
+            $GLOBALS['smarty']->assign('record_count', $tag_list['record_count']);
+            $GLOBALS['smarty']->assign('page_count', $tag_list['page_count']);
 
             $sort_flag = sort_flag($tag_list['filter']);
-            $smarty->assign($sort_flag['tag'], $sort_flag['img']);
+            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
             make_json_result(
-                $smarty->fetch('tag_manage.htm'),
+                $GLOBALS['smarty']->fetch('tag_manage.htm'),
                 '',
                 array('filter' => $tag_list['filter'], 'page_count' => $tag_list['page_count'])
             );
@@ -173,8 +173,8 @@ class TagManage extends Init
             if (isset($_POST['checkboxes'])) {
                 $count = 0;
                 foreach ($_POST['checkboxes'] as $key => $id) {
-                    $sql = "DELETE FROM " . $ecs->table('tag') . " WHERE tag_id='$id'";
-                    $db->query($sql);
+                    $sql = "DELETE FROM " . $GLOBALS['ecs']->table('tag') . " WHERE tag_id='$id'";
+                    $GLOBALS['db']->query($sql);
 
                     $count++;
                 }
@@ -182,11 +182,11 @@ class TagManage extends Init
                 admin_log($count, 'remove', 'tag_manage');
                 clear_cache_files();
 
-                $link[] = array('text' => $_LANG['back_list'], 'href' => 'tag_manage.php?act=list');
-                sys_msg(sprintf($_LANG['drop_success'], $count), 0, $link);
+                $link[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'tag_manage.php?act=list');
+                sys_msg(sprintf($GLOBALS['_LANG']['drop_success'], $count), 0, $link);
             } else {
-                $link[] = array('text' => $_LANG['back_list'], 'href' => 'tag_manage.php?act=list');
-                sys_msg($_LANG['no_select_tag'], 0, $link);
+                $link[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'tag_manage.php?act=list');
+                sys_msg($GLOBALS['_LANG']['no_select_tag'], 0, $link);
             }
         }
 
@@ -201,9 +201,9 @@ class TagManage extends Init
             $id = intval($_GET['id']);
 
             /* 获取删除的标签的名称 */
-            $tag_name = $db->getOne("SELECT tag_words FROM " . $ecs->table('tag') . " WHERE tag_id = '$id'");
+            $tag_name = $GLOBALS['db']->getOne("SELECT tag_words FROM " . $GLOBALS['ecs']->table('tag') . " WHERE tag_id = '$id'");
 
-            $sql = "DELETE FROM " . $ecs->table('tag') . " WHERE tag_id = '$id'";
+            $sql = "DELETE FROM " . $GLOBALS['ecs']->table('tag') . " WHERE tag_id = '$id'";
             $result = $GLOBALS['db']->query($sql);
             if ($result) {
                 /* 管理员日志 */
@@ -213,7 +213,7 @@ class TagManage extends Init
                 ecs_header("Location: $url\n");
                 exit;
             } else {
-                make_json_error($db->error());
+                make_json_error($GLOBALS['db']->error());
             }
         }
 
@@ -228,7 +228,7 @@ class TagManage extends Init
             $id = intval($_POST['id']);
 
             if (!$this->tag_is_only($name, $id)) {
-                make_json_error(sprintf($_LANG['tagword_exist'], $name));
+                make_json_error(sprintf($GLOBALS['_LANG']['tagword_exist'], $name));
             } else {
                 $this->edit_tag($name, $id);
                 make_json_result(stripslashes($name));

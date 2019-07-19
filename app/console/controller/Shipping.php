@@ -9,7 +9,7 @@ class Shipping extends Init
 {
     public function index()
     {
-        $exc = new exchange($ecs->table('shipping'), $db, 'shipping_code', 'shipping_name');
+        $exc = new Exchange($GLOBALS['ecs']->table('shipping'), $db, 'shipping_code', 'shipping_name');
 
         /*------------------------------------------------------ */
         //-- 配送方式列表
@@ -19,15 +19,15 @@ class Shipping extends Init
             $modules = read_modules('../includes/modules/shipping');
 
             for ($i = 0; $i < count($modules); $i++) {
-                $lang_file = ROOT_PATH . 'languages/' . $_CFG['lang'] . '/shipping/' . $modules[$i]['code'] . '.php';
+                $lang_file = ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/shipping/' . $modules[$i]['code'] . '.php';
 
                 if (file_exists($lang_file)) {
                     include_once($lang_file);
                 }
 
                 /* 检查该插件是否已经安装 */
-                $sql = "SELECT shipping_id, shipping_name, shipping_desc, insure, support_cod,shipping_order FROM " . $ecs->table('shipping') . " WHERE shipping_code='" . $modules[$i]['code'] . "' ORDER BY shipping_order";
-                $row = $db->GetRow($sql);
+                $sql = "SELECT shipping_id, shipping_name, shipping_desc, insure, support_cod,shipping_order FROM " . $GLOBALS['ecs']->table('shipping') . " WHERE shipping_code='" . $modules[$i]['code'] . "' ORDER BY shipping_order";
+                $row = $GLOBALS['db']->GetRow($sql);
 
                 if ($row) {
                     /* 插件已经安装了，获得名称以及描述 */
@@ -45,18 +45,18 @@ class Shipping extends Init
                         $modules[$i]['is_insure'] = 1;
                     }
                 } else {
-                    $modules[$i]['name'] = $_LANG[$modules[$i]['code']];
-                    $modules[$i]['desc'] = $_LANG[$modules[$i]['desc']];
+                    $modules[$i]['name'] = $GLOBALS['_LANG'][$modules[$i]['code']];
+                    $modules[$i]['desc'] = $GLOBALS['_LANG'][$modules[$i]['desc']];
                     $modules[$i]['insure_fee'] = empty($modules[$i]['insure']) ? 0 : $modules[$i]['insure'];
                     $modules[$i]['cod'] = $modules[$i]['cod'];
                     $modules[$i]['install'] = 0;
                 }
             }
 
-            $smarty->assign('ur_here', $_LANG['03_shipping_list']);
-            $smarty->assign('modules', $modules);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['03_shipping_list']);
+            $GLOBALS['smarty']->assign('modules', $modules);
             assign_query_info();
-            $smarty->display('shipping_list.htm');
+            $GLOBALS['smarty']->display('shipping_list.htm');
         }
 
         /*------------------------------------------------------ */
@@ -70,31 +70,31 @@ class Shipping extends Init
             include_once(ROOT_PATH . 'includes/modules/shipping/' . $_GET['code'] . '.php');
 
             /* 检查该配送方式是否已经安装 */
-            $sql = "SELECT shipping_id FROM " . $ecs->table('shipping') . " WHERE shipping_code = '$_GET[code]'";
-            $id = $db->GetOne($sql);
+            $sql = "SELECT shipping_id FROM " . $GLOBALS['ecs']->table('shipping') . " WHERE shipping_code = '$_GET[code]'";
+            $id = $GLOBALS['db']->GetOne($sql);
 
             if ($id > 0) {
                 /* 该配送方式已经安装过, 将该配送方式的状态设置为 enable */
-                $db->query("UPDATE " . $ecs->table('shipping') . " SET enabled = 1 WHERE shipping_code = '$_GET[code]' LIMIT 1");
+                $GLOBALS['db']->query("UPDATE " . $GLOBALS['ecs']->table('shipping') . " SET enabled = 1 WHERE shipping_code = '$_GET[code]' LIMIT 1");
             } else {
                 /* 该配送方式没有安装过, 将该配送方式的信息添加到数据库 */
                 $insure = empty($modules[0]['insure']) ? 0 : $modules[0]['insure'];
-                $sql = "INSERT INTO " . $ecs->table('shipping') . " (" .
+                $sql = "INSERT INTO " . $GLOBALS['ecs']->table('shipping') . " (" .
                     "shipping_code, shipping_name, shipping_desc, insure, support_cod, enabled, print_bg, config_lable, print_model" .
                     ") VALUES (" .
-                    "'" . addslashes($modules[0]['code']) . "', '" . addslashes($_LANG[$modules[0]['code']]) . "', '" .
-                    addslashes($_LANG[$modules[0]['desc']]) . "', '$insure', '" . intval($modules[0]['cod']) . "', 1, '" . addslashes($modules[0]['print_bg']) . "', '" . addslashes($modules[0]['config_lable']) . "', '" . $modules[0]['print_model'] . "')";
-                $db->query($sql);
-                $id = $db->insert_Id();
+                    "'" . addslashes($modules[0]['code']) . "', '" . addslashes($GLOBALS['_LANG'][$modules[0]['code']]) . "', '" .
+                    addslashes($GLOBALS['_LANG'][$modules[0]['desc']]) . "', '$insure', '" . intval($modules[0]['cod']) . "', 1, '" . addslashes($modules[0]['print_bg']) . "', '" . addslashes($modules[0]['config_lable']) . "', '" . $modules[0]['print_model'] . "')";
+                $GLOBALS['db']->query($sql);
+                $id = $GLOBALS['db']->insert_Id();
             }
 
             /* 记录管理员操作 */
-            admin_log(addslashes($_LANG[$modules[0]['code']]), 'install', 'shipping');
+            admin_log(addslashes($GLOBALS['_LANG'][$modules[0]['code']]), 'install', 'shipping');
 
             /* 提示信息 */
-            $lnk[] = array('text' => $_LANG['add_shipping_area'], 'href' => 'shipping_area.php?act=add&shipping=' . $id);
-            $lnk[] = array('text' => $_LANG['go_back'], 'href' => 'shipping.php?act=list');
-            sys_msg(sprintf($_LANG['install_succeess'], $_LANG[$modules[0]['code']]), 0, $lnk);
+            $lnk[] = array('text' => $GLOBALS['_LANG']['add_shipping_area'], 'href' => 'shipping_area.php?act=add&shipping=' . $id);
+            $lnk[] = array('text' => $GLOBALS['_LANG']['go_back'], 'href' => 'shipping.php?act=list');
+            sys_msg(sprintf($GLOBALS['_LANG']['install_succeess'], $GLOBALS['_LANG'][$modules[0]['code']]), 0, $lnk);
         }
 
         /*------------------------------------------------------ */
@@ -102,23 +102,21 @@ class Shipping extends Init
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'uninstall') {
-            global $ecs, $_LANG;
-
             admin_priv('ship_manage');
 
             /* 获得该配送方式的ID */
-            $row = $db->GetRow("SELECT shipping_id, shipping_name, print_bg FROM " . $ecs->table('shipping') . " WHERE shipping_code='$_GET[code]'");
+            $row = $GLOBALS['db']->GetRow("SELECT shipping_id, shipping_name, print_bg FROM " . $GLOBALS['ecs']->table('shipping') . " WHERE shipping_code='$_GET[code]'");
             $shipping_id = $row['shipping_id'];
             $shipping_name = $row['shipping_name'];
 
             /* 删除 shipping_fee 以及 shipping 表中的数据 */
             if ($row) {
-                $all = $db->getCol("SELECT shipping_area_id FROM " . $ecs->table('shipping_area') . " WHERE shipping_id='$shipping_id'");
+                $all = $GLOBALS['db']->getCol("SELECT shipping_area_id FROM " . $GLOBALS['ecs']->table('shipping_area') . " WHERE shipping_id='$shipping_id'");
                 $in = db_create_in(join(',', $all));
 
-                $db->query("DELETE FROM " . $ecs->table('area_region') . " WHERE shipping_area_id $in");
-                $db->query("DELETE FROM " . $ecs->table('shipping_area') . " WHERE shipping_id='$shipping_id'");
-                $db->query("DELETE FROM " . $ecs->table('shipping') . " WHERE shipping_id='$shipping_id'");
+                $GLOBALS['db']->query("DELETE FROM " . $GLOBALS['ecs']->table('area_region') . " WHERE shipping_area_id $in");
+                $GLOBALS['db']->query("DELETE FROM " . $GLOBALS['ecs']->table('shipping_area') . " WHERE shipping_id='$shipping_id'");
+                $GLOBALS['db']->query("DELETE FROM " . $GLOBALS['ecs']->table('shipping') . " WHERE shipping_id='$shipping_id'");
 
                 //删除上传的非默认快递单
                 if (($row['print_bg'] != '') && (!$this->is_print_bg_default($row['print_bg']))) {
@@ -128,8 +126,8 @@ class Shipping extends Init
                 //记录管理员操作
                 admin_log(addslashes($shipping_name), 'uninstall', 'shipping');
 
-                $lnk[] = array('text' => $_LANG['go_back'], 'href' => 'shipping.php?act=list');
-                sys_msg(sprintf($_LANG['uninstall_success'], $shipping_name), 0, $lnk);
+                $lnk[] = array('text' => $GLOBALS['_LANG']['go_back'], 'href' => 'shipping.php?act=list');
+                sys_msg(sprintf($GLOBALS['_LANG']['uninstall_success'], $shipping_name), 0, $lnk);
             }
         }
 
@@ -144,17 +142,17 @@ class Shipping extends Init
             $shipping_id = !empty($_GET['shipping']) ? intval($_GET['shipping']) : 0;
 
             /* 检查该插件是否已经安装 取值 */
-            $sql = "SELECT * FROM " . $ecs->table('shipping') . " WHERE shipping_id = '$shipping_id' LIMIT 0,1";
-            $row = $db->GetRow($sql);
+            $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('shipping') . " WHERE shipping_id = '$shipping_id' LIMIT 0,1";
+            $row = $GLOBALS['db']->GetRow($sql);
             if ($row) {
                 include_once(ROOT_PATH . 'includes/modules/shipping/' . $row['shipping_code'] . '.php');
                 $row['shipping_print'] = !empty($row['shipping_print']) ? $row['shipping_print'] : '';
                 $row['print_bg'] = empty($row['print_bg']) ? '' : $this->get_site_root_url() . $row['print_bg'];
             }
-            $smarty->assign('shipping', $row);
-            $smarty->assign('shipping_id', $shipping_id);
+            $GLOBALS['smarty']->assign('shipping', $row);
+            $GLOBALS['smarty']->assign('shipping_id', $shipping_id);
 
-            $smarty->display('print_index.htm');
+            $GLOBALS['smarty']->display('print_index.htm');
         }
 
         /*------------------------------------------------------ */
@@ -168,14 +166,14 @@ class Shipping extends Init
             $shipping_id = !empty($_POST['shipping']) ? intval($_POST['shipping']) : 0;
 
             /* 取配送代码 */
-            $sql = "SELECT shipping_code FROM " . $ecs->table('shipping') . " WHERE shipping_id = '$shipping_id'";
-            $code = $db->GetOne($sql);
+            $sql = "SELECT shipping_code FROM " . $GLOBALS['ecs']->table('shipping') . " WHERE shipping_id = '$shipping_id'";
+            $code = $GLOBALS['db']->GetOne($sql);
 
             $set_modules = true;
             include_once(ROOT_PATH . 'includes/modules/shipping/' . $code . '.php');
 
             /* 恢复默认 */
-            $db->query("UPDATE " . $ecs->table('shipping') . " SET print_bg = '" . addslashes($modules[0]['print_bg']) . "',  config_lable = '" . addslashes($modules[0]['config_lable']) . "' WHERE shipping_code = '$code' LIMIT 1");
+            $GLOBALS['db']->query("UPDATE " . $GLOBALS['ecs']->table('shipping') . " SET print_bg = '" . addslashes($modules[0]['print_bg']) . "',  config_lable = '" . addslashes($modules[0]['config_lable']) . "' WHERE shipping_code = '$code' LIMIT 1");
 
             $url = "shipping.php?act=edit_print_template&shipping=$shipping_id";
             ecs_header("Location: $url\n");
@@ -198,7 +196,7 @@ class Shipping extends Init
             if (!empty($_FILES['bg']['name'])) {
                 if (!get_file_suffix($_FILES['bg']['name'], $allow_suffix)) {
                     echo '<script language="javascript">';
-                    echo 'parent.alert("' . sprintf($_LANG['js_languages']['upload_falid'], implode('，', $allow_suffix)) . '");';
+                    echo 'parent.alert("' . sprintf($GLOBALS['_LANG']['js_languages']['upload_falid'], implode('，', $allow_suffix)) . '");';
                     echo '</script>';
                     exit;
                 }
@@ -217,8 +215,8 @@ class Shipping extends Init
             }
 
             //保存
-            $sql = "UPDATE " . $ecs->table('shipping') . " SET print_bg = '$src' WHERE shipping_id = '$shipping_id'";
-            $res = $db->query($sql);
+            $sql = "UPDATE " . $GLOBALS['ecs']->table('shipping') . " SET print_bg = '$src' WHERE shipping_id = '$shipping_id'";
+            $res = $GLOBALS['db']->query($sql);
             if ($res) {
                 echo '<script language="javascript">';
                 echo 'parent.call_flash("bg_add", "' . $this->get_site_root_url() . $src . '");';
@@ -238,17 +236,17 @@ class Shipping extends Init
             $shipping_id = json_str_iconv($shipping_id);
 
             /* 检查该插件是否已经安装 取值 */
-            $sql = "SELECT print_bg FROM " . $ecs->table('shipping') . " WHERE shipping_id = '$shipping_id' LIMIT 0,1";
-            $row = $db->GetRow($sql);
+            $sql = "SELECT print_bg FROM " . $GLOBALS['ecs']->table('shipping') . " WHERE shipping_id = '$shipping_id' LIMIT 0,1";
+            $row = $GLOBALS['db']->GetRow($sql);
             if ($row) {
                 if (($row['print_bg'] != '') && (!$this->is_print_bg_default($row['print_bg']))) {
                     @unlink(ROOT_PATH . $row['print_bg']);
                 }
 
-                $sql = "UPDATE " . $ecs->table('shipping') . " SET print_bg = '' WHERE shipping_id = '$shipping_id'";
-                $res = $db->query($sql);
+                $sql = "UPDATE " . $GLOBALS['ecs']->table('shipping') . " SET print_bg = '' WHERE shipping_id = '$shipping_id'";
+                $res = $GLOBALS['db']->query($sql);
             } else {
-                make_json_error($_LANG['js_languages']['upload_del_falid']);
+                make_json_error($GLOBALS['_LANG']['js_languages']['upload_del_falid']);
             }
 
             make_json_result($shipping_id);
@@ -264,26 +262,26 @@ class Shipping extends Init
             $shipping_id = !empty($_GET['shipping']) ? intval($_GET['shipping']) : 0;
 
             /* 检查该插件是否已经安装 */
-            $sql = "SELECT * FROM " . $ecs->table('shipping') . " WHERE shipping_id=$shipping_id";
-            $row = $db->GetRow($sql);
+            $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('shipping') . " WHERE shipping_id=$shipping_id";
+            $row = $GLOBALS['db']->GetRow($sql);
             if ($row) {
                 include_once(ROOT_PATH . 'includes/modules/shipping/' . $row['shipping_code'] . '.php');
                 $row['shipping_print'] = !empty($row['shipping_print']) ? $row['shipping_print'] : '';
                 $row['print_model'] = empty($row['print_model']) ? 1 : $row['print_model']; //兼容以前版本
 
-                $smarty->assign('shipping', $row);
+                $GLOBALS['smarty']->assign('shipping', $row);
             } else {
-                $lnk[] = array('text' => $_LANG['go_back'], 'href' => 'shipping.php?act=list');
-                sys_msg($_LANG['no_shipping_install'], 0, $lnk);
+                $lnk[] = array('text' => $GLOBALS['_LANG']['go_back'], 'href' => 'shipping.php?act=list');
+                sys_msg($GLOBALS['_LANG']['no_shipping_install'], 0, $lnk);
             }
 
-            $smarty->assign('ur_here', $_LANG['03_shipping_list'] . ' - ' . $row['shipping_name'] . ' - ' . $_LANG['shipping_print_template']);
-            $smarty->assign('action_link', array('text' => $_LANG['03_shipping_list'], 'href' => 'shipping.php?act=list'));
-            $smarty->assign('shipping_id', $shipping_id);
+            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['03_shipping_list'] . ' - ' . $row['shipping_name'] . ' - ' . $GLOBALS['_LANG']['shipping_print_template']);
+            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['03_shipping_list'], 'href' => 'shipping.php?act=list'));
+            $GLOBALS['smarty']->assign('shipping_id', $shipping_id);
 
             assign_query_info();
 
-            $smarty->display('shipping_template.htm');
+            $GLOBALS['smarty']->display('shipping_template.htm');
         }
 
         /*------------------------------------------------------ */
@@ -301,19 +299,19 @@ class Shipping extends Init
             /* 处理不同模式编辑的表单 */
             if ($print_model == 2) {
                 //所见即所得模式
-                $db->query("UPDATE " . $ecs->table('shipping') . " SET config_lable = '" . $_POST['config_lable'] . "', print_model = '$print_model'  WHERE shipping_id = '$shipping_id'");
+                $GLOBALS['db']->query("UPDATE " . $GLOBALS['ecs']->table('shipping') . " SET config_lable = '" . $_POST['config_lable'] . "', print_model = '$print_model'  WHERE shipping_id = '$shipping_id'");
             } elseif ($print_model == 1) {
                 //代码模式
                 $template = !empty($_POST['shipping_print']) ? $_POST['shipping_print'] : '';
 
-                $db->query("UPDATE " . $ecs->table('shipping') . " SET shipping_print = '" . $template . "', print_model = '$print_model' WHERE shipping_id = '$shipping_id'");
+                $GLOBALS['db']->query("UPDATE " . $GLOBALS['ecs']->table('shipping') . " SET shipping_print = '" . $template . "', print_model = '$print_model' WHERE shipping_id = '$shipping_id'");
             }
 
             /* 记录管理员操作 */
             admin_log(addslashes($_POST['shipping_name']), 'edit', 'shipping');
 
-            $lnk[] = array('text' => $_LANG['go_back'], 'href' => 'shipping.php?act=list');
-            sys_msg($_LANG['edit_template_success'], 0, $lnk);
+            $lnk[] = array('text' => $GLOBALS['_LANG']['go_back'], 'href' => 'shipping.php?act=list');
+            sys_msg($GLOBALS['_LANG']['edit_template_success'], 0, $lnk);
         }
 
         /*------------------------------------------------------ */
@@ -330,12 +328,12 @@ class Shipping extends Init
 
             /* 检查名称是否为空 */
             if (empty($val)) {
-                make_json_error($_LANG['no_shipping_name']);
+                make_json_error($GLOBALS['_LANG']['no_shipping_name']);
             }
 
             /* 检查名称是否重复 */
             if (!$exc->is_only('shipping_name', $val, $id)) {
-                make_json_error($_LANG['repeat_shipping_name']);
+                make_json_error($GLOBALS['_LANG']['repeat_shipping_name']);
             }
 
             /* 更新支付方式名称 */
@@ -386,7 +384,7 @@ class Shipping extends Init
             $set_modules = true;
             include_once(ROOT_PATH . 'includes/modules/shipping/' . $id . '.php');
             if (isset($modules[0]['insure']) && $modules[0]['insure'] === false) {
-                make_json_error($_LANG['not_support_insure']);
+                make_json_error($GLOBALS['_LANG']['not_support_insure']);
             }
 
             /* 更新保价费用 */
