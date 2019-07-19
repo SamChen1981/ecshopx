@@ -19,7 +19,7 @@ class Agency extends Init
             $smarty->assign('action_link', array('text' => $_LANG['add_agency'], 'href' => 'agency.php?act=add'));
             $smarty->assign('full_page', 1);
 
-            $agency_list = get_agencylist();
+            $agency_list = $this->get_agencylist();
             $smarty->assign('agency_list', $agency_list['agency']);
             $smarty->assign('filter', $agency_list['filter']);
             $smarty->assign('record_count', $agency_list['record_count']);
@@ -37,7 +37,7 @@ class Agency extends Init
         //-- 排序、分页、查询
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'query') {
-            $agency_list = get_agencylist();
+            $agency_list = $this->get_agencylist();
             $smarty->assign('agency_list', $agency_list['agency']);
             $smarty->assign('filter', $agency_list['filter']);
             $smarty->assign('record_count', $agency_list['record_count']);

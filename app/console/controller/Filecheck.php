@@ -34,21 +34,21 @@ class Filecheck extends Init
             @set_time_limit(0);
 
             $md5data = array();
-            checkfiles('./', '\.php', 0);
-            checkfiles(ADMIN_PATH . '/', '\.php|\.htm|\.js|\.css|\xml');
-            checkfiles('api/', '\.php');
-            checkfiles('includes/', '\.php|\.html|\.js', 1, 'fckeditor');
-            checkfiles('js/', '\.js|\.css');
-            checkfiles('languages/', '\.php');
-            checkfiles('plugins/', '\.php');
-            checkfiles('wap/', '\.php|\.wml');
-            // checkfiles('mobile/', '\.php');
+            $this->checkfiles('./', '\.php', 0);
+            $this->checkfiles(ADMIN_PATH . '/', '\.php|\.htm|\.js|\.css|\xml');
+            $this->checkfiles('api/', '\.php');
+            $this->checkfiles('includes/', '\.php|\.html|\.js', 1, 'fckeditor');
+            $this->checkfiles('js/', '\.js|\.css');
+            $this->checkfiles('languages/', '\.php');
+            $this->checkfiles('plugins/', '\.php');
+            $this->checkfiles('wap/', '\.php|\.wml');
+            // $this->checkfiles('mobile/', '\.php');
             /*
-            checkfiles('themes/default/', '\.dwt|\.lbi|\.css');
-            checkfiles('uc_client/', '\.php', 0);
-            checkfiles('uc_client/control/', '\.php');
-            checkfiles('uc_client/model/', '\.php');
-            checkfiles('uc_client/lib/', '\.php');
+            $this->checkfiles('themes/default/', '\.dwt|\.lbi|\.css');
+            $this->checkfiles('uc_client/', '\.php', 0);
+            $this->checkfiles('uc_client/control/', '\.php');
+            $this->checkfiles('uc_client/model/', '\.php');
+            $this->checkfiles('uc_client/lib/', '\.php');
             */
 
             foreach ($ecshopfiles as $line) {
@@ -146,7 +146,7 @@ class Filecheck extends Init
 
             if ($entry != '.' && $entry != '..' && $entry != '.svn' && (preg_match($exts, $entry) || ($sub && is_dir($file))) && !in_array($entry, $skips)) {
                 if ($sub && is_dir($file)) {
-                    checkfiles($file . '/', $ext, $sub, $skip);
+                    $this->checkfiles($file . '/', $ext, $sub, $skip);
                 } else {
                     if (str_replace(ROOT_PATH, '', $file) != './md5.php') {
                         $md5data[str_replace(ROOT_PATH, '', $file)] = md5_file($file);

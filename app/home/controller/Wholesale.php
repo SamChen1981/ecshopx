@@ -72,7 +72,7 @@ class Wholesale extends Init
                 $page = $page > $page_count ? $page_count : $page;
 
                 /* 取得当前页的批发商品 */
-                $wholesale_list = wholesale_list($size, $page, $where);
+                $wholesale_list = $this->wholesale_list($size, $page, $where);
                 $smarty->assign('wholesale_list', $wholesale_list);
 
                 $param['act'] = 'list';
@@ -191,7 +191,7 @@ class Wholesale extends Init
                     $goods_list[0]['qp_list'] = $attr_price['qp_list'];
                     break;
                 } // 有属性
-                elseif (($key = is_attr_matching($goods_list, $attr_price['attr'])) !== false) {
+                elseif (($key = $this->is_attr_matching($goods_list, $attr_price['attr'])) !== false) {
                     $attr_matching = true;
                     $goods_list[$key]['qp_list'] = $attr_price['qp_list'];
                 }
@@ -393,7 +393,7 @@ class Wholesale extends Init
             $properties = get_goods_properties($row['goods_id']);
             $row['goods_attr'] = $properties['pro'];
 
-            $price_ladder = get_price_ladder($row['goods_id']);
+            $price_ladder = $this->get_price_ladder($row['goods_id']);
             $row['price_ladder'] = $price_ladder;
 
             $list[] = $row;

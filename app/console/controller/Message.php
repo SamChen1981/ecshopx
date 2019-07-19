@@ -25,7 +25,7 @@ class Message extends Init
             $smarty->assign('ur_here', $_LANG['msg_list']);
             $smarty->assign('action_link', array('text' => $_LANG['send_msg'], 'href' => 'message.php?act=send'));
 
-            $list = get_message_list();
+            $list = $this->get_message_list();
 
             $smarty->assign('message_list', $list['item']);
             $smarty->assign('filter', $list['filter']);
@@ -43,7 +43,7 @@ class Message extends Init
         //-- 翻页、排序
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'query') {
-            $list = get_message_list();
+            $list = $this->get_message_list();
 
             $smarty->assign('message_list', $list['item']);
             $smarty->assign('filter', $list['filter']);

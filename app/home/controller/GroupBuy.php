@@ -21,7 +21,7 @@ class GroupBuy extends Init
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
             /* 取得团购活动总数 */
-            $count = group_buy_count();
+            $count = $this->group_buy_count();
             if ($count > 0) {
                 /* 取得每页记录数 */
                 $size = isset($_CFG['page_size']) && intval($_CFG['page_size']) > 0 ? intval($_CFG['page_size']) : 10;
@@ -46,7 +46,7 @@ class GroupBuy extends Init
             if (!$smarty->is_cached('group_buy_list.dwt', $cache_id)) {
                 if ($count > 0) {
                     /* 取得当前页的团购活动 */
-                    $gb_list = group_buy_list($size, $page);
+                    $gb_list = $this->group_buy_list($size, $page);
                     $smarty->assign('gb_list', $gb_list);
 
                     /* 设置分页链接 */

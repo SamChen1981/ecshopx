@@ -104,7 +104,7 @@ class UserMsg extends Init
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list_all') {
             assign_query_info();
-            $msg_list = msg_list();
+            $msg_list = $this->msg_list();
 
             $smarty->assign('msg_list', $msg_list['msg_list']);
             $smarty->assign('filter', $msg_list['filter']);
@@ -122,7 +122,7 @@ class UserMsg extends Init
         //-- ajax显示留言列表
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'query') {
-            $msg_list = msg_list();
+            $msg_list = $this->msg_list();
 
             $smarty->assign('msg_list', $msg_list['msg_list']);
             $smarty->assign('filter', $msg_list['filter']);
@@ -207,7 +207,7 @@ class UserMsg extends Init
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'view') {
             $smarty->assign('send_fail', !empty($_REQUEST['send_ok']));
-            $smarty->assign('msg', get_feedback_detail(intval($_REQUEST['id'])));
+            $smarty->assign('msg', $this->get_feedback_detail(intval($_REQUEST['id'])));
             $smarty->assign('ur_here', $_LANG['reply']);
             $smarty->assign('action_link', array('text' => $_LANG['08_unreply_msg'], 'href' => 'user_msg.php?act=list_all'));
 

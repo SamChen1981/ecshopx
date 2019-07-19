@@ -17,7 +17,7 @@ class GoodsBooking extends Init
             $smarty->assign('ur_here', $_LANG['list_all']);
             $smarty->assign('full_page', 1);
 
-            $list = get_bookinglist();
+            $list = $this->get_bookinglist();
 
             $smarty->assign('booking_list', $list['item']);
             $smarty->assign('filter', $list['filter']);
@@ -35,7 +35,7 @@ class GoodsBooking extends Init
         //-- 翻页、排序
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'query') {
-            $list = get_bookinglist();
+            $list = $this->get_bookinglist();
 
             $smarty->assign('booking_list', $list['item']);
             $smarty->assign('filter', $list['filter']);
@@ -76,7 +76,7 @@ class GoodsBooking extends Init
             $id = intval($_REQUEST['id']);
 
             $smarty->assign('send_fail', !empty($_REQUEST['send_ok']));
-            $smarty->assign('booking', get_booking_info($id));
+            $smarty->assign('booking', $this->get_booking_info($id));
             $smarty->assign('ur_here', $_LANG['detail']);
             $smarty->assign('action_link', array('text' => $_LANG['06_undispose_booking'], 'href' => 'goods_booking.php?act=list_all'));
             $smarty->display('booking_info.htm');

@@ -21,7 +21,7 @@ class AffiliateCk extends Init
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
             isset($_GET[auid]) && $_GET[auid] = intval($_GET[auid]);
-            $logdb = get_affiliate_ck();
+            $logdb = $this->get_affiliate_ck();
             $smarty->assign('full_page', 1);
             $smarty->assign('ur_here', $_LANG['affiliate_ck']);
             $smarty->assign('on', $separate_on);
@@ -41,7 +41,7 @@ class AffiliateCk extends Init
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'query') {
             isset($_GET[auid]) && $_GET[auid] = intval($_GET[auid]);
-            $logdb = get_affiliate_ck();
+            $logdb = $this->get_affiliate_ck();
             $smarty->assign('logdb', $logdb['logdb']);
             $smarty->assign('on', $separate_on);
             $smarty->assign('filter', $logdb['filter']);
@@ -148,7 +148,7 @@ class AffiliateCk extends Init
                         } else {
                             $info = sprintf($_LANG['separate_info'], $order_sn, $setmoney, $setpoint);
                             log_account_change($up_uid, $setmoney, 0, $setpoint, 0, $info);
-                            write_affiliate_log($oid, $up_uid, $row['user_name'], $setmoney, $setpoint, $separate_by);
+                            $this->write_affiliate_log($oid, $up_uid, $row['user_name'], $setmoney, $setpoint, $separate_by);
                         }
                     }
                 } else {
@@ -162,7 +162,7 @@ class AffiliateCk extends Init
                     if (!empty($up_uid) && $up_uid > 0) {
                         $info = sprintf($_LANG['separate_info'], $order_sn, $money, $point);
                         log_account_change($up_uid, $money, 0, $point, 0, $info);
-                        write_affiliate_log($oid, $up_uid, $row['user_name'], $money, $point, $separate_by);
+                        $this->write_affiliate_log($oid, $up_uid, $row['user_name'], $money, $point, $separate_by);
                     } else {
                         $links[] = array('text' => $_LANG['affiliate_ck'], 'href' => 'affiliate_ck.php?act=list');
                         sys_msg($_LANG['edit_fail'], 1, $links);

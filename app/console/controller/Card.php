@@ -22,7 +22,7 @@ class Card extends Init
             $smarty->assign('action_link', array('text' => $_LANG['card_add'], 'href' => 'card.php?act=add'));
             $smarty->assign('full_page', 1);
 
-            $cards_list = cards_list();
+            $cards_list = $this->cards_list();
 
             $smarty->assign('card_list', $cards_list['card_list']);
             $smarty->assign('filter', $cards_list['filter']);
@@ -36,7 +36,7 @@ class Card extends Init
         //-- ajax列表
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'query') {
-            $cards_list = cards_list();
+            $cards_list = $this->cards_list();
             $smarty->assign('card_list', $cards_list['card_list']);
             $smarty->assign('filter', $cards_list['filter']);
             $smarty->assign('record_count', $cards_list['record_count']);

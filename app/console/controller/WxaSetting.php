@@ -41,7 +41,7 @@ class WxaSetting extends Init
             $charset = EC_CHARSET == 'utf-8' ? "utf8" : 'gbk';
             $sql = "SELECT * FROM " . $ecs->table('config') . " WHERE 1";
             $group_items = $db->getAll($sql);
-            $grouplist = get_params();
+            $grouplist = $this->get_params();
             foreach ($grouplist as $key => $value) {
                 foreach ($value['items'] as $k => $v) {
                     foreach ($group_items as $item) {
@@ -82,7 +82,7 @@ class WxaSetting extends Init
             }
             $sql = "SELECT * FROM " . $ecs->table('config') . " WHERE `code` = '" . $_POST['code'] . "'";
             $res = $db->getRow($sql);
-            $items = get_items($_POST['code']);
+            $items = $this->get_items($_POST['code']);
 
             $type = $items['type'];
             $name = $items['name'];
@@ -121,7 +121,7 @@ class WxaSetting extends Init
 
     private function get_items($code)
     {
-        $params = get_params();
+        $params = $this->get_params();
         foreach ($params as $value) {
             foreach ($value['items'] as $val) {
                 if ($val['code'] == $code) {

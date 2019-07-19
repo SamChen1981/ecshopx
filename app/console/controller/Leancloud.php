@@ -29,7 +29,7 @@ class Leancloud extends Init
             }
             $tab = !$isOpenWap ? 'open' : 'enter';
             $charset = EC_CHARSET == 'utf-8' ? "utf8" : 'gbk';
-            $push_list = get_list(1, $db, $ecs);
+            $push_list = $this->get_list(1, $db, $ecs);
             $count = $push_list['count'];
             unset($push_list['count']);
             $order_by = array('ORDER BY created_at ASC' => '创建时间从新到旧', 'ORDER BY created_at DESC' => '创建时间从旧到新', 'ORDER BY push_at ASC' => '推送时间从新到旧', 'ORDER BY push_at DESC' => '推送时间从旧到新');
@@ -66,10 +66,10 @@ class Leancloud extends Init
             $tab = !$isOpenWap ? 'open' : 'enter';
             $charset = EC_CHARSET == 'utf-8' ? "utf8" : 'gbk';
             if ($_GET['id']) {
-                $params = getrow($_GET['id'], $db, $ecs);
+                $params = $this->getrow($_GET['id'], $db, $ecs);
                 $smarty->assign('params', $params);
             }
-            $links = get_url();
+            $links = $this->get_url();
             $push_type = array(0 => '立即发送', 1 => '定时发送');
             $smarty->assign('ur_here', $_LANG['leancloud']);
             $smarty->assign('platform', $platform);
@@ -240,7 +240,7 @@ class Leancloud extends Init
         $push_list = $db->getAll($sql);
         $params = $push_list[0];
         if ($params['link']) {
-            $link = get_linkcode($params['link']);
+            $link = $this->get_linkcode($params['link']);
             $params['link_code'] = $link['link'];
             $params['link_type'] = $link['arg_type'];
             $params['link_value'] = $link['arg_value'];
@@ -250,7 +250,7 @@ class Leancloud extends Init
 
     private function get_linkcode($link)
     {
-        $links = get_url();
+        $links = $this->get_url();
         $link_temp = explode(':', $link);
         $link = $link_temp[2] ? $link_temp[0] . ':' . $link_temp[1] . ':id' : $link;
         if ($link_temp[2]) {

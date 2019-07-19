@@ -103,7 +103,7 @@ class OrderStats extends Init
                     "<category label='{$_LANG['cs'][OS_SHIPPED_PART]}' /></categories>";
                 foreach ($start_date_arr as $k => $val) {
                     $seriesName = local_date('Y-m', $val);
-                    $order_info = get_orderinfo($start_date_arr[$k], $end_date_arr[$k]);
+                    $order_info = $this->get_orderinfo($start_date_arr[$k], $end_date_arr[$k]);
                     $order_general_xml .= "<dataset seriesName='$seriesName' color='$color_array[$k]' showValues='0'>";
                     $order_general_xml .= "<set value='$order_info[unconfirmed_num]' />";
                     $order_general_xml .= "<set value='$order_info[await_pay_num]' />";
@@ -208,7 +208,7 @@ class OrderStats extends Init
             } /* 按时间段查询 */
             else {
                 /* 订单概况 */
-                $order_info = get_orderinfo($start_date, $end_date);
+                $order_info = $this->get_orderinfo($start_date, $end_date);
 
                 $order_general_xml = "<graph caption='" . $_LANG['order_circs'] . "' decimalPrecision='2' showPercentageValues='0' showNames='1' showValues='1' showPercentageInLabel='0' pieYScale='45' pieBorderAlpha='40' pieFillAlpha='70' pieSliceDepth='15' pieRadius='100' outCnvBaseFontSize='13' baseFontSize='12'>";
 
@@ -295,7 +295,7 @@ class OrderStats extends Init
             $start_date = empty($_REQUEST['start_date']) ? strtotime('-20 day') : intval($_REQUEST['start_date']);
             $end_date = empty($_REQUEST['end_date']) ? time() : intval($_REQUEST['end_date']);
             /* 订单概况 */
-            $order_info = get_orderinfo($start_date, $end_date);
+            $order_info = $this->get_orderinfo($start_date, $end_date);
             $data = $_LANG['order_circs'] . "\n";
             $data .= "{$_LANG['cs'][OS_UNCONFIRMED]} \t {$_LANG['cs'][CS_AWAIT_PAY]} \t {$_LANG['cs'][CS_AWAIT_SHIP]} \t {$_LANG['cs'][CS_FINISHED]} \t {$_LANG['cs'][PS_PAYING]} \t {$_LANG['cs'][OS_CANCELED]} \t {$_LANG['cs'][OS_INVALID]} \t {$_LANG['cs'][OS_RETURNED]} \t {$_LANG['cs'][OS_SHIPPED_PART]}\n";
 
@@ -374,7 +374,7 @@ class OrderStats extends Init
         $end_date = $end_date + 86400;
 
         foreach ($find_data as $key => $val) {
-            $order_info[$key] = order_stats($val, $start_date, $end_date);
+            $order_info[$key] = $this->order_stats($val, $start_date, $end_date);
         }
         return $order_info;
     }

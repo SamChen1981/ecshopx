@@ -11,7 +11,7 @@ class AttentionList extends Init
     {
         admin_priv('attention_list');
         if ($_REQUEST['act'] == 'list') {
-            $goodsdb = get_attention();
+            $goodsdb = $this->get_attention();
             $smarty->assign('full_page', 1);
             $smarty->assign('ur_here', $_LANG['attention_list']);
             $smarty->assign('goodsdb', $goodsdb['goodsdb']);
@@ -22,7 +22,7 @@ class AttentionList extends Init
             assign_query_info();
             $smarty->display('attention_list.htm');
         } elseif ($_REQUEST['act'] == 'query') {
-            $goodsdb = get_attention();
+            $goodsdb = $this->get_attention();
             $smarty->assign('goodsdb', $goodsdb['goodsdb']);
             $smarty->assign('filter', $goodsdb['filter']);
             $smarty->assign('record_count', $goodsdb['record_count']);

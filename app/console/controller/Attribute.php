@@ -30,7 +30,7 @@ class Attribute extends Init
             $smarty->assign('goods_type_list', goods_type_list($goods_type)); // 取得商品类型
             $smarty->assign('full_page', 1);
 
-            $list = get_attrlist();
+            $list = $this->get_attrlist();
 
             $smarty->assign('attr_list', $list['item']);
             $smarty->assign('filter', $list['filter']);
@@ -50,7 +50,7 @@ class Attribute extends Init
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'query') {
-            $list = get_attrlist();
+            $list = $this->get_attrlist();
 
             $smarty->assign('attr_list', $list['item']);
             $smarty->assign('filter', $list['filter']);

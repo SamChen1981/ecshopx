@@ -196,7 +196,7 @@ class Integrate extends Init
 
             if (!empty($_POST['save'])) {
                 /* 直接保存修改 */
-                if (save_integrate_config($code, $_POST['cfg'])) {
+                if ($this->save_integrate_config($code, $_POST['cfg'])) {
                     sys_msg($_LANG['save_ok'], 0, array(array('text' => $_LANG['06_list_integrate'], 'href' => 'integrate.php?act=list')));
                 } else {
                     sys_msg($_LANG['save_error'], 0, array(array('text' => $_LANG['06_list_integrate'], 'href' => 'integrate.php?act=list')));
@@ -208,7 +208,7 @@ class Integrate extends Init
 
             if ($total == 0) {
                 /* 商城没有用户时，直接保存完成整合 */
-                save_integrate_config($_POST['code'], $_POST['cfg']);
+                $this->save_integrate_config($_POST['code'], $_POST['cfg']);
                 ecs_header("Location: integrate.php?act=complete\n");
                 exit;
             }
@@ -255,7 +255,7 @@ class Integrate extends Init
             $cfg = array_merge($cfg, $_POST['cfg']);
 
             /* 直接保存修改 */
-            if (save_integrate_config($code, $cfg)) {
+            if ($this->save_integrate_config($code, $cfg)) {
                 sys_msg($_LANG['save_ok'], 0, array(array('text' => $_LANG['06_list_integrate'], 'href' => 'integrate.php?act=list')));
             } else {
                 sys_msg($_LANG['save_error'], 0, array(array('text' => $_LANG['06_list_integrate'], 'href' => 'integrate.php?act=list')));
@@ -310,7 +310,7 @@ class Integrate extends Init
 
             /* 直接保存修改 */
             if (!empty($_POST['save'])) {
-                if (save_integrate_config($code, $cfg)) {
+                if ($this->save_integrate_config($code, $cfg)) {
                     sys_msg($_LANG['save_ok'], 0, array(array('text' => $_LANG['06_list_integrate'], 'href' => 'integrate.php?act=list')));
                 } else {
                     sys_msg($_LANG['save_error'], 0, array(array('text' => $_LANG['06_list_integrate'], 'href' => 'integrate.php?act=list')));
@@ -326,7 +326,7 @@ class Integrate extends Init
             }
 
             /* 保存完成整合 */
-            save_integrate_config($code, $cfg);
+            $this->save_integrate_config($code, $cfg);
 
             $smarty->assign('ur_here', $_LANG['ucenter_import_username']);
             $smarty->assign('user_startid_intro', sprintf($_LANG['user_startid_intro'], $maxuid, $maxuid));
@@ -516,7 +516,7 @@ class Integrate extends Init
             $flags = array(0 => $_LANG['all_user'], 1 => $_LANG['error_user'], 2 => $_LANG['rename_user'], 3 => $_LANG['delete_user'], 4 => $_LANG['ignore_user']);
             $smarty->assign('flags', $flags);
 
-            $arr = conflict_userlist();
+            $arr = $this->conflict_userlist();
 
             $smarty->assign('ur_here', $_LANG['conflict_username_modify']);
             $smarty->assign('domain', '@ecshop');
@@ -533,7 +533,7 @@ class Integrate extends Init
         //-- ajax 用户列表查询
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'query') {
-            $arr = conflict_userlist();
+            $arr = $this->conflict_userlist();
             $smarty->assign('list', $arr['list']);
             $smarty->assign('filter', $arr['filter']);
             $smarty->assign('record_count', $arr['record_count']);
@@ -751,7 +751,7 @@ class Integrate extends Init
                 $db->query($sql);
 
                 /* 序列化设置信息，并保存到数据库 */
-                save_integrate_config($_SESSION['code'], $_SESSION['cfg']);
+                $this->save_integrate_config($_SESSION['code'], $_SESSION['cfg']);
 
                 $result['content'] = $_LANG['task_complete'];
                 $result['id'] = 'task_save';

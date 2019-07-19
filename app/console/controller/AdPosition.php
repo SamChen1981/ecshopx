@@ -29,7 +29,7 @@ class AdPosition extends Init
             $smarty->assign('action_link', array('text' => $_LANG['position_add'], 'href' => 'ad_position.php?act=add'));
             $smarty->assign('full_page', 1);
 
-            $position_list = ad_position_list();
+            $position_list = $this->ad_position_list();
 
             $smarty->assign('position_list', $position_list['position']);
             $smarty->assign('filter', $position_list['filter']);
@@ -151,7 +151,7 @@ class AdPosition extends Init
         //-- 排序、分页、查询
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'query') {
-            $position_list = ad_position_list();
+            $position_list = $this->ad_position_list();
 
             $smarty->assign('position_list', $position_list['position']);
             $smarty->assign('filter', $position_list['filter']);

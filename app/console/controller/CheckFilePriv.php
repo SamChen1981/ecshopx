@@ -67,7 +67,7 @@ class CheckFilePriv extends Init
             $keys = array_unique(array_keys($dir_subdir));
             foreach ($keys as $key) {
                 $err_msg = array();
-                $mark = check_file_in_array($dir_subdir[$key], $err_msg);
+                $mark = $this->check_file_in_array($dir_subdir[$key], $err_msg);
                 $list[] = array('item' => $key . $_LANG['dir_subdir'], 'r' => $mark & 1, 'w' => $mark & 2, 'm' => $mark & 4, 'err_msg' => $err_msg);
             }
 
@@ -90,7 +90,7 @@ class CheckFilePriv extends Init
 
             /* 开始检查 */
             $err_msg = array();
-            $mark = check_file_in_array($tpl_file, $err_msg);
+            $mark = $this->check_file_in_array($tpl_file, $err_msg);
             $list[] = array('item' => $tpl . $_LANG['tpl_file'], 'r' => $mark & 1, 'w' => $mark & 2, 'm' => $mark & 4, 'err_msg' => $err_msg);
 
             /* 检查smarty的缓存目录和编译目录及image目录是否有执行rename()函数的权限 */

@@ -25,7 +25,7 @@ class Privilege extends Init
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'logout') {
             if ($_SESSION['yunqi_login'] == true) {
-                yunqi_logout();
+                $this->yunqi_logout();
             }
             /* 清除cookie */
             setcookie('ECSCP[admin_id]', '', 1, null, null, null, true);
@@ -74,7 +74,7 @@ class Privilege extends Init
                         $admin_row = $db->getRow($sql);
                         if ($certificate['passport_uid'] != $res['params']['passport_uid'] || $admin_row['passport_uid'] != $res['params']['passport_uid']) {
                             $_SESSION['login_err'] = '您好，您的账号尚未激活,请使用本地账号登录!';
-                            yunqi_logout();
+                            $this->yunqi_logout();
                         }
                         if ($admin_row) {
                             // 检查是否为供货商的管理员 所属供货商是否有效
@@ -141,7 +141,7 @@ class Privilege extends Init
                                 }
                             }
                             // 清除购物车中过期的数据
-                            clear_cart();
+                            $this->clear_cart();
                             exit('<script>top.location.href="./index.php"</script>');
                             // ecs_header("Location: ./index.php\n");exit;
                         }
@@ -168,7 +168,7 @@ class Privilege extends Init
                 $smarty->assign('iframe_url', $iframe_url);
                 $smarty->assign('now_year', date('Y'));
 
-                $yunqi_bg = getYunqiAd('ecshop_login_bg'); //ekaidian_login_bg
+                $yunqi_bg = $this->getYunqiAd('ecshop_login_bg'); //ekaidian_login_bg
                 if (isset($yunqi_bg[0]['picpath']) && !empty($yunqi_bg[0]['picpath'])) {
                     $smarty->assign('yunqi_bg', $yunqi_bg[0]['picpath']);
                     $smarty->assign('yunqi_ad_link', $yunqi_bg[0]['link']);
@@ -256,7 +256,7 @@ class Privilege extends Init
                 setcookie('ECSCP[admin_pass]', md5($row['password'] . $_CFG['hash_code']), $time);
 
                 // 清除购物车中过期的数据
-                clear_cart();
+                $this->clear_cart();
 
                 ecs_header("Location: ./index.php\n");
 
@@ -274,7 +274,7 @@ class Privilege extends Init
             $smarty->assign('ur_here', $_LANG['admin_list']);
             $smarty->assign('action_link', array('href' => 'privilege.php?act=add', 'text' => $_LANG['admin_add']));
             $smarty->assign('full_page', 1);
-            $smarty->assign('admin_list', get_admin_userlist());
+            $smarty->assign('admin_list', $this->get_admin_userlist());
 
             /* 显示页面 */
             assign_query_info();
@@ -285,7 +285,7 @@ class Privilege extends Init
         //-- 查询
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'query') {
-            $smarty->assign('admin_list', get_admin_userlist());
+            $smarty->assign('admin_list', $this->get_admin_userlist());
 
             make_json_result($smarty->fetch('privilege_list.htm'));
         }
@@ -302,7 +302,7 @@ class Privilege extends Init
             $smarty->assign('action_link', array('href' => 'privilege.php?act=list', 'text' => $_LANG['admin_list']));
             $smarty->assign('form_act', 'insert');
             $smarty->assign('action', 'add');
-            $smarty->assign('select_role', get_role_list());
+            $smarty->assign('select_role', $this->get_role_list());
 
             /* 显示页面 */
             assign_query_info();
@@ -411,7 +411,7 @@ class Privilege extends Init
 
             /* 如果被编辑的管理员拥有了all这个权限，将不能编辑 */
             if ($priv_str != 'all') {
-                $smarty->assign('select_role', get_role_list());
+                $smarty->assign('select_role', $this->get_role_list());
             }
             $smarty->assign('form_act', 'update');
             $smarty->assign('action', 'edit');

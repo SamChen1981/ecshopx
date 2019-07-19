@@ -150,7 +150,7 @@ class VirtualCard extends Init
                 'href' => 'virtual_card.php?act=replenish&goods_id=' . $_REQUEST['goods_id']));
             $smarty->assign('goods_id', $_REQUEST['goods_id']);
 
-            $list = get_replenish_list();
+            $list = $this->get_replenish_list();
 
             $smarty->assign('card_list', $list['item']);
             $smarty->assign('filter', $list['filter']);
@@ -169,7 +169,7 @@ class VirtualCard extends Init
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'query_card') {
-            $list = get_replenish_list();
+            $list = $this->get_replenish_list();
 
             $smarty->assign('card_list', $list['item']);
             $smarty->assign('filter', $list['filter']);
@@ -193,7 +193,7 @@ class VirtualCard extends Init
             $sql = "DELETE FROM " . $ecs->table('virtual_card') . " WHERE card_id " . db_create_in(implode(',', $_POST['checkboxes']));
             if ($db->query($sql)) {
                 /* 商品数量减$num */
-                update_goods_number(intval($_REQUEST['goods_id']));
+                $this->update_goods_number(intval($_REQUEST['goods_id']));
                 $link[] = array('text' => $_LANG['go_list'], 'href' => 'virtual_card.php?act=card&goods_id=' . $_REQUEST['goods_id']);
                 sys_msg($_LANG['action_success'], 0, $link);
             }
@@ -261,7 +261,7 @@ class VirtualCard extends Init
             }
 
             /* 更新商品库存 */
-            update_goods_number(intval($_REQUEST['goods_id']));
+            $this->update_goods_number(intval($_REQUEST['goods_id']));
             $link[] = array('text' => $_LANG['card'], 'href' => 'virtual_card.php?act=card&goods_id=' . $_POST['goods_id']);
             sys_msg(sprintf($_LANG['batch_card_add_ok'], $i), 0, $link);
         }
@@ -342,7 +342,7 @@ class VirtualCard extends Init
                 $sql = "SELECT goods_id FROM " . $ecs->table('virtual_card') . " WHERE card_id = '$id' LIMIT 1";
                 $goods_id = $db->getOne($sql);
 
-                update_goods_number($goods_id);
+                $this->update_goods_number($goods_id);
                 make_json_result($val);
             } else {
                 make_json_error($_LANG['action_fail'] . "\n" . $db->error());
@@ -362,7 +362,7 @@ class VirtualCard extends Init
             $sql = 'DELETE FROM ' . $ecs->table('virtual_card') . " WHERE card_id = '$id'";
             if ($db->query($sql, 'SILENT')) {
                 /* 修改商品数量 */
-                update_goods_number($row['goods_id']);
+                $this->update_goods_number($row['goods_id']);
 
                 $url = 'virtual_card.php?act=query_card&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
 

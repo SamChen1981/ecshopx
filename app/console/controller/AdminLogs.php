@@ -40,7 +40,7 @@ class AdminLogs extends Init
             $smarty->assign('ip_list', $ip_list);
             $smarty->assign('full_page', 1);
 
-            $log_list = get_admin_logs();
+            $log_list = $this->get_admin_logs();
 
             $smarty->assign('log_list', $log_list['list']);
             $smarty->assign('filter', $log_list['filter']);
@@ -58,7 +58,7 @@ class AdminLogs extends Init
         //-- 排序、分页、查询
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'query') {
-            $log_list = get_admin_logs();
+            $log_list = $this->get_admin_logs();
 
             $smarty->assign('log_list', $log_list['list']);
             $smarty->assign('filter', $log_list['filter']);

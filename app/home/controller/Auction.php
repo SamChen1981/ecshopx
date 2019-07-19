@@ -23,7 +23,7 @@ class Auction extends Init
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
             /* 取得拍卖活动总数 */
-            $count = auction_count();
+            $count = $this->auction_count();
             if ($count > 0) {
                 /* 取得每页记录数 */
                 $size = isset($_CFG['page_size']) && intval($_CFG['page_size']) > 0 ? intval($_CFG['page_size']) : 10;
@@ -48,7 +48,7 @@ class Auction extends Init
             if (!$smarty->is_cached('auction_list.dwt', $cache_id)) {
                 if ($count > 0) {
                     /* 取得当前页的拍卖活动 */
-                    $auction_list = auction_list($size, $page);
+                    $auction_list = $this->auction_list($size, $page);
                     $smarty->assign('auction_list', $auction_list);
 
                     /* 设置分页链接 */

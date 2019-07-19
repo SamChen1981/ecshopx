@@ -37,7 +37,7 @@ class Template extends Init
             $templates_style = array();
             if (count($available_templates) > 0) {
                 foreach ($available_templates as $value) {
-                    $templates_style[$value['code']] = read_tpl_style($value['code'], 2);
+                    $templates_style[$value['code']] = $this->read_tpl_style($value['code'], 2);
                 }
             }
 
@@ -429,7 +429,7 @@ class Template extends Init
 
             @closedir($library_dir);
 
-            $lib = load_library($curr_template, $curr_library);
+            $lib = $this->load_library($curr_template, $curr_library);
 
             assign_query_info();
             $smarty->assign('ur_here', $_LANG['04_template_library']);
@@ -462,7 +462,7 @@ class Template extends Init
                 if (move_plugin_library($tpl_name, $error_msg)) {
                     make_json_error($error_msg);
                 } else {
-                    make_json_result(read_style_and_tpl($tpl_name, $tpl_fg), $_LANG['install_template_success']);
+                    make_json_result($this->read_style_and_tpl($tpl_name, $tpl_fg), $_LANG['install_template_success']);
                 }
             } else {
                 make_json_error($db->error());
@@ -480,7 +480,7 @@ class Template extends Init
             $filename = ROOT_PATH . 'temp' . DIRECTORY_SEPARATOR . 'backup' . DIRECTORY_SEPARATOR . $template . '_' . date('Ymd') . '.tgz';
             $tar = new mdl_tar();
             $tar->filename = $filename;
-            compression($tar, '.');
+            $this->compression($tar, '.');
             $done = $tar->saveTar();
 
             if ($done) {
@@ -495,7 +495,7 @@ class Template extends Init
         /*------------------------------------------------------ */
 
         if ($_REQUEST['act'] == 'load_library') {
-            $library = load_library($_CFG['template'], trim($_GET['lib']));
+            $library = $this->load_library($_CFG['template'], trim($_GET['lib']));
             $message = ($library['mark'] & 7) ? '' : $_LANG['library_not_written'];
 
             make_json_result($library['html'], $message);
@@ -675,7 +675,7 @@ class Template extends Init
                     move_uploaded_file($_FILES["file"]["tmp_name"], $folder . DIRECTORY_SEPARATOR . $theme_name);
                     $tar = new mdl_tar();
                     $tar->openTAR($folder . DIRECTORY_SEPARATOR . $theme_name, $folder);
-                    decompression($tar, $folder);
+                    de$this->compression($tar, $folder);
                     $tar->closeTAR();
                     unlink($folder . DIRECTORY_SEPARATOR . $theme_name);
                 }
@@ -689,7 +689,7 @@ class Template extends Init
             $curr_template = $_CFG['template'];
             $template = str_replace(['..', '/', '\/'], ['', '', ''], $template);
             $folder = ROOT_PATH . 'themes' . '/' . $template;
-            if ($template != $curr_template && file_exists($folder) && delete_tree($folder)) {
+            if ($template != $curr_template && file_exists($folder) && $this->delete_tree($folder)) {
                 make_json_result('');
             } else {
                 make_json_error('');
@@ -802,7 +802,7 @@ class Template extends Init
         $style_info = get_template_info($tpl_name, $tpl_style);
 
         $tpl_style_info = array();
-        $tpl_style_info = read_tpl_style($tpl_name, 2);
+        $tpl_style_info = $this->read_tpl_style($tpl_name, 2);
         $tpl_style_list = '';
         if (count($tpl_style_info) > 1) {
             foreach ($tpl_style_info as $value) {
@@ -834,7 +834,7 @@ class Template extends Init
                 if ($file != '.' && $file != '..' && $file != '.svn') {
                     $cur_path = $dir . '/' . $file;
                     if (is_dir($cur_path)) {
-                        compression($tar, $cur_path);
+                        $this->compression($tar, $cur_path);
                         $tar->addDirectory($cur_path);
                     } else {
                         $tar->addFile($cur_path, file_get_contents($cur_path));
@@ -858,7 +858,7 @@ class Template extends Init
                 if ($file != '.' && $file != '..') {
                     $cur_path = $dir . DIRECTORY_SEPARATOR . $file;
                     if (is_dir($cur_path)) {
-                        delete_tree($cur_path);
+                        $this->delete_tree($cur_path);
                     } else {
                         @unlink($cur_path);
                     }
@@ -874,7 +874,7 @@ class Template extends Init
      * @param mdl_tar Object   &$tar   压缩数据
      * @param string $dir 解压文件的路径
      */
-    private function decompression($tar, $folder)
+    private function de$this->compression($tar, $folder)
     {
         foreach ($tar->files as $file) {
             $information = $tar->getFile($file['name']);

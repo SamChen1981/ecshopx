@@ -72,7 +72,7 @@ class Package extends Init
             /* 礼包编号 */
             $package_id = $db->insert_id();
 
-            handle_packagep_goods($package_id);
+            $this->handle_packagep_goods($package_id);
 
             admin_log($_POST['package_name'], 'add', 'package');
             $link[] = array('text' => $_LANG['back_list'], 'href' => 'package.php?act=list');
@@ -162,7 +162,7 @@ class Package extends Init
             $smarty->assign('ur_here', $_LANG['14_package_list']);
             $smarty->assign('action_link', array('text' => $_LANG['package_add'], 'href' => 'package.php?act=add'));
 
-            $packages = get_packagelist();
+            $packages = $this->get_packagelist();
 
             $smarty->assign('package_list', $packages['packages']);
             $smarty->assign('filter', $packages['filter']);
@@ -182,7 +182,7 @@ class Package extends Init
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'query') {
-            $packages = get_packagelist();
+            $packages = $this->get_packagelist();
 
             $smarty->assign('package_list', $packages['packages']);
             $smarty->assign('filter', $packages['filter']);

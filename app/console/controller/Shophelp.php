@@ -22,7 +22,7 @@ class Shophelp extends Init
             $smarty->assign('action_link', array('text' => $_LANG['article_add'], 'href' => 'shophelp.php?act=add'));
             $smarty->assign('ur_here', $_LANG['cat_list']);
             $smarty->assign('full_page', 1);
-            $smarty->assign('list', get_shophelp_list());
+            $smarty->assign('list', $this->get_shophelp_list());
 
             assign_query_info();
             $smarty->display('shophelp_cat_list.htm');
@@ -37,7 +37,7 @@ class Shophelp extends Init
             $smarty->assign('action_link', array('text' => $_LANG['article_add'], 'href' => 'shophelp.php?act=add&cat_id=' . $_REQUEST['cat_id']));
             $smarty->assign('full_page', 1);
             $smarty->assign('cat', article_cat_list($_REQUEST['cat_id'], true, 'cat_id', 0, "onchange=\"location.href='?act=list_article&cat_id='+this.value\""));
-            $smarty->assign('list', shophelp_article_list($_REQUEST['cat_id']));
+            $smarty->assign('list', $this->shophelp_article_list($_REQUEST['cat_id']));
 
             assign_query_info();
             $smarty->display('shophelp_article_list.htm');
@@ -49,7 +49,7 @@ class Shophelp extends Init
         elseif ($_REQUEST['act'] == 'query_art') {
             $cat_id = intval($_GET['cat']);
 
-            $smarty->assign('list', shophelp_article_list($cat_id));
+            $smarty->assign('list', $this->shophelp_article_list($cat_id));
             make_json_result($smarty->fetch('shophelp_article_list.htm'));
         }
 
@@ -57,7 +57,7 @@ class Shophelp extends Init
         //-- 查询
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'query') {
-            $smarty->assign('list', get_shophelp_list());
+            $smarty->assign('list', $this->get_shophelp_list());
 
             make_json_result($smarty->fetch('shophelp_cat_list.htm'));
         }

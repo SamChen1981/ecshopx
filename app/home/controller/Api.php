@@ -14,7 +14,7 @@ class Api extends Init
         define('GMTIME_UTC', gmtime()); // 获取 UTC 时间戳
         /* 接收传递参数并初步检验 */
         if (empty($_POST) || empty($_POST['ac'])) {
-            api_err('0x003', 'no parameter');   //输出系统级错误:数据异常
+            $this->api_err('0x003', 'no parameter');   //输出系统级错误:数据异常
         }
 
         if (@constant("DEBUG_API")) {
@@ -34,59 +34,59 @@ class Api extends Init
         error_log("\r\n" . $_POST['act'], 3, __FILE__ . ".log");
         switch ($_POST['act']) {
             case 'search_goods_list':
-                search_goods_list();
+                $this->search_goods_list();
                 break;
             case 'search_goods_detail':
-                search_goods_detail();
+                $this->search_goods_detail();
                 break;
             case 'search_deleted_goods_list':
-                search_deleted_goods_list();
+                $this->search_deleted_goods_list();
                 break;
             case 'search_products_list':
-                search_products_list();
+                $this->search_products_list();
                 break;
             case 'search_site_info':
-                search_site_info();
+                $this->search_site_info();
                 break;
             case 'get_certinfo':
-                get_certinfo();
+                $this->get_certinfo();
                 break;
             case 'fy.logistics.offline.send':
-                fy_logistics_offline_send();
+                $this->fy_logistics_offline_send();
                 break;//淘打发货接口
 
             case 'update_order_status':
-                update_order_status();
+                $this->update_order_status();
                 break;//更新订单状态
             case 'create_ome_delivery':
-                ome_create_delivery();
+                $this->ome_create_delivery();
                 break;//创建发货、退货单
             case 'create_ome_payments':
-                ome_create_payments();
+                $this->ome_create_payments();
                 break;//创建支付单
             case 'create_ome_refunds':
-                ome_create_reimburse();
+                $this->ome_create_reimburse();
                 break;//创建退款单
             case 'set_ome_products_store':
-                update_store();
+                $this->update_store();
                 break;//更新库存
             case 'set_ome_ship_addr':
-                update_consignee();
+                $this->update_consignee();
                 break;//修改收货人信息
             case 'set_ome_message':
-                add_buyer_msg();
+                $this->add_buyer_msg();
                 break;//添加买家家留言
             case 'set_ome_mark':
-                update_memo();
+                $this->update_memo();
                 break;//添加备注
             case 'ome_update_order_item':
-                ome_update_order_item();
+                $this->ome_update_order_item();
                 break;//修改订单商品及金额信息
             case 'ome:fetch_order_detail':
-                get_orders_info();
+                $this->get_orders_info();
                 break;//获取订单信息
             case 'start_ome_payment':
-                get_payment_conf();
+                $this->get_payment_conf();
                 break;//获得当前店铺有效支付方式
             case 'create_return':
                 create_return();
@@ -98,75 +98,75 @@ class Api extends Init
                 update_consignor();
                 break;//修改发货人信息
             case 'ome:fetch_order_list':
-                search_order_lists();
+                $this->search_order_lists();
                 break;//获取订单列表
 
             case 'shopex_shop_login':
-                shopex_shop_login();
+                $this->shopex_shop_login();
                 break; //登录店铺
             case 'shopex_goods_cat_list':
-                shopex_goods_cat_list();
+                $this->shopex_goods_cat_list();
                 break; //获取商品分类列
             case 'shopex_type_list':
-                shopex_type_list();
+                $this->shopex_type_list();
                 break; //获取商品类型
             case 'shopex_brand_list':
-                shopex_brand_list();
+                $this->shopex_brand_list();
                 break; //获取品牌列表
             case 'shopex_goods_add':
-                shopex_goods_add();
+                $this->shopex_goods_add();
                 break; //添加商品
             case 'shopex_goods_search':
-                shopex_goods_search();
+                $this->shopex_goods_search();
                 break; //查找商品信息
             case 'ecmobile_send_sms':
-                yunqi_send_sms();
+                $this->yunqi_send_sms();
                 break;//发送短信接口
             case 'ecmobile_get_logistics_info':
-                ecmobile_get_logistics_info($_CFG['lang']);
+                $this->ecmobile_get_logistics_info($_CFG['lang']);
                 break;
             case 'ecmobile_fire_event':
-                ecmobile_fire_event();
+                $this->ecmobile_fire_event();
                 break;
             case 'get_auth_info':
-                get_auth_info();
+                $this->get_auth_info();
                 break;
             case 'compute_discount':
-                api_compute_discount();
+                $this->api_compute_discount();
                 break;
 
             default:
-                api_err('0x008', 'no this type api');   //输出系统级错误:数据异常
+                $this->api_err('0x008', 'no this type api');   //输出系统级错误:数据异常
         }
     }
 
     //计算折扣：根据购物车和优惠活动
     private function api_compute_discount()
     {
-        check_auth();   //检查基本权限
+        $this->check_auth();   //检查基本权限
 
         $goods_list = json_decode($_POST['goods_list'], true);
         $goods_list or $goods_list = json_decode(stripcslashes($_POST['goods_list']), true);
 
         if (!$goods_list) {
-            api_response('fail', '缺少参数', '', RETURN_TYPE);
+            $this->api_response('fail', '缺少参数', '', RETURN_TYPE);
         }
 
         foreach ($goods_list as &$val) {
             if (!isset($val['goods_id']) || !isset($val['product_id']) || !isset($val['subtotal'])) {
-                api_response('fail', '缺少参数', '', RETURN_TYPE);
+                $this->api_response('fail', '缺少参数', '', RETURN_TYPE);
             }
             $val['goods_id'] = intval($val['goods_id']);
             $val['product_id'] = intval($val['product_id']);
             if (!is_numeric($val['subtotal'])) {
-                api_response('fail', '缺少参数', '', RETURN_TYPE);
+                $this->api_response('fail', '缺少参数', '', RETURN_TYPE);
             }
 
             // 获取cat_id,brand_id
             $sql = 'SELECT cat_id,brand_id FROM ' . $GLOBALS['ecs']->table('goods') . ' WHERE goods_id = ' . $val['goods_id'];
             $row = $GLOBALS['db']->getRow($sql);
             if (!$row) {
-                api_response('fail', '缺少参数', '', RETURN_TYPE);
+                $this->api_response('fail', '缺少参数', '', RETURN_TYPE);
             }
             $val['brand_id'] = $row['brand_id'];
             $val['cat_id'] = $row['cat_id'];
@@ -174,28 +174,28 @@ class Api extends Init
 
         require(ROOT_PATH . 'includes/lib_order.php');
         $data = compute_discount_calc($goods_list);
-        api_response('true', '', $data, RETURN_TYPE);
+        $this->api_response('true', '', $data, RETURN_TYPE);
     }
 
     //获取ecshop授权类型
     private function get_auth_info()
     {
-        check_auth();   //检查基本权限
+        $this->check_auth();   //检查基本权限
         $auth_sql = 'SELECT * FROM ' . $GLOBALS['ecs']->table('shop_config') . ' WHERE code = "authorize"';
         $auth = $GLOBALS['db']->getRow($auth_sql);
         $params = unserialize($auth['value']);
         if ($auth) {
             $data = array('authorize_code' => $params['authorize_code'], 'authorize_name' => $params['authorize_name']);
-            api_response('true', '', $data, RETURN_TYPE);
+            $this->api_response('true', '', $data, RETURN_TYPE);
         } else {
-            api_response('fail', '', '', RETURN_TYPE);
+            $this->api_response('fail', '', '', RETURN_TYPE);
         }
     }
 
     //ecmobile操作触发动作
     private function ecmobile_fire_event()
     {
-        check_auth();   //检查基本权限
+        $this->check_auth();   //检查基本权限
         $type = $_POST['type'];
         $args = $_POST['id'];
         $matrix = new matrix;
@@ -215,61 +215,61 @@ class Api extends Init
                 $msg = 'no this type api';
         }
         if ($flag) {
-            api_response('true', $msg, '', RETURN_TYPE);
+            $this->api_response('true', $msg, '', RETURN_TYPE);
         } else {
-            api_response('fail', $msg, '', RETURN_TYPE);
+            $this->api_response('fail', $msg, '', RETURN_TYPE);
         }
     }
 
     //发送短信
     private function yunqi_send_sms()
     {
-        check_auth();   //检查基本权限
+        $this->check_auth();   //检查基本权限
         if (!$_POST['phone'] || !$_POST['content']) {
-            api_response('fail', 'ERR_PARAMS', '', RETURN_TYPE);
+            $this->api_response('fail', 'ERR_PARAMS', '', RETURN_TYPE);
         }
 
         $sms = new sms();
         $is_succ = $sms->send($_POST['phone'], $_POST['content']) ? 'true' : 'fail';
-        api_response($is_succ, '', '', RETURN_TYPE);
+        $this->api_response($is_succ, '', '', RETURN_TYPE);
     }
 
     //获取物流信息
     private function ecmobile_get_logistics_info($lang)
     {
-        check_auth();   //检查基本权限
+        $this->check_auth();   //检查基本权限
         if (!$_POST['order_sn']) {
-            api_response('fail', 'ORDERID_NOT_EXSISTS', '', RETURN_TYPE);
+            $this->api_response('fail', 'ORDERID_NOT_EXSISTS', '', RETURN_TYPE);
         }
 
         include_once(ROOT_PATH . 'includes/lib_order.php');
         $data = get_logistics_trace($_POST['order_sn'], 0, $lang);
-        api_response('true', '', $data, RETURN_TYPE);
+        $this->api_response('true', '', $data, RETURN_TYPE);
     }
 
     // 更新订单
     private function ome_update_order_item()
     {
         require_once(ROOT_PATH . 'includes/lib_order.php');
-        check_auth();   //检查基本权限
+        $this->check_auth();   //检查基本权限
         $version = '1.0';   //版本号
         if ($_POST['api_version'] != $version) {      //网店的接口版本低
-            api_err('0x008', 'a low version api');
+            $this->api_err('0x008', 'a low version api');
         }
 
         $data = $_POST;
 
         $order_sn = $data['tid'];
         // 判断订单是否有效
-        if (!verify_order_valid($order_sn, $order, '*', $msg)) {
-            api_err('0x003', '订单无效。' . $msg);
+        if (!$this->verify_order_valid($order_sn, $order, '*', $msg)) {
+            $this->api_err('0x003', '订单无效。' . $msg);
         }
         $order_id = $order['order_id'];
 
         // 检测商品是否有效
-        $data['orders'] = getStructDataByType($data['orders'], $data['orders_type']);
-        if (!verify_goods_valid($order_sn, $data['orders'], $msg)) {
-            api_err('0x003', '订单商品无效。' . $msg);
+        $data['orders'] = $this->getStructDataByType($data['orders'], $data['orders_type']);
+        if (!$this->verify_goods_valid($order_sn, $data['orders'], $msg)) {
+            $this->api_err('0x003', '订单商品无效。' . $msg);
         }
 
         $payed = $order['surplus'] + $order['surplus']; //已付款
@@ -309,7 +309,7 @@ class Api extends Init
         //配送方式名称
         if ($data['shipping'] && $shipping = json_decode($data['shipping'], 1)) {
             if (isset($shipping['shipping_name'])) {
-                $aRet = getDlTypeList();
+                $aRet = $this->getDlTypeList();
                 foreach ($aRet as $v) {
                     if ($v['shipping_name'] == $data['shipping_name']) {
                         $order['shipping_id'] = $v['shipping_id'];
@@ -325,7 +325,7 @@ class Api extends Init
 
         if ($data['orders']) {
             $loginfo['msg'] .= '修改订单商品信息';
-            $fail_order_items = _omeUpdateOrderItem($order_sn, $data, $order);
+            $fail_order_items = $this->_omeUpdateOrderItem($order_sn, $data, $order);
 
             //订单配送状态  -- 只修改 已经发货，及部分发货
             if (in_array($order['ship_status'], array('0', '1', '3', '4', '5', '6'))) {
@@ -373,10 +373,10 @@ class Api extends Init
             $action_note = "管理员更新订单：" . $order['order_sn'];
             order_action($order['order_sn'], $order['order_status'], $order['shipping_status'], $order['pay_status'], $action_note, 'system');
             // 请求crm
-            update_order_crm($order['order_sn']);
-            data_back($fail_order_items, '', RETURN_TYPE);
+            $this->update_order_crm($order['order_sn']);
+            $this->data_back($fail_order_items, '', RETURN_TYPE);
         } else {
-            api_err('0x003', '更新订单金额及商品信息出错!');
+            $this->api_err('0x003', '更新订单金额及商品信息出错!');
         }
     }
 
@@ -523,7 +523,7 @@ class Api extends Init
         $fail_order_items = array();
         // 新添加的货
         foreach ($new_order_items as $key => $item) {
-            $r = get_product($key, $order);
+            $r = $this->get_product($key, $order);
             if ($r['res'] != 'true') {
                 $fail_order_items[] = $r['msg'];
                 continue;
@@ -617,10 +617,10 @@ class Api extends Init
     // 获取订单列表
     private function search_order_lists()
     {
-        check_auth();   //检查基本权限
+        $this->check_auth();   //检查基本权限
         $version = '1.0';   //版本号
         if ($_POST['api_version'] != $version) {      //网店的接口版本低
-            api_err('0x008', 'a low version api');
+            $this->api_err('0x008', 'a low version api');
         }
         $data = $_POST;
         $order_status['status'] = array('active', 'finish', 'pending', 'dead');
@@ -635,7 +635,7 @@ class Api extends Init
         $result = $where = array();
         //搜索条件
         if ($start_time >= $end_time) {
-            api_err('', 'order_end_time_than_start_time');
+            $this->api_err('', 'order_end_time_than_start_time');
         }
         $where[] = ' modified >= ' . $start_time;
         $where[] = ' modified < ' . $end_time;
@@ -646,14 +646,14 @@ class Api extends Init
                 }
             }
             if (2 == count($where)) {
-                api_err('', 'order_status_struct');
+                $this->api_err('', 'order_status_struct');
             }
         }
         //搜索结果
         $sql_count = 'select count(*) as total_results from ' . $GLOBALS['ecs']->table('order_info') . ' where ' . implode(' and ', $where) . ' ';
         $result = $GLOBALS['db']->getRow($sql_count);
         if (!$result['total_results']) {
-            data_back('true', '', RETURN_TYPE);
+            $this->data_back('true', '', RETURN_TYPE);
         }
 
         $sql = 'select order_sn from ' . $GLOBALS['ecs']->table('order_info') . ' where ' . implode(' and ', $where) . ' order by lastmodify limit ' . ($page_no - 1) * $page_size . ',' . $page_size;
@@ -668,17 +668,17 @@ class Api extends Init
                 $result['trades'][] = $params;
             }
         }
-        data_back($result, '', RETURN_TYPE);
+        $this->data_back($result, '', RETURN_TYPE);
     }
 
 
     // 拉取订单信息
     private function get_orders_info()
     {
-        check_auth();   //检查基本权限
+        $this->check_auth();   //检查基本权限
         $version = '1.0';   //版本号
         if ($_POST['api_version'] != $version) {      //网店的接口版本低
-            api_err('0x008', 'a low version api');
+            $this->api_err('0x008', 'a low version api');
         }
         $data = $_POST;
         $result = array();
@@ -688,10 +688,10 @@ class Api extends Init
         $matrix = new matrix;
         $msg = $matrix->getOrderStruct($order_id, $fields);
         if ($msg) {
-            $result['trade'] = last_filter_params($msg, $fields);
-            $result['trade'] and data_back($result, '', RETURN_TYPE);
+            $result['trade'] = $this->last_filter_params($msg, $fields);
+            $result['trade'] and $this->data_back($result, '', RETURN_TYPE);
         }
-        data_back('true', '', RETURN_TYPE);
+        $this->data_back('true', '', RETURN_TYPE);
     }
 
 
@@ -714,21 +714,21 @@ class Api extends Init
     // 修改收货人信息
     private function update_consignee()
     {
-        check_auth();   //检查基本权限
+        $this->check_auth();   //检查基本权限
         $version = '1.0';   //版本号
         if ($_POST['api_version'] != $version) {      //网店的接口版本低
-            api_err('0x008', 'a low version api');
+            $this->api_err('0x008', 'a low version api');
         }
         $data = $_POST;
         if (empty($data['ship_tel']) && empty($data['ship_mobile'])) {
-            api_err('', '手机或者座机必须有一个不为空！');
+            $this->api_err('', '手机或者座机必须有一个不为空！');
         }
         $order_sn = $data['order_id'] ? $data['order_id'] : '-1';
         $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('order_info') .
             " WHERE order_sn = $order_sn";
         $orders = $GLOBALS['db']->getRow($sql);
         if (!$orders) {
-            api_err('', '订单号“' . $order_sn . '”不存在。');
+            $this->api_err('', '订单号“' . $order_sn . '”不存在。');
         }
         // $state = str_replace('省', '', $data['ship_state']);
         // $city = str_replace('市', '', $data['ship_city']);
@@ -738,19 +738,19 @@ class Api extends Init
 
         $sql = "SELECT region_id FROM " . $GLOBALS['ecs']->table('region') . " WHERE region_type = '1' AND region_name = '" . $state . "'";
         if (!$region_id = $GLOBALS['db']->getRow($sql)) {
-            api_err('0x003', 'state error');
+            $this->api_err('0x003', 'state error');
         }
         $aAddr['province'] = $region_id['region_id'];
 
         $sql = "SELECT region_id FROM " . $GLOBALS['ecs']->table('region') . " WHERE region_type = '2' AND region_name = '" . $city . "'";
         if (!$region_id = $GLOBALS['db']->getRow($sql)) {
-            api_err('0x003', 'city error');
+            $this->api_err('0x003', 'city error');
         }
         $aAddr['city'] = $region_id['region_id'];
 
         $sql = "SELECT region_id FROM " . $GLOBALS['ecs']->table('region') . " WHERE region_type = '3' AND region_name = '" . $district . "'";
         if (!$region_id = $GLOBALS['db']->getRow($sql)) {
-            api_err('0x003', 'region error');
+            $this->api_err('0x003', 'region error');
         }
         $aAddr['district'] = $region_id['region_id'];
         $aAddr['consignee'] = $data['ship_name'];
@@ -776,10 +776,10 @@ class Api extends Init
             $action_note = "管理员更新收货人地址：" . $orders['order_sn'] . ":" . implode(';', $aAddr);
             order_action($orders['order_sn'], $orders['order_status'], $orders['shipping_status'], $orders['pay_status'], $action_note, 'system');
             // 请求crm
-            update_order_crm($orders['order_sn']);
-            data_back('true', '', RETURN_TYPE);
+            $this->update_order_crm($orders['order_sn']);
+            $this->data_back('true', '', RETURN_TYPE);
         } else {
-            api_err('0x003', 'update error');
+            $this->api_err('0x003', 'update error');
         }
     }
 
@@ -787,17 +787,17 @@ class Api extends Init
     // 添加买家家留言
     private function add_buyer_msg()
     {
-        check_auth();   //检查基本权限
+        $this->check_auth();   //检查基本权限
         $version = '1.0';   //版本号
         if ($_POST['api_version'] != $version) {      //网店的接口版本低
-            api_err('0x008', 'a low version api');
+            $this->api_err('0x008', 'a low version api');
         }
         $order_sn = $_POST['rel_order'] ? $_POST['rel_order'] : '-1';
         $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('order_info') .
             " WHERE order_sn = $order_sn";
         $orders = $GLOBALS['db']->getRow($sql);
         if (!$orders) {
-            api_err('', '订单号“' . $order_sn . '”不存在。');
+            $this->api_err('', '订单号“' . $order_sn . '”不存在。');
         }
         $order = array();
         $order['postscript'] = $orders['postscript'] . "<br>" . $_POST['msg_from'] . ":" . htmlspecialchars($_POST['message']) . "--" . $_POST['date'] . "；";
@@ -807,17 +807,17 @@ class Api extends Init
         require_once(ROOT_PATH . 'includes/lib_common.php');
         $action_note = "管理员添加买家留言：" . $orders['order_sn'] . "，留言：" . htmlspecialchars($_POST['message']);
         order_action($orders['order_sn'], $orders['order_status'], $orders['shipping_status'], $orders['pay_status'], $action_note, 'system');
-        data_back(array('order_id' => $order_sn), '', RETURN_TYPE);
+        $this->data_back(array('order_id' => $order_sn), '', RETURN_TYPE);
     }
 
 
     // 添加备注
     private function update_memo()
     {
-        check_auth();   //检查基本权限
+        $this->check_auth();   //检查基本权限
         $version = '1.0';   //版本号
         if ($_POST['api_version'] != $version) {      //网店的接口版本低
-            api_err('0x008', 'a low version api');
+            $this->api_err('0x008', 'a low version api');
         }
         $data = $_POST;
         $order_sn = $data['order_id'] ? $data['order_id'] : '-1';
@@ -825,7 +825,7 @@ class Api extends Init
             " WHERE order_sn = $order_sn";
         $orders = $GLOBALS['db']->getRow($sql);
         if (!$orders) {
-            api_err('', '订单号“' . $order_sn . '”不存在。');
+            $this->api_err('', '订单号“' . $order_sn . '”不存在。');
         }
         require_once(ROOT_PATH . 'includes/lib_order.php');
         $order = array();
@@ -835,17 +835,17 @@ class Api extends Init
         require_once(ROOT_PATH . 'includes/lib_common.php');
         $action_note = "管理员添加备注：" . $orders['order_sn'] . "，备注：" . htmlspecialchars($data['mark_text']);
         order_action($orders['order_sn'], $orders['order_status'], $orders['shipping_status'], $orders['pay_status'], $action_note, 'system');
-        data_back(array('order_id' => $order_sn), '', RETURN_TYPE);
+        $this->data_back(array('order_id' => $order_sn), '', RETURN_TYPE);
     }
 
 
     // 更新订单状态
     private function update_order_status()
     {
-        check_auth();   //检查基本权限
+        $this->check_auth();   //检查基本权限
         $version = '1.0';   //版本号
         if ($_POST['api_version'] != $version) {      //网店的接口版本低
-            api_err('0x008', 'a low version api');
+            $this->api_err('0x008', 'a low version api');
         }
         $data = $_POST;
         $order_sn = $data['order_id'];
@@ -855,7 +855,7 @@ class Api extends Init
         $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('order_info') . " WHERE order_sn = " . $order_sn;
         $_order = $GLOBALS['db']->getRow($sql);
         if (!$_order) {
-            api_err('', '订单号“' . $order_sn . '”不存在');
+            $this->api_err('', '订单号“' . $order_sn . '”不存在');
         }
 
         $sql = " update " . $GLOBALS['ecs']->table('order_info') . " ";
@@ -897,7 +897,7 @@ class Api extends Init
                         $status = '1';
                         break;
                     default:
-                        api_err('0x015', "status pay_status 参数错误");
+                        $this->api_err('0x015', "status pay_status 参数错误");
                         break;
                 }
                 $sql .= " set pay_status = '{$status}',lastmodify='" . $lastmodify . "' ";
@@ -936,7 +936,7 @@ class Api extends Init
                         $status = '3';
                         break;
                     default:
-                        api_err('0x015', "status ship_status参数错误 参数错误");
+                        $this->api_err('0x015', "status ship_status参数错误 参数错误");
                         break;
                 }
                 $sql .= " set shipping_status = '{$status}' ,lastmodify='" . $lastmodify . "' ";
@@ -965,30 +965,30 @@ class Api extends Init
                         } else {
                             $matrix = new matrix;
                             $matrix->updateOrder($order_sn);
-                            api_err('0x003', "pay_status 不是未支付状态");
+                            $this->api_err('0x003', "pay_status 不是未支付状态");
                         }
                         break;
                     default:
-                        api_err('0x015', "status  参数错误");
+                        $this->api_err('0x015', "status  参数错误");
                         break;
                 }
                 $sql .= " set order_status = '{$status}' ,lastmodify='" . $lastmodify . "' ";
                 break;
             default:
-                api_err('0x015', "type  参数错误");
+                $this->api_err('0x015', "type  参数错误");
                 break;
         }
         $sql .= " where order_sn = {$order_sn} ";
         if (!$GLOBALS['db']->query($sql, 'SILENT')) {
-            api_err('0x003', "sql error");
+            $this->api_err('0x003', "sql error");
         }
         // add log
         require_once(ROOT_PATH . 'includes/lib_common.php');
         $action_note = "管理员修改订单状态";
         order_action($_order['order_sn'], $_order['order_status'], $_order['shipping_status'], $_order['pay_status'], $action_note, 'system');
         // 请求crm
-        update_order_crm($_order['order_sn']);
-        data_back('true', '', RETURN_TYPE);
+        $this->update_order_crm($_order['order_sn']);
+        $this->data_back('true', '', RETURN_TYPE);
     }
 
 
@@ -997,12 +997,12 @@ class Api extends Init
      */
     private function search_goods_list()
     {
-        check_auth();   //检查基本权限
+        $this->check_auth();   //检查基本权限
 
         $version = '1.0';   //版本号
 
         if ($_POST['api_version'] != $version) {      //网店的接口版本低
-            api_err('0x008', 'a low version api');
+            $this->api_err('0x008', 'a low version api');
         }
 
         if (is_numeric($_POST['last_modify_st_time']) && is_numeric($_POST['last_modify_en_time'])) {
@@ -1012,7 +1012,7 @@ class Api extends Init
             $date_count = $GLOBALS['db']->getRow($sql);
 
             if (empty($date_count)) {
-                api_err('0x003', 'no data to back');    //无符合条件数据
+                $this->api_err('0x003', 'no data to back');    //无符合条件数据
             }
 
             $page = empty($_POST['pages']) ? 1 : $_POST['pages'];       //确定读取哪些记录
@@ -1043,9 +1043,9 @@ class Api extends Init
             $GLOBALS['db']->query($sql, 'SILENT');
 
             $re_arr['counts'] = $date_count['count'];
-            data_back($re_arr, '', RETURN_TYPE);  //返回数据
+            $this->data_back($re_arr, '', RETURN_TYPE);  //返回数据
         } else {
-            api_err('0x003', 'required date invalid');   //请求数据异常
+            $this->api_err('0x003', 'required date invalid');   //请求数据异常
         }
     }
 
@@ -1055,12 +1055,12 @@ class Api extends Init
      */
     private function search_goods_detail()
     {
-        check_auth();   //检查基本权限
+        $this->check_auth();   //检查基本权限
 
         $version = '1.0';   //版本号
 
         if ($_POST['api_version'] != $version) {      //网店的接口版本低
-            api_err('0x008', 'a low version api');
+            $this->api_err('0x008', 'a low version api');
         }
 
         if (!empty($_POST['goods_id']) && is_numeric($_POST['goods_id'])) {
@@ -1070,7 +1070,7 @@ class Api extends Init
             $goods_data = $GLOBALS['db']->getRow($sql);
 
             if (empty($goods_data)) {
-                api_err('0x003', 'no data to back');    //无符合条件数据
+                $this->api_err('0x003', 'no data to back');    //无符合条件数据
             }
 
             $goods_data['goods_link'] = defined('FORCE_SSL_LOGIN') ? 'https://' : 'http://' . $_SERVER['HTTP_HOST'] . '/goods.php?id=' . $goods_data['goods_id'];
@@ -1078,7 +1078,7 @@ class Api extends Init
             $goods_data['unit'] = '千克';
             $goods_data['brand_name'] = empty($goods_data['brand_name']) ? '' : $goods_data['brand_name'];
 
-            $prop = create_goods_properties($_POST['goods_id']);
+            $prop = $this->create_goods_properties($_POST['goods_id']);
             $goods_data['props_name'] = $prop['props_name'];
             $goods_data['props'] = $prop['props'];
 
@@ -1093,9 +1093,9 @@ class Api extends Init
                 $re_arr['data_info'] = $goods_data;
             }
 
-            data_back($re_arr, '', RETURN_TYPE);  //返回数据
+            $this->data_back($re_arr, '', RETURN_TYPE);  //返回数据
         } else {
-            api_err('0x003', 'required date invalid');   //请求数据异常
+            $this->api_err('0x003', 'required date invalid');   //请求数据异常
         }
     }
 
@@ -1105,7 +1105,7 @@ class Api extends Init
      */
     private function search_deleted_goods_list()
     {
-        api_err('0x007', '暂时不提供此服务功能');   //服务不可用
+        $this->api_err('0x007', '暂时不提供此服务功能');   //服务不可用
     }
 
     /**
@@ -1113,12 +1113,12 @@ class Api extends Init
      */
     private function search_products_list()
     {
-        check_auth();   //检查基本权限
+        $this->check_auth();   //检查基本权限
 
         $version = '1.0';   //版本号
 
         if ($_POST['api_version'] != $version) {      //网店的接口版本低
-            api_err('0x008', 'a low version api');
+            $this->api_err('0x008', 'a low version api');
         }
 
         if (!empty($_POST['goods_id']) && is_numeric($_POST['goods_id']) || !empty($_POST['bn'])) {
@@ -1128,13 +1128,13 @@ class Api extends Init
             $goods_data = $GLOBALS['db']->getRow($sql);
 
             if (empty($goods_data)) {
-                api_err('0x003', 'no data to back');    //无符合条件数据
+                $this->api_err('0x003', 'no data to back');    //无符合条件数据
             }
 
             $goods_data['product_id'] = $_POST['goods_id'];
             $goods_data['cost'] = $goods_data['price'];
 
-            $prop = create_goods_properties($_POST['goods_id']);
+            $prop = $this->create_goods_properties($_POST['goods_id']);
             $goods_data['props'] = $prop['props'];
 
             if (!empty($_POST['columns'])) {
@@ -1148,9 +1148,9 @@ class Api extends Init
                 $re_arr['data_info'] = $goods_data;
             }
 
-            data_back($re_arr, '', RETURN_TYPE);  //返回数据
+            $this->data_back($re_arr, '', RETURN_TYPE);  //返回数据
         } else {
-            api_err('0x003', 'required date invalid');   //请求数据异常
+            $this->api_err('0x003', 'required date invalid');   //请求数据异常
         }
     }
 
@@ -1159,12 +1159,12 @@ class Api extends Init
      */
     private function search_site_info()
     {
-        check_auth();   //检查基本权限
+        $this->check_auth();   //检查基本权限
 
         $version = '1.0';   //版本号
 
         if ($_POST['api_version'] != $version) {      //网店的接口版本低
-            api_err('0x008', 'a low version api');
+            $this->api_err('0x008', 'a low version api');
         }
 
         $sql = 'SELECT code, value' .
@@ -1175,7 +1175,7 @@ class Api extends Init
 
         $siteinfo['data_info']['site_address'] = $_SERVER['SERVER_NAME'];
 
-        data_back($siteinfo, '', RETURN_TYPE);  //返回数据
+        $this->data_back($siteinfo, '', RETURN_TYPE);  //返回数据
     }
 
     /**
@@ -1189,11 +1189,11 @@ class Api extends Init
         $license = $GLOBALS['cert']->get_shop_certificate();  // 取出网店 license信息
 
         if (empty($license['certificate_id']) || empty($license['token'])) {
-            api_err('0x006', 'no certificate');   //没有证书数据，输出系统级错误:用户权限不够
+            $this->api_err('0x006', 'no certificate');   //没有证书数据，输出系统级错误:用户权限不够
         }
 
-        if (!check_shopex_ac_new($_POST, $license['token'])) {
-            api_err('0x009');   //输出系统级错误:签名无效
+        if (!$this->check_shopex_ac_new($_POST, $license['token'])) {
+            $this->api_err('0x009');   //输出系统级错误:签名无效
         }
 
         // /* 对应用申请的session进行验证 */
@@ -1209,7 +1209,7 @@ class Api extends Init
         // $request_arr = $cert->exchange_shop_license($certi, $license);
         // if ($request_arr['res'] != 'succ')
         // {
-        //     api_err('0x001', 'session is invalid');   //输出系统级错误:身份验证失败
+        //     $this->api_err('0x001', 'session is invalid');   //输出系统级错误:身份验证失败
         // }
     }
 
@@ -1230,7 +1230,7 @@ class Api extends Init
         } else {
             return false;
         }
-        // if($verfy && $verfy == strtoupper(md5(strtoupper(md5(assemble($params))).$token))){
+        // if($verfy && $verfy == strtoupper(md5(strtoupper(md5($this->assemble($params))).$token))){
         //     return true;
         // }
         // return false;
@@ -1246,7 +1246,7 @@ class Api extends Init
         ksort($params, SORT_STRING);
         $sign = '';
         foreach ($params as $key => $val) {
-            $sign .= $key . (is_array($val) ? assemble($val) : $val);
+            $sign .= $key . (is_array($val) ? $this->assemble($val) : $val);
         }
         return $sign;
     }
@@ -1303,7 +1303,7 @@ class Api extends Init
         $err_arr['0x015'] = 'Request parameters error'; //请求参数有误
         $err_arr['0x016'] = 'Parameter value error';    //参数值异常
 
-        data_back($err_info == '' ? $err_arr[$err_type] : $err_info, $err_type, $return_type, 'fail');  //回复请求以错误信息
+        $this->data_back($err_info == '' ? $err_arr[$err_type] : $err_info, $err_type, $return_type, 'fail');  //回复请求以错误信息
     }
 
     /**
@@ -1341,11 +1341,11 @@ class Api extends Init
                 $info = $doc->createElement('info');
                 $shopex->appendChild($info);
 
-                create_tree($doc, $info, $data_arr['info']);
+                $this->create_tree($doc, $info, $data_arr['info']);
                 die($doc->saveXML());
             }
 
-            die('<?xml version="1.0" encoding="UTF-8"?>' . array2xml($data_arr));
+            die('<?xml version="1.0" encoding="UTF-8"?>' . $this->array2xml($data_arr));
         } else {
             /* json方式 */
             // error_log(print_R(json_encode($data_arr),1)."\n",3,"/tmp/chen_".date('Y-m-d',time()).".log");
@@ -1370,14 +1370,14 @@ class Api extends Init
                     if ($have_item == false) {
                         $data_info = $doc->createElement('data_info');
                         $top->appendChild($data_info);
-                        create_tree($doc, $data_info, $val, true);
+                        $this->create_tree($doc, $data_info, $val, true);
                     } else {
                         $item = $doc->createElement('item');
                         $top->appendChild($item);
                         $key_code = $doc->createAttribute('key');
                         $item->appendChild($key_code);
                         $key_code->appendChild($doc->createTextNode($key));
-                        create_tree($doc, $item, $val);
+                        $this->create_tree($doc, $item, $val);
                     }
                 } else {
                     $text_code = $doc->createElement($key);
@@ -1397,22 +1397,22 @@ class Api extends Init
     private function array2xml($data, $root = 'shopex')
     {
         $xml = '<' . $root . '>';
-        _array2xml($data, $xml);
+        _$this->array2xml($data, $xml);
         $xml .= '</' . $root . '>';
         return $xml;
     }
 
-    private function _array2xml(&$data, &$xml)
+    private function _$this->array2xml(&$data, &$xml)
     {
         if (is_array($data)) {
             foreach ($data as $k => $v) {
                 if (is_numeric($k)) {
                     $xml .= '<item key="' . $k . '">';
-                    $xml .= _array2xml($v, $xml);
+                    $xml .= _$this->array2xml($v, $xml);
                     $xml .= '</item>';
                 } else {
                     $xml .= '<' . $k . '>';
-                    $xml .= _array2xml($v, $xml);
+                    $xml .= _$this->array2xml($v, $xml);
                     $xml .= '</' . $k . '>';
                 }
             }
@@ -1471,16 +1471,16 @@ class Api extends Init
     private function get_certinfo()
     {
         $data = $_POST;
-        check_auth();   //检查基本权限
+        $this->check_auth();   //检查基本权限
 
         $version = '1.0';   //版本号
 
         if ($data['api_version'] != $version) {      //网店的接口版本低{
-            api_err('0x008', 'a low version api');
+            $this->api_err('0x008', 'a low version api');
         }
         //验证必填参数
         if (!$data['node_id'] || !$data['token']) {
-            api_err('0x003', 'required date invalid');
+            $this->api_err('0x003', 'required date invalid');
         }
         $cert = new certificate();
         //验证是否有eid的账号认证过
@@ -1494,10 +1494,10 @@ class Api extends Init
 
             if ($node_id and $cert_id and $token) {
                 $is_bind = $cert->is_bind_sn('taodali', 'bind_type');
-                $is_bind and api_err('0x003', 'taodali is bind');
+                $is_bind and $this->api_err('0x003', 'taodali is bind');
 
                 $is_bind_erp = $cert->is_bind_sn('ecos.ome', 'bind_type');
-                $is_bind_erp and api_err('0x003', 'erp is bind');
+                $is_bind_erp and $this->api_err('0x003', 'erp is bind');
 
                 $ret['node_id'] = $node_id;
                 $ret['cert_id'] = $cert_id;
@@ -1514,17 +1514,17 @@ class Api extends Init
                 if ($res['res'] == 'succ') {
                     //shop_config 标识 绑定淘打成功
                     $sql = "insert into " . $GLOBALS['ecs']->table('shop_config') . " set parent_id=2,code='bind_taodali',type='hidden',value='" . serialize($data) . "'";
-                    data_back($ret, '', RETURN_TYPE);  //返回数据
+                    $this->data_back($ret, '', RETURN_TYPE);  //返回数据
                 } elseif ($res['res'] == 'fail' && $res['info'] != "") {
-                    api_err('0x003', 'bind fail');
+                    $this->api_err('0x003', 'bind fail');
                 } else {
-                    api_err('0x003', $res['msg']);
+                    $this->api_err('0x003', $res['msg']);
                 }
             } else {
-                api_err('0x003', 'license fail');
+                $this->api_err('0x003', 'license fail');
             }
         } else {
-            api_err('0x003', 'eid fail');
+            $this->api_err('0x003', 'eid fail');
         }
     }
 
@@ -1533,23 +1533,23 @@ class Api extends Init
         $ecs = $GLOBALS['ecs'];
         $db = $GLOBALS['db'];
         $data = $_POST;
-        check_auth();   //检查基本权限
+        $this->check_auth();   //检查基本权限
 
         $version = '1.0';   //版本号
         if ($data['api_version'] != $version) {      //网店的接口版本低{
-            api_err('0x008', 'a low version api');
+            $this->api_err('0x008', 'a low version api');
         }
 
         if (!$data['tid'] || !$data['logistics_no']) {//验证必填参数
-            api_err('0x003', 'required date invalid');
+            $this->api_err('0x003', 'required date invalid');
         }
 
-        if (!verify_order_valid($data['tid'], $order, '*', $msg)) {//验证订单有效性
-            api_err('0x003', $msg);
+        if (!$this->verify_order_valid($data['tid'], $order, '*', $msg)) {//验证订单有效性
+            $this->api_err('0x003', $msg);
         }
         //加入重复发货验证
         if ($order['shipping_status'] == SS_SHIPPED) {
-            api_err('0x003', '订单已经发货，不需要重复发货');
+            $this->api_err('0x003', '订单已经发货，不需要重复发货');
         }
 
         $invoice_no = empty($data['logistics_no']) ? "" : trim($data['logistics_no']);//快递单号
@@ -1599,10 +1599,10 @@ class Api extends Init
             /* 查询：是否保价 */
             $order['insure_yn'] = empty($order['insure_fee']) ? 0 : 1;
             /* 查询：是否存在实体商品 */
-            $exist_real_goods = exist_real_goods($order_id);
+            $exist_real_goods = exist_real_$this->goods($order_id);
 
             /* 查询：取得订单商品 */
-            $_goods = get_order_goods(array('order_id' => $order_id, 'order_sn' => $order['order_sn']));
+            $_goods = $this->get_order_$this->goods(array('order_id' => $order_id, 'order_sn' => $order['order_sn']));
 
             $attr = $_goods['attr'];
             $goods_list = $_goods['goods_list'];
@@ -1617,7 +1617,7 @@ class Api extends Init
 
                     /* 超级礼包 */
                     if (($goods_value['extension_code'] == 'package_buy') && (count($goods_value['package_goods_list']) > 0)) {
-                        $goods_list[$key]['package_goods_list'] = package_goods($goods_value['package_goods_list'], $goods_value['goods_number'], $goods_value['order_id'], $goods_value['extension_code'], $goods_value['goods_id']);
+                        $goods_list[$key]['package_goods_list'] = package_$this->goods($goods_value['package_goods_list'], $goods_value['goods_number'], $goods_value['order_id'], $goods_value['extension_code'], $goods_value['goods_id']);
 
                         foreach ($goods_list[$key]['package_goods_list'] as $pg_key => $pg_value) {
                             $goods_list[$key]['package_goods_list'][$pg_key]['readonly'] = '';
@@ -1765,7 +1765,7 @@ class Api extends Init
                 }
             } else {
                 /* 操作失败 */
-                api_err('0x003', '创建发货单失败');
+                $this->api_err('0x003', '创建发货单失败');
             }
             unset($filter_fileds, $delivery, $_delivery, $order_finish);
 
@@ -1773,7 +1773,7 @@ class Api extends Init
             if (true) {
                 /* 标记订单为已确认 “发货中” */
                 /* 更新发货时间 */
-                $order_finish = get_order_finish($order_id);
+                $order_finish = $this->get_order_finish($order_id);
                 $shipping_status = SS_SHIPPED_ING;
                 if ($order['order_status'] != OS_CONFIRMED && $order['order_status'] != OS_SPLITED && $order['order_status'] != OS_SPLITING_PART) {
                     $arr['order_status'] = OS_CONFIRMED;
@@ -1792,7 +1792,7 @@ class Api extends Init
 
             /* 根据发货单id查询发货单信息 */
             if (!empty($delivery_id)) {
-                $delivery_order = delivery_order_info($delivery_id);
+                $delivery_order = $this->delivery_order_info($delivery_id);
             }
 
             /* 检查此单发货商品库存缺货情况 */
@@ -1811,7 +1811,7 @@ class Api extends Init
                 foreach ($delivery_stock_result as $value) {
                     if (($value['sums'] > $value['storage'] || $value['storage'] <= 0) && (($GLOBALS['_CFG']['use_storage'] == '1' && $GLOBALS['_CFG']['stock_dec_time'] == SDT_SHIP) || ($GLOBALS['_CFG']['use_storage'] == '0' && $value['is_real'] == 0))) {
                         /* 操作失败 */
-                        api_err('0x003', 'goods store error');
+                        $this->api_err('0x003', 'goods store error');
                         break;
                     }
 
@@ -1833,7 +1833,7 @@ class Api extends Init
                 $delivery_stock_result = $db->getAll($delivery_stock_sql);
                 foreach ($delivery_stock_result as $value) {
                     if (($value['sums'] > $value['goods_number'] || $value['goods_number'] <= 0) && (($GLOBALS['_CFG']['use_storage'] == '1' && $GLOBALS['_CFG']['stock_dec_time'] == SDT_SHIP) || ($GLOBALS['_CFG']['use_storage'] == '0' && $value['is_real'] == 0))) {
-                        api_err('0x003', 'goods store error');
+                        $this->api_err('0x003', 'goods store error');
                         break;
                     }
 
@@ -1881,12 +1881,12 @@ class Api extends Init
             $_delivery['status'] = 0; // 0，为已发货
             $query = $db->autoExecute($ecs->table('delivery_order'), $_delivery, 'UPDATE', "delivery_id = $delivery_id", 'SILENT');
             if (!$query) {
-                api_err('0x003', 'update delivery_id fail');
+                $this->api_err('0x003', 'update delivery_id fail');
             }
 
             /* 标记订单为已确认 “已发货” */
             /* 更新发货时间 */
-            $order_finish = get_all_delivery_finish($order_id);
+            $order_finish = $this->get_all_delivery_finish($order_id);
             $shipping_status = ($order_finish == 1) ? SS_SHIPPED : SS_SHIPPED_PART;
             $arr['shipping_status'] = $shipping_status;
             $arr['shipping_time'] = $gmtime; // 发货时间
@@ -1943,8 +1943,8 @@ class Api extends Init
             clear_cache_files();
             $re_arr['tid'] = $data['tid'];
             // 请求crm
-            update_order_crm($order['order_sn']);
-            data_back($re_arr, '', RETURN_TYPE);  //返回数据
+            $this->update_order_crm($order['order_sn']);
+            $this->data_back($re_arr, '', RETURN_TYPE);  //返回数据
         }
     }
 
@@ -1981,7 +1981,7 @@ class Api extends Init
      * @param array $order 订单数组
      * @return array
      */
-    private function get_order_goods($order)
+    private function get_order_$this->goods($order)
     {
         $goods_list = array();
         $goods_attr = array();
@@ -2110,7 +2110,7 @@ class Api extends Init
         }
 
         /* 未全部分单 */
-        if (!get_order_finish($order_id)) {
+        if (!$this->get_order_finish($order_id)) {
             return $return_res;
         } /* 已全部分单 */
         else {
@@ -2145,17 +2145,17 @@ class Api extends Init
     /* 更新库存 */
     private function update_store()
     {
-        check_auth();   //检查基本权限
+        $this->check_auth();   //检查基本权限
         $version = '1.0';   //版本号
         if ($_POST['api_version'] != $version) {      //网店的接口版本低
-            api_err('0x008', 'a low version api');
+            $this->api_err('0x008', 'a low version api');
         }
         $data = $_POST;
         $result = json_decode($data['store_str'], true);
         $result or $result = json_decode(stripcslashes($data['store_str']), true);
 
         if (!$result) {
-            api_err('0x003', 'Sore data wrong ');
+            $this->api_err('0x003', 'Sore data wrong ');
         }
 
         $result_data['msg'] = '';
@@ -2163,7 +2163,7 @@ class Api extends Init
         $result_data['true_bn'] = array();
         foreach ($result as $val) {
             $memo = json_decode($val["memo"], true);
-            if (checkStore($val['bn'], $memo['last_modified'], $val)) {
+            if ($this->checkStore($val['bn'], $memo['last_modified'], $val)) {
                 if ($goods_id = $GLOBALS['db']->getOne("SELECT goods_id FROM " . $GLOBALS['ecs']->table('products') . " WHERE product_sn = '" . $val['bn'] . "'")) {
                     // 多规格商品
                     $sql = "update " . $GLOBALS['ecs']->table('products') . "  set product_number={$val['store']} where product_sn = '" . $val['bn'] . "' ";
@@ -2200,7 +2200,7 @@ class Api extends Init
             }
         }
 
-        data_back($result_data, '', RETURN_TYPE);
+        $this->data_back($result_data, '', RETURN_TYPE);
     }
 
     private function checkStore($bn, $time, $val)
@@ -2226,10 +2226,10 @@ class Api extends Init
  */
     private function get_payment_conf()
     {
-        check_auth();   //检查基本权限
+        $this->check_auth();   //检查基本权限
         $version = '1.0';   //版本号
         if ($_POST['api_version'] != $version) {      //网店的接口版本低
-            api_err('0x008', 'a low version api');
+            $this->api_err('0x008', 'a low version api');
         }
 
         $return_data = array();
@@ -2242,9 +2242,9 @@ class Api extends Init
                     $return_data[$key]['payout_type'] = 'deposit';
                 }
             }
-            data_back($return_data, '', RETURN_TYPE);
+            $this->data_back($return_data, '', RETURN_TYPE);
         }
-        data_back($return_data, '', RETURN_TYPE, 'fail');
+        $this->data_back($return_data, '', RETURN_TYPE, 'fail');
     }
 
 
@@ -2252,24 +2252,24 @@ class Api extends Init
     private function ome_create_payments()
     {
         require_once(ROOT_PATH . 'includes/lib_order.php');
-        check_auth();   //检查基本权限
+        $this->check_auth();   //检查基本权限
         $version = '1.0';   //版本号
         if ($_POST['api_version'] != $version) {      //网店的接口版本低
-            api_err('0x008', 'a low version api');
+            $this->api_err('0x008', 'a low version api');
         }
 
         $data = $_POST;
         if (!$data['order_id']) {
-            api_err('0x003', 'order_id no exist');
+            $this->api_err('0x003', 'order_id no exist');
         }
         $sql = "select order_id,order_sn,order_amount,money_paid,shipping_status,user_id from " . $GLOBALS['ecs']->table('order_info') . " where  order_sn = '" . $data['order_id'] . "' and pay_status = " . PS_UNPAYED . " ";
         $order = $GLOBALS['db']->getRow($sql);
         if (!$order) {
-            api_err('0x003', 'order_id no exist or Already Paid');
+            $this->api_err('0x003', 'order_id no exist or Already Paid');
         }
 
         if ((string)$data['money'] < $order['order_amount']) {
-            api_err('0x003', 'order insufficient fund ');
+            $this->api_err('0x003', 'order insufficient fund ');
         }
         /* 余额是否超过了应付款金额，改为应付款金额 */
         if ($data['money'] > $order['order_amount']) {
@@ -2280,7 +2280,7 @@ class Api extends Init
         $pay_info = $GLOBALS['db']->getRow($sql);
 
         if (!$pay_info) {
-            api_err('0x003', 'Payment No Exist');
+            $this->api_err('0x003', 'Payment No Exist');
         }
 
         //如果支付方式是余额支付
@@ -2289,7 +2289,7 @@ class Api extends Init
             $user = user_info($order['user_id']);
             /* 用户帐户余额是否足够 */
             if ($data['money'] > $user['user_money'] + $user['credit_line']) {
-                api_err('0x003', '余额不足。');
+                $this->api_err('0x003', '余额不足。');
             }
         }
 
@@ -2312,31 +2312,31 @@ class Api extends Init
             $matrix = new matrix;
             $matrix->updateOrder($order['order_sn']);
             // 请求crm
-            update_order_crm($order['order_sn']);
-            data_back('succ', '', RETURN_TYPE);
+            $this->update_order_crm($order['order_sn']);
+            $this->data_back('succ', '', RETURN_TYPE);
         }
-        api_err('0x003', 'toPay fail');
+        $this->api_err('0x003', 'toPay fail');
     }
 
 
     // 创建退款单
     private function ome_create_reimburse()
     {
-        check_auth();   //检查基本权限
+        $this->check_auth();   //检查基本权限
         $version = '1.0';   //版本号
         if ($_POST['api_version'] != $version) {      //网店的接口版本低
-            api_err('0x008', 'a low version api');
+            $this->api_err('0x008', 'a low version api');
         }
 
         $data = $_POST;
         if (!$data['order_id']) {
-            api_err('0x003', 'order_id no exist');
+            $this->api_err('0x003', 'order_id no exist');
         }
         // $sql = "select * from " . $GLOBALS['ecs']->table('order_info') . " where  order_sn = '".$data['order_id']."' and order_status != ".OS_RETURNED." and pay_status = ".PS_PAYED." and shipping_status = ".SS_UNSHIPPED." ";
         $sql = "select *,money_paid+surplus as payed_all from " . $GLOBALS['ecs']->table('order_info') . " where  order_sn = '" . $data['order_id'] . "' and money_paid+surplus>0";
         $order = $GLOBALS['db']->getRow($sql);
         if (!$order) {
-            api_err('0x003', 'order_id no exist or Already Reimburse');
+            $this->api_err('0x003', 'order_id no exist or Already Reimburse');
         }
 
         require_once(ROOT_PATH . 'includes/lib_order.php');
@@ -2352,7 +2352,7 @@ class Api extends Init
                 'order_amount' => 0,
                 'surplus' => 0);
             if (order_refund($order, 1, $action_note, $order['payed_all']) == false) {
-                api_err('0x003', 'reimburse fail');
+                $this->api_err('0x003', 'reimburse fail');
             }
             update_order($order['order_id'], $arr);
             /* 记录log */
@@ -2401,7 +2401,7 @@ class Api extends Init
                 // 'order_amount'     => 0
             );
             if (order_refund($order, 1, $action_note, $data['cur_money']) == false) {
-                api_err('0x003', 'reimburse fail');
+                $this->api_err('0x003', 'reimburse fail');
             }
             if ($order['money_paid'] - $data['cur_money'] >= 0) {
                 $arr['money_paid'] = $order['money_paid'] - $data['cur_money'];
@@ -2417,15 +2417,15 @@ class Api extends Init
             order_action($order['order_sn'], OS_RETURNED, $order['shipping_status'], PS_UNPAYED, $action_note, 'system');
         }
         //更新订单到crm
-        $is_succ = update_order_crm($order['order_sn']);
+        $is_succ = $this->update_order_crm($order['order_sn']);
         // 退款请求crm
         $data['order_id'] = $order['order_sn'];
         // $data['cur_money'] = $order['total_fee'];
-        send_refund_to_crm($data);
+        $this->send_refund_to_crm($data);
 
         // 退款通知到erp
-        send_refund_to_matrix($data);
-        data_back('succ', '', RETURN_TYPE);
+        $this->send_refund_to_matrix($data);
+        $this->data_back('succ', '', RETURN_TYPE);
     }
 
 
@@ -2462,26 +2462,26 @@ class Api extends Init
 
     private function ome_create_delivery()
     {
-        check_auth();   //检查基本权限
+        $this->check_auth();   //检查基本权限
         $version = '1.0';   //版本号
         if ($_POST['api_version'] != $version) {      //网店的接口版本低
-            api_err('0x008', 'a low version api');
+            $this->api_err('0x008', 'a low version api');
         }
 
         $data = $_POST;
         if (!$data['order_id']) {
-            api_err('0x003', 'order_id no exist');
+            $this->api_err('0x003', 'order_id no exist');
         }
         $sql = "select * from " . $GLOBALS['ecs']->table('order_info') . " where  order_sn = '" . $data['order_id'] . "' ";
         $order = $GLOBALS['db']->getRow($sql);
         if (!$order) {
-            api_err('0x003', 'order_id no exist');
+            $this->api_err('0x003', 'order_id no exist');
         }
 
         if ($data['type'] == 'delivery' && $order['shipping_status'] == SS_SHIPPED) {
-            api_err('0x003', '订单已经发货，不要重复发货');
+            $this->api_err('0x003', '订单已经发货，不要重复发货');
         } elseif ($data['type'] == 'return' && $order['order_status'] == OS_RETURNED) {
-            api_err('0x003', '订单已经退款，不要重复退款');
+            $this->api_err('0x003', '订单已经退款，不要重复退款');
         }
 
         $match_logi = false;
@@ -2521,7 +2521,7 @@ class Api extends Init
             // 判断发货单是否存在
             $sql = "select delivery_id from " . $GLOBALS['ecs']->table('delivery_order') . " where delivery_sn = '" . $data['delivery_id'] . "'";
             if ($GLOBALS['db']->getOne($sql)) {
-                api_err('0x003', '发货单已经存在不能重复添加');
+                $this->api_err('0x003', '发货单已经存在不能重复添加');
             }
 
             $delivery['delivery_sn'] = $data['delivery_id'];
@@ -2691,10 +2691,10 @@ class Api extends Init
                     }
                 }
                 // 请求crm
-                update_order_crm($order['order_sn']);
-                data_back('succ', '', RETURN_TYPE);
+                $this->update_order_crm($order['order_sn']);
+                $this->data_back('succ', '', RETURN_TYPE);
             } else {
-                api_err('0x003', '发货失败');
+                $this->api_err('0x003', '发货失败');
             }
         } else { // todo 处理退货
             $back_order = array();
@@ -2705,7 +2705,7 @@ class Api extends Init
             // 判断退货单是否存在
             $sql = "select back_id from " . $GLOBALS['ecs']->table('back_order') . " where delivery_sn = " . $data['delivery_id'];
             if ($GLOBALS['db']->getOne($sql)) {
-                api_err('0x003', '退货单已经存在不能重复添加');
+                $this->api_err('0x003', '退货单已经存在不能重复添加');
             }
             require_once(ROOT_PATH . 'includes/lib_order.php');
             $order_id = $order['order_id'];
@@ -2740,7 +2740,7 @@ class Api extends Init
             $back_id = $GLOBALS['db']->insert_id();
 
             if (!$back_id) {
-                api_err('0x003', '退货单创建失败');
+                $this->api_err('0x003', '退货单创建失败');
             }
 
             if ($data['struct']) {
@@ -2795,7 +2795,7 @@ class Api extends Init
             /* todo 处理退款 */
             if ($order['pay_status'] != PS_UNPAYED) {
                 if (order_refund($order, 1, $action_note, $data['money']) == false) {
-                    api_err('0x003', '退款失败');
+                    $this->api_err('0x003', '退款失败');
                 }
             }
 
@@ -2816,7 +2816,7 @@ class Api extends Init
                 order_action($order['order_sn'], OS_RETURNED, SS_SHIPPED, $order['pay_status'], $action_note);
                 /* 清除缓存 */
                 clear_cache_files();
-                data_back('succ', '', RETURN_TYPE);
+                $this->data_back('succ', '', RETURN_TYPE);
             }
 
             /* 修改订单的发货单状态为退货 */
@@ -2892,8 +2892,8 @@ class Api extends Init
             clear_cache_files();
             // 订单更新crm
             error_log("order_update", 3, __FILE__ . ".log");
-            update_order_crm($order['order_sn']);
-            data_back('succ', '', RETURN_TYPE);
+            $this->update_order_crm($order['order_sn']);
+            $this->data_back('succ', '', RETURN_TYPE);
         }
     }
 
@@ -2928,11 +2928,11 @@ class Api extends Init
 
         if ($type == 1) {
             //XML
-            _header('text/xml');
-            $result = array2xml($result, 'shopex');
+            $this->_header('text/xml');
+            $result = $this->array2xml($result, 'shopex');
         } else {
             //JSON
-            _header('text/html');
+            $this->_header('text/html');
             $result = json_encode($result);
         }
         echo $result;
@@ -2944,7 +2944,7 @@ class Api extends Init
      */
     private function shopex_shop_login()
     {
-        check_auth(); //检查基本权限
+        $this->check_auth(); //检查基本权限
 
         $db = $GLOBALS['db'];
         $ecs = $GLOBALS['ecs'];
@@ -2970,10 +2970,10 @@ class Api extends Init
                 $re_arr['session'] = SESS_ID;
                 $re_arr['goods_url'] = $ecs->url() . 'goods.php?id=0'; //站点网址
 
-                api_response('true', '', $re_arr, RETURN_TYPE);
+                $this->api_response('true', '', $re_arr, RETURN_TYPE);
             }
         }
-        api_response('fail', 'Verify fail', '', RETURN_TYPE);
+        $this->api_response('fail', 'Verify fail', '', RETURN_TYPE);
     }
 
     /**
@@ -2981,7 +2981,7 @@ class Api extends Init
      */
     private function shopex_goods_cat_list()
     {
-        check_auth(); //检查基本权限
+        $this->check_auth(); //检查基本权限
 
         $db = $GLOBALS['db'];
         $ecs = $GLOBALS['ecs'];
@@ -3007,16 +3007,16 @@ class Api extends Init
                 $re_arr[$cid]['type_name'] = '';
                 $re_arr[$cid]['last_modify'] = time(); //最后修改时间
                 $re_arr[$cid]['cat_path'] = empty($cat['parent_id']) ? '' : $cat_list[$cat['parent_id']]['cat_name'];
-                // get_cat_path($cat, $cat_list, $path);
+                // $this->get_cat_path($cat, $cat_list, $path);
                 // krsort($path);
                 // $re_arr[$cid]['cat_path'] = implode('->', $path);
             }
             $re_arr = array_slice($re_arr, ($page_size * ($page_no - 1)), $page_size);
             $re_arr['item_total'] = count($cat_list);
 
-            api_response('true', '', $re_arr, RETURN_TYPE);
+            $this->api_response('true', '', $re_arr, RETURN_TYPE);
         }
-        api_response('true', 'No Data', '', RETURN_TYPE);
+        $this->api_response('true', 'No Data', '', RETURN_TYPE);
     }
 
     private function get_cat_path($cat, $cat_list, &$path)
@@ -3024,7 +3024,7 @@ class Api extends Init
         $path[] = $cat['cat_name'];
         if ($cat['parent_id'] != 0) {
             $pid = $cat['parent_id'];
-            get_cat_path($cat_list[$pid], $cat_list, $path);
+            $this->get_cat_path($cat_list[$pid], $cat_list, $path);
         }
     }
 
@@ -3033,7 +3033,7 @@ class Api extends Init
      */
     private function shopex_brand_list()
     {
-        check_auth(); //检查基本权限
+        $this->check_auth(); //检查基本权限
 
         $db = $GLOBALS['db'];
         $ecs = $GLOBALS['ecs'];
@@ -3058,9 +3058,9 @@ class Api extends Init
             $re_arr['item_total'] = count($res);
             $re_arr = array_slice($re_arr, ($page_size * ($page_no - 1)), $page_size);
 
-            api_response('true', '', $re_arr, RETURN_TYPE);
+            $this->api_response('true', '', $re_arr, RETURN_TYPE);
         }
-        api_response('true', 'No Data', '', RETURN_TYPE);
+        $this->api_response('true', 'No Data', '', RETURN_TYPE);
     }
 
     /**
@@ -3068,7 +3068,7 @@ class Api extends Init
      */
     private function shopex_type_list()
     {
-        check_auth(); //检查基本权限
+        $this->check_auth(); //检查基本权限
 
         $db = $GLOBALS['db'];
         $ecs = $GLOBALS['ecs'];
@@ -3113,9 +3113,9 @@ class Api extends Init
             $re_arr = array_slice($type_arr, ($page_size * ($page_no - 1)), $page_size);
             $re_arr['item_total'] = count($type_arr);
 
-            api_response('true', '', $re_arr, RETURN_TYPE);
+            $this->api_response('true', '', $re_arr, RETURN_TYPE);
         }
-        api_response('true', 'No Data', '', RETURN_TYPE);
+        $this->api_response('true', 'No Data', '', RETURN_TYPE);
     }
 
 
@@ -3124,28 +3124,28 @@ class Api extends Init
      */
     private function shopex_goods_add()
     {
-        check_auth(); //检查基本权限
+        $this->check_auth(); //检查基本权限
 
         $goods_data = json_decode($_POST['goodsinfo'], true);
         $goods_data or $goods_data = json_decode(stripcslashes($_POST['goodsinfo']), true);
         if (empty($goods_data)) {
-            api_response('fail', 'Data Error', '', RETURN_TYPE);
+            $this->api_response('fail', 'Data Error', '', RETURN_TYPE);
         } //商品数据异常
 
         //数组key转换为小写
-        lowerKey($goods_data);
+        $this->lowerKey($goods_data);
         //检查商品数据
-        checkGoodsArray($goods_data);
+        $this->checkGoodsArray($goods_data);
         //获取商品分类id
-        getCatagory($goods_data, $cat_id);
+        $this->getCatagory($goods_data, $cat_id);
         //获取商品类型id
-        goodsType($goods_data, $type_id);
+        $this->goodsType($goods_data, $type_id);
         //新增和更新商品
-        goods($goods_data, $cat_id, $type_id, $goods);
+        $this->goods($goods_data, $cat_id, $type_id, $goods);
         //新增和更新商品属性
-        attribute($goods_data, $goods, $type_id);
+        $this->attribute($goods_data, $goods, $type_id);
         //新增和更新商品图片
-        gallery($goods_data, $goods);
+        $this->gallery($goods_data, $goods);
 
         clear_tpl_files();
 
@@ -3153,7 +3153,7 @@ class Api extends Init
         $re_arr['goods_id'] = $goods['goods_id'];
         $re_arr['goods_url'] = $GLOBALS['ecs']->url() . "/goods.php?id={$goods['goods_id']}";
 
-        api_response('true', '', $re_arr, RETURN_TYPE);
+        $this->api_response('true', '', $re_arr, RETURN_TYPE);
     }
 
     /**
@@ -3165,7 +3165,7 @@ class Api extends Init
             $goods_data = array_change_key_case($goods_data, CASE_LOWER);
             foreach ($goods_data as $key => $value) {
                 if (is_array($value)) {
-                    lowerKey($goods_data[$key]);
+                    $this->lowerKey($goods_data[$key]);
                 }
             }
         }
@@ -3191,12 +3191,12 @@ class Api extends Init
                 case 'shopexcategorypath':
                 case 'typename':
                     if (isset($goods_data['shopexobj'][$key]) == false || empty($goods_data['shopexobj'][$key])) {
-                        api_response('fail', $msg, '', RETURN_TYPE);
+                        $this->api_response('fail', $msg, '', RETURN_TYPE);
                     }
                     break;
                 default:
                     if (isset($goods_data[$key]) == false || empty($goods_data[$key])) {
-                        api_response('fail', $msg, '', RETURN_TYPE);
+                        $this->api_response('fail', $msg, '', RETURN_TYPE);
                     }
                     break;
             }
@@ -3219,7 +3219,7 @@ class Api extends Init
             }
         }
         if (empty($tmp_arr)) {
-            api_response('fail', 'catagory is not found', '', RETURN_TYPE);
+            $this->api_response('fail', 'catagory is not found', '', RETURN_TYPE);
         }
 
         if (count($tmp_arr) == 1) {
@@ -3228,14 +3228,14 @@ class Api extends Init
 
         foreach ($tmp_arr as $id => $cat) {
             $path = array(); // 每次循环必须重新初始化 不然子分类有相同的名称会导致 分类路径错误  2019.01.17 18:28:00 pangxp
-            get_cat_path($cat, $cat_list, $path);
+            $this->get_cat_path($cat, $cat_list, $path);
             krsort($path);
             if (implode('->', $path) == $shopexcategorypath) {
                 $cat_id = $id;
             }
         }
         if (isset($cat_id) == false) {
-            api_response('fail', 'catagory is not found', '', RETURN_TYPE);
+            $this->api_response('fail', 'catagory is not found', '', RETURN_TYPE);
         }
     }
 
@@ -3256,7 +3256,7 @@ class Api extends Init
         if (($type_id = $db->getOne($sql)) == false) {
             $sql = "INSERT INTO " . $ecs->table('goods_type') . " (`cat_name`,`enabled`) VALUE ('{$type_name}',1)";
             if ($db->query($sql) === false) {
-                api_response('fail', 'add goods type failed', '', RETURN_TYPE);
+                $this->api_response('fail', 'add goods type failed', '', RETURN_TYPE);
             }
             $type_id = $GLOBALS['db']->insert_id();
         }
@@ -3319,7 +3319,7 @@ class Api extends Init
         }
 
         if ($db->query($sql) === false) {
-            api_response('fail', 'update goods failed', '', RETURN_TYPE);
+            $this->api_response('fail', 'update goods failed', '', RETURN_TYPE);
         }
 
         //返回商品数据
@@ -3383,10 +3383,10 @@ class Api extends Init
                     //和数据库数据做对比
                     if ($diff = array_diff($value, $res_arr[$name])) {
                         $attr_value = array_merge($res_arr[$name], $diff);
-                        $attr_value = remove_quotation_marks($attr_value);
+                        $attr_value = $this->remove_quotation_marks($attr_value);
                         $sql = "UPDATE " . $ecs->table('attribute') . " SET `attr_values` = \"" . implode("\n", $attr_value) . "\" WHERE cat_id = {$type_id} AND attr_name = '{$name}'";
                         if ($db->query($sql) === false) {
-                            api_response('fail', 'update attribute failed', '', RETURN_TYPE);
+                            $this->api_response('fail', 'update attribute failed', '', RETURN_TYPE);
                         }
                     }
                     //去除已更新的属性
@@ -3400,13 +3400,13 @@ class Api extends Init
             $sql = "INSERT INTO " . $ecs->table('attribute') . " (`cat_id`,`attr_name`,`attr_values`,`attr_input_type`,`attr_type`) VALUES ";
             foreach ($attr_arr as $name => $attr_value) {
                 $attr_type = count($attr_value) > 1 ? 1 : 0;
-                $attr_value = remove_quotation_marks($attr_value);
+                $attr_value = $this->remove_quotation_marks($attr_value);
                 $sql .= "({$type_id},'{$name}',\"" . implode("\n", $attr_value) . "\",1,$attr_type),";
             }
             $sql = trim($sql, ",");
 
             if ($db->query($sql) === false) {
-                api_response('fail', 'add attribute failed', '', RETURN_TYPE);
+                $this->api_response('fail', 'add attribute failed', '', RETURN_TYPE);
             }
         }
 
@@ -3452,7 +3452,7 @@ class Api extends Init
                             if ($type == 0 && $v != $value) {
                                 $sql = "UPDATE " . $ecs->table('goods_attr') . " SET attr_value = '{$v}' WHERE goods_id = {$goods['goods_id']} AND attr_id = " . key($values) . " AND goods_attr_id = {$goods_attr_id}";
                                 if ($db->query($sql) === false) {
-                                    api_response('fail', 'update goods attribute failed', '', RETURN_TYPE);
+                                    $this->api_response('fail', 'update goods attribute failed', '', RETURN_TYPE);
                                 }
                             }
                             unset($goods_attr_arr[$name][$k]);
@@ -3478,7 +3478,7 @@ class Api extends Init
             }
             $sql = trim($sql, ",");
             if ($db->query($sql) === false) {
-                api_response('fail', 'add goods attribute failed', '', RETURN_TYPE);
+                $this->api_response('fail', 'add goods attribute failed', '', RETURN_TYPE);
             }
         }
 
@@ -3518,7 +3518,7 @@ class Api extends Init
                     $goods_attr = addslashes(trim($goods_attr, '|'));
                     $sql = "UPDATE " . $ecs->table('products') . " SET goods_attr = '{$goods_attr}', product_number = {$quantities} WHERE product_sn = '{$bn}'";
                     if ($db->query($sql) === false) {
-                        api_response('fail', 'update product failed', '', RETURN_TYPE);
+                        $this->api_response('fail', 'update product failed', '', RETURN_TYPE);
                     }
                     unset($sku_arr[$bn]);
                 }
@@ -3538,7 +3538,7 @@ class Api extends Init
             }
             $sql = trim($sql, ",");
             if ($db->query($sql) === false) {
-                api_response('fail', 'add product failed', '', RETURN_TYPE);
+                $this->api_response('fail', 'add product failed', '', RETURN_TYPE);
             }
         }
     }
@@ -3603,7 +3603,7 @@ class Api extends Init
      */
     private function shopex_goods_search()
     {
-        check_auth(); //检查基本权限
+        $this->check_auth(); //检查基本权限
 
         $db = $GLOBALS['db'];
         $ecs = $GLOBALS['ecs'];
@@ -3628,7 +3628,7 @@ class Api extends Init
                 //分类
                 $cat_name = $cat_list[$goods['cat_id']]['cat_name'];
                 $path = array();
-                get_cat_path($cat_list[$goods['cat_id']], $cat_list, $path);
+                $this->get_cat_path($cat_list[$goods['cat_id']], $cat_list, $path);
                 krsort($path);
                 //品牌
                 $brand_name = $brand_list[$goods['brand_id']];
@@ -3726,9 +3726,9 @@ class Api extends Init
                 $re_arr['goods'][$gid]['goods_id'] = $goods['goods_id']; //商品id
                 $re_arr['goods'][$gid]['goods_url'] = $ecs->url() . "goods.php?id={$goods['goods_id']}"; //商品详前台URL
             }
-            api_response('true', '', $re_arr, RETURN_TYPE);
+            $this->api_response('true', '', $re_arr, RETURN_TYPE);
         }
-        api_response('true', 'No Data', '', RETURN_TYPE);
+        $this->api_response('true', 'No Data', '', RETURN_TYPE);
     }
 
     // 更新订单到crm

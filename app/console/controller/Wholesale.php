@@ -24,7 +24,7 @@ class Wholesale extends Init
             $smarty->assign('action_link', array('href' => 'wholesale.php?act=add', 'text' => $_LANG['add_wholesale']));
             $smarty->assign('action_link2', array('href' => 'wholesale.php?act=batch_add', 'text' => $_LANG['add_batch_wholesale']));
 
-            $list = wholesale_list();
+            $list = $this->wholesale_list();
 
             $smarty->assign('wholesale_list', $list['item']);
             $smarty->assign('filter', $list['filter']);
@@ -44,7 +44,7 @@ class Wholesale extends Init
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'query') {
-            $list = wholesale_list();
+            $list = $this->wholesale_list();
 
             $smarty->assign('wholesale_list', $list['item']);
             $smarty->assign('filter', $list['filter']);

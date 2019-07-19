@@ -12,7 +12,7 @@ class EmailList extends Init
         admin_priv('email_list');
 
         if ($_REQUEST['act'] == 'list') {
-            $emaildb = get_email_list();
+            $emaildb = $this->get_email_list();
             $smarty->assign('full_page', 1);
             $smarty->assign('ur_here', $_LANG['email_list']);
             $smarty->assign('emaildb', $emaildb['emaildb']);
@@ -39,7 +39,7 @@ class EmailList extends Init
             echo $out;
             exit;
         } elseif ($_REQUEST['act'] == 'query') {
-            $emaildb = get_email_list();
+            $emaildb = $this->get_email_list();
             $smarty->assign('emaildb', $emaildb['emaildb']);
             $smarty->assign('filter', $emaildb['filter']);
             $smarty->assign('record_count', $emaildb['record_count']);

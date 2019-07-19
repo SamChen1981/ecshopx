@@ -31,7 +31,7 @@ class Ads extends Init
             $smarty->assign('pid', $pid);
             $smarty->assign('full_page', 1);
 
-            $ads_list = get_adslist();
+            $ads_list = $this->get_adslist();
 
             $smarty->assign('ads_list', $ads_list['ads']);
             $smarty->assign('filter', $ads_list['filter']);
@@ -49,7 +49,7 @@ class Ads extends Init
         //-- 排序、分页、查询
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'query') {
-            $ads_list = get_adslist();
+            $ads_list = $this->get_adslist();
 
             $smarty->assign('ads_list', $ads_list['ads']);
             $smarty->assign('filter', $ads_list['filter']);

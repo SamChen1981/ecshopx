@@ -20,7 +20,7 @@ class Shopinfo extends Init
             $smarty->assign('ur_here', $_LANG['shop_info']);
             $smarty->assign('action_link', array('text' => $_LANG['shopinfo_add'], 'href' => 'shopinfo.php?act=add'));
             $smarty->assign('full_page', 1);
-            $smarty->assign('list', shopinfo_article_list());
+            $smarty->assign('list', $this->shopinfo_article_list());
 
             assign_query_info();
             $smarty->display('shopinfo_list.htm');
@@ -30,7 +30,7 @@ class Shopinfo extends Init
         //-- 查询
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'query') {
-            $smarty->assign('list', shopinfo_article_list());
+            $smarty->assign('list', $this->shopinfo_article_list());
 
             make_json_result($smarty->fetch('shopinfo_list.htm'));
         }

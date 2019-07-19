@@ -30,7 +30,7 @@ class Article extends Init
             $smarty->assign('full_page', 1);
             $smarty->assign('filter', $filter);
 
-            $article_list = get_articleslist();
+            $article_list = $this->get_articleslist();
 
             $smarty->assign('article_list', $article_list['arr']);
             $smarty->assign('filter', $article_list['filter']);
@@ -50,7 +50,7 @@ class Article extends Init
         elseif ($_REQUEST['act'] == 'query') {
             check_authz_json('article_manage');
 
-            $article_list = get_articleslist();
+            $article_list = $this->get_articleslist();
 
             $smarty->assign('article_list', $article_list['arr']);
             $smarty->assign('filter', $article_list['filter']);
@@ -125,7 +125,7 @@ class Article extends Init
                 }
 
                 // 复制文件
-                $res = upload_article_file($_FILES['file']);
+                $res = $this->upload_article_file($_FILES['file']);
                 if ($res != false) {
                     $file_url = $res;
                 }
@@ -191,7 +191,7 @@ class Article extends Init
             $smarty->assign('brand_list', get_brand_list());
 
             /* 取得关联商品 */
-            $goods_list = get_article_goods($_REQUEST['id']);
+            $goods_list = $this->get_article_goods($_REQUEST['id']);
             $smarty->assign('goods_list', $goods_list);
 
             $smarty->assign('article', $article);
@@ -229,7 +229,7 @@ class Article extends Init
                 }
 
                 // 复制文件
-                $res = upload_article_file($_FILES['file']);
+                $res = $this->upload_article_file($_FILES['file']);
                 if ($res != false) {
                     $file_url = $res;
                 }
@@ -373,7 +373,7 @@ class Article extends Init
             }
 
             /* 重新载入 */
-            $arr = get_article_goods($article_id);
+            $arr = $this->get_article_goods($article_id);
             $opt = array();
 
             foreach ($arr as $key => $val) {
@@ -404,7 +404,7 @@ class Article extends Init
             $db->query($sql, 'SILENT') or make_json_error($db->error());
 
             /* 重新载入 */
-            $arr = get_article_goods($article_id);
+            $arr = $this->get_article_goods($article_id);
             $opt = array();
 
             foreach ($arr as $key => $val) {

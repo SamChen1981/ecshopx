@@ -40,7 +40,7 @@ class AccountLog extends Init
             $smarty->assign('action_link', array('text' => $_LANG['add_account'], 'href' => 'account_log.php?act=add&user_id=' . $user_id));
             $smarty->assign('full_page', 1);
 
-            $account_list = get_accountlist($user_id, $account_type);
+            $account_list = $this->get_accountlist($user_id, $account_type);
             $smarty->assign('account_list', $account_list['account']);
             $smarty->assign('filter', $account_list['filter']);
             $smarty->assign('record_count', $account_list['record_count']);
@@ -75,7 +75,7 @@ class AccountLog extends Init
             }
             $smarty->assign('account_type', $account_type);
 
-            $account_list = get_accountlist($user_id, $account_type);
+            $account_list = $this->get_accountlist($user_id, $account_type);
             $smarty->assign('account_list', $account_list['account']);
             $smarty->assign('filter', $account_list['filter']);
             $smarty->assign('record_count', $account_list['record_count']);

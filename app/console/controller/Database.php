@@ -90,7 +90,7 @@ class Database extends Init
 
                     $file_size = filesize($path . $file);
                     $info = cls_sql_dump::get_head($path . $file);
-                    $list[] = array('name' => $file, 'ver' => $info['ecs_ver'], 'add_time' => $info['date'], 'vol' => $info['vol'], 'file_size' => num_bitunit($file_size), 'mark' => $mark);
+                    $list[] = array('name' => $file, 'ver' => $info['ecs_ver'], 'add_time' => $info['date'], 'vol' => $info['vol'], 'file_size' => $this->num_bitunit($file_size), 'mark' => $mark);
                 }
             }
 
@@ -350,7 +350,7 @@ class Database extends Init
                     if ($info['ecs_ver'] != VERSION) {
                         sys_msg(sprintf($_LANG['version_error'], VERSION, $sql_info['ecs_ver']));
                     }
-                    if (!sql_import($path . $file)) {
+                    if (!$this->sql_import($path . $file)) {
                         sys_msg($_LANG['sqlfile_error'], 1);
                     }
                 }
@@ -364,7 +364,7 @@ class Database extends Init
                 if ($info['ecs_ver'] != VERSION) {
                     sys_msg(sprintf($_LANG['version_error'], VERSION, $sql_info['ecs_ver']));
                 }
-                if (sql_import($path . $file_name)) {
+                if ($this->sql_import($path . $file_name)) {
                     clear_cache_files();
                     admin_log($_LANG['backup_time'] . $info['date'], 'restore', 'db_backup');
                     sys_msg($_LANG['restore_success'], 0, array(array('text' => $_LANG['restore'], 'href' => 'database.php?act=restore')));
@@ -441,7 +441,7 @@ class Database extends Init
             /* 设置最长执行时间为5分钟 */
             @set_time_limit(300);
 
-            if (sql_import($sql_file)) {
+            if ($this->sql_import($sql_file)) {
                 clear_all_files();
                 @unlink($sql_file);
                 sys_msg($_LANG['restore_success'], 0, array());

@@ -15,7 +15,7 @@ class MagazineList extends Init
             $smarty->assign('action_link', array('text' => $_LANG['add_new'], 'href' => 'magazine_list.php?act=add'));
             $smarty->assign('full_page', 1);
 
-            $magazinedb = get_magazine();
+            $magazinedb = $this->get_magazine();
 
             $smarty->assign('magazinedb', $magazinedb['magazinedb']);
             $smarty->assign('filter', $magazinedb['filter']);
@@ -33,7 +33,7 @@ class MagazineList extends Init
             assign_query_info();
             $smarty->display('magazine_list.htm');
         } elseif ($_REQUEST['act'] == 'query') {
-            $magazinedb = get_magazine();
+            $magazinedb = $this->get_magazine();
             $smarty->assign('magazinedb', $magazinedb['magazinedb']);
             $smarty->assign('filter', $magazinedb['filter']);
             $smarty->assign('record_count', $magazinedb['record_count']);

@@ -36,8 +36,8 @@ class Certificate extends Init
             $_content = file_get_contents($release_url);
             $version_all = array_filter(explode("\n", $_content));
             $message = "您现在已经是最新版本了,当前版本:ECSHOP " . EC_CHARSET . " " . VERSION;
-            $app_version = get_appserver_verison();
-            $h5_version = get_h5_version();
+            $app_version = $this->get_appserver_verison();
+            $h5_version = $this->get_h5_version();
             foreach ($version_all as $v) {
                 $item = json_decode($v, 1);
                 if (intval($item['date']) > intval(RELEASE)) {

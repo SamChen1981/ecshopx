@@ -17,7 +17,7 @@ class ShippingArea extends Init
         if ($_REQUEST['act'] == 'list') {
             $shipping_id = intval($_REQUEST['shipping']);
 
-            $list = get_shipping_area_list($shipping_id);
+            $list = $this->get_shipping_area_list($shipping_id);
             $smarty->assign('areas', $list);
 
             $smarty->assign('ur_here', '<a href="shipping.php?act=list">' .
@@ -367,7 +367,7 @@ class ShippingArea extends Init
 
             admin_log($name, 'remove', 'shipping_area');
 
-            $list = get_shipping_area_list($shipping_id);
+            $list = $this->get_shipping_area_list($shipping_id);
             $smarty->assign('areas', $list);
             make_json_result($smarty->fetch('shipping_area_list.htm'));
         }

@@ -285,8 +285,8 @@ class Index extends Init
             $release_url = VERSION_UTF8;
             $_content = file_get_contents($release_url);
             $version_all = array_filter(explode("\n", $_content));
-            $app_version = get_appserver_verison();
-            $h5_version = get_h5_version();
+            $app_version = $this->get_appserver_verison();
+            $h5_version = $this->get_h5_version();
             foreach ($version_all as $v) {
                 $item = json_decode($v, 1);
                 if ($item['date'] > intval(RELEASE)) {
@@ -1103,7 +1103,7 @@ class Index extends Init
                 include_once(ROOT_PATH . 'includes/lib_main.php');
                 include_once(ROOT_PATH . 'includes/lib_license.php');
 
-                $license = license_check();
+                $license = $this->license_check();
                 switch ($license['flag']) {
                     case 'login_succ':
                         if (isset($license['request']['info']['service']['ecshop_b2c']['cert_auth']['auth_str'])) {
@@ -1119,7 +1119,7 @@ class Index extends Init
                         break;
 
                     case 'reg_succ':
-                        $_license = license_check();
+                        $_license = $this->license_check();
                         switch ($_license['flag']) {
                             case 'login_succ':
                                 if (isset($_license['request']['info']['service']['ecshop_b2c']['cert_auth']['auth_str']) && $_license['request']['info']['service']['ecshop_b2c']['cert_auth']['auth_str'] != '') {

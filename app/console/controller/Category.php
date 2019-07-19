@@ -59,7 +59,7 @@ class Category extends Init
             $smarty->assign('action_link', array('href' => 'category.php?act=list', 'text' => $_LANG['03_category_list']));
 
             $smarty->assign('goods_type_list', goods_type_list(0)); // 取得商品类型
-            $smarty->assign('attr_list', get_attr_list()); // 取得商品属性
+            $smarty->assign('attr_list', $this->get_attr_list()); // 取得商品属性
 
             $smarty->assign('cat_select', cat_list(0, 0, true));
             $smarty->assign('form_act', 'insert');
@@ -118,7 +118,7 @@ class Category extends Init
                         " VALUES('" . $cat['cat_name'] . "', 'c', '" . $db->insert_id() . "','1','$vieworder','0', '" . build_uri('category', array('cid' => $cat_id), $cat['cat_name']) . "','middle')";
                     $db->query($sql);
                 }
-                insert_cat_recommend($cat['cat_recommend'], $cat_id);
+                $this->insert_cat_recommend($cat['cat_recommend'], $cat_id);
 
                 admin_log($_POST['cat_name'], 'add', 'category');   // 记录管理员操作
                 clear_cache_files();    // 清除缓存
@@ -140,8 +140,8 @@ class Category extends Init
         if ($_REQUEST['act'] == 'edit') {
             admin_priv('cat_manage');   // 权限检查
             $cat_id = intval($_REQUEST['cat_id']);
-            $cat_info = get_cat_info($cat_id);  // 查询分类信息数据
-            $attr_list = get_attr_list();
+            $cat_info = $this->get_cat_info($cat_id);  // 查询分类信息数据
+            $attr_list = $this->get_attr_list();
             $filter_attr_list = array();
 
             if ($cat_info['filter_attr']) {
@@ -287,7 +287,7 @@ class Category extends Init
                 }
 
                 //更新首页推荐
-                insert_cat_recommend($cat['cat_recommend'], $cat_id);
+                $this->insert_cat_recommend($cat['cat_recommend'], $cat_id);
                 /* 更新分类信息成功 */
                 clear_cache_files(); // 清除缓存
                 admin_log($_POST['cat_name'], 'edit', 'category'); // 记录管理员操作
@@ -358,7 +358,7 @@ class Category extends Init
             $id = intval($_POST['id']);
             $val = intval($_POST['val']);
 
-            if (cat_update($id, array('sort_order' => $val))) {
+            if ($this->cat_update($id, array('sort_order' => $val))) {
                 clear_cache_files(); // 清除缓存
                 make_json_result($val);
             } else {
@@ -376,7 +376,7 @@ class Category extends Init
             $id = intval($_POST['id']);
             $val = json_str_iconv($_POST['val']);
 
-            if (cat_update($id, array('measure_unit' => $val))) {
+            if ($this->cat_update($id, array('measure_unit' => $val))) {
                 clear_cache_files(); // 清除缓存
                 make_json_result($val);
             } else {
@@ -399,7 +399,7 @@ class Category extends Init
                 make_json_error($_LANG['grade_error']);
             }
 
-            if (cat_update($id, array('grade' => $val))) {
+            if ($this->cat_update($id, array('grade' => $val))) {
                 clear_cache_files(); // 清除缓存
                 make_json_result($val);
             } else {
@@ -417,7 +417,7 @@ class Category extends Init
             $id = intval($_POST['id']);
             $val = intval($_POST['val']);
 
-            if (cat_update($id, array('show_in_nav' => $val)) != false) {
+            if ($this->cat_update($id, array('show_in_nav' => $val)) != false) {
                 if ($val == 1) {
                     //显示
                     $vieworder = $db->getOne("SELECT max(vieworder) FROM " . $ecs->table('nav') . " WHERE type = 'middle'");
@@ -456,7 +456,7 @@ class Category extends Init
             $id = intval($_POST['id']);
             $val = intval($_POST['val']);
 
-            if (cat_update($id, array('is_show' => $val)) != false) {
+            if ($this->cat_update($id, array('is_show' => $val)) != false) {
                 clear_cache_files();
                 make_json_result($val);
             } else {

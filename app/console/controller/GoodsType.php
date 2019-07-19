@@ -20,7 +20,7 @@ class GoodsType extends Init
             $smarty->assign('ur_here', $_LANG['08_goods_type']);
             $smarty->assign('full_page', 1);
 
-            $good_type_list = get_goodstype();
+            $good_type_list = $this->get_goodstype();
             $good_in_type = '';
 
             $smarty->assign('goods_type_arr', $good_type_list['type']);
@@ -44,7 +44,7 @@ class GoodsType extends Init
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'query') {
-            $good_type_list = get_goodstype();
+            $good_type_list = $this->get_goodstype();
 
             $smarty->assign('goods_type_arr', $good_type_list['type']);
             $smarty->assign('filter', $good_type_list['filter']);
@@ -131,7 +131,7 @@ class GoodsType extends Init
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'edit') {
-            $goods_type = get_goodstype_info(intval($_GET['cat_id']));
+            $goods_type = $this->get_goodstype_info(intval($_GET['cat_id']));
 
             if (empty($goods_type)) {
                 sys_msg($_LANG['cannot_found_goodstype'], 1);
@@ -163,11 +163,11 @@ class GoodsType extends Init
 
                     if ($found === null || $found === false) {
                         /* 老的分组没有在新的分组中找到 */
-                        update_attribute_group($cat_id, $key, 0);
+                        $this->update_attribute_group($cat_id, $key, 0);
                     } else {
                         /* 老的分组出现在新的分组中了 */
                         if ($key != $found) {
-                            update_attribute_group($cat_id, $key, $found); // 但是分组的key变了,需要更新属性的分组
+                            $this->update_attribute_group($cat_id, $key, $found); // 但是分组的key变了,需要更新属性的分组
                         }
                     }
                 }

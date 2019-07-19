@@ -28,7 +28,7 @@ class CommentManage extends Init
             $smarty->assign('ur_here', $_LANG['05_comment_manage']);
             $smarty->assign('full_page', 1);
 
-            $list = get_comment_list();
+            $list = $this->get_comment_list();
 
             $smarty->assign('comment_list', $list['item']);
             $smarty->assign('filter', $list['filter']);
@@ -46,7 +46,7 @@ class CommentManage extends Init
         //-- 翻页、搜索、排序
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'query') {
-            $list = get_comment_list();
+            $list = $this->get_comment_list();
 
             $smarty->assign('comment_list', $list['item']);
             $smarty->assign('filter', $list['filter']);

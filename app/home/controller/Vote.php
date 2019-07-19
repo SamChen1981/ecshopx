@@ -21,11 +21,11 @@ class Vote extends Init
         $type = intval($_POST['type']);
         $ip_address = real_ip();
 
-        if (vote_already_submited($vote_id, $ip_address)) {
+        if ($this->vote_already_submited($vote_id, $ip_address)) {
             $res['error'] = 1;
             $res['message'] = $_LANG['vote_ip_same'];
         } else {
-            save_vote($vote_id, $ip_address, $options);
+            $this->save_vote($vote_id, $ip_address, $options);
 
             $vote = get_vote($vote_id);
             if (!empty($vote)) {

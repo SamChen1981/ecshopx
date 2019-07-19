@@ -30,7 +30,7 @@ class Users extends Init
             $smarty->assign('ur_here', $_LANG['03_users_list']);
             $smarty->assign('action_link', array('text' => $_LANG['04_users_add'], 'href' => 'users.php?act=add'));
 
-            $user_list = user_list();
+            $user_list = $this->user_list();
             $cert = new certificate();
             $is_bind_crm = $cert->is_bind_sn('ecos.taocrm', 'bind_type');
             $smarty->assign('is_bind_crm', $is_bind_crm);
@@ -49,7 +49,7 @@ class Users extends Init
         //-- ajax返回用户列表
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'query') {
-            $user_list = user_list();
+            $user_list = $this->user_list();
 
             $smarty->assign('user_list', $user_list['user_list']);
             $smarty->assign('filter', $user_list['filter']);

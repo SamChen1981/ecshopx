@@ -30,7 +30,7 @@ class Vote extends Init
             $smarty->assign('action_link', array('text' => $_LANG['add_vote'], 'href' => 'vote.php?act=add'));
             $smarty->assign('full_page', 1);
 
-            $vote_list = get_votelist();
+            $vote_list = $this->get_votelist();
 
             $smarty->assign('list', $vote_list['list']);
             $smarty->assign('filter', $vote_list['filter']);
@@ -46,7 +46,7 @@ class Vote extends Init
         //-- 排序、分页、查询
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'query') {
-            $vote_list = get_votelist();
+            $vote_list = $this->get_votelist();
 
             $smarty->assign('list', $vote_list['list']);
             $smarty->assign('filter', $vote_list['filter']);
@@ -176,7 +176,7 @@ class Vote extends Init
             $smarty->assign('full_page', 1);
 
             $smarty->assign('id', $id);
-            $smarty->assign('option_arr', get_optionlist($id));
+            $smarty->assign('option_arr', $this->get_optionlist($id));
 
             /* 显示页面 */
             assign_query_info();
@@ -190,7 +190,7 @@ class Vote extends Init
             $id = intval($_GET['vid']);
 
             $smarty->assign('id', $id);
-            $smarty->assign('option_arr', get_optionlist($id));
+            $smarty->assign('option_arr', $this->get_optionlist($id));
 
             make_json_result($smarty->fetch('vote_option.htm'));
         }

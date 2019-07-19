@@ -19,7 +19,7 @@ class Article extends Init
 
         if (!$smarty->is_cached('article.dwt', $cache_id)) {
             /* 文章详情 */
-            $article = get_article_info($article_id);
+            $article = $this->get_article_info($article_id);
 
             if (empty($article)) {
                 ecs_header("Location: ./\n");
@@ -39,7 +39,7 @@ class Article extends Init
             $smarty->assign('new_goods', get_recommend_goods('new'));        // 最新商品
             $smarty->assign('hot_goods', get_recommend_goods('hot'));        // 热点文章
             $smarty->assign('promotion_goods', get_promote_goods());    // 特价商品
-            $smarty->assign('related_goods', article_related_goods($_REQUEST['id']));  // 特价商品
+            $smarty->assign('related_goods', $this->article_related_goods($_REQUEST['id']));  // 特价商品
             $smarty->assign('id', $article_id);
             $smarty->assign('username', $_SESSION['user_name']);
             $smarty->assign('email', $_SESSION['email']);

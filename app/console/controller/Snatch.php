@@ -96,7 +96,7 @@ class Snatch extends Init
             $smarty->assign('ur_here', $_LANG['02_snatch_list']);
             $smarty->assign('action_link', array('text' => $_LANG['snatch_add'], 'href' => 'snatch.php?act=add'));
 
-            $snatchs = get_snatchlist();
+            $snatchs = $this->get_snatchlist();
 
             $smarty->assign('snatch_list', $snatchs['snatchs']);
             $smarty->assign('filter', $snatchs['filter']);
@@ -116,7 +116,7 @@ class Snatch extends Init
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'query') {
-            $snatchs = get_snatchlist();
+            $snatchs = $this->get_snatchlist();
 
             $smarty->assign('snatch_list', $snatchs['snatchs']);
             $smarty->assign('filter', $snatchs['filter']);
@@ -179,7 +179,7 @@ class Snatch extends Init
             /* 权限判断 */
             admin_priv('snatch_manage');
 
-            $snatch = get_snatch_info($_REQUEST['id']);
+            $snatch = $this->get_snatch_info($_REQUEST['id']);
 
             $snatch['option'] = '<option value="' . $snatch['goods_id'] . '">' . $snatch['goods_name'] . '</option>';
             $smarty->assign('snatch', $snatch);
@@ -257,7 +257,7 @@ class Snatch extends Init
 
             $id = empty($_REQUEST['snatch_id']) ? 0 : intval($_REQUEST['snatch_id']);
 
-            $bid_list = get_snatch_detail();
+            $bid_list = $this->get_snatch_detail();
 
             $smarty->assign('bid_list', $bid_list['bid']);
             $smarty->assign('filter', $bid_list['filter']);
@@ -267,7 +267,7 @@ class Snatch extends Init
             $sort_flag = sort_flag($bid_list['filter']);
             $smarty->assign($sort_flag['tag'], $sort_flag['img']);
             /* 赋值 */
-            $smarty->assign('info', get_snatch_info($id));
+            $smarty->assign('info', $this->get_snatch_info($id));
             $smarty->assign('full_page', 1);
             $smarty->assign('result', get_snatch_result($id));
             $smarty->assign('ur_here', $_LANG['view_detail']);
@@ -280,7 +280,7 @@ class Snatch extends Init
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'query_bid') {
-            $bid_list = get_snatch_detail();
+            $bid_list = $this->get_snatch_detail();
 
             $smarty->assign('bid_list', $bid_list['bid']);
             $smarty->assign('filter', $bid_list['filter']);

@@ -14,7 +14,7 @@ class GoodsExport extends Init
             $smarty->assign('cat_list', cat_list());
             $smarty->assign('brand_list', get_brand_list());
             $smarty->assign('goods_type_list', goods_type_list(0));
-            $goods_fields = my_array_merge($_LANG['custom'], get_attributes());
+            $goods_fields = $this->my_array_merge($_LANG['custom'], $this->get_attributes());
             $data_format_array = array(
                 'ecshop' => $_LANG['export_ecshop'],
                 'taobao V4.3' => $_LANG['export_taobao_v43'],
@@ -33,7 +33,7 @@ class GoodsExport extends Init
             admin_priv('goods_export');
             $zip = new PHPZip;
 
-            $where = get_export_where_sql($_POST);
+            $where = $this->get_export_where_sql($_POST);
 
             $goods_class = intval($_POST['goods_class']);
             $post_express = floatval($_POST['post_express']);
@@ -79,7 +79,7 @@ class GoodsExport extends Init
                 $goods_value['goods_name'] = '"' . $row['goods_name'] . '"';
                 $goods_value['shop_price'] = $row['shop_price'];
                 $goods_value['goods_number'] = $row['goods_number'];
-                $goods_value['goods_desc'] = replace_special_char($row['goods_desc']);
+                $goods_value['goods_desc'] = $this->replace_special_char($row['goods_desc']);
                 $goods_value['goods_img'] = '"' . $row['goods_img'] . '"';
 
                 $content .= implode("\t", $goods_value) . "\n";
@@ -93,7 +93,7 @@ class GoodsExport extends Init
             if (EC_CHARSET != 'utf-8') {
                 $content = ecs_iconv(EC_CHARSET, 'utf-8', $content);
             }
-            $zip->add_file("\xFF\xFE" . utf82u2($content), 'goods_list.csv');
+            $zip->add_file("\xFF\xFE" . $this->utf82u2($content), 'goods_list.csv');
 
             header("Content-Disposition: attachment; filename=goods_list.zip");
             header("Content-Type: application/unknown");
@@ -103,7 +103,7 @@ class GoodsExport extends Init
             admin_priv('goods_export');
             $zip = new PHPZip;
 
-            $where = get_export_where_sql($_POST);
+            $where = $this->get_export_where_sql($_POST);
 
             $goods_class = intval($_POST['goods_class']);
             $post_express = floatval($_POST['post_express']);
@@ -149,7 +149,7 @@ class GoodsExport extends Init
                 $goods_value['goods_name'] = '"' . $row['goods_name'] . '"';
                 $goods_value['shop_price'] = $row['shop_price'];
                 $goods_value['goods_number'] = $row['goods_number'];
-                $goods_value['goods_desc'] = replace_special_char($row['goods_desc']);
+                $goods_value['goods_desc'] = $this->replace_special_char($row['goods_desc']);
                 $goods_value['goods_img'] = '"' . $row['goods_img'] . '"';
 
                 $content .= implode("\t", $goods_value) . "\n";
@@ -162,7 +162,7 @@ class GoodsExport extends Init
             if (EC_CHARSET != 'utf-8') {
                 $content = ecs_iconv(EC_CHARSET, 'utf-8', $content);
             }
-            $zip->add_file("\xFF\xFE" . utf82u2($content), 'goods_list.csv');
+            $zip->add_file("\xFF\xFE" . $this->utf82u2($content), 'goods_list.csv');
 
             header("Content-Disposition: attachment; filename=goods_list.zip");
             header("Content-Type: application/unknown");
@@ -176,7 +176,7 @@ class GoodsExport extends Init
 
             $zip = new PHPZip;
 
-            $where = get_export_where_sql($_POST);
+            $where = $this->get_export_where_sql($_POST);
 
             $sql = "SELECT g.*, b.brand_name as brandname " .
                 " FROM " . $ecs->table('goods') . " AS g LEFT JOIN " . $ecs->table('brand') . " AS b " .
@@ -220,8 +220,8 @@ class GoodsExport extends Init
                 $goods_value['goods_img'] = '"' . $row['goods_img'] . '"';
                 $goods_value['goods_thumb'] = '"' . $row['goods_thumb'] . '"';
                 $goods_value['keywords'] = '"' . $row['keywords'] . '"';
-                $goods_value['goods_brief'] = '"' . replace_special_char($row['goods_brief'], false) . '"';
-                $goods_value['goods_desc'] = '"' . replace_special_char($row['goods_desc'], false) . '"';
+                $goods_value['goods_brief'] = '"' . $this->replace_special_char($row['goods_brief'], false) . '"';
+                $goods_value['goods_desc'] = '"' . $this->replace_special_char($row['goods_desc'], false) . '"';
                 $goods_value['goods_weight'] = $row['goods_weight'];
                 $goods_value['goods_number'] = $row['goods_number'];
                 $goods_value['warn_number'] = $row['warn_number'];
@@ -258,7 +258,7 @@ class GoodsExport extends Init
 
             $zip = new PHPZip;
 
-            $where = get_export_where_sql($_POST);
+            $where = $this->get_export_where_sql($_POST);
 
             $post_express = floatval($_POST['post_express']);
             $express = floatval($_POST['express']);
@@ -346,7 +346,7 @@ class GoodsExport extends Init
                 $goods_value['title'] = '"' . $row['goods_name'] . '"';
                 $goods_value['price'] = $row['shop_price'];
                 $goods_value['quantity'] = $row['goods_number'];
-                $goods_value['description'] = replace_special_char($row['goods_desc']);
+                $goods_value['description'] = $this->replace_special_char($row['goods_desc']);
                 $goods_value['pic_filename'] = '"' . $row['goods_img'] . '"';
 
                 $content .= implode(",", $goods_value) . "\n";
@@ -372,7 +372,7 @@ class GoodsExport extends Init
 
             $zip = new PHPZip;
 
-            $where = get_export_where_sql($_POST);
+            $where = $this->get_export_where_sql($_POST);
 
             $post_express = floatval($_POST['post_express']);
             $express = floatval($_POST['express']);
@@ -452,7 +452,7 @@ class GoodsExport extends Init
                 $goods_value['goods_name'] = '"' . $row['goods_name'] . '"';
                 $goods_value['price'] = $row['shop_price'];
                 $goods_value['quantity'] = $row['goods_number'];
-                $goods_value['description'] = replace_special_char($row['goods_desc']);
+                $goods_value['description'] = $this->replace_special_char($row['goods_desc']);
                 $goods_value['pic_filename'] = '"' . $row['goods_img'] . '"';
 
                 $content .= implode(",", $goods_value) . "\n";
@@ -478,7 +478,7 @@ class GoodsExport extends Init
         } /* 处理Ajax调用 */
         elseif ($_REQUEST['act'] == 'get_goods_fields') {
             $cat_id = isset($_REQUEST['cat_id']) ? intval($_REQUEST['cat_id']) : 0;
-            $goods_fields = my_array_merge($_LANG['custom'], get_attributes($cat_id));
+            $goods_fields = $this->my_array_merge($_LANG['custom'], $this->get_attributes($cat_id));
             make_json_result($goods_fields);
         } elseif ($_REQUEST['act'] == 'act_export_custom') {
             /* 检查输出列 */
@@ -491,7 +491,7 @@ class GoodsExport extends Init
 
             $zip = new PHPZip;
 
-            $where = get_export_where_sql($_POST);
+            $where = $this->get_export_where_sql($_POST);
 
             $sql = "SELECT g.*, b.brand_name as brandname " .
                 " FROM " . $ecs->table('goods') . " AS g LEFT JOIN " . $ecs->table('brand') . " AS b " .
@@ -500,7 +500,7 @@ class GoodsExport extends Init
             $res = $db->query($sql);
 
             $goods_fields = explode(',', $_POST['custom_goods_export']);
-            $goods_field_name = set_goods_field_name($goods_fields, $_LANG['custom']);
+            $goods_field_name = $this->set_goods_field_name($goods_fields, $_LANG['custom']);
 
             /* csv文件数组 */
             $goods_field_value = array();
@@ -525,8 +525,8 @@ class GoodsExport extends Init
                 isset($goods_value['integral']) && ($goods_value['integral'] = $row['integral']);
                 isset($goods_value['original_img']) && ($goods_value['original_img'] = '"' . $row['original_img'] . '"');
                 isset($goods_value['keywords']) && ($goods_value['keywords'] = '"' . $row['keywords'] . '"');
-                isset($goods_value['goods_brief']) && ($goods_value['goods_brief'] = '"' . replace_special_char($row['goods_brief']) . '"');
-                isset($goods_value['goods_desc']) && ($goods_value['goods_desc'] = '"' . replace_special_char($row['goods_desc']) . '"');
+                isset($goods_value['goods_brief']) && ($goods_value['goods_brief'] = '"' . $this->replace_special_char($row['goods_brief']) . '"');
+                isset($goods_value['goods_desc']) && ($goods_value['goods_desc'] = '"' . $this->replace_special_char($row['goods_desc']) . '"');
                 isset($goods_value['goods_weight']) && ($goods_value['goods_weight'] = $row['goods_weight']);
                 isset($goods_value['goods_number']) && ($goods_value['goods_number'] = $row['goods_number']);
                 isset($goods_value['warn_number']) && ($goods_value['warn_number'] = $row['warn_number']);
@@ -574,7 +574,7 @@ class GoodsExport extends Init
             admin_priv('goods_export');
             $zip = new PHPZip;
 
-            $where = get_export_where_sql($_POST);
+            $where = $this->get_export_where_sql($_POST);
 
             $goods_class = intval($_POST['goods_class']);
             $post_express = floatval($_POST['post_express']);
@@ -630,7 +630,7 @@ class GoodsExport extends Init
                 $goods_value['goods_name'] = '"' . $row['goods_name'] . '"';
                 $goods_value['shop_price'] = $row['shop_price'];
                 $goods_value['goods_number'] = $row['goods_number'];
-                $goods_value['goods_desc'] = replace_special_char($row['goods_desc']);
+                $goods_value['goods_desc'] = $this->replace_special_char($row['goods_desc']);
                 if (!empty($row['new_goods_img'])) {
                     $row['new_goods_img'] = str_ireplace('/', '\\', $row['new_goods_img'], $row['new_goods_img']);
                     $row['new_goods_img'] = str_ireplace('.tbi', '', $row['new_goods_img'], $row['new_goods_img']);
@@ -642,7 +642,7 @@ class GoodsExport extends Init
             if (EC_CHARSET != 'utf-8') {
                 $content = ecs_iconv(EC_CHARSET, 'utf-8', $content);
             }
-            $zip->add_file("\xFF\xFE" . utf82u2($content), 'goods_list.csv');
+            $zip->add_file("\xFF\xFE" . $this->utf82u2($content), 'goods_list.csv');
 
             header("Content-Disposition: attachment; filename=goods_list.zip");
             header("Content-Type: application/unknown");
@@ -832,7 +832,7 @@ class GoodsExport extends Init
      */
     private function replace_special_char($str, $replace = true)
     {
-        $str = str_replace("\r\n", "", image_path_format($str));
+        $str = str_replace("\r\n", "", $this->image_path_format($str));
         $str = str_replace("\t", "    ", $str);
         $str = str_replace("\n", "", $str);
         if ($replace == true) {

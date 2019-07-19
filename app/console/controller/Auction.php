@@ -26,7 +26,7 @@ class Auction extends Init
             $smarty->assign('ur_here', $_LANG['auction_list']);
             $smarty->assign('action_link', array('href' => 'auction.php?act=add', 'text' => $_LANG['add_auction']));
 
-            $list = auction_list();
+            $list = $this->auction_list();
 
             $smarty->assign('auction_list', $list['item']);
             $smarty->assign('filter', $list['filter']);
@@ -46,7 +46,7 @@ class Auction extends Init
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'query') {
-            $list = auction_list();
+            $list = $this->auction_list();
 
             $smarty->assign('auction_list', $list['item']);
             $smarty->assign('filter', $list['filter']);
@@ -212,7 +212,7 @@ class Auction extends Init
             } else {
                 $smarty->assign('ur_here', $_LANG['edit_auction']);
             }
-            $smarty->assign('action_link', list_link($is_add));
+            $smarty->assign('action_link', $this->list_link($is_add));
             assign_query_info();
             $smarty->display('auction_info.htm');
         }

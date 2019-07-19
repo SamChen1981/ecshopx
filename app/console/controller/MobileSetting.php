@@ -31,7 +31,7 @@ class MobileSetting extends Init
             $tab = !$isOpenWap ? 'open' : 'enter';
             $charset = EC_CHARSET == 'utf-8' ? "utf8" : 'gbk';
 
-            $playerdb = get_flash_xml();
+            $playerdb = $this->get_flash_xml();
             $num = 0;
             foreach ($playerdb as $key => $val) {
                 $playerdb[$key]['id'] = $num;
@@ -51,7 +51,7 @@ class MobileSetting extends Init
             admin_priv('flash_manage');
 
             $id = (int)$_GET['id'];
-            $flashdb = get_flash_xml();
+            $flashdb = $this->get_flash_xml();
             if (isset($flashdb[$id])) {
                 $rt = $flashdb[$id];
             } else {
@@ -68,9 +68,9 @@ class MobileSetting extends Init
                     $temp[] = $val;
                 }
             }
-            put_flash_xml($temp);
+            $this->put_flash_xml($temp);
             $error_msg = '';
-            set_flash_data($_CFG['flash_theme'], $error_msg);
+            $this->set_flash_data($_CFG['flash_theme'], $error_msg);
             ecs_header("Location: mobile_setting.php?act=list\n");
             exit;
         } elseif ($_REQUEST['act'] == 'add') {
@@ -82,7 +82,7 @@ class MobileSetting extends Init
                 $sort = 0;
                 $rt = array('act' => 'add', 'img_url' => $url, 'img_src' => $src, 'img_sort' => $sort);
                 $rt = array('act' => 'add', 'img_url' => $url, 'img_src' => $src, 'img_sort' => $sort);
-                $width_height = get_width_height();
+                $width_height = $this->get_width_height();
                 assign_query_info();
                 if (isset($width_height['width']) || isset($width_height['height'])) {
                     $smarty->assign('width_height', sprintf($_LANG['width_height'], $width_height['width'], $width_height['height']));
@@ -113,7 +113,7 @@ class MobileSetting extends Init
                     }
                     $src = $_POST['img_src'];
                     if (strstr($src, 'http') && !strstr($src, $_SERVER['SERVER_NAME'])) {
-                        $src = get_url_image($src);
+                        $src = $this->get_url_image($src);
                     }
                 } else {
                     $links[] = array('text' => $_LANG['add_new'], 'href' => 'mobile_setting.php?act=add');
@@ -126,7 +126,7 @@ class MobileSetting extends Init
                 }
 
                 // 获取flash播放器数据
-                $flashdb = get_flash_xml();
+                $flashdb = $this->get_flash_xml();
 
                 // 插入新数据
                 array_unshift($flashdb, array('src' => $src, 'url' => $_POST['img_url'], 'text' => $_POST['img_text'], 'sort' => $_POST['img_sort']));
@@ -143,9 +143,9 @@ class MobileSetting extends Init
                 }
                 unset($flashdb, $flashdb_sort);
 
-                put_flash_xml($_flashdb);
+                $this->put_flash_xml($_flashdb);
                 $error_msg = '';
-                set_flash_data($_CFG['flash_theme'], $error_msg);
+                $this->set_flash_data($_CFG['flash_theme'], $error_msg);
                 $links[] = array('text' => $_LANG['go_url'], 'href' => 'mobile_setting.php?act=list');
                 sys_msg($_LANG['edit_ok'], 0, $links);
             }
@@ -153,7 +153,7 @@ class MobileSetting extends Init
             admin_priv('flash_manage');
 
             $id = (int)$_REQUEST['id']; //取得id
-            $flashdb = get_flash_xml(); //取得数据
+            $flashdb = $this->get_flash_xml(); //取得数据
             if (isset($flashdb[$id])) {
                 $rt = $flashdb[$id];
             } else {
@@ -202,7 +202,7 @@ class MobileSetting extends Init
                         sys_msg($_LANG['invalid_type']);
                     }
                     if (strstr($src, 'http') && !strstr($src, $_SERVER['SERVER_NAME'])) {
-                        $src = get_url_image($src);
+                        $src = $this->get_url_image($src);
                     }
                 } else {
                     $links[] = array('text' => $_LANG['return_edit'], 'href' => 'mobile_setting.php?act=edit&id=' . $id);
@@ -226,9 +226,9 @@ class MobileSetting extends Init
                 }
                 unset($flashdb, $flashdb_sort);
 
-                put_flash_xml($_flashdb);
+                $this->put_flash_xml($_flashdb);
                 $error_msg = '';
-                set_flash_data($_CFG['flash_theme'], $error_msg);
+                $this->set_flash_data($_CFG['flash_theme'], $error_msg);
                 $links[] = array('text' => $_LANG['go_url'], 'href' => 'mobile_setting.php?act=list');
                 sys_msg($_LANG['edit_ok'], 0, $links);
             }
@@ -329,7 +329,7 @@ class MobileSetting extends Init
         $template_dir = @opendir($dir);
         while ($file = readdir($template_dir)) {
             if ($file != '.' && $file != '..' && is_dir($dir . $file) && $file != '.svn' && $file != 'index.htm') {
-                $flashtpls[] = get_flash_tpl_info($dir, $file);
+                $flashtpls[] = $this->get_flash_tpl_info($dir, $file);
             }
         }
         @closedir($template_dir);
@@ -353,7 +353,7 @@ class MobileSetting extends Init
 
     private function set_flash_data($tplname, &$msg)
     {
-        $flashdata = get_flash_xml();
+        $flashdata = $this->get_flash_xml();
         if (empty($flashdata)) {
             $flashdata[] = array(
                 'src' => 'data/afficheimg/20081027angsif.jpg',
@@ -374,16 +374,16 @@ class MobileSetting extends Init
         }
         switch ($tplname) {
             case 'uproll':
-                $msg = set_flash_uproll($tplname, $flashdata);
+                $msg = $this->set_flash_uproll($tplname, $flashdata);
                 break;
             case 'redfocus':
             case 'pinkfocus':
             case 'dynfocus':
-                $msg = set_flash_focus($tplname, $flashdata);
+                $msg = $this->set_flash_focus($tplname, $flashdata);
                 break;
             case 'default':
             default:
-                $msg = set_flash_default($tplname, $flashdata);
+                $msg = $this->set_flash_default($tplname, $flashdata);
                 break;
         }
         return $msg !== true;

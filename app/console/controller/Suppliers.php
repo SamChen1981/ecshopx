@@ -18,7 +18,7 @@ class Suppliers extends Init
             admin_priv('suppliers_manage');
 
             /* 查询 */
-            $result = suppliers_list();
+            $result = $this->suppliers_list();
 
             /* 模板赋值 */
             $smarty->assign('ur_here', $_LANG['suppliers_list']); // 当前导航
@@ -43,7 +43,7 @@ class Suppliers extends Init
         elseif ($_REQUEST['act'] == 'query') {
             check_authz_json('suppliers_manage');
 
-            $result = suppliers_list();
+            $result = $this->suppliers_list();
 
             $smarty->assign('suppliers_list', $result['result']);
             $smarty->assign('filter', $result['filter']);

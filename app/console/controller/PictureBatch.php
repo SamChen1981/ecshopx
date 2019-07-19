@@ -134,9 +134,9 @@ class PictureBatch extends Init
 
                         /* 开始处理 */
                         if ($proc_thumb) {
-                            process_image_ex($result['page'], $result['page_size'], $result['module_no'], $result['thumb'], $result['watermark'], $result['change'], $result['silent']);
+                            $this->process_image_ex($result['page'], $result['page_size'], $result['module_no'], $result['thumb'], $result['watermark'], $result['change'], $result['silent']);
                         } else {
-                            process_image($result['page'], $result['page_size'], $result['module_no'], $result['thumb'], $result['watermark'], $result['change'], $result['silent']);
+                            $this->process_image($result['page'], $result['page_size'], $result['module_no'], $result['thumb'], $result['watermark'], $result['change'], $result['silent']);
                         }
                         $end_time = gmtime();
                         $result['row']['pre_id'] = 'time_' . $result['total'];
@@ -165,9 +165,9 @@ class PictureBatch extends Init
                         $start_time = gmtime(); // 开始执行时间
                         /* 开始处理 */
                         if ($proc_thumb) {
-                            process_image_ex($result['page'], $result['page_size'], $result['module_no'], $result['thumb'], $result['watermark'], $result['change'], $result['silent']);
+                            $this->process_image_ex($result['page'], $result['page_size'], $result['module_no'], $result['thumb'], $result['watermark'], $result['change'], $result['silent']);
                         } else {
-                            process_image($result['page'], $result['page_size'], $result['module_no'], $result['thumb'], $result['watermark'], $result['change'], $result['silent']);
+                            $this->process_image($result['page'], $result['page_size'], $result['module_no'], $result['thumb'], $result['watermark'], $result['change'], $result['silent']);
                         }
                         $end_time = gmtime();
 
@@ -276,7 +276,7 @@ class PictureBatch extends Init
                             }
                         }
                     } else {
-                        replace_image($image, $row['goods_img'], $row['goods_id'], $silent);
+                        $this->replace_image($image, $row['goods_img'], $row['goods_id'], $silent);
                     }
                 }
 
@@ -312,7 +312,7 @@ class PictureBatch extends Init
                             }
                         }
                     } else {
-                        replace_image($goods_thumb, $row['goods_thumb'], $row['goods_id'], $silent);
+                        $this->replace_image($goods_thumb, $row['goods_thumb'], $row['goods_id'], $silent);
                     }
                 }
             }
@@ -359,7 +359,7 @@ class PictureBatch extends Init
                             }
                         }
                     } else {
-                        replace_image($image, $row['img_url'], $row['goods_id'], $silent);
+                        $this->replace_image($image, $row['img_url'], $row['goods_id'], $silent);
                     }
                 }
 
@@ -391,7 +391,7 @@ class PictureBatch extends Init
                             @unlink(ROOT_PATH . $row['thumb_url']);
                         }
                     } else {
-                        replace_image($thumb_url, $row['thumb_url'], $row['goods_id'], $silent);
+                        $this->replace_image($thumb_url, $row['thumb_url'], $row['goods_id'], $silent);
                     }
                 }
             }

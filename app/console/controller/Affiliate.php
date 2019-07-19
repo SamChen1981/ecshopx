@@ -10,7 +10,7 @@ class Affiliate extends Init
     public function index()
     {
         admin_priv('affiliate');
-        $config = get_affiliate();
+        $config = $this->get_affiliate();
 
         /*------------------------------------------------------ */
         //-- 分成管理页
@@ -56,7 +56,7 @@ class Affiliate extends Init
                 $config['on'] = 1;
                 $config['config']['separate_by'] = 0;
 
-                put_affiliate($config);
+                $this->put_affiliate($config);
             } else {
                 make_json_error($_LANG['level_error']);
             }
@@ -95,7 +95,7 @@ class Affiliate extends Init
             );
             $temp['item'] = $config['item'];
             $temp['on'] = 1;
-            put_affiliate($temp);
+            $this->put_affiliate($temp);
             $links[] = array('text' => $_LANG['affiliate'], 'href' => 'affiliate.php?act=list');
             sys_msg($_LANG['edit_ok'], 0, $links);
         }
@@ -106,7 +106,7 @@ class Affiliate extends Init
             $on = (intval($_POST['on']) == 1) ? 1 : 0;
 
             $config['on'] = $on;
-            put_affiliate($config);
+            $this->put_affiliate($config);
             $links[] = array('text' => $_LANG['affiliate'], 'href' => 'affiliate.php?act=list');
             sys_msg($_LANG['edit_ok'], 0, $links);
         }
@@ -130,7 +130,7 @@ class Affiliate extends Init
             }
             $config['item'][$key]['level_point'] = $val;
             $config['on'] = 1;
-            put_affiliate($config);
+            $this->put_affiliate($config);
             make_json_result(stripcslashes($val));
         }
         /*------------------------------------------------------ */
@@ -151,7 +151,7 @@ class Affiliate extends Init
             }
             $config['item'][$key]['level_money'] = $val;
             $config['on'] = 1;
-            put_affiliate($config);
+            $this->put_affiliate($config);
             make_json_result(stripcslashes($val));
         }
         /*------------------------------------------------------ */
@@ -167,7 +167,7 @@ class Affiliate extends Init
             $config['item'] = $temp;
             $config['on'] = 1;
             $config['config']['separate_by'] = 0;
-            put_affiliate($config);
+            $this->put_affiliate($config);
             ecs_header("Location: affiliate.php?act=list\n");
             exit;
         }

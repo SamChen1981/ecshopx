@@ -108,7 +108,7 @@ class PickOut extends Init
                 $sql = "SELECT attr_id, attr_name FROM " . $ecs->table('attribute') . " WHERE attr_id " . db_create_in(implode(',', $attr_picks));
                 $rs = $db->query($sql);
                 while ($row = $db->fetchRow($rs)) {
-                    $picks[] = array('name' => '<strong>' . $row['attr_name'] . ':</strong><br />' . htmlspecialchars(urldecode($_GET['attr'][$row['attr_id']])), 'url' => 'pick_out.php?cat_id=' . $cat_id . search_url($attr_picks, $row['attr_id']));
+                    $picks[] = array('name' => '<strong>' . $row['attr_name'] . ':</strong><br />' . htmlspecialchars(urldecode($_GET['attr'][$row['attr_id']])), 'url' => 'pick_out.php?cat_id=' . $cat_id . $this->search_url($attr_picks, $row['attr_id']));
                 }
 
                 /* 查出数量 */
@@ -144,11 +144,11 @@ class PickOut extends Init
                 if (empty($condition[0]['cat'][$row['attr_id']]['cat_name'])) {
                     $condition[0]['cat'][$row['attr_id']]['cat_name'] = $row['attr_name'];
                 }
-                $condition[0]['cat'][$row['attr_id']]['list'][] = array('name' => $row['attr_value'], 'url' => 'pick_out.php?cat_id=' . $cat_id . search_url($attr_picks) . '&amp;attr[' . $row['attr_id'] . ']=' . urlencode($row['attr_value']));
+                $condition[0]['cat'][$row['attr_id']]['list'][] = array('name' => $row['attr_value'], 'url' => 'pick_out.php?cat_id=' . $cat_id . $this->search_url($attr_picks) . '&amp;attr[' . $row['attr_id'] . ']=' . urlencode($row['attr_value']));
             }
 
             /* 生成更多商品的url */
-            $url = "search.php?pickout=1&amp;cat_id=" . $cat_id . search_url($attr_picks);
+            $url = "search.php?pickout=1&amp;cat_id=" . $cat_id . $this->search_url($attr_picks);
         }
 
         /* 显示商品 */

@@ -23,7 +23,7 @@ class SaleOrder extends Init
 
             /* 下载报表 */
             if ($_REQUEST['act'] == 'download') {
-                $goods_order_data = get_sales_order(false);
+                $goods_order_data = $this->get_sales_order(false);
                 $goods_order_data = $goods_order_data['sales_order_data'];
 
                 $filename = $_REQUEST['start_date'] . '_' . $_REQUEST['end_date'] . 'sale_order';
@@ -46,7 +46,7 @@ class SaleOrder extends Init
                 }
                 exit;
             }
-            $goods_order_data = get_sales_order();
+            $goods_order_data = $this->get_sales_order();
             $smarty->assign('goods_order_data', $goods_order_data['sales_order_data']);
             $smarty->assign('filter', $goods_order_data['filter']);
             $smarty->assign('record_count', $goods_order_data['record_count']);
@@ -67,7 +67,7 @@ class SaleOrder extends Init
             if (!isset($_REQUEST['end_date'])) {
                 $_REQUEST['end_date'] = local_strtotime('+1 day');
             }
-            $goods_order_data = get_sales_order();
+            $goods_order_data = $this->get_sales_order();
 
             /* 赋值到模板 */
             $smarty->assign('ur_here', $_LANG['sell_stats']);

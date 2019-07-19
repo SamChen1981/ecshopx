@@ -303,7 +303,7 @@ class Articlecat extends Init
             $id = intval($_POST['id']);
             $val = intval($_POST['val']);
 
-            if (cat_update($id, array('show_in_nav' => $val)) != false) {
+            if ($this->cat_update($id, array('show_in_nav' => $val)) != false) {
                 if ($val == 1) {
                     //显示
                     $nid = $db->getOne("SELECT id FROM " . $ecs->table('nav') . " WHERE ctype='a' AND cid='$id' AND type = 'middle'");

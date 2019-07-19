@@ -30,7 +30,7 @@ class FriendLink extends Init
             $smarty->assign('full_page', 1);
 
             /* 获取友情链接数据 */
-            $links_list = get_links_list();
+            $links_list = $this->get_links_list();
 
             $smarty->assign('links_list', $links_list['list']);
             $smarty->assign('filter', $links_list['filter']);
@@ -49,7 +49,7 @@ class FriendLink extends Init
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'query') {
             /* 获取友情链接数据 */
-            $links_list = get_links_list();
+            $links_list = $this->get_links_list();
 
             $smarty->assign('links_list', $links_list['list']);
             $smarty->assign('filter', $links_list['filter']);
