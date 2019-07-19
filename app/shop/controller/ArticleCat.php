@@ -4,33 +4,23 @@ namespace app\shop\controller;
 
 /**
  * 文章分类
+ * Class ArticleCat
+ * @package app\shop\controller
  */
-class Article_cat extends Init
+class ArticleCat extends Init
 {
     public function index()
     {
-
-        /*------------------------------------------------------ */
-        //-- INPUT
-        /*------------------------------------------------------ */
-
         /* 获得指定的分类ID */
         if (!empty($_GET['id'])) {
             $cat_id = intval($_GET['id']);
-        } elseif (!empty($_GET['category'])) {
-            $cat_id = intval($_GET['category']);
         } else {
             ecs_header("Location: ./\n");
-
             exit;
         }
 
         /* 获得当前页码 */
         $page = !empty($_REQUEST['page']) && intval($_REQUEST['page']) > 0 ? intval($_REQUEST['page']) : 1;
-
-        /*------------------------------------------------------ */
-        //-- PROCESSOR
-        /*------------------------------------------------------ */
 
         /* 获得页面的缓存ID */
         $cache_id = sprintf('%X', crc32($cat_id . '-' . $page . '-' . $GLOBALS['_CFG']['lang']));
