@@ -13,7 +13,7 @@ class Article extends Init
 
         /*初始化数据交换对象 */
         $exc = new exchange($ecs->table("article"), $db, 'article_id', 'title');
-        //$image = new cls_image();
+        //$image = new Image();
 
         /* 允许上传的文件类型 */
         $allow_file_types = '|GIF|JPG|PNG|BMP|SWF|DOC|XLS|PPT|MID|WAV|ZIP|RAR|PDF|CHM|RM|TXT|';

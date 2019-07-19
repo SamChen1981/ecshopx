@@ -2,6 +2,8 @@
 
 namespace app\shop\controller;
 
+use app\common\libraries\Certificate;
+
 /**
  * 证书反查文件
  */
@@ -9,7 +11,7 @@ class Certi extends Init
 {
     public function index()
     {
-        $cert = new certificate();
+        $cert = new Certificate();
         /*------------------------------------------------------ */
         //-- 获取证书反查地址
         /*------------------------------------------------------ */

@@ -9,7 +9,7 @@ class Card extends Init
 {
     public function index()
     {
-        $image = new cls_image($_CFG['bgcolor']);
+        $image = new Image($_CFG['bgcolor']);
 
         $exc = new exchange($ecs->table("card"), $db, 'card_id', 'card_name');
 

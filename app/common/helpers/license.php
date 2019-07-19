@@ -4,6 +4,8 @@
  * LICENSE 相关函数库
  */
 
+use app\common\libraries\Transport;
+
 /**
  * 获得网店 license 信息
  *
@@ -67,14 +69,14 @@ function exchange_shop_license($certi, $license, $use_lib = 0)
         return array();
     }
 
-        
+
     $params = '';
     foreach ($certi as $key => $value) {
         $params .= '&' . $key . '=' . $value;
     }
     $params = trim($params, '&');
 
-    $transport = new transport;
+    $transport = new Transport();
     //$transport->connect_timeout = 1;
     $request = $transport->request($license['certi'], $params, 'POST');
     $request_str = json_str_iconv($request['body']);

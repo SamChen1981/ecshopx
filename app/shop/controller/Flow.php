@@ -233,10 +233,12 @@ class Flow extends Init
                     }
 
                     if (register(trim($_POST['username']), trim($_POST['password']), trim($_POST['email']))) {
-                        $matrix = new matrix;
+                        /*
+                         * TODO BY LANCE
+                         * $matrix = new matrix;
                         if ($matrix->get_bind_info('ecos.taocrm')) {
                             $matrix->createMember($_SESSION['user_id'], 'ecos.taocrm');
-                        }
+                        }*/
                         /* 用户注册成功 */
                         ecs_header("Location: flow.php?step=consignee\n");
                         exit;
@@ -1428,20 +1430,24 @@ class Flow extends Init
             if ($order['user_id'] > 0 && $order['surplus'] > 0) {
                 log_account_change($order['user_id'], $order['surplus'] * (-1), 0, 0, 0, sprintf($_LANG['pay_order'], $order['order_sn']));
                 //订单支付后，创建订单到淘打
-                $matrix = new matrix();
+                /*
+                 * TODO BY LANCE
+                 * $matrix = new matrix();
                 $bind_info = $matrix->get_bind_info(array('taodali'));
                 if ($bind_info) {
                     $matrix->createOrder($order['order_sn'], 'taodali');
-                }
+                }*/
             }
             if ($order['user_id'] > 0 && $order['integral'] > 0) {
                 log_account_change($order['user_id'], 0, 0, 0, $order['integral'] * (-1), sprintf($_LANG['pay_order'], $order['order_sn']));
                 //订单支付后，创建订单到淘打
-                $matrix = new matrix();
+                /*
+                 * TODO BY LANCE
+                 * $matrix = new matrix();
                 $bind_info = $matrix->get_bind_info(array('taodali'));
                 if ($bind_info) {
                     $matrix->createOrder($order['order_sn'], 'taodali');
-                }
+                }*/
             }
 
 
@@ -1468,7 +1474,7 @@ class Flow extends Init
 
             /* 如果需要，发短信 */
             if ($_CFG['sms_order_placed'] == '1' && $_CFG['sms_shop_mobile'] != '') {
-                $sms = new sms();
+                $sms = new Sms();
                 $msg = $order['pay_status'] == PS_UNPAYED ?
                     $_LANG['order_placed_sms'] : $_LANG['order_placed_sms'] . '[' . $_LANG['sms_paid'] . ']';
                 $sms->send($_CFG['sms_shop_mobile'], sprintf($msg, $order['consignee'], $order['tel']), '', 13, 1);
@@ -1563,8 +1569,10 @@ class Flow extends Init
             $smarty->assign('order_submit_back', sprintf($_LANG['order_submit_back'], $_LANG['back_home'], $_LANG['goto_user_center'])); // 返回提示
 
             // 对接erp将订单推送到erp
-            $matrix = new matrix;
-            $matrix->createOrder($order['order_sn']);
+            /*
+             * TODO BY LANCE
+             * $matrix = new matrix;
+            $matrix->createOrder($order['order_sn']);*/
 
             user_uc_call('add_feed', array($order['order_id'], BUY_GOODS)); //推送feed到uc
             unset($_SESSION['flow_consignee']); // 清除session中保存的收货人信息

@@ -67,12 +67,14 @@ class Cloud extends Init
                 make_json_result($api_data['content']);
             }
         } elseif ($act == 'load_crontab') {
-            $cert = new certificate();
+            /*
+             * TODO BY LANCE
+             * $cert = new certificate();
             $matrix = new matrix();
             if ($cert->is_bind_sn('ecos.taocrm', 'bind_type')) {
                 $matrix->push_history_order();//推送历史订单到crm
                 $matrix->push_history_member();//推送历史会员到crm
-            }
+            }*/
         } elseif ($act == 'cloud_remind') {
             $api_data = read_static_cache('cloud_remind');
 

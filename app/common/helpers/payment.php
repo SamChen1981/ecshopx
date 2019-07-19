@@ -4,6 +4,8 @@
  * 支付接口函数库
  */
 
+use app\common\libraries\Sms;
+
 /**
  * 取得返回信息地址
  * @param string $code 支付方式代码
@@ -149,7 +151,7 @@ function order_paid($log_id, $pay_status = PS_PAYED, $note = '')
 
                 /* 如果需要，发短信 */
                 if ($GLOBALS['_CFG']['sms_shop_mobile'] != '') {
-                    $sms = new sms();
+                    $sms = new Sms();
                     if ($GLOBALS['_CFG']['sms_order_payed'] == '1') {
                         $sms->send(
                             $GLOBALS['_CFG']['sms_shop_mobile'],
@@ -206,11 +208,13 @@ function order_paid($log_id, $pay_status = PS_PAYED, $note = '')
                 }
 
                 //订单支付后，创建订单到淘打
-                $matrix = new matrix();
+                /*
+                 * TODO BY LANCE
+                 * $matrix = new matrix();
                 $bind_info = $matrix->get_bind_info(array('taodali'));
                 if ($bind_info) {
                     $matrix->createOrder($order['order_sn'], 'taodali');
-                }
+                }*/
                 //end
                 // 请求erp
                 $bind_info = $matrix->get_bind_info(array('ecos.ome'));
@@ -246,11 +250,13 @@ function order_paid($log_id, $pay_status = PS_PAYED, $note = '')
                     $order = $GLOBALS['db']->getRow("select order_sn FROM " . $GLOBALS['ecs']->table('order_info') . " WHERE order_id=" . $pay_log['order_id']);
                     if (isset($order['order_sn']) && $order['order_sn']) {
                         //订单支付后，创建订单到淘打
-                        $matrix = new matrix();
+                        /*
+                         * TODO BY LANCE
+                         * $matrix = new matrix();
                         $bind_info = $matrix->get_bind_info(array('taodali'));
                         if ($bind_info) {
                             $matrix->createOrder($order['order_sn'], 'taodali');
-                        }
+                        }*/
                         //end
 
                         // 请求erp

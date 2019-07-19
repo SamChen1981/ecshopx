@@ -757,6 +757,7 @@ function update_order($order_id, $order)
         "order_id = '$order_id'"
     );
 
+    // TODO BY LANCE
     // $order_sn = $GLOBALS['db']->getOne("SELECT order_sn FROM ".$GLOBALS['ecs']->table('order_info')." WHERE order_id='{$order_id}'");
     // if ($order_sn) {
     //         //     $matrix = new matrix;
@@ -3045,8 +3046,10 @@ function return_user_surplus_integral_bonus($order)
  */
 function order_retry($order_sn)
 {
-    $matrix = new matrix();
+    /*
+     * TODO BY LANCE
+     * $matrix = new matrix();
     $row = $matrix->get_callback($order_sn);
-    $matrix->http_request_matrix($row['data']['params'], 'retry');
+    $matrix->http_request_matrix($row['data']['params'], 'retry');*/
     return true;
 }

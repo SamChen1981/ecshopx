@@ -19,7 +19,7 @@ class Sms extends Init
             $action = 'sms_sign_default';
         }
 
-        $sms = new sms();
+        $sms = new Sms();
 
         switch ($action) {
             /* 显示短信发送界面，如果尚未注册或启用短信服务则显示注册界面。 */

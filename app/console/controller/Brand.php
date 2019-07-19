@@ -9,7 +9,7 @@ class Brand extends Init
 {
     public function index()
     {
-        $image = new cls_image($_CFG['bgcolor']);
+        $image = new Image($_CFG['bgcolor']);
 
         $exc = new exchange($ecs->table("brand"), $db, 'brand_id', 'brand_name');
 

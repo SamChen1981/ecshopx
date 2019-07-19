@@ -9,7 +9,7 @@ class FriendLink extends Init
 {
     public function index()
     {
-        $image = new cls_image($_CFG['bgcolor']);
+        $image = new Image($_CFG['bgcolor']);
 
         $exc = new exchange($ecs->table('friend_link'), $db, 'link_id', 'link_name');
 

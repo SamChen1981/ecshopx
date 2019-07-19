@@ -2,6 +2,8 @@
 
 namespace app\console\controller;
 
+use app\common\libraries\SqlDump;
+
 /**
  * 数据库管理
  */
@@ -136,7 +138,7 @@ class Database extends Init
             @set_time_limit(300);
 
             /* 初始化 */
-            $dump = new cls_sql_dump($db);
+            $dump = new SqlDump($db);
             $run_log = ROOT_PATH . DATA_DIR . '/sqldata/run.log';
 
             /* 初始化输入变量 */

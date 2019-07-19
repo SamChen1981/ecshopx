@@ -2,6 +2,8 @@
 
 namespace app\console\controller;
 
+use app\common\libraries\Image;
+
 /**
  * 商品批量上传、修改
  */
@@ -321,7 +323,7 @@ class GoodsBatch extends Init
             admin_priv('goods_batch');
 
             if (isset($_POST['checked'])) {
-                $image = new cls_image($_CFG['bgcolor']);
+                $image = new Image($_CFG['bgcolor']);
 
                 /* 字段默认值 */
                 $default_value = array(
@@ -774,7 +776,7 @@ class GoodsBatch extends Init
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'get_goods') {
-            $filter = new stdclass;
+            $filter = new \stdClass();
 
             $filter->cat_id = intval($_GET['cat_id']);
             $filter->brand_id = intval($_GET['brand_id']);

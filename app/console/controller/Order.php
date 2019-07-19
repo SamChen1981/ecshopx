@@ -141,8 +141,10 @@ class Order extends Init
         elseif ($_REQUEST['act'] == 'query') {
             /* 检查权限 */
             admin_priv('order_view');
-            $matrix = new matrix();
-            $matrix->get_bind_info(array('ecos.ome')) ? $smarty->assign('node_info', true) : $smarty->assign('node_info', false);
+            /*
+             * TODO BY LANCE
+             * $matrix = new matrix();
+            $matrix->get_bind_info(array('ecos.ome')) ? $smarty->assign('node_info', true) : $smarty->assign('node_info', false);*/
 
             $order_list = $this->order_list();
 
@@ -160,8 +162,10 @@ class Order extends Init
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'info') {
-            $matrix = new matrix();
-            $matrix->get_bind_info(array('ecos.ome')) ? $smarty->assign('node_info', true) : $smarty->assign('node_info', false);
+            /*
+             * TODO BY LANCE
+             * $matrix = new matrix();
+            $matrix->get_bind_info(array('ecos.ome')) ? $smarty->assign('node_info', true) : $smarty->assign('node_info', false);*/
             /* 根据订单id或订单号查询订单信息 */
             if (isset($_REQUEST['order_id'])) {
                 $order_id = intval($_REQUEST['order_id']);
@@ -535,8 +539,10 @@ class Order extends Init
         elseif ($_REQUEST['act'] == 'delivery_list') {
             /* 检查权限 */
             admin_priv('delivery_view');
-            $matrix = new matrix();
-            $matrix->get_bind_info(array('ecos.ome')) ? $smarty->assign('node_info', true) : $smarty->assign('node_info', false);
+            /*
+             * TODO BY LANCE
+             * $matrix = new matrix();
+            $matrix->get_bind_info(array('ecos.ome')) ? $smarty->assign('node_info', true) : $smarty->assign('node_info', false);*/
 
             /* 查询 */
             $result = $this->delivery_list();
@@ -585,8 +591,10 @@ class Order extends Init
         elseif ($_REQUEST['act'] == 'delivery_info') {
             /* 检查权限 */
             admin_priv('delivery_view');
-            $matrix = new matrix();
-            $matrix->get_bind_info(array('ecos.ome')) ? $smarty->assign('node_info', true) : $smarty->assign('node_info', false);
+            /*
+             * TODO BY LANCE
+             * $matrix = new matrix();
+            $matrix->get_bind_info(array('ecos.ome')) ? $smarty->assign('node_info', true) : $smarty->assign('node_info', false);*/
 
             $delivery_id = intval(trim($_REQUEST['delivery_id']));
 
@@ -852,7 +860,7 @@ class Order extends Init
 
                 /* 如果需要，发短信 */
                 if ($GLOBALS['_CFG']['sms_order_shipped'] == '1' && $order['mobile'] != '') {
-                    $sms = new sms();
+                    $sms = new Sms();
                     $sms->send($order['mobile'], sprintf(
                         $GLOBALS['_LANG']['order_shipped_sms'],
                         $order['order_sn'],
@@ -995,8 +1003,10 @@ class Order extends Init
         elseif ($_REQUEST['act'] == 'back_list') {
             /* 检查权限 */
             admin_priv('back_view');
-            $matrix = new matrix();
-            $matrix->get_bind_info(array('ecos.ome')) ? $smarty->assign('node_info', true) : $smarty->assign('node_info', false);
+            /*
+             * TODO BY LANCE
+             * $matrix = new matrix();
+            $matrix->get_bind_info(array('ecos.ome')) ? $smarty->assign('node_info', true) : $smarty->assign('node_info', false);*/
 
             /* 查询 */
             $result = $this->back_list();
@@ -1860,8 +1870,10 @@ class Order extends Init
         elseif ($_REQUEST['act'] == 'add' || $_REQUEST['act'] == 'edit') {
             /* 检查权限 */
             admin_priv('order_edit');
-            $matrix = new matrix();
-            $matrix->get_bind_info(array('ecos.ome')) ? $smarty->assign('node_info', true) : $smarty->assign('node_info', false);
+            /*
+             * TODO BY LANCE
+             * $matrix = new matrix();
+            $matrix->get_bind_info(array('ecos.ome')) ? $smarty->assign('node_info', true) : $smarty->assign('node_info', false);*/
 
             /* 取得参数 order_id */
             $order_id = isset($_GET['order_id']) ? intval($_GET['order_id']) : 0;
@@ -2193,8 +2205,10 @@ class Order extends Init
         elseif ($_REQUEST['act'] == 'merge') {
             /* 检查权限 */
             admin_priv('order_os_edit');
-            $matrix = new matrix();
-            $matrix->get_bind_info(array('ecos.ome')) ? $smarty->assign('node_info', true) : $smarty->assign('node_info', false);
+            /*
+             * TODO BY LANCE
+             * $matrix = new matrix();
+            $matrix->get_bind_info(array('ecos.ome')) ? $smarty->assign('node_info', true) : $smarty->assign('node_info', false);*/
 
             /* 取得满足条件的订单 */
             $sql = "SELECT o.order_sn, u.user_name " .
@@ -3075,11 +3089,13 @@ class Order extends Init
                 }
                 update_order($order_id, $arr);
                 //订单支付后，创建订单到淘打
-                $matrix = new matrix();
+                /*
+                 * TODO BY LANCE
+                 * $matrix = new matrix();
                 $bind_info = $matrix->get_bind_info(array('taodali'));
                 if ($bind_info) {
                     $matrix->createOrder($order['order_sn'], 'taodali');
-                }
+                }*/
                 // 请求crm
                 $this->update_order_crm($order['order_sn']);
                 /* 记录log */
@@ -5612,12 +5628,14 @@ class Order extends Init
     // 更新订单到crm
     private function update_order_crm($order_sn)
     {
-        $matrix = new matrix();
+        /*
+         * TODO BY LANCE
+         * $matrix = new matrix();
         $bind_info = $matrix->get_bind_info(array('ecos.taocrm'));
         if ($bind_info) {
             $is_succ = $matrix->updateOrder($order_sn, 'ecos.taocrm');
             return $is_succ;
-        }
+        }*/
         return true;
     }
 
@@ -5629,10 +5647,12 @@ class Order extends Init
         $msg['refund_fee'] = $data['cur_money'];
         $msg['status'] = 'SUCC';
         $msg['t_begin'] = date('Y-m-d H:i:s', time());
-        $matrix = new matrix;
+        /*
+         * TODO BY LANCE
+         * $matrix = new matrix;
         $bind_info = $matrix->get_bind_info(array('ecos.taocrm'));
         if ($bind_info) {
             $is_succ = $matrix->send_refund_to_crm($msg);
-        }
+        }*/
     }
 }

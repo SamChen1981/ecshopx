@@ -431,7 +431,7 @@ class Integrate extends Init
             // die(json_encode(array('error' => 1, 'message' => 'ucenter整合已被屏蔽掉，如有疑问联系ecshop官方客服')));
             */
             $cfg = $_SESSION['cfg'];
-            $ucdb = new cls_mysql($cfg['db_host'], $cfg['db_user'], $cfg['db_pass'], $cfg['db_name'], $cfg['db_charset']);
+            $ucdb = new Mysql($cfg['db_host'], $cfg['db_user'], $cfg['db_pass'], $cfg['db_name'], $cfg['db_charset']);
             $result = array('error' => 0, 'message' => '');
             $query = $db->query("SHOW TABLE STATUS LIKE '" . $GLOBALS['prefix'] . 'users' . "'");
             $data = $db->fetch_array($query);

@@ -9,7 +9,7 @@ class Pack extends Init
 {
     public function index()
     {
-        $image = new cls_image($_CFG['bgcolor']);
+        $image = new Image($_CFG['bgcolor']);
 
         $exc = new exchange($ecs->table("pack"), $db, 'pack_id', 'pack_name');
 

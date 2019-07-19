@@ -2,6 +2,8 @@
 
 namespace app\console\controller;
 
+use app\common\libraries\Certificate;
+
 /**
  * 会员管理程序
  */
@@ -31,7 +33,7 @@ class Users extends Init
             $smarty->assign('action_link', array('text' => $_LANG['04_users_add'], 'href' => 'users.php?act=add'));
 
             $user_list = $this->user_list();
-            $cert = new certificate();
+            $cert = new Certificate();
             $is_bind_crm = $cert->is_bind_sn('ecos.taocrm', 'bind_type');
             $smarty->assign('is_bind_crm', $is_bind_crm);
             $smarty->assign('user_list', $user_list['user_list']);

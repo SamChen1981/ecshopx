@@ -356,7 +356,7 @@ class Wholesale extends Init
 
             /* 如果需要，发短信 */
             if ($_CFG['sms_order_placed'] == '1' && $_CFG['sms_shop_mobile'] != '') {
-                $sms = new sms();
+                $sms = new Sms();
                 $msg = $_LANG['order_placed_sms'];
                 $sms->send($_CFG['sms_shop_mobile'], sprintf($msg, $order['consignee'], $order['tel']), '', 13, 1);
             }

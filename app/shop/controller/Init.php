@@ -2,8 +2,11 @@
 
 namespace app\shop\controller;
 
+use app\common\libraries\Error;
 use app\common\libraries\Mysql;
+use app\common\libraries\Session;
 use app\common\libraries\Shop;
+use app\common\libraries\Template;
 use think\Controller;
 
 /**
@@ -62,7 +65,7 @@ class Init extends Controller
         $db->set_disable_cache_tables(array($ecs->table('sessions'), $ecs->table('sessions_data'), $ecs->table('cart')));
 
         /* 创建错误处理对象 */
-        $err = new ecs_error('message.dwt');
+        $err = new Error('message.dwt');
 
         /* 载入系统参数 */
         $_CFG = load_config();
@@ -98,7 +101,7 @@ class Init extends Controller
         if (!defined('INIT_NO_USERS')) {
             /* 初始化session */
 
-            $sess = new cls_session($db, $ecs->table('sessions'), $ecs->table('sessions_data'));
+            $sess = new Session($db, $ecs->table('sessions'), $ecs->table('sessions_data'));
 
             define('SESS_ID', $sess->get_session_id());
         }
@@ -110,7 +113,7 @@ class Init extends Controller
             header('Content-type: text/html; charset=' . EC_CHARSET);
 
             /* 创建 Smarty 对象。*/
-            $smarty = new cls_template;
+            $smarty = new Template();
 
             $smarty->cache_lifetime = $_CFG['cache_time'];
             $smarty->template_dir = ROOT_PATH . 'themes/' . $_CFG['template'];

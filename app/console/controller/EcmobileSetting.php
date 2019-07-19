@@ -2,6 +2,8 @@
 
 namespace app\console\controller;
 
+use app\common\libraries\Certificate;
+
 /**
  * 程序说明
  */
@@ -18,7 +20,7 @@ class EcmobileSetting extends Init
             /* 检查权限 */
             admin_priv('mobile_setting');
             $smarty->assign('ur_here', $_LANG['lead_here']);
-            $cert = new certificate;
+            $cert = new Certificate();
             $isOpenWap = $cert->is_open_sn('fy');
             if ($isOpenWap == false && $_SESSION['yunqi_login'] && $_SESSION['TOKEN']) {
                 $result = $cert->getsnlistoauth($_SESSION['TOKEN'], array());

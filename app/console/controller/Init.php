@@ -2,6 +2,10 @@
 
 namespace app\console\controller;
 
+use app\common\libraries\Captcha;
+use app\common\libraries\Error;
+use app\common\libraries\Session;
+use app\common\libraries\Template;
 use think\Controller;
 
 /**
@@ -97,14 +101,13 @@ class Init extends Controller
         define('IMAGE_DIR', $ecs->image_dir());
 
         /* 初始化数据库类 */
-        $db = new cls_mysql($db_host, $db_user, $db_pass, $db_name);
-        $db_host = $db_user = $db_pass = $db_name = null;
+        $db = new Mysql($db_host, $db_user, $db_pass, $db_name);
 
         /* 创建错误处理对象 */
-        $err = new ecs_error('message.htm');
+        $err = new Error('message.htm');
 
         /* 初始化session */
-        $sess = new cls_session($db, $ecs->table('sessions'), $ecs->table('sessions_data'), 'ECSCP_ID');
+        $sess = new Session($db, $ecs->table('sessions'), $ecs->table('sessions_data'), 'ECSCP_ID');
 
         /* 初始化 action */
         if (!isset($_REQUEST['act'])) {
@@ -122,7 +125,7 @@ class Init extends Controller
 
         // TODO : 登录部分准备拿出去做，到时候把以下操作一起挪过去
         if ($_REQUEST['act'] == 'captcha') {
-            $img = new captcha('../data/captcha/', 104, 36);
+            $img = new Captcha('../data/captcha/', 104, 36);
             @ob_end_clean(); //清除之前出现的多余输入
             $img->generate_image();
 
@@ -163,7 +166,7 @@ class Init extends Controller
         }
 
         /* 创建 Smarty 对象。*/
-        $smarty = new cls_template;
+        $smarty = new Template();
 
         $smarty->template_dir = ROOT_PATH . ADMIN_PATH . '/templates';
         $smarty->compile_dir = ROOT_PATH . 'temp/compiled/admin';

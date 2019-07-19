@@ -197,10 +197,12 @@ class User extends Init
                         send_regiter_hash($_SESSION['user_id']);
                     }
                     $ucdata = empty($user->ucdata) ? "" : $user->ucdata;
-                    $matrix = new matrix;
+                    /*
+                     * TODO BY LANCE
+                     * $matrix = new matrix;
                     if ($matrix->get_bind_info('ecos.taocrm')) {
                         $matrix->createMember($_SESSION['user_id'], 'ecos.taocrm');
-                    }
+                    }*/
                     show_message(sprintf($_LANG['register_success'], $username . $ucdata), array($_LANG['back_up_page'], $_LANG['profile_lnk']), array($back_act, 'user.php'), 'info');
                 } else {
                     $err->show($_LANG['sign_up'], 'user.php?act=register');
@@ -834,8 +836,10 @@ class User extends Init
 
             if (cancel_order($order_id, $user_id)) {
                 // 通知erp取消订单
-                $matrix = new matrix();
-                $matrix->set_dead_order($order_id);
+                /*
+                 * TODO BY LANCE
+                 * $matrix = new matrix();
+                $matrix->set_dead_order($order_id);*/
 
                 ecs_header("Location: user.php?act=order_list\n");
                 exit;
@@ -1045,6 +1049,7 @@ class User extends Init
 
             if (add_message($message)) {
                 // 通知erp订单留言
+                // TODO BY LANCE
                 // if (isset($_POST['order_id']) && $_POST['order_id']) {
                 //             //     $matrix = new matrix();
                 //     $matrix->update_order_buyer_message($message);
@@ -1707,8 +1712,10 @@ class User extends Init
             }
 
             // 支付后通知erp
-            $matrix = new matrix;
-            $matrix->createOrder($order['order_sn']);
+            /*
+             * TODO BY LANCE
+             * $matrix = new matrix;
+            $matrix->createOrder($order['order_sn']);*/
 
             /* 跳转 */
             ecs_header('Location: user.php?act=order_detail&order_id=' . $order_id . "\n");
@@ -1794,8 +1801,10 @@ class User extends Init
                     $sql = "UPDATE " . $ecs->table('order_info') .
                         " SET lastmodify=" . gmtime() . "  WHERE order_id = " . $address['order_id'];
                     $db->query($sql);
-                    $matrix = new matrix;
-                    $matrix->createOrder($order_sn);
+                    /*
+                     * TODO BY LANCE
+                     * $matrix = new matrix;
+                    $matrix->createOrder($order_sn);*/
                 }
                 ecs_header('Location: user.php?act=order_detail&order_id=' . $address['order_id'] . "\n");
                 exit;
@@ -2487,7 +2496,7 @@ class User extends Init
                     }
                 }
                 $sms_code = mt_rand(100000, 999999);
-                $sms = new sms();
+                $sms = new Sms();
                 $_SESSION[$mobile . '-sms_code'] = $sms_code;
                 $is_send = $sms->send($mobile, '您本次的验证码为：' . $sms_code . '，十分钟内有效，请不要把验证码泄露给其他人，如非本人操作可不用理会');
                 $is_send = $is_send ? 'succ' : 'fail';

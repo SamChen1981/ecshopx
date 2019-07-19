@@ -2,6 +2,8 @@
 
 namespace app\shop\controller;
 
+use app\common\libraries\Captcha;
+
 /**
  * 留言板
  */
@@ -18,7 +20,7 @@ class Message extends Init
 
             /* 验证码防止灌水刷屏 */
             if ((intval($_CFG['captcha']) & CAPTCHA_MESSAGE) && gd_version() > 0) {
-                $validator = new captcha();
+                $validator = new Captcha();
                 if (!$validator->check_word($_POST['captcha'])) {
                     show_message($_LANG['invalid_captcha']);
                 }

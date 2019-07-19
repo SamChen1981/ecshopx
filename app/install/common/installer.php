@@ -334,7 +334,7 @@ function install_data($sql_files)
 
     include(ROOT_PATH . 'data/config.php');
 
-    $db = new cls_mysql($db_host, $db_user, $db_pass, $db_name);
+    $db = new Mysql($db_host, $db_user, $db_pass, $db_name);
     $se = new sql_executor($db, EC_DB_CHARSET, 'ecs_', $prefix);
     $result = $se->run_all($sql_files);
     if ($result === false) {
@@ -390,7 +390,7 @@ function create_admin_passport($admin_name, $admin_password, $admin_password2, $
 
     $nav_list = join(',', $_LANG['admin_user']);
 
-    $db = new cls_mysql($db_host, $db_user, $db_pass, $db_name);
+    $db = new Mysql($db_host, $db_user, $db_pass, $db_name);
     $sql = "INSERT INTO $prefix" . "admin_user " .
         "(user_name, email, password, add_time, action_list, nav_list)" .
         "VALUES " .
@@ -420,7 +420,7 @@ function install_goods_types($goods_types, $lang)
     }
 
     include(ROOT_PATH . 'data/config.php');
-    $db = new cls_mysql($db_host, $db_user, $db_pass, $db_name);
+    $db = new Mysql($db_host, $db_user, $db_pass, $db_name);
 
     if (file_exists(ROOT_PATH . 'install/data/inc_goods_type_' . $lang . '.php')) {
         include(ROOT_PATH . 'install/data/inc_goods_type_' . $lang . '.php');
@@ -547,7 +547,7 @@ function do_others($system_lang, $captcha, $goods_types, $install_demo, $integra
     }
 
     include(ROOT_PATH . 'data/config.php');
-    $db = new cls_mysql($db_host, $db_user, $db_pass, $db_name);
+    $db = new Mysql($db_host, $db_user, $db_pass, $db_name);
 
     /* 更新 ECSHOP 语言 */
     $sql = "UPDATE $prefix" . "shop_config SET value='" . $system_lang . "' WHERE code='lang'";
@@ -599,7 +599,7 @@ function deal_aftermath()
 
     include(ROOT_PATH . 'data/config.php');
 
-    $db = new cls_mysql($db_host, $db_user, $db_pass, $db_name);
+    $db = new Mysql($db_host, $db_user, $db_pass, $db_name);
 
     /* 初始化友情链接 */
     $sql = "INSERT INTO $prefix" . "friend_link " .
@@ -669,7 +669,7 @@ function deal_aftermath()
 function get_spt_code()
 {
     include(ROOT_PATH . 'data/config.php');
-    $db = new cls_mysql($db_host, $db_user, $db_pass, $db_name);
+    $db = new Mysql($db_host, $db_user, $db_pass, $db_name);
     $ecs = new ECS($db_name, $prefix);
     $hash_code = $db->getOne("SELECT value FROM " . $ecs->table('shop_config') . " WHERE code='hash_code'");
     $spt = '<script type="text/javascript" src="https://api-ecshop.xyunqi.com/record.php?';

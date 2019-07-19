@@ -13,7 +13,7 @@ class ExchangeGoods extends Init
 
         /*初始化数据交换对象 */
         $exc = new exchange($ecs->table("exchange_goods"), $db, 'goods_id', 'exchange_integral');
-        //$image = new cls_image();
+        //$image = new Image();
 
         /*------------------------------------------------------ */
         //-- 商品列表

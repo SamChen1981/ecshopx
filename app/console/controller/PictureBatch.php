@@ -10,7 +10,7 @@ class PictureBatch extends Init
     public function index()
     {
         load_helper('goods', 'console');
-        $image = new cls_image($_CFG['bgcolor']);
+        $image = new Image($_CFG['bgcolor']);
 
         /* 权限检查 */
         admin_priv('picture_batch');

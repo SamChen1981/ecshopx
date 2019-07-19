@@ -10,7 +10,7 @@ class SuppliersGoods extends Init
     public function index()
     {
         load_helper('goods', 'console');
-        $image = new cls_image($_CFG['bgcolor']);
+        $image = new Image($_CFG['bgcolor']);
         $exc = new exchange($ecs->table('goods'), $db, 'goods_id', 'goods_name');
 
         /*------------------------------------------------------ */

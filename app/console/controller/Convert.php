@@ -63,7 +63,7 @@ class Convert extends Init
             $config = json_decode($_POST['JSON']);
 
             /* 测试连接数据库 */
-            $sdb = new cls_mysql($config->host, $config->user, $config->pass, $config->db);
+            $sdb = new Mysql($config->host, $config->user, $config->pass, $config->db);
 
             /* 检查必需的表是否存在 */
             $sprefix = $config->prefix;
@@ -153,7 +153,7 @@ class Convert extends Init
             /* 连接原数据库 */
             $config = $_SESSION['convert_config'];
 
-            $sdb = new cls_mysql($config->host, $config->user, $config->pass, $config->db);
+            $sdb = new Mysql($config->host, $config->user, $config->pass, $config->db);
             $sdb->set_mysql_charset($config->charset);
 
             /* 创建插件对象 */

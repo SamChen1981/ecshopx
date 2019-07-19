@@ -89,11 +89,13 @@ while ($i <= $total) {
         $sn_list[] = $order['order_sn'];
 
         // 通知erp取消订单
-        $matrix = new matrix();
+        /*
+         * TODO BY LANCE
+         * $matrix = new matrix();
         $bind_info = $matrix->get_bind_info(array('ecos.ome'));
         if ($bind_info) {
             $matrix->set_dead_order($order_id);
-        }
+        }*/
         cancel_log("cancel_order_id:" . $order_id);
         $i++;
     }

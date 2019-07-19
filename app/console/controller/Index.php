@@ -831,7 +831,7 @@ class Index extends Init
                 $max_id = $db->getOne("SELECT MAX(goods_id) + 1 FROM " . $ecs->table('goods'));
                 $goods_sn = generate_goods_sn($max_id);
 
-                $image = new cls_image($_CFG['bgcolor']);
+                $image = new Image($_CFG['bgcolor']);
 
                 if (!empty($good_name)) {
                     /* 检查图片：如果有错误，检查尺寸是否超过最大值；否则，检查文件类型 */

@@ -2,6 +2,9 @@
 
 namespace app\console\controller;
 
+use app\common\libraries\Exchange;
+use app\common\libraries\Image;
+
 /**
  * 广告管理程序
  */
@@ -9,8 +12,8 @@ class Ads extends Init
 {
     public function index()
     {
-        $image = new cls_image($_CFG['bgcolor']);
-        $exc = new exchange($ecs->table("ad"), $db, 'ad_id', 'ad_name');
+        $image = new Image($_CFG['bgcolor']);
+        $exc = new Exchange($ecs->table("ad"), $db, 'ad_id', 'ad_name');
         $allow_suffix = array('gif', 'jpg', 'png', 'jpeg', 'bmp', 'swf');
         /* act操作项的初始化 */
         if (empty($_REQUEST['act'])) {
