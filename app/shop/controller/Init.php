@@ -56,7 +56,7 @@ class Init extends Controller
         }
 
         /* 创建 SHOP 对象 */
-        $GLOBALS['ecs'] = new Shop(config('database.database'), config('database.db_prefix'));
+        $GLOBALS['ecs'] = new Shop(config('database.database'), config('database.prefix'));
         define('DATA_DIR', $GLOBALS['ecs']->data_dir());
         define('IMAGE_DIR', $GLOBALS['ecs']->image_dir());
 
