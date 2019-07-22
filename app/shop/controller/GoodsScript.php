@@ -9,8 +9,6 @@ class GoodsScript extends Init
 {
     public function index()
     {
-        define('INIT_NO_USERS', true);
-
         $charset = empty($_GET['charset']) ? EC_CHARSET : $_GET['charset'];
         $type = empty($_GET['type']) ? '' : 'collection';
         if (strtolower($charset) == 'gb2312') {

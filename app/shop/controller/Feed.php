@@ -9,9 +9,6 @@ class Feed extends Init
 {
     public function index()
     {
-        define('INIT_NO_USERS', true);
-        define('INIT_NO_SMARTY', true);
-
 
         header('Content-Type: application/xml; charset=' . EC_CHARSET);
         header('Cache-Control: no-cache, must-revalidate');

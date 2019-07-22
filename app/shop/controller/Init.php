@@ -79,94 +79,73 @@ class Init extends Controller
             die('<div style="margin: 150px; text-align: center; font-size: 14px"><p>' . $GLOBALS['_LANG']['shop_closed'] . '</p><p>' . $GLOBALS['_CFG']['close_comment'] . '</p></div>');
         }
 
-        if (is_spider()) {
-            /* 如果是蜘蛛的访问，那么默认为访客方式，并且不记录到日志中 */
-            if (!defined('INIT_NO_USERS')) {
-                define('INIT_NO_USERS', true);
-                /* 整合UC后，如果是蜘蛛访问，初始化UC需要的常量 */
-                if ($GLOBALS['_CFG']['integrate_code'] == 'ucenter') {
-                    $GLOBALS['user'] = init_users();
-                }
-            }
-            $_SESSION = array();
-            $_SESSION['user_id'] = 0;
-            $_SESSION['user_name'] = '';
-            $_SESSION['email'] = '';
-            $_SESSION['user_rank'] = 0;
-            $_SESSION['discount'] = 1.00;
-        }
+        /* 初始化session */
+        $GLOBALS['sess'] = new Session($GLOBALS['db'], $GLOBALS['ecs']->table('sessions'), $GLOBALS['ecs']->table('sessions_data'));
 
-        if (!defined('INIT_NO_USERS')) {
-            /* 初始化session */
-            $GLOBALS['sess'] = new Session($GLOBALS['db'], $GLOBALS['ecs']->table('sessions'), $GLOBALS['ecs']->table('sessions_data'));
-
-            define('SESS_ID', $GLOBALS['sess']->get_session_id());
-        }
+        define('SESS_ID', $GLOBALS['sess']->get_session_id());
 
         $view_path = 'themes/' . $GLOBALS['_CFG']['template'] . '/' . config('template.tpl_path') . '/';
         $this->view->config('view_path', public_path($view_path));
 
-        if (!defined('INIT_NO_USERS')) {
-            /* 会员信息 */
-            $GLOBALS['user'] = init_users();
+        /* 会员信息 */
+        $GLOBALS['user'] = init_users();
 
-            if (!isset($_SESSION['user_id'])) {
-                /* 获取投放站点的名称 */
-                $site_name = isset($_GET['from']) ? htmlspecialchars($_GET['from']) : addslashes($GLOBALS['_LANG']['self_site']);
-                $from_ad = !empty($_GET['ad_id']) ? intval($_GET['ad_id']) : 0;
+        if (!isset($_SESSION['user_id'])) {
+            /* 获取投放站点的名称 */
+            $site_name = isset($_GET['from']) ? htmlspecialchars($_GET['from']) : addslashes($GLOBALS['_LANG']['self_site']);
+            $from_ad = !empty($_GET['ad_id']) ? intval($_GET['ad_id']) : 0;
 
-                $_SESSION['from_ad'] = $from_ad; // 用户点击的广告ID
-                $_SESSION['referer'] = stripslashes($site_name); // 用户来源
+            $_SESSION['from_ad'] = $from_ad; // 用户点击的广告ID
+            $_SESSION['referer'] = stripslashes($site_name); // 用户来源
 
-                unset($site_name);
+            unset($site_name);
 
-                if (!defined('INGORE_VISIT_STATS')) {
-                    visit_stats();
-                }
+            if (!defined('INGORE_VISIT_STATS')) {
+                visit_stats();
             }
+        }
 
-            if (empty($_SESSION['user_id'])) {
-                if ($GLOBALS['user']->get_cookie()) {
-                    /* 如果会员已经登录并且还没有获得会员的帐户余额、积分以及优惠券 */
-                    if ($_SESSION['user_id'] > 0) {
-                        update_user_info();
-                    }
-                } else {
-                    $_SESSION['user_id'] = 0;
-                    $_SESSION['user_name'] = '';
-                    $_SESSION['email'] = '';
-                    $_SESSION['user_rank'] = 0;
-                    $_SESSION['discount'] = 1.00;
-                    if (!isset($_SESSION['login_fail'])) {
-                        $_SESSION['login_fail'] = 0;
-                    }
-                }
-            }
-
-            /* 设置推荐会员 */
-            if (isset($_GET['u'])) {
-                set_affiliate();
-            }
-
-            /* session 不存在，检查cookie */
-            if (!empty($_COOKIE['ECS']['user_id']) && !empty($_COOKIE['ECS']['password'])) {
-                // 找到了cookie, 验证cookie信息
-                $sql = 'SELECT user_id, user_name, password ' .
-                    ' FROM ' . $GLOBALS['ecs']->table('users') .
-                    " WHERE user_id = '" . intval($_COOKIE['ECS']['user_id']) . "' AND password = '" . $_COOKIE['ECS']['password'] . "'";
-
-                $row = $GLOBALS['db']->GetRow($sql);
-
-                if (!$row) {
-                    // 没有找到这个记录
-                    $time = time() - 3600;
-                    setcookie("ECS[user_id]", '', $time, '/', null, null, true);
-                    setcookie("ECS[password]", '', $time, '/', null, null, true);
-                } else {
-                    $_SESSION['user_id'] = $row['user_id'];
-                    $_SESSION['user_name'] = $row['user_name'];
+        if (empty($_SESSION['user_id'])) {
+            if ($GLOBALS['user']->get_cookie()) {
+                /* 如果会员已经登录并且还没有获得会员的帐户余额、积分以及优惠券 */
+                if ($_SESSION['user_id'] > 0) {
                     update_user_info();
                 }
+            } else {
+                $_SESSION['user_id'] = 0;
+                $_SESSION['user_name'] = '';
+                $_SESSION['email'] = '';
+                $_SESSION['user_rank'] = 0;
+                $_SESSION['discount'] = 1.00;
+                if (!isset($_SESSION['login_fail'])) {
+                    $_SESSION['login_fail'] = 0;
+                }
+            }
+        }
+
+        /* 设置推荐会员 */
+        if (isset($_GET['u'])) {
+            set_affiliate();
+        }
+
+        /* session 不存在，检查cookie */
+        if (!empty($_COOKIE['ECS']['user_id']) && !empty($_COOKIE['ECS']['password'])) {
+            // 找到了cookie, 验证cookie信息
+            $sql = 'SELECT user_id, user_name, password ' .
+                ' FROM ' . $GLOBALS['ecs']->table('users') .
+                " WHERE user_id = '" . intval($_COOKIE['ECS']['user_id']) . "' AND password = '" . $_COOKIE['ECS']['password'] . "'";
+
+            $row = $GLOBALS['db']->GetRow($sql);
+
+            if (!$row) {
+                // 没有找到这个记录
+                $time = time() - 3600;
+                setcookie("ECS[user_id]", '', $time, '/', null, null, true);
+                setcookie("ECS[password]", '', $time, '/', null, null, true);
+            } else {
+                $_SESSION['user_id'] = $row['user_id'];
+                $_SESSION['user_name'] = $row['user_name'];
+                update_user_info();
             }
         }
     }
