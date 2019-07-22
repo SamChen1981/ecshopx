@@ -84,7 +84,7 @@ class SaleOrder extends Init
 
             /* 显示页面 */
             assign_query_info();
-            $GLOBALS['smarty']->display('sale_order.htm');
+            return $GLOBALS['smarty']->display('sale_order.htm');
         }
     }
 

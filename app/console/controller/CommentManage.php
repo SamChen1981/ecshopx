@@ -39,7 +39,7 @@ class CommentManage extends Init
             $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
             assign_query_info();
-            $GLOBALS['smarty']->display('comment_list.htm');
+            return $GLOBALS['smarty']->display('comment_list.htm');
         }
 
         /*------------------------------------------------------ */
@@ -121,7 +121,7 @@ class CommentManage extends Init
 
             /* 页面显示 */
             assign_query_info();
-            $GLOBALS['smarty']->display('comment_info.htm');
+            return $GLOBALS['smarty']->display('comment_info.htm');
         }
         /*------------------------------------------------------ */
         //-- 处理 回复用户评论

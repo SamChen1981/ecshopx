@@ -37,7 +37,7 @@ class AdPosition extends Init
             $GLOBALS['smarty']->assign('page_count', $position_list['page_count']);
 
             assign_query_info();
-            $GLOBALS['smarty']->display('ad_position_list.htm');
+            return $GLOBALS['smarty']->display('ad_position_list.htm');
         }
 
         /*------------------------------------------------------ */
@@ -54,7 +54,7 @@ class AdPosition extends Init
             $GLOBALS['smarty']->assign('posit_arr', array('position_style' => '<table cellpadding="0" cellspacing="0">' . "\n" . '{foreach from=$ads item=ad}' . "\n" . '<tr><td>{$ad}</td></tr>' . "\n" . '{/foreach}' . "\n" . '</table>'));
 
             assign_query_info();
-            $GLOBALS['smarty']->display('ad_position_info.htm');
+            return $GLOBALS['smarty']->display('ad_position_info.htm');
         } elseif ($_REQUEST['act'] == 'insert') {
             admin_priv('ad_manage');
 
@@ -109,7 +109,7 @@ class AdPosition extends Init
             $GLOBALS['smarty']->assign('form_act', 'update');
 
             assign_query_info();
-            $GLOBALS['smarty']->display('ad_position_info.htm');
+            return $GLOBALS['smarty']->display('ad_position_info.htm');
         } elseif ($_REQUEST['act'] == 'update') {
             admin_priv('ad_manage');
 

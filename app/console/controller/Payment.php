@@ -66,7 +66,7 @@ class Payment extends Init
             $GLOBALS['smarty']->assign('modules', $modules);
             $GLOBALS['smarty']->assign('tenpayc2c', $tenpayc2c);
             $GLOBALS['smarty']->assign('account_url', TEEGON_PASSPORT_URL);
-            $GLOBALS['smarty']->display('payment_list.htm');
+            return $GLOBALS['smarty']->display('payment_list.htm');
         }
 
         /*------------------------------------------------------ */
@@ -134,7 +134,7 @@ class Payment extends Init
 
             $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['02_payment_list'], 'href' => 'payment.php?act=list'));
             $GLOBALS['smarty']->assign('pay', $pay);
-            $GLOBALS['smarty']->display('payment_edit.htm');
+            return $GLOBALS['smarty']->display('payment_edit.htm');
         } elseif ($_REQUEST['act'] == 'get_config') {
             check_authz_json('payment');
 
@@ -249,7 +249,7 @@ class Payment extends Init
             $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['02_payment_list'], 'href' => 'payment.php?act=list'));
             $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['edit'] . $GLOBALS['_LANG']['payment']);
             $GLOBALS['smarty']->assign('pay', $pay);
-            $GLOBALS['smarty']->display('payment_edit.htm');
+            return $GLOBALS['smarty']->display('payment_edit.htm');
         }
 
         /*------------------------------------------------------ */

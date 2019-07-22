@@ -41,7 +41,7 @@ class Privilege extends Init
             $callback = $GLOBALS['ecs']->url() . "admin/privilege.php?act=login&type=yunqi";
             $iframe_url = $cert->get_authorize_url($callback);
             $GLOBALS['smarty']->assign('iframe_url', $iframe_url);
-            $GLOBALS['smarty']->display('login_extend.html');
+            return $GLOBALS['smarty']->display('login_extend.html');
         }
 
         /*------------------------------------------------------ */
@@ -174,7 +174,7 @@ class Privilege extends Init
                     $GLOBALS['smarty']->assign('yunqi_ad_link', $yunqi_bg[0]['link']);
                 }
 
-                $GLOBALS['smarty']->display('login.htm');
+                return $GLOBALS['smarty']->display('login.htm');
             }
         }
 
@@ -278,7 +278,7 @@ class Privilege extends Init
 
             /* 显示页面 */
             assign_query_info();
-            $GLOBALS['smarty']->display('privilege_list.htm');
+            return $GLOBALS['smarty']->display('privilege_list.htm');
         }
 
         /*------------------------------------------------------ */
@@ -306,7 +306,7 @@ class Privilege extends Init
 
             /* 显示页面 */
             assign_query_info();
-            $GLOBALS['smarty']->display('privilege_info.htm');
+            return $GLOBALS['smarty']->display('privilege_info.htm');
         }
 
         /*------------------------------------------------------ */
@@ -417,7 +417,7 @@ class Privilege extends Init
             $GLOBALS['smarty']->assign('action', 'edit');
 
             assign_query_info();
-            $GLOBALS['smarty']->display('privilege_info.htm');
+            return $GLOBALS['smarty']->display('privilege_info.htm');
         }
 
         /*------------------------------------------------------ */
@@ -614,7 +614,7 @@ class Privilege extends Init
 
             /* 显示页面 */
             assign_query_info();
-            $GLOBALS['smarty']->display('privilege_info.htm');
+            return $GLOBALS['smarty']->display('privilege_info.htm');
         }
 
         /*------------------------------------------------------ */
@@ -672,7 +672,7 @@ class Privilege extends Init
 
             /* 显示页面 */
             assign_query_info();
-            $GLOBALS['smarty']->display('privilege_allot.htm');
+            return $GLOBALS['smarty']->display('privilege_allot.htm');
         }
 
         /*------------------------------------------------------ */

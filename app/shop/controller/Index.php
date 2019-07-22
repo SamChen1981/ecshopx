@@ -103,7 +103,7 @@ class Index extends Init
             assign_dynamic('index');
         }
 
-        $GLOBALS['smarty']->display('index.dwt', $cache_id);
+        return $GLOBALS['smarty']->display('index.dwt', $cache_id);
     }
 
     /**

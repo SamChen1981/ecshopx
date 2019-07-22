@@ -29,7 +29,7 @@ class Pack extends Init
             $GLOBALS['smarty']->assign('page_count', $packs_list['page_count']);
 
             assign_query_info();
-            $GLOBALS['smarty']->display('pack_list.htm');
+            return $GLOBALS['smarty']->display('pack_list.htm');
         }
         /*------------------------------------------------------ */
         //-- ajax 列表
@@ -62,7 +62,7 @@ class Pack extends Init
             $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['06_pack_list'], 'href' => 'pack.php?act=list'));
 
             assign_query_info();
-            $GLOBALS['smarty']->display('pack_info.htm');
+            return $GLOBALS['smarty']->display('pack_info.htm');
         }
         if ($_REQUEST['act'] == 'insert') {
             /* 权限判断 */
@@ -113,7 +113,7 @@ class Pack extends Init
             $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['06_pack_list'], 'href' => 'pack.php?act=list&' . list_link_postfix()));
             $GLOBALS['smarty']->assign('pack', $pack);
             $GLOBALS['smarty']->assign('form_action', 'update');
-            $GLOBALS['smarty']->display('pack_info.htm');
+            return $GLOBALS['smarty']->display('pack_info.htm');
         }
         if ($_REQUEST['act'] == 'update') {
             /* 权限判断 */

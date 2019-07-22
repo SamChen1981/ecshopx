@@ -58,7 +58,7 @@ class UserAccount extends Init
             $GLOBALS['smarty']->assign('full_page', 1);
 
             assign_query_info();
-            $GLOBALS['smarty']->display('user_account_list.htm');
+            return $GLOBALS['smarty']->display('user_account_list.htm');
         }
 
         /*------------------------------------------------------ */
@@ -112,7 +112,7 @@ class UserAccount extends Init
             $GLOBALS['smarty']->assign('action_link', array('href' => $href, 'text' => $GLOBALS['_LANG']['09_user_account']));
 
             assign_query_info();
-            $GLOBALS['smarty']->display('user_account_info.htm');
+            return $GLOBALS['smarty']->display('user_account_info.htm');
         }
 
         /*------------------------------------------------------ */
@@ -264,7 +264,7 @@ class UserAccount extends Init
 
             /* 页面显示 */
             assign_query_info();
-            $GLOBALS['smarty']->display('user_account_check.htm');
+            return $GLOBALS['smarty']->display('user_account_check.htm');
         }
 
         /*------------------------------------------------------ */

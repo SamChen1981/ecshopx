@@ -44,7 +44,7 @@ class Leancloud extends Init
             $GLOBALS['smarty']->assign('push_list', $push_list);
             $GLOBALS['smarty']->assign('full_page', 1);
 
-            $GLOBALS['smarty']->display('leancloud.html');
+            return $GLOBALS['smarty']->display('leancloud.html');
         } elseif ($_REQUEST['act'] == 'edit') {
             /* 检查权限 */
             admin_priv('leancloud');
@@ -75,7 +75,7 @@ class Leancloud extends Init
             $GLOBALS['smarty']->assign('platform', $platform);
             $GLOBALS['smarty']->assign('links', $links);
             $GLOBALS['smarty']->assign('push_type', $push_type);
-            $GLOBALS['smarty']->display('leancloud_edit.html');
+            return $GLOBALS['smarty']->display('leancloud_edit.html');
         } elseif ($_REQUEST['act'] == 'remove') {
             /* 检查权限 */
             admin_priv('leancloud');

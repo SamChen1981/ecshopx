@@ -31,7 +31,7 @@ class Snatch extends Init
             $GLOBALS['smarty']->assign('form_action', 'insert');
 
             assign_query_info();
-            $GLOBALS['smarty']->display('snatch_info.htm');
+            return $GLOBALS['smarty']->display('snatch_info.htm');
         } elseif ($_REQUEST['act'] == 'insert') {
             /* 权限判断 */
             admin_priv('snatch_manage');
@@ -108,7 +108,7 @@ class Snatch extends Init
 
             $GLOBALS['smarty']->assign('full_page', 1);
             assign_query_info();
-            $GLOBALS['smarty']->display('snatch_list.htm');
+            return $GLOBALS['smarty']->display('snatch_list.htm');
         }
 
         /*------------------------------------------------------ */
@@ -191,7 +191,7 @@ class Snatch extends Init
             $GLOBALS['smarty']->assign('good_products_select', get_good_products_select($snatch['goods_id']));
 
             assign_query_info();
-            $GLOBALS['smarty']->display('snatch_info.htm');
+            return $GLOBALS['smarty']->display('snatch_info.htm');
         } elseif ($_REQUEST['act'] == 'update') {
             /* 权限判断 */
             admin_priv('snatch_manage');
@@ -272,7 +272,7 @@ class Snatch extends Init
             $GLOBALS['smarty']->assign('result', get_snatch_result($id));
             $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['view_detail']);
             $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['02_snatch_list'], 'href' => 'snatch.php?act=list'));
-            $GLOBALS['smarty']->display('snatch_view.htm');
+            return $GLOBALS['smarty']->display('snatch_view.htm');
         }
 
         /*------------------------------------------------------ */

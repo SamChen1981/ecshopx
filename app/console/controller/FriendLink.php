@@ -41,7 +41,7 @@ class FriendLink extends Init
             $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
             assign_query_info();
-            $GLOBALS['smarty']->display('link_list.htm');
+            return $GLOBALS['smarty']->display('link_list.htm');
         }
 
         /*------------------------------------------------------ */
@@ -78,7 +78,7 @@ class FriendLink extends Init
             $GLOBALS['smarty']->assign('form_act', 'insert');
 
             assign_query_info();
-            $GLOBALS['smarty']->display('link_info.htm');
+            return $GLOBALS['smarty']->display('link_info.htm');
         }
 
         /*------------------------------------------------------ */
@@ -177,7 +177,7 @@ class FriendLink extends Init
             $GLOBALS['smarty']->assign('link_arr', $link_arr);
 
             assign_query_info();
-            $GLOBALS['smarty']->display('link_info.htm');
+            return $GLOBALS['smarty']->display('link_info.htm');
         }
 
         /*------------------------------------------------------ */

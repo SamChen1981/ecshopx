@@ -47,7 +47,7 @@ class AccountLog extends Init
             $GLOBALS['smarty']->assign('page_count', $account_list['page_count']);
 
             assign_query_info();
-            $GLOBALS['smarty']->display('account_list.htm');
+            return $GLOBALS['smarty']->display('account_list.htm');
         }
 
         /*------------------------------------------------------ */
@@ -109,7 +109,7 @@ class AccountLog extends Init
             $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['add_account']);
             $GLOBALS['smarty']->assign('action_link', array('href' => 'account_log.php?act=list&user_id=' . $user_id, 'text' => $GLOBALS['_LANG']['account_list']));
             assign_query_info();
-            $GLOBALS['smarty']->display('account_info.htm');
+            return $GLOBALS['smarty']->display('account_info.htm');
         }
 
         /*------------------------------------------------------ */

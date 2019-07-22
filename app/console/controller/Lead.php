@@ -21,7 +21,7 @@ class Lead extends Init
             $url_arr = explode('/admin', $url_cur);
             $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['lead_here']);
             $GLOBALS['smarty']->assign('url', $url_arr[0]);
-            $GLOBALS['smarty']->display('lead.htm');
+            return $GLOBALS['smarty']->display('lead.htm');
         }
     }
 }

@@ -38,7 +38,7 @@ class Package extends Init
             $GLOBALS['smarty']->assign('form_action', 'insert');
 
             assign_query_info();
-            $GLOBALS['smarty']->display('package_info.htm');
+            return $GLOBALS['smarty']->display('package_info.htm');
         } elseif ($_REQUEST['act'] == 'insert') {
             /* 权限判断 */
             admin_priv('package_manage');
@@ -99,7 +99,7 @@ class Package extends Init
             $GLOBALS['smarty']->assign('package_goods_list', $package_goods_list);
 
             assign_query_info();
-            $GLOBALS['smarty']->display('package_info.htm');
+            return $GLOBALS['smarty']->display('package_info.htm');
         } elseif ($_REQUEST['act'] == 'update') {
             /* 权限判断 */
             admin_priv('package_manage');
@@ -174,7 +174,7 @@ class Package extends Init
 
             $GLOBALS['smarty']->assign('full_page', 1);
             assign_query_info();
-            $GLOBALS['smarty']->display('package_list.htm');
+            return $GLOBALS['smarty']->display('package_list.htm');
         }
 
         /*------------------------------------------------------ */

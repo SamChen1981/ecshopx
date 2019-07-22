@@ -92,9 +92,9 @@ class Article extends Init
             assign_dynamic('article');
         }
         if (isset($article) && $article['cat_id'] > 2) {
-            $GLOBALS['smarty']->display('article.dwt', $cache_id);
+            return $GLOBALS['smarty']->display('article.dwt', $cache_id);
         } else {
-            $GLOBALS['smarty']->display('article_pro.dwt', $cache_id);
+            return $GLOBALS['smarty']->display('article_pro.dwt', $cache_id);
         }
     }
 

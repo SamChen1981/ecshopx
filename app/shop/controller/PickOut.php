@@ -239,7 +239,7 @@ class PickOut extends Init
         $GLOBALS['smarty']->assign('count', $goods_count);
         $GLOBALS['smarty']->assign('picks', $picks);
         $GLOBALS['smarty']->assign('condition', $condition);
-        $GLOBALS['smarty']->display('pick_out.dwt');
+        return $GLOBALS['smarty']->display('pick_out.dwt');
     }
 
     /**

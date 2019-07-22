@@ -29,7 +29,7 @@ class Brand extends Init
             $GLOBALS['smarty']->assign('page_count', $brand_list['page_count']);
 
             assign_query_info();
-            $GLOBALS['smarty']->display('brand_list.htm');
+            return $GLOBALS['smarty']->display('brand_list.htm');
         }
 
         /*------------------------------------------------------ */
@@ -45,7 +45,7 @@ class Brand extends Init
 
             assign_query_info();
             $GLOBALS['smarty']->assign('brand', array('sort_order' => 50, 'is_show' => 1));
-            $GLOBALS['smarty']->display('brand_info.htm');
+            return $GLOBALS['smarty']->display('brand_info.htm');
         } elseif ($_REQUEST['act'] == 'insert') {
             /*检查品牌名是否重复*/
             admin_priv('brand_manage');
@@ -105,7 +105,7 @@ class Brand extends Init
             $GLOBALS['smarty']->assign('form_action', 'updata');
 
             assign_query_info();
-            $GLOBALS['smarty']->display('brand_info.htm');
+            return $GLOBALS['smarty']->display('brand_info.htm');
         } elseif ($_REQUEST['act'] == 'updata') {
             admin_priv('brand_manage');
             if ($_POST['brand_name'] != $_POST['old_brandname']) {

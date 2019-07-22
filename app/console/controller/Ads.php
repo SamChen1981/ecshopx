@@ -45,7 +45,7 @@ class Ads extends Init
             $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
             assign_query_info();
-            $GLOBALS['smarty']->display('ads_list.htm');
+            return $GLOBALS['smarty']->display('ads_list.htm');
         }
 
         /*------------------------------------------------------ */
@@ -96,7 +96,7 @@ class Ads extends Init
             $GLOBALS['smarty']->assign('cfg_lang', $GLOBALS['_CFG']['lang']);
 
             assign_query_info();
-            $GLOBALS['smarty']->display('ads_info.htm');
+            return $GLOBALS['smarty']->display('ads_info.htm');
         }
 
         /*------------------------------------------------------ */
@@ -280,7 +280,7 @@ class Ads extends Init
             $GLOBALS['smarty']->assign('ads', $ads_arr);
 
             assign_query_info();
-            $GLOBALS['smarty']->display('ads_info.htm');
+            return $GLOBALS['smarty']->display('ads_info.htm');
         }
 
         /*------------------------------------------------------ */
@@ -408,7 +408,7 @@ class Ads extends Init
             $GLOBALS['smarty']->assign('lang_list', $lang_list);
 
             assign_query_info();
-            $GLOBALS['smarty']->display('ads_js.htm');
+            return $GLOBALS['smarty']->display('ads_js.htm');
         }
 
         /*------------------------------------------------------ */

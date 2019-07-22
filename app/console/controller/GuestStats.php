@@ -126,7 +126,7 @@ class GuestStats extends Init
                 'href' => 'guest_stats.php?flag=download'));
 
             assign_query_info();
-            $GLOBALS['smarty']->display('guest_stats.htm');
+            return $GLOBALS['smarty']->display('guest_stats.htm');
         }
     }
 }

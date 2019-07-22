@@ -103,6 +103,6 @@ class Topic extends Init
             $template_file = empty($topic['template']) ? 'topic.dwt' : $topic['template'];
         }
         /* 显示模板 */
-        $GLOBALS['smarty']->display($templates, $cache_id);
+        return $GLOBALS['smarty']->display($templates, $cache_id);
     }
 }

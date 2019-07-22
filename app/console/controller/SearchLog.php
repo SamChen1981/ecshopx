@@ -23,7 +23,7 @@ class SearchLog extends Init
             $GLOBALS['smarty']->assign('start_date', local_date('Y-m-d'));
             $GLOBALS['smarty']->assign('end_date', local_date('Y-m-d'));
             assign_query_info();
-            $GLOBALS['smarty']->display('search_log_list.htm');
+            return $GLOBALS['smarty']->display('search_log_list.htm');
         } elseif ($_REQUEST['act'] == 'query') {
             $logdb = $this->get_search_log();
             $GLOBALS['smarty']->assign('full_page', 0);

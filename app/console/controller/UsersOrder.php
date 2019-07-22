@@ -79,7 +79,7 @@ class UsersOrder extends Init
             $GLOBALS['smarty']->assign('sort_order_num', '<img src="images/sort_desc.png">');
             /* 页面显示 */
             assign_query_info();
-            $GLOBALS['smarty']->display('users_order.htm');
+            return $GLOBALS['smarty']->display('users_order.htm');
         }
     }
 

@@ -11,6 +11,6 @@ class LogisticTracking extends Init
     {
         $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['logistic_tracking_here']);
         $GLOBALS['smarty']->assign('iframe_url', YUNQI_LOGISTIC_URL . '?ctl=exp&act=index&source=' . iframe_source_encode('ecshop'));
-        $GLOBALS['smarty']->display('yq_iframe.htm');
+        return $GLOBALS['smarty']->display('yq_iframe.htm');
     }
 }

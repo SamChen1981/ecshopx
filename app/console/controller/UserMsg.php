@@ -40,7 +40,7 @@ class UserMsg extends Init
             $GLOBALS['smarty']->assign('msg_list', $msg_list);
             $GLOBALS['smarty']->assign('order_id', $_GET['order_id']);
             $GLOBALS['smarty']->assign('user_id', $_GET['user_id']);
-            $GLOBALS['smarty']->display('msg_add.htm');
+            return $GLOBALS['smarty']->display('msg_add.htm');
         }
 
         if ($_REQUEST['act'] == 'insert') {
@@ -115,7 +115,7 @@ class UserMsg extends Init
 
             $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['08_unreply_msg']);
             $GLOBALS['smarty']->assign('full_page', 1);
-            $GLOBALS['smarty']->display('msg_list.htm');
+            return $GLOBALS['smarty']->display('msg_list.htm');
         }
 
         /*------------------------------------------------------ */
@@ -212,7 +212,7 @@ class UserMsg extends Init
             $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['08_unreply_msg'], 'href' => 'user_msg.php?act=list_all'));
 
             assign_query_info();
-            $GLOBALS['smarty']->display('msg_info.htm');
+            return $GLOBALS['smarty']->display('msg_info.htm');
         } elseif ($_REQUEST['act'] == 'action') {
             if (empty($_REQUEST['parent_id'])) {
                 $sql = "INSERT INTO " . $GLOBALS['ecs']->table('feedback') . " (msg_title, msg_time, user_id, user_name , " .

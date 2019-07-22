@@ -35,7 +35,7 @@ class Brand extends Init
 
                 $GLOBALS['smarty']->assign('brand_list', get_brands());
             }
-            $GLOBALS['smarty']->display('brand_list.dwt', $cache_id);
+            return $GLOBALS['smarty']->display('brand_list.dwt', $cache_id);
         }
 
         /* 初始化分页信息 */
@@ -116,7 +116,7 @@ class Brand extends Init
             assign_dynamic('brand'); // 动态内容
         }
 
-        $GLOBALS['smarty']->display('brand.dwt', $cache_id);
+        return $GLOBALS['smarty']->display('brand.dwt', $cache_id);
     }
 
     /**

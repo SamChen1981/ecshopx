@@ -27,7 +27,7 @@ class UserRank extends Init
             $GLOBALS['smarty']->assign('user_ranks', $ranks);
 
             assign_query_info();
-            $GLOBALS['smarty']->display('user_rank.htm');
+            return $GLOBALS['smarty']->display('user_rank.htm');
         }
 
         /*------------------------------------------------------ */
@@ -64,7 +64,7 @@ class UserRank extends Init
             $GLOBALS['smarty']->assign('form_action', $form_action);
 
             assign_query_info();
-            $GLOBALS['smarty']->display('user_rank_info.htm');
+            return $GLOBALS['smarty']->display('user_rank_info.htm');
         }
 
         /*------------------------------------------------------ */

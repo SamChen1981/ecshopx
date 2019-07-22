@@ -49,7 +49,7 @@ class EcmobileSetting extends Init
 
             $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['mobile_setting']);
             $GLOBALS['smarty']->assign('group_list', $grouplist);
-            $GLOBALS['smarty']->display('mobile_config.html');
+            return $GLOBALS['smarty']->display('mobile_config.html');
         } elseif ($_REQUEST['act'] == 'post') {
             /* 检查权限 */
             admin_priv('mobile_setting');

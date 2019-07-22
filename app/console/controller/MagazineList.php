@@ -31,7 +31,7 @@ class MagazineList extends Init
             $GLOBALS['smarty']->assign('send_rank', $send_rank);
 
             assign_query_info();
-            $GLOBALS['smarty']->display('magazine_list.htm');
+            return $GLOBALS['smarty']->display('magazine_list.htm');
         } elseif ($_REQUEST['act'] == 'query') {
             $magazinedb = $this->get_magazine();
             $GLOBALS['smarty']->assign('magazinedb', $magazinedb['magazinedb']);
@@ -50,7 +50,7 @@ class MagazineList extends Init
                 $GLOBALS['smarty']->assign(array('ur_here' => $GLOBALS['_LANG']['magazine_list'], 'act' => 'add'));
                 create_html_editor('magazine_content');
                 assign_query_info();
-                $GLOBALS['smarty']->display('magazine_list_add.htm');
+                return $GLOBALS['smarty']->display('magazine_list_add.htm');
             } elseif ($_POST['step'] == 2) {
                 $magazine_name = trim($_POST['magazine_name']);
                 $magazine_content = trim($_POST['magazine_content']);
@@ -72,7 +72,7 @@ class MagazineList extends Init
                 $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['go_list'], 'href' => 'magazine_list.php?act=list'));
                 create_html_editor('magazine_content', $rt['template_content']);
                 assign_query_info();
-                $GLOBALS['smarty']->display('magazine_list_add.htm');
+                return $GLOBALS['smarty']->display('magazine_list_add.htm');
             } elseif ($_POST['step'] == 2) {
                 $magazine_name = trim($_POST['magazine_name']);
                 $magazine_content = trim($_POST['magazine_content']);

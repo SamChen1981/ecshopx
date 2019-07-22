@@ -102,7 +102,7 @@ class SaleGeneral extends Init
             /* 显示模板 */
             $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['report_sell']);
             assign_query_info();
-            $GLOBALS['smarty']->display('sale_general.htm');
+            return $GLOBALS['smarty']->display('sale_general.htm');
         }
 
         /*------------------------------------------------------ */

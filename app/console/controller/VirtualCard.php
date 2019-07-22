@@ -39,7 +39,7 @@ class VirtualCard extends Init
 
             $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['replenish']);
             $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['go_list'], 'href' => 'virtual_card.php?act=card&goods_id=' . $card['goods_id']));
-            $GLOBALS['smarty']->display('replenish_info.htm');
+            return $GLOBALS['smarty']->display('replenish_info.htm');
         }
 
         /*------------------------------------------------------ */
@@ -67,7 +67,7 @@ class VirtualCard extends Init
             $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['replenish']);
             $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['go_list'], 'href' => 'virtual_card.php?act=card&goods_id=' . $card['goods_id']));
             $GLOBALS['smarty']->assign('card', $card);
-            $GLOBALS['smarty']->display('replenish_info.htm');
+            return $GLOBALS['smarty']->display('replenish_info.htm');
         } elseif ($_REQUEST['act'] == 'action') {
             /* 检查权限 */
             admin_priv('virualcard');
@@ -161,7 +161,7 @@ class VirtualCard extends Init
             $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
             assign_query_info();
-            $GLOBALS['smarty']->display('replenish_list.htm');
+            return $GLOBALS['smarty']->display('replenish_list.htm');
         }
 
         /*------------------------------------------------------ */
@@ -206,7 +206,7 @@ class VirtualCard extends Init
             $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['batch_card_add']);
             $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['virtual_card_list'], 'href' => 'goods.php?act=list&extension_code=virtual_card'));
             $GLOBALS['smarty']->assign('goods_id', $_REQUEST['goods_id']);
-            $GLOBALS['smarty']->display('batch_card_info.htm');
+            return $GLOBALS['smarty']->display('batch_card_info.htm');
         } elseif ($_REQUEST['act'] == 'batch_confirm') {
             /* 检查上传是否成功 */
             if ($_FILES['uploadfile']['tmp_name'] == '' || $_FILES['uploadfile']['tmp_name'] == 'none') {
@@ -241,7 +241,7 @@ class VirtualCard extends Init
             $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['batch_card_add']);
             $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['batch_card_add'], 'href' => 'virtual_card.php?act=batch_card_add&goods_id=' . $_REQUEST['goods_id']));
             $GLOBALS['smarty']->assign('list', $rec);
-            $GLOBALS['smarty']->display('batch_card_confirm.htm');
+            return $GLOBALS['smarty']->display('batch_card_confirm.htm');
         } /* 批量上传处理 */
         elseif ($_REQUEST['act'] == 'batch_insert') {
             /* 检查权限 */
@@ -277,7 +277,7 @@ class VirtualCard extends Init
             $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['virtual_card_change']);
 
             assign_query_info();
-            $GLOBALS['smarty']->display('virtual_card_change.htm');
+            return $GLOBALS['smarty']->display('virtual_card_change.htm');
         }
 
         /*------------------------------------------------------ */

@@ -40,7 +40,7 @@ class TagManage extends Init
 
             /* 页面显示 */
             assign_query_info();
-            $GLOBALS['smarty']->display('tag_manage.htm');
+            return $GLOBALS['smarty']->display('tag_manage.htm');
         }
 
         /*------------------------------------------------------ */
@@ -71,7 +71,7 @@ class TagManage extends Init
             $GLOBALS['smarty']->assign('action_link', array('href' => 'tag_manage.php?act=list', 'text' => $GLOBALS['_LANG']['tag_list']));
 
             assign_query_info();
-            $GLOBALS['smarty']->display('tag_edit.htm');
+            return $GLOBALS['smarty']->display('tag_edit.htm');
         }
 
         /*------------------------------------------------------ */

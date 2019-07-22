@@ -86,7 +86,7 @@ class ShopConfig extends Init
                 $demo_data['sms_sign']
             );
             $GLOBALS['smarty']->assign('demo_sms_info', $demo_sms_info);
-            $GLOBALS['smarty']->display('shop_config.htm');
+            return $GLOBALS['smarty']->display('shop_config.htm');
         }
 
         /*------------------------------------------------------ */
@@ -102,7 +102,7 @@ class ShopConfig extends Init
 
             $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['mail_settings']);
             $GLOBALS['smarty']->assign('cfg', $arr[5]['vars']);
-            $GLOBALS['smarty']->display('shop_config_mail_settings.htm');
+            return $GLOBALS['smarty']->display('shop_config_mail_settings.htm');
         }
 
         /*------------------------------------------------------ */

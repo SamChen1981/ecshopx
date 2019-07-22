@@ -20,7 +20,7 @@ class PictureBatch extends Init
             $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['12_batch_pic']);
             $GLOBALS['smarty']->assign('cat_list', cat_list(0, 0));
             $GLOBALS['smarty']->assign('brand_list', get_brand_list());
-            $GLOBALS['smarty']->display('picture_batch.htm');
+            return $GLOBALS['smarty']->display('picture_batch.htm');
         } elseif (!empty($_GET['get_goods'])) {
             $brand_id = intval($_GET['brand_id']);
             $cat_id = intval($_GET['cat_id']);

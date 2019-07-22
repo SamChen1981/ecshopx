@@ -60,6 +60,6 @@ class Respond extends Init
         $GLOBALS['smarty']->assign('message', $msg);
         $GLOBALS['smarty']->assign('shop_url', $GLOBALS['ecs']->url());
 
-        $GLOBALS['smarty']->display('respond.dwt');
+        return $GLOBALS['smarty']->display('respond.dwt');
     }
 }

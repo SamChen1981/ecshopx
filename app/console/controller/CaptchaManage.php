@@ -51,7 +51,7 @@ class CaptchaManage extends Init
             $GLOBALS['smarty']->assign('captcha_width', $GLOBALS['_CFG']['captcha_width']);
             $GLOBALS['smarty']->assign('captcha_height', $GLOBALS['_CFG']['captcha_height']);
             $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['captcha_manage']);
-            $GLOBALS['smarty']->display('captcha_manage.htm');
+            return $GLOBALS['smarty']->display('captcha_manage.htm');
         }
 
         /*------------------------------------------------------ */

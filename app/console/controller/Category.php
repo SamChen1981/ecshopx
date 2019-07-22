@@ -34,7 +34,7 @@ class Category extends Init
 
             /* 列表页面 */
             assign_query_info();
-            $GLOBALS['smarty']->display('category_list.htm');
+            return $GLOBALS['smarty']->display('category_list.htm');
         }
 
         /*------------------------------------------------------ */
@@ -68,7 +68,7 @@ class Category extends Init
 
             /* 显示页面 */
             assign_query_info();
-            $GLOBALS['smarty']->display('category_info.htm');
+            return $GLOBALS['smarty']->display('category_info.htm');
         }
 
         /*------------------------------------------------------ */
@@ -188,7 +188,7 @@ class Category extends Init
 
             /* 显示页面 */
             assign_query_info();
-            $GLOBALS['smarty']->display('category_info.htm');
+            return $GLOBALS['smarty']->display('category_info.htm');
         } elseif ($_REQUEST['act'] == 'add_category') {
             $parent_id = empty($_REQUEST['parent_id']) ? 0 : intval($_REQUEST['parent_id']);
             $category = empty($_REQUEST['cat']) ? '' : json_str_iconv(trim($_REQUEST['cat']));
@@ -316,7 +316,7 @@ class Category extends Init
 
             /* 显示页面 */
             assign_query_info();
-            $GLOBALS['smarty']->display('category_move.htm');
+            return $GLOBALS['smarty']->display('category_move.htm');
         }
 
         /*------------------------------------------------------ */

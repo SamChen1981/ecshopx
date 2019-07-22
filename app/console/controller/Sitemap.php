@@ -23,7 +23,7 @@ class Sitemap extends Init
             $GLOBALS['smarty']->assign('config', $config);
             $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['sitemap']);
             $GLOBALS['smarty']->assign('arr_changefreq', array(1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1));
-            $GLOBALS['smarty']->display('sitemap.htm');
+            return $GLOBALS['smarty']->display('sitemap.htm');
         } else {
             /*------------------------------------------------------ */
             //-- 生成站点地图

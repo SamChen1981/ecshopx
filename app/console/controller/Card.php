@@ -29,7 +29,7 @@ class Card extends Init
             $GLOBALS['smarty']->assign('record_count', $cards_list['record_count']);
             $GLOBALS['smarty']->assign('page_count', $cards_list['page_count']);
 
-            $GLOBALS['smarty']->display('card_list.htm');
+            return $GLOBALS['smarty']->display('card_list.htm');
         }
 
         /*------------------------------------------------------ */
@@ -52,6 +52,7 @@ class Card extends Init
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'remove') {
             /* 检查权限 */
+            // TODO BY LANCE 返回类型处理 return
             check_authz_json('card_manage');
 
             $card_id = empty($_REQUEST['id']) ? 0 : intval($_REQUEST['id']);
@@ -91,7 +92,7 @@ class Card extends Init
             $GLOBALS['smarty']->assign('form_action', 'insert');
 
             assign_query_info();
-            $GLOBALS['smarty']->display('card_info.htm');
+            return $GLOBALS['smarty']->display('card_info.htm');
         } elseif ($_REQUEST['act'] == 'insert') {
             /* 权限判断 */
             admin_priv('card_manage');
@@ -139,7 +140,7 @@ class Card extends Init
             $GLOBALS['smarty']->assign('form_action', 'update');
 
             assign_query_info();
-            $GLOBALS['smarty']->display('card_info.htm');
+            return $GLOBALS['smarty']->display('card_info.htm');
         } elseif ($_REQUEST['act'] == 'update') {
             /* 权限判断 */
             admin_priv('card_manage');

@@ -62,7 +62,7 @@ class MailTemplate extends Init
             $GLOBALS['smarty']->assign('templates', $templates);
             $GLOBALS['smarty']->assign('template', $content);
             $GLOBALS['smarty']->assign('full_page', 1);
-            $GLOBALS['smarty']->display('mail_template.htm');
+            return $GLOBALS['smarty']->display('mail_template.htm');
         }
 
         /*------------------------------------------------------ */

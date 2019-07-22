@@ -62,7 +62,7 @@ class SuppliersGoods extends Init
             assign_query_info();
             $htm_file = ($_REQUEST['act'] == 'list') ?
                 'goods_list.htm' : (($_REQUEST['act'] == 'trash') ? 'goods_trash.htm' : 'group_list.htm');
-            $GLOBALS['smarty']->display($htm_file);
+            return $GLOBALS['smarty']->display($htm_file);
         }
 
         /*------------------------------------------------------ */
@@ -365,7 +365,7 @@ class SuppliersGoods extends Init
 
             /* 显示商品信息页面 */
             assign_query_info();
-            $GLOBALS['smarty']->display('goods_info.htm');
+            return $GLOBALS['smarty']->display('goods_info.htm');
         }
 
         /*------------------------------------------------------ */
@@ -1013,7 +1013,7 @@ class SuppliersGoods extends Init
                 }
             }
             $GLOBALS['smarty']->assign('img_url', $img_url);
-            $GLOBALS['smarty']->display('goods_show_image.htm');
+            return $GLOBALS['smarty']->display('goods_show_image.htm');
         }
 
         /*------------------------------------------------------ */

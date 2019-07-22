@@ -118,7 +118,7 @@ class CheckFilePriv extends Init
             $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['check_file_priv']);
             $GLOBALS['smarty']->assign('list', $list);
             $GLOBALS['smarty']->assign('tpl_msg', $tpl_msg);
-            $GLOBALS['smarty']->display('file_priv.html');
+            return $GLOBALS['smarty']->display('file_priv.html');
         }
     }
 

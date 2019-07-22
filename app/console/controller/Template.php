@@ -68,7 +68,7 @@ class Template extends Init
             $GLOBALS['smarty']->assign('curr_template', get_template_info($curr_template, $curr_style));
             $GLOBALS['smarty']->assign('available_templates', $available_templates);
             $GLOBALS['smarty']->assign('theme_online_url', YUNQI_SERVICE_URL . 'cid=40&source=' . iframe_source_encode('ecshop'));
-            $GLOBALS['smarty']->display('templates_list.htm');
+            return $GLOBALS['smarty']->display('templates_list.htm');
         }
 
         /*------------------------------------------------------ */
@@ -194,7 +194,7 @@ class Template extends Init
             $GLOBALS['smarty']->assign('arr_brands', get_brand_list());
             $GLOBALS['smarty']->assign('arr_article_cats', article_cat_list(0, 0, true));
             $GLOBALS['smarty']->assign('arr_ad_positions', get_position_list());
-            $GLOBALS['smarty']->display('template_setup.htm');
+            return $GLOBALS['smarty']->display('template_setup.htm');
         }
 
         /*------------------------------------------------------ */
@@ -438,7 +438,7 @@ class Template extends Init
             $GLOBALS['smarty']->assign('curr_library', $curr_library);
             $GLOBALS['smarty']->assign('libraries', $arr_library);
             $GLOBALS['smarty']->assign('library_html', $lib['html']);
-            $GLOBALS['smarty']->display('template_library.htm');
+            return $GLOBALS['smarty']->display('template_library.htm');
         }
 
         /*------------------------------------------------------ */
@@ -568,7 +568,7 @@ class Template extends Init
             $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['backup_setting']);
             $GLOBALS['smarty']->assign('list', $remarks);
             $GLOBALS['smarty']->assign('files', $files);
-            $GLOBALS['smarty']->display('templates_backup.htm');
+            return $GLOBALS['smarty']->display('templates_backup.htm');
         }
 
         if ($_REQUEST['act'] == 'act_backup_setting') {

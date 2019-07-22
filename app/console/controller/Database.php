@@ -48,7 +48,7 @@ class Database extends Init
             $GLOBALS['smarty']->assign('vol_size', $allow_max_size);
             $GLOBALS['smarty']->assign('sql_name', cls_sql_dump::get_random_name() . '.sql');
             $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['02_db_manage']);
-            $GLOBALS['smarty']->display('db_backup.htm');
+            return $GLOBALS['smarty']->display('db_backup.htm');
         }
 
         /* 备份恢复页面 */
@@ -100,7 +100,7 @@ class Database extends Init
             $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['02_db_manage'], 'href' => 'database.php?act=backup'));
             $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['restore']);
             $GLOBALS['smarty']->assign('list', $list);
-            $GLOBALS['smarty']->display('db_restore.htm');
+            return $GLOBALS['smarty']->display('db_restore.htm');
         }
 
         if ($_REQUEST['act'] == 'dumpsql') {
@@ -230,7 +230,7 @@ class Database extends Init
 
                     $GLOBALS['smarty']->assign('list', $list);
                     $GLOBALS['smarty']->assign('title', $GLOBALS['_LANG']['backup_success']);
-                    $GLOBALS['smarty']->display('sql_dump_msg.htm');
+                    return $GLOBALS['smarty']->display('sql_dump_msg.htm');
                 } else {
                     /* 只有一个文件 */
                     if (!@file_put_contents(ROOT_PATH . DATA_DIR . '/sqldata/' . $sql_file_name . '.sql', $dump->dump_sql)) {
@@ -239,7 +239,7 @@ class Database extends Init
 
                     $GLOBALS['smarty']->assign('list', array(array('name' => $sql_file_name . '.sql', 'href' => '../' . DATA_DIR . '/sqldata/' . $sql_file_name . '.sql')));
                     $GLOBALS['smarty']->assign('title', $GLOBALS['_LANG']['backup_success']);
-                    $GLOBALS['smarty']->display('sql_dump_msg.htm');
+                    return $GLOBALS['smarty']->display('sql_dump_msg.htm');
                 }
             } else {
                 /* 下一个页面处理 */
@@ -251,7 +251,7 @@ class Database extends Init
                 $GLOBALS['smarty']->assign('title', sprintf($GLOBALS['_LANG']['backup_title'], '#' . $vol));
                 $GLOBALS['smarty']->assign('auto_redirect', 1);
                 $GLOBALS['smarty']->assign('auto_link', $lnk);
-                $GLOBALS['smarty']->display('sql_dump_msg.htm');
+                return $GLOBALS['smarty']->display('sql_dump_msg.htm');
             }
         }
 
@@ -483,7 +483,7 @@ class Database extends Init
             $GLOBALS['smarty']->assign('list', $list);
             $GLOBALS['smarty']->assign('num', $num);
             $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['03_db_optimize']);
-            $GLOBALS['smarty']->display('optimize.htm');
+            return $GLOBALS['smarty']->display('optimize.htm');
         }
 
         if ($_REQUEST['act'] == 'run_optimize') {
@@ -508,7 +508,7 @@ class Database extends Init
             admin_priv('db_clear');
             $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['clear']);
             $GLOBALS['smarty']->assign('yunqi_login', $_SESSION['yunqi_login']);
-            $GLOBALS['smarty']->display('clear.htm');
+            return $GLOBALS['smarty']->display('clear.htm');
         }
 
         /**

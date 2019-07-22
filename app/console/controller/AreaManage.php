@@ -66,7 +66,7 @@ class AreaManage extends Init
             $GLOBALS['smarty']->assign('full_page', 1);
 
             assign_query_info();
-            $GLOBALS['smarty']->display('area_list.htm');
+            return $GLOBALS['smarty']->display('area_list.htm');
         }
 
         /*------------------------------------------------------ */

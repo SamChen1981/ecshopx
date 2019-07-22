@@ -39,7 +39,7 @@ class Vote extends Init
 
             /* 显示页面 */
             assign_query_info();
-            $GLOBALS['smarty']->display('vote_list.htm');
+            return $GLOBALS['smarty']->display('vote_list.htm');
         }
 
         /*------------------------------------------------------ */
@@ -81,7 +81,7 @@ class Vote extends Init
 
             /* 显示页面 */
             assign_query_info();
-            $GLOBALS['smarty']->display('vote_info.htm');
+            return $GLOBALS['smarty']->display('vote_info.htm');
         } elseif ($_REQUEST['act'] == 'insert') {
             admin_priv('vote_priv');
 
@@ -139,7 +139,7 @@ class Vote extends Init
             $GLOBALS['smarty']->assign('vote_arr', $vote_arr);
 
             assign_query_info();
-            $GLOBALS['smarty']->display('vote_info.htm');
+            return $GLOBALS['smarty']->display('vote_info.htm');
         } elseif ($_REQUEST['act'] == 'update') {
             /* 获得广告的开始时期与结束日期 */
             $start_time = local_strtotime($_POST['start_time']);
@@ -180,7 +180,7 @@ class Vote extends Init
 
             /* 显示页面 */
             assign_query_info();
-            $GLOBALS['smarty']->display('vote_option.htm');
+            return $GLOBALS['smarty']->display('vote_option.htm');
         }
 
         /*------------------------------------------------------ */

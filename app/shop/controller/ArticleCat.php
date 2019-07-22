@@ -93,6 +93,6 @@ class ArticleCat extends Init
 
         $GLOBALS['smarty']->assign('feed_url', ($GLOBALS['_CFG']['rewrite'] == 1) ? "feed-typearticle_cat" . $cat_id . ".xml" : 'feed.php?type=article_cat' . $cat_id); // RSS URL
 
-        $GLOBALS['smarty']->display('article_cat.dwt', $cache_id);
+        return $GLOBALS['smarty']->display('article_cat.dwt', $cache_id);
     }
 }

@@ -25,7 +25,7 @@ class H5Setting extends Init
             if ($params['authorize_code'] != 'NDE') {
                 $url = $params['authorize_code'] == 'NCH' ? 'https://account.shopex.cn/order/confirm/goods_2460-946 ' : 'https://account.shopex.cn/order/confirm/goods_2540-1050 ';
                 $GLOBALS['smarty']->assign('url', $url);
-                $GLOBALS['smarty']->display('accredit.html');
+                return $GLOBALS['smarty']->display('accredit.html');
 
             }
             $cert = new certificate;
@@ -76,7 +76,7 @@ class H5Setting extends Init
             $GLOBALS['smarty']->assign('error_msg', $_REQUEST['error_msg']);
             $GLOBALS['smarty']->assign('playerdb', $playerdb);
             $GLOBALS['smarty']->assign('group_list', $grouplist);
-            $GLOBALS['smarty']->display('h5_config.html');
+            return $GLOBALS['smarty']->display('h5_config.html');
         } elseif ($_REQUEST['act'] == 'post') {
             /* 检查权限 */
             admin_priv('mobile_setting');
@@ -202,7 +202,7 @@ class H5Setting extends Init
                 $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['go_url'], 'href' => 'h5_setting.php?act=list'));
                 $GLOBALS['smarty']->assign('rt', $rt);
                 $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['add_picad']);
-                $GLOBALS['smarty']->display('flashplay_add.htm');
+                return $GLOBALS['smarty']->display('flashplay_add.htm');
             } elseif ($_POST['step'] == 2) {
                 if (!empty($_FILES['img_file_src']['name'])) {
                     if (!get_file_suffix($_FILES['img_file_src']['name'], $allow_suffix)) {
@@ -282,7 +282,7 @@ class H5Setting extends Init
                 $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['go_url'], 'href' => 'h5_setting.php?act=list'));
                 $GLOBALS['smarty']->assign('rt', $rt);
                 $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['edit_picad']);
-                $GLOBALS['smarty']->display('flashplay_add.htm');
+                return $GLOBALS['smarty']->display('flashplay_add.htm');
             } elseif ($_POST['step'] == 2) {
                 if (empty($_POST['img_url'])) {
                     //若链接地址为空

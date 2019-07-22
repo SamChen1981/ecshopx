@@ -85,7 +85,7 @@ class User extends Init
             $GLOBALS['smarty']->assign('info', get_user_default($user_id));
             $GLOBALS['smarty']->assign('user_notice', $GLOBALS['_CFG']['user_notice']);
             $GLOBALS['smarty']->assign('prompt', get_user_prompt($user_id));
-            $GLOBALS['smarty']->display('user_clips.dwt');
+            return $GLOBALS['smarty']->display('user_clips.dwt');
         }
 
         /* 显示会员注册界面 */
@@ -109,14 +109,14 @@ class User extends Init
 
             /* 增加是否关闭注册 */
             $GLOBALS['smarty']->assign('shop_reg_closed', $GLOBALS['_CFG']['shop_reg_closed']);
-            $GLOBALS['smarty']->display('user_passport.dwt');
+            return $GLOBALS['smarty']->display('user_passport.dwt');
         } /* 注册会员的处理 */
         elseif ($action == 'act_register') {
             /* 增加是否关闭注册 */
             if ($GLOBALS['_CFG']['shop_reg_closed']) {
                 $GLOBALS['smarty']->assign('action', 'register');
                 $GLOBALS['smarty']->assign('shop_reg_closed', $GLOBALS['_CFG']['shop_reg_closed']);
-                $GLOBALS['smarty']->display('user_passport.dwt');
+                return $GLOBALS['smarty']->display('user_passport.dwt');
             } else {
                 load_helper('passport');
 
@@ -286,7 +286,7 @@ class User extends Init
                 $GLOBALS['smarty']->assign('rand', mt_rand());
             }
             $_SESSION['back_act'] = $back_act;
-            $GLOBALS['smarty']->display('user_passport.dwt');
+            return $GLOBALS['smarty']->display('user_passport.dwt');
         } /* 处理会员的登录 */
         elseif ($action == 'act_login') {
             $username = isset($_POST['username']) ? trim($_POST['username']) : '';
@@ -424,7 +424,7 @@ class User extends Init
             $GLOBALS['smarty']->assign('passwd_questions', $GLOBALS['_LANG']['passwd_questions']);
 
             $GLOBALS['smarty']->assign('profile', $user_info);
-            $GLOBALS['smarty']->display('user_transaction.dwt');
+            return $GLOBALS['smarty']->display('user_transaction.dwt');
         } /* 修改个人资料的处理 */
         elseif ($action == 'act_edit_profile') {
             load_helper('transaction');
@@ -520,15 +520,15 @@ class User extends Init
                 $GLOBALS['smarty']->assign('uid', $uid);
                 $GLOBALS['smarty']->assign('code', $code);
                 $GLOBALS['smarty']->assign('action', 'reset_password');
-                $GLOBALS['smarty']->display('user_passport.dwt');
+                return $GLOBALS['smarty']->display('user_passport.dwt');
             } else {
                 //显示用户名和email表单
-                $GLOBALS['smarty']->display('user_passport.dwt');
+                return $GLOBALS['smarty']->display('user_passport.dwt');
             }
         } /* 密码找回-->输入用户名界面 */
         elseif ($action == 'qpassword_name') {
             //显示输入要找回密码的账号表单
-            $GLOBALS['smarty']->display('user_passport.dwt');
+            return $GLOBALS['smarty']->display('user_passport.dwt');
         } /* 密码找回-->根据注册用户名取得密码提示问题界面 */
         elseif ($action == 'get_passwd_question') {
             if (empty($_POST['user_name'])) {
@@ -557,7 +557,7 @@ class User extends Init
             }
 
             $GLOBALS['smarty']->assign('passwd_question', $GLOBALS['_LANG']['passwd_questions'][$user_question_arr['passwd_question']]);
-            $GLOBALS['smarty']->display('user_passport.dwt');
+            return $GLOBALS['smarty']->display('user_passport.dwt');
         } /* 密码找回-->根据提交的密码答案进行相应处理 */
         elseif ($action == 'check_answer') {
             $captcha = intval($GLOBALS['_CFG']['captcha']);
@@ -584,7 +584,7 @@ class User extends Init
                 unset($_SESSION['temp_user_name']);
                 $GLOBALS['smarty']->assign('uid', $_SESSION['user_id']);
                 $GLOBALS['smarty']->assign('action', 'reset_password');
-                $GLOBALS['smarty']->display('user_passport.dwt');
+                return $GLOBALS['smarty']->display('user_passport.dwt');
             }
         } /* 发送密码修改确认邮件 */
         elseif ($action == 'send_pwd_email') {
@@ -616,7 +616,7 @@ class User extends Init
         } /* 重置新密码 */
         elseif ($action == 'reset_password') {
             //显示重置密码的表单
-            $GLOBALS['smarty']->display('user_passport.dwt');
+            return $GLOBALS['smarty']->display('user_passport.dwt');
         } /* 修改会员密码 */
         elseif ($action == 'act_edit_password') {
             load_helper('passport');
@@ -673,7 +673,7 @@ class User extends Init
             $GLOBALS['smarty']->assign('merge', $merge);
             $GLOBALS['smarty']->assign('pager', $pager);
             $GLOBALS['smarty']->assign('orders', $orders);
-            $GLOBALS['smarty']->display('user_transaction.dwt');
+            return $GLOBALS['smarty']->display('user_transaction.dwt');
         } /* 查看订单详情 */
         elseif ($action == 'order_detail') {
             load_helper('transaction');
@@ -737,7 +737,7 @@ class User extends Init
             $order['shipping_status'] = $GLOBALS['_LANG']['ss'][$order['shipping_status']];
             $GLOBALS['smarty']->assign('order', $order);
             $GLOBALS['smarty']->assign('goods_list', $goods_list);
-            $GLOBALS['smarty']->display('user_transaction.dwt');
+            return $GLOBALS['smarty']->display('user_transaction.dwt');
         } elseif ($action == 'get_yunqi_online') {
             $order_id = $_POST['order_id'];
             if (!$order_id) {
@@ -890,10 +890,10 @@ class User extends Init
             $GLOBALS['smarty']->assign('integral_scale', $GLOBALS['_CFG']['integral_scale']);
             $GLOBALS['smarty']->assign('name_of_region', array($GLOBALS['_CFG']['name_of_region_1'], $GLOBALS['_CFG']['name_of_region_2'], $GLOBALS['_CFG']['name_of_region_3'], $GLOBALS['_CFG']['name_of_region_4']));
 
-            $GLOBALS['smarty']->display('user_transaction.dwt');
+            return $GLOBALS['smarty']->display('user_transaction.dwt');
         } /* 绑定账户*/
         elseif ($action == 'account_bind') {
-            $GLOBALS['smarty']->display('account_bind.dwt');
+            return $GLOBALS['smarty']->display('account_bind.dwt');
         } /* 添加/编辑收货地址的处理 */
         elseif ($action == 'act_edit_address') {
             load_helper('transaction');
@@ -952,7 +952,7 @@ class User extends Init
             );
             $GLOBALS['smarty']->assign('lang_list', $lang_list);
             $GLOBALS['smarty']->assign('user_id', $user_id);
-            $GLOBALS['smarty']->display('user_clips.dwt');
+            return $GLOBALS['smarty']->display('user_clips.dwt');
         } /* 删除收藏的商品 */
         elseif ($action == 'delete_collection') {
             load_helper('clips');
@@ -1013,7 +1013,7 @@ class User extends Init
             $GLOBALS['smarty']->assign('message_list', get_message_list($user_id, $_SESSION['user_name'], $pager['size'], $pager['start'], $order_id));
             $GLOBALS['smarty']->assign('pager', $pager);
             $GLOBALS['smarty']->assign('order_info', $order_info);
-            $GLOBALS['smarty']->display('user_clips.dwt');
+            return $GLOBALS['smarty']->display('user_clips.dwt');
         } /* 显示评论列表 */
         elseif ($action == 'comment_list') {
             load_helper('clips');
@@ -1028,7 +1028,7 @@ class User extends Init
 
             $GLOBALS['smarty']->assign('comment_list', get_comment_list($user_id, $pager['size'], $pager['start']));
             $GLOBALS['smarty']->assign('pager', $pager);
-            $GLOBALS['smarty']->display('user_clips.dwt');
+            return $GLOBALS['smarty']->display('user_clips.dwt');
         } /* 添加我的留言 */
         elseif ($action == 'act_add_message') {
             load_helper('clips');
@@ -1064,7 +1064,7 @@ class User extends Init
 
             $GLOBALS['smarty']->assign('tags', get_user_tags($user_id));
             $GLOBALS['smarty']->assign('tags_from', 'user');
-            $GLOBALS['smarty']->display('user_clips.dwt');
+            return $GLOBALS['smarty']->display('user_clips.dwt');
         } /* 删除标签云的处理 */
         elseif ($action == 'act_del_tag') {
             load_helper('clips');
@@ -1090,7 +1090,7 @@ class User extends Init
 
             $GLOBALS['smarty']->assign('booking_list', get_booking_list($user_id, $pager['size'], $pager['start']));
             $GLOBALS['smarty']->assign('pager', $pager);
-            $GLOBALS['smarty']->display('user_clips.dwt');
+            return $GLOBALS['smarty']->display('user_clips.dwt');
         } /* 添加缺货登记页面 */
         elseif ($action == 'add_booking') {
             load_helper('clips');
@@ -1120,7 +1120,7 @@ class User extends Init
             $GLOBALS['smarty']->assign('goods_attr', $goods_attr);
 
             $GLOBALS['smarty']->assign('info', get_goodsinfo($goods_id));
-            $GLOBALS['smarty']->display('user_clips.dwt');
+            return $GLOBALS['smarty']->display('user_clips.dwt');
         } /* 添加缺货登记的处理 */
         elseif ($action == 'act_add_booking') {
             load_helper('clips');
@@ -1180,7 +1180,7 @@ class User extends Init
             }
         } /* 会员退款申请界面 */
         elseif ($action == 'account_raply') {
-            $GLOBALS['smarty']->display('user_transaction.dwt');
+            return $GLOBALS['smarty']->display('user_transaction.dwt');
         } /* 会员预付款界面 */
         elseif ($action == 'account_deposit') {
             load_helper('clips');
@@ -1190,7 +1190,7 @@ class User extends Init
 
             $GLOBALS['smarty']->assign('payment', get_online_payment_list(false));
             $GLOBALS['smarty']->assign('order', $account);
-            $GLOBALS['smarty']->display('user_transaction.dwt');
+            return $GLOBALS['smarty']->display('user_transaction.dwt');
         } /* 会员账目明细界面 */
         elseif ($action == 'account_detail') {
             load_helper('clips');
@@ -1237,7 +1237,7 @@ class User extends Init
             $GLOBALS['smarty']->assign('surplus_amount', price_format($surplus_amount, false));
             $GLOBALS['smarty']->assign('account_log', $account_log);
             $GLOBALS['smarty']->assign('pager', $pager);
-            $GLOBALS['smarty']->display('user_transaction.dwt');
+            return $GLOBALS['smarty']->display('user_transaction.dwt');
         } /* 会员充值和提现申请记录 */
         elseif ($action == 'account_log') {
             load_helper('clips');
@@ -1266,7 +1266,7 @@ class User extends Init
             $GLOBALS['smarty']->assign('surplus_amount', price_format($surplus_amount, false));
             $GLOBALS['smarty']->assign('account_log', $account_log);
             $GLOBALS['smarty']->assign('pager', $pager);
-            $GLOBALS['smarty']->display('user_transaction.dwt');
+            return $GLOBALS['smarty']->display('user_transaction.dwt');
         } /* 对会员余额申请的处理 */
         elseif ($action == 'act_account') {
             load_helper('clips');
@@ -1365,7 +1365,7 @@ class User extends Init
                 $GLOBALS['smarty']->assign('pay_fee', price_format($payment_info['pay_fee'], false));
                 $GLOBALS['smarty']->assign('amount', price_format($amount, false));
                 $GLOBALS['smarty']->assign('order', $order);
-                $GLOBALS['smarty']->display('user_transaction.dwt');
+                return $GLOBALS['smarty']->display('user_transaction.dwt');
             }
         } /* 删除会员余额 */
         elseif ($action == 'cancel') {
@@ -1451,7 +1451,7 @@ class User extends Init
                 $GLOBALS['smarty']->assign('pay_fee', price_format($payment_info['pay_fee'], false));
                 $GLOBALS['smarty']->assign('amount', price_format($order['surplus_amount'], false));
                 $GLOBALS['smarty']->assign('action', 'act_account');
-                $GLOBALS['smarty']->display('user_transaction.dwt');
+                return $GLOBALS['smarty']->display('user_transaction.dwt');
             } /* 重新选择支付方式 */
             else {
                 load_helper('clips');
@@ -1459,7 +1459,7 @@ class User extends Init
                 $GLOBALS['smarty']->assign('payment', get_online_payment_list());
                 $GLOBALS['smarty']->assign('order', $order);
                 $GLOBALS['smarty']->assign('action', 'account_deposit');
-                $GLOBALS['smarty']->display('user_transaction.dwt');
+                return $GLOBALS['smarty']->display('user_transaction.dwt');
             }
         } /* 添加标签(ajax) */
         elseif ($action == 'add_tag') {
@@ -1821,19 +1821,19 @@ class User extends Init
 
             $GLOBALS['smarty']->assign('pager', $pager);
             $GLOBALS['smarty']->assign('bonus', $bonus);
-            $GLOBALS['smarty']->display('user_transaction . dwt');
+            return $GLOBALS['smarty']->display('user_transaction . dwt');
         } /* 我的团购列表 */
         elseif ($action == 'group_buy') {
             load_helper('transaction');
 
             //待议
-            $GLOBALS['smarty']->display('user_transaction . dwt');
+            return $GLOBALS['smarty']->display('user_transaction . dwt');
         } /* 团购订单详情 */
         elseif ($action == 'group_buy_detail') {
             load_helper('transaction');
 
             //待议
-            $GLOBALS['smarty']->display('user_transaction . dwt');
+            return $GLOBALS['smarty']->display('user_transaction . dwt');
         } // 用户推荐页面
         elseif ($action == 'affiliate') {
             $goodsid = intval(isset($_REQUEST['goodsid']) ? $_REQUEST['goodsid'] : 0);
@@ -2019,7 +2019,7 @@ class User extends Init
             $GLOBALS['smarty']->assign('shopurl', $GLOBALS['ecs']->url());
             $GLOBALS['smarty']->assign('logosrc', 'themes/' . $GLOBALS['_CFG']['template'] . '/images/logo.gif');
 
-            $GLOBALS['smarty']->display('user_clips.dwt');
+            return $GLOBALS['smarty']->display('user_clips.dwt');
         } //首页邮件订阅ajax操做和验证操作
         elseif ($action == 'email_list') {
             $job = $_GET['job'];
@@ -2149,7 +2149,7 @@ class User extends Init
             $pager = get_pager('user.php', array('act' => $action), $record_count, $page);
             $GLOBALS['smarty']->assign('pager', $pager);
             $GLOBALS['smarty']->assign('orders', $orders);
-            $GLOBALS['smarty']->display('user_transaction.dwt');
+            return $GLOBALS['smarty']->display('user_transaction.dwt');
         } elseif
         ($action == 'order_query') {
             $_GET['order_sn'] = trim(substr($_GET['order_sn'], 1));
@@ -2287,7 +2287,7 @@ class User extends Init
             $GLOBALS['smarty']->assign('exchange_type', $exchange_type);
             $GLOBALS['smarty']->assign('action', $action);
             $GLOBALS['smarty']->assign('lang', $GLOBALS['_LANG']);
-            $GLOBALS['smarty']->display('user_transaction.dwt');
+            return $GLOBALS['smarty']->display('user_transaction.dwt');
         } elseif
         ($action == 'act_transform_points') {
             $rule_index = empty($_POST['rule_index']) ? '' : trim($_POST['rule_index']);
@@ -2438,7 +2438,7 @@ class User extends Init
             }
             load_helper('order');
             $GLOBALS['smarty']->assign('logistics_info', get_logistics_trace($order_sn, 0, $GLOBALS['_CFG']['lang']));
-            $GLOBALS['smarty']->display('delivery_info.dwt');
+            return $GLOBALS['smarty']->display('delivery_info.dwt');
         } /* ajax 物流信息 */
         elseif
         ($action == 'ajax_delivery_info') {
@@ -2551,13 +2551,13 @@ class User extends Init
                     $GLOBALS['user']->set_session($username);
                     $GLOBALS['smarty']->assign('action', 'reset_password_rep');
                     $GLOBALS['smarty']->assign('uid', $user_info['user_id']);
-                    $GLOBALS['smarty']->display('user_passport.dwt');
+                    return $GLOBALS['smarty']->display('user_passport.dwt');
                 } else {
                     show_message('短信验证码错误', '返回上一页', 'user.php?act=sms_get_password', 'info');
                 }
             } else {
                 //显示用户名和email表单
-                $GLOBALS['smarty']->display('user_passport.dwt');
+                return $GLOBALS['smarty']->display('user_passport.dwt');
             }
         }
     }

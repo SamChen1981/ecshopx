@@ -29,7 +29,7 @@ class Filecheck extends Init
                 $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['fileperms_verify']);
             }
             assign_query_info();
-            $GLOBALS['smarty']->display('filecheck.htm');
+            return $GLOBALS['smarty']->display('filecheck.htm');
         } elseif ($step == 3) {
             @set_time_limit(0);
 
@@ -122,7 +122,7 @@ class Filecheck extends Init
             $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['filecheck_return'], 'href' => 'filecheck.php?step=1'));
 
             assign_query_info();
-            $GLOBALS['smarty']->display('filecheck.htm');
+            return $GLOBALS['smarty']->display('filecheck.htm');
         }
     }
 

@@ -43,7 +43,7 @@ class Cron extends Init
             assign_query_info();
             $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['07_cron_schcron']);
             $GLOBALS['smarty']->assign('modules', $modules);
-            $GLOBALS['smarty']->display('cron_list.htm');
+            return $GLOBALS['smarty']->display('cron_list.htm');
         } elseif ($_REQUEST['act'] == 'install') {
             if (empty($_POST['step'])) {
                 /* 取相应插件信息 */
@@ -90,7 +90,7 @@ class Cron extends Init
                 $GLOBALS['smarty']->assign('week', $week);
                 $GLOBALS['smarty']->assign('hours', $hours);
                 $GLOBALS['smarty']->assign('cron', $cron);
-                $GLOBALS['smarty']->display('cron_edit.htm');
+                return $GLOBALS['smarty']->display('cron_edit.htm');
             } elseif ($_POST['step'] == 2) {
                 $links[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'cron.php?act=list');
                 if (empty($_POST['cron_name'])) {
@@ -205,7 +205,7 @@ class Cron extends Init
                 $GLOBALS['smarty']->assign('week', $week);
                 $GLOBALS['smarty']->assign('hours', $hours);
                 $GLOBALS['smarty']->assign('page_list', $page_list);
-                $GLOBALS['smarty']->display('cron_edit.htm');
+                return $GLOBALS['smarty']->display('cron_edit.htm');
             } elseif ($_POST['step'] == 2) {
                 $links[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'cron.php?act=list');
                 if (empty($_POST['cron_id'])) {

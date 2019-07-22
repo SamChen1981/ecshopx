@@ -105,7 +105,7 @@ class Exchange extends Init
             }
 
             $GLOBALS['smarty']->assign('feed_url', ($GLOBALS['_CFG']['rewrite'] == 1) ? "feed-typeexchange.xml" : 'feed.php?type=exchange'); // RSS URL
-            $GLOBALS['smarty']->display('exchange_list.dwt', $cache_id);
+            return $GLOBALS['smarty']->display('exchange_list.dwt', $cache_id);
         }
 
         /*------------------------------------------------------ */
@@ -179,7 +179,7 @@ class Exchange extends Init
                 }
             }
 
-            $GLOBALS['smarty']->display('exchange_goods.dwt', $cache_id);
+            return $GLOBALS['smarty']->display('exchange_goods.dwt', $cache_id);
         }
 
         /*------------------------------------------------------ */

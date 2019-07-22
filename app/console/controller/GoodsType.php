@@ -36,7 +36,7 @@ class GoodsType extends Init
 
             $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['new_goods_type'], 'href' => 'goods_type.php?act=add'));
 
-            $GLOBALS['smarty']->display('goods_type.htm');
+            return $GLOBALS['smarty']->display('goods_type.htm');
         }
 
         /*------------------------------------------------------ */
@@ -110,7 +110,7 @@ class GoodsType extends Init
             $GLOBALS['smarty']->assign('goods_type', array('enabled' => 1));
 
             assign_query_info();
-            $GLOBALS['smarty']->display('goods_type_info.htm');
+            return $GLOBALS['smarty']->display('goods_type_info.htm');
         } elseif ($_REQUEST['act'] == 'insert') {
             //$goods_type['cat_name']   = trim_right(sub_str($_POST['cat_name'], 60));
             //$goods_type['attr_group'] = trim_right(sub_str($_POST['attr_group'], 255));
@@ -146,7 +146,7 @@ class GoodsType extends Init
             $GLOBALS['smarty']->assign('goods_type', $goods_type);
 
             assign_query_info();
-            $GLOBALS['smarty']->display('goods_type_info.htm');
+            return $GLOBALS['smarty']->display('goods_type_info.htm');
         } elseif ($_REQUEST['act'] == 'update') {
             $goods_type['cat_name'] = sub_str($_POST['cat_name'], 60);
             $goods_type['attr_group'] = sub_str($_POST['attr_group'], 255);

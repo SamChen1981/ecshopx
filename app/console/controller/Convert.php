@@ -44,7 +44,7 @@ class Convert extends Init
             /* 显示模板 */
             $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['convert']);
             assign_query_info();
-            $GLOBALS['smarty']->display('convert_main.htm');
+            return $GLOBALS['smarty']->display('convert_main.htm');
         }
 
         /*------------------------------------------------------ */

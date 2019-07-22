@@ -47,7 +47,7 @@ class Flashplay extends Init
             $GLOBALS['smarty']->assign('flashtpls', $this->get_flash_templates($flash_dir));
             $GLOBALS['smarty']->assign('current_flashtpl', $GLOBALS['_CFG']['flash_theme']);
             $GLOBALS['smarty']->assign('playerdb', $playerdb);
-            $GLOBALS['smarty']->display('flashplay_list.htm');
+            return $GLOBALS['smarty']->display('flashplay_list.htm');
         } elseif ($_REQUEST['act'] == 'del') {
             admin_priv('flash_manage');
 
@@ -91,7 +91,7 @@ class Flashplay extends Init
                 $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['go_url'], 'href' => 'flashplay.php?act=list'));
                 $GLOBALS['smarty']->assign('rt', $rt);
                 $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['add_picad']);
-                $GLOBALS['smarty']->display('flashplay_add.htm');
+                return $GLOBALS['smarty']->display('flashplay_add.htm');
             } elseif ($_POST['step'] == 2) {
                 if (!empty($_FILES['img_file_src']['name'])) {
                     if (!get_file_suffix($_FILES['img_file_src']['name'], $allow_suffix)) {
@@ -171,7 +171,7 @@ class Flashplay extends Init
                 $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['go_url'], 'href' => 'flashplay.php?act=list'));
                 $GLOBALS['smarty']->assign('rt', $rt);
                 $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['edit_picad']);
-                $GLOBALS['smarty']->display('flashplay_add.htm');
+                return $GLOBALS['smarty']->display('flashplay_add.htm');
             } elseif ($_POST['step'] == 2) {
                 if (empty($_POST['img_url'])) {
                     //若链接地址为空
@@ -288,7 +288,7 @@ class Flashplay extends Init
             $GLOBALS['smarty']->assign('ad', $ad);
             $GLOBALS['smarty']->assign('form_act', 'custom_insert');
 
-            $GLOBALS['smarty']->display('flashplay_custom.htm');
+            return $GLOBALS['smarty']->display('flashplay_custom.htm');
         }
 
         /*------------------------------------------------------ */
@@ -326,7 +326,7 @@ class Flashplay extends Init
             $GLOBALS['smarty']->assign('ad', $ad);
             $GLOBALS['smarty']->assign('form_act', 'custom_insert');
 
-            $GLOBALS['smarty']->display('flashplay_custom_add.htm');
+            return $GLOBALS['smarty']->display('flashplay_custom_add.htm');
         }
 
 
@@ -529,7 +529,7 @@ class Flashplay extends Init
 
             /* 添加 */
             $GLOBALS['smarty']->assign('ad', $ad);
-            $GLOBALS['smarty']->display('flashplay_ccustom_edit.htm');
+            return $GLOBALS['smarty']->display('flashplay_ccustom_edit.htm');
         }
 
         /*------------------------------------------------------ */

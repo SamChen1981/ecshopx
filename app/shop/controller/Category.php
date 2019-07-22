@@ -340,7 +340,7 @@ class Category extends Init
             assign_dynamic('category'); // 动态内容
         }
 
-        $GLOBALS['smarty']->display('category.dwt', $cache_id);
+        return $GLOBALS['smarty']->display('category.dwt', $cache_id);
     }
 
     /**

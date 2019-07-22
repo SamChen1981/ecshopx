@@ -31,7 +31,7 @@ class Catalog extends Init
             $GLOBALS['smarty']->assign('promotion_info', get_promotion_info());
         }
 
-        $GLOBALS['smarty']->display('catalog.dwt');
+        return $GLOBALS['smarty']->display('catalog.dwt');
     }
 
     /**

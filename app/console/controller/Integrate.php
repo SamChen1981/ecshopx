@@ -27,7 +27,7 @@ class Integrate extends Init
             $GLOBALS['smarty']->assign('modules', $modules);
 
             assign_query_info();
-            $GLOBALS['smarty']->display('integrates_list.htm');
+            return $GLOBALS['smarty']->display('integrates_list.htm');
         }
 
         /*------------------------------------------------------ */
@@ -86,7 +86,7 @@ class Integrate extends Init
                 $GLOBALS['smarty']->assign('set_list', get_charset_list());
                 $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['integrate_setup']);
                 $GLOBALS['smarty']->assign('code', $_GET['code']);
-                $GLOBALS['smarty']->display('integrates_setup.htm');
+                return $GLOBALS['smarty']->display('integrates_setup.htm');
             }
         }
 
@@ -130,7 +130,7 @@ class Integrate extends Init
                 $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['integrate_setup']);
                 $GLOBALS['smarty']->assign('code', $_GET['code']);
                 $GLOBALS['smarty']->assign('cfg', $cfg);
-                $GLOBALS['smarty']->display('integrates_setup.htm');
+                return $GLOBALS['smarty']->display('integrates_setup.htm');
             }
         }
 
@@ -223,7 +223,7 @@ class Integrate extends Init
             $GLOBALS['smarty']->assign('domain', '@ecshop');
             $GLOBALS['smarty']->assign('lang_total', sprintf($GLOBALS['_LANG']['shop_user_total'], $total));
             $GLOBALS['smarty']->assign('size', $size);
-            $GLOBALS['smarty']->display('integrates_check.htm');
+            return $GLOBALS['smarty']->display('integrates_check.htm');
         }
 
         /*------------------------------------------------------ */
@@ -330,7 +330,7 @@ class Integrate extends Init
 
             $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['ucenter_import_username']);
             $GLOBALS['smarty']->assign('user_startid_intro', sprintf($GLOBALS['_LANG']['user_startid_intro'], $maxuid, $maxuid));
-            $GLOBALS['smarty']->display('integrates_uc_import.htm');
+            return $GLOBALS['smarty']->display('integrates_uc_import.htm');
         }
 
         /*------------------------------------------------------ */
@@ -526,7 +526,7 @@ class Integrate extends Init
             $GLOBALS['smarty']->assign('page_count', $arr['page_count']);
             $GLOBALS['smarty']->assign('full_page', 1);
 
-            $GLOBALS['smarty']->display('integrates_modify.htm');
+            return $GLOBALS['smarty']->display('integrates_modify.htm');
         }
 
         /*------------------------------------------------------ */
@@ -666,7 +666,7 @@ class Integrate extends Init
             $GLOBALS['smarty']->assign('tasks', $tasks);
             $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['user_sync']);
             $GLOBALS['smarty']->assign('size', $size);
-            $GLOBALS['smarty']->display('integrates_sync.htm');
+            return $GLOBALS['smarty']->display('integrates_sync.htm');
         }
 
         /*------------------------------------------------------ */
@@ -914,7 +914,7 @@ class Integrate extends Init
             $GLOBALS['smarty']->assign('integral_name', $GLOBALS['_CFG']['integral_name']);
             $GLOBALS['smarty']->assign('full_page', 1);
             $GLOBALS['smarty']->assign('points', $points);
-            $GLOBALS['smarty']->display('integrates_points.htm');
+            return $GLOBALS['smarty']->display('integrates_points.htm');
         }
 
         if ($_REQUEST['act'] == 'edit_points') {

@@ -36,7 +36,7 @@ class Wholesale extends Init
 
             /* 显示商品列表页面 */
             assign_query_info();
-            $GLOBALS['smarty']->display('wholesale_list.htm');
+            return $GLOBALS['smarty']->display('wholesale_list.htm');
         }
 
         /*------------------------------------------------------ */
@@ -190,7 +190,7 @@ class Wholesale extends Init
             $GLOBALS['smarty']->assign('action_link', array('href' => $href, 'text' => $GLOBALS['_LANG']['wholesale_list']));
             assign_query_info();
 
-            $GLOBALS['smarty']->display('wholesale_batch_info.htm');
+            return $GLOBALS['smarty']->display('wholesale_batch_info.htm');
         }
 
         /*------------------------------------------------------ */
@@ -366,7 +366,7 @@ class Wholesale extends Init
             }
             $GLOBALS['smarty']->assign('action_link', array('href' => $href, 'text' => $GLOBALS['_LANG']['wholesale_list']));
             assign_query_info();
-            $GLOBALS['smarty']->display('wholesale_info.htm');
+            return $GLOBALS['smarty']->display('wholesale_info.htm');
         }
 
         /*------------------------------------------------------ */

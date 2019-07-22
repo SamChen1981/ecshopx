@@ -249,7 +249,7 @@ class Goods extends Init
         $GLOBALS['db']->query('UPDATE ' . $GLOBALS['ecs']->table('goods') . " SET click_count = click_count + 1 WHERE goods_id = '$_REQUEST[id]'");
 
         $GLOBALS['smarty']->assign('now_time', gmtime());           // 当前系统时间
-        $GLOBALS['smarty']->display('goods.dwt', $cache_id);
+        return $GLOBALS['smarty']->display('goods.dwt', $cache_id);
     }
 
     /**

@@ -46,7 +46,7 @@ class MobileSetting extends Init
 
             $GLOBALS['smarty']->assign('playerdb', $playerdb);
             $GLOBALS['smarty']->assign('group_list', $grouplist);
-            $GLOBALS['smarty']->display('banner_config.html');
+            return $GLOBALS['smarty']->display('banner_config.html');
         } elseif ($_REQUEST['act'] == 'del') {
             admin_priv('flash_manage');
 
@@ -91,7 +91,7 @@ class MobileSetting extends Init
                 $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['go_url'], 'href' => 'mobile_setting.php?act=list'));
                 $GLOBALS['smarty']->assign('rt', $rt);
                 $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['add_picad']);
-                $GLOBALS['smarty']->display('flashplay_add.htm');
+                return $GLOBALS['smarty']->display('flashplay_add.htm');
             } elseif ($_POST['step'] == 2) {
                 if (!empty($_FILES['img_file_src']['name'])) {
                     if (!get_file_suffix($_FILES['img_file_src']['name'], $allow_suffix)) {
@@ -171,7 +171,7 @@ class MobileSetting extends Init
                 $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['go_url'], 'href' => 'mobile_setting.php?act=list'));
                 $GLOBALS['smarty']->assign('rt', $rt);
                 $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['edit_picad']);
-                $GLOBALS['smarty']->display('flashplay_add.htm');
+                return $GLOBALS['smarty']->display('flashplay_add.htm');
             } elseif ($_POST['step'] == 2) {
                 // if (empty($_POST['img_url']))
                 // {

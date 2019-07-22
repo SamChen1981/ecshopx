@@ -22,7 +22,7 @@ class ArticleAuto extends Init
             $GLOBALS['smarty']->assign('record_count', $goodsdb['record_count']);
             $GLOBALS['smarty']->assign('page_count', $goodsdb['page_count']);
             assign_query_info();
-            $GLOBALS['smarty']->display('goods_auto.htm');
+            return $GLOBALS['smarty']->display('goods_auto.htm');
         } elseif ($_REQUEST['act'] == 'query') {
             $goodsdb = get_auto_goods();
             $GLOBALS['smarty']->assign('goodsdb', $goodsdb['goodsdb']);

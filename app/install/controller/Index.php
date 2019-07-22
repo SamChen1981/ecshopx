@@ -46,7 +46,7 @@ case 'welcome':
     $GLOBALS['smarty']->assign('ucapi', $_POST['ucapi']);
     $GLOBALS['smarty']->assign('ucfounderpw', $_POST['ucfounderpw']);
     $GLOBALS['smarty']->assign('installer_lang', $installer_lang);
-    $GLOBALS['smarty']->display('welcome.php');
+    return $GLOBALS['smarty']->display('welcome.php');
 
     break;
 
@@ -54,7 +54,7 @@ case 'uccheck':
     $GLOBALS['smarty']->assign('ucapi', $_POST['ucapi']);
     $GLOBALS['smarty']->assign('ucfounderpw', $_POST['ucfounderpw']);
     $GLOBALS['smarty']->assign('installer_lang', $installer_lang);
-    $GLOBALS['smarty']->display('uc_check.php');
+    return $GLOBALS['smarty']->display('uc_check.php');
 
     break;
 
@@ -105,7 +105,7 @@ case 'check':
     $GLOBALS['smarty']->assign('rename_priv', $rename_priv);
     $GLOBALS['smarty']->assign('disabled', $disabled);
     $GLOBALS['smarty']->assign('userinterface', $ui);
-    $GLOBALS['smarty']->display('checking.php');
+    return $GLOBALS['smarty']->display('checking.php');
 
     break;
 
@@ -151,7 +151,7 @@ case 'setting_ui':
     $GLOBALS['smarty']->assign('local_timezone', get_local_timezone());
     $GLOBALS['smarty']->assign('timezones', $timezones);
     $GLOBALS['smarty']->assign('userinterface', empty($_GET['ui'])?'ecshop':$_GET['ui']);
-    $GLOBALS['smarty']->display('setting.php');
+    return $GLOBALS['smarty']->display('setting.php');
 
     break;
 
@@ -354,7 +354,7 @@ case 'done':
         $GLOBALS['err']->add($GLOBALS['_LANG']['has_locked_installer']);
         $err_msg = implode(',', $GLOBALS['err']->get_all());
         $GLOBALS['smarty']->assign('err_msg', $err_msg);
-        $GLOBALS['smarty']->display('error.php');
+        return $GLOBALS['smarty']->display('error.php');
         break;
     }
     if (!file_exists(ROOT_PATH . 'data/install.lock')) {
@@ -371,13 +371,13 @@ case 'done':
         if ($result === false) {
             $err_msg = implode(',', $GLOBALS['err']->get_all());
             $GLOBALS['smarty']->assign('err_msg', $err_msg);
-            $GLOBALS['smarty']->display('error.php');
+            return $GLOBALS['smarty']->display('error.php');
         } else {
             @unlink(ROOT_PATH .'data/config_temp.php');
             $spt_code = get_spt_code();
             $_SESSION['done']['spt_code'] = $spt_code;
             $GLOBALS['smarty']->assign('spt_code', spt_code);
-            $GLOBALS['smarty']->display('done.php');
+            return $GLOBALS['smarty']->display('done.php');
         }
     }
     break;
@@ -398,14 +398,14 @@ case 'active':
     $GLOBALS['smarty']->assign('link_url', $link_url);
     $GLOBALS['smarty']->assign('nowtime', time());
     $GLOBALS['smarty']->assign('spt_code', spt_code);
-    $GLOBALS['smarty']->display('active.php');
+    return $GLOBALS['smarty']->display('active.php');
 
     break;
 
 case 'error':
     $err_msg = implode(',', $GLOBALS['err']->get_all());
     $GLOBALS['smarty']->assign('err_msg', $err_msg);
-    $GLOBALS['smarty']->display('error.php');
+    return $GLOBALS['smarty']->display('error.php');
 
     break;
 

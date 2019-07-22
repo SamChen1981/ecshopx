@@ -34,7 +34,7 @@ class AffiliateCk extends Init
                 $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['back_note'], 'href' => "users.php?act=edit&id=" . intval($_GET['auid'])));
             }
             assign_query_info();
-            $GLOBALS['smarty']->display('affiliate_ck_list.htm');
+            return $GLOBALS['smarty']->display('affiliate_ck_list.htm');
         }
         /*------------------------------------------------------ */
         //-- 分页

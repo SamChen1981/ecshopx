@@ -286,7 +286,7 @@ class OrderStats extends Init
             }
 
             assign_query_info();
-            $GLOBALS['smarty']->display('order_stats.htm');
+            return $GLOBALS['smarty']->display('order_stats.htm');
         } elseif ($act = 'download') {
             $filename = !empty($_REQUEST['filename']) ? trim($_REQUEST['filename']) : '';
 

@@ -23,7 +23,7 @@ class Shopinfo extends Init
             $GLOBALS['smarty']->assign('list', $this->shopinfo_article_list());
 
             assign_query_info();
-            $GLOBALS['smarty']->display('shopinfo_list.htm');
+            return $GLOBALS['smarty']->display('shopinfo_list.htm');
         }
 
         /*------------------------------------------------------ */
@@ -54,7 +54,7 @@ class Shopinfo extends Init
             $GLOBALS['smarty']->assign('form_action', 'insert');
 
             assign_query_info();
-            $GLOBALS['smarty']->display('shopinfo_info.htm');
+            return $GLOBALS['smarty']->display('shopinfo_info.htm');
         }
         if ($_REQUEST['act'] == 'insert') {
             /* 权限判断 */
@@ -105,7 +105,7 @@ class Shopinfo extends Init
             $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['shopinfo_list'], 'href' => 'shopinfo.php?act=list'));
             $GLOBALS['smarty']->assign('article', $article);
             $GLOBALS['smarty']->assign('form_action', 'update');
-            $GLOBALS['smarty']->display('shopinfo_info.htm');
+            return $GLOBALS['smarty']->display('shopinfo_info.htm');
         }
         if ($_REQUEST['act'] == 'update') {
             /* 权限判断 */

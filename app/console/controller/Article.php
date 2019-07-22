@@ -41,7 +41,7 @@ class Article extends Init
             $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
             assign_query_info();
-            $GLOBALS['smarty']->display('article_list.htm');
+            return $GLOBALS['smarty']->display('article_list.htm');
         }
 
         /*------------------------------------------------------ */
@@ -99,7 +99,7 @@ class Article extends Init
             $GLOBALS['smarty']->assign('form_action', 'insert');
 
             assign_query_info();
-            $GLOBALS['smarty']->display('article_info.htm');
+            return $GLOBALS['smarty']->display('article_info.htm');
         }
 
         /*------------------------------------------------------ */
@@ -201,7 +201,7 @@ class Article extends Init
             $GLOBALS['smarty']->assign('form_action', 'update');
 
             assign_query_info();
-            $GLOBALS['smarty']->display('article_info.htm');
+            return $GLOBALS['smarty']->display('article_info.htm');
         }
 
         if ($_REQUEST['act'] == 'update') {

@@ -41,7 +41,7 @@ class Order extends Init
 
             /* 显示模板 */
             assign_query_info();
-            $GLOBALS['smarty']->display('order_query.htm');
+            return $GLOBALS['smarty']->display('order_query.htm');
         }
 
         /*------------------------------------------------------ */
@@ -132,7 +132,7 @@ class Order extends Init
 
             /* 显示模板 */
             assign_query_info();
-            $GLOBALS['smarty']->display('order_list.htm');
+            return $GLOBALS['smarty']->display('order_list.htm');
         }
 
         /*------------------------------------------------------ */
@@ -413,7 +413,7 @@ class Order extends Init
                 $GLOBALS['smarty']->assign('action_user', $_SESSION['admin_name']);
 
                 $GLOBALS['smarty']->template_dir = '../' . DATA_DIR;
-                $GLOBALS['smarty']->display('order_print.html');
+                return $GLOBALS['smarty']->display('order_print.html');
             } /* 打印快递单 */
             elseif (isset($_GET['shipping_print'])) {
                 //$GLOBALS['smarty']->assign('print_time',   local_date($GLOBALS['_CFG']['time_format']));
@@ -505,7 +505,7 @@ class Order extends Init
 
                     $GLOBALS['smarty']->assign('shipping', $shipping);
 
-                    $GLOBALS['smarty']->display('print.htm');
+                    return $GLOBALS['smarty']->display('print.htm');
                 } elseif (!empty($shipping['shipping_print'])) {
                     /* 代码 */
                     echo $GLOBALS['smarty']->fetch("str:" . $shipping['shipping_print']);
@@ -528,7 +528,7 @@ class Order extends Init
 
                 /* 显示模板 */
                 assign_query_info();
-                $GLOBALS['smarty']->display('order_info.htm');
+                return $GLOBALS['smarty']->display('order_info.htm');
             }
         }
 
@@ -562,7 +562,7 @@ class Order extends Init
 
             /* 显示模板 */
             assign_query_info();
-            $GLOBALS['smarty']->display('delivery_list.htm');
+            return $GLOBALS['smarty']->display('delivery_list.htm');
         }
 
         /*------------------------------------------------------ */
@@ -680,7 +680,7 @@ class Order extends Init
             $GLOBALS['smarty']->assign('action_link', array('href' => 'order.php?act=delivery_list&' . list_link_postfix(), 'text' => $GLOBALS['_LANG']['09_delivery_order']));
             $GLOBALS['smarty']->assign('action_act', ($delivery_order['status'] == 2) ? 'delivery_ship' : 'delivery_cancel_ship');
             assign_query_info();
-            $GLOBALS['smarty']->display('delivery_info.htm');
+            return $GLOBALS['smarty']->display('delivery_info.htm');
              //
         }
 
@@ -1026,7 +1026,7 @@ class Order extends Init
 
             /* 显示模板 */
             assign_query_info();
-            $GLOBALS['smarty']->display('back_list.htm');
+            return $GLOBALS['smarty']->display('back_list.htm');
         }
 
         /*------------------------------------------------------ */
@@ -1126,7 +1126,7 @@ class Order extends Init
             $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['back_operate'] . $GLOBALS['_LANG']['detail']);
             $GLOBALS['smarty']->assign('action_link', array('href' => 'order.php?act=back_list&' . list_link_postfix(), 'text' => $GLOBALS['_LANG']['10_back_order']));
             assign_query_info();
-            $GLOBALS['smarty']->display('back_info.htm');
+            return $GLOBALS['smarty']->display('back_info.htm');
              //
         }
 
@@ -2100,7 +2100,7 @@ class Order extends Init
 
             /* 显示模板 */
             assign_query_info();
-            $GLOBALS['smarty']->display('order_step.htm');
+            return $GLOBALS['smarty']->display('order_step.htm');
         }
 
         /*------------------------------------------------------ */
@@ -2191,7 +2191,7 @@ class Order extends Init
                 /* 显示模板 */
                 $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['refund']);
                 assign_query_info();
-                $GLOBALS['smarty']->display('order_refund.htm');
+                return $GLOBALS['smarty']->display('order_refund.htm');
             } else {
                 die('invalid params');
             }
@@ -2223,7 +2223,7 @@ class Order extends Init
 
             /* 显示模板 */
             assign_query_info();
-            $GLOBALS['smarty']->display('merge_order.htm');
+            return $GLOBALS['smarty']->display('merge_order.htm');
         }
 
         /*------------------------------------------------------ */
@@ -2259,7 +2259,7 @@ class Order extends Init
 
             /* 显示模板 */
             assign_query_info();
-            $GLOBALS['smarty']->display('order_templates.htm');
+            return $GLOBALS['smarty']->display('order_templates.htm');
         }
         /*------------------------------------------------------ */
         //-- 订单打印模板（提交修改）
@@ -2446,7 +2446,7 @@ class Order extends Init
                 /* 显示模板 */
                 $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['order_operate'] . $GLOBALS['_LANG']['op_split']);
                 assign_query_info();
-                $GLOBALS['smarty']->display('order_delivery_info.htm');
+                return $GLOBALS['smarty']->display('order_delivery_info.htm');
 
             } /* 未发货 */
             elseif (isset($_POST['unship'])) {
@@ -2750,7 +2750,7 @@ class Order extends Init
                 /* 显示模板 */
                 $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['order_operate'] . $action);
                 assign_query_info();
-                $GLOBALS['smarty']->display('order_operate.htm');
+                return $GLOBALS['smarty']->display('order_operate.htm');
             } else {
                 /* 直接处理 */
                 if (!$batch) {
@@ -3007,7 +3007,7 @@ class Order extends Init
 
                 /* 显示模板 */
                 assign_query_info();
-                $GLOBALS['smarty']->display('order_operate_info.htm');
+                return $GLOBALS['smarty']->display('order_operate_info.htm');
             }
         }
 
@@ -4012,7 +4012,7 @@ class Order extends Init
             /**
              *  激活云起页面
              **/
-            $GLOBALS['smarty']->display('install-icloud.htm');
+            return $GLOBALS['smarty']->display('install-icloud.htm');
         } elseif ($_REQUEST['act'] == 'cancelErpPanel') {
             //更新订单总金额
             $sql = "UPDATE " . $GLOBALS['ecs']->table('shop_config') .

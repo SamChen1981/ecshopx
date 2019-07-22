@@ -40,7 +40,7 @@ class ExchangeGoods extends Init
             $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
             assign_query_info();
-            $GLOBALS['smarty']->display('exchange_goods_list.htm');
+            return $GLOBALS['smarty']->display('exchange_goods_list.htm');
         }
 
         /*------------------------------------------------------ */
@@ -85,7 +85,7 @@ class ExchangeGoods extends Init
             $GLOBALS['smarty']->assign('form_action', 'insert');
 
             assign_query_info();
-            $GLOBALS['smarty']->display('exchange_goods_info.htm');
+            return $GLOBALS['smarty']->display('exchange_goods_info.htm');
         }
 
         /*------------------------------------------------------ */
@@ -145,7 +145,7 @@ class ExchangeGoods extends Init
             $GLOBALS['smarty']->assign('form_action', 'update');
 
             assign_query_info();
-            $GLOBALS['smarty']->display('exchange_goods_info.htm');
+            return $GLOBALS['smarty']->display('exchange_goods_info.htm');
         }
 
         /*------------------------------------------------------ */

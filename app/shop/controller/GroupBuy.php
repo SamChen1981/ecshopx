@@ -70,7 +70,7 @@ class GroupBuy extends Init
             }
 
             /* 显示模板 */
-            $GLOBALS['smarty']->display('group_buy_list.dwt', $cache_id);
+            return $GLOBALS['smarty']->display('group_buy_list.dwt', $cache_id);
         }
 
         /*------------------------------------------------------ */
@@ -139,7 +139,7 @@ class GroupBuy extends Init
             $GLOBALS['db']->query($sql);
 
             $GLOBALS['smarty']->assign('now_time', gmtime());           // 当前系统时间
-            $GLOBALS['smarty']->display('group_buy_goods.dwt', $cache_id);
+            return $GLOBALS['smarty']->display('group_buy_goods.dwt', $cache_id);
         }
 
         /*------------------------------------------------------ */

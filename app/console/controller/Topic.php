@@ -51,7 +51,7 @@ class Topic extends Init
 
             assign_query_info();
             $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['topic_add'], 'href' => 'topic.php?act=add'));
-            $GLOBALS['smarty']->display('topic_list.htm');
+            return $GLOBALS['smarty']->display('topic_list.htm');
         }
         /* 添加,编辑 */
         if ($_REQUEST['act'] == 'add' || $_REQUEST['act'] == 'edit') {
@@ -111,7 +111,7 @@ class Topic extends Init
                 create_html_editor('topic_intro');
                 $GLOBALS['smarty']->assign('act', "insert");
             }
-            $GLOBALS['smarty']->display('topic_edit.htm');
+            return $GLOBALS['smarty']->display('topic_edit.htm');
         } elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update') {
             admin_priv('topic_manage');
 

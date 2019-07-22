@@ -96,7 +96,7 @@ class Wholesale extends Init
             assign_dynamic('wholesale');
 
             /* 显示模板 */
-            $GLOBALS['smarty']->display('wholesale_list.dwt');
+            return $GLOBALS['smarty']->display('wholesale_list.dwt');
         }
 
         /*------------------------------------------------------ */

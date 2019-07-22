@@ -1901,7 +1901,7 @@ class Flow extends Init
         $GLOBALS['smarty']->assign('step', $_REQUEST['step']);
         assign_dynamic('shopping_flow');
 
-        $GLOBALS['smarty']->display('flow.dwt');
+        return $GLOBALS['smarty']->display('flow.dwt');
     }
 
     /**

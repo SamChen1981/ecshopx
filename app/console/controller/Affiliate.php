@@ -23,7 +23,7 @@ class Affiliate extends Init
 
             $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['affiliate']);
             $GLOBALS['smarty']->assign('config', $config);
-            $GLOBALS['smarty']->display('affiliate.htm');
+            return $GLOBALS['smarty']->display('affiliate.htm');
         } elseif ($_REQUEST['act'] == 'query') {
             $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['affiliate']);
             $GLOBALS['smarty']->assign('config', $config);

@@ -31,7 +31,7 @@ class License extends Init
             $GLOBALS['smarty']->assign('certificate_id', $license['certificate_id']);
             $GLOBALS['smarty']->assign('token', $license['token']);
 
-            $GLOBALS['smarty']->display('license.htm');
+            return $GLOBALS['smarty']->display('license.htm');
         }
 
         /*------------------------------------------------------ */

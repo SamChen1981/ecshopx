@@ -47,7 +47,7 @@ class Role extends Init
                 $GLOBALS['smarty']->assign('random', mt_rand());
             }
 
-            $GLOBALS['smarty']->display('login.htm');
+            return $GLOBALS['smarty']->display('login.htm');
         }
 
 
@@ -63,7 +63,7 @@ class Role extends Init
 
             /* 显示页面 */
             assign_query_info();
-            $GLOBALS['smarty']->display('role_list.htm');
+            return $GLOBALS['smarty']->display('role_list.htm');
         }
 
         /*------------------------------------------------------ */
@@ -121,7 +121,7 @@ class Role extends Init
 
             /* 显示页面 */
             assign_query_info();
-            $GLOBALS['smarty']->display('role_info.htm');
+            return $GLOBALS['smarty']->display('role_info.htm');
         }
 
         /*------------------------------------------------------ */
@@ -205,7 +205,7 @@ class Role extends Init
             $GLOBALS['smarty']->assign('user_id', $_GET['id']);
 
             assign_query_info();
-            $GLOBALS['smarty']->display('role_info.htm');
+            return $GLOBALS['smarty']->display('role_info.htm');
         }
 
         /*------------------------------------------------------ */
