@@ -149,7 +149,7 @@ class GroupBuy extends Init
         elseif ($_REQUEST['act'] == 'buy') {
             /* 查询：判断是否登录 */
             if ($_SESSION['user_id'] <= 0) {
-                show_message($GLOBALS['_LANG']['gb_error_login'], '', '', 'error');
+                return show_message($GLOBALS['_LANG']['gb_error_login'], '', '', 'error');
             }
 
             /* 查询：取得参数：团购活动id */
@@ -173,7 +173,7 @@ class GroupBuy extends Init
 
             /* 查询：检查团购活动是否是进行中 */
             if ($group_buy['status'] != GBS_UNDER_WAY) {
-                show_message($GLOBALS['_LANG']['gb_error_status'], '', '', 'error');
+                return show_message($GLOBALS['_LANG']['gb_error_status'], '', '', 'error');
             }
 
             /* 查询：取得团购商品信息 */
@@ -185,7 +185,7 @@ class GroupBuy extends Init
 
             /* 查询：判断数量是否足够 */
             if (($group_buy['restrict_amount'] > 0 && $number > ($group_buy['restrict_amount'] - $group_buy['valid_goods'])) || $number > $goods['goods_number']) {
-                show_message($GLOBALS['_LANG']['gb_error_goods_lacking'], '', '', 'error');
+                return show_message($GLOBALS['_LANG']['gb_error_goods_lacking'], '', '', 'error');
             }
 
             /* 查询：取得规格 */
@@ -207,7 +207,7 @@ class GroupBuy extends Init
 
             /* 查询：判断指定规格的货品数量是否足够 */
             if ($specs && $number > $product_info['product_number']) {
-                show_message($GLOBALS['_LANG']['gb_error_goods_lacking'], '', '', 'error');
+                return show_message($GLOBALS['_LANG']['gb_error_goods_lacking'], '', '', 'error');
             }
 
             /* 查询：查询规格名称和值，不考虑价格 */

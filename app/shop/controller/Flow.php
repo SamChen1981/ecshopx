@@ -187,7 +187,7 @@ class Flow extends Init
                     $captcha = intval($GLOBALS['_CFG']['captcha']);
                     if (($captcha & CAPTCHA_LOGIN) && (!($captcha & CAPTCHA_LOGIN_FAIL) || (($captcha & CAPTCHA_LOGIN_FAIL) && $_SESSION['login_fail'] > 2)) && gd_version() > 0) {
                         if (empty($_POST['captcha'])) {
-                            show_message($GLOBALS['_LANG']['invalid_captcha']);
+                            return show_message($GLOBALS['_LANG']['invalid_captcha']);
                         }
 
                         /* 检查验证码 */
@@ -195,7 +195,7 @@ class Flow extends Init
                         $validator = new captcha();
                         $validator->session_word = 'captcha_login';
                         if (!$validator->check_word($_POST['captcha'])) {
-                            show_message($GLOBALS['_LANG']['invalid_captcha']);
+                            return show_message($GLOBALS['_LANG']['invalid_captcha']);
                         }
                     }
 
@@ -216,19 +216,19 @@ class Flow extends Init
 
                     } else {
                         $_SESSION['login_fail']++;
-                        show_message($GLOBALS['_LANG']['signin_failed'], '', 'flow.php?step=login');
+                        return show_message($GLOBALS['_LANG']['signin_failed'], '', 'flow.php?step=login');
                     }
                 } elseif (!empty($_POST['act']) && $_POST['act'] == 'signup') {
                     if ((intval($GLOBALS['_CFG']['captcha']) & CAPTCHA_REGISTER) && gd_version() > 0) {
                         if (empty($_POST['captcha'])) {
-                            show_message($GLOBALS['_LANG']['invalid_captcha']);
+                            return show_message($GLOBALS['_LANG']['invalid_captcha']);
                         }
 
                         /* 检查验证码 */
 
                         $validator = new captcha();
                         if (!$validator->check_word($_POST['captcha'])) {
-                            show_message($GLOBALS['_LANG']['invalid_captcha']);
+                            return show_message($GLOBALS['_LANG']['invalid_captcha']);
                         }
                     }
 
@@ -356,7 +356,7 @@ class Flow extends Init
                 return $this->redirect('flow.php?step=consignee');
 
             } else {
-                show_message($GLOBALS['_LANG']['not_fount_consignee']);
+                return show_message($GLOBALS['_LANG']['not_fount_consignee']);
             }
         } elseif ($_REQUEST['step'] == 'checkout') {
             /*------------------------------------------------------ */
@@ -387,7 +387,7 @@ class Flow extends Init
                 " WHERE " . $where . " AND parent_id = 0 AND is_gift = 0 AND rec_type = '$flow_type'";
 
             if ($GLOBALS['db']->getOne($sql) == 0) {
-                show_message($GLOBALS['_LANG']['no_goods_in_cart'], '', '', 'warning');
+                return show_message($GLOBALS['_LANG']['no_goods_in_cart'], '', '', 'warning');
             }
 
             /*
@@ -502,11 +502,11 @@ class Flow extends Init
                     if ($flow_type == CART_GROUP_BUY_GOODS) {
                         $group_buy_id = $_SESSION['extension_id'];
                         if ($group_buy_id <= 0) {
-                            show_message('error group_buy_id');
+                            return show_message('error group_buy_id');
                         }
                         $group_buy = group_buy_info($group_buy_id);
                         if (empty($group_buy)) {
-                            show_message('group buy not exists: ' . $group_buy_id);
+                            return show_message('group buy not exists: ' . $group_buy_id);
                         }
 
                         if ($group_buy['deposit'] > 0) {
@@ -1134,7 +1134,7 @@ class Flow extends Init
                 " WHERE " . $where .
                 "AND parent_id = 0 AND is_gift = 0 AND rec_type = '$flow_type'";
             if ($GLOBALS['db']->getOne($sql) == 0) {
-                show_message($GLOBALS['_LANG']['no_goods_in_cart'], '', '', 'warning');
+                return show_message($GLOBALS['_LANG']['no_goods_in_cart'], '', '', 'warning');
             }
 
             /* 检查商品库存 */
@@ -1263,12 +1263,12 @@ class Flow extends Init
             $cart_goods = cart_goods($flow_type);
             add_log("pc create order ==cart_goods==", $cart_goods);
             if (empty($cart_goods)) {
-                show_message($GLOBALS['_LANG']['no_goods_in_cart'], $GLOBALS['_LANG']['back_home'], './', 'warning');
+                return show_message($GLOBALS['_LANG']['no_goods_in_cart'], $GLOBALS['_LANG']['back_home'], './', 'warning');
             }
 
             /* 检查商品总额是否达到最低限购金额 */
             if ($flow_type == CART_GENERAL_GOODS && cart_amount(true, CART_GENERAL_GOODS) < $GLOBALS['_CFG']['min_goods_amount']) {
-                show_message(sprintf($GLOBALS['_LANG']['goods_amount_not_enough'], price_format($GLOBALS['_CFG']['min_goods_amount'], false)));
+                return show_message(sprintf($GLOBALS['_LANG']['goods_amount_not_enough'], price_format($GLOBALS['_CFG']['min_goods_amount'], false)));
             }
 
             /* 收货人信息 */
@@ -1286,7 +1286,7 @@ class Flow extends Init
             if (isset($is_real_good)) {
                 $sql = "SELECT shipping_id FROM " . $GLOBALS['ecs']->table('shipping') . " WHERE shipping_id=" . $order['shipping_id'] . " AND enabled =1";
                 if (!$GLOBALS['db']->getOne($sql)) {
-                    show_message($GLOBALS['_LANG']['flow_no_shipping']);
+                    return show_message($GLOBALS['_LANG']['flow_no_shipping']);
                 }
             }
             /* 订单中的总额 */
@@ -1344,7 +1344,7 @@ class Flow extends Init
                     $order['surplus'] = 0;
                 }
                 if ($order['order_amount'] > ($user_info['user_money'] + $user_info['credit_line'])) {
-                    show_message($GLOBALS['_LANG']['balance_not_enough']);
+                    return show_message($GLOBALS['_LANG']['balance_not_enough']);
                 } else {
                     $order['surplus'] = $order['order_amount'];
                     $order['order_amount'] = 0;
@@ -1574,7 +1574,7 @@ class Flow extends Init
                 $this->flow_update_cart($_POST['goods_number']);
             }
 
-            show_message($GLOBALS['_LANG']['update_cart_notice'], $GLOBALS['_LANG']['back_to_cart'], 'flow.php');
+            return show_message($GLOBALS['_LANG']['update_cart_notice'], $GLOBALS['_LANG']['back_to_cart'], 'flow.php');
         }
 
         /*------------------------------------------------------ */
@@ -1597,25 +1597,25 @@ class Flow extends Init
             $act_id = intval($_POST['act_id']);
             $favourable = favourable_info($act_id);
             if (empty($favourable)) {
-                show_message($GLOBALS['_LANG']['favourable_not_exist']);
+                return show_message($GLOBALS['_LANG']['favourable_not_exist']);
             }
 
             /* 判断用户能否享受该优惠 */
             if (!$this->favourable_available($favourable)) {
-                show_message($GLOBALS['_LANG']['favourable_not_available']);
+                return show_message($GLOBALS['_LANG']['favourable_not_available']);
             }
 
             /* 检查购物车中是否已有该优惠 */
             $cart_favourable = $this->cart_favourable();
             if ($this->favourable_used($favourable, $cart_favourable)) {
-                show_message($GLOBALS['_LANG']['favourable_used']);
+                return show_message($GLOBALS['_LANG']['favourable_used']);
             }
 
             /* 赠品（特惠品）优惠 */
             if ($favourable['act_type'] == FAT_GOODS) {
                 /* 检查是否选择了赠品 */
                 if (empty($_POST['gift'])) {
-                    show_message($GLOBALS['_LANG']['pls_select_gift']);
+                    return show_message($GLOBALS['_LANG']['pls_select_gift']);
                 }
 
                 /* 检查是否已在购物车 */
@@ -1627,13 +1627,13 @@ class Flow extends Init
                     " AND goods_id " . db_create_in($_POST['gift']);
                 $gift_name = $GLOBALS['db']->getCol($sql);
                 if (!empty($gift_name)) {
-                    show_message(sprintf($GLOBALS['_LANG']['gift_in_cart'], join(',', $gift_name)));
+                    return show_message(sprintf($GLOBALS['_LANG']['gift_in_cart'], join(',', $gift_name)));
                 }
 
                 /* 检查数量是否超过上限 */
                 $count = isset($cart_favourable[$act_id]) ? $cart_favourable[$act_id] : 0;
                 if ($favourable['act_type_ext'] > 0 && $count + count($_POST['gift']) > $favourable['act_type_ext']) {
-                    show_message($GLOBALS['_LANG']['gift_count_exceed']);
+                    return show_message($GLOBALS['_LANG']['gift_count_exceed']);
                 }
 
                 /* 添加赠品到购物车 */
@@ -1961,7 +1961,7 @@ class Flow extends Init
             //查询：系统启用了库存，检查输入的商品数量是否有效
             if (intval($GLOBALS['_CFG']['use_storage']) > 0 && $goods['extension_code'] != 'package_buy') {
                 if ($row['goods_number'] < $val) {
-                    show_message(sprintf(
+                    return show_message(sprintf(
                         $GLOBALS['_LANG']['stock_insufficiency'],
                         $row['goods_name'],
                         $row['goods_number'],
@@ -1976,7 +1976,7 @@ class Flow extends Init
 
                     $product_number = $GLOBALS['db']->getOne($sql);
                     if ($product_number < $val) {
-                        show_message(sprintf(
+                        return show_message(sprintf(
                             $GLOBALS['_LANG']['stock_insufficiency'],
                             $row['goods_name'],
                             $product_number['product_number'],
@@ -1987,7 +1987,7 @@ class Flow extends Init
                 }
             } elseif (intval($GLOBALS['_CFG']['use_storage']) > 0 && $goods['extension_code'] == 'package_buy') {
                 if (judge_package_stock($goods['goods_id'], $val)) {
-                    show_message($GLOBALS['_LANG']['package_stock_insufficiency']);
+                    return show_message($GLOBALS['_LANG']['package_stock_insufficiency']);
 
                 }
             }
@@ -2088,7 +2088,7 @@ class Flow extends Init
             //系统启用了库存，检查输入的商品数量是否有效
             if (intval($GLOBALS['_CFG']['use_storage']) > 0 && $goods['extension_code'] != 'package_buy') {
                 if ($row['goods_number'] < $val) {
-                    show_message(sprintf(
+                    return show_message(sprintf(
                         $GLOBALS['_LANG']['stock_insufficiency'],
                         $row['goods_name'],
                         $row['goods_number'],
@@ -2103,7 +2103,7 @@ class Flow extends Init
                     $sql = "SELECT product_number FROM " . $GLOBALS['ecs']->table('products') . " WHERE goods_id = '" . $goods['goods_id'] . "' AND product_id = '" . $row['product_id'] . "'";
                     $product_number = $GLOBALS['db']->getOne($sql);
                     if ($product_number < $val) {
-                        show_message(sprintf(
+                        return show_message(sprintf(
                             $GLOBALS['_LANG']['stock_insufficiency'],
                             $row['goods_name'],
                             $row['goods_number'],
@@ -2114,7 +2114,7 @@ class Flow extends Init
                 }
             } elseif (intval($GLOBALS['_CFG']['use_storage']) > 0 && $goods['extension_code'] == 'package_buy') {
                 if (judge_package_stock($goods['goods_id'], $val)) {
-                    show_message($GLOBALS['_LANG']['package_stock_insufficiency']);
+                    return show_message($GLOBALS['_LANG']['package_stock_insufficiency']);
 
                 }
             }

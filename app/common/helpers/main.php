@@ -1227,7 +1227,7 @@ function show_message($content, $links = '', $hrefs = '', $type = 'info', $auto_
 
     $GLOBALS['smarty']->assign('auto_redirect', $auto_redirect);
     $GLOBALS['smarty']->assign('message', $msg);
-    $GLOBALS['smarty']->display('message.dwt');
+    return $GLOBALS['smarty']->display('message.dwt');
 
 
 }

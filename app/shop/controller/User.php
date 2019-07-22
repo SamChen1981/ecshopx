@@ -134,21 +134,21 @@ class User extends Init
 
                 $back_act = isset($_SESSION['back_act']) ? trim($_SESSION['back_act']) : '';
                 if (empty($_POST['agreement'])) {
-                    show_message($GLOBALS['_LANG']['passport_js']['agreement']);
+                    return show_message($GLOBALS['_LANG']['passport_js']['agreement']);
                 }
                 if (strlen($username) < 3) {
-                    show_message($GLOBALS['_LANG']['passport_js']['username_shorter']);
+                    return show_message($GLOBALS['_LANG']['passport_js']['username_shorter']);
                 }
                 if (is_numeric($username) && !preg_match("/^(((13[0-9]{1})|(14[0-9]{1})|(15[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/", $username)) {
-                    show_message($GLOBALS['_LANG']['passport_js']['username_invalid']);
+                    return show_message($GLOBALS['_LANG']['passport_js']['username_invalid']);
                 }
 
                 if (strlen($password) < 6) {
-                    show_message($GLOBALS['_LANG']['passport_js']['password_shorter']);
+                    return show_message($GLOBALS['_LANG']['passport_js']['password_shorter']);
                 }
 
                 if (strpos($password, ' ') > 0) {
-                    show_message($GLOBALS['_LANG']['passwd_balnk']);
+                    return show_message($GLOBALS['_LANG']['passwd_balnk']);
                 }
 
                 //短信验证码检查
@@ -156,12 +156,12 @@ class User extends Init
                     if ($sms_code != '' && $sms_code == $_SESSION[$username . '-sms_code']) {
                         // 短信验证码十分钟内有效
                         if (time() - $_SESSION[$username . '-send_time'] > 600) {
-                            show_message('短信验证码已过期', '返回上一页', 'user.php?act=register', 'error');
+                            return show_message('短信验证码已过期', '返回上一页', 'user.php?act=register', 'error');
                         }
                         $other['mobile_phone'] = $username;
                         $_SESSION[$username . '-sms_code'] = 'false';
                     } else {
-                        show_message('短信验证码错误', $GLOBALS['_LANG']['sign_up'], 'user.php?act=register', 'error');
+                        return show_message('短信验证码错误', $GLOBALS['_LANG']['sign_up'], 'user.php?act=register', 'error');
                     }
                 }
 
@@ -201,7 +201,7 @@ class User extends Init
                     if ($matrix->get_bind_info('ecos.taocrm')) {
                         $matrix->createMember($_SESSION['user_id'], 'ecos.taocrm');
                     }*/
-                    show_message(sprintf($GLOBALS['_LANG']['register_success'], $username . $ucdata), array($GLOBALS['_LANG']['back_up_page'], $GLOBALS['_LANG']['profile_lnk']), array($back_act, 'user.php'), 'info');
+                    return show_message(sprintf($GLOBALS['_LANG']['register_success'], $username . $ucdata), array($GLOBALS['_LANG']['back_up_page'], $GLOBALS['_LANG']['profile_lnk']), array($back_act, 'user.php'), 'info');
                 } else {
                     $GLOBALS['err']->show($GLOBALS['_LANG']['sign_up'], 'user.php?act=register');
                 }
@@ -245,10 +245,10 @@ class User extends Init
                     $GLOBALS['db']->query($sql);
                     $sql = 'SELECT user_name, email FROM ' . $GLOBALS['ecs']->table('users') . " WHERE user_id = '$id'";
                     $row = $GLOBALS['db']->getRow($sql);
-                    show_message(sprintf($GLOBALS['_LANG']['validate_ok'], $row['user_name'], $row['email']), $GLOBALS['_LANG']['profile_lnk'], 'user.php');
+                    return show_message(sprintf($GLOBALS['_LANG']['validate_ok'], $row['user_name'], $row['email']), $GLOBALS['_LANG']['profile_lnk'], 'user.php');
                 }
             }
-            show_message($GLOBALS['_LANG']['validate_fail']);
+            return show_message($GLOBALS['_LANG']['validate_fail']);
         } /* 验证用户注册用户名是否可以注册 */
         elseif ($action == 'is_registered') {
             load_helper('passport');
@@ -294,14 +294,14 @@ class User extends Init
             $back_act = isset($_SESSION['back_act']) ? trim($_SESSION['back_act']) : '';
             // 登录密码不能为空
             if (empty($password)) {
-                show_message($GLOBALS['_LANG']['passport_js']['password_empty'], $GLOBALS['_LANG']['relogin_lnk'], 'user.php', 'error');
+                return show_message($GLOBALS['_LANG']['passport_js']['password_empty'], $GLOBALS['_LANG']['relogin_lnk'], 'user.php', 'error');
             }
 
 
             $captcha = intval($GLOBALS['_CFG']['captcha']);
             if (($captcha & CAPTCHA_LOGIN) && (!($captcha & CAPTCHA_LOGIN_FAIL) || (($captcha & CAPTCHA_LOGIN_FAIL) && $_SESSION['login_fail'] > 2)) && gd_version() > 0) {
                 if (empty($_POST['captcha'])) {
-                    show_message($GLOBALS['_LANG']['invalid_captcha'], $GLOBALS['_LANG']['relogin_lnk'], 'user.php', 'error');
+                    return show_message($GLOBALS['_LANG']['invalid_captcha'], $GLOBALS['_LANG']['relogin_lnk'], 'user.php', 'error');
                 }
 
                 /* 检查验证码 */
@@ -309,7 +309,7 @@ class User extends Init
                 $validator = new captcha();
                 $validator->session_word = 'captcha_login';
                 if (!$validator->check_word($_POST['captcha'])) {
-                    show_message($GLOBALS['_LANG']['invalid_captcha'], $GLOBALS['_LANG']['relogin_lnk'], 'user.php', 'error');
+                    return show_message($GLOBALS['_LANG']['invalid_captcha'], $GLOBALS['_LANG']['relogin_lnk'], 'user.php', 'error');
                 }
             }
 
@@ -319,10 +319,10 @@ class User extends Init
                 recalculate_price();
 
                 $ucdata = isset($GLOBALS['user']->ucdata) ? $GLOBALS['user']->ucdata : '';
-                show_message($GLOBALS['_LANG']['login_success'] . $ucdata, array($GLOBALS['_LANG']['back_up_page'], $GLOBALS['_LANG']['profile_lnk']), array($back_act, 'user.php'), 'info');
+                return show_message($GLOBALS['_LANG']['login_success'] . $ucdata, array($GLOBALS['_LANG']['back_up_page'], $GLOBALS['_LANG']['profile_lnk']), array($back_act, 'user.php'), 'info');
             } else {
                 $_SESSION['login_fail']++;
-                show_message($GLOBALS['_LANG']['login_failure'], $GLOBALS['_LANG']['relogin_lnk'], 'user.php', 'error');
+                return show_message($GLOBALS['_LANG']['login_failure'], $GLOBALS['_LANG']['relogin_lnk'], 'user.php', 'error');
             }
         } /* 处理 ajax 的登录请求 */
         elseif ($action == 'signin') {
@@ -375,7 +375,7 @@ class User extends Init
             }
             $GLOBALS['user']->logout();
             $ucdata = empty($GLOBALS['user']->ucdata) ? "" : $GLOBALS['user']->ucdata;
-            show_message($GLOBALS['_LANG']['logout'] . $ucdata, array($GLOBALS['_LANG']['back_up_page'], $GLOBALS['_LANG']['back_home_lnk']), array($back_act, 'index.php'), 'info');
+            return show_message($GLOBALS['_LANG']['logout'] . $ucdata, array($GLOBALS['_LANG']['back_up_page'], $GLOBALS['_LANG']['back_home_lnk']), array($back_act, 'index.php'), 'info');
         } /* 个人资料页面 */
         elseif ($action == 'profile') {
             load_helper('transaction');
@@ -465,22 +465,22 @@ class User extends Init
             }
 
             if (!empty($office_phone) && !preg_match('/^[\d|\_|\-|\s]+$/', $office_phone)) {
-                show_message($GLOBALS['_LANG']['passport_js']['office_phone_invalid']);
+                return show_message($GLOBALS['_LANG']['passport_js']['office_phone_invalid']);
             }
             if (!empty($home_phone) && !preg_match('/^[\d|\_|\-|\s]+$/', $home_phone)) {
-                show_message($GLOBALS['_LANG']['passport_js']['home_phone_invalid']);
+                return show_message($GLOBALS['_LANG']['passport_js']['home_phone_invalid']);
             }
             if (!is_email($email)) {
-                show_message($GLOBALS['_LANG']['msg_email_format']);
+                return show_message($GLOBALS['_LANG']['msg_email_format']);
             }
             if (!empty($msn) && !is_email($msn)) {
-                show_message($GLOBALS['_LANG']['passport_js']['msn_invalid']);
+                return show_message($GLOBALS['_LANG']['passport_js']['msn_invalid']);
             }
             if (!empty($qq) && !preg_match('/^\d+$/', $qq)) {
-                show_message($GLOBALS['_LANG']['passport_js']['qq_invalid']);
+                return show_message($GLOBALS['_LANG']['passport_js']['qq_invalid']);
             }
             if (!empty($mobile_phone) && !preg_match('/^[\d-\s]+$/', $mobile_phone)) {
-                show_message($GLOBALS['_LANG']['passport_js']['mobile_phone_invalid']);
+                return show_message($GLOBALS['_LANG']['passport_js']['mobile_phone_invalid']);
             }
 
 
@@ -494,14 +494,14 @@ class User extends Init
 
 
             if (edit_profile($profile)) {
-                show_message($GLOBALS['_LANG']['edit_profile_success'], $GLOBALS['_LANG']['profile_lnk'], 'user.php?act=profile', 'info');
+                return show_message($GLOBALS['_LANG']['edit_profile_success'], $GLOBALS['_LANG']['profile_lnk'], 'user.php?act=profile', 'info');
             } else {
                 if ($GLOBALS['user']->error == ERR_EMAIL_EXISTS) {
                     $msg = sprintf($GLOBALS['_LANG']['email_exist'], $profile['email']);
                 } else {
                     $msg = $GLOBALS['_LANG']['edit_profile_failed'];
                 }
-                show_message($msg, '', '', 'info');
+                return show_message($msg, '', '', 'info');
             }
         } /* 密码找回-->修改密码界面 */
         elseif ($action == 'get_password') {
@@ -514,7 +514,7 @@ class User extends Init
                 /* 判断链接的合法性 */
                 $user_info = $GLOBALS['user']->get_profile_by_id($uid);
                 if (empty($user_info) || ($user_info && md5($user_info['user_id'] . $GLOBALS['_CFG']['hash_code'] . $user_info['reg_time']) != $code)) {
-                    show_message($GLOBALS['_LANG']['parm_error'], $GLOBALS['_LANG']['back_home_lnk'], './', 'info');
+                    return show_message($GLOBALS['_LANG']['parm_error'], $GLOBALS['_LANG']['back_home_lnk'], './', 'info');
                 }
 
                 $GLOBALS['smarty']->assign('uid', $uid);
@@ -532,7 +532,7 @@ class User extends Init
         } /* 密码找回-->根据注册用户名取得密码提示问题界面 */
         elseif ($action == 'get_passwd_question') {
             if (empty($_POST['user_name'])) {
-                show_message($GLOBALS['_LANG']['no_passwd_question'], $GLOBALS['_LANG']['back_home_lnk'], './', 'info');
+                return show_message($GLOBALS['_LANG']['no_passwd_question'], $GLOBALS['_LANG']['back_home_lnk'], './', 'info');
             } else {
                 $user_name = trim($_POST['user_name']);
             }
@@ -543,7 +543,7 @@ class User extends Init
 
             //如果没有设置密码问题，给出错误提示
             if (empty($user_question_arr['passwd_answer'])) {
-                show_message($GLOBALS['_LANG']['no_passwd_question'], $GLOBALS['_LANG']['back_home_lnk'], './', 'info');
+                return show_message($GLOBALS['_LANG']['no_passwd_question'], $GLOBALS['_LANG']['back_home_lnk'], './', 'info');
             }
 
             $_SESSION['temp_user'] = $user_question_arr['user_id'];  //设置临时用户，不具有有效身份
@@ -563,7 +563,7 @@ class User extends Init
             $captcha = intval($GLOBALS['_CFG']['captcha']);
             if (($captcha & CAPTCHA_LOGIN) && (!($captcha & CAPTCHA_LOGIN_FAIL) || (($captcha & CAPTCHA_LOGIN_FAIL) && $_SESSION['login_fail'] > 2)) && gd_version() > 0) {
                 if (empty($_POST['captcha'])) {
-                    show_message($GLOBALS['_LANG']['invalid_captcha'], $GLOBALS['_LANG']['back_retry_answer'], 'user.php?act=qpassword_name', 'error');
+                    return show_message($GLOBALS['_LANG']['invalid_captcha'], $GLOBALS['_LANG']['back_retry_answer'], 'user.php?act=qpassword_name', 'error');
                 }
 
                 /* 检查验证码 */
@@ -571,12 +571,12 @@ class User extends Init
                 $validator = new captcha();
                 $validator->session_word = 'captcha_login';
                 if (!$validator->check_word($_POST['captcha'])) {
-                    show_message($GLOBALS['_LANG']['invalid_captcha'], $GLOBALS['_LANG']['back_retry_answer'], 'user.php?act=qpassword_name', 'error');
+                    return show_message($GLOBALS['_LANG']['invalid_captcha'], $GLOBALS['_LANG']['back_retry_answer'], 'user.php?act=qpassword_name', 'error');
                 }
             }
 
             if (empty($_POST['passwd_answer']) || $_POST['passwd_answer'] != $_SESSION['passwd_answer']) {
-                show_message($GLOBALS['_LANG']['wrong_passwd_answer'], $GLOBALS['_LANG']['back_retry_answer'], 'user.php?act=qpassword_name', 'info');
+                return show_message($GLOBALS['_LANG']['wrong_passwd_answer'], $GLOBALS['_LANG']['back_retry_answer'], 'user.php?act=qpassword_name', 'info');
             } else {
                 $_SESSION['user_id'] = $_SESSION['temp_user'];
                 $_SESSION['user_name'] = $_SESSION['temp_user_name'];
@@ -604,14 +604,14 @@ class User extends Init
                 $code = md5($user_info['user_id'] . $GLOBALS['_CFG']['hash_code'] . $user_info['reg_time']);
                 //发送邮件的函数
                 if (send_pwd_email($user_info['user_id'], $user_name, $email, $code)) {
-                    show_message($GLOBALS['_LANG']['send_success'] . $email, $GLOBALS['_LANG']['back_home_lnk'], './', 'info');
+                    return show_message($GLOBALS['_LANG']['send_success'] . $email, $GLOBALS['_LANG']['back_home_lnk'], './', 'info');
                 } else {
                     //发送邮件出错
-                    show_message($GLOBALS['_LANG']['fail_send_password'], $GLOBALS['_LANG']['back_page_up'], './', 'info');
+                    return show_message($GLOBALS['_LANG']['fail_send_password'], $GLOBALS['_LANG']['back_page_up'], './', 'info');
                 }
             } else {
                 //用户名与邮件地址不匹配
-                show_message($GLOBALS['_LANG']['username_no_email'], $GLOBALS['_LANG']['back_page_up'], '', 'info');
+                return show_message($GLOBALS['_LANG']['username_no_email'], $GLOBALS['_LANG']['back_page_up'], '', 'info');
             }
         } /* 重置新密码 */
         elseif ($action == 'reset_password') {
@@ -626,7 +626,7 @@ class User extends Init
             $code = isset($_POST['code']) ? trim($_POST['code']) : '';
 
             if (strlen($new_password) < 6) {
-                show_message($GLOBALS['_LANG']['passport_js']['password_shorter']);
+                return show_message($GLOBALS['_LANG']['passport_js']['password_shorter']);
             }
             $user_info = $GLOBALS['user']->get_profile_by_id($user_id); //论坛记录
 
@@ -635,12 +635,12 @@ class User extends Init
                     $sql = "UPDATE " . $GLOBALS['ecs']->table('users') . "SET `ec_salt`='0' WHERE user_id= '" . $user_id . "'";
                     $GLOBALS['db']->query($sql);
                     $GLOBALS['user']->logout();
-                    show_message($GLOBALS['_LANG']['edit_password_success'], $GLOBALS['_LANG']['relogin_lnk'], 'user.php?act=login', 'info');
+                    return show_message($GLOBALS['_LANG']['edit_password_success'], $GLOBALS['_LANG']['relogin_lnk'], 'user.php?act=login', 'info');
                 } else {
-                    show_message($GLOBALS['_LANG']['edit_password_failure'] . '1', $GLOBALS['_LANG']['back_page_up'], '', 'info');
+                    return show_message($GLOBALS['_LANG']['edit_password_failure'] . '1', $GLOBALS['_LANG']['back_page_up'], '', 'info');
                 }
             } else {
-                show_message($GLOBALS['_LANG']['edit_password_failure'], $GLOBALS['_LANG']['back_page_up'], '', 'info');
+                return show_message($GLOBALS['_LANG']['edit_password_failure'], $GLOBALS['_LANG']['back_page_up'], '', 'info');
             }
         } /* 添加一个红包 */
         elseif ($action == 'act_add_bonus') {
@@ -649,7 +649,7 @@ class User extends Init
             $bouns_sn = isset($_POST['bonus_sn']) ? intval($_POST['bonus_sn']) : '';
 
             if (add_bonus($user_id, $bouns_sn)) {
-                show_message($GLOBALS['_LANG']['add_bonus_sucess'], $GLOBALS['_LANG']['back_up_page'], 'user.php?act=bonus', 'info');
+                return show_message($GLOBALS['_LANG']['add_bonus_sucess'], $GLOBALS['_LANG']['back_up_page'], 'user.php?act=bonus', 'info');
             } else {
                 $GLOBALS['err']->show($GLOBALS['_LANG']['back_up_page'], 'user.php?act=bonus');
             }
@@ -918,7 +918,7 @@ class User extends Init
             );
 
             if (update_address($address)) {
-                show_message($GLOBALS['_LANG']['edit_address_success'], $GLOBALS['_LANG']['address_list_lnk'], 'user.php?act=address_list');
+                return show_message($GLOBALS['_LANG']['edit_address_success'], $GLOBALS['_LANG']['address_list_lnk'], 'user.php?act=address_list');
             }
         } /* 删除收货地址 */
         elseif ($action == 'drop_consignee') {
@@ -930,7 +930,7 @@ class User extends Init
                 return $this->redirect('user.php?act=address_list');
 
             } else {
-                show_message($GLOBALS['_LANG']['del_address_false']);
+                return show_message($GLOBALS['_LANG']['del_address_false']);
             }
         } /* 显示收藏商品列表 */
         elseif ($action == 'collection_list') {
@@ -1052,7 +1052,7 @@ class User extends Init
                 //             //     $matrix = new matrix();
                 //     $matrix->update_order_buyer_message($message);
                 // }
-                show_message($GLOBALS['_LANG']['add_message_success'], $GLOBALS['_LANG']['message_list_lnk'], 'user.php?act=message_list&order_id=' . $message['order_id'], 'info');
+                return show_message($GLOBALS['_LANG']['add_message_success'], $GLOBALS['_LANG']['message_list_lnk'], 'user.php?act=message_list&order_id=' . $message['order_id'], 'info');
             } else {
                 $GLOBALS['err']->show($GLOBALS['_LANG']['message_list_lnk'], 'user.php?act=message_list');
             }
@@ -1097,7 +1097,7 @@ class User extends Init
 
             $goods_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
             if ($goods_id == 0) {
-                show_message($GLOBALS['_LANG']['no_goods_id'], $GLOBALS['_LANG']['back_page_up'], '', 'error');
+                return show_message($GLOBALS['_LANG']['no_goods_id'], $GLOBALS['_LANG']['back_page_up'], '', 'error');
             }
 
             /* 根据规格属性获取货品规格信息 */
@@ -1138,11 +1138,11 @@ class User extends Init
             // 查看此商品是否已经登记过
             $rec_id = get_booking_rec($user_id, $booking['goods_id']);
             if ($rec_id > 0) {
-                show_message($GLOBALS['_LANG']['booking_rec_exist'], $GLOBALS['_LANG']['back_page_up'], '', 'error');
+                return show_message($GLOBALS['_LANG']['booking_rec_exist'], $GLOBALS['_LANG']['back_page_up'], '', 'error');
             }
 
             if (add_booking($booking)) {
-                show_message(
+                return show_message(
                     $GLOBALS['_LANG']['booking_success'],
                     $GLOBALS['_LANG']['back_booking_list'],
                     'user.php?act=booking_list',
@@ -1273,7 +1273,7 @@ class User extends Init
             load_helper('order');
             $amount = isset($_POST['amount']) ? floatval($_POST['amount']) : 0;
             if ($amount <= 0) {
-                show_message($GLOBALS['_LANG']['amount_gt_zero']);
+                return show_message($GLOBALS['_LANG']['amount_gt_zero']);
             }
 
             /* 变量初始化 */
@@ -1293,7 +1293,7 @@ class User extends Init
                 $sur_amount = get_user_surplus($user_id);
                 if ($amount > $sur_amount) {
                     $content = $GLOBALS['_LANG']['surplus_amount_error'];
-                    show_message($content, $GLOBALS['_LANG']['back_page_up'], '', 'info');
+                    return show_message($content, $GLOBALS['_LANG']['back_page_up'], '', 'info');
                 }
 
                 //插入会员账目明细
@@ -1304,15 +1304,15 @@ class User extends Init
                 /* 如果成功提交 */
                 if ($surplus['rec_id'] > 0) {
                     $content = $GLOBALS['_LANG']['surplus_appl_submit'];
-                    show_message($content, $GLOBALS['_LANG']['back_account_log'], 'user.php?act=account_log', 'info');
+                    return show_message($content, $GLOBALS['_LANG']['back_account_log'], 'user.php?act=account_log', 'info');
                 } else {
                     $content = $GLOBALS['_LANG']['process_false'];
-                    show_message($content, $GLOBALS['_LANG']['back_page_up'], '', 'info');
+                    return show_message($content, $GLOBALS['_LANG']['back_page_up'], '', 'info');
                 }
             } /* 如果是会员预付款，跳转到下一步，进行线上支付的操作 */
             else {
                 if ($surplus['payment_id'] <= 0) {
-                    show_message($GLOBALS['_LANG']['select_payment_pls']);
+                    return show_message($GLOBALS['_LANG']['select_payment_pls']);
                 }
 
                 load_helper('payment');
@@ -1325,7 +1325,7 @@ class User extends Init
                 if ($surplus['rec_id'] > 0) {
                     //检查金额是否有改变，如果有改变，不可以修改
                     if (!check_account_money($surplus['rec_id'], $user_id, $amount)) {
-                        show_message($GLOBALS['_LANG']['check_account_money_fail']);
+                        return show_message($GLOBALS['_LANG']['check_account_money_fail']);
                     }
                     //更新会员账目明细
                     $surplus['rec_id'] = update_user_account($surplus);
@@ -1556,7 +1556,7 @@ class User extends Init
             $from_order = isset($_POST['from_order']) ? trim($_POST['from_order']) : '';
             $to_order = isset($_POST['to_order']) ? trim($_POST['to_order']) : '';
             if (merge_user_order($from_order, $to_order, $user_id)) {
-                show_message($GLOBALS['_LANG']['merge_order_success'], $GLOBALS['_LANG']['order_list_lnk'], 'user.php?act=order_list', 'info');
+                return show_message($GLOBALS['_LANG']['merge_order_success'], $GLOBALS['_LANG']['order_list_lnk'], 'user.php?act=order_list', 'info');
             } else {
                 $GLOBALS['err']->show($GLOBALS['_LANG']['order_list_lnk']);
             }
@@ -2088,7 +2088,7 @@ class User extends Init
                         $info = $GLOBALS['_LANG']['hash_wrong'];
                     }
                 }
-                show_message($info, $GLOBALS['_LANG']['back_home_lnk'], 'index.php');
+                return show_message($info, $GLOBALS['_LANG']['back_home_lnk'], 'index.php');
             } elseif ($job == 'del_check') {
                 if (empty($ck)) {
                     $info = sprintf($GLOBALS['_LANG']['email_invalid'], $email);
@@ -2103,7 +2103,7 @@ class User extends Init
                 } else {
                     $info = $GLOBALS['_LANG']['email_not_alive'];
                 }
-                show_message($info, $GLOBALS['_LANG']['back_home_lnk'], 'index.php');
+                return show_message($info, $GLOBALS['_LANG']['back_home_lnk'], 'index.php');
             }
         } /* ajax 发送验证邮件 */
         elseif
@@ -2295,7 +2295,7 @@ class User extends Init
 
 
             if ($num <= 0 || $num != floor($num)) {
-                show_message($GLOBALS['_LANG']['invalid_points'], $GLOBALS['_LANG']['transform_points'], 'user.php?act=transform_points');
+                return show_message($GLOBALS['_LANG']['invalid_points'], $GLOBALS['_LANG']['transform_points'], 'user.php?act=transform_points');
             }
 
             $num = floor($num); //格式化为整数
@@ -2334,7 +2334,7 @@ class User extends Init
 
             /* 检查积分是否超过最大值 */
             if ($max_points <= 0 || $num > $max_points) {
-                show_message($GLOBALS['_LANG']['overflow_points'], $GLOBALS['_LANG']['transform_points'], 'user.php?act=transform_points');
+                return show_message($GLOBALS['_LANG']['overflow_points'], $GLOBALS['_LANG']['transform_points'], 'user.php?act=transform_points');
             }
 
             switch ($rule_key) {
@@ -2342,28 +2342,28 @@ class User extends Init
                     $result_points = floor($num * $to / $from);
                     $GLOBALS['user']->set_points($row['user_name'], array($bbs_key => 0 - $num)); //调整论坛积分
                     log_account_change($row['user_id'], 0, 0, 0, $result_points, $GLOBALS['_LANG']['transform_points'], ACT_OTHER);
-                    show_message(sprintf($GLOBALS['_LANG']['to_pay_points'], $num, $points_name[$bbs_key]['title'], $result_points), $GLOBALS['_LANG']['transform_points'], 'user.php?act=transform_points');
+                    return show_message(sprintf($GLOBALS['_LANG']['to_pay_points'], $num, $points_name[$bbs_key]['title'], $result_points), $GLOBALS['_LANG']['transform_points'], 'user.php?act=transform_points');
 
                 // no break
                 case TO_R:
                     $result_points = floor($num * $to / $from);
                     $GLOBALS['user']->set_points($row['user_name'], array($bbs_key => 0 - $num)); //调整论坛积分
                     log_account_change($row['user_id'], 0, 0, $result_points, 0, $GLOBALS['_LANG']['transform_points'], ACT_OTHER);
-                    show_message(sprintf($GLOBALS['_LANG']['to_rank_points'], $num, $points_name[$bbs_key]['title'], $result_points), $GLOBALS['_LANG']['transform_points'], 'user.php?act=transform_points');
+                    return show_message(sprintf($GLOBALS['_LANG']['to_rank_points'], $num, $points_name[$bbs_key]['title'], $result_points), $GLOBALS['_LANG']['transform_points'], 'user.php?act=transform_points');
 
                 // no break
                 case FROM_P:
                     $result_points = floor($num * $to / $from);
                     log_account_change($row['user_id'], 0, 0, 0, 0 - $num, $GLOBALS['_LANG']['transform_points'], ACT_OTHER); //调整商城积分
                     $GLOBALS['user']->set_points($row['user_name'], array($bbs_key => $result_points)); //调整论坛积分
-                    show_message(sprintf($GLOBALS['_LANG']['from_pay_points'], $num, $result_points, $points_name[$bbs_key]['title']), $GLOBALS['_LANG']['transform_points'], 'user.php?act=transform_points');
+                    return show_message(sprintf($GLOBALS['_LANG']['from_pay_points'], $num, $result_points, $points_name[$bbs_key]['title']), $GLOBALS['_LANG']['transform_points'], 'user.php?act=transform_points');
 
                 // no break
                 case FROM_R:
                     $result_points = floor($num * $to / $from);
                     log_account_change($row['user_id'], 0, 0, 0 - $num, 0, $GLOBALS['_LANG']['transform_points'], ACT_OTHER); //调整商城积分
                     $GLOBALS['user']->set_points($row['user_name'], array($bbs_key => $result_points)); //调整论坛积分
-                    show_message(sprintf($GLOBALS['_LANG']['from_rank_points'], $num, $result_points, $points_name[$bbs_key]['title']), $GLOBALS['_LANG']['transform_points'], 'user.php?act=transform_points');
+                    return show_message(sprintf($GLOBALS['_LANG']['from_rank_points'], $num, $result_points, $points_name[$bbs_key]['title']), $GLOBALS['_LANG']['transform_points'], 'user.php?act=transform_points');
             }
         } elseif
         ($action == 'act_transform_ucenter_points') {
@@ -2386,10 +2386,10 @@ class User extends Init
             $ratio = 0;
 
             if ($exchange_amount <= 0) {
-                show_message($GLOBALS['_LANG']['invalid_points'], $GLOBALS['_LANG']['transform_points'], 'user.php?act=transform_points');
+                return show_message($GLOBALS['_LANG']['invalid_points'], $GLOBALS['_LANG']['transform_points'], 'user.php?act=transform_points');
             }
             if ($exchange_amount > $row[$shop_points[$fromcredits]]) {
-                show_message($GLOBALS['_LANG']['overflow_points'], $GLOBALS['_LANG']['transform_points'], 'user.php?act=transform_points');
+                return show_message($GLOBALS['_LANG']['overflow_points'], $GLOBALS['_LANG']['transform_points'], 'user.php?act=transform_points');
             }
             foreach ($rule as $credit) {
                 if ($credit['appiddesc'] == $appiddesc && $credit['creditdesc'] == $creditdesc && $credit['creditsrc'] == $fromcredits) {
@@ -2398,7 +2398,7 @@ class User extends Init
                 }
             }
             if ($ratio == 0) {
-                show_message($GLOBALS['_LANG']['exchange_deny'], $GLOBALS['_LANG']['transform_points'], 'user.php?act=transform_points');
+                return show_message($GLOBALS['_LANG']['exchange_deny'], $GLOBALS['_LANG']['transform_points'], 'user.php?act=transform_points');
             }
             $netamount = floor($exchange_amount / $ratio);
             load_helper('uc');
@@ -2411,9 +2411,9 @@ class User extends Init
                 $sql = "INSERT INTO " . $GLOBALS['ecs']->table('account_log') . "(user_id, {
                     $shop_points[$fromcredits]}, change_time, change_desc, change_type)" . " VALUES('{$row['user_id']}', '-$exchange_amount', '" . gmtime() . "', '" . $cfg['uc_lang']['exchange'] . "', '98')";
                 $GLOBALS['db']->query($sql);
-                show_message(sprintf($GLOBALS['_LANG']['exchange_success'], $exchange_amount, $GLOBALS['_LANG']['exchange_points'][$fromcredits], $netamount, $credit['title']), $GLOBALS['_LANG']['transform_points'], 'user.php?act=transform_points');
+                return show_message(sprintf($GLOBALS['_LANG']['exchange_success'], $exchange_amount, $GLOBALS['_LANG']['exchange_points'][$fromcredits], $netamount, $credit['title']), $GLOBALS['_LANG']['transform_points'], 'user.php?act=transform_points');
             } else {
-                show_message($GLOBALS['_LANG']['exchange_error_1'], $GLOBALS['_LANG']['transform_points'], 'user.php?act=transform_points');
+                return show_message($GLOBALS['_LANG']['exchange_error_1'], $GLOBALS['_LANG']['transform_points'], 'user.php?act=transform_points');
             }
         } /* 清除商品浏览历史 */
         elseif
@@ -2426,7 +2426,7 @@ class User extends Init
             $order_sn = empty($_GET['order_sn']) ? '' : addslashes($_GET['order_sn']);
 
             if (empty($order_sn)) {
-                show_message($GLOBALS['_LANG']['invalid_order_sn'], '', 'user.php?act=order_list');
+                return show_message($GLOBALS['_LANG']['invalid_order_sn'], '', 'user.php?act=order_list');
             }
 
             $sql = "SELECT order_id " .
@@ -2434,7 +2434,7 @@ class User extends Init
                 " WHERE order_sn = '$order_sn' and user_id = " . $_SESSION['user_id'] . " and shipping_status = " . SS_SHIPPED . " LIMIT 1";
             $row = $GLOBALS['db']->getRow($sql);
             if (empty($row)) {
-                show_message($GLOBALS['_LANG']['invalid_order_sn'], '', 'user.php?act=order_list');
+                return show_message($GLOBALS['_LANG']['invalid_order_sn'], '', 'user.php?act=order_list');
             }
             load_helper('order');
             $GLOBALS['smarty']->assign('logistics_info', get_logistics_trace($order_sn, 0, $GLOBALS['_CFG']['lang']));
@@ -2538,12 +2538,12 @@ class User extends Init
                 if ($sms_code == $_SESSION[$username . '-sms_code']) {
                     // 短信验证码十分钟内有效
                     if (time() - $_SESSION[$username . '-send_time'] > 600) {
-                        show_message('短信验证码已过期', '返回上一页', 'user.php?act=sms_get_password', 'info');
+                        return show_message('短信验证码已过期', '返回上一页', 'user.php?act=sms_get_password', 'info');
                     }
                     $user_info = $GLOBALS['user']->get_profile_by_name($username);
                     // 判断会员是否存在
                     if (!$user_info['user_id']) {
-                        show_message(sprintf($GLOBALS['_LANG']['username_inexistent'], $username), $GLOBALS['_LANG']['back_page_up'], 'user.php?act=sms_get_password', 'info');
+                        return show_message(sprintf($GLOBALS['_LANG']['username_inexistent'], $username), $GLOBALS['_LANG']['back_page_up'], 'user.php?act=sms_get_password', 'info');
                     }
                     $_SESSION['user_id'] = $user_info['user_id'];
                     $_SESSION['change_password'] = 'true';
@@ -2553,7 +2553,7 @@ class User extends Init
                     $GLOBALS['smarty']->assign('uid', $user_info['user_id']);
                     return $GLOBALS['smarty']->display('user_passport.dwt');
                 } else {
-                    show_message('短信验证码错误', '返回上一页', 'user.php?act=sms_get_password', 'info');
+                    return show_message('短信验证码错误', '返回上一页', 'user.php?act=sms_get_password', 'info');
                 }
             } else {
                 //显示用户名和email表单

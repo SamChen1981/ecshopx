@@ -12,7 +12,7 @@ class Message extends Init
     public function index()
     {
         if (empty($GLOBALS['_CFG']['message_board'])) {
-            show_message($GLOBALS['_LANG']['message_board_close']);
+            return show_message($GLOBALS['_LANG']['message_board_close']);
         }
         $action = isset($_REQUEST['act']) ? trim($_REQUEST['act']) : 'default';
         if ($action == 'act_add_message') {
@@ -22,7 +22,7 @@ class Message extends Init
             if ((intval($GLOBALS['_CFG']['captcha']) & CAPTCHA_MESSAGE) && gd_version() > 0) {
                 $validator = new Captcha();
                 if (!$validator->check_word($_POST['captcha'])) {
-                    show_message($GLOBALS['_LANG']['invalid_captcha']);
+                    return show_message($GLOBALS['_LANG']['invalid_captcha']);
                 }
             } else {
                 /* 没有验证码时，用时间来限制机器人发帖或恶意发评论 */
@@ -32,7 +32,7 @@ class Message extends Init
 
                 $cur_time = gmtime();
                 if (($cur_time - $_SESSION['send_time']) < 30) { // 小于30秒禁止发评论
-                    show_message($GLOBALS['_LANG']['cmt_spam_warning']);
+                    return show_message($GLOBALS['_LANG']['cmt_spam_warning']);
                 }
             }
             $user_name = '';
@@ -66,7 +66,7 @@ class Message extends Init
                     $_SESSION['send_time'] = $cur_time;
                 }
                 $msg_info = $GLOBALS['_CFG']['message_check'] ? $GLOBALS['_LANG']['message_submit_wait'] : $GLOBALS['_LANG']['message_submit_done'];
-                show_message($msg_info, $GLOBALS['_LANG']['message_list_lnk'], 'message.php');
+                return show_message($msg_info, $GLOBALS['_LANG']['message_list_lnk'], 'message.php');
             } else {
                 $GLOBALS['err']->show($GLOBALS['_LANG']['message_list_lnk'], 'message.php');
             }
