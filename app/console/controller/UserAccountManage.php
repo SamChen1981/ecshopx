@@ -70,7 +70,7 @@ class UserAccountManage extends Init
 
             /* 显示页面 */
             assign_query_info();
-            return $this->display('user_account_manage.view.php');
+            return $this->fetch('user_account_manage');
         } elseif ($_REQUEST['act'] == 'surplus') {
             $order_list = $this->order_list();
 
@@ -85,7 +85,7 @@ class UserAccountManage extends Init
 
             /* 显示页面 */
             assign_query_info();
-            return $this->display('order_surplus_list.view.php');
+            return $this->fetch('order_surplus_list');
         }
 
         /*------------------------------------------------------ */

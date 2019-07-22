@@ -36,7 +36,7 @@ class Wholesale extends Init
 
             /* 显示商品列表页面 */
             assign_query_info();
-            return $this->display('wholesale_list.view.php');
+            return $this->fetch('wholesale_list');
         }
 
         /*------------------------------------------------------ */
@@ -190,7 +190,7 @@ class Wholesale extends Init
             $this->assign('action_link', array('href' => $href, 'text' => $GLOBALS['_LANG']['wholesale_list']));
             assign_query_info();
 
-            return $this->display('wholesale_batch_info.view.php');
+            return $this->fetch('wholesale_batch_info');
         }
 
         /*------------------------------------------------------ */
@@ -366,7 +366,7 @@ class Wholesale extends Init
             }
             $this->assign('action_link', array('href' => $href, 'text' => $GLOBALS['_LANG']['wholesale_list']));
             assign_query_info();
-            return $this->display('wholesale_info.view.php');
+            return $this->fetch('wholesale_info');
         }
 
         /*------------------------------------------------------ */

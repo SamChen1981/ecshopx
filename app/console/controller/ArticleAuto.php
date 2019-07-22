@@ -22,7 +22,7 @@ class ArticleAuto extends Init
             $this->assign('record_count', $goodsdb['record_count']);
             $this->assign('page_count', $goodsdb['page_count']);
             assign_query_info();
-            return $this->display('goods_auto.view.php');
+            return $this->fetch('goods_auto');
         } elseif ($_REQUEST['act'] == 'query') {
             $goodsdb = get_auto_goods();
             $this->assign('goodsdb', $goodsdb['goodsdb']);

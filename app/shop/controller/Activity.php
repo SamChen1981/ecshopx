@@ -106,6 +106,6 @@ class Activity extends Init
         $this->assign('lang', $GLOBALS['_LANG']);
 
         $this->assign('feed_url', ($GLOBALS['_CFG']['rewrite'] == 1) ? "feed-typeactivity.xml" : 'feed.php?type=activity'); // RSS URL
-        return $this->display('activity.view.php');
+        return $this->fetch('activity');
     }
 }

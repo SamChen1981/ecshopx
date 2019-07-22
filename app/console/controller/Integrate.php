@@ -27,7 +27,7 @@ class Integrate extends Init
             $this->assign('modules', $modules);
 
             assign_query_info();
-            return $this->display('integrates_list.view.php');
+            return $this->fetch('integrates_list');
         }
 
         /*------------------------------------------------------ */
@@ -86,7 +86,7 @@ class Integrate extends Init
                 $this->assign('set_list', get_charset_list());
                 $this->assign('ur_here', $GLOBALS['_LANG']['integrate_setup']);
                 $this->assign('code', $_GET['code']);
-                return $this->display('integrates_setup.view.php');
+                return $this->fetch('integrates_setup');
             }
         }
 
@@ -130,7 +130,7 @@ class Integrate extends Init
                 $this->assign('ur_here', $GLOBALS['_LANG']['integrate_setup']);
                 $this->assign('code', $_GET['code']);
                 $this->assign('cfg', $cfg);
-                return $this->display('integrates_setup.view.php');
+                return $this->fetch('integrates_setup');
             }
         }
 
@@ -223,7 +223,7 @@ class Integrate extends Init
             $this->assign('domain', '@ecshop');
             $this->assign('lang_total', sprintf($GLOBALS['_LANG']['shop_user_total'], $total));
             $this->assign('size', $size);
-            return $this->display('integrates_check.view.php');
+            return $this->fetch('integrates_check');
         }
 
         /*------------------------------------------------------ */
@@ -330,7 +330,7 @@ class Integrate extends Init
 
             $this->assign('ur_here', $GLOBALS['_LANG']['ucenter_import_username']);
             $this->assign('user_startid_intro', sprintf($GLOBALS['_LANG']['user_startid_intro'], $maxuid, $maxuid));
-            return $this->display('integrates_uc_import.view.php');
+            return $this->fetch('integrates_uc_import');
         }
 
         /*------------------------------------------------------ */
@@ -526,7 +526,7 @@ class Integrate extends Init
             $this->assign('page_count', $arr['page_count']);
             $this->assign('full_page', 1);
 
-            return $this->display('integrates_modify.view.php');
+            return $this->fetch('integrates_modify');
         }
 
         /*------------------------------------------------------ */
@@ -666,7 +666,7 @@ class Integrate extends Init
             $this->assign('tasks', $tasks);
             $this->assign('ur_here', $GLOBALS['_LANG']['user_sync']);
             $this->assign('size', $size);
-            return $this->display('integrates_sync.view.php');
+            return $this->fetch('integrates_sync');
         }
 
         /*------------------------------------------------------ */
@@ -914,7 +914,7 @@ class Integrate extends Init
             $this->assign('integral_name', $GLOBALS['_CFG']['integral_name']);
             $this->assign('full_page', 1);
             $this->assign('points', $points);
-            return $this->display('integrates_points.view.php');
+            return $this->fetch('integrates_points');
         }
 
         if ($_REQUEST['act'] == 'edit_points') {

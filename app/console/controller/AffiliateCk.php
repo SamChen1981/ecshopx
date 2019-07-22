@@ -34,7 +34,7 @@ class AffiliateCk extends Init
                 $this->assign('action_link', array('text' => $GLOBALS['_LANG']['back_note'], 'href' => "users.php?act=edit&id=" . intval($_GET['auid'])));
             }
             assign_query_info();
-            return $this->display('affiliate_ck_list.view.php');
+            return $this->fetch('affiliate_ck_list');
         }
         /*------------------------------------------------------ */
         //-- 分页

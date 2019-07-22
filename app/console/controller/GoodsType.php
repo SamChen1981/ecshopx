@@ -36,7 +36,7 @@ class GoodsType extends Init
 
             $this->assign('action_link', array('text' => $GLOBALS['_LANG']['new_goods_type'], 'href' => 'goods_type.php?act=add'));
 
-            return $this->display('goods_type.view.php');
+            return $this->fetch('goods_type');
         }
 
         /*------------------------------------------------------ */
@@ -110,7 +110,7 @@ class GoodsType extends Init
             $this->assign('goods_type', array('enabled' => 1));
 
             assign_query_info();
-            return $this->display('goods_type_info.view.php');
+            return $this->fetch('goods_type_info');
         } elseif ($_REQUEST['act'] == 'insert') {
             //$goods_type['cat_name']   = trim_right(sub_str($_POST['cat_name'], 60));
             //$goods_type['attr_group'] = trim_right(sub_str($_POST['attr_group'], 255));
@@ -146,7 +146,7 @@ class GoodsType extends Init
             $this->assign('goods_type', $goods_type);
 
             assign_query_info();
-            return $this->display('goods_type_info.view.php');
+            return $this->fetch('goods_type_info');
         } elseif ($_REQUEST['act'] == 'update') {
             $goods_type['cat_name'] = sub_str($_POST['cat_name'], 60);
             $goods_type['attr_group'] = sub_str($_POST['attr_group'], 255);

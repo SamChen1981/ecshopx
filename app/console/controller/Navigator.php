@@ -29,7 +29,7 @@ class Navigator extends Init
             $this->assign('page_count', $navdb['page_count']);
 
             assign_query_info();
-            return $this->display('navigator.view.php');
+            return $this->fetch('navigator');
         }
         /*------------------------------------------------------ */
         //-- 自定义导航栏列表Ajax
@@ -60,7 +60,7 @@ class Navigator extends Init
                 assign_query_info();
                 $this->assign('sysmain', $sysmain);
                 $this->assign('rt', $rt);
-                return $this->display('navigator_add.view.php');
+                return $this->fetch('navigator_add');
             } elseif ($_REQUEST['step'] == 2) {
                 $item_name = $_REQUEST['item_name'];
                 $item_url = $_REQUEST['item_url'];
@@ -115,7 +115,7 @@ class Navigator extends Init
                 assign_query_info();
                 $this->assign('sysmain', $sysmain);
                 $this->assign('rt', $rt);
-                return $this->display('navigator_add.view.php');
+                return $this->fetch('navigator_add');
             } elseif ($_REQUEST['step'] == 2) {
                 $item_name = $_REQUEST['item_name'];
                 $item_url = $_REQUEST['item_url'];

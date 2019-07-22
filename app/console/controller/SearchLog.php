@@ -23,7 +23,7 @@ class SearchLog extends Init
             $this->assign('start_date', local_date('Y-m-d'));
             $this->assign('end_date', local_date('Y-m-d'));
             assign_query_info();
-            return $this->display('search_log_list.view.php');
+            return $this->fetch('search_log_list');
         } elseif ($_REQUEST['act'] == 'query') {
             $logdb = $this->get_search_log();
             $this->assign('full_page', 0);

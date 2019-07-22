@@ -60,6 +60,6 @@ class Respond extends Init
         $this->assign('message', $msg);
         $this->assign('shop_url', $GLOBALS['ecs']->url());
 
-        return $this->display('respond.view.php');
+        return $this->fetch('respond');
     }
 }

@@ -29,7 +29,7 @@ class Filecheck extends Init
                 $this->assign('ur_here', $GLOBALS['_LANG']['fileperms_verify']);
             }
             assign_query_info();
-            return $this->display('filecheck.view.php');
+            return $this->fetch('filecheck');
         } elseif ($step == 3) {
             @set_time_limit(0);
 
@@ -44,7 +44,7 @@ class Filecheck extends Init
             $this->checkfiles('wap/', '\.php|\.wml');
             // $this->checkfiles('mobile/', '\.php');
             /*
-            $this->checkfiles('themes/default/', '\.view.php|\.view.php|\.css');
+            $this->checkfiles('themes/default/', '\|\|\.css');
             $this->checkfiles('uc_client/', '\.php', 0);
             $this->checkfiles('uc_client/control/', '\.php');
             $this->checkfiles('uc_client/model/', '\.php');
@@ -122,7 +122,7 @@ class Filecheck extends Init
             $this->assign('action_link', array('text' => $GLOBALS['_LANG']['filecheck_return'], 'href' => 'filecheck.php?step=1'));
 
             assign_query_info();
-            return $this->display('filecheck.view.php');
+            return $this->fetch('filecheck');
         }
     }
 

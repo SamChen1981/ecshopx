@@ -17,7 +17,7 @@ class Article extends Init
 
         $cache_id = sprintf('%X', crc32($_REQUEST['id'] . '-' . $GLOBALS['_CFG']['lang']));
 
-        if (!$GLOBALS['smarty']->is_cached('article.view.php', $cache_id)) {
+        if (!$GLOBALS['smarty']->is_cached('article', $cache_id)) {
             /* 文章详情 */
             $article = $this->get_article_info($article_id);
 
@@ -92,9 +92,9 @@ class Article extends Init
             assign_dynamic('article');
         }
         if (isset($article) && $article['cat_id'] > 2) {
-            return $this->display('article.view.php', $cache_id);
+            return $this->fetch('article', $cache_id);
         } else {
-            return $this->display('article_pro.view.php', $cache_id);
+            return $this->fetch('article_pro', $cache_id);
         }
     }
 

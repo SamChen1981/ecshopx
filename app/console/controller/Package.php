@@ -38,7 +38,7 @@ class Package extends Init
             $this->assign('form_action', 'insert');
 
             assign_query_info();
-            return $this->display('package_info.view.php');
+            return $this->fetch('package_info');
         } elseif ($_REQUEST['act'] == 'insert') {
             /* 权限判断 */
             admin_priv('package_manage');
@@ -99,7 +99,7 @@ class Package extends Init
             $this->assign('package_goods_list', $package_goods_list);
 
             assign_query_info();
-            return $this->display('package_info.view.php');
+            return $this->fetch('package_info');
         } elseif ($_REQUEST['act'] == 'update') {
             /* 权限判断 */
             admin_priv('package_manage');
@@ -174,7 +174,7 @@ class Package extends Init
 
             $this->assign('full_page', 1);
             assign_query_info();
-            return $this->display('package_list.view.php');
+            return $this->fetch('package_list');
         }
 
         /*------------------------------------------------------ */

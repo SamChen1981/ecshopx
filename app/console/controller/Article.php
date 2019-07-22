@@ -41,7 +41,7 @@ class Article extends Init
             $this->assign($sort_flag['tag'], $sort_flag['img']);
 
             assign_query_info();
-            return $this->display('article_list.view.php');
+            return $this->fetch('article_list');
         }
 
         /*------------------------------------------------------ */
@@ -99,7 +99,7 @@ class Article extends Init
             $this->assign('form_action', 'insert');
 
             assign_query_info();
-            return $this->display('article_info.view.php');
+            return $this->fetch('article_info');
         }
 
         /*------------------------------------------------------ */
@@ -201,7 +201,7 @@ class Article extends Init
             $this->assign('form_action', 'update');
 
             assign_query_info();
-            return $this->display('article_info.view.php');
+            return $this->fetch('article_info');
         }
 
         if ($_REQUEST['act'] == 'update') {

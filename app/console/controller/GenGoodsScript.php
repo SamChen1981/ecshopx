@@ -37,7 +37,7 @@ class GenGoodsScript extends Init
 
             /* 显示模板 */
             assign_query_info();
-            return $this->display('gen_goods_script.view.php');
+            return $this->fetch('gen_goods_script');
         }
     }
 }

@@ -47,7 +47,7 @@ class Flashplay extends Init
             $this->assign('flashtpls', $this->get_flash_templates($flash_dir));
             $this->assign('current_flashtpl', $GLOBALS['_CFG']['flash_theme']);
             $this->assign('playerdb', $playerdb);
-            return $this->display('flashplay_list.view.php');
+            return $this->fetch('flashplay_list');
         } elseif ($_REQUEST['act'] == 'del') {
             admin_priv('flash_manage');
 
@@ -91,7 +91,7 @@ class Flashplay extends Init
                 $this->assign('action_link', array('text' => $GLOBALS['_LANG']['go_url'], 'href' => 'flashplay.php?act=list'));
                 $this->assign('rt', $rt);
                 $this->assign('ur_here', $GLOBALS['_LANG']['add_picad']);
-                return $this->display('flashplay_add.view.php');
+                return $this->fetch('flashplay_add');
             } elseif ($_POST['step'] == 2) {
                 if (!empty($_FILES['img_file_src']['name'])) {
                     if (!get_file_suffix($_FILES['img_file_src']['name'], $allow_suffix)) {
@@ -171,7 +171,7 @@ class Flashplay extends Init
                 $this->assign('action_link', array('text' => $GLOBALS['_LANG']['go_url'], 'href' => 'flashplay.php?act=list'));
                 $this->assign('rt', $rt);
                 $this->assign('ur_here', $GLOBALS['_LANG']['edit_picad']);
-                return $this->display('flashplay_add.view.php');
+                return $this->fetch('flashplay_add');
             } elseif ($_POST['step'] == 2) {
                 if (empty($_POST['img_url'])) {
                     //若链接地址为空
@@ -288,7 +288,7 @@ class Flashplay extends Init
             $this->assign('ad', $ad);
             $this->assign('form_act', 'custom_insert');
 
-            return $this->display('flashplay_custom.view.php');
+            return $this->fetch('flashplay_custom');
         }
 
         /*------------------------------------------------------ */
@@ -326,7 +326,7 @@ class Flashplay extends Init
             $this->assign('ad', $ad);
             $this->assign('form_act', 'custom_insert');
 
-            return $this->display('flashplay_custom_add.view.php');
+            return $this->fetch('flashplay_custom_add');
         }
 
 
@@ -529,7 +529,7 @@ class Flashplay extends Init
 
             /* 添加 */
             $this->assign('ad', $ad);
-            return $this->display('flashplay_ccustom_edit.view.php');
+            return $this->fetch('flashplay_ccustom_edit');
         }
 
         /*------------------------------------------------------ */
@@ -696,7 +696,7 @@ class Flashplay extends Init
 
         $width_height = array();
         while ($file = readdir($template_dir)) {
-            if ($file == 'index_ad.view.php') {
+            if ($file == 'index_ad') {
                 $string = file_get_contents($path . $file);
                 $pattern_width = '/var\s*swf_width\s*=\s*(\d+);/';
                 $pattern_height = '/var\s*swf_height\s*=\s*(\d+);/';

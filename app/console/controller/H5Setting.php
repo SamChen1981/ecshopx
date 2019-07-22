@@ -25,7 +25,7 @@ class H5Setting extends Init
             if ($params['authorize_code'] != 'NDE') {
                 $url = $params['authorize_code'] == 'NCH' ? 'https://account.shopex.cn/order/confirm/goods_2460-946 ' : 'https://account.shopex.cn/order/confirm/goods_2540-1050 ';
                 $this->assign('url', $url);
-                return $this->display('accredit.html');
+                return $this->fetch('accredit.html');
 
             }
             $cert = new certificate;
@@ -76,7 +76,7 @@ class H5Setting extends Init
             $this->assign('error_msg', $_REQUEST['error_msg']);
             $this->assign('playerdb', $playerdb);
             $this->assign('group_list', $grouplist);
-            return $this->display('h5_config.html');
+            return $this->fetch('h5_config.html');
         } elseif ($_REQUEST['act'] == 'post') {
             /* 检查权限 */
             admin_priv('mobile_setting');
@@ -202,7 +202,7 @@ class H5Setting extends Init
                 $this->assign('action_link', array('text' => $GLOBALS['_LANG']['go_url'], 'href' => 'h5_setting.php?act=list'));
                 $this->assign('rt', $rt);
                 $this->assign('ur_here', $GLOBALS['_LANG']['add_picad']);
-                return $this->display('flashplay_add.view.php');
+                return $this->fetch('flashplay_add');
             } elseif ($_POST['step'] == 2) {
                 if (!empty($_FILES['img_file_src']['name'])) {
                     if (!get_file_suffix($_FILES['img_file_src']['name'], $allow_suffix)) {
@@ -282,7 +282,7 @@ class H5Setting extends Init
                 $this->assign('action_link', array('text' => $GLOBALS['_LANG']['go_url'], 'href' => 'h5_setting.php?act=list'));
                 $this->assign('rt', $rt);
                 $this->assign('ur_here', $GLOBALS['_LANG']['edit_picad']);
-                return $this->display('flashplay_add.view.php');
+                return $this->fetch('flashplay_add');
             } elseif ($_POST['step'] == 2) {
                 if (empty($_POST['img_url'])) {
                     //若链接地址为空
@@ -423,7 +423,7 @@ class H5Setting extends Init
 
         $width_height = array();
         while ($file = readdir($template_dir)) {
-            if ($file == 'index_ad.view.php') {
+            if ($file == 'index_ad') {
                 $string = file_get_contents($path . $file);
                 $pattern_width = '/var\s*swf_width\s*=\s*(\d+);/';
                 $pattern_height = '/var\s*swf_height\s*=\s*(\d+);/';

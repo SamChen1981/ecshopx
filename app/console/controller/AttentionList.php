@@ -20,7 +20,7 @@ class AttentionList extends Init
             $this->assign('record_count', $goodsdb['record_count']);
             $this->assign('page_count', $goodsdb['page_count']);
             assign_query_info();
-            return $this->display('attention_list.view.php');
+            return $this->fetch('attention_list');
         } elseif ($_REQUEST['act'] == 'query') {
             $goodsdb = $this->get_attention();
             $this->assign('goodsdb', $goodsdb['goodsdb']);

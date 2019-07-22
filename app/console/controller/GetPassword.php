@@ -54,7 +54,7 @@ class GetPassword extends Init
             $this->assign('ur_here', $GLOBALS['_LANG']['get_newpassword']);
 
             assign_query_info();
-            return $this->display('get_pwd.view.php');
+            return $this->fetch('get_pwd');
         }
 
         /*------------------------------------------------------ */

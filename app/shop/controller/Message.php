@@ -101,7 +101,7 @@ class Message extends Init
             $this->assign('rand', mt_rand());
             $this->assign('msg_lists', $msg_lists);
             $this->assign('pager', $pager);
-            return $this->display('message_board.view.php');
+            return $this->fetch('message_board');
         }
     }
 

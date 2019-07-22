@@ -40,7 +40,7 @@ class Bonus extends Init
             $this->assign($sort_flag['tag'], $sort_flag['img']);
 
             assign_query_info();
-            return $this->display('bonus_type.view.php');
+            return $this->fetch('bonus_type');
         }
 
         /*------------------------------------------------------ */
@@ -169,7 +169,7 @@ class Bonus extends Init
             $this->assign('bonus_arr', $bonus_arr);
 
             assign_query_info();
-            return $this->display('bonus_type_info.view.php');
+            return $this->fetch('bonus_type_info');
         }
 
         /*------------------------------------------------------ */
@@ -246,7 +246,7 @@ class Bonus extends Init
             $this->assign('bonus_arr', $bonus_arr);
 
             assign_query_info();
-            return $this->display('bonus_type_info.view.php');
+            return $this->fetch('bonus_type_info');
         }
 
         /*------------------------------------------------------ */
@@ -306,7 +306,7 @@ class Bonus extends Init
                 $this->assign('id', $id);
                 $this->assign('ranklist', get_rank_list());
 
-                return $this->display('bonus_by_user.view.php');
+                return $this->fetch('bonus_by_user');
             } elseif ($_REQUEST['send_by'] == SEND_BY_GOODS) {
                 /* 查询此红包类型信息 */
                 $bonus_type = $GLOBALS['db']->GetRow("SELECT type_id, type_name FROM " . $GLOBALS['ecs']->table('bonus_type') .
@@ -328,11 +328,11 @@ class Bonus extends Init
                 $this->assign('bonus_type', $bonus_type);
                 $this->assign('goods_list', $goods_list);
 
-                return $this->display('bonus_by_goods.view.php');
+                return $this->fetch('bonus_by_goods');
             } elseif ($_REQUEST['send_by'] == SEND_BY_PRINT) {
                 $this->assign('type_list', get_bonus_type());
 
-                return $this->display('bonus_by_print.view.php');
+                return $this->fetch('bonus_by_print');
             }
         }
 
@@ -700,7 +700,7 @@ class Bonus extends Init
             $this->assign($sort_flag['tag'], $sort_flag['img']);
 
             assign_query_info();
-            return $this->display('bonus_list.view.php');
+            return $this->fetch('bonus_list');
         }
 
         /*------------------------------------------------------ */

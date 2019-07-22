@@ -30,7 +30,7 @@ class Articlecat extends Init
             $this->assign('articlecat', $articlecat);
 
             assign_query_info();
-            return $this->display('articlecat_list.view.php');
+            return $this->fetch('articlecat_list');
         }
 
         /*------------------------------------------------------ */
@@ -59,7 +59,7 @@ class Articlecat extends Init
             $this->assign('form_action', 'insert');
 
             assign_query_info();
-            return $this->display('articlecat_info.view.php');
+            return $this->fetch('articlecat_info');
         } elseif ($_REQUEST['act'] == 'insert') {
             /* 权限判断 */
             admin_priv('article_cat');
@@ -144,7 +144,7 @@ class Articlecat extends Init
             $this->assign('form_action', 'update');
 
             assign_query_info();
-            return $this->display('articlecat_info.view.php');
+            return $this->fetch('articlecat_info');
         } elseif ($_REQUEST['act'] == 'update') {
             /* 权限判断 */
             admin_priv('article_cat');

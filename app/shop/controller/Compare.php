@@ -105,6 +105,6 @@ class Compare extends Init
 
         assign_dynamic('compare');
 
-        return $this->display('compare.view.php');
+        return $this->fetch('compare');
     }
 }

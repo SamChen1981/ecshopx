@@ -21,7 +21,7 @@ class ViewSendlist extends Init
             $this->assign('page_count', $listdb['page_count']);
 
             assign_query_info();
-            return $this->display('view_sendlist.view.php');
+            return $this->fetch('view_sendlist');
         } elseif ($_REQUEST['act'] == 'query') {
             $listdb = $this->get_sendlist();
             $this->assign('listdb', $listdb['listdb']);

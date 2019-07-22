@@ -293,7 +293,7 @@ class FlowStats extends Init
 
             /* 显示页面 */
             assign_query_info();
-            return $this->display('flow_stats.view.php');
+            return $this->fetch('flow_stats');
         } /* 报表下载 */
         elseif ($act = 'download') {
             $filename = !empty($_REQUEST['filename']) ? trim($_REQUEST['filename']) : '';

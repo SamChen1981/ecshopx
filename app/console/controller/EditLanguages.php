@@ -71,7 +71,7 @@ class EditLanguages extends Init
             $this->assign('language_arr', $language_arr); //需要编辑的语言项列表
 
             assign_query_info();
-            return $this->display('language_list.view.php');
+            return $this->fetch('language_list');
         }
 
         /*------------------------------------------------------ */

@@ -47,7 +47,7 @@ class Role extends Init
                 $this->assign('random', mt_rand());
             }
 
-            return $this->display('login.view.php');
+            return $this->fetch('login');
         }
 
 
@@ -63,7 +63,7 @@ class Role extends Init
 
             /* 显示页面 */
             assign_query_info();
-            return $this->display('role_list.view.php');
+            return $this->fetch('role_list');
         }
 
         /*------------------------------------------------------ */
@@ -121,7 +121,7 @@ class Role extends Init
 
             /* 显示页面 */
             assign_query_info();
-            return $this->display('role_info.view.php');
+            return $this->fetch('role_info');
         }
 
         /*------------------------------------------------------ */
@@ -205,7 +205,7 @@ class Role extends Init
             $this->assign('user_id', $_GET['id']);
 
             assign_query_info();
-            return $this->display('role_info.view.php');
+            return $this->fetch('role_info');
         }
 
         /*------------------------------------------------------ */

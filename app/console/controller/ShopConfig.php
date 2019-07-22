@@ -86,7 +86,7 @@ class ShopConfig extends Init
                 $demo_data['sms_sign']
             );
             $this->assign('demo_sms_info', $demo_sms_info);
-            return $this->display('shop_config.view.php');
+            return $this->fetch('shop_config');
         }
 
         /*------------------------------------------------------ */
@@ -102,7 +102,7 @@ class ShopConfig extends Init
 
             $this->assign('ur_here', $GLOBALS['_LANG']['mail_settings']);
             $this->assign('cfg', $arr[5]['vars']);
-            return $this->display('shop_config_mail_settings.view.php');
+            return $this->fetch('shop_config_mail_settings');
         }
 
         /*------------------------------------------------------ */

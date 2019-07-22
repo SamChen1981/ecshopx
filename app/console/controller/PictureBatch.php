@@ -20,7 +20,7 @@ class PictureBatch extends Init
             $this->assign('ur_here', $GLOBALS['_LANG']['12_batch_pic']);
             $this->assign('cat_list', cat_list(0, 0));
             $this->assign('brand_list', get_brand_list());
-            return $this->display('picture_batch.view.php');
+            return $this->fetch('picture_batch');
         } elseif (!empty($_GET['get_goods'])) {
             $brand_id = intval($_GET['brand_id']);
             $cat_id = intval($_GET['cat_id']);

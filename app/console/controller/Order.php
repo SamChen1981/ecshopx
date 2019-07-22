@@ -41,7 +41,7 @@ class Order extends Init
 
             /* 显示模板 */
             assign_query_info();
-            return $this->display('order_query.view.php');
+            return $this->fetch('order_query');
         }
 
         /*------------------------------------------------------ */
@@ -132,7 +132,7 @@ class Order extends Init
 
             /* 显示模板 */
             assign_query_info();
-            return $this->display('order_list.view.php');
+            return $this->fetch('order_list');
         }
 
         /*------------------------------------------------------ */
@@ -413,7 +413,7 @@ class Order extends Init
                 $this->assign('action_user', $_SESSION['admin_name']);
 
                 $GLOBALS['smarty']->template_dir = '../' . DATA_DIR;
-                return $this->display('order_print.html');
+                return $this->fetch('order_print.html');
             } /* 打印快递单 */
             elseif (isset($_GET['shipping_print'])) {
                 //$this->assign('print_time',   local_date($GLOBALS['_CFG']['time_format']));
@@ -505,7 +505,7 @@ class Order extends Init
 
                     $this->assign('shipping', $shipping);
 
-                    return $this->display('print.view.php');
+                    return $this->fetch('print');
                 } elseif (!empty($shipping['shipping_print'])) {
                     /* 代码 */
                     echo $GLOBALS['smarty']->fetch("str:" . $shipping['shipping_print']);
@@ -528,7 +528,7 @@ class Order extends Init
 
                 /* 显示模板 */
                 assign_query_info();
-                return $this->display('order_info.view.php');
+                return $this->fetch('order_info');
             }
         }
 
@@ -562,7 +562,7 @@ class Order extends Init
 
             /* 显示模板 */
             assign_query_info();
-            return $this->display('delivery_list.view.php');
+            return $this->fetch('delivery_list');
         }
 
         /*------------------------------------------------------ */
@@ -680,7 +680,7 @@ class Order extends Init
             $this->assign('action_link', array('href' => 'order.php?act=delivery_list&' . list_link_postfix(), 'text' => $GLOBALS['_LANG']['09_delivery_order']));
             $this->assign('action_act', ($delivery_order['status'] == 2) ? 'delivery_ship' : 'delivery_cancel_ship');
             assign_query_info();
-            return $this->display('delivery_info.view.php');
+            return $this->fetch('delivery_info');
              //
         }
 
@@ -1026,7 +1026,7 @@ class Order extends Init
 
             /* 显示模板 */
             assign_query_info();
-            return $this->display('back_list.view.php');
+            return $this->fetch('back_list');
         }
 
         /*------------------------------------------------------ */
@@ -1126,7 +1126,7 @@ class Order extends Init
             $this->assign('ur_here', $GLOBALS['_LANG']['back_operate'] . $GLOBALS['_LANG']['detail']);
             $this->assign('action_link', array('href' => 'order.php?act=back_list&' . list_link_postfix(), 'text' => $GLOBALS['_LANG']['10_back_order']));
             assign_query_info();
-            return $this->display('back_info.view.php');
+            return $this->fetch('back_info');
              //
         }
 
@@ -1504,7 +1504,7 @@ class Order extends Init
                 $this->update_pay_log($order_id);
 
                 /* 清除首页缓存：发货单查询 */
-                clear_cache_files('index.view.php');
+                clear_cache_files('index');
 
                 /* todo 记录日志 */
                 $sn = $old_order['order_sn'];
@@ -2100,7 +2100,7 @@ class Order extends Init
 
             /* 显示模板 */
             assign_query_info();
-            return $this->display('order_step.view.php');
+            return $this->fetch('order_step');
         }
 
         /*------------------------------------------------------ */
@@ -2191,7 +2191,7 @@ class Order extends Init
                 /* 显示模板 */
                 $this->assign('ur_here', $GLOBALS['_LANG']['refund']);
                 assign_query_info();
-                return $this->display('order_refund.view.php');
+                return $this->fetch('order_refund');
             } else {
                 die('invalid params');
             }
@@ -2223,7 +2223,7 @@ class Order extends Init
 
             /* 显示模板 */
             assign_query_info();
-            return $this->display('merge_order.view.php');
+            return $this->fetch('merge_order');
         }
 
         /*------------------------------------------------------ */
@@ -2259,7 +2259,7 @@ class Order extends Init
 
             /* 显示模板 */
             assign_query_info();
-            return $this->display('order_templates.view.php');
+            return $this->fetch('order_templates');
         }
         /*------------------------------------------------------ */
         //-- 订单打印模板（提交修改）
@@ -2446,7 +2446,7 @@ class Order extends Init
                 /* 显示模板 */
                 $this->assign('ur_here', $GLOBALS['_LANG']['order_operate'] . $GLOBALS['_LANG']['op_split']);
                 assign_query_info();
-                return $this->display('order_delivery_info.view.php');
+                return $this->fetch('order_delivery_info');
 
             } /* 未发货 */
             elseif (isset($_POST['unship'])) {
@@ -2750,7 +2750,7 @@ class Order extends Init
                 /* 显示模板 */
                 $this->assign('ur_here', $GLOBALS['_LANG']['order_operate'] . $action);
                 assign_query_info();
-                return $this->display('order_operate.view.php');
+                return $this->fetch('order_operate');
             } else {
                 /* 直接处理 */
                 if (!$batch) {
@@ -3007,7 +3007,7 @@ class Order extends Init
 
                 /* 显示模板 */
                 assign_query_info();
-                return $this->display('order_operate_info.view.php');
+                return $this->fetch('order_operate_info');
             }
         }
 
@@ -4012,7 +4012,7 @@ class Order extends Init
             /**
              *  激活云起页面
              **/
-            return $this->display('install-icloud.view.php');
+            return $this->fetch('install-icloud');
         } elseif ($_REQUEST['act'] == 'cancelErpPanel') {
             //更新订单总金额
             $sql = "UPDATE " . $GLOBALS['ecs']->table('shop_config') .

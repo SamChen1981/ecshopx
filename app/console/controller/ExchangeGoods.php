@@ -40,7 +40,7 @@ class ExchangeGoods extends Init
             $this->assign($sort_flag['tag'], $sort_flag['img']);
 
             assign_query_info();
-            return $this->display('exchange_goods_list.view.php');
+            return $this->fetch('exchange_goods_list');
         }
 
         /*------------------------------------------------------ */
@@ -85,7 +85,7 @@ class ExchangeGoods extends Init
             $this->assign('form_action', 'insert');
 
             assign_query_info();
-            return $this->display('exchange_goods_info.view.php');
+            return $this->fetch('exchange_goods_info');
         }
 
         /*------------------------------------------------------ */
@@ -145,7 +145,7 @@ class ExchangeGoods extends Init
             $this->assign('form_action', 'update');
 
             assign_query_info();
-            return $this->display('exchange_goods_info.view.php');
+            return $this->fetch('exchange_goods_info');
         }
 
         /*------------------------------------------------------ */

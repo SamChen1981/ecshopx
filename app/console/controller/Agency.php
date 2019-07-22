@@ -30,7 +30,7 @@ class Agency extends Init
             $this->assign($sort_flag['tag'], $sort_flag['img']);
 
             assign_query_info();
-            return $this->display('agency_list.view.php');
+            return $this->fetch('agency_list');
         }
 
         /*------------------------------------------------------ */
@@ -208,7 +208,7 @@ class Agency extends Init
             }
             $this->assign('action_link', array('href' => $href, 'text' => $GLOBALS['_LANG']['agency_list']));
             assign_query_info();
-            return $this->display('agency_info.view.php');
+            return $this->fetch('agency_info');
         }
 
         /*------------------------------------------------------ */

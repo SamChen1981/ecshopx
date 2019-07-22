@@ -286,7 +286,7 @@ class OrderStats extends Init
             }
 
             assign_query_info();
-            return $this->display('order_stats.view.php');
+            return $this->fetch('order_stats');
         } elseif ($act = 'download') {
             $filename = !empty($_REQUEST['filename']) ? trim($_REQUEST['filename']) : '';
 

@@ -37,7 +37,7 @@ class AdPosition extends Init
             $this->assign('page_count', $position_list['page_count']);
 
             assign_query_info();
-            return $this->display('ad_position_list.view.php');
+            return $this->fetch('ad_position_list');
         }
 
         /*------------------------------------------------------ */
@@ -54,7 +54,7 @@ class AdPosition extends Init
             $this->assign('posit_arr', array('position_style' => '<table cellpadding="0" cellspacing="0">' . "\n" . '{foreach from=$ads item=ad}' . "\n" . '<tr><td>{$ad}</td></tr>' . "\n" . '{/foreach}' . "\n" . '</table>'));
 
             assign_query_info();
-            return $this->display('ad_position_info.view.php');
+            return $this->fetch('ad_position_info');
         } elseif ($_REQUEST['act'] == 'insert') {
             admin_priv('ad_manage');
 
@@ -109,7 +109,7 @@ class AdPosition extends Init
             $this->assign('form_act', 'update');
 
             assign_query_info();
-            return $this->display('ad_position_info.view.php');
+            return $this->fetch('ad_position_info');
         } elseif ($_REQUEST['act'] == 'update') {
             admin_priv('ad_manage');
 

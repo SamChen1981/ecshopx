@@ -41,7 +41,7 @@ class FriendLink extends Init
             $this->assign($sort_flag['tag'], $sort_flag['img']);
 
             assign_query_info();
-            return $this->display('link_list.view.php');
+            return $this->fetch('link_list');
         }
 
         /*------------------------------------------------------ */
@@ -78,7 +78,7 @@ class FriendLink extends Init
             $this->assign('form_act', 'insert');
 
             assign_query_info();
-            return $this->display('link_info.view.php');
+            return $this->fetch('link_info');
         }
 
         /*------------------------------------------------------ */
@@ -177,7 +177,7 @@ class FriendLink extends Init
             $this->assign('link_arr', $link_arr);
 
             assign_query_info();
-            return $this->display('link_info.view.php');
+            return $this->fetch('link_info');
         }
 
         /*------------------------------------------------------ */

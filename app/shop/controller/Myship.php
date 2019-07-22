@@ -85,6 +85,6 @@ class Myship extends Init
 
         $this->assign('shipping_list', $shipping_list);
 
-        return $this->display('myship.view.php');
+        return $this->fetch('myship');
     }
 }

@@ -15,7 +15,7 @@ class Index extends Init
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == '') {
             $this->assign('shop_url', urlencode($GLOBALS['ecs']->url()));
-            return $this->display('index.view.php');
+            return $this->fetch('index');
         }
 
         /*------------------------------------------------------ */
@@ -61,7 +61,7 @@ class Index extends Init
             $this->assign('http_host', $_SERVER['HTTP_HOST']);
             $this->assign('yunqi_login', $_SESSION['yunqi_login']);
             $this->assign('certi', $certificate);
-            return $this->display('top.view.php');
+            return $this->fetch('top');
         }
 
         /*------------------------------------------------------ */
@@ -69,7 +69,7 @@ class Index extends Init
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'calculator') {
-            return $this->display('calculator.view.php');
+            return $this->fetch('calculator');
         }
 
         /*------------------------------------------------------ */
@@ -151,7 +151,7 @@ class Index extends Init
             $this->assign('admin_id', $_SESSION['admin_id']);
             $this->assign('admin_name', $_SESSION['admin_name']);
             $this->assign('certi', $certificate);
-            return $this->display('menu.view.php');
+            return $this->fetch('menu');
         }
 
 
@@ -482,7 +482,7 @@ class Index extends Init
             $this->assign('install_date', local_date($GLOBALS['_CFG']['date_format'], $GLOBALS['_CFG']['install_date']));
             $this->assign('pmp_desktop', PMP_DESKTOP);
             $this->assign('pmp_market', PMS_MARKET);
-            return $this->display('start.view.php');
+            return $this->fetch('start');
         } elseif ($_REQUEST['act'] == 'main_api') {
             load_helper('base');
             $data = read_static_cache('api_str');
@@ -600,7 +600,7 @@ class Index extends Init
             assign_query_info();
 
             $this->assign('ur_here', $GLOBALS['_LANG']['ur_config']);
-            return $this->display('setting_first.view.php');
+            return $this->fetch('setting_first');
         }
 
         /*------------------------------------------------------ */
@@ -766,7 +766,7 @@ class Index extends Init
             assign_query_info();
 
             $this->assign('ur_here', $GLOBALS['_LANG']['ur_add']);
-            return $this->display('setting_second.view.php');
+            return $this->fetch('setting_second');
         }
 
         /*------------------------------------------------------ */
@@ -953,7 +953,7 @@ class Index extends Init
 
             assign_query_info();
             //    $this->assign('ur_here', '开店向导－添加商品');
-            return $this->display('setting_third.view.php');
+            return $this->fetch('setting_third');
         }
 
         /*------------------------------------------------------ */
@@ -962,7 +962,7 @@ class Index extends Init
 
         elseif ($_REQUEST['act'] == 'about_us') {
             assign_query_info();
-            return $this->display('about_us.view.php');
+            return $this->fetch('about_us');
         }
 
         /*------------------------------------------------------ */
@@ -970,7 +970,7 @@ class Index extends Init
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'drag') {
-            return $this->display('drag.view.php');
+            return $this->fetch('drag');
         }
 
         /*------------------------------------------------------ */

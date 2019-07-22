@@ -39,7 +39,7 @@ class VirtualCard extends Init
 
             $this->assign('ur_here', $GLOBALS['_LANG']['replenish']);
             $this->assign('action_link', array('text' => $GLOBALS['_LANG']['go_list'], 'href' => 'virtual_card.php?act=card&goods_id=' . $card['goods_id']));
-            return $this->display('replenish_info.view.php');
+            return $this->fetch('replenish_info');
         }
 
         /*------------------------------------------------------ */
@@ -67,7 +67,7 @@ class VirtualCard extends Init
             $this->assign('ur_here', $GLOBALS['_LANG']['replenish']);
             $this->assign('action_link', array('text' => $GLOBALS['_LANG']['go_list'], 'href' => 'virtual_card.php?act=card&goods_id=' . $card['goods_id']));
             $this->assign('card', $card);
-            return $this->display('replenish_info.view.php');
+            return $this->fetch('replenish_info');
         } elseif ($_REQUEST['act'] == 'action') {
             /* 检查权限 */
             admin_priv('virualcard');
@@ -161,7 +161,7 @@ class VirtualCard extends Init
             $this->assign($sort_flag['tag'], $sort_flag['img']);
 
             assign_query_info();
-            return $this->display('replenish_list.view.php');
+            return $this->fetch('replenish_list');
         }
 
         /*------------------------------------------------------ */
@@ -206,7 +206,7 @@ class VirtualCard extends Init
             $this->assign('ur_here', $GLOBALS['_LANG']['batch_card_add']);
             $this->assign('action_link', array('text' => $GLOBALS['_LANG']['virtual_card_list'], 'href' => 'goods.php?act=list&extension_code=virtual_card'));
             $this->assign('goods_id', $_REQUEST['goods_id']);
-            return $this->display('batch_card_info.view.php');
+            return $this->fetch('batch_card_info');
         } elseif ($_REQUEST['act'] == 'batch_confirm') {
             /* 检查上传是否成功 */
             if ($_FILES['uploadfile']['tmp_name'] == '' || $_FILES['uploadfile']['tmp_name'] == 'none') {
@@ -241,7 +241,7 @@ class VirtualCard extends Init
             $this->assign('ur_here', $GLOBALS['_LANG']['batch_card_add']);
             $this->assign('action_link', array('text' => $GLOBALS['_LANG']['batch_card_add'], 'href' => 'virtual_card.php?act=batch_card_add&goods_id=' . $_REQUEST['goods_id']));
             $this->assign('list', $rec);
-            return $this->display('batch_card_confirm.view.php');
+            return $this->fetch('batch_card_confirm');
         } /* 批量上传处理 */
         elseif ($_REQUEST['act'] == 'batch_insert') {
             /* 检查权限 */
@@ -277,7 +277,7 @@ class VirtualCard extends Init
             $this->assign('ur_here', $GLOBALS['_LANG']['virtual_card_change']);
 
             assign_query_info();
-            return $this->display('virtual_card_change.view.php');
+            return $this->fetch('virtual_card_change');
         }
 
         /*------------------------------------------------------ */

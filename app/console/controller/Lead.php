@@ -21,7 +21,7 @@ class Lead extends Init
             $url_arr = explode('/admin', $url_cur);
             $this->assign('ur_here', $GLOBALS['_LANG']['lead_here']);
             $this->assign('url', $url_arr[0]);
-            return $this->display('lead.view.php');
+            return $this->fetch('lead');
         }
     }
 }

@@ -96,7 +96,7 @@ class Wholesale extends Init
             assign_dynamic('wholesale');
 
             /* 显示模板 */
-            return $this->display('wholesale_list.view.php');
+            return $this->fetch('wholesale_list');
         }
 
         /*------------------------------------------------------ */

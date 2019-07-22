@@ -75,7 +75,7 @@ class Certificate extends Init
             $this->assign('bind_crm_member_push_no', $bind_crm_member_push_no);
             $this->assign('bind_crm_order_push_no', $bind_crm_order_push_no);
             $this->assign('message', $message);
-            return $this->display('certificate.view.php');
+            return $this->fetch('certificate');
         }
 
 
@@ -106,7 +106,7 @@ class Certificate extends Init
             $callback = urlencode($domain_url . "matrix_callback.php");
             $this->assign('callback', $callback);
             $this->assign('str_url', $str_url);
-            return $this->display('apply_bindrelation.view.php');
+            return $this->fetch('apply_bindrelation');
         }
 
         /*------------------------------------------------------ */
@@ -132,7 +132,7 @@ class Certificate extends Init
             }
             $str_url = MATRIX_REALTION_URL . implode("&", $array_params);
             $this->assign('str_url', $str_url);
-            return $this->display('accept_bindrelation.view.php');
+            return $this->fetch('accept_bindrelation');
         }
 
         /*------------------------------------------------------ */
@@ -175,7 +175,7 @@ class Certificate extends Init
         } elseif ($_REQUEST['act'] == 'authority_url') {
             $authority_url = $cert->get_authority_url();
             $this->assign('authority_url', $authority_url);
-            return $this->display('authority.view.php');
+            return $this->fetch('authority');
         } elseif ($_REQUEST['act'] == 'delete') {
             /* 检查权限 */
             admin_priv('certificate');

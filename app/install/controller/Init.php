@@ -37,7 +37,7 @@ load_helper('common');
 load_helper('time');
 
 /* 创建错误处理对象 */
-$err = new ecs_error('message.view.php');
+$err = new ecs_error('message');
 
 /* 初始化模板引擎 */
 $smarty = new template(ROOT_PATH . 'install/templates/');

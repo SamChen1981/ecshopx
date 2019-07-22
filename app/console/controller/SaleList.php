@@ -87,7 +87,7 @@ class SaleList extends Init
 
             /* 显示页面 */
             assign_query_info();
-            return $this->display('sale_list.view.php');
+            return $this->fetch('sale_list');
         }
     }
 

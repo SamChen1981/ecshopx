@@ -49,7 +49,7 @@ class EcmobileSetting extends Init
 
             $this->assign('ur_here', $GLOBALS['_LANG']['mobile_setting']);
             $this->assign('group_list', $grouplist);
-            return $this->display('mobile_config.html');
+            return $this->fetch('mobile_config.html');
         } elseif ($_REQUEST['act'] == 'post') {
             /* 检查权限 */
             admin_priv('mobile_setting');

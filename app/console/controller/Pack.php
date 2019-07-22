@@ -29,7 +29,7 @@ class Pack extends Init
             $this->assign('page_count', $packs_list['page_count']);
 
             assign_query_info();
-            return $this->display('pack_list.view.php');
+            return $this->fetch('pack_list');
         }
         /*------------------------------------------------------ */
         //-- ajax 列表
@@ -62,7 +62,7 @@ class Pack extends Init
             $this->assign('action_link', array('text' => $GLOBALS['_LANG']['06_pack_list'], 'href' => 'pack.php?act=list'));
 
             assign_query_info();
-            return $this->display('pack_info.view.php');
+            return $this->fetch('pack_info');
         }
         if ($_REQUEST['act'] == 'insert') {
             /* 权限判断 */
@@ -113,7 +113,7 @@ class Pack extends Init
             $this->assign('action_link', array('text' => $GLOBALS['_LANG']['06_pack_list'], 'href' => 'pack.php?act=list&' . list_link_postfix()));
             $this->assign('pack', $pack);
             $this->assign('form_action', 'update');
-            return $this->display('pack_info.view.php');
+            return $this->fetch('pack_info');
         }
         if ($_REQUEST['act'] == 'update') {
             /* 权限判断 */

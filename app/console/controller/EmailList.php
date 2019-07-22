@@ -20,7 +20,7 @@ class EmailList extends Init
             $this->assign('record_count', $emaildb['record_count']);
             $this->assign('page_count', $emaildb['page_count']);
             assign_query_info();
-            return $this->display('email_list.view.php');
+            return $this->fetch('email_list');
         } elseif ($_REQUEST['act'] == 'export') {
             $sql = "SELECT email FROM " . $GLOBALS['ecs']->table('email_list') . "WHERE stat = 1";
             $emails = $GLOBALS['db']->getAll($sql);

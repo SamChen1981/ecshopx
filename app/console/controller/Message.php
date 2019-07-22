@@ -36,7 +36,7 @@ class Message extends Init
             $this->assign($sort_flag['tag'], $sort_flag['img']);
 
             assign_query_info();
-            return $this->display('message_list.view.php');
+            return $this->fetch('message_list');
         }
 
         /*------------------------------------------------------ */
@@ -74,7 +74,7 @@ class Message extends Init
             $this->assign('admin_list', $admin_list);
 
             assign_query_info();
-            return $this->display('message_info.view.php');
+            return $this->fetch('message_info');
         }
 
         /*------------------------------------------------------ */
@@ -146,7 +146,7 @@ class Message extends Init
             $this->assign('msg_arr', $msg_arr);
 
             assign_query_info();
-            return $this->display('message_info.view.php');
+            return $this->fetch('message_info');
         } elseif ($_REQUEST['act'] == 'update') {
             /* 获得留言数据*/
             $msg_arr = array();
@@ -202,7 +202,7 @@ class Message extends Init
             $this->assign('msg_arr', $msg_arr);
 
             assign_query_info();
-            return $this->display('message_view.view.php');
+            return $this->fetch('message_view');
         }
 
         /*------------------------------------------------------ */
@@ -227,7 +227,7 @@ class Message extends Init
             $this->assign('msg_val', $msg_val);
 
             assign_query_info();
-            return $this->display('message_info.view.php');
+            return $this->fetch('message_info');
         }
 
         /*------------------------------------------------------ */

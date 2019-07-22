@@ -23,7 +23,7 @@ class Sitemap extends Init
             $this->assign('config', $config);
             $this->assign('ur_here', $GLOBALS['_LANG']['sitemap']);
             $this->assign('arr_changefreq', array(1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1));
-            return $this->display('sitemap.view.php');
+            return $this->fetch('sitemap');
         } else {
             /*------------------------------------------------------ */
             //-- 生成站点地图

@@ -26,7 +26,7 @@ class RegFields extends Init
             $this->assign('reg_fields', $fields);
 
             assign_query_info();
-            return $this->display('reg_fields.view.php');
+            return $this->fetch('reg_fields');
         }
 
 
@@ -60,7 +60,7 @@ class RegFields extends Init
             $this->assign('form_action', $form_action);
 
             assign_query_info();
-            return $this->display('reg_field_info.view.php');
+            return $this->fetch('reg_field_info');
         }
 
         /*------------------------------------------------------ */
@@ -109,7 +109,7 @@ class RegFields extends Init
             $this->assign('form_action', $form_action);
 
             assign_query_info();
-            return $this->display('reg_field_info.view.php');
+            return $this->fetch('reg_field_info');
         }
 
         /*------------------------------------------------------ */

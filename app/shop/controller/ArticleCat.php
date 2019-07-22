@@ -25,7 +25,7 @@ class ArticleCat extends Init
         /* 获得页面的缓存ID */
         $cache_id = sprintf('%X', crc32($cat_id . '-' . $page . '-' . $GLOBALS['_CFG']['lang']));
 
-        if (!$GLOBALS['smarty']->is_cached('article_cat.view.php', $cache_id)) {
+        if (!$GLOBALS['smarty']->is_cached('article_cat', $cache_id)) {
             /* 如果页面没有被缓存则重新获得页面的内容 */
 
             $this->assign_template('a', array($cat_id));
@@ -93,6 +93,6 @@ class ArticleCat extends Init
 
         $this->assign('feed_url', ($GLOBALS['_CFG']['rewrite'] == 1) ? "feed-typearticle_cat" . $cat_id . ".xml" : 'feed.php?type=article_cat' . $cat_id); // RSS URL
 
-        return $this->display('article_cat.view.php', $cache_id);
+        return $this->fetch('article_cat', $cache_id);
     }
 }

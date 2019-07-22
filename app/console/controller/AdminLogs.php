@@ -51,7 +51,7 @@ class AdminLogs extends Init
             $this->assign($sort_flag['tag'], $sort_flag['img']);
 
             assign_query_info();
-            return $this->display('admin_logs.view.php');
+            return $this->fetch('admin_logs');
         }
 
         /*------------------------------------------------------ */

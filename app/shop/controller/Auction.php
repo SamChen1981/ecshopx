@@ -45,7 +45,7 @@ class Auction extends Init
             }
 
             /* 如果没有缓存，生成缓存 */
-            if (!$GLOBALS['smarty']->is_cached('auction_list.view.php', $cache_id)) {
+            if (!$GLOBALS['smarty']->is_cached('auction_list', $cache_id)) {
                 if ($count > 0) {
                     /* 取得当前页的拍卖活动 */
                     $auction_list = $this->auction_list($size, $page);
@@ -72,7 +72,7 @@ class Auction extends Init
             }
 
             /* 显示模板 */
-            return $this->display('auction_list.view.php', $cache_id);
+            return $this->fetch('auction_list', $cache_id);
         }
 
         /*------------------------------------------------------ */
@@ -108,7 +108,7 @@ class Auction extends Init
             $cache_id = sprintf('%X', crc32($cache_id));
 
             /* 如果没有缓存，生成缓存 */
-            if (!$GLOBALS['smarty']->is_cached('auction.view.php', $cache_id)) {
+            if (!$GLOBALS['smarty']->is_cached('auction', $cache_id)) {
                 //取货品信息
                 if ($auction['product_id'] > 0) {
                     $goods_specifications = get_specifications_list($auction['goods_id']);
@@ -162,7 +162,7 @@ class Auction extends Init
             $GLOBALS['db']->query($sql);
 
             $this->assign('now_time', gmtime());           // 当前系统时间
-            return $this->display('auction.view.php', $cache_id);
+            return $this->fetch('auction', $cache_id);
         }
 
         /*------------------------------------------------------ */

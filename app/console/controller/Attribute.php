@@ -42,7 +42,7 @@ class Attribute extends Init
 
             /* 显示模板 */
             assign_query_info();
-            return $this->display('attribute_list.view.php');
+            return $this->fetch('attribute_list');
         }
 
         /*------------------------------------------------------ */
@@ -108,7 +108,7 @@ class Attribute extends Init
 
             /* 显示模板 */
             assign_query_info();
-            return $this->display('attribute_info.view.php');
+            return $this->fetch('attribute_info');
         }
 
         /*------------------------------------------------------ */

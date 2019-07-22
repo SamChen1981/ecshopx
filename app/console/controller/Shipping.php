@@ -51,7 +51,7 @@ class Shipping extends Init
             $this->assign('ur_here', $GLOBALS['_LANG']['03_shipping_list']);
             $this->assign('modules', $modules);
             assign_query_info();
-            return $this->display('shipping_list.view.php');
+            return $this->fetch('shipping_list');
         }
 
         /*------------------------------------------------------ */
@@ -147,7 +147,7 @@ class Shipping extends Init
             $this->assign('shipping', $row);
             $this->assign('shipping_id', $shipping_id);
 
-            return $this->display('print_index.view.php');
+            return $this->fetch('print_index');
         }
 
         /*------------------------------------------------------ */
@@ -276,7 +276,7 @@ class Shipping extends Init
 
             assign_query_info();
 
-            return $this->display('shipping_template.view.php');
+            return $this->fetch('shipping_template');
         }
 
         /*------------------------------------------------------ */

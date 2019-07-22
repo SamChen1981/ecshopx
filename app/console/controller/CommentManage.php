@@ -39,7 +39,7 @@ class CommentManage extends Init
             $this->assign($sort_flag['tag'], $sort_flag['img']);
 
             assign_query_info();
-            return $this->display('comment_list.view.php');
+            return $this->fetch('comment_list');
         }
 
         /*------------------------------------------------------ */
@@ -121,7 +121,7 @@ class CommentManage extends Init
 
             /* 页面显示 */
             assign_query_info();
-            return $this->display('comment_info.view.php');
+            return $this->fetch('comment_info');
         }
         /*------------------------------------------------------ */
         //-- 处理 回复用户评论

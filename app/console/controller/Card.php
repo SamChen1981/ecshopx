@@ -29,7 +29,7 @@ class Card extends Init
             $this->assign('record_count', $cards_list['record_count']);
             $this->assign('page_count', $cards_list['page_count']);
 
-            return $this->display('card_list.view.php');
+            return $this->fetch('card_list');
         }
 
         /*------------------------------------------------------ */
@@ -92,7 +92,7 @@ class Card extends Init
             $this->assign('form_action', 'insert');
 
             assign_query_info();
-            return $this->display('card_info.view.php');
+            return $this->fetch('card_info');
         } elseif ($_REQUEST['act'] == 'insert') {
             /* 权限判断 */
             admin_priv('card_manage');
@@ -140,7 +140,7 @@ class Card extends Init
             $this->assign('form_action', 'update');
 
             assign_query_info();
-            return $this->display('card_info.view.php');
+            return $this->fetch('card_info');
         } elseif ($_REQUEST['act'] == 'update') {
             /* 权限判断 */
             admin_priv('card_manage');

@@ -36,6 +36,6 @@ class TagCloud extends Init
 
         $this->assign('tags', $tags);
 
-        return $this->display('tag_cloud.view.php');
+        return $this->fetch('tag_cloud');
     }
 }

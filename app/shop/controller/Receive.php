@@ -51,6 +51,6 @@ class Receive extends Init
         assign_dynamic('receive');
 
         $this->assign('msg', $msg);
-        return $this->display('receive.view.php');
+        return $this->fetch('receive');
     }
 }

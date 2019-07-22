@@ -25,7 +25,7 @@ class WxaSetting extends Init
             if ($params['authorize_code'] != 'NDE') {
                 $url = $params['authorize_code'] == 'NCH' ? 'https://account.shopex.cn/order/confirm/goods_2460-946 ' : 'https://account.shopex.cn/order/confirm/goods_2540-1050 ';
                 $this->assign('url', $url);
-                return $this->display('accredit.html');
+                return $this->fetch('accredit.html');
 
             }
             $cert = new certificate;
@@ -58,7 +58,7 @@ class WxaSetting extends Init
             assign_query_info();
 
             $this->assign('group_list', $grouplist);
-            return $this->display('wxa_config.html');
+            return $this->fetch('wxa_config.html');
         } elseif ($_REQUEST['act'] == 'post') {
             /* 检查权限 */
             admin_priv('mobile_setting');

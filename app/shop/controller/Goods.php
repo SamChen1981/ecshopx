@@ -108,7 +108,7 @@ class Goods extends Init
                 $this->assign('pager', $pager);
 
 
-                $res['result'] = $GLOBALS['smarty']->fetch('library/bought_notes.view.php');
+                $res['result'] = $GLOBALS['smarty']->fetch('library/bought_notes');
 
                 $GLOBALS['smarty']->caching = $need_cache;
                 $GLOBALS['smarty']->force_compile = $need_compile;
@@ -124,7 +124,7 @@ class Goods extends Init
 
         $cache_id = $goods_id . '-' . $_SESSION['user_rank'] . '-' . $GLOBALS['_CFG']['lang'];
         $cache_id = sprintf('%X', crc32($cache_id));
-        if (!$GLOBALS['smarty']->is_cached('goods.view.php', $cache_id)) {
+        if (!$GLOBALS['smarty']->is_cached('goods', $cache_id)) {
             $this->assign('image_width', $GLOBALS['_CFG']['image_width']);
             $this->assign('image_height', $GLOBALS['_CFG']['image_height']);
             $this->assign('helps', get_shop_help()); // 网店帮助
@@ -249,7 +249,7 @@ class Goods extends Init
         $GLOBALS['db']->query('UPDATE ' . $GLOBALS['ecs']->table('goods') . " SET click_count = click_count + 1 WHERE goods_id = '$_REQUEST[id]'");
 
         $this->assign('now_time', gmtime());           // 当前系统时间
-        return $this->display('goods.view.php', $cache_id);
+        return $this->fetch('goods', $cache_id);
     }
 
     /**

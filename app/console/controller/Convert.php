@@ -44,7 +44,7 @@ class Convert extends Init
             /* 显示模板 */
             $this->assign('ur_here', $GLOBALS['_LANG']['convert']);
             assign_query_info();
-            return $this->display('convert_main.view.php');
+            return $this->fetch('convert_main');
         }
 
         /*------------------------------------------------------ */

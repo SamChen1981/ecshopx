@@ -41,7 +41,7 @@ class Privilege extends Init
             $callback = $GLOBALS['ecs']->url() . "admin/privilege.php?act=login&type=yunqi";
             $iframe_url = $cert->get_authorize_url($callback);
             $this->assign('iframe_url', $iframe_url);
-            return $this->display('login_extend.html');
+            return $this->fetch('login_extend.html');
         }
 
         /*------------------------------------------------------ */
@@ -174,7 +174,7 @@ class Privilege extends Init
                     $this->assign('yunqi_ad_link', $yunqi_bg[0]['link']);
                 }
 
-                return $this->display('login.view.php');
+                return $this->fetch('login');
             }
         }
 
@@ -278,7 +278,7 @@ class Privilege extends Init
 
             /* 显示页面 */
             assign_query_info();
-            return $this->display('privilege_list.view.php');
+            return $this->fetch('privilege_list');
         }
 
         /*------------------------------------------------------ */
@@ -306,7 +306,7 @@ class Privilege extends Init
 
             /* 显示页面 */
             assign_query_info();
-            return $this->display('privilege_info.view.php');
+            return $this->fetch('privilege_info');
         }
 
         /*------------------------------------------------------ */
@@ -417,7 +417,7 @@ class Privilege extends Init
             $this->assign('action', 'edit');
 
             assign_query_info();
-            return $this->display('privilege_info.view.php');
+            return $this->fetch('privilege_info');
         }
 
         /*------------------------------------------------------ */
@@ -614,7 +614,7 @@ class Privilege extends Init
 
             /* 显示页面 */
             assign_query_info();
-            return $this->display('privilege_info.view.php');
+            return $this->fetch('privilege_info');
         }
 
         /*------------------------------------------------------ */
@@ -672,7 +672,7 @@ class Privilege extends Init
 
             /* 显示页面 */
             assign_query_info();
-            return $this->display('privilege_allot.view.php');
+            return $this->fetch('privilege_allot');
         }
 
         /*------------------------------------------------------ */

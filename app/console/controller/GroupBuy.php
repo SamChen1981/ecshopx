@@ -44,7 +44,7 @@ class GroupBuy extends Init
 
             /* 显示商品列表页面 */
             assign_query_info();
-            return $this->display('group_buy_list.view.php');
+            return $this->fetch('group_buy_list');
         } elseif ($_REQUEST['act'] == 'query') {
             $list = $this->group_buy_list();
 
@@ -93,7 +93,7 @@ class GroupBuy extends Init
 
             /* 显示模板 */
             assign_query_info();
-            return $this->display('group_buy_info.view.php');
+            return $this->fetch('group_buy_info');
         }
 
         /*------------------------------------------------------ */

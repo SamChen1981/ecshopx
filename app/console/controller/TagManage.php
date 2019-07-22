@@ -40,7 +40,7 @@ class TagManage extends Init
 
             /* 页面显示 */
             assign_query_info();
-            return $this->display('tag_manage.view.php');
+            return $this->fetch('tag_manage');
         }
 
         /*------------------------------------------------------ */
@@ -71,7 +71,7 @@ class TagManage extends Init
             $this->assign('action_link', array('href' => 'tag_manage.php?act=list', 'text' => $GLOBALS['_LANG']['tag_list']));
 
             assign_query_info();
-            return $this->display('tag_edit.view.php');
+            return $this->fetch('tag_edit');
         }
 
         /*------------------------------------------------------ */

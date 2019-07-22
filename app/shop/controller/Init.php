@@ -64,7 +64,7 @@ class Init extends Controller
         $GLOBALS['db'] = new Mysql();
 
         /* 创建错误处理对象 */
-        $GLOBALS['err'] = new Error('message.view.php');
+        $GLOBALS['err'] = new Error('message');
 
         /* 载入系统参数 */
         $GLOBALS['_CFG'] = load_config();
@@ -277,6 +277,6 @@ class Init extends Controller
 
         $this->assign('auto_redirect', $auto_redirect);
         $this->assign('message', $msg);
-        return $this->display('message.view.php');
+        return $this->fetch('message');
     }
 }

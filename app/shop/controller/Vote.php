@@ -33,7 +33,7 @@ class Vote extends Init
                 $this->assign('vote', $vote['content']);
             }
 
-            $str = $GLOBALS['smarty']->fetch("library/vote.view.php");
+            $str = $GLOBALS['smarty']->fetch("library/vote");
 
             $pattern = '/(?:<(\w+)[^>]*> .*?)?<div\s+id="ECS_VOTE">(.*)<\/div>(?:.*?<\/\1>)?/is';
 

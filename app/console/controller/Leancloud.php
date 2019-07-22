@@ -44,7 +44,7 @@ class Leancloud extends Init
             $this->assign('push_list', $push_list);
             $this->assign('full_page', 1);
 
-            return $this->display('leancloud.html');
+            return $this->fetch('leancloud.html');
         } elseif ($_REQUEST['act'] == 'edit') {
             /* 检查权限 */
             admin_priv('leancloud');
@@ -75,7 +75,7 @@ class Leancloud extends Init
             $this->assign('platform', $platform);
             $this->assign('links', $links);
             $this->assign('push_type', $push_type);
-            return $this->display('leancloud_edit.html');
+            return $this->fetch('leancloud_edit.html');
         } elseif ($_REQUEST['act'] == 'remove') {
             /* 检查权限 */
             admin_priv('leancloud');

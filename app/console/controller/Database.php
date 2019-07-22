@@ -48,7 +48,7 @@ class Database extends Init
             $this->assign('vol_size', $allow_max_size);
             $this->assign('sql_name', cls_sql_dump::get_random_name() . '.sql');
             $this->assign('ur_here', $GLOBALS['_LANG']['02_db_manage']);
-            return $this->display('db_backup.view.php');
+            return $this->fetch('db_backup');
         }
 
         /* 备份恢复页面 */
@@ -100,7 +100,7 @@ class Database extends Init
             $this->assign('action_link', array('text' => $GLOBALS['_LANG']['02_db_manage'], 'href' => 'database.php?act=backup'));
             $this->assign('ur_here', $GLOBALS['_LANG']['restore']);
             $this->assign('list', $list);
-            return $this->display('db_restore.view.php');
+            return $this->fetch('db_restore');
         }
 
         if ($_REQUEST['act'] == 'dumpsql') {
@@ -230,7 +230,7 @@ class Database extends Init
 
                     $this->assign('list', $list);
                     $this->assign('title', $GLOBALS['_LANG']['backup_success']);
-                    return $this->display('sql_dump_msg.view.php');
+                    return $this->fetch('sql_dump_msg');
                 } else {
                     /* 只有一个文件 */
                     if (!@file_put_contents(ROOT_PATH . DATA_DIR . '/sqldata/' . $sql_file_name . '.sql', $dump->dump_sql)) {
@@ -239,7 +239,7 @@ class Database extends Init
 
                     $this->assign('list', array(array('name' => $sql_file_name . '.sql', 'href' => '../' . DATA_DIR . '/sqldata/' . $sql_file_name . '.sql')));
                     $this->assign('title', $GLOBALS['_LANG']['backup_success']);
-                    return $this->display('sql_dump_msg.view.php');
+                    return $this->fetch('sql_dump_msg');
                 }
             } else {
                 /* 下一个页面处理 */
@@ -251,7 +251,7 @@ class Database extends Init
                 $this->assign('title', sprintf($GLOBALS['_LANG']['backup_title'], '#' . $vol));
                 $this->assign('auto_redirect', 1);
                 $this->assign('auto_link', $lnk);
-                return $this->display('sql_dump_msg.view.php');
+                return $this->fetch('sql_dump_msg');
             }
         }
 
@@ -483,7 +483,7 @@ class Database extends Init
             $this->assign('list', $list);
             $this->assign('num', $num);
             $this->assign('ur_here', $GLOBALS['_LANG']['03_db_optimize']);
-            return $this->display('optimize.view.php');
+            return $this->fetch('optimize');
         }
 
         if ($_REQUEST['act'] == 'run_optimize') {
@@ -508,7 +508,7 @@ class Database extends Init
             admin_priv('db_clear');
             $this->assign('ur_here', $GLOBALS['_LANG']['clear']);
             $this->assign('yunqi_login', $_SESSION['yunqi_login']);
-            return $this->display('clear.view.php');
+            return $this->fetch('clear');
         }
 
         /**

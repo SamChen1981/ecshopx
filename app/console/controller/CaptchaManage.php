@@ -51,7 +51,7 @@ class CaptchaManage extends Init
             $this->assign('captcha_width', $GLOBALS['_CFG']['captcha_width']);
             $this->assign('captcha_height', $GLOBALS['_CFG']['captcha_height']);
             $this->assign('ur_here', $GLOBALS['_LANG']['captcha_manage']);
-            return $this->display('captcha_manage.view.php');
+            return $this->fetch('captcha_manage');
         }
 
         /*------------------------------------------------------ */

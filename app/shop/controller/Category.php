@@ -57,7 +57,7 @@ class Category extends Init
         $cache_id = sprintf('%X', crc32($cat_id . '-' . $display . '-' . $sort . '-' . $order . '-' . $page . '-' . $size . '-' . $_SESSION['user_rank'] . '-' .
             $GLOBALS['_CFG']['lang'] . '-' . $brand . '-' . $price_max . '-' . $price_min . '-' . $filter_attr_str));
 
-        if (!$GLOBALS['smarty']->is_cached('category.view.php', $cache_id)) {
+        if (!$GLOBALS['smarty']->is_cached('category', $cache_id)) {
             /* 如果页面没有被缓存则重新获取页面的内容 */
 
             $children = get_children($cat_id);
@@ -340,7 +340,7 @@ class Category extends Init
             assign_dynamic('category'); // 动态内容
         }
 
-        return $this->display('category.view.php', $cache_id);
+        return $this->fetch('category', $cache_id);
     }
 
     /**

@@ -62,7 +62,7 @@ class MailTemplate extends Init
             $this->assign('templates', $templates);
             $this->assign('template', $content);
             $this->assign('full_page', 1);
-            return $this->display('mail_template.view.php');
+            return $this->fetch('mail_template');
         }
 
         /*------------------------------------------------------ */

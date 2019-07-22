@@ -23,7 +23,7 @@ class Shopinfo extends Init
             $this->assign('list', $this->shopinfo_article_list());
 
             assign_query_info();
-            return $this->display('shopinfo_list.view.php');
+            return $this->fetch('shopinfo_list');
         }
 
         /*------------------------------------------------------ */
@@ -54,7 +54,7 @@ class Shopinfo extends Init
             $this->assign('form_action', 'insert');
 
             assign_query_info();
-            return $this->display('shopinfo_info.view.php');
+            return $this->fetch('shopinfo_info');
         }
         if ($_REQUEST['act'] == 'insert') {
             /* 权限判断 */
@@ -105,7 +105,7 @@ class Shopinfo extends Init
             $this->assign('action_link', array('text' => $GLOBALS['_LANG']['shopinfo_list'], 'href' => 'shopinfo.php?act=list'));
             $this->assign('article', $article);
             $this->assign('form_action', 'update');
-            return $this->display('shopinfo_info.view.php');
+            return $this->fetch('shopinfo_info');
         }
         if ($_REQUEST['act'] == 'update') {
             /* 权限判断 */

@@ -681,7 +681,7 @@ class Flow extends Init
                     $result['cod_fee'] = price_format($result['cod_fee'], false);
                 }
                 $result['need_insure'] = ($shipping_info['insure'] > 0 && !empty($order['need_insure'])) ? 1 : 0;
-                $result['content'] = $GLOBALS['smarty']->fetch('library/order_total.view.php');
+                $result['content'] = $GLOBALS['smarty']->fetch('library/order_total');
             }
 
             echo json_encode($result);
@@ -729,7 +729,7 @@ class Flow extends Init
                     $this->assign('is_group_buy', 1);
                 }
 
-                $result['content'] = $GLOBALS['smarty']->fetch('library/order_total.view.php');
+                $result['content'] = $GLOBALS['smarty']->fetch('library/order_total');
             }
 
             echo json_encode($result);
@@ -779,7 +779,7 @@ class Flow extends Init
                     $this->assign('is_group_buy', 1);
                 }
 
-                $result['content'] = $GLOBALS['smarty']->fetch('library/order_total.view.php');
+                $result['content'] = $GLOBALS['smarty']->fetch('library/order_total');
             }
 
             echo json_encode($result);
@@ -827,7 +827,7 @@ class Flow extends Init
                     $this->assign('is_group_buy', 1);
                 }
 
-                $result['content'] = $GLOBALS['smarty']->fetch('library/order_total.view.php');
+                $result['content'] = $GLOBALS['smarty']->fetch('library/order_total');
             }
 
             echo json_encode($result);
@@ -875,7 +875,7 @@ class Flow extends Init
                     $this->assign('is_group_buy', 1);
                 }
 
-                $result['content'] = $GLOBALS['smarty']->fetch('library/order_total.view.php');
+                $result['content'] = $GLOBALS['smarty']->fetch('library/order_total');
             }
 
             echo json_encode($result);
@@ -919,7 +919,7 @@ class Flow extends Init
                         $this->assign('is_group_buy', 1);
                     }
 
-                    $result['content'] = $GLOBALS['smarty']->fetch('library/order_total.view.php');
+                    $result['content'] = $GLOBALS['smarty']->fetch('library/order_total');
                 }
             }
 
@@ -967,7 +967,7 @@ class Flow extends Init
                         $this->assign('is_group_buy', 1);
                     }
 
-                    $result['content'] = $GLOBALS['smarty']->fetch('library/order_total.view.php');
+                    $result['content'] = $GLOBALS['smarty']->fetch('library/order_total');
                     $result['error'] = '';
                 }
             }
@@ -1015,7 +1015,7 @@ class Flow extends Init
                     $this->assign('is_group_buy', 1);
                 }
 
-                $result['content'] = $GLOBALS['smarty']->fetch('library/order_total.view.php');
+                $result['content'] = $GLOBALS['smarty']->fetch('library/order_total');
             }
 
             die(json_encode($result));
@@ -1068,7 +1068,7 @@ class Flow extends Init
                     $this->assign('is_group_buy', 1);
                 }
 
-                die($GLOBALS['smarty']->fetch('library/order_total.view.php'));
+                die($GLOBALS['smarty']->fetch('library/order_total'));
             }
         } elseif ($_REQUEST['step'] == 'change_oos') {
             /*------------------------------------------------------ */
@@ -1750,7 +1750,7 @@ class Flow extends Init
                     $this->assign('is_group_buy', 1);
                 }
 
-                $result['content'] = $GLOBALS['smarty']->fetch('library/order_total.view.php');
+                $result['content'] = $GLOBALS['smarty']->fetch('library/order_total');
             }
             die(json_encode($result));
         }
@@ -1901,7 +1901,7 @@ class Flow extends Init
         $this->assign('step', $_REQUEST['step']);
         assign_dynamic('shopping_flow');
 
-        return $this->display('flow.view.php');
+        return $this->fetch('flow');
     }
 
     /**

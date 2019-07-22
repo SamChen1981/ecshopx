@@ -32,7 +32,7 @@ class License extends Init
             $this->assign('certificate_id', $license['certificate_id']);
             $this->assign('token', $license['token']);
 
-            return $this->display('license.view.php');
+            return $this->fetch('license');
         }
 
         /*------------------------------------------------------ */

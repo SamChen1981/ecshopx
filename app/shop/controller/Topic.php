@@ -22,7 +22,7 @@ class Topic extends Init
 
         }
 
-        $templates = empty($topic['template']) ? 'topic.view.php' : $topic['template'];
+        $templates = empty($topic['template']) ? 'topic' : $topic['template'];
 
         $cache_id = sprintf('%X', crc32($_SESSION['user_rank'] . '-' . $GLOBALS['_CFG']['lang'] . '-' . $topic_id));
 
@@ -100,9 +100,9 @@ class Topic extends Init
             $this->assign('title_pic', $topic['title_pic']);      // 分类标题图片地址
             $this->assign('base_style', '#' . $topic['base_style']);     // 基本风格样式颜色
 
-            $template_file = empty($topic['template']) ? 'topic.view.php' : $topic['template'];
+            $template_file = empty($topic['template']) ? 'topic' : $topic['template'];
         }
         /* 显示模板 */
-        return $this->display($templates, $cache_id);
+        return $this->fetch($templates, $cache_id);
     }
 }

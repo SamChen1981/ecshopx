@@ -39,7 +39,7 @@ class Vote extends Init
 
             /* 显示页面 */
             assign_query_info();
-            return $this->display('vote_list.view.php');
+            return $this->fetch('vote_list');
         }
 
         /*------------------------------------------------------ */
@@ -81,7 +81,7 @@ class Vote extends Init
 
             /* 显示页面 */
             assign_query_info();
-            return $this->display('vote_info.view.php');
+            return $this->fetch('vote_info');
         } elseif ($_REQUEST['act'] == 'insert') {
             admin_priv('vote_priv');
 
@@ -139,7 +139,7 @@ class Vote extends Init
             $this->assign('vote_arr', $vote_arr);
 
             assign_query_info();
-            return $this->display('vote_info.view.php');
+            return $this->fetch('vote_info');
         } elseif ($_REQUEST['act'] == 'update') {
             /* 获得广告的开始时期与结束日期 */
             $start_time = local_strtotime($_POST['start_time']);
@@ -180,7 +180,7 @@ class Vote extends Init
 
             /* 显示页面 */
             assign_query_info();
-            return $this->display('vote_option.view.php');
+            return $this->fetch('vote_option');
         }
 
         /*------------------------------------------------------ */

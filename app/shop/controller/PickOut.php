@@ -239,7 +239,7 @@ class PickOut extends Init
         $this->assign('count', $goods_count);
         $this->assign('picks', $picks);
         $this->assign('condition', $condition);
-        return $this->display('pick_out.view.php');
+        return $this->fetch('pick_out');
     }
 
     /**

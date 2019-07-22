@@ -126,7 +126,7 @@ class GuestStats extends Init
                 'href' => 'guest_stats.php?flag=download'));
 
             assign_query_info();
-            return $this->display('guest_stats.view.php');
+            return $this->fetch('guest_stats');
         }
     }
 }

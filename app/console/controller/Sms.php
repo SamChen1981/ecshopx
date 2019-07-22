@@ -39,12 +39,12 @@ class Sms extends Init
                     $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('shop_config') . "WHERE  code='default_sms_sign'";
                     $row = $GLOBALS['db']->getRow($sql);
                     $this->assign('default_sms_sign', $row['value']);
-                    return $this->display('sms_send_ui.view.php');
+                    return $this->fetch('sms_send_ui');
                 } else {
                     $this->assign('ur_here', $GLOBALS['_LANG']['register_sms']);
                     $this->assign('sms_site_info', $sms->get_site_info());
                     assign_query_info();
-                    return $this->display('sms_register_ui.view.php');
+                    return $this->fetch('sms_register_ui');
                 }
 
                 break;
@@ -73,12 +73,12 @@ class Sms extends Init
                     $this->assign('default_sign', $default_sms_sign['value']);
 
 
-                    return $this->display('sms_sign.view.php');
+                    return $this->fetch('sms_sign');
                 } else {
                     $this->assign('ur_here', $GLOBALS['_LANG']['register_sms']);
                     $this->assign('sms_site_info', $sms->get_site_info());
                     assign_query_info();
-                    return $this->display('sms_register_ui.view.php');
+                    return $this->fetch('sms_register_ui');
                 }
                 break;
 
@@ -149,7 +149,7 @@ class Sms extends Init
                     $this->assign('ur_here', $GLOBALS['_LANG']['register_sms']);
                     $this->assign('sms_site_info', $sms->get_site_info());
                     assign_query_info();
-                    return $this->display('sms_register_ui.view.php');
+                    return $this->fetch('sms_register_ui');
                 }
                 break;
 
@@ -224,7 +224,7 @@ class Sms extends Init
                     $this->assign('ur_here', $GLOBALS['_LANG']['register_sms']);
                     $this->assign('sms_site_info', $sms->get_site_info());
                     assign_query_info();
-                    return $this->display('sms_register_ui.view.php');
+                    return $this->fetch('sms_register_ui');
                 }
                 break;
 
@@ -262,7 +262,7 @@ class Sms extends Init
                     $this->assign('ur_here', $GLOBALS['_LANG']['register_sms']);
                     $this->assign('sms_site_info', $sms->get_site_info());
                     assign_query_info();
-                    return $this->display('sms_register_ui.view.php');
+                    return $this->fetch('sms_register_ui');
                 }
                 break;
 

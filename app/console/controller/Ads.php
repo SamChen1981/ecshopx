@@ -45,7 +45,7 @@ class Ads extends Init
             $this->assign($sort_flag['tag'], $sort_flag['img']);
 
             assign_query_info();
-            return $this->display('ads_list.view.php');
+            return $this->fetch('ads_list');
         }
 
         /*------------------------------------------------------ */
@@ -96,7 +96,7 @@ class Ads extends Init
             $this->assign('cfg_lang', $GLOBALS['_CFG']['lang']);
 
             assign_query_info();
-            return $this->display('ads_info.view.php');
+            return $this->fetch('ads_info');
         }
 
         /*------------------------------------------------------ */
@@ -280,7 +280,7 @@ class Ads extends Init
             $this->assign('ads', $ads_arr);
 
             assign_query_info();
-            return $this->display('ads_info.view.php');
+            return $this->fetch('ads_info');
         }
 
         /*------------------------------------------------------ */
@@ -408,7 +408,7 @@ class Ads extends Init
             $this->assign('lang_list', $lang_list);
 
             assign_query_info();
-            return $this->display('ads_js.view.php');
+            return $this->fetch('ads_js');
         }
 
         /*------------------------------------------------------ */

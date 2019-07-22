@@ -58,7 +58,7 @@ class UserAccount extends Init
             $this->assign('full_page', 1);
 
             assign_query_info();
-            return $this->display('user_account_list.view.php');
+            return $this->fetch('user_account_list');
         }
 
         /*------------------------------------------------------ */
@@ -112,7 +112,7 @@ class UserAccount extends Init
             $this->assign('action_link', array('href' => $href, 'text' => $GLOBALS['_LANG']['09_user_account']));
 
             assign_query_info();
-            return $this->display('user_account_info.view.php');
+            return $this->fetch('user_account_info');
         }
 
         /*------------------------------------------------------ */
@@ -264,7 +264,7 @@ class UserAccount extends Init
 
             /* 页面显示 */
             assign_query_info();
-            return $this->display('user_account_check.view.php');
+            return $this->fetch('user_account_check');
         }
 
         /*------------------------------------------------------ */

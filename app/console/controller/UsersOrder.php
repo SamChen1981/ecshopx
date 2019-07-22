@@ -79,7 +79,7 @@ class UsersOrder extends Init
             $this->assign('sort_order_num', '<img src="images/sort_desc.png">');
             /* 页面显示 */
             assign_query_info();
-            return $this->display('users_order.view.php');
+            return $this->fetch('users_order');
         }
     }
 

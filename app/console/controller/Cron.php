@@ -43,7 +43,7 @@ class Cron extends Init
             assign_query_info();
             $this->assign('ur_here', $GLOBALS['_LANG']['07_cron_schcron']);
             $this->assign('modules', $modules);
-            return $this->display('cron_list.view.php');
+            return $this->fetch('cron_list');
         } elseif ($_REQUEST['act'] == 'install') {
             if (empty($_POST['step'])) {
                 /* 取相应插件信息 */
@@ -90,7 +90,7 @@ class Cron extends Init
                 $this->assign('week', $week);
                 $this->assign('hours', $hours);
                 $this->assign('cron', $cron);
-                return $this->display('cron_edit.view.php');
+                return $this->fetch('cron_edit');
             } elseif ($_POST['step'] == 2) {
                 $links[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'cron.php?act=list');
                 if (empty($_POST['cron_name'])) {
@@ -205,7 +205,7 @@ class Cron extends Init
                 $this->assign('week', $week);
                 $this->assign('hours', $hours);
                 $this->assign('page_list', $page_list);
-                return $this->display('cron_edit.view.php');
+                return $this->fetch('cron_edit');
             } elseif ($_POST['step'] == 2) {
                 $links[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'cron.php?act=list');
                 if (empty($_POST['cron_id'])) {

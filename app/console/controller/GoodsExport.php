@@ -27,7 +27,7 @@ class GoodsExport extends Init
             $this->assign('data_format', $data_format_array);
             $this->assign('goods_fields', $goods_fields);
             assign_query_info();
-            return $this->display('goods_export.view.php');
+            return $this->fetch('goods_export');
         } elseif ($_REQUEST['act'] == 'act_export_taobao') {
             /* 检查权限 */
             admin_priv('goods_export');
@@ -169,7 +169,7 @@ class GoodsExport extends Init
             die($zip->file());
         } /* 从淘宝导入数据 */
         elseif ($_REQUEST['act'] == 'import_taobao') {
-            return $this->display('import_taobao.view.php');
+            return $this->fetch('import_taobao');
         } elseif ($_REQUEST['act'] == 'act_export_ecshop') {
             /* 检查权限 */
             admin_priv('goods_export');
@@ -474,7 +474,7 @@ class GoodsExport extends Init
             die($zip->file());
         } /* 从拍拍网导入数据 */
         elseif ($_REQUEST['act'] == 'import_paipai') {
-            return $this->display('import_paipai.view.php');
+            return $this->fetch('import_paipai');
         } /* 处理Ajax调用 */
         elseif ($_REQUEST['act'] == 'get_goods_fields') {
             $cat_id = isset($_REQUEST['cat_id']) ? intval($_REQUEST['cat_id']) : 0;

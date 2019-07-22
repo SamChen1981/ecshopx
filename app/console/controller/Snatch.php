@@ -31,7 +31,7 @@ class Snatch extends Init
             $this->assign('form_action', 'insert');
 
             assign_query_info();
-            return $this->display('snatch_info.view.php');
+            return $this->fetch('snatch_info');
         } elseif ($_REQUEST['act'] == 'insert') {
             /* 权限判断 */
             admin_priv('snatch_manage');
@@ -108,7 +108,7 @@ class Snatch extends Init
 
             $this->assign('full_page', 1);
             assign_query_info();
-            return $this->display('snatch_list.view.php');
+            return $this->fetch('snatch_list');
         }
 
         /*------------------------------------------------------ */
@@ -191,7 +191,7 @@ class Snatch extends Init
             $this->assign('good_products_select', get_good_products_select($snatch['goods_id']));
 
             assign_query_info();
-            return $this->display('snatch_info.view.php');
+            return $this->fetch('snatch_info');
         } elseif ($_REQUEST['act'] == 'update') {
             /* 权限判断 */
             admin_priv('snatch_manage');
@@ -272,7 +272,7 @@ class Snatch extends Init
             $this->assign('result', get_snatch_result($id));
             $this->assign('ur_here', $GLOBALS['_LANG']['view_detail']);
             $this->assign('action_link', array('text' => $GLOBALS['_LANG']['02_snatch_list'], 'href' => 'snatch.php?act=list'));
-            return $this->display('snatch_view.view.php');
+            return $this->fetch('snatch_view');
         }
 
         /*------------------------------------------------------ */

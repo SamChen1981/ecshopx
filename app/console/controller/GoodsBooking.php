@@ -28,7 +28,7 @@ class GoodsBooking extends Init
             $this->assign($sort_flag['tag'], $sort_flag['img']);
 
             assign_query_info();
-            return $this->display('booking_list.view.php');
+            return $this->fetch('booking_list');
         }
 
         /*------------------------------------------------------ */
@@ -79,7 +79,7 @@ class GoodsBooking extends Init
             $this->assign('booking', $this->get_booking_info($id));
             $this->assign('ur_here', $GLOBALS['_LANG']['detail']);
             $this->assign('action_link', array('text' => $GLOBALS['_LANG']['06_undispose_booking'], 'href' => 'goods_booking.php?act=list_all'));
-            return $this->display('booking_info.view.php');
+            return $this->fetch('booking_info');
         }
 
         /*------------------------------------------------------ */

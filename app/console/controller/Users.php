@@ -44,7 +44,7 @@ class Users extends Init
             $this->assign('sort_user_id', '<img src="images/sort_desc.png">');
             $this->assign('pageHtml', 'users_list.htm');
             assign_query_info();
-            return $this->display('users_list.view.php');
+            return $this->fetch('users_list');
         }
 
         /*------------------------------------------------------ */
@@ -87,7 +87,7 @@ class Users extends Init
             $this->assign('special_ranks', get_rank_list(true));
 
             assign_query_info();
-            return $this->display('user_info.view.php');
+            return $this->fetch('user_info');
         }
 
         /*------------------------------------------------------ */
@@ -308,7 +308,7 @@ class Users extends Init
             $this->assign('user', $user);
             $this->assign('form_action', 'update');
             $this->assign('special_ranks', get_rank_list(true));
-            return $this->display('user_info.view.php');
+            return $this->fetch('user_info');
         }
 
         /*------------------------------------------------------ */
@@ -516,7 +516,7 @@ class Users extends Init
             assign_query_info();
             $this->assign('ur_here', $GLOBALS['_LANG']['address_list']);
             $this->assign('action_link', array('text' => $GLOBALS['_LANG']['03_users_list'], 'href' => 'users.php?act=list&' . list_link_postfix()));
-            return $this->display('user_address_list.view.php');
+            return $this->fetch('user_address_list');
         }
 
         /*------------------------------------------------------ */
@@ -594,7 +594,7 @@ class Users extends Init
             $this->assign('action_link', array('text' => $GLOBALS['_LANG']['back_note'], 'href' => "users.php?act=edit&id=$auid"));
 
             assign_query_info();
-            return $this->display('affiliate_list.view.php');
+            return $this->fetch('affiliate_list');
         }
     }
 

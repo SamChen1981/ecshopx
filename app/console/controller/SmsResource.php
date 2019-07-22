@@ -20,7 +20,7 @@ class SmsResource extends Init
         $data[] = getRandChar(6);
         $source_str = implode('|', $data);
         $this->assign('resource_url', SMS_RESOURCE_URL . '/index.php?source=' . base64_encode($source_str));
-        return $this->display('sms_resource.view.php');
+        return $this->fetch('sms_resource');
 
         function getRandChar($length)
         {

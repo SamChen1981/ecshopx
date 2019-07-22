@@ -102,7 +102,7 @@ class SaleGeneral extends Init
             /* 显示模板 */
             $this->assign('ur_here', $GLOBALS['_LANG']['report_sell']);
             assign_query_info();
-            return $this->display('sale_general.view.php');
+            return $this->fetch('sale_general');
         }
 
         /*------------------------------------------------------ */

@@ -62,7 +62,7 @@ class Quotation extends Init
             $this->assign('helps', get_shop_help()); // 网店帮助
         }
 
-        return $this->display('quotation.view.php');
+        return $this->fetch('quotation');
     }
 
     private function get_quotation_where($filter)

@@ -23,7 +23,7 @@ class Affiliate extends Init
 
             $this->assign('ur_here', $GLOBALS['_LANG']['affiliate']);
             $this->assign('config', $config);
-            return $this->display('affiliate.view.php');
+            return $this->fetch('affiliate');
         } elseif ($_REQUEST['act'] == 'query') {
             $this->assign('ur_here', $GLOBALS['_LANG']['affiliate']);
             $this->assign('config', $config);

@@ -68,7 +68,7 @@ class Template extends Init
             $this->assign('curr_template', get_template_info($curr_template, $curr_style));
             $this->assign('available_templates', $available_templates);
             $this->assign('theme_online_url', YUNQI_SERVICE_URL . 'cid=40&source=' . iframe_source_encode('ecshop'));
-            return $this->display('templates_list.view.php');
+            return $this->fetch('templates_list');
         }
 
         /*------------------------------------------------------ */
@@ -84,8 +84,8 @@ class Template extends Init
             $curr_template = empty($_REQUEST['template_file']) ? 'index' : $_REQUEST['template_file'];
 
             $temp_options = array();
-            $temp_regions = get_template_region($template_theme, $curr_template . '.view.php', false);
-            $temp_libs = get_template_region($template_theme, $curr_template . '.view.php', true);
+            $temp_regions = get_template_region($template_theme, $curr_template . '', false);
+            $temp_libs = get_template_region($template_theme, $curr_template . '', true);
 
             $editable_libs = get_editable_libs($curr_template, $page_libs[$curr_template]);
 
@@ -194,7 +194,7 @@ class Template extends Init
             $this->assign('arr_brands', get_brand_list());
             $this->assign('arr_article_cats', article_cat_list(0, 0, true));
             $this->assign('arr_ad_positions', get_position_list());
-            return $this->display('template_setup.view.php');
+            return $this->fetch('template_setup');
         }
 
         /*------------------------------------------------------ */
@@ -227,7 +227,7 @@ class Template extends Init
                             "theme, filename, region, library, sort_order, type, id, number" .
                             ") VALUES (" .
                             "'$curr_template', " .
-                            "'$_POST[template_file]', '" . $val . "', '/library/cat_goods.view.php', " .
+                            "'$_POST[template_file]', '" . $val . "', '/library/cat_goods', " .
                             "'" . $_POST['sort_order']['cat_goods'][$key] . "', 1, '" . $_POST['categories']['cat_goods'][$key] .
                             "', '" . $_POST['number']['cat_goods'][$key] . "'" .
                             ")";
@@ -244,7 +244,7 @@ class Template extends Init
                             "theme, filename, region, library, sort_order, type, id, number" .
                             ") VALUES (" .
                             "'$curr_template', " .
-                            "'$_POST[template_file]', '" . $val . "', '/library/brand_goods.view.php', " .
+                            "'$_POST[template_file]', '" . $val . "', '/library/brand_goods', " .
                             "'" . $_POST['sort_order']['brand_goods'][$key] . "', 2, '" . $_POST['brands']['brand_goods'][$key] .
                             "', '" . $_POST['number']['brand_goods'][$key] . "'" .
                             ")";
@@ -261,7 +261,7 @@ class Template extends Init
                             "theme, filename, region, library, sort_order, type, id, number" .
                             ") VALUES (" .
                             "'$curr_template', " .
-                            "'$_POST[template_file]', '" . $val . "', '/library/cat_articles.view.php', " .
+                            "'$_POST[template_file]', '" . $val . "', '/library/cat_articles', " .
                             "'" . $_POST['sort_order']['cat_articles'][$key] . "', 3, '" . $_POST['article_cat']['cat_articles'][$key] .
                             "', '" . $_POST['number']['cat_articles'][$key] . "'" .
                             ")";
@@ -278,7 +278,7 @@ class Template extends Init
                             "theme, filename, region, library, sort_order, type, id, number" .
                             ") VALUES (" .
                             "'$curr_template', " .
-                            "'$_POST[template_file]', '" . $val . "', '/library/ad_position.view.php', " .
+                            "'$_POST[template_file]', '" . $val . "', '/library/ad_position', " .
                             "'" . $_POST['sort_order']['ad_position'][$key] . "', 4, '" . $_POST['ad_position'][$key] .
                             "', '" . $_POST['number']['ad_position'][$key] . "'" .
                             ")";
@@ -297,7 +297,7 @@ class Template extends Init
                                 $post_regions[] = array('region' => $v,
                                     'type' => 1,
                                     'number' => $_POST['number']['cat_goods'][$k],
-                                    'library' => '/library/' . $key . '.view.php',
+                                    'library' => '/library/' . $key . '',
                                     'sort_order' => $_POST['sort_order']['cat_goods'][$k],
                                     'id' => $_POST['categories']['cat_goods'][$k]);
                             }
@@ -309,7 +309,7 @@ class Template extends Init
                                 $post_regions[] = array('region' => $v,
                                     'type' => 2,
                                     'number' => $_POST['number']['brand_goods'][$k],
-                                    'library' => '/library/' . $key . '.view.php',
+                                    'library' => '/library/' . $key . '',
                                     'sort_order' => $_POST['sort_order']['brand_goods'][$k],
                                     'id' => $_POST['brands']['brand_goods'][$k]);
                             }
@@ -321,7 +321,7 @@ class Template extends Init
                                 $post_regions[] = array('region' => $v,
                                     'type' => 3,
                                     'number' => $_POST['number']['cat_articles'][$k],
-                                    'library' => '/library/' . $key . '.view.php',
+                                    'library' => '/library/' . $key . '',
                                     'sort_order' => $_POST['sort_order']['cat_articles'][$k],
                                     'id' => $_POST['article_cat']['cat_articles'][$k]);
                             }
@@ -333,7 +333,7 @@ class Template extends Init
                                 $post_regions[] = array('region' => $v,
                                     'type' => 4,
                                     'number' => $_POST['number']['ad_position'][$k],
-                                    'library' => '/library/' . $key . '.view.php',
+                                    'library' => '/library/' . $key . '',
                                     'sort_order' => $_POST['sort_order']['ad_position'][$k],
                                     'id' => $_POST['ad_position'][$k]);
                             }
@@ -356,10 +356,10 @@ class Template extends Init
             usort($post_regions, "array_sort");
 
             /* 修改模板文件 */
-            $template_file = '../themes/' . $curr_template . '/' . $_POST['template_file'] . '.view.php';
+            $template_file = '../themes/' . $curr_template . '/' . $_POST['template_file'] . '';
             $template_content = file_get_contents($template_file);
             $template_content = str_replace("\xEF\xBB\xBF", '', $template_content);
-            $org_regions = get_template_region($curr_template, $_POST['template_file'] . '.view.php', false);
+            $org_regions = get_template_region($curr_template, $_POST['template_file'] . '', false);
 
             $region_content = '';
             $pattern = '/(<!--\\s*TemplateBeginEditable\\sname="%s"\\s*-->)(.*?)(<!--\\s*TemplateEndEditable\\s*-->)/s';
@@ -385,12 +385,12 @@ class Template extends Init
             }
 
             if (file_put_contents($template_file, $template_content)) {
-                //clear_tpl_files(false, '.view.php.php'); // 清除对应的编译文件
+                //clear_tpl_files(false, '.php'); // 清除对应的编译文件
                 clear_cache_files();
                 $lnk[] = array('text' => $GLOBALS['_LANG']['go_back'], 'href' => 'template.php?act=setup&template_file=' . $_POST['template_file']);
                 return sys_msg($GLOBALS['_LANG']['setup_success'], 0, $lnk);
             } else {
-                return sys_msg(sprintf($GLOBALS['_LANG']['modify_dwt_failed'], 'themes/' . $curr_template . '/' . $_POST['template_file'] . '.view.php'), 1, null, false);
+                return sys_msg(sprintf($GLOBALS['_LANG']['modify_dwt_failed'], 'themes/' . $curr_template . '/' . $_POST['template_file'] . ''), 1, null, false);
             }
         }
 
@@ -438,7 +438,7 @@ class Template extends Init
             $this->assign('curr_library', $curr_library);
             $this->assign('libraries', $arr_library);
             $this->assign('library_html', $lib['html']);
-            return $this->display('template_library.view.php');
+            return $this->fetch('template_library');
         }
 
         /*------------------------------------------------------ */
@@ -511,13 +511,13 @@ class Template extends Init
             check_authz_json('library_manage');
 
             $html = stripslashes(json_str_iconv($_POST['html']));
-            $lib_file = '../themes/' . $GLOBALS['_CFG']['template'] . '/library/' . $_POST['lib'] . '.view.php';
+            $lib_file = '../themes/' . $GLOBALS['_CFG']['template'] . '/library/' . $_POST['lib'] . '';
             $lib_file = str_replace("0xa", '', $lib_file); // 过滤 0xa 非法字符
 
             $org_html = str_replace("\xEF\xBB\xBF", '', file_get_contents($lib_file));
 
             if (@file_exists($lib_file) === true && @file_put_contents($lib_file, $html)) {
-                @file_put_contents('../temp/backup/library/' . $GLOBALS['_CFG']['template'] . '-' . $_POST['lib'] . '.view.php', $org_html);
+                @file_put_contents('../temp/backup/library/' . $GLOBALS['_CFG']['template'] . '-' . $_POST['lib'] . '', $org_html);
 
                 return make_json_result('', $GLOBALS['_LANG']['update_lib_success']);
             } else {
@@ -531,9 +531,9 @@ class Template extends Init
         if ($_REQUEST['act'] == 'restore_library') {
             admin_priv('backup_setting');
             $lib_name = trim($_GET['lib']);
-            $lib_file = '../themes/' . $GLOBALS['_CFG']['template'] . '/library/' . $lib_name . '.view.php';
+            $lib_file = '../themes/' . $GLOBALS['_CFG']['template'] . '/library/' . $lib_name . '';
             $lib_file = str_replace("0xa", '', $lib_file); // 过滤 0xa 非法字符
-            $lib_backup = '../temp/backup/library/' . $GLOBALS['_CFG']['template'] . '-' . $lib_name . '.view.php';
+            $lib_backup = '../temp/backup/library/' . $GLOBALS['_CFG']['template'] . '-' . $lib_name . '';
             $lib_backup = str_replace("0xa", '', $lib_backup); // 过滤 0xa 非法字符
 
             if (file_exists($lib_backup) && filemtime($lib_backup) >= filemtime($lib_file)) {
@@ -568,7 +568,7 @@ class Template extends Init
             $this->assign('ur_here', $GLOBALS['_LANG']['backup_setting']);
             $this->assign('list', $remarks);
             $this->assign('files', $files);
-            return $this->display('templates_backup.view.php');
+            return $this->fetch('templates_backup');
         }
 
         if ($_REQUEST['act'] == 'act_backup_setting') {
@@ -632,7 +632,7 @@ class Template extends Init
 
                     foreach ($data as $file => $regions) {
                         $pattern = '/(?:<!--\\s*TemplateBeginEditable\\sname="(' . implode('|', array_keys($regions)) . ')"\\s*-->)(?:.*?)(?:<!--\\s*TemplateEndEditable\\s*-->)/s';
-                        $temple_file = ROOT_PATH . 'themes/' . $GLOBALS['_CFG']['template'] . '/' . $file . '.view.php';
+                        $temple_file = ROOT_PATH . 'themes/' . $GLOBALS['_CFG']['template'] . '/' . $file . '';
                         $template_content = file_get_contents($temple_file);
                         $template_content = preg_replace_callback($pattern, function ($r) use ($regions) {
                             return "<!-- TemplateBeginEditable name=\"" . $r[1] . "\" -->\r\n" . $regions[$r[1]] . "\r\n<!-- TemplateEndEditable -->";
@@ -719,7 +719,7 @@ class Template extends Init
     {
         $lib_name = str_replace("0xa", '', $lib_name); // 过滤 0xa 非法字符
 
-        $lib_file = '../themes/' . $curr_template . '/library/' . $lib_name . '.view.php';
+        $lib_file = '../themes/' . $curr_template . '/library/' . $lib_name . '';
         $arr['mark'] = file_mode_info($lib_file);
         $arr['html'] = str_replace("\xEF\xBB\xBF", '', file_get_contents($lib_file));
 

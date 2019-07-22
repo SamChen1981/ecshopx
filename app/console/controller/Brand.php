@@ -29,7 +29,7 @@ class Brand extends Init
             $this->assign('page_count', $brand_list['page_count']);
 
             assign_query_info();
-            return $this->display('brand_list.view.php');
+            return $this->fetch('brand_list');
         }
 
         /*------------------------------------------------------ */
@@ -45,7 +45,7 @@ class Brand extends Init
 
             assign_query_info();
             $this->assign('brand', array('sort_order' => 50, 'is_show' => 1));
-            return $this->display('brand_info.view.php');
+            return $this->fetch('brand_info');
         } elseif ($_REQUEST['act'] == 'insert') {
             /*检查品牌名是否重复*/
             admin_priv('brand_manage');
@@ -105,7 +105,7 @@ class Brand extends Init
             $this->assign('form_action', 'updata');
 
             assign_query_info();
-            return $this->display('brand_info.view.php');
+            return $this->fetch('brand_info');
         } elseif ($_REQUEST['act'] == 'updata') {
             admin_priv('brand_manage');
             if ($_POST['brand_name'] != $_POST['old_brandname']) {

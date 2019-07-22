@@ -40,7 +40,7 @@ class UserMsg extends Init
             $this->assign('msg_list', $msg_list);
             $this->assign('order_id', $_GET['order_id']);
             $this->assign('user_id', $_GET['user_id']);
-            return $this->display('msg_add.view.php');
+            return $this->fetch('msg_add');
         }
 
         if ($_REQUEST['act'] == 'insert') {
@@ -115,7 +115,7 @@ class UserMsg extends Init
 
             $this->assign('ur_here', $GLOBALS['_LANG']['08_unreply_msg']);
             $this->assign('full_page', 1);
-            return $this->display('msg_list.view.php');
+            return $this->fetch('msg_list');
         }
 
         /*------------------------------------------------------ */
@@ -212,7 +212,7 @@ class UserMsg extends Init
             $this->assign('action_link', array('text' => $GLOBALS['_LANG']['08_unreply_msg'], 'href' => 'user_msg.php?act=list_all'));
 
             assign_query_info();
-            return $this->display('msg_info.view.php');
+            return $this->fetch('msg_info');
         } elseif ($_REQUEST['act'] == 'action') {
             if (empty($_REQUEST['parent_id'])) {
                 $sql = "INSERT INTO " . $GLOBALS['ecs']->table('feedback') . " (msg_title, msg_time, user_id, user_name , " .

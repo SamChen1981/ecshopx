@@ -224,7 +224,7 @@ function insert_member_info()
             $GLOBALS['smarty']->assign('rand', mt_rand());
         }
     }
-    $output = $GLOBALS['smarty']->fetch('library/member_info.view.php');
+    $output = $GLOBALS['smarty']->fetch('library/member_info');
 
     $GLOBALS['smarty']->caching = $need_cache;
 
@@ -261,7 +261,7 @@ function insert_comments($arr)
     $GLOBALS['smarty']->assign('pager', $cmt['pager']);
 
 
-    $val = $GLOBALS['smarty']->fetch('library/comments_list.view.php');
+    $val = $GLOBALS['smarty']->fetch('library/comments_list');
 
     $GLOBALS['smarty']->caching = $need_cache;
     $GLOBALS['smarty']->force_compile = $need_compile;
@@ -316,7 +316,7 @@ function insert_bought_notes($arr)
     $GLOBALS['smarty']->assign('pager', $pager);
 
 
-    $val = $GLOBALS['smarty']->fetch('library/bought_notes.view.php');
+    $val = $GLOBALS['smarty']->fetch('library/bought_notes');
 
     $GLOBALS['smarty']->caching = $need_cache;
     $GLOBALS['smarty']->force_compile = $need_compile;
@@ -338,7 +338,7 @@ function insert_vote()
         $GLOBALS['smarty']->assign('vote_id', $vote['id']);
         $GLOBALS['smarty']->assign('vote', $vote['content']);
     }
-    $val = $GLOBALS['smarty']->fetch('library/vote.view.php');
+    $val = $GLOBALS['smarty']->fetch('library/vote');
 
     return $val;
 }

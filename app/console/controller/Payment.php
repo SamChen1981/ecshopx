@@ -66,7 +66,7 @@ class Payment extends Init
             $this->assign('modules', $modules);
             $this->assign('tenpayc2c', $tenpayc2c);
             $this->assign('account_url', TEEGON_PASSPORT_URL);
-            return $this->display('payment_list.view.php');
+            return $this->fetch('payment_list');
         }
 
         /*------------------------------------------------------ */
@@ -134,7 +134,7 @@ class Payment extends Init
 
             $this->assign('action_link', array('text' => $GLOBALS['_LANG']['02_payment_list'], 'href' => 'payment.php?act=list'));
             $this->assign('pay', $pay);
-            return $this->display('payment_edit.view.php');
+            return $this->fetch('payment_edit');
         } elseif ($_REQUEST['act'] == 'get_config') {
             check_authz_json('payment');
 
@@ -249,7 +249,7 @@ class Payment extends Init
             $this->assign('action_link', array('text' => $GLOBALS['_LANG']['02_payment_list'], 'href' => 'payment.php?act=list'));
             $this->assign('ur_here', $GLOBALS['_LANG']['edit'] . $GLOBALS['_LANG']['payment']);
             $this->assign('pay', $pay);
-            return $this->display('payment_edit.view.php');
+            return $this->fetch('payment_edit');
         }
 
         /*------------------------------------------------------ */

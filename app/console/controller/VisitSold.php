@@ -64,7 +64,7 @@ class VisitSold extends Init
 
             /* 显示页面 */
             assign_query_info();
-            return $this->display('visit_sold.view.php');
+            return $this->fetch('visit_sold');
         }
     }
 

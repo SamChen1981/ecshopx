@@ -55,7 +55,7 @@ class GoodsBatch extends Init
 
             /* 显示模板 */
             assign_query_info();
-            return $this->display('goods_batch_add.view.php');
+            return $this->fetch('goods_batch_add');
         }
 
         /*------------------------------------------------------ */
@@ -311,7 +311,7 @@ class GoodsBatch extends Init
 
             /* 显示模板 */
             assign_query_info();
-            return $this->display('goods_batch_confirm.view.php');
+            return $this->fetch('goods_batch_confirm');
         }
 
         /*------------------------------------------------------ */
@@ -523,7 +523,7 @@ class GoodsBatch extends Init
 
             /* 显示模板 */
             assign_query_info();
-            return $this->display('goods_batch_select.view.php');
+            return $this->fetch('goods_batch_select');
         }
 
         /*------------------------------------------------------ */
@@ -606,7 +606,7 @@ class GoodsBatch extends Init
 
             /* 显示模板 */
             assign_query_info();
-            return $this->display('goods_batch_edit.view.php');
+            return $this->fetch('goods_batch_edit');
         }
 
         /*------------------------------------------------------ */

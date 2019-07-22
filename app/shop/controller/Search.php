@@ -81,7 +81,7 @@ class Search extends Init
             $this->assign('action', 'form');
             $this->assign('use_storage', $GLOBALS['_CFG']['use_storage']);
 
-            return $this->display('search.view.php');
+            return $this->fetch('search');
 
 
         }
@@ -429,7 +429,7 @@ class Search extends Init
             $this->assign('top_goods', get_top10());           // 销售排行
             $this->assign('promotion_info', get_promotion_info());
 
-            return $this->display('search.view.php');
+            return $this->fetch('search');
         }
     }
 

@@ -46,7 +46,7 @@ class MobileSetting extends Init
 
             $this->assign('playerdb', $playerdb);
             $this->assign('group_list', $grouplist);
-            return $this->display('banner_config.html');
+            return $this->fetch('banner_config.html');
         } elseif ($_REQUEST['act'] == 'del') {
             admin_priv('flash_manage');
 
@@ -91,7 +91,7 @@ class MobileSetting extends Init
                 $this->assign('action_link', array('text' => $GLOBALS['_LANG']['go_url'], 'href' => 'mobile_setting.php?act=list'));
                 $this->assign('rt', $rt);
                 $this->assign('ur_here', $GLOBALS['_LANG']['add_picad']);
-                return $this->display('flashplay_add.view.php');
+                return $this->fetch('flashplay_add');
             } elseif ($_POST['step'] == 2) {
                 if (!empty($_FILES['img_file_src']['name'])) {
                     if (!get_file_suffix($_FILES['img_file_src']['name'], $allow_suffix)) {
@@ -171,7 +171,7 @@ class MobileSetting extends Init
                 $this->assign('action_link', array('text' => $GLOBALS['_LANG']['go_url'], 'href' => 'mobile_setting.php?act=list'));
                 $this->assign('rt', $rt);
                 $this->assign('ur_here', $GLOBALS['_LANG']['edit_picad']);
-                return $this->display('flashplay_add.view.php');
+                return $this->fetch('flashplay_add');
             } elseif ($_POST['step'] == 2) {
                 // if (empty($_POST['img_url']))
                 // {
@@ -304,7 +304,7 @@ class MobileSetting extends Init
 
         $width_height = array();
         while ($file = readdir($template_dir)) {
-            if ($file == 'index_ad.view.php') {
+            if ($file == 'index_ad') {
                 $string = file_get_contents($path . $file);
                 $pattern_width = '/var\s*swf_width\s*=\s*(\d+);/';
                 $pattern_height = '/var\s*swf_height\s*=\s*(\d+);/';

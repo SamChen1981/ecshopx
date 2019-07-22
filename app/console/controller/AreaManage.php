@@ -66,7 +66,7 @@ class AreaManage extends Init
             $this->assign('full_page', 1);
 
             assign_query_info();
-            return $this->display('area_list.view.php');
+            return $this->fetch('area_list');
         }
 
         /*------------------------------------------------------ */

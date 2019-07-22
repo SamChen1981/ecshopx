@@ -34,7 +34,7 @@ class Suppliers extends Init
 
             /* 显示模板 */
             assign_query_info();
-            return $this->display('suppliers_list.view.php');
+            return $this->fetch('suppliers_list');
         }
 
         /*------------------------------------------------------ */
@@ -278,7 +278,7 @@ class Suppliers extends Init
 
                 assign_query_info();
 
-                return $this->display('suppliers_info.view.php');
+                return $this->fetch('suppliers_info');
             } elseif ($_REQUEST['act'] == 'edit') {
                 $suppliers = array();
 
@@ -310,7 +310,7 @@ class Suppliers extends Init
 
                 assign_query_info();
 
-                return $this->display('suppliers_info.view.php');
+                return $this->fetch('suppliers_info');
             }
         }
 

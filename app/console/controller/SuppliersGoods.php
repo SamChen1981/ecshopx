@@ -62,7 +62,7 @@ class SuppliersGoods extends Init
             assign_query_info();
             $htm_file = ($_REQUEST['act'] == 'list') ?
                 'goods_list.htm' : (($_REQUEST['act'] == 'trash') ? 'goods_trash.htm' : 'group_list.htm');
-            return $this->display($htm_file);
+            return $this->fetch($htm_file);
         }
 
         /*------------------------------------------------------ */
@@ -365,7 +365,7 @@ class SuppliersGoods extends Init
 
             /* 显示商品信息页面 */
             assign_query_info();
-            return $this->display('goods_info.view.php');
+            return $this->fetch('goods_info');
         }
 
         /*------------------------------------------------------ */
@@ -1013,7 +1013,7 @@ class SuppliersGoods extends Init
                 }
             }
             $this->assign('img_url', $img_url);
-            return $this->display('goods_show_image.view.php');
+            return $this->fetch('goods_show_image');
         }
 
         /*------------------------------------------------------ */

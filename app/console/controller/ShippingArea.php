@@ -27,7 +27,7 @@ class ShippingArea extends Init
             $this->assign('full_page', 1);
 
             assign_query_info();
-            return $this->display('shipping_area_list.view.php');
+            return $this->fetch('shipping_area_list');
         }
 
         /*------------------------------------------------------ */
@@ -71,7 +71,7 @@ class ShippingArea extends Init
             $this->assign('countries', get_regions());
             $this->assign('default_country', $GLOBALS['_CFG']['shop_country']);
             assign_query_info();
-            return $this->display('shipping_area_info.view.php');
+            return $this->fetch('shipping_area_info');
         } elseif ($_REQUEST['act'] == 'insert') {
             admin_priv('shiparea_manage');
 
@@ -209,7 +209,7 @@ class ShippingArea extends Init
             $this->assign('form_action', 'update');
             $this->assign('countries', get_regions());
             $this->assign('default_country', 1);
-            return $this->display('shipping_area_info.view.php');
+            return $this->fetch('shipping_area_info');
         } elseif ($_REQUEST['act'] == 'update') {
             admin_priv('shiparea_manage');
 

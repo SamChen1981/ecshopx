@@ -37,7 +37,7 @@ class Favourable extends Init
 
             /* 显示商品列表页面 */
             assign_query_info();
-            return $this->display('favourable_list.view.php');
+            return $this->fetch('favourable_list');
         }
 
         /*------------------------------------------------------ */
@@ -223,7 +223,7 @@ class Favourable extends Init
             }
             $this->assign('action_link', array('href' => $href, 'text' => $GLOBALS['_LANG']['favourable_list']));
             assign_query_info();
-            return $this->display('favourable_info.view.php');
+            return $this->fetch('favourable_info');
         }
 
         /*------------------------------------------------------ */

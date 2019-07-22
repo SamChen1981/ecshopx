@@ -27,7 +27,7 @@ class UserRank extends Init
             $this->assign('user_ranks', $ranks);
 
             assign_query_info();
-            return $this->display('user_rank.view.php');
+            return $this->fetch('user_rank');
         }
 
         /*------------------------------------------------------ */
@@ -64,7 +64,7 @@ class UserRank extends Init
             $this->assign('form_action', $form_action);
 
             assign_query_info();
-            return $this->display('user_rank_info.view.php');
+            return $this->fetch('user_rank_info');
         }
 
         /*------------------------------------------------------ */

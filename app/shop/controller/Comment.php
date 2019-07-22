@@ -206,7 +206,7 @@ class Comment extends Init
             }
 
             $result['message'] = $GLOBALS['_CFG']['comment_check'] ? $GLOBALS['_LANG']['cmt_submit_wait'] : $GLOBALS['_LANG']['cmt_submit_done'];
-            $result['content'] = $GLOBALS['smarty']->fetch("library/comments_list.view.php");
+            $result['content'] = $GLOBALS['smarty']->fetch("library/comments_list");
         }
 
         echo json_encode($result);
@@ -239,7 +239,7 @@ class Comment extends Init
             "('" . $cmt->type . "', '" . $cmt->id . "', '$email', '$user_name', '" . $cmt->content . "', '" . $cmt->rank . "', " . gmtime() . ", '" . real_ip() . "', '$status', '0', '$user_id')";
 
         $result = $GLOBALS['db']->query($sql);
-        clear_cache_files('comments_list.view.php');
+        clear_cache_files('comments_list');
         /*if ($status > 0)
         {
             add_feed($GLOBALS['db']->insert_id(), COMMENT_GOODS);
