@@ -111,7 +111,8 @@ class Error
             }
 
             if (isset($GLOBALS['smarty'])) {
-                assign_template();
+                // TODO BY LANCE 
+                $this->assign_template();
                 $GLOBALS['smarty']->assign('auto_redirect', true);
                 $GLOBALS['smarty']->assign('message', $message);
                 return $GLOBALS['smarty']->display($this->_template);

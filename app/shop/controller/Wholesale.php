@@ -13,7 +13,7 @@ class Wholesale extends Init
 
         /* 如果没登录，提示登录 */
         if ($_SESSION['user_rank'] <= 0) {
-            return show_message($GLOBALS['_LANG']['ws_user_rank'], $GLOBALS['_LANG']['ws_return_home'], 'index.php');
+            return $this->show_message($GLOBALS['_LANG']['ws_user_rank'], $GLOBALS['_LANG']['ws_return_home'], 'index.php');
         }
 
         /*------------------------------------------------------ */
@@ -148,7 +148,7 @@ class Wholesale extends Init
 
             /* 检查数量 */
             if (empty($goods_number) || (is_array($goods_number) && array_sum($goods_number) <= 0)) {
-                return show_message($GLOBALS['_LANG']['ws_invalid_goods_number']);
+                return $this->show_message($GLOBALS['_LANG']['ws_invalid_goods_number']);
             }
 
             /* 确定购买商品列表 */
@@ -174,9 +174,9 @@ class Wholesale extends Init
                 foreach ($_SESSION['wholesale_goods'] as $goods) {
                     if ($goods['goods_id'] == $wholesale['goods_id']) {
                         if (empty($goods_attr)) {
-                            return show_message($GLOBALS['_LANG']['ws_goods_attr_exists']);
+                            return $this->show_message($GLOBALS['_LANG']['ws_goods_attr_exists']);
                         } elseif (in_array($goods['goods_attr_id'], $goods_attr)) {
-                            return show_message($GLOBALS['_LANG']['ws_goods_attr_exists']);
+                            return $this->show_message($GLOBALS['_LANG']['ws_goods_attr_exists']);
                         }
                     }
                 }
@@ -197,13 +197,13 @@ class Wholesale extends Init
                 }
             }
             if (!$attr_matching) {
-                return show_message($GLOBALS['_LANG']['ws_attr_not_matching']);
+                return $this->show_message($GLOBALS['_LANG']['ws_attr_not_matching']);
             }
 
             /* 检查数量是否达到最低要求 */
             foreach ($goods_list as $goods_key => $goods) {
                 if ($goods['number'] < $goods['qp_list'][0]['quantity']) {
-                    return show_message($GLOBALS['_LANG']['ws_goods_number_not_enough']);
+                    return $this->show_message($GLOBALS['_LANG']['ws_goods_number_not_enough']);
                 } else {
                     $goods_price = 0;
                     foreach ($goods['qp_list'] as $qp) {
@@ -276,12 +276,12 @@ class Wholesale extends Init
 
             /* 检查购物车中是否有商品 */
             if (count($_SESSION['wholesale_goods']) == 0) {
-                return show_message($GLOBALS['_LANG']['no_goods_in_cart'] . "d");
+                return $this->show_message($GLOBALS['_LANG']['no_goods_in_cart'] . "d");
             }
 
             /* 检查备注信息 */
             if (empty($_POST['remark'])) {
-                return show_message($GLOBALS['_LANG']['ws_remark']);
+                return $this->show_message($GLOBALS['_LANG']['ws_remark']);
             }
 
             /* 计算商品总额 */
@@ -365,7 +365,7 @@ class Wholesale extends Init
             unset($_SESSION['wholesale_goods']);
 
             /* 提示 */
-            return show_message(sprintf($GLOBALS['_LANG']['ws_order_submitted'], $order['order_sn']), $GLOBALS['_LANG']['ws_return_home'], 'index.php');
+            return $this->show_message(sprintf($GLOBALS['_LANG']['ws_order_submitted'], $order['order_sn']), $GLOBALS['_LANG']['ws_return_home'], 'index.php');
         }
     }
 

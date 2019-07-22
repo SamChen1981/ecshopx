@@ -91,7 +91,7 @@ class Compare extends Init
             $this->assign('attribute', $attribute);
             $this->assign('goods_list', $arr);
         } else {
-            return show_message($GLOBALS['_LANG']['compare_no_goods']);
+            return $this->show_message($GLOBALS['_LANG']['compare_no_goods']);
 
         }
 
