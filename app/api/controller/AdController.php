@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: cun
- * Date: 2018/8/11
- * Time: 下午6:59
- */
 
 namespace app\api\controller;
 

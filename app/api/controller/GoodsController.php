@@ -2,16 +2,11 @@
 
 namespace app\api\controller;
 
-use think\facade\Request;
-
-use app\api\library\Token;
-use app\api\model\v2\Shipping;
 use app\api\model\v2\Goods;
 use app\api\model\v2\Comment;
 use app\api\model\v2\GoodsCategory;
 use app\api\model\v2\CollectGoods;
 use app\api\model\v2\Products;
-use app\api\model\v2\Activity;
 
 class GoodsController extends Controller
 {
@@ -21,7 +16,7 @@ class GoodsController extends Controller
     public function home()
     {
         $rules = [
-            'category_id'   =>  'integer|min:1',
+            'category_id' => 'integer|min:1',
         ];
         if ($error = $this->validateInput($rules)) {
             return $error;
@@ -37,16 +32,16 @@ class GoodsController extends Controller
     public function index()
     {
         $rules = [
-            'page'            => 'integer|min:1',
-            'per_page'        => 'required_with:page|integer|min:1',
-            'brand'           => 'integer|min:1',
-            'category'        => 'integer|min:1',
-            'shop'            => 'integer|min:1',
-            'is_exchange'     => 'boolean',
-            'is_hot'          => 'boolean',
-            'keyword'         => 'string|min:1',
-            'sort_key'        => 'string|min:1',
-            'sort_value'      => 'required_with:sort_key|string|min:1',
+            'page' => 'integer|min:1',
+            'per_page' => 'required_with:page|integer|min:1',
+            'brand' => 'integer|min:1',
+            'category' => 'integer|min:1',
+            'shop' => 'integer|min:1',
+            'is_exchange' => 'boolean',
+            'is_hot' => 'boolean',
+            'keyword' => 'string|min:1',
+            'sort_key' => 'string|min:1',
+            'sort_value' => 'required_with:sort_key|string|min:1',
         ];
 
         if ($error = $this->validateInput($rules)) {
@@ -64,14 +59,14 @@ class GoodsController extends Controller
     public function search()
     {
         $rules = [
-            'page'            => 'required|integer|min:1',
-            'per_page'        => 'required|integer|min:1',
-            'brand'           => 'integer|min:1',
-            'category'        => 'integer|min:1',
-            'shop'            => 'integer|min:1',
-            'keyword'         => 'string|min:1',
-            'sort_key'        => 'string|min:1',
-            'sort_value'      => 'required_with:sort_key|string|min:1',
+            'page' => 'required|integer|min:1',
+            'per_page' => 'required|integer|min:1',
+            'brand' => 'integer|min:1',
+            'category' => 'integer|min:1',
+            'shop' => 'integer|min:1',
+            'keyword' => 'string|min:1',
+            'sort_key' => 'string|min:1',
+            'sort_value' => 'required_with:sort_key|string|min:1',
         ];
 
         if ($error = $this->validateInput($rules)) {
@@ -125,8 +120,8 @@ class GoodsController extends Controller
     public function likedList()
     {
         $rules = [
-            'page'            => 'required|integer|min:1',
-            'per_page'        => 'required|integer|min:1',
+            'page' => 'required|integer|min:1',
+            'per_page' => 'required|integer|min:1',
         ];
 
         if ($error = $this->validateInput($rules)) {
@@ -145,10 +140,10 @@ class GoodsController extends Controller
     public function review()
     {
         $rules = [
-            'page'     => 'required|integer|min:1',
+            'page' => 'required|integer|min:1',
             'per_page' => 'required|integer|min:1',
-            'product'  => 'required|integer|min:1',
-            'grade'    => 'integer|in:0,1,2,3',
+            'product' => 'required|integer|min:1',
+            'grade' => 'integer|in:0,1,2,3',
         ];
 
         if ($error = $this->validateInput($rules)) {
@@ -166,7 +161,7 @@ class GoodsController extends Controller
     public function subtotal()
     {
         $rules = [
-            'product'  => 'required|integer|min:1',
+            'product' => 'required|integer|min:1',
         ];
 
         if ($error = $this->validateInput($rules)) {
@@ -181,14 +176,14 @@ class GoodsController extends Controller
     public function recommendList()
     {
         $rules = [
-            'page'            => 'required|integer|min:1',
-            'per_page'        => 'required|integer|min:1',
-            'product'         => 'integer|min:1',
-            'brand'           => 'integer|min:1',
-            'category'        => 'integer|min:1',
-            'shop'            => 'integer|min:1',
-            'sort_key'        => 'string|min:1',
-            'sort_value'      => 'required_with:sort_key|string|min:1',
+            'page' => 'required|integer|min:1',
+            'per_page' => 'required|integer|min:1',
+            'product' => 'integer|min:1',
+            'brand' => 'integer|min:1',
+            'category' => 'integer|min:1',
+            'shop' => 'integer|min:1',
+            'sort_key' => 'string|min:1',
+            'sort_value' => 'required_with:sort_key|string|min:1',
         ];
 
         if ($error = $this->validateInput($rules)) {
@@ -203,9 +198,9 @@ class GoodsController extends Controller
     public function accessoryList()
     {
         $rules = [
-            'page'            => 'required|integer|min:1',
-            'per_page'        => 'required|integer|min:1',
-            'product'         => 'required|integer|min:1',
+            'page' => 'required|integer|min:1',
+            'per_page' => 'required|integer|min:1',
+            'product' => 'required|integer|min:1',
         ];
 
         if ($error = $this->validateInput($rules)) {
@@ -221,18 +216,18 @@ class GoodsController extends Controller
     public function brandList()
     {
         $rules = [
-            'page'            => 'required|integer|min:1',
-            'per_page'        => 'required|integer|min:1',
+            'page' => 'required|integer|min:1',
+            'per_page' => 'required|integer|min:1',
         ];
     }
 
     public function category()
     {
         $rules = [
-            'page'     => 'required|integer|min:1',
+            'page' => 'required|integer|min:1',
             'per_page' => 'required|integer|min:1',
             'category' => 'integer|min:1',
-            'shop'     => 'integer|min:1',
+            'shop' => 'integer|min:1',
             // 'paging'     => 'required',
         ];
 
@@ -249,11 +244,11 @@ class GoodsController extends Controller
     public function categorySearch()
     {
         $rules = [
-            'page'     => 'required|integer|min:1',
+            'page' => 'required|integer|min:1',
             'per_page' => 'required|integer|min:1',
             'category' => 'integer|min:1',
-            'shop'     => 'integer|min:1',
-            'keyword'  => 'string',
+            'shop' => 'integer|min:1',
+            'keyword' => 'string',
         ];
 
         if ($error = $this->validateInput($rules)) {
@@ -276,7 +271,7 @@ class GoodsController extends Controller
         }
 
         $data = Goods::getInfo($this->validated);
-        
+
         return $this->json($data);
     }
 
@@ -293,20 +288,20 @@ class GoodsController extends Controller
     public function purchase()
     {
         $rules = [
-            "shop"             => "integer|min:1",          // 店铺ID
-            "consignee"        => "required|integer|min:1", // 收货人ID
-            "shipping"         => "required|integer|min:1", // 快递ID
-            "invoice_type"     => "string|min:1",           // 发票类型ID，如：公司、个人
-            "invoice_content"  => "string|min:1",           // 发票内容ID，如：办公用品、礼品
-            "invoice_title"    => "string|min:1",           // 发票抬头，如：xx科技有限公司
-            "coupon"           => "string|min:1",           // 优惠券ID
-            "cashgift"         => "string|min:1",           // 红包ID
-            "comment"          => "string|min:1",           // 留言
-            "score"            => "integer",                 // 积分
-            "exchange_score"   => "integer",                 // 兑换商品所需积分
-            "property"         => "required|string",         // 用户选择的属性ID
-            "product"          => "required|integer|min:1",         // 商品ID
-            "amount"           => "required|integer|min:1",         // 数量
+            "shop" => "integer|min:1",          // 店铺ID
+            "consignee" => "required|integer|min:1", // 收货人ID
+            "shipping" => "required|integer|min:1", // 快递ID
+            "invoice_type" => "string|min:1",           // 发票类型ID，如：公司、个人
+            "invoice_content" => "string|min:1",           // 发票内容ID，如：办公用品、礼品
+            "invoice_title" => "string|min:1",           // 发票抬头，如：xx科技有限公司
+            "coupon" => "string|min:1",           // 优惠券ID
+            "cashgift" => "string|min:1",           // 红包ID
+            "comment" => "string|min:1",           // 留言
+            "score" => "integer",                 // 积分
+            "exchange_score" => "integer",                 // 兑换商品所需积分
+            "property" => "required|string",         // 用户选择的属性ID
+            "product" => "required|integer|min:1",         // 商品ID
+            "amount" => "required|integer|min:1",         // 数量
         ];
 
         if ($error = $this->validateInput($rules)) {
@@ -322,7 +317,7 @@ class GoodsController extends Controller
     public function checkProduct()
     {
         $rules = [
-            "product"  => "required|json",
+            "product" => "required|json",
         ];
 
         if ($error = $this->validateInput($rules)) {

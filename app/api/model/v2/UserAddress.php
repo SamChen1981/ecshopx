@@ -7,9 +7,7 @@ use app\api\library\Token;
 
 class UserAddress extends BaseModel
 {
-    protected $connection = 'shop';
-
-    protected $table      = 'user_address';
+    protected $table = 'user_address';
 
     protected $primaryKey = 'address_id';
 
@@ -17,7 +15,7 @@ class UserAddress extends BaseModel
 
     protected $appends = ['id', 'name', 'zip_code', 'regions', 'is_default'];
 
-    protected $visible = ['id', 'name', 'mobile', 'tel', 'zip_code', 'regions', 'country','province','city', 'address', 'is_default'];
+    protected $visible = ['id', 'name', 'mobile', 'tel', 'zip_code', 'regions', 'country', 'province', 'city', 'address', 'is_default'];
 
     public static function getList()
     {
@@ -41,8 +39,8 @@ class UserAddress extends BaseModel
 
             // $arr = $GLOBALS['db']->getRow($sql);
             $arr = self::join('users', 'user_address.address_id', '=', 'users.address_id')
-                    ->where('users.user_id', $uid)
-                    ->first()->toArray();
+                ->where('users.user_id', $uid)
+                ->first()->toArray();
         }
 
         return $arr;
@@ -71,20 +69,20 @@ class UserAddress extends BaseModel
         $arr = Region::getParentId($region);
         $user = Member::where('user_id', $uid)->first();
         $model = new UserAddress;
-        $model->user_id         = $uid;
-        $model->consignee       = $name;
-        $model->email           = isset($user['email']) ? $user['email'] : '';
-        $model->country         = !empty($arr['country']) ? $arr['country'] : '';
-        $model->province        = !empty($arr['province']) ? $arr['province'] : '';
-        $model->city            = !empty($arr['city']) ? $arr['city'] : '';
-        $model->district        = !empty($arr['region']) ? $arr['region'] : '';
-        $model->address         = $address;
-        $model->mobile          = isset($mobile) ? $mobile : '';
-        $model->tel             = isset($tel) ? $tel : '';
-        $model->zipcode         = isset($zip_code) ? $zip_code : '';
-        $model->address_name    = '';
-        $model->sign_building   = '';
-        $model->best_time       = '';
+        $model->user_id = $uid;
+        $model->consignee = $name;
+        $model->email = isset($user['email']) ? $user['email'] : '';
+        $model->country = !empty($arr['country']) ? $arr['country'] : '';
+        $model->province = !empty($arr['province']) ? $arr['province'] : '';
+        $model->city = !empty($arr['city']) ? $arr['city'] : '';
+        $model->district = !empty($arr['region']) ? $arr['region'] : '';
+        $model->address = $address;
+        $model->mobile = isset($mobile) ? $mobile : '';
+        $model->tel = isset($tel) ? $tel : '';
+        $model->zipcode = isset($zip_code) ? $zip_code : '';
+        $model->address_name = '';
+        $model->sign_building = '';
+        $model->best_time = '';
 
         if ($model->save()) {
             $member = Member::where('user_id', $uid)->first();
@@ -109,16 +107,16 @@ class UserAddress extends BaseModel
             $arr = Region::getParentId($region);
 
 
-            $model->user_id         = $uid;
-            $model->consignee       = $name;
-            $model->country         = !empty($arr['country']) ? $arr['country'] : '';
-            $model->province        = !empty($arr['province']) ? $arr['province'] : '';
-            $model->city            = !empty($arr['city']) ? $arr['city'] : '';
-            $model->district        = !empty($arr['region']) ? $arr['region'] : '';
-            $model->address         = $address;
-            $model->mobile          = isset($mobile) ? $mobile : ' ';
-            $model->tel             = isset($tel) ? $tel : ' ';
-            $model->zipcode         = isset($zip_code) ? $zip_code : ' ';
+            $model->user_id = $uid;
+            $model->consignee = $name;
+            $model->country = !empty($arr['country']) ? $arr['country'] : '';
+            $model->province = !empty($arr['province']) ? $arr['province'] : '';
+            $model->city = !empty($arr['city']) ? $arr['city'] : '';
+            $model->district = !empty($arr['region']) ? $arr['region'] : '';
+            $model->address = $address;
+            $model->mobile = isset($mobile) ? $mobile : ' ';
+            $model->tel = isset($tel) ? $tel : ' ';
+            $model->zipcode = isset($zip_code) ? $zip_code : ' ';
 
             if ($model->save()) {
                 return self::formatBody(['consignee' => self::formatBody($model->toArray())]);
@@ -169,7 +167,7 @@ class UserAddress extends BaseModel
 
     public function getRegionsAttribute()
     {
-        return Region::getRegionGroup($this->district?:$this->city?:$this->province?:$this->country);
+        return Region::getRegionGroup($this->district ?: $this->city ?: $this->province ?: $this->country);
     }
 
     public function getZipCodeAttribute()
@@ -181,6 +179,6 @@ class UserAddress extends BaseModel
     {
         $uid = Token::authorization();
         $flag = Member::where('user_id', $uid)->where('address_id', $this->address_id)->count() ? true : false;
-        return  $flag;
+        return $flag;
     }
 }

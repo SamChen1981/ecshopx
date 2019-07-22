@@ -6,9 +6,7 @@ use app\api\model\BaseModel;
 
 class AreaRegion extends BaseModel
 {
-    protected $connection = 'shop';
-
-    protected $table      = 'area_region';
+    protected $table = 'area_region';
 
     public $timestamps = false;
 

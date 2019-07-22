@@ -2,10 +2,8 @@
 
 namespace app\api\controller;
 
-use think\facade\Request;
-
 use app\api\model\v2\Cart;
-use app\api\library\Token;
+use think\facade\Request;
 
 class CartController extends Controller
 {
@@ -16,9 +14,9 @@ class CartController extends Controller
     public function add(Request $request)
     {
         $rules = [
-            'product'     => 'required|integer|min:1',
-            'property'    => 'json',
-            'amount'      => 'required|integer',
+            'product' => 'required|integer|min:1',
+            'property' => 'json',
+            'amount' => 'required|integer',
             'attachments' => 'json',
         ];
 
@@ -38,7 +36,7 @@ class CartController extends Controller
     public function delete(Request $request)
     {
         $rules = [
-            'good'     => 'required|string|min:1',
+            'good' => 'required|string|min:1',
         ];
 
         if ($error = $this->validateInput($rules)) {
@@ -53,8 +51,8 @@ class CartController extends Controller
     public function update(Request $request)
     {
         $rules = [
-            'good'     => 'required|string|min:1',
-            'amount'     => 'required|integer|min:1',
+            'good' => 'required|string|min:1',
+            'amount' => 'required|integer|min:1',
         ];
 
         if ($error = $this->validateInput($rules)) {
@@ -98,24 +96,24 @@ class CartController extends Controller
 
     /**
      * 加入购物车
-     * @param  Request $request [description]
+     * @param Request $request [description]
      * @return [type]           [description]
      */
     public function checkout(Request $request)
     {
         $rules = [
-            "shop"             => "integer|min:1",          // 店铺ID
-            "consignee"        => "required|integer|min:1", // 收货人ID
-            "shipping"         => "required|integer|min:1", // 快递ID
-            "invoice_type"     => "string|min:1",           // 发票类型ID，如：公司、个人
-            "invoice_content"  => "string|min:1",           // 发票内容ID，如：办公用品、礼品
-            "invoice_title"    => "string|min:1",           // 发票抬头，如：xx科技有限公司
-            "invoice_number"   => "string|min:1",           // 发票 : 纳税人识别编号
-            "coupon"           => "string|min:1",          // 优惠券ID
-            "cashgift"         => "string|min:1",          // 红包ID
-            "comment"          => "string|min:1",           // 留言
-            "score"            => "integer",                // 积分
-            "cart_good_id"     => "required|json",         // 购物车商品id数组
+            "shop" => "integer|min:1",          // 店铺ID
+            "consignee" => "required|integer|min:1", // 收货人ID
+            "shipping" => "required|integer|min:1", // 快递ID
+            "invoice_type" => "string|min:1",           // 发票类型ID，如：公司、个人
+            "invoice_content" => "string|min:1",           // 发票内容ID，如：办公用品、礼品
+            "invoice_title" => "string|min:1",           // 发票抬头，如：xx科技有限公司
+            "invoice_number" => "string|min:1",           // 发票 : 纳税人识别编号
+            "coupon" => "string|min:1",          // 优惠券ID
+            "cashgift" => "string|min:1",          // 红包ID
+            "comment" => "string|min:1",           // 留言
+            "score" => "integer",                // 积分
+            "cart_good_id" => "required|json",         // 购物车商品id数组
         ];
 
         if ($error = $this->validateInput($rules)) {
@@ -128,13 +126,13 @@ class CartController extends Controller
 
     /**
      * 购物车商品促销信息
-     * @param  Request $request [description]
+     * @param Request $request [description]
      * @return [type]           [description]
      */
     public function promos(Request $request)
     {
         $rules = [
-            "cart_good_id"     => "required|json",         // 购物车商品id数组
+            "cart_good_id" => "required|json",         // 购物车商品id数组
         ];
 
         if ($error = $this->validateInput($rules)) {

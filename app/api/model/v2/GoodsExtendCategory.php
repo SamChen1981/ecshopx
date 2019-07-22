@@ -4,22 +4,18 @@ namespace app\api\model\v2;
 
 use app\api\model\BaseModel;
 
-use app\api\library\Token;
-
 class GoodsExtendCategory extends BaseModel
 {
-    protected $connection = 'shop';
-    protected $table      = 'goods_cat';
+    protected $table = 'goods_cat';
     public $timestamps = false;
 
 
-    protected $visible = ['id','cat_id'];
+    protected $visible = ['id', 'cat_id'];
 
-    protected $appends = ['id','cat_id'];
+    protected $appends = ['id', 'cat_id'];
 
     protected $guarded = [];
 
-   
 
     public function getIdAttribute()
     {

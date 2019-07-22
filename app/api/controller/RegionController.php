@@ -2,9 +2,8 @@
 
 namespace app\api\controller;
 
-use think\facade\Request;
-
 use app\api\model\v2\Region;
+use think\facade\Request;
 
 class RegionController extends Controller
 {

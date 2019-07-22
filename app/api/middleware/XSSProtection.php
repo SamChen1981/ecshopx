@@ -9,8 +9,8 @@ class XSSProtection
     /**
      * Handle an incoming request.
      *
-     * @param  \think\facade\Request  $request
-     * @param  \Closure  $next
+     * @param \think\facade\Request $request
+     * @param \Closure $next
      * @return mixed
      */
     public function handle($request, Closure $next)

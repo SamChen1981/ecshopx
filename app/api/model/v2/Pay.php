@@ -6,10 +6,8 @@ use app\api\model\BaseModel;
 
 class Pay extends BaseModel
 {
-    protected $connection = 'shop';
+    protected $table = 'payment';
 
-    protected $table      = 'payment';
-    
     public $timestamps = false;
 
     public static function checkConfig($pay_code)

@@ -2,7 +2,6 @@
 
 namespace app\api\model\v2;
 
-use app\api\model\v2\ShopConfig;
 use app\api\model\BaseModel;
 
 class Invoice
@@ -16,7 +15,7 @@ class Invoice
             for ($i = 0; $i < count($model['type']); $i++) {
                 $data[$i]['id'] = $i + 1;
                 $data[$i]['name'] = $model['type'][$i];
-                $data[$i]['tax'] = $model['rate'][$i]/100;
+                $data[$i]['tax'] = $model['rate'][$i] / 100;
             }
             return BaseModel::formatBody(['types' => $data]);
         }
@@ -28,7 +27,7 @@ class Invoice
         $data = [];
         if ($model = ShopConfig::findByCode('invoice_content')) {
             $model = explode("\n", str_replace("\r", '', $model));
-         
+
             for ($i = 0; $i < count($model); $i++) {
                 $data[$i]['id'] = $i + 1;
                 $data[$i]['name'] = $model[$i];

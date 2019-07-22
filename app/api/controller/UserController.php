@@ -2,16 +2,9 @@
 
 namespace app\api\controller;
 
-use think\facade\Request;
-
-use app\api\library\Token;
 use app\api\model\v2\Member;
 use app\api\model\v2\RegFields;
-use app\api\model\v2\Configs;
 use app\api\model\v2\Features;
-
-
-use Cookie;
 
 class UserController extends Controller
 {
@@ -39,11 +32,11 @@ class UserController extends Controller
     public function signupByEmail()
     {
         $rules = [
-            'device_id'     => 'string',
-            'username'      => 'required|min:3|max:25|alpha_num',
-            'email'         => 'required|email',
-            'password'      => 'required|min:6|max:20',
-            'invite_code'   => 'integer'
+            'device_id' => 'string',
+            'username' => 'required|min:3|max:25|alpha_num',
+            'email' => 'required|email',
+            'password' => 'required|min:6|max:20',
+            'invite_code' => 'integer'
         ];
 
         if ($res = Features::check('signup.default')) {
@@ -68,11 +61,11 @@ class UserController extends Controller
         }
 
         $rules = [
-            'device_id'     => 'string',
-            'password'      => 'required|min:6|max:20',
-            'mobile'        => 'required|string',
-            'code'          => 'required|string|digits:6',
-            'invite_code'   => 'integer',
+            'device_id' => 'string',
+            'password' => 'required|min:6|max:20',
+            'mobile' => 'required|string',
+            'code' => 'required|string|digits:6',
+            'invite_code' => 'integer',
         ];
 
         if ($error = $this->validateInput($rules)) {
@@ -132,10 +125,10 @@ class UserController extends Controller
     public function updateProfile()
     {
         $rules = [
-            'values'        => 'json',
-            'nickname'      => 'string|max:25',
-            'gender'        => 'integer|in:0,1,2',
-            'avatar_url'    => 'string'
+            'values' => 'json',
+            'nickname' => 'string|max:25',
+            'gender' => 'integer|in:0,1,2',
+            'avatar_url' => 'string'
         ];
 
         if ($error = $this->validateInput($rules)) {
@@ -153,7 +146,7 @@ class UserController extends Controller
     {
         $rules = [
             'old_password' => 'required|min:6|max:20',
-            'password'     => 'required|min:6|max:20'
+            'password' => 'required|min:6|max:20'
         ];
 
         if ($error = $this->validateInput($rules)) {
@@ -170,8 +163,8 @@ class UserController extends Controller
     public function resetPasswordByMobile()
     {
         $rules = [
-            'mobile'   => 'required|string',
-            'code'     => 'required|string|digits:6',
+            'mobile' => 'required|string',
+            'code' => 'required|string|digits:6',
             'password' => 'required|min:6|max:20'
         ];
 
@@ -214,12 +207,12 @@ class UserController extends Controller
     public function auth()
     {
         $rules = [
-            'device_id'     => 'string',
-            'vendor'        => 'required|integer|in:1,2,3,4,5',
-            'access_token'  => 'string',
-            'js_code'       => 'string',
-            'open_id'       => 'string',
-            'invite_code'   => 'integer',
+            'device_id' => 'string',
+            'vendor' => 'required|integer|in:1,2,3,4,5',
+            'access_token' => 'string',
+            'js_code' => 'string',
+            'open_id' => 'string',
+            'invite_code' => 'integer',
         ];
 
         if ($error = $this->validateInput($rules)) {
@@ -247,10 +240,10 @@ class UserController extends Controller
     public function webOauth()
     {
         $rules = [
-                    'vendor'        => 'required|integer|in:1,2,3,4',
-                    'referer'       => 'required|url',
-                    'invite_code'   => 'integer',
-                 ];
+            'vendor' => 'required|integer|in:1,2,3,4',
+            'referer' => 'required|url',
+            'invite_code' => 'integer',
+        ];
 
         if ($error = $this->validateInput($rules)) {
             return $error;
@@ -262,6 +255,7 @@ class UserController extends Controller
         }
         return redirect($data);
     }
+
     /**
      * GET /ecapi.auth.web.callback/:vendor
      */
@@ -278,34 +272,34 @@ class UserController extends Controller
 
             if (isset($data['openid'])) {
                 Log::info('设置的cookie为' . config('app.domain_url'));
-                setcookie('o', $data['openid'], time()+7200, '/', config('app.domain_url'));
+                setcookie('o', $data['openid'], time() + 7200, '/', config('app.domain_url'));
             }
 
             if (isset($data['token'])) {
-                setcookie('t', $data['token'], time()+7200, '/', config('app.domain_url'));
+                setcookie('t', $data['token'], time() + 7200, '/', config('app.domain_url'));
             }
-          
+
             return redirect(urldecode($_GET['referer']));
         }
-        
+
         return $this->json(['token' => $data]);
     }
-    
+
     /**
      * POST /ecapi.auth.mobile.binding
      */
     public function bindByMobile()
     {
         $rules = [
-            'mobile'   => 'required|string',
-            'code'     => 'required|string|digits:6',
+            'mobile' => 'required|string',
+            'code' => 'required|string|digits:6',
             'password' => 'string',
         ];
 
         if ($error = $this->validateInput($rules)) {
             return $error;
         }
-        
+
         return $this->json(Member::bindMobile($this->validated));
     }
 }

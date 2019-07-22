@@ -1,16 +1,13 @@
 <?php
+
 namespace app\api\model\v2;
 
 use app\api\model\BaseModel;
 use app\api\library\Token;
-use app\api\model\v2\AccountLog;
-use DB;
 
 class UserAccount extends BaseModel
 {
-    protected $connection = 'shop';
-
-    protected $table      = 'user_account';
+    protected $table = 'user_account';
 
     public $timestamps = false;
 
@@ -18,9 +15,9 @@ class UserAccount extends BaseModel
 
     protected $visible = ['id', 'cash', 'member_memo', 'admin_memo', 'update_at', 'create_at', 'status'];
 
-    const WAIT    = 0;    //  待处理     待处理的时候  可以做取消操作
-    const FINISH  = 1;    //  已完成
-    const CANCEL  = 2;    //  已取消   // 此处没有取消
+    const WAIT = 0;    //  待处理     待处理的时候  可以做取消操作
+    const FINISH = 1;    //  已完成
+    const CANCEL = 2;    //  已取消   // 此处没有取消
 
     public static $process_type = 1;  // 0：充值 1:提现
 
@@ -43,6 +40,7 @@ class UserAccount extends BaseModel
     {
         return $this->attributes['admin_note'];
     }
+
     public function getUpdateAtAttribute()
     {
         if (empty($this->attributes['paid_time'])) {
@@ -50,7 +48,7 @@ class UserAccount extends BaseModel
         }
         return $this->attributes['paid_time'];
     }
-    
+
     public function getCreateAtAttribute()
     {
         return $this->attributes['add_time'];
@@ -62,14 +60,14 @@ class UserAccount extends BaseModel
     }
 
     /**
-    * 申请提现
-    */
+     * 申请提现
+     */
     public static function submit(array $attributes)
     {
         $user_id = Token::authorization();
 
         extract($attributes);
-        
+
         if ($cash <= 0) {
             return self::formatError(self::BAD_REQUEST, trans('message.account.cash'));
         }
@@ -114,7 +112,7 @@ class UserAccount extends BaseModel
         extract($attributes);
         $user_id = Token::authorization();
 
-        $lists = self::where(['user_id'=> $user_id, 'process_type' => self::$process_type]);
+        $lists = self::where(['user_id' => $user_id, 'process_type' => self::$process_type]);
 
         $model = $lists->orderBy('add_time', 'desc')->paginate($per_page)->toArray();
 
@@ -130,7 +128,7 @@ class UserAccount extends BaseModel
     {
         extract($attributes);
         $user_id = Token::authorization();
-        
+
         if ($list = self::find($id)) {
             return self::formatBody(['withdraw' => $list]);
         }
@@ -140,7 +138,7 @@ class UserAccount extends BaseModel
     /**
      * 查询会员余额的数量
      * @access  public
-     * @param   int     $user_id        会员ID
+     * @param int $user_id 会员ID
      * @return  int
      */
     public static function getUserSurplus($user_id)
@@ -153,9 +151,9 @@ class UserAccount extends BaseModel
      * 插入会员账目明细
      *
      * @access  public
-     * @param   string    $user_note  会员备注
-     * @param   string    $user_id    会员ID
-     * @param   string    $amount     余额
+     * @param string $user_note 会员备注
+     * @param string $user_id 会员ID
+     * @param string $amount 余额
      *
      * @return  int
      */

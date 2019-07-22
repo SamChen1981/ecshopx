@@ -3,12 +3,10 @@
 namespace app\api\model\v2;
 
 use app\api\model\BaseModel;
-use Cache;
 
 class Region extends BaseModel
 {
-    protected $connection = 'shop';
-    protected $table      = 'region';
+    protected $table = 'region';
     public $timestamps = false;
 
     protected $appends = ['id', 'name', 'more'];
@@ -60,7 +58,7 @@ class Region extends BaseModel
                         break;
 
                     case 2:
-                        $body['city']  = $model->id;
+                        $body['city'] = $model->id;
                         break;
 
                     case 3:

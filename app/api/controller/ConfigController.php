@@ -2,9 +2,6 @@
 
 namespace app\api\controller;
 
-use think\facade\Request;
-
-
 use app\api\model\v2\Configs;
 
 class ConfigController extends Controller
@@ -20,6 +17,7 @@ class ConfigController extends Controller
         $data = Configs::getList($this->validated);
         return $this->json($data);
     }
+
     public function wechat()
     {
         $rules = [

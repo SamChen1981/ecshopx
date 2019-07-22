@@ -4,12 +4,9 @@ namespace app\api\model\v2;
 
 use app\api\model\BaseModel;
 
-use app\api\library\Token;
-
 class GoodsGallery extends BaseModel
 {
-    protected $connection = 'shop';
-    protected $table      = 'goods_gallery';
+    protected $table = 'goods_gallery';
     public $timestamps = false;
 
     /**
@@ -34,8 +31,8 @@ class GoodsGallery extends BaseModel
 
         return $goods_images;
     }
-    
-    
+
+
     public static function getCategoryPhoto($cat_id)
     {
         //获取分类ids

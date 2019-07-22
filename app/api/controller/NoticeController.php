@@ -2,22 +2,21 @@
 
 namespace app\api\controller;
 
-use think\facade\Request;
-
 use app\api\model\v2\Card;
 use app\api\model\v2\Notice;
+use think\facade\Request;
 
 class NoticeController extends Controller
 {
 
     /**
-    * POST ecapi.notice.list
-    */
+     * POST ecapi.notice.list
+     */
     public function index(Request $request)
     {
         $rules = [
-            'page'      => 'required|integer|min:1',
-            'per_page'  => 'required|integer|min:1',
+            'page' => 'required|integer|min:1',
+            'per_page' => 'required|integer|min:1',
         ];
 
         if ($error = $this->validateInput($rules)) {
@@ -30,8 +29,8 @@ class NoticeController extends Controller
     }
 
     /**
-    * GET notice.{id:[0-9]+}
-    */
+     * GET notice.{id:[0-9]+}
+     */
     public function show($id)
     {
         return Notice::getNotice($id);

@@ -4,11 +4,6 @@ namespace app\api\model\v2;
 
 use app\api\model\BaseModel;
 use app\api\library\Token;
-use \DB;
-
-use Cache;
-use Illuminate\Support\Facades\Mail;
-
 use app\api\service\shopex\Sms;
 use app\api\service\oauth\Wechat;
 use app\api\service\oauth\Qc;
@@ -16,30 +11,29 @@ use app\api\service\oauth\Qc;
 class Member extends BaseModel
 {
     const VENDOR_WEIXIN = 1;
-    const VENDOR_WEIBO  = 2;
-    const VENDOR_QQ     = 3;
+    const VENDOR_WEIBO = 2;
+    const VENDOR_QQ = 3;
     const VENDOR_TAOBAO = 4;
-    const VENDOR_WXA    = 5;    //微信小程序
+    const VENDOR_WXA = 5;    //微信小程序
 
     const GENDER_SECRET = 0;
-    const GENDER_MALE   = 1;
+    const GENDER_MALE = 1;
     const GENDER_FEMALE = 2;
 
 
     /* 帐号变动类型 */
-    const ACT_SAVING               =  0;     // 帐户冲值
-    const ACT_DRAWING              =  1;     // 帐户提款
-    const ACT_ADJUSTING            =  2;     // 调节帐户
-    const ACT_OTHER                = 99;     // 其他类型
+    const ACT_SAVING = 0;     // 帐户冲值
+    const ACT_DRAWING = 1;     // 帐户提款
+    const ACT_ADJUSTING = 2;     // 调节帐户
+    const ACT_OTHER = 99;     // 其他类型
 
-    protected $connection = 'shop';
-    protected $table      = 'users';
+    protected $table = 'users';
     protected $primaryKey = 'user_id';
     public $timestamps = false;
 
     protected $guarded = [];
-    protected $appends = ['id','age','rank','gender','username','nickname','mobile','avatar','mobile_binded', 'joined_at','is_auth', 'is_completed'];
-    protected $visible = ['id','age','rank','gender','username','nickname','mobile','avatar','mobile_binded', 'joined_at','is_auth', 'is_completed'];
+    protected $appends = ['id', 'age', 'rank', 'gender', 'username', 'nickname', 'mobile', 'avatar', 'mobile_binded', 'joined_at', 'is_auth', 'is_completed'];
+    protected $visible = ['id', 'age', 'rank', 'gender', 'username', 'nickname', 'mobile', 'avatar', 'mobile_binded', 'joined_at', 'is_auth', 'is_completed'];
 
     public static function login(array $attributes)
     {
@@ -60,23 +54,23 @@ class Member extends BaseModel
     {
         /* 插入帐户变动记录 */
         $account_log = array(
-            'user_id'       => $user_id,
-            'user_money'    => $user_money,
-            'frozen_money'  => $frozen_money,
-            'rank_points'   => $rank_points,
-            'pay_points'    => $pay_points,
-            'change_time'   => time(),
-            'change_desc'   => $change_desc,
-            'change_type'   => $change_type
+            'user_id' => $user_id,
+            'user_money' => $user_money,
+            'frozen_money' => $frozen_money,
+            'rank_points' => $rank_points,
+            'pay_points' => $pay_points,
+            'change_time' => time(),
+            'change_desc' => $change_desc,
+            'change_type' => $change_type
         );
         AccountLog::insert($account_log);
 
         /* 更新用户信息 */
         $user = self::find($user_id);
-        $user->user_money   += $user_money;
+        $user->user_money += $user_money;
         $user->frozen_money += $frozen_money;
-        $user->rank_points  += $rank_points;
-        $user->pay_points   += $pay_points;
+        $user->rank_points += $rank_points;
+        $user->pay_points += $pay_points;
         $user->save();
     }
 
@@ -112,7 +106,7 @@ class Member extends BaseModel
                                 if (!empty($affiliate['config']['level_register_up'])) {
                                     if ($rank_points = self::find($up_uid)) {
                                         $rank_points = $rank_points->rank_points;
-                                    
+
                                         if ($rank_points + $affiliate['config']['level_register_all'] <= $affiliate['config']['level_register_up']) {
                                             self::logAccountChange($up_uid, 0, 0, $affiliate['config']['level_register_all'], 0, sprintf($_LANG, $model->user_id, $model->user_name));
                                         }
@@ -128,7 +122,7 @@ class Member extends BaseModel
                         }
                     }
                 }
-        
+
                 if (isset($device_id) && $device_id) {
                     Device::toUpdateOrCreate($model->user_id, $attributes);
                 }
@@ -181,7 +175,7 @@ class Member extends BaseModel
                                 if (!empty($affiliate['config']['level_register_up'])) {
                                     if ($rank_points = self::find($up_uid)) {
                                         $rank_points = $rank_points->rank_points;
-                                    
+
                                         if ($rank_points + $affiliate['config']['level_register_all'] <= $affiliate['config']['level_register_up']) {
                                             self::logAccountChange($up_uid, 0, 0, $affiliate['config']['level_register_all'], 0, sprintf($_LANG, $model->user_id, $model->user_name));
                                         }
@@ -197,7 +191,7 @@ class Member extends BaseModel
                         }
                     }
                 }
-        
+
                 if (isset($device_id) && $device_id) {
                     Device::toUpdateOrCreate($model->user_id, $attributes);
                 }
@@ -233,7 +227,7 @@ class Member extends BaseModel
         if ($res === true) { // !isset($res['error'])
             return self::formatBody();
         }
-        
+
         return self::formatError(self::BAD_REQUEST, trans('message.member.mobile.send.error'));
     }
 
@@ -356,21 +350,21 @@ class Member extends BaseModel
 
         if ($model = Member::where('email', $email)->first()) {
             $hash_code = ShopConfig::findByCode('hash_code');
-        
+
             $activation = md5($model->user_id . $hash_code . $model->reg_time);
 
             //Send mail
             Mail::send(
                 'emails.reset',
-            [
-                'username' => $model->user_name,
-                'sitename' => env('MAIL_FROM_NAME'),
-                'link'     => config('app.shop_url').'/user.php?act=get_password&uid='.$model->user_id.'&code='.$activation
-            ],
-            function ($message) use ($model) {
-                $message->to($model->email)
-                  ->subject(trans('message.email.reset.subject'));
-            }
+                [
+                    'username' => $model->user_name,
+                    'sitename' => env('MAIL_FROM_NAME'),
+                    'link' => config('app.shop_url') . '/user.php?act=get_password&uid=' . $model->user_id . '&code=' . $activation
+                ],
+                function ($message) use ($model) {
+                    $message->to($model->email)
+                        ->subject(trans('message.email.reset.subject'));
+                }
             );
 
             return self::formatBody();
@@ -415,7 +409,7 @@ class Member extends BaseModel
                     $userinfo['gender'] = 0;
                     $userinfo['nickname'] = 'wxa_' . $wxainfo['openid'];
                 }
-                
+
                 break;
             default:
                 return false;
@@ -451,8 +445,8 @@ class Member extends BaseModel
 
         // login
         return self::formatBody(
-            ['token' => Token::encode(['uid' => $user_id]), 'user' => Member::where('user_id', $user_id)->first(),'openid'=>$open_id,'is_new_user' => $is_new_user]
-            );
+            ['token' => Token::encode(['uid' => $user_id]), 'user' => Member::where('user_id', $user_id)->first(), 'openid' => $open_id, 'is_new_user' => $is_new_user]
+        );
     }
 
     public static function bindMobile(array $validate)
@@ -474,7 +468,7 @@ class Member extends BaseModel
         if ($member->is_auth && $member->mobile_phone) {
             return self::formatError(self::BAD_REQUEST, trans('message.member.mobile.bind'));
         }
-        
+
         $data = ['mobile_phone' => $mobile, 'user_name' => $mobile];
         if (isset($password)) {
             $data['password'] = self::setPassword($password);
@@ -501,9 +495,9 @@ class Member extends BaseModel
 
                 $wechat = new Wechat($config['app_id'], $config['app_secret']);
                 if (isset($invite_code)) {
-                    $wechatUrl = $wechat->getWeChatAuthorizeURL(url('/v2/ecapi.auth.web.callback/'.self::VENDOR_WEIXIN.'/?referer='.$referer.'&scope='.$scope.'&invite_code='.$invite_code));
+                    $wechatUrl = $wechat->getWeChatAuthorizeURL(url('/v2/ecapi.auth.web.callback/' . self::VENDOR_WEIXIN . '/?referer=' . $referer . '&scope=' . $scope . '&invite_code=' . $invite_code));
                 } else {
-                    $wechatUrl = $wechat->getWeChatAuthorizeURL(url('/v2/ecapi.auth.web.callback/'.self::VENDOR_WEIXIN.'/?referer='.$referer.'&scope='.$scope));
+                    $wechatUrl = $wechat->getWeChatAuthorizeURL(url('/v2/ecapi.auth.web.callback/' . self::VENDOR_WEIXIN . '/?referer=' . $referer . '&scope=' . $scope));
                 }
                 return $wechatUrl;
                 break;
@@ -513,7 +507,7 @@ class Member extends BaseModel
                 break;
 
             case self::VENDOR_QQ:
-                
+
                 $oauth = Configs::where(['type' => 'oauth', 'status' => 1, 'code' => 'qq.wap'])->first();
                 $config = Configs::verifyConfig(['app_id', 'app_secret'], $oauth);
 
@@ -525,10 +519,10 @@ class Member extends BaseModel
 
                 $qc = new Qc($config['app_id'], $config['app_secret']);
 
-                $res = $qc->login(url('/v2/ecapi.auth.web.callback/'.self::VENDOR_QQ.'/?referer='.$referer), 'get_user_info');
+                $res = $qc->login(url('/v2/ecapi.auth.web.callback/' . self::VENDOR_QQ . '/?referer=' . $referer), 'get_user_info');
 
                 return $res;
-                
+
                 break;
 
             case self::VENDOR_TAOBAO:
@@ -554,15 +548,15 @@ class Member extends BaseModel
                 }
 
 
-                $scope = isset($_GET['scope'])?$_GET['scope']:"";
+                $scope = isset($_GET['scope']) ? $_GET['scope'] : "";
 
                 $wechat = new Wechat($config['app_id'], $config['app_secret']);
 
                 if (!$access_token = $wechat->getAccessToken('code', isset($_GET['code']) ? $_GET['code'] : '')) {
-                    Log::error('access_token: '.$wechat->error());
+                    Log::error('access_token: ' . $wechat->error());
                     return self::formatError(self::BAD_REQUEST, trans('message.member.auth.error'));
                 }
-                
+
                 $open_id = $wechat->getOpenid();
                 if ($scope == "snsapi_userinfo") {
                     $oauth_id = $wechat->getUnionid() ?: $open_id;
@@ -577,8 +571,8 @@ class Member extends BaseModel
                     }
                     if (!$user_id = self::checkBind($oauth_id)) {
                         // create user
-                        $invite_code = isset($_GET['invite_code'])?$_GET['invite_code']:null;
-                        Log::error('callback $invite_code: '.$invite_code);
+                        $invite_code = isset($_GET['invite_code']) ? $_GET['invite_code'] : null;
+                        Log::error('callback $invite_code: ' . $invite_code);
                         $model = self::createAuthUser($vendor, $oauth_id, $userinfo['nickname'], $userinfo['gender'], $userinfo['prefix'], $userinfo['avatar'], $invite_code);
                         if (!$model) {
                             return self::formatError(self::BAD_REQUEST, trans('message.member.auth.error'));
@@ -609,10 +603,10 @@ class Member extends BaseModel
                 if (!$oauth || !$config) {
                     return self::formatError(self::BAD_REQUEST, trans('message.config.oauth.qq'));
                 }
-                
+
                 $qc = new Qc($config['app_id'], $config['app_secret']);
 
-                $access_token = $qc->get_access_token(url('/v2/ecapi.auth.web.callback/'.self::VENDOR_QQ)); //
+                $access_token = $qc->get_access_token(url('/v2/ecapi.auth.web.callback/' . self::VENDOR_QQ)); //
 
                 $open_id = $qc->get_openid($access_token); // open_id
 
@@ -651,7 +645,7 @@ class Member extends BaseModel
         $api = "https://api.weixin.qq.com/sns/userinfo?access_token={$access_token}&openid={$open_id}";
         $res = curl_request($api);
         if (isset($res['errcode'])) {
-            Log::error('weixin_oauth_log: '.json_encode($res));
+            Log::error('weixin_oauth_log: ' . json_encode($res));
             return false;
         }
 
@@ -667,7 +661,7 @@ class Member extends BaseModel
     {
         $oauth = Configs::where(['type' => 'oauth', 'status' => 1, 'code' => 'wechat.wxa'])->first();
         $config = Configs::verifyConfig(['app_id', 'app_secret'], $oauth);
-        Log::error('weixin_config: '.var_export($config, true));
+        Log::error('weixin_config: ' . var_export($config, true));
         if (!$oauth || !$config) {
             return self::formatError(self::BAD_REQUEST, trans('message.config.oauth.wechat'));
         }
@@ -675,27 +669,27 @@ class Member extends BaseModel
         $app_id = $config['app_id'];
         $app_secret = $config['app_secret'];
         $api = "https://api.weixin.qq.com/sns/jscode2session?appid={$app_id}&secret={$app_secret}&js_code={$js_code}&grant_type=authorization_code";
-        Log::error('weixin_oauth_log: '.$api);
+        Log::error('weixin_oauth_log: ' . $api);
         $res = curl_request($api);
         if (isset($res['errcode'])) {
-            Log::error('weixin_oauth_log: '.json_encode($res));
+            Log::error('weixin_oauth_log: ' . json_encode($res));
             return false;
         };
-        Log::error('weixin_oauth_log: '.json_encode($res));
+        Log::error('weixin_oauth_log: ' . json_encode($res));
         return [
             'openid' => $res['openid'],
             'prefix' => 'wxa',
             'session_key' => $res['session_key']
         ];
     }
-    
+
 
     private static function getUserByWeibo($access_token, $open_id)
     {
         $api = "https://api.weibo.com/2/users/show.json?access_token={$access_token}&uid={$open_id}";
         $res = curl_request($api);
         if (isset($res['error_code'])) {
-            Log::error('weibo_oauth_log: '.json_encode($res));
+            Log::error('weibo_oauth_log: ' . json_encode($res));
             return false;
         }
 
@@ -716,7 +710,7 @@ class Member extends BaseModel
                 $res = curl_request($api);
 
                 if (isset($res['ret']) && $res['ret'] != 0) {
-                    Log::error('qq_oauth_log: '.json_encode($res));
+                    Log::error('qq_oauth_log: ' . json_encode($res));
                     return false;
                 }
 
@@ -763,16 +757,16 @@ class Member extends BaseModel
                 $sns = new Sns;
                 $sns->user_id = $model->user_id;
                 $sns->open_id = $open_id;
-                $sns->vendor  = $vendor;
+                $sns->vendor = $vendor;
                 $sns->save();
 
                 Cache::forever('avatar_' . $model->user_id, $avatar);
 
-                Log::error('邀请注册: '.$invite_code);
+                Log::error('邀请注册: ' . $invite_code);
                 // 邀请注册
                 if (isset($invite_code)) {
                     $up_uid = $invite_code;
-                    Log::error('up_uid: '.$up_uid);
+                    Log::error('up_uid: ' . $up_uid);
 
                     if (AffiliateLog::checkOpen() == 1) {
                         $affiliate = AffiliateLog::getAffiliateConfig();
@@ -784,7 +778,7 @@ class Member extends BaseModel
                                 if (!empty($affiliate['config']['level_register_up'])) {
                                     if ($rank_points = self::find($up_uid)) {
                                         $rank_points = $rank_points->rank_points;
-                                    
+
                                         if ($rank_points + $affiliate['config']['level_register_all'] <= $affiliate['config']['level_register_up']) {
                                             self::logAccountChange($up_uid, 0, 0, $affiliate['config']['level_register_all'], 0, sprintf($_LANG, $model->user_id, $model->user_name));
                                         }
@@ -810,7 +804,7 @@ class Member extends BaseModel
 
     private static function genUsername($type)
     {
-        return $type.'_'.time().rand(1000, 9999);
+        return $type . '_' . time() . rand(1000, 9999);
     }
 
     private static function validatePassword($username, $password)
@@ -837,7 +831,7 @@ class Member extends BaseModel
     private static function setPassword($password, $salt = false)
     {
         if ($salt) {
-            return md5(md5($password).$salt);
+            return md5(md5($password) . $salt);
         }
         return md5($password);
     }
@@ -861,14 +855,14 @@ class Member extends BaseModel
         if ($member = Member::where('user_id', $uid)->first()) {
             $rule = ShopConfig::findByCode('integral_scale');
             if (isset($rule)) {
-                return self::formatBody(['score' => $member->pay_points, 'rule' => $rule/100]);
+                return self::formatBody(['score' => $member->pay_points, 'rule' => $rule / 100]);
             }
         }
     }
 
     /**
      * 取得用户信息
-     * @param   int     $user_id    用户id
+     * @param int $user_id 用户id
      * @return  array   用户信息
      */
     public static function user_info($user_id)
@@ -901,12 +895,12 @@ class Member extends BaseModel
     {
         $val = 0;
         $res = Cart::join('goods', 'cart.goods_id', '=', 'goods.goods_id')
-                ->where('goods.integral', '>', 0)
-                ->where('cart.is_gift', '=', 0)
-                ->where('cart.rec_type', '=', Cart::CART_GENERAL_GOODS)
-                // ->sum(DB::raw('integral * (cart.goods_number)'));
-                // ->select('sum('goods.integral' * 'cart.goods_number') AS total')
-                ->first(['goods.integral','cart.goods_number']);
+            ->where('goods.integral', '>', 0)
+            ->where('cart.is_gift', '=', 0)
+            ->where('cart.rec_type', '=', Cart::CART_GENERAL_GOODS)
+            // ->sum(DB::raw('integral * (cart.goods_number)'));
+            // ->select('sum('goods.integral' * 'cart.goods_number') AS total')
+            ->first(['goods.integral', 'cart.goods_number']);
         if ($res) {
             $val = $res->integral * $res->goods_number;
         }
@@ -926,36 +920,36 @@ class Member extends BaseModel
 
     /**
      * 记录帐户变动
-     * @param   int     $user_id        用户id
-     * @param   float   $user_money     可用余额变动
-     * @param   float   $frozen_money   冻结余额变动
-     * @param   int     $rank_points    等级积分变动
-     * @param   int     $pay_points     消费积分变动
-     * @param   string  $change_desc    变动说明
-     * @param   int     $change_type    变动类型：参见常量文件
+     * @param int $user_id 用户id
+     * @param float $user_money 可用余额变动
+     * @param float $frozen_money 冻结余额变动
+     * @param int $rank_points 等级积分变动
+     * @param int $pay_points 消费积分变动
+     * @param string $change_desc 变动说明
+     * @param int $change_type 变动类型：参见常量文件
      * @return  void
      */
     public static function log_account_change($user_id, $user_money = 0, $frozen_money = 0, $rank_points = 0, $pay_points = 0, $change_desc = '', $change_type = self::ACT_OTHER)
     {
         /* 插入帐户变动记录 */
         $account_log = array(
-            'user_id'       => $user_id,
-            'user_money'    => $user_money,
-            'frozen_money'  => $frozen_money,
-            'rank_points'   => $rank_points,
-            'pay_points'    => $pay_points,
-            'change_time'   => time(),
-            'change_desc'   => $change_desc,
-            'change_type'   => $change_type
+            'user_id' => $user_id,
+            'user_money' => $user_money,
+            'frozen_money' => $frozen_money,
+            'rank_points' => $rank_points,
+            'pay_points' => $pay_points,
+            'change_time' => time(),
+            'change_desc' => $change_desc,
+            'change_type' => $change_type
         );
         AccountLog::insert($account_log);
         // /* 更新用户信息 */
         self::where('user_id', $user_id)
-                ->limit(1)
-                ->increment('user_money', $user_money)
-                ->increment('frozen_money', $frozen_money)
-                ->increment('rank_points', $rank_points)
-                ->increment('pay_points', $pay_points);
+            ->limit(1)
+            ->increment('user_money', $user_money)
+            ->increment('frozen_money', $frozen_money)
+            ->increment('rank_points', $rank_points)
+            ->increment('pay_points', $pay_points);
     }
 
     private static function verifyCode($mobile, $code)

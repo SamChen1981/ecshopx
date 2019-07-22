@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: cun
- * Date: 2018/8/11
- * Time: 下午7:05
- */
 
 namespace app\api\model\v2;
 
@@ -12,12 +6,11 @@ use app\api\model\BaseModel;
 
 class Ad extends BaseModel
 {
-    protected $connection = 'shop';
-    protected $table      = 'ad';
+    protected $table = 'ad';
     public $timestamps = false;
-    protected $guarded    = [];
-    protected $appends    = ['id', 'photo', 'link', 'postion'];
-    protected $visible    = ['id', 'photo', 'link', 'postion'];
+    protected $guarded = [];
+    protected $appends = ['id', 'photo', 'link', 'postion'];
+    protected $visible = ['id', 'photo', 'link', 'postion'];
 
     public static function getlist($postion)
     {
@@ -38,7 +31,7 @@ class Ad extends BaseModel
     public function getPhotoAttribute()
     {
         $photo = $this->attributes['ad_code'];
-        $doadmin = config('app.shop_url').'/data/afficheimg';
+        $doadmin = config('app.shop_url') . '/data/afficheimg';
         return formatPhoto($photo, $photo, $doadmin);
     }
 

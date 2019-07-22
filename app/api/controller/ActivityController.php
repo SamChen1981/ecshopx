@@ -2,16 +2,14 @@
 
 namespace app\api\controller;
 
-use think\facade\Request;
-
 use app\api\model\v2\Activity;
 
 class ActivityController extends Controller
 {
 
     /**
-    * POST ecapi.activity.list
-    */
+     * POST ecapi.activity.list
+     */
     public function index()
     {
         $data = Activity::getList();
@@ -19,8 +17,8 @@ class ActivityController extends Controller
     }
 
     /**
-    * POST ecapi.activity.get
-    */
+     * POST ecapi.activity.get
+     */
     public function info()
     {
         $rules = [

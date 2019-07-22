@@ -7,11 +7,9 @@ use app\api\library\Header;
 
 class Version extends BaseModel
 {
-    protected $connection = 'shop';
-    
-    protected $table      = 'version';
+    protected $table = 'version';
 
-    public $timestamps   = true;
+    public $timestamps = true;
 
     protected $appends = ['download_url'];
 

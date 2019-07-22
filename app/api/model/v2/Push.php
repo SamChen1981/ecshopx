@@ -1,4 +1,5 @@
 <?php
+
 namespace app\api\model\v2;
 
 use app\api\model\BaseModel;
@@ -6,11 +7,9 @@ use app\api\library\Token;
 
 class Push extends BaseModel
 {
-    protected $connection = 'shop';
+    protected $table = 'push';
 
-    protected $table      = 'push';
-
-    public $timestamps   = true;
+    public $timestamps = true;
 
     protected $visible = ['id', 'title', 'photo', 'content', 'link', 'created_at'];
 
@@ -29,7 +28,7 @@ class Push extends BaseModel
             ->paginate($per_page)
             ->toArray();
 
-        return self::formatBody(['messages' => $data['data'],'paged' => self::formatPaged($page, $per_page, $total)]);
+        return self::formatBody(['messages' => $data['data'], 'paged' => self::formatPaged($page, $per_page, $total)]);
     }
 
     public static function getOrderList(array $attributes)
@@ -46,7 +45,7 @@ class Push extends BaseModel
             ->paginate($per_page)
             ->toArray();
 
-        return self::formatBody(['messages' => $data['data'],'paged' => self::formatPaged($page, $per_page, $total)]);
+        return self::formatBody(['messages' => $data['data'], 'paged' => self::formatPaged($page, $per_page, $total)]);
     }
 
     public static function unread(array $attributes)
@@ -66,7 +65,7 @@ class Push extends BaseModel
                 case 2:
                     if ($uid = Token::authorization()) {
                         $count = Push::where('isPush', 1)->where('message_type', 2)->where('user_id', $uid)
-                                ->where('created_at', '>', date('Y-m-d H:i:s', $after))->count();
+                            ->where('created_at', '>', date('Y-m-d H:i:s', $after))->count();
                     } else {
                         $count = 0;
                     }
@@ -79,7 +78,7 @@ class Push extends BaseModel
             }
         } else {
             $count = Push::where('status', 2)
-                   ->where('created_at', '>', date('Y-m-d H:i:s', $after))->count();
+                ->where('created_at', '>', date('Y-m-d H:i:s', $after))->count();
         }
 
 

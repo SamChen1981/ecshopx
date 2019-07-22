@@ -8,8 +8,7 @@ use app\api\library\Header;
 
 class Device extends BaseModel
 {
-    protected $connection = 'shop';
-    protected $table      = 'device';
+    protected $table = 'device';
     public $timestamps = true;
     protected $primaryKey = 'user_id';
 

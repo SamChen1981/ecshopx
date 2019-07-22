@@ -6,8 +6,7 @@ use app\api\model\BaseModel;
 
 class Category extends BaseModel
 {
-    protected $connection = 'shop';
-    protected $table      = 'category';
+    protected $table = 'category';
     public $timestamps = false;
     protected $guarded = [];
 }

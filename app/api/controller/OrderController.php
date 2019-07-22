@@ -2,11 +2,8 @@
 
 namespace app\api\controller;
 
-use think\facade\Request;
-
 use app\api\model\v2\Order;
 use app\api\model\v2\Payment;
-use app\api\model\v2\Features;
 
 class OrderController extends Controller
 {
@@ -16,9 +13,9 @@ class OrderController extends Controller
     public function index()
     {
         $rules = [
-            'page'            => 'required|integer|min:1',
-            'per_page'        => 'required|integer|min:1',
-            'status'          => 'integer|min:0',
+            'page' => 'required|integer|min:1',
+            'per_page' => 'required|integer|min:1',
+            'status' => 'integer|min:0',
         ];
 
         if ($error = $this->validateInput($rules)) {
@@ -69,7 +66,7 @@ class OrderController extends Controller
     public function cancel()
     {
         $rules = [
-            'order'  => 'required|integer|min:1',
+            'order' => 'required|integer|min:1',
             'reason' => 'required|integer|min:1',
         ];
 
@@ -87,15 +84,15 @@ class OrderController extends Controller
     public function price()
     {
         $rules = [
-            "shop"             => "integer|min:1",          // 店铺ID
-            "consignee"        => "integer|min:1",          // 收货人ID
-            "shipping"         => "integer|min:1",          // 快递ID
-            "coupon"           => "string|min:1",           // 优惠券ID
-            "cashgift"         => "string|min:1",           // 红包ID
-            "score"            => "integer",                // 积分
-            "invoice_type"     => "integer",                // 发票类型
-            "order_product"    => "required|string",        // 商品id数组
-            "is_exchange"      => "boolean",                // 是否是兑换商品
+            "shop" => "integer|min:1",          // 店铺ID
+            "consignee" => "integer|min:1",          // 收货人ID
+            "shipping" => "integer|min:1",          // 快递ID
+            "coupon" => "string|min:1",           // 优惠券ID
+            "cashgift" => "string|min:1",           // 红包ID
+            "score" => "integer",                // 积分
+            "invoice_type" => "integer",                // 发票类型
+            "order_product" => "required|string",        // 商品id数组
+            "is_exchange" => "boolean",                // 是否是兑换商品
         ];
 
         if ($error = $this->validateInput($rules)) {
@@ -124,8 +121,8 @@ class OrderController extends Controller
         $items = json_decode($this->validated['review'], true);
 
         $items_rules = [
-            '*.goods'   => 'required|integer|min:1',
-            '*.grade'   => 'required|integer|in:1,2,3',
+            '*.goods' => 'required|integer|min:1',
+            '*.grade' => 'required|integer|in:1,2,3',
             '*.content' => 'string'
         ];
 

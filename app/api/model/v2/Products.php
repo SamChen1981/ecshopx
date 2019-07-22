@@ -3,17 +3,15 @@
 namespace app\api\model\v2;
 
 use app\api\model\BaseModel;
-use app\api\library\Token;
 
 class Products extends BaseModel
 {
-    protected $connection = 'shop';
-    protected $table      = 'products';
+    protected $table = 'products';
     public $timestamps = false;
 
-    protected $visible = ['id','goods_id','goods_attr', 'stock_number','goods_attr_price'];
+    protected $visible = ['id', 'goods_id', 'goods_attr', 'stock_number', 'goods_attr_price'];
 
-    protected $appends = ['id','goods_attr', 'stock_number','goods_attr_price'];
+    protected $appends = ['id', 'goods_attr', 'stock_number', 'goods_attr_price'];
 
     protected $guarded = [];
 
@@ -22,6 +20,7 @@ class Products extends BaseModel
     {
         return $this->product_id;
     }
+
     public function getGoodsattrAttribute()
     {
         return $this->attributes['goods_attr'];
@@ -59,8 +58,8 @@ class Products extends BaseModel
      * 取指定规格的货品信息
      *
      * @access      public
-     * @param       string      $goods_id
-     * @param       array       $spec_goods_attr_id
+     * @param string $goods_id
+     * @param array $spec_goods_attr_id
      * @return      array
      */
     public static function get_products_info($goods_id, $spec_goods_attr_id)

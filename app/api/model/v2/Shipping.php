@@ -8,8 +8,6 @@ use app\api\service\shopex\Logistics;
 
 class Shipping extends BaseModel
 {
-    protected $connection = 'shop';
-
     protected $table = 'shipping';
 
     public $timestamps = false;
@@ -41,10 +39,10 @@ class Shipping extends BaseModel
         $region_id_list = UserAddress::getRegionIdList($address);
 
         $model = Shipping::join('shipping_area', 'shipping_area.shipping_id', '=', 'shipping.shipping_id')
-           ->join('area_region', 'area_region.shipping_area_id', '=', 'shipping_area.shipping_area_id')
-           ->whereIn('area_region.region_id', $region_id_list)
-           ->where('shipping.enabled', 1)
-           ->get();
+            ->join('area_region', 'area_region.shipping_area_id', '=', 'shipping_area.shipping_area_id')
+            ->whereIn('area_region.region_id', $region_id_list)
+            ->where('shipping.enabled', 1)
+            ->get();
 
         if (count($model->toArray()) > 0) {
             $model = $model->toArray();
@@ -67,7 +65,7 @@ class Shipping extends BaseModel
             $products[$key]['num'] = $value->goods_number;
             $goods_ids[] = $value['goods_id'];
         }
-    
+
         // 查看购物车中是否全为免运费商品，若是则把运费赋为零
         $is_shipping = Goods::whereIn('goods_id', $goods_ids)
             ->where('is_shipping', 0)
@@ -81,11 +79,11 @@ class Shipping extends BaseModel
         $region_id_list = UserAddress::getRegionIdList($address);
 
         $model = Shipping::join('shipping_area', 'shipping_area.shipping_id', '=', 'shipping.shipping_id')
-           ->join('area_region', 'area_region.shipping_area_id', '=', 'shipping_area.shipping_area_id')
-           ->whereIn('area_region.region_id', $region_id_list)
-           ->where('shipping.enabled', 1)
-           ->where('shipping.shipping_id', $shipping_id)
-           ->first();
+            ->join('area_region', 'area_region.shipping_area_id', '=', 'shipping_area.shipping_area_id')
+            ->whereIn('area_region.region_id', $region_id_list)
+            ->where('shipping.enabled', 1)
+            ->where('shipping.shipping_id', $shipping_id)
+            ->first();
 
         if (count($model->toArray()) > 0) {
             return $model->fee;
@@ -107,7 +105,7 @@ class Shipping extends BaseModel
             $products[$key]['num'] = $value['num'];
             $goods_ids[] = $value['goods_id'];
         }
-    
+
         // 查看购物车中是否全为免运费商品，若是则把运费赋为零
         $is_shipping = Goods::whereIn('goods_id', $goods_ids)
             ->where('is_shipping', 0)
@@ -120,11 +118,11 @@ class Shipping extends BaseModel
         $region_id_list = UserAddress::getRegionIdList($address);
 
         $model = Shipping::join('shipping_area', 'shipping_area.shipping_id', '=', 'shipping.shipping_id')
-           ->join('area_region', 'area_region.shipping_area_id', '=', 'shipping_area.shipping_area_id')
-           ->whereIn('area_region.region_id', $region_id_list)
-           ->where('shipping.enabled', 1)
-           ->where('shipping.shipping_id', $shipping_id)
-           ->first();
+            ->join('area_region', 'area_region.shipping_area_id', '=', 'shipping_area.shipping_area_id')
+            ->whereIn('area_region.region_id', $region_id_list)
+            ->where('shipping.enabled', 1)
+            ->where('shipping.shipping_id', $shipping_id)
+            ->first();
         if (!$model) {
             return false;
         }
@@ -147,7 +145,7 @@ class Shipping extends BaseModel
             if (empty($format_data)) {
                 $format_data = [];
             }
-            return self::formatBody(['status' => $format_data, 'vendor_name' => $order->shipping_name, 'code' => str_replace('<br>', ' ', $order->invoice_no) ]);
+            return self::formatBody(['status' => $format_data, 'vendor_name' => $order->shipping_name, 'code' => str_replace('<br>', ' ', $order->invoice_no)]);
         }
         return self::formatError(self::NOT_FOUND);
     }
@@ -203,7 +201,7 @@ class Shipping extends BaseModel
         $weight = 0;
         $amount = 0;
         $number = 0;
-        $fee    = 0;
+        $fee = 0;
 
         $goods_ids = array();
 
@@ -212,7 +210,7 @@ class Shipping extends BaseModel
             foreach ($products as $product) {
                 $goods_weight = Goods::where('goods_id', $product['goods_id'])->pluck('goods_weight')->first();
                 if ($goods_weight) {
-                    if (isset($product['property']) && is_array($product['property']) && count($product['property'])>0) {
+                    if (isset($product['property']) && is_array($product['property']) && count($product['property']) > 0) {
                     } else {
                         $product['property'] = [];
                     }
@@ -224,7 +222,7 @@ class Shipping extends BaseModel
                 $goods_ids[] = $product['goods_id'];
             }
         }
-    
+
         // 查看购物车中是否全为免运费商品，若是则把运费赋为零
         $is_shipping = Goods::whereIn('goods_id', $goods_ids)
             ->where('is_shipping', 0)
@@ -244,7 +242,7 @@ class Shipping extends BaseModel
 
     public function shippingArea()
     {
-        return  $this->hasMany('app\api\model\v2\ShippingArea', 'shipping_id', 'shipping_id');
+        return $this->hasMany('app\api\model\v2\ShippingArea', 'shipping_id', 'shipping_id');
     }
 
     /**
@@ -344,13 +342,13 @@ class Shipping extends BaseModel
                 $fee = isset($configure['base_fee']) ? $configure['base_fee'] : 0;
                 $configure['fee_compute_mode'] = !empty($configure['fee_compute_mode']) ? $configure['fee_compute_mode'] : 'by_weight';
 
-                 if ($configure['fee_compute_mode'] == 'by_number') {
-                     $fee = $goods_number * $configure['item_fee'];
-                 } else {
-                     if ($goods_weight > 1) {
-                         $fee += (ceil(($goods_weight - 1))) * $configure['step_fee'];
-                     }
-                 }
+                if ($configure['fee_compute_mode'] == 'by_number') {
+                    $fee = $goods_number * $configure['item_fee'];
+                } else {
+                    if ($goods_weight > 1) {
+                        $fee += (ceil(($goods_weight - 1))) * $configure['step_fee'];
+                    }
+                }
                 break;
 
             default:

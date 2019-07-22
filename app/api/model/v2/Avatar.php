@@ -6,8 +6,7 @@ use app\api\model\BaseModel;
 
 class Avatar extends BaseModel
 {
-    protected $connection = 'shop';
-    protected $table      = 'avatar';
+    protected $table = 'avatar';
     public $timestamps = false;
     protected $guarded = [];
 }

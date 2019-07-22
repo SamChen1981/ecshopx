@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'secret' => env('TOKEN_SECRET', 'ecmobile'),
+    'secret' => env('TOKEN_SECRET', 'shop'),
     'alg' => env('TOKEN_ALG', 'HS256'),
     'ttl' => env('TOKEN_TTL', 43200), // minutes
     'refresh' => env('TOKEN_REFRESH', false), // minutes

@@ -7,8 +7,7 @@ use app\api\library\Token;
 
 class UserRank extends BaseModel
 {
-    protected $connection = 'shop';
-    protected $table      = 'user_rank';
+    protected $table = 'user_rank';
     public $timestamps = false;
 
     protected $guarded = [];
@@ -54,14 +53,14 @@ class UserRank extends BaseModel
             return $shop_price;
         }
     }
-    
+
     public static function getUserRankByUid()
     {
         $uid = Token::authorization();
-        Log::debug("用户ID记录".$uid);
+        Log::debug("用户ID记录" . $uid);
         $user = Member::where('user_id', $uid)->first();
 
-        $data = ['rank_id' => 0,'discount' => 1];
+        $data = ['rank_id' => 0, 'discount' => 1];
         if (!$user) {
             $data = null;
         } else {
@@ -91,7 +90,7 @@ class UserRank extends BaseModel
 
     public function getDescAttribute()
     {
-        return $this->attributes['discount'].'%';
+        return $this->attributes['discount'] . '%';
     }
 
     public function getScoreMinAttribute()

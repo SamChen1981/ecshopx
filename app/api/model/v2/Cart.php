@@ -4,41 +4,38 @@ namespace app\api\model\v2;
 
 use app\api\model\BaseModel;
 use app\api\library\Token;
-use DB;
 use app\api\service\shopex\Erp;
 use app\api\service\shopex\Sms;
-
 use app\api\library\Header;
 use app\api\service\shopex\Logistics;
 
 class Cart extends BaseModel
 {
-    protected $connection = 'shop';
     protected $table = 'cart';
     public $timestamps = false;
     protected $primaryKey = 'rec_id';
 
-    protected $appends = ['id','amount','property','price','attr_stock','attrs','promos'];
-    protected $visible = ['id','amount','product','property','price','attr_stock','attrs','subtotal','goods_id','promos'];
+    protected $appends = ['id', 'amount', 'property', 'price', 'attr_stock', 'attrs', 'promos'];
+    protected $visible = ['id', 'amount', 'product', 'property', 'price', 'attr_stock', 'attrs', 'subtotal', 'goods_id', 'promos'];
     /* 购物车商品类型 */
-    const CART_GENERAL_GOODS        = 0; // 普通商品
-    const CART_GROUP_BUY_GOODS      = 1; // 团购商品
-    const CART_AUCTION_GOODS        = 2; // 拍卖商品
-    const CART_SNATCH_GOODS         = 3; // 夺宝奇兵
-    const CART_EXCHANGE_GOODS       = 4; // 积分商城
+    const CART_GENERAL_GOODS = 0; // 普通商品
+    const CART_GROUP_BUY_GOODS = 1; // 团购商品
+    const CART_AUCTION_GOODS = 2; // 拍卖商品
+    const CART_SNATCH_GOODS = 3; // 夺宝奇兵
+    const CART_EXCHANGE_GOODS = 4; // 积分商城
 
     /* 减库存时机 */
-    const SDT_SHIP                  = 0; // 发货时
-    const SDT_PLACE                 = 1; // 下订单时
+    const SDT_SHIP = 0; // 发货时
+    const SDT_PLACE = 1; // 下订单时
 
     /**
      * 添加商品到购物车
      *
      * @access  public
-     * @param   integer $goods_id   商品编号
-     * @param   integer $num        商品数量
-     * @param   json   $property       规格值对应的id json数组
-     * @param   integer $parent     基本件
+     * @param integer $goods_id 商品编号
+     * @param integer $num 商品数量
+     * @param json $property 规格值对应的id json数组
+     * @param integer $parent 基本件
      * @return  boolean
      */
     public static function add(array $attributes)
@@ -92,35 +89,35 @@ class Cart extends BaseModel
             }
         }
         /* 计算商品的促销价格 */
-        $property_price         = GoodsAttr::property_price($property);
-        $goods_price            = Goods::get_final_price($product, $amount, true, $property);
-        $good['market_price']  += $property_price;
-        $goods_attr             = Attribute::get_goods_attr_info($property);
-        $goods_attr_id          = join(',', $property);
+        $property_price = GoodsAttr::property_price($property);
+        $goods_price = Goods::get_final_price($product, $amount, true, $property);
+        $good['market_price'] += $property_price;
+        $goods_attr = Attribute::get_goods_attr_info($property);
+        $goods_attr_id = join(',', $property);
         /* 初始化要插入购物车的基本件数据 */
 
         $parent = array(
-            'user_id'       => Token::authorization(), //uid
+            'user_id' => Token::authorization(), //uid
             // 'session_id'    => SESS_ID,
-            'goods_id'      => $product,
-            'goods_sn'      => addslashes($good['goods_sn']),
-            'product_id'    => $product_info['id'],
-            'goods_name'    => addslashes($good['goods_name']),
-            'market_price'  => $good['market_price'],
-            'goods_attr'    => addslashes($goods_attr),
+            'goods_id' => $product,
+            'goods_sn' => addslashes($good['goods_sn']),
+            'product_id' => $product_info['id'],
+            'goods_name' => addslashes($good['goods_name']),
+            'market_price' => $good['market_price'],
+            'goods_attr' => addslashes($goods_attr),
             'goods_attr_id' => $goods_attr_id,
-            'is_real'       => $good['is_real'],
-            'extension_code'=> $good['extension_code'],
-            'is_gift'       => 0,
-            'is_shipping'   => $good['is_shipping'],
-            'rec_type'      => Cart::CART_GENERAL_GOODS,
+            'is_real' => $good['is_real'],
+            'extension_code' => $good['extension_code'],
+            'is_gift' => 0,
+            'is_shipping' => $good['is_shipping'],
+            'rec_type' => Cart::CART_GENERAL_GOODS,
         );
         /* 如果该配件在添加为基本件的配件时，所设置的“配件价格”比原价低，即此配件在价格上提供了优惠， */
         /* 则按照该配件的优惠价格卖，但是每一个基本件只能购买一个优惠价格的“该配件”，多买的“该配件”不享 */
         /* 受此优惠 */
         $basic_list = array();
- 
-        $res = GoodsGroup::where('goods_id', $product)->where('goods_price', '<', $goods_price)->where('parent_id', $parent)->orderBy('goods_price')->get(['parent_id','goods_price']);
+
+        $res = GoodsGroup::where('goods_id', $product)->where('goods_price', '<', $goods_price)->where('parent_id', $parent)->orderBy('goods_price')->get(['parent_id', 'goods_price']);
         foreach ($res as $key => $row) {
             $basic_list[$row['parent_id']] = $row['goods_price'];
         }
@@ -129,11 +126,11 @@ class Cart extends BaseModel
         $basic_count_list = array();
         if ($basic_list) {
             $res = Cart::where('parent_id', 0)
-            ->where('extension_code', '!=', 'package_buy')
-            ->whereIn('goods_id', array_keys($basic_list))
-            ->groupBy('goods_id')
-            ->selectRaw('sum(goods_number) as count')
-            ->get();
+                ->where('extension_code', '!=', 'package_buy')
+                ->whereIn('goods_id', array_keys($basic_list))
+                ->groupBy('goods_id')
+                ->selectRaw('sum(goods_number) as count')
+                ->get();
 
             foreach ($res as $key => $row) {
                 $basic_count_list[$row['goods_id']] = $row['count'];
@@ -144,12 +141,12 @@ class Cart extends BaseModel
         /* 一个基本件对应一个该商品配件 */
         if ($basic_count_list) {
             $res = Cart::where('parent_id', 0)
-            ->where('extension_code', '!=', 'package_buy')
-            ->where('goods_id', $product)
-            ->whereIn('parent_id', array_keys($basic_count_list))
-            ->groupBy('parent_id')
-            ->selectRaw('sum(goods_number) as count')
-            ->get();
+                ->where('extension_code', '!=', 'package_buy')
+                ->where('goods_id', $product)
+                ->whereIn('parent_id', array_keys($basic_count_list))
+                ->groupBy('parent_id')
+                ->selectRaw('sum(goods_number) as count')
+                ->get();
 
             foreach ($res as $key => $row) {
                 $basic_count_list[$row['goods_id']] = $row['count'];
@@ -174,9 +171,9 @@ class Cart extends BaseModel
             }
 
             /* 作为该基本件的配件插入 */
-            $parent['goods_price']  = max($fitting_price, 0) + $property_price; //允许该配件优惠价格为0
+            $parent['goods_price'] = max($fitting_price, 0) + $property_price; //允许该配件优惠价格为0
             $parent['goods_number'] = min($amount, $basic_count_list[$parent_id]);
-            $parent['parent_id']    = $parent_id;
+            $parent['parent_id'] = $parent_id;
 
             /* 添加 */
             Cart::insert($parent);
@@ -206,15 +203,15 @@ class Cart extends BaseModel
                         ->where('goods_attr', Attribute::get_goods_attr_info($property))
                         ->where('extension_code', '!=', 'package_buy')
                         ->where('rec_type', self::CART_GENERAL_GOODS)
-                        ->update(['goods_number' => $amount,'goods_price' => $goods_final_price]);
+                        ->update(['goods_number' => $amount, 'goods_price' => $goods_final_price]);
                 } else {
                     return self::formatError(self::BAD_REQUEST, trans('message.good.out_storage'));
                 }
             } else { //购物车没有此物品，则插入
                 $goods_price = Goods::get_final_price($product, $amount, true, $property);
-                $parent['goods_price']  = max($goods_price, 0);
+                $parent['goods_price'] = max($goods_price, 0);
                 $parent['goods_number'] = $amount;
-                $parent['parent_id']    = 0;
+                $parent['parent_id'] = 0;
                 Cart::insert($parent);
             }
         }
@@ -227,28 +224,28 @@ class Cart extends BaseModel
 
     /**
      * 购物车结算
-     * @param     int     $shop            // 店铺ID(无)
-     * @param     int     $consignee       // 收货人ID
-     * @param     int     $shipping        // 快递ID
-     * @param     string     $invoice_type    // 发票类型，如：公司、个人
-     * @param     string     $invoice_content // 发票内容，如：办公用品、礼品
-     * @param     string     $invoice_title   // 发票抬头，如：xx科技有限公司
-     * @param     string     $invoice_number  // 发票:纳税人识别号
-     * @param     int     $coupon          // 优惠券ID (无)
-     * @param     int     $cashgift        // 红包ID
-     * @param     int     $comment         // 留言
-     * @param     int     $score           // 积分
-     * @param     int     $cart_good_id    // 购物车商品id数组
+     * @param int $shop // 店铺ID(无)
+     * @param int $consignee // 收货人ID
+     * @param int $shipping // 快递ID
+     * @param string $invoice_type // 发票类型，如：公司、个人
+     * @param string $invoice_content // 发票内容，如：办公用品、礼品
+     * @param string $invoice_title // 发票抬头，如：xx科技有限公司
+     * @param string $invoice_number // 发票:纳税人识别号
+     * @param int $coupon // 优惠券ID (无)
+     * @param int $cashgift // 红包ID
+     * @param int $comment // 留言
+     * @param int $score // 积分
+     * @param int $cart_good_id // 购物车商品id数组
      */
 
     public static function checkout(array $attributes)
     {
-        Log::info("create order begin==function:".__FUNCTION__."==".__LINE__."==attributes:", $attributes);
+        Log::info("create order begin==function:" . __FUNCTION__ . "==" . __LINE__ . "==attributes:", $attributes);
         extract($attributes);
         //-- 完成所有订单操作，提交到数据库
         /* 取得购物类型 */
         $flow_type = self::CART_GENERAL_GOODS;
-        Log::info("create order function:".__FUNCTION__."==".__LINE__."==flow_type=".$flow_type);
+        Log::info("create order function:" . __FUNCTION__ . "==" . __LINE__ . "==flow_type=" . $flow_type);
         /* 检查购物车中是否有商品 */
 
         if (json_decode($cart_good_id, true)) {
@@ -277,7 +274,7 @@ class Cart extends BaseModel
             if (!self::flow_cart_stock($_cart_goods_stock)) {
                 return self::formatError(self::BAD_REQUEST, trans('message.good.out_storage'));
             }
-            
+
             unset($cart_goods_stock, $_cart_goods_stock);
         }
 
@@ -290,36 +287,36 @@ class Cart extends BaseModel
 
         $inv_type = isset($invoice_type) ? $invoice_type : '';
         $inv_payee = isset($invoice_title) ? $invoice_title : '';//发票抬头
-        $inv_content = isset($invoice_content) ? $invoice_content : '' ;
+        $inv_content = isset($invoice_content) ? $invoice_content : '';
         $postscript = isset($comment) ? $comment : '';
 
         $user_id = Token::authorization();
 
         $order = array(
-            'shipping_id'     => intval($shipping),
-            'pay_id'          => intval(0),
-            'pack_id'         => isset($_POST['pack']) ? intval($_POST['pack']) : 0,//包装id
-            'card_id'         => isset($_POST['card']) ? intval($_POST['card']) : 0,//贺卡id
-            'card_message'    => '',//贺卡内容
-            'surplus'         => isset($_POST['surplus']) ? floatval($_POST['surplus']) : 0.00,
-            'integral'        => isset($score) ? intval($score) : 0,//使用的积分的数量,取用户使用积分,商品可用积分,用户拥有积分中最小者
-            'bonus_id'        => isset($cashgift) ? intval($cashgift) : 0,//红包ID
+            'shipping_id' => intval($shipping),
+            'pay_id' => intval(0),
+            'pack_id' => isset($_POST['pack']) ? intval($_POST['pack']) : 0,//包装id
+            'card_id' => isset($_POST['card']) ? intval($_POST['card']) : 0,//贺卡id
+            'card_message' => '',//贺卡内容
+            'surplus' => isset($_POST['surplus']) ? floatval($_POST['surplus']) : 0.00,
+            'integral' => isset($score) ? intval($score) : 0,//使用的积分的数量,取用户使用积分,商品可用积分,用户拥有积分中最小者
+            'bonus_id' => isset($cashgift) ? intval($cashgift) : 0,//红包ID
             // 'need_inv'        => empty($_POST['need_inv']) ? 0 : 1,
-            'inv_type'        => $inv_type,
-            'inv_payee'       => trim($inv_payee),
-            'inv_content'     => $inv_content,
-            'postscript'      => trim($postscript),
-            'how_oos'         => '',//缺货处理
+            'inv_type' => $inv_type,
+            'inv_payee' => trim($inv_payee),
+            'inv_content' => $inv_content,
+            'postscript' => trim($postscript),
+            'how_oos' => '',//缺货处理
             // 'how_oos'         => isset($_LANG['oos'][$_POST['how_oos']]) ? addslashes($_LANG['oos'][$_POST['how_oos']]) : '',
             // 'need_insure'     => isset($_POST['need_insure']) ? intval($_POST['need_insure']) : 0,
-            'user_id'         => $user_id,
-            'add_time'        => time(),
-            'order_status'    => Order::OS_UNCONFIRMED,
+            'user_id' => $user_id,
+            'add_time' => time(),
+            'order_status' => Order::OS_UNCONFIRMED,
             'shipping_status' => Order::SS_UNSHIPPED,
-            'pay_status'      => Order::PS_UNPAYED,
-            'agency_id'       => 0 ,//办事处的id
-            );
-        
+            'pay_status' => Order::PS_UNPAYED,
+            'agency_id' => 0,//办事处的id
+        );
+
         if (env('REFRESH_ECSHOP36_DATABASE')) {
             $order['inv_number'] = isset($invoice_number) ? $invoice_number : '';
         }
@@ -365,7 +362,7 @@ class Cart extends BaseModel
                 $order['integral'] = 0;
             }
         } else {
-            $order['surplus']  = 0;
+            $order['surplus'] = 0;
             $order['integral'] = 0;
         }
 
@@ -380,7 +377,7 @@ class Cart extends BaseModel
 
         /* 订单中的商品 */
         $cart_goods = self::cart_goods($flow_type, $cart_good_ids);
-        Log::info("create order log ==".__FUNCTION__."==".__LINE__."==cart_goods:", $cart_goods->toArray());
+        Log::info("create order log ==" . __FUNCTION__ . "==" . __LINE__ . "==cart_goods:", $cart_goods->toArray());
         if (empty($cart_goods)) {
             return self::formatError(self::BAD_REQUEST, trans('message.cart.no_goods'));
         }
@@ -405,7 +402,7 @@ class Cart extends BaseModel
         foreach ($cart_goods as $val) {
             /* 统计实体商品的个数 */
             if ($val['is_real']) {
-                $is_real_good=1;
+                $is_real_good = 1;
             }
         }
         if (isset($is_real_good)) {
@@ -418,17 +415,17 @@ class Cart extends BaseModel
         $total = Order::order_fee($order, $cart_goods, $consignee_info, $cart_good_id, $shipping, $consignee);
         /* 红包 */
         if (!empty($order['bonus_id'])) {
-            $bonus          = BonusType::bonus_info($order['bonus_id']);
+            $bonus = BonusType::bonus_info($order['bonus_id']);
             $total['bonus'] = $bonus['type_money'];
         }
         // $total['bonus_formated'] = Goods::price_format($total['bonus'], false);
 
-        $order['bonus']        = isset($bonus)? $bonus['type_money'] : '';
+        $order['bonus'] = isset($bonus) ? $bonus['type_money'] : '';
 
         $order['goods_amount'] = $total['goods_price'];
-        $order['discount']     = $total['discount'];
-        $order['surplus']      = $total['surplus'];
-        $order['tax']          = $total['tax'];
+        $order['discount'] = $total['discount'];
+        $order['surplus'] = $total['surplus'];
+        $order['tax'] = $total['tax'];
 
         // 购物车中的商品能享受红包支付的总额
         $discount_amout = self::compute_discount_amount($cart_good_ids);
@@ -442,12 +439,12 @@ class Cart extends BaseModel
         /* 配送方式 */
         if ($order['shipping_id'] > 0) {
             $shipping = Shipping::where('shipping_id', $order['shipping_id'])
-                                ->where('enabled', 1)
-                                ->first();
+                ->where('enabled', 1)
+                ->first();
             $order['shipping_name'] = addslashes($shipping['shipping_name']);
         }
         $order['shipping_fee'] = $total['shipping_fee'];
-        $order['insure_fee']   = 0;
+        $order['insure_fee'] = 0;
         /* 支付方式 */
         if ($order['pay_id'] > 0) {
             $payment = payment_info($order['pay_id']);
@@ -461,22 +458,22 @@ class Cart extends BaseModel
         /* 祝福贺卡 */
 
         /* 如果全部使用余额支付，检查余额是否足够 没有余额支付*/
-        $order['order_amount']  = number_format($total['amount'], 2, '.', '');
+        $order['order_amount'] = number_format($total['amount'], 2, '.', '');
 
         /* 如果订单金额为0（使用余额或积分或红包支付），修改订单状态为已确认、已付款 */
         if ($order['order_amount'] <= 0) {
             $order['order_status'] = Order::OS_CONFIRMED;
             $order['confirm_time'] = time();
-            $order['pay_status']   = Order::PS_PAYED;
-            $order['pay_time']     = time();
+            $order['pay_status'] = Order::PS_PAYED;
+            $order['pay_time'] = time();
             $order['order_amount'] = 0;
         }
 
-        $order['integral_money']   = $total['integral_money'];
-        $order['integral']         = $total['integral'];
+        $order['integral_money'] = $total['integral_money'];
+        $order['integral'] = $total['integral'];
 
         $order['parent_id'] = 0;
-        
+
         // 获取新订单号 验证订单号重复
         do {
             $order['order_sn'] = Order::get_order_sn();
@@ -495,29 +492,29 @@ class Cart extends BaseModel
         unset($order['wasRecentlyCreated']);
         unset($order['cod_fee']);
         // unset($order['surplus']);
-        Log::info("create order function:".__FUNCTION__."==".__LINE__."==创建order之前，order:", $order);
+        Log::info("create order function:" . __FUNCTION__ . "==" . __LINE__ . "==创建order之前，order:", $order);
         $new_order_id = Order::insertGetId($order);
         $order['order_id'] = $new_order_id;
-    
+
         /* 插入订单商品 */
         $cart_goods = Cart::whereIn('rec_id', $cart_good_ids)->where('rec_type', $flow_type)->get();
         foreach ($cart_goods as $key => $cart_good) {
-            $order_good                 = new OrderGoods;
-            $order_good->order_id       = $new_order_id;
-            $order_good->goods_id       = $cart_good->goods_id;
-            $order_good->goods_name     = $cart_good->goods_name;
-            $order_good->goods_sn       = $cart_good->goods_sn;
-            $order_good->product_id     = $cart_good->product_id;
-            $order_good->goods_number   = $cart_good->goods_number;
-            $order_good->market_price   = $cart_good->market_price;
-            $order_good->goods_price    = $cart_good->goods_price;
-            $order_good->goods_attr     = $cart_good->goods_attr;
-            $order_good->is_real        = $cart_good->is_real;
+            $order_good = new OrderGoods;
+            $order_good->order_id = $new_order_id;
+            $order_good->goods_id = $cart_good->goods_id;
+            $order_good->goods_name = $cart_good->goods_name;
+            $order_good->goods_sn = $cart_good->goods_sn;
+            $order_good->product_id = $cart_good->product_id;
+            $order_good->goods_number = $cart_good->goods_number;
+            $order_good->market_price = $cart_good->market_price;
+            $order_good->goods_price = $cart_good->goods_price;
+            $order_good->goods_attr = $cart_good->goods_attr;
+            $order_good->is_real = $cart_good->is_real;
             $order_good->extension_code = $cart_good->extension_code;
-            $order_good->parent_id      = $cart_good->parent_id;
-            $order_good->is_gift        = $cart_good->is_gift;
-            $order_good->goods_attr_id  = $cart_good->goods_attr_id;
-            Log::info("create order log end==".__FUNCTION__."==".__LINE__."==OrderGoods:", ['order_id'=>$order_good->order_id,'goods_id'=>$order_good->goods_id,'goods_name'=>$order_good->goods_name,'goods_sn'=>$order_good->goods_sn,'product_id'=>$order_good->product_id,'goods_number'=>$order_good->goods_number,'goods_attr'=>$order_good->goods_attr]);
+            $order_good->parent_id = $cart_good->parent_id;
+            $order_good->is_gift = $cart_good->is_gift;
+            $order_good->goods_attr_id = $cart_good->goods_attr_id;
+            Log::info("create order log end==" . __FUNCTION__ . "==" . __LINE__ . "==OrderGoods:", ['order_id' => $order_good->order_id, 'goods_id' => $order_good->goods_id, 'goods_name' => $order_good->goods_name, 'goods_sn' => $order_good->goods_sn, 'product_id' => $order_good->product_id, 'goods_number' => $order_good->goods_number, 'goods_attr' => $order_good->goods_attr]);
             $order_good->save();
         }
 
@@ -545,10 +542,10 @@ class Cart extends BaseModel
         /* 如果订单金额为0 处理虚拟卡 */
         if ($order['order_amount'] <= 0) {
             $res = self::where('is_real', 0)
-                        ->where('extension_code', 'virtual_card')
-                        ->where('rec_type', 'flow_type')
-                        ->selectRaw('goods_id,goods_name,goods_number as num')
-                        ->get();
+                ->where('extension_code', 'virtual_card')
+                ->where('rec_type', 'flow_type')
+                ->selectRaw('goods_id,goods_name,goods_number as num')
+                ->get();
 
             $virtual_goods = array();
             foreach ($res as $row) {
@@ -560,8 +557,8 @@ class Cart extends BaseModel
                 if (virtual_goods_ship($virtual_goods, $msg, $order['order_sn'], true)) {
                     /* 如果没有实体商品，修改发货状态，送积分和红包 */
                     $get_count = OrderGoods::where('order_id', $order['order_id'])
-                    ->where('is_real', 1)
-                    ->count();
+                        ->where('is_real', 1)
+                        ->count();
 
                     if ($get_count <= 0) {
                         /* 修改订单状态 */
@@ -591,7 +588,7 @@ class Cart extends BaseModel
 
 
         if (!empty($order['shipping_name'])) {
-            $order['shipping_name']=trim(stripcslashes($order['shipping_name']));
+            $order['shipping_name'] = trim(stripcslashes($order['shipping_name']));
         }
         $orderObj = Order::find($new_order_id);
 
@@ -610,7 +607,7 @@ class Cart extends BaseModel
     /**
      * 清空购物车
      * 用戶退出時自動清空
-     * @param   int     $type   类型：默认普通商品
+     * @param int $type 类型：默认普通商品
      */
     public static function clear()
     {
@@ -647,14 +644,14 @@ class Cart extends BaseModel
     public static function updateAmount(array $attributes)
     {
         extract($attributes);
-        
+
         $cart = Cart::where('rec_id', $good)->first();
         if ($product_id = $cart->product_id) {
             $prod = Products::where('product_id', $product_id)->first();
         }
         $goods = Goods::where(['goods_id' => $cart->goods_id, 'is_delete' => 0])->first();
-        
-        
+
+
         /* 检查：库存 */
         //检查：商品购买数量是否大于总库存
         if ($amount > $goods['goods_number']) {
@@ -680,7 +677,7 @@ class Cart extends BaseModel
     public static function getList()
     {
         $uid = Token::authorization();
-    
+
         // ----------------------
         $goods = self::join('goods', 'goods.goods_id', '=', 'cart.goods_id')
             ->where('user_id', $uid)
@@ -691,7 +688,7 @@ class Cart extends BaseModel
         foreach ($goods as $key => $value) {
             //订货数量大于0
             if ($value->cart_goods_number > 0) {
-                $attr_id    = empty($value->goods_attr_id) ? array() : explode(',', $value->goods_attr_id);
+                $attr_id = empty($value->goods_attr_id) ? array() : explode(',', $value->goods_attr_id);
                 $goods_price = Goods::get_final_price($value->goods_id, $value->cart_goods_number, true, $attr_id);
 
                 //更新购物车中的商品信息
@@ -699,7 +696,7 @@ class Cart extends BaseModel
             }
         }
         // ----------------------
-    
+
         $data = [];
         $goods = self::findAllByUid($uid);
         if ($goods->count() > 0) {
@@ -726,7 +723,7 @@ class Cart extends BaseModel
 
     public static function findAllByUid($uid)
     {
-        $ids =  self::leftJoin('goods', 'goods.goods_id', '=', 'cart.goods_id')->where('cart.user_id', $uid)->where('goods.is_on_sale', 1)->lists('rec_id');
+        $ids = self::leftJoin('goods', 'goods.goods_id', '=', 'cart.goods_id')->where('cart.user_id', $uid)->where('goods.is_on_sale', 1)->lists('rec_id');
         return self::with('product')->whereIn('rec_id', $ids)->orderBy('rec_id', 'DESC')->get();
     }
 
@@ -740,7 +737,7 @@ class Cart extends BaseModel
     {
         $uid = Token::authorization();
 
-        $goods =  self::where('user_id', $uid)->orderBy('rec_id', 'DESC')->get();
+        $goods = self::where('user_id', $uid)->orderBy('rec_id', 'DESC')->get();
         $total = 0;
         foreach ($goods as $key => $good) {
             $total += ($good['goods_number'] * $good['goods_price']);
@@ -768,16 +765,18 @@ class Cart extends BaseModel
     {
         return $this->goods_attr_id;
     }
+
     public function getPriceAttribute()
     {
         $property = explode(',', $this->goods_attr_id);
-        $property_price         = GoodsAttr::property_price($property);
+        $property_price = GoodsAttr::property_price($property);
         if ($this->goods_attr_id) {
-            $goods_price            = Goods::get_final_price($this->goods_id, 1, true, $property);//带属性 物品单价
+            $goods_price = Goods::get_final_price($this->goods_id, 1, true, $property);//带属性 物品单价
             return $goods_price;
         }
         return Goods::get_final_price($this->goods_id, 1, true, $property);
     }
+
     public function getAttrstockAttribute()
     {
         if ($this->goods_attr_id) {
@@ -819,10 +818,10 @@ class Cart extends BaseModel
         /* 初始化 */
         $goods_list = array();
         $total = array(
-            'goods_price'  => 0, // 本店售价合计（有格式）
+            'goods_price' => 0, // 本店售价合计（有格式）
             'market_price' => 0, // 市场售价合计（有格式）
-            'saving'       => 0, // 节省金额（有格式）
-            'save_rate'    => 0, // 节省百分比
+            'saving' => 0, // 节省金额（有格式）
+            'save_rate' => 0, // 节省百分比
             'goods_amount' => 0, // 本店售价合计（无格式）
         );
 
@@ -836,13 +835,13 @@ class Cart extends BaseModel
         $res = self::where('rec_type', self::CART_GENERAL_GOODS)->whereIn('rec_id', $cart_good_ids)->orderBy('parent_id')->get();
         /* 用于统计购物车中实体商品和虚拟商品的个数 */
         $virtual_goods_count = 0;
-        $real_goods_count    = 0;
+        $real_goods_count = 0;
         foreach ($res as $key => $row) {
-            $total['goods_price']  += $row['goods_price'] * $row['goods_number'];
+            $total['goods_price'] += $row['goods_price'] * $row['goods_number'];
             $total['market_price'] += $row['market_price'] * $row['goods_number'];
 
-            $row['subtotal']     = Goods::price_format($row['goods_price'] * $row['goods_number'], false);
-            $row['goods_price']  = Goods::price_format($row['goods_price'], false);
+            $row['subtotal'] = Goods::price_format($row['goods_price'] * $row['goods_number'], false);
+            $row['goods_price'] = Goods::price_format($row['goods_price'], false);
             $row['market_price'] = Goods::price_format($row['market_price'], false);
 
             /* 统计实体商品和虚拟商品的个数 */
@@ -859,14 +858,14 @@ class Cart extends BaseModel
             $goods_list[] = $row;
         }
         $total['goods_amount'] = $total['goods_price'];
-        $total['saving']       = Goods::price_format($total['market_price'] - $total['goods_price'], false);
+        $total['saving'] = Goods::price_format($total['market_price'] - $total['goods_price'], false);
         if ($total['market_price'] > 0) {
             $total['save_rate'] = $total['market_price'] ? round(($total['market_price'] - $total['goods_price']) *
-            100 / $total['market_price']).'%' : 0;
+                    100 / $total['market_price']) . '%' : 0;
         }
-        $total['goods_price']  = Goods::price_format($total['goods_price'], false);
+        $total['goods_price'] = Goods::price_format($total['goods_price'], false);
         $total['market_price'] = Goods::price_format($total['market_price'], false);
-        $total['real_goods_count']    = $real_goods_count;
+        $total['real_goods_count'] = $real_goods_count;
         $total['virtual_goods_count'] = $virtual_goods_count;
 
         return array('goods_list' => $goods_list, 'total' => $total);
@@ -876,7 +875,7 @@ class Cart extends BaseModel
      * 检查订单中商品库存
      *
      * @access  public
-     * @param   array   $arr
+     * @param array $arr
      *
      * @return  void
      */
@@ -887,16 +886,16 @@ class Cart extends BaseModel
             if ($val <= 0 || !is_numeric($key)) {
                 continue;
             }
-        
-            $goods = self::where('rec_id', $key)->first(['goods_id','goods_attr_id','extension_code']);
+
+            $goods = self::where('rec_id', $key)->first(['goods_id', 'goods_attr_id', 'extension_code']);
 
             $row = Goods::join('cart', 'goods.goods_id', '=', 'cart.goods_id')
-                    ->where('cart.rec_id', $key)
-                    ->select(
-                        'goods.goods_name',
-                        'goods.goods_number',
-                        'cart.product_id'
-                    )->first();
+                ->where('cart.rec_id', $key)
+                ->select(
+                    'goods.goods_name',
+                    'goods.goods_number',
+                    'cart.product_id'
+                )->first();
             //系统启用了库存，检查输入的商品数量是否有效
             if (intval(ShopConfig::findByCode('use_storage')) > 0 && $goods['extension_code'] != 'package_buy') {
                 if ($row['goods_number'] < $val) {
@@ -919,7 +918,7 @@ class Cart extends BaseModel
     /**
      * 取得购物车总金额
      * @params  boolean $include_gift   是否包括赠品
-     * @param   int     $type           类型：默认普通商品
+     * @param int $type 类型：默认普通商品
      * @return  float   购物车总金额
      */
     public static function cart_amount($include_gift = true, $type = CART_GENERAL_GOODS)
@@ -930,7 +929,7 @@ class Cart extends BaseModel
             $res->where('is_gift', 0)->where('goods_id', '>', 0);
         }
         $total = $res->selectRaw('sum(goods_price * goods_number) as total')
-                     ->value('total');
+            ->value('total');
 
         return (float)($total);
     }
@@ -938,7 +937,7 @@ class Cart extends BaseModel
 
     /**
      * 取得购物车商品
-     * @param   int     $type   类型：默认普通商品
+     * @param int $type 类型：默认普通商品
      * @return  array   购物车商品数组
      */
     public static function cart_goods($type = CART_GENERAL_GOODS, $cart_good_ids)
@@ -948,8 +947,8 @@ class Cart extends BaseModel
         /* 格式化价格及礼包商品 */
         foreach ($arr as $key => $value) {
             $arr[$key]['formated_market_price'] = Goods::price_format($value['market_price'], false);
-            $arr[$key]['formated_goods_price']  = Goods::price_format($value['goods_price'], false);
-            $arr[$key]['formated_subtotal']     = Goods::price_format($value['goods_price'] * $value['goods_number'], false);
+            $arr[$key]['formated_goods_price'] = Goods::price_format($value['goods_price'], false);
+            $arr[$key]['formated_subtotal'] = Goods::price_format($value['goods_price'] * $value['goods_number'], false);
 
             // if ($value['extension_code'] == 'package_buy')
             // {
@@ -968,7 +967,7 @@ class Cart extends BaseModel
     public static function compute_discount($order_products)
     {
         $user_agent = Header::getUserAgent();
-        Log::debug("平台记录".json_encode($user_agent));
+        Log::debug("平台记录" . json_encode($user_agent));
         if ($user_agent == array('Platform' => 'Wechat')) {
             return 0;
         }
@@ -978,22 +977,22 @@ class Cart extends BaseModel
         $now = time();
         $user_rank = UserRank::getUserRankByUid();
         $user_rank = ',' . $user_rank['rank_id'] . ',';
-        Log::debug("用户等级".$user_rank);
+        Log::debug("用户等级" . $user_rank);
         $favourable_list = FavourableActivity::where('start_time', '<=', $now)
-                            ->where('end_time', '>=', $now)
-                            ->where(DB::raw("CONCAT(',', user_rank, ',')"), 'LIKE', "%".$user_rank."%")
-                            ->whereIn('act_type', array(FavourableActivity::FAT_DISCOUNT, FavourableActivity::FAT_PRICE))
-                            ->orderBy('min_amount', 'DESC')
-                            ->orderBy('act_range', 'DESC')
-                            ->orderBy('act_type_ext', 'DESC')
-                            ->get()->toArray();
+            ->where('end_time', '>=', $now)
+            ->where(DB::raw("CONCAT(',', user_rank, ',')"), 'LIKE', "%" . $user_rank . "%")
+            ->whereIn('act_type', array(FavourableActivity::FAT_DISCOUNT, FavourableActivity::FAT_PRICE))
+            ->orderBy('min_amount', 'DESC')
+            ->orderBy('act_range', 'DESC')
+            ->orderBy('act_type_ext', 'DESC')
+            ->get()->toArray();
         if (!$favourable_list) {
             Log::debug("第一步");
             return 0;
         }
         $goods_list = $order_products;
         foreach ($goods_list as $key => $good) {
-            $goods_list[$key]['price'] = Goods::get_final_price($good['goods_id'], $good['num'], true, $good['property']) ;
+            $goods_list[$key]['price'] = Goods::get_final_price($good['goods_id'], $good['num'], true, $good['property']);
             $goods_list[$key]['amount'] = $good['num'];
         }
         if (!$goods_list) {
@@ -1116,7 +1115,7 @@ class Cart extends BaseModel
     public static function compute_discount_check($order_products)
     {
         $user_agent = Header::getUserAgent();
-        Log::debug("平台记录".json_encode($user_agent));
+        Log::debug("平台记录" . json_encode($user_agent));
         if ($user_agent == array('Platform' => 'Wechat')) {
             return 0;
         }
@@ -1128,7 +1127,7 @@ class Cart extends BaseModel
         $user_rank = ',' . $user_rank['rank_id'] . ',';
         $favourable_list = FavourableActivity::where('start_time', '<=', $now)
             ->where('end_time', '>=', $now)
-            ->where(DB::raw("CONCAT(',', user_rank, ',')"), 'LIKE', "%".$user_rank."%")
+            ->where(DB::raw("CONCAT(',', user_rank, ',')"), 'LIKE', "%" . $user_rank . "%")
             ->whereIn('act_type', array(FavourableActivity::FAT_DISCOUNT, FavourableActivity::FAT_PRICE))
             ->get()->toArray();
         if (!$favourable_list) {
@@ -1140,7 +1139,7 @@ class Cart extends BaseModel
             if ($good['goods_attr_id']) {
                 $good_property = explode(',', $good['goods_attr_id']);
             }
-            $goods_list[$key]['price'] = Goods::get_final_price($good['goods_id'], $good['goods_number'], true, $good_property) ;
+            $goods_list[$key]['price'] = Goods::get_final_price($good['goods_id'], $good['goods_number'], true, $good_property);
             $goods_list[$key]['amount'] = $good['goods_number'];
         }
         if (!$goods_list) {
@@ -1195,6 +1194,7 @@ class Cart extends BaseModel
 
         return $discount;
     }
+
     /**
      * 计算快速购买中的商品能享受红包支付的总额
      * @return  float   享受红包支付的总额
@@ -1202,7 +1202,7 @@ class Cart extends BaseModel
     public static function compute_purchase_discount($order_products)
     {
         $user_agent = Header::getUserAgent();
-        Log::debug("平台记录".json_encode($user_agent));
+        Log::debug("平台记录" . json_encode($user_agent));
         if ($user_agent == array('Platform' => 'Wechat')) {
             return 0;
         }
@@ -1212,10 +1212,10 @@ class Cart extends BaseModel
         $user_rank = UserRank::getUserRankByUid();
         $user_rank = ',' . $user_rank['rank_id'] . ',';
         $favourable_list = FavourableActivity::where('start_time', '<=', $now)
-                            ->where('end_time', '>=', $now)
-                            ->where(DB::raw("CONCAT(',', user_rank, ',')"), 'LIKE', "%".$user_rank."%")
-                            ->whereIn('act_type', array(FavourableActivity::FAT_DISCOUNT, FavourableActivity::FAT_PRICE))
-                            ->get()->toArray();
+            ->where('end_time', '>=', $now)
+            ->where(DB::raw("CONCAT(',', user_rank, ',')"), 'LIKE', "%" . $user_rank . "%")
+            ->whereIn('act_type', array(FavourableActivity::FAT_DISCOUNT, FavourableActivity::FAT_PRICE))
+            ->get()->toArray();
         if (!$favourable_list) {
             return 0;
         }
@@ -1288,7 +1288,7 @@ class Cart extends BaseModel
     public static function compute_discount_amount($cart_good_ids)
     {
         $user_agent = Header::getUserAgent();
-        Log::debug("平台记录".json_encode($user_agent));
+        Log::debug("平台记录" . json_encode($user_agent));
         if ($user_agent == array('Platform' => 'Wechat')) {
             return 0;
         }
@@ -1299,20 +1299,20 @@ class Cart extends BaseModel
         $user_rank = ',' . $user_rank['rank_id'] . ',';
 
         $favourable_list = FavourableActivity::where('start_time', '<=', $now)
-                            ->where('end_time', '>=', $now)
-                            ->where(DB::raw("CONCAT(',', user_rank, ',')"), 'LIKE', "%".$user_rank."%")
-                            ->whereIn('act_type', array(FavourableActivity::FAT_DISCOUNT, FavourableActivity::FAT_PRICE))
-                            ->get()->toArray();
+            ->where('end_time', '>=', $now)
+            ->where(DB::raw("CONCAT(',', user_rank, ',')"), 'LIKE', "%" . $user_rank . "%")
+            ->whereIn('act_type', array(FavourableActivity::FAT_DISCOUNT, FavourableActivity::FAT_PRICE))
+            ->get()->toArray();
         if (!$favourable_list) {
             return 0;
         }
 
         $goods_list = Cart::join('goods', 'cart.goods_id', '=', 'goods.goods_id')
-                    ->where('cart.parent_id', 0)
-                    ->whereIn('cart.rec_id', $cart_good_ids)
-                    ->where('cart.is_gift', 0)
-                    ->where('cart.rec_type', Cart::CART_GENERAL_GOODS)
-                    ->get()->toArray();
+            ->where('cart.parent_id', 0)
+            ->whereIn('cart.rec_id', $cart_good_ids)
+            ->where('cart.is_gift', 0)
+            ->where('cart.rec_type', Cart::CART_GENERAL_GOODS)
+            ->get()->toArray();
         if (!$goods_list) {
             return 0;
         }
@@ -1382,11 +1382,11 @@ class Cart extends BaseModel
         //         "AND c.rec_type = 0 " .
         //         "AND c.is_gift = 0";
         $allIntegral = Cart::join('goods', 'goods.goods_id', '=', 'cart.goods_id')
-                ->where('cart.goods_id', '>', 0)
-                ->where('cart.parent_id', '=', 0)
-                ->where('cart.rec_type', '=', 0)
-                ->where('cart.is_gift', '=', 0)
-                ->get();
+            ->where('cart.goods_id', '>', 0)
+            ->where('cart.parent_id', '=', 0)
+            ->where('cart.rec_type', '=', 0)
+            ->where('cart.is_gift', '=', 0)
+            ->get();
         $sum = 0;
         foreach ($allIntegral as $key => $value) {
             if ($value->give_integral > -1) {
@@ -1401,7 +1401,7 @@ class Cart extends BaseModel
 
     /**
      * 清空购物车
-     * @param   int     $type   类型：默认普通商品
+     * @param int $type 类型：默认普通商品
      */
     public static function clear_cart($type = CART_GENERAL_GOODS)
     {
@@ -1411,8 +1411,8 @@ class Cart extends BaseModel
 
     /**
      * 清空指定购物车
-     * @param   arr     $arr   购物车id
-     * @param   int     $type   类型：默认普通商品
+     * @param arr $arr 购物车id
+     * @param int $type 类型：默认普通商品
      */
     public static function clear_cart_ids($arr, $type = CART_GENERAL_GOODS)
     {
@@ -1432,7 +1432,7 @@ class Cart extends BaseModel
             $carts->where('is_gift', 0)->where('goods_id', '>', 0);
         }
         $total = $carts->selectRaw('sum(goods_price * goods_number) as total')
-                     ->value('total');
+            ->value('total');
 
         return (float)($total);
     }

@@ -6,8 +6,7 @@ use app\api\model\BaseModel;
 
 class RegFields extends BaseModel
 {
-    protected $connection = 'shop';
-    protected $table      = 'reg_fields';
+    protected $table = 'reg_fields';
     public $timestamps = false;
 
     protected $guarded = [];

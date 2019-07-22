@@ -3,27 +3,20 @@
 namespace app\api\model\v2;
 
 use app\api\model\BaseModel;
-use app\api\library\Token;
 
 class Attribute extends BaseModel
 {
-    protected $connection = 'shop';
-    protected $table      = 'attribute';
+    protected $table = 'attribute';
     public $timestamps = false;
     protected $primaryKey = 'attr_id';
 
-
-
-    protected $visible = ['id','name','attrs','is_multiselect'];
-    protected $appends = ['id','name','attrs','is_multiselect'];
-
-    // protected $with = ['goods'];
-
+    protected $visible = ['id', 'name', 'attrs', 'is_multiselect'];
+    protected $appends = ['id', 'name', 'attrs', 'is_multiselect'];
 
     /**
      * 是否存在规格
      * @access      public
-     * @param       array       $goods_attr_id_array        一维数组
+     * @param array $goods_attr_id_array 一维数组
      * @return      string
      */
     public static function is_property($goods_attr_id_array, $sort = 'asc')
@@ -40,13 +33,13 @@ class Attribute extends BaseModel
             ->where(['attribute.attr_type' => 1])
             ->whereIn('goods_attr.goods_attr_id', $goods_attr_id_array)
             ->orderBy('attribute.attr_id', $sort)
-            ->get(['attribute.attr_type','goods_attr.attr_value','goods_attr.goods_attr_id']);
+            ->get(['attribute.attr_type', 'goods_attr.attr_value', 'goods_attr.goods_attr_id']);
 
         $return_arr = array();
         foreach ($row as $value) {
-            $return_arr['sort'][]   = $value['goods_attr_id'];
+            $return_arr['sort'][] = $value['goods_attr_id'];
 
-            $return_arr['row'][$value['goods_attr_id']]    = $value;
+            $return_arr['row'][$value['goods_attr_id']] = $value;
         }
 
         if (!empty($return_arr)) {
@@ -61,14 +54,14 @@ class Attribute extends BaseModel
      * 获得指定的商品属性
      *
      * @access      public
-     * @param       array       $arr        规格、属性ID数组
-     * @param       type        $type       设置返回结果类型：pice，显示价格，默认；no，不显示价格
+     * @param array $arr 规格、属性ID数组
+     * @param type $type 设置返回结果类型：pice，显示价格，默认；no，不显示价格
      *
      * @return      string
      */
     public static function get_goods_attr_info($arr, $type = 'pice')
     {
-        $attr   = '';
+        $attr = '';
 
         if (!empty($arr)) {
             $fmt = "%s:%s[%s] \n";
@@ -98,8 +91,8 @@ class Attribute extends BaseModel
      * 注意：非规格属性的id会被排除
      *
      * @access      public
-     * @param       array       $goods_attr_id_array        一维数组
-     * @param       string      $sort                       序号：asc|desc，默认为：asc
+     * @param array $goods_attr_id_array 一维数组
+     * @param string $sort 序号：asc|desc，默认为：asc
      *
      * @return      string
      */
@@ -115,14 +108,14 @@ class Attribute extends BaseModel
             ->where(['attribute.attr_type' => 1])
             ->whereIn('goods_attr.goods_attr_id', $goods_attr_id_array)
             ->orderBy('attribute.attr_id', $sort)
-            ->get(['attribute.attr_type','goods_attr.attr_value','goods_attr.goods_attr_id']);
+            ->get(['attribute.attr_type', 'goods_attr.attr_value', 'goods_attr.goods_attr_id']);
 
         $return_arr = array();
 
         foreach ($row as $value) {
             if ($value['goods_attr_id']) {
-                $return_arr['sort'][]   = $value['goods_attr_id'];
-                $return_arr['row'][$value['goods_attr_id']]    = $value;
+                $return_arr['sort'][] = $value['goods_attr_id'];
+                $return_arr['row'][$value['goods_attr_id']] = $value;
             }
         }
 
@@ -148,7 +141,7 @@ class Attribute extends BaseModel
 
     public function getIsmultiselectAttribute()
     {
-        return ($this->attr_type == 2) ? true :false;
+        return ($this->attr_type == 2) ? true : false;
     }
 
     public function goodsattr()

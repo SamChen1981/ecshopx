@@ -6,9 +6,7 @@ use app\api\model\BaseModel;
 
 class MemberPrice extends BaseModel
 {
-    protected $connection = 'shop';
-
-    protected $table      = 'member_price';
+    protected $table = 'member_price';
 
     public $timestamps = false;
 

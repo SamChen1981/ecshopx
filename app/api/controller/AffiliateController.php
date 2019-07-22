@@ -2,9 +2,8 @@
 
 namespace app\api\controller;
 
-use think\facade\Request;
-
 use app\api\model\v2\AffiliateLog;
+use think\facade\Request;
 
 class AffiliateController extends Controller
 {

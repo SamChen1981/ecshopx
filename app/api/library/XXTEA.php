@@ -5,6 +5,7 @@ namespace app\api\library;
 class XXTEA
 {
     const DELTA = 0x9E3779B9;
+
     private static function long2str($v, $w)
     {
         $len = count($v);
@@ -30,7 +31,7 @@ class XXTEA
 
     private static function str2long($s, $w)
     {
-        $v = unpack("V*", $s. str_repeat("\0", (4 - strlen($s) % 4) & 3));
+        $v = unpack("V*", $s . str_repeat("\0", (4 - strlen($s) % 4) & 3));
         $v = array_values($v);
         if ($w) {
             $v[count($v)] = strlen($s);

@@ -6,9 +6,7 @@ use app\api\model\BaseModel;
 
 class ShippingArea extends BaseModel
 {
-    protected $connection = 'shop';
-
-    protected $table      = 'shipping_area';
+    protected $table = 'shipping_area';
 
     public $timestamps = false;
 }

@@ -6,15 +6,13 @@ use app\api\model\BaseModel;
 
 class Tags extends BaseModel
 {
-    protected $connection = 'shop';
-
-    protected $table      = 'tag';
+    protected $table = 'tag';
 
     public $timestamps = false;
 
-    protected $visible = ['id', 'name','created_at','updated_at'];
+    protected $visible = ['id', 'name', 'created_at', 'updated_at'];
 
-    protected $appends = ['id', 'name','created_at','updated_at'];
+    protected $appends = ['id', 'name', 'created_at', 'updated_at'];
 
     protected $guarded = [];
 

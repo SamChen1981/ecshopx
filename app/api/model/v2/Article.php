@@ -6,9 +6,7 @@ use app\api\model\BaseModel;
 
 class Article extends BaseModel
 {
-    protected $connection = 'shop';
-
-    protected $table      = 'article';
+    protected $table = 'article';
 
     public $timestamps = false;
 
@@ -16,7 +14,7 @@ class Article extends BaseModel
 
     protected $guarded = [];
 
-    protected $appends = ['id', 'created_at', 'updated_at', 'url','more'];
+    protected $appends = ['id', 'created_at', 'updated_at', 'url', 'more'];
 
     protected $visible = ['id', 'created_at', 'updated_at', 'url', 'title', 'more'];
 
@@ -45,7 +43,7 @@ class Article extends BaseModel
 
             $pattern = '/(https?|ftp|mms)?:\/\/([A-z0-9]+[_\-]?[A-z0-9]+\.)*[A-z0-9]+\-?[A-z0-9]+\.[A-z]{2,}(\/.*)*\/?(\/images\/upload\/)/';
             if (!preg_match($pattern, $data['content'])) {
-                $data['content'] =  str_replace('/images/upload', config('app.shop_url').'/images/upload', $data['content']);
+                $data['content'] = str_replace('/images/upload', config('app.shop_url') . '/images/upload', $data['content']);
             }
 
             $data['add_time'] = $model->add_time;
@@ -62,7 +60,7 @@ class Article extends BaseModel
 
     public function getUrlAttribute()
     {
-        return url('/v2/article.'.$this->attributes['article_id']);
+        return url('/v2/article.' . $this->attributes['article_id']);
     }
 
     public function getCreatedAtAttribute()

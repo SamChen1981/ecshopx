@@ -6,9 +6,7 @@ use app\api\model\BaseModel;
 
 class ArticleCategory extends BaseModel
 {
-    protected $connection = 'shop';
-
-    protected $table      = 'article_cat';
+    protected $table = 'article_cat';
 
     public $timestamps = false;
 
@@ -41,8 +39,6 @@ class ArticleCategory extends BaseModel
     }
 
 
-
-
     public function getIdAttribute()
     {
         return $this->attributes['cat_id'];
@@ -50,8 +46,9 @@ class ArticleCategory extends BaseModel
 
     public function getTitleAttribute()
     {
-        return  $this->attributes['cat_name'];
+        return $this->attributes['cat_name'];
     }
+
     public function getLinkAttribute()
     {
         return null;

@@ -2,22 +2,21 @@
 
 namespace app\api\controller;
 
-use think\facade\Request;
-
 use app\api\model\v2\Push;
 use app\api\model\v2\Device;
+use think\facade\Request;
 
 class MessageController extends Controller
 {
 
     /**
-    * POST ecapi.message.system.list
-    */
+     * POST ecapi.message.system.list
+     */
     public function system(Request $request)
     {
         $rules = [
-            'page'      => 'required|integer|min:1',
-            'per_page'  => 'required|integer|min:1',
+            'page' => 'required|integer|min:1',
+            'per_page' => 'required|integer|min:1',
         ];
 
         if ($error = $this->validateInput($rules)) {
@@ -30,13 +29,13 @@ class MessageController extends Controller
     }
 
     /**
-    * POST ecapi.message.order.list
-    */
+     * POST ecapi.message.order.list
+     */
     public function order(Request $request)
     {
         $rules = [
-            'page'      => 'required|integer|min:1',
-            'per_page'  => 'required|integer|min:1',
+            'page' => 'required|integer|min:1',
+            'per_page' => 'required|integer|min:1',
         ];
 
         if ($error = $this->validateInput($rules)) {
@@ -49,13 +48,13 @@ class MessageController extends Controller
     }
 
     /**
-    * POST ecapi.message.unread
-    */
+     * POST ecapi.message.unread
+     */
     public function unread(Request $request)
     {
         $rules = [
             'after' => 'required|string',
-            'type'  => 'int'
+            'type' => 'int'
         ];
 
         if ($error = $this->validateInput($rules)) {
@@ -68,8 +67,8 @@ class MessageController extends Controller
     }
 
     /**
-    * POST ecapi.push.update
-    */
+     * POST ecapi.push.update
+     */
     public function updateDeviceId(Request $request)
     {
         $rules = [

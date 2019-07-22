@@ -2,10 +2,7 @@
 
 namespace app\api\controller;
 
-use think\facade\Request;
-
 use app\api\model\BaseModel;
-use app\api\library\XXTEA;
 
 class AccessController extends Controller
 {

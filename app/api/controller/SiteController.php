@@ -2,8 +2,6 @@
 
 namespace app\api\controller;
 
-use think\facade\Request;
-
 use app\api\model\v2\ShopConfig;
 use app\api\model\v2\Configs;
 

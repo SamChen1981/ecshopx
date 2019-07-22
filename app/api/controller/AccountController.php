@@ -2,18 +2,17 @@
 
 namespace app\api\controller;
 
-use think\facade\Request;
-
 use app\api\model\v2\UserAccount;
 use app\api\library\Token;
 use app\api\model\v2\Account;
+use think\facade\Request;
 
 class AccountController extends Controller
 {
 
     /**
-    * POST ecapi.withdraw.list
-    */
+     * POST ecapi.withdraw.list
+     */
     public function index(Request $request)
     {
         $rules = [
@@ -29,8 +28,8 @@ class AccountController extends Controller
     }
 
     /**
-    * POST ecapi.withdraw.info
-    */
+     * POST ecapi.withdraw.info
+     */
     public function getDetail(Request $request)
     {
         $rules = [
@@ -45,13 +44,13 @@ class AccountController extends Controller
     }
 
     /**
-    * POST ecapi.withdraw.submit
-    */
+     * POST ecapi.withdraw.submit
+     */
     public function submit()
     {
         $rules = [
-            "cash"   => 'required|numeric',    // 金额
-            "memo"  => 'required|string',     // 备注
+            "cash" => 'required|numeric',    // 金额
+            "memo" => 'required|string',     // 备注
         ];
 
         if ($error = $this->validateInput($rules)) {
@@ -63,12 +62,12 @@ class AccountController extends Controller
     }
 
     /**
-    * POST ecapi.withdraw.cancel
-    */
+     * POST ecapi.withdraw.cancel
+     */
     public function cancel(Request $request)
     {
         $rules = [
-            "id"   => 'required|integer',
+            "id" => 'required|integer',
         ];
 
         if ($error = $this->validateInput($rules)) {
@@ -88,16 +87,16 @@ class AccountController extends Controller
         $data = UserAccount::getUserSurplus($user_id);
         return $this->json($data);
     }
-    
+
     /**
      * POST ecapi.balance.list
      */
     public function accountDetail()
     {
         $rules = [
-                'status'   => 'integer',           // 状态   全部  收入  支出
-                'page'     => 'integer|min:1',     // 当前第几页
-                'per_page' => 'integer|min:1',     // 每页多少
+            'status' => 'integer',           // 状态   全部  收入  支出
+            'page' => 'integer|min:1',     // 当前第几页
+            'per_page' => 'integer|min:1',     // 每页多少
         ];
         if ($error = $this->validateInput($rules)) {
             return $error;

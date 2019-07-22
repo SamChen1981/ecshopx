@@ -3,12 +3,10 @@
 namespace app\api\model\v2;
 
 use app\api\model\BaseModel;
-use app\api\library\Token;
 
 class Brand extends BaseModel
 {
-    protected $connection = 'shop';
-    protected $table      = 'brand';
+    protected $table = 'brand';
     public $timestamps = false;
 
     protected $appends = ['id', 'name', 'logo'];
@@ -20,13 +18,13 @@ class Brand extends BaseModel
         $model = Brand::where('brand_name', $name)->first();
         if ($model) {
             return [
-                'id'   => $model->brand_id,
+                'id' => $model->brand_id,
                 'name' => $model->brand_name,
                 'logo' => formatPhoto($model->brand_logo, null)
             ];
         } else {
             return [
-                'id'   => null,
+                'id' => null,
                 'name' => $name,
                 'logo' => null
             ];
@@ -39,7 +37,6 @@ class Brand extends BaseModel
     }
 
 
-
     public static function getList(array $attributes)
     {
         extract($attributes);
@@ -47,8 +44,8 @@ class Brand extends BaseModel
         $total = Brand::count();
 
         $data = Brand::paginate($per_page)
-                ->toArray();
-        return self::formatBody(['brands' => $data['data'],'paged' => self::formatPaged($page, $per_page, $total)]);
+            ->toArray();
+        return self::formatBody(['brands' => $data['data'], 'paged' => self::formatPaged($page, $per_page, $total)]);
     }
 
     public static function getListByOrder(array $attributes)
@@ -61,7 +58,7 @@ class Brand extends BaseModel
             ->paginate($per_page)
             ->toArray();
 
-        return self::formatBody(['brands' => $data['data'],'paged' => self::formatPaged($page, $per_page, $total)]);
+        return self::formatBody(['brands' => $data['data'], 'paged' => self::formatPaged($page, $per_page, $total)]);
     }
 
     public function getIdAttribute()

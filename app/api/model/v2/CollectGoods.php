@@ -3,14 +3,11 @@
 namespace app\api\model\v2;
 
 use app\api\model\BaseModel;
-
 use app\api\library\Token;
 
 class CollectGoods extends BaseModel
 {
-    protected $connection = 'shop';
-
-    protected $table      = 'collect_goods';
+    protected $table = 'collect_goods';
 
     protected $primaryKey = 'rec_id';
 
@@ -41,12 +38,12 @@ class CollectGoods extends BaseModel
     }
 
     /**
-    * 获取当前用户收藏此商品状态
-    *
-    * @access public
-    * @param integer $goods_id
-    * @return integer
-    */
+     * 获取当前用户收藏此商品状态
+     *
+     * @access public
+     * @param integer $goods_id
+     * @return integer
+     */
     public static function getIsLiked($goods_id)
     {
         $uid = Token::authorization();
@@ -66,18 +63,18 @@ class CollectGoods extends BaseModel
         //因为有网站和手机 所以可能$num大于1
         if ($num == 0) {
             $model = new CollectGoods;
-            $model->user_id             = $uid;
-            $model->goods_id            = $product;
-            $model->add_time            = time();
-            $model->is_attention        = 1;
+            $model->user_id = $uid;
+            $model->goods_id = $product;
+            $model->add_time = time();
+            $model->is_attention = 1;
 
             if ($model->save()) {
-                return self::formatBody(['is_liked' =>true ]);
+                return self::formatBody(['is_liked' => true]);
             } else {
                 return self::formatError(self::UNKNOWN_ERROR);
             }
-        } elseif ($num >0) {
-            return self::formatBody(['is_liked' =>true ]);
+        } elseif ($num > 0) {
+            return self::formatBody(['is_liked' => true]);
         }
     }
 
@@ -92,13 +89,13 @@ class CollectGoods extends BaseModel
         if ($num == 1) {
             $model->delete();
         } elseif ($num > 1) {
-            for ($i=0; $i < $num; $i++) {
+            for ($i = 0; $i < $num; $i++) {
                 $model = $model->first();
                 $model->delete();
             }
         }
         if ($model->count() == 0) {
-            return self::formatBody(['is_liked' =>false ]);
+            return self::formatBody(['is_liked' => false]);
         }
     }
 

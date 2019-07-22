@@ -2,9 +2,9 @@
 
 namespace app\api\controller;
 
-use think\Controller as BaseController;
 use app\api\library\Token;
 use app\api\model\BaseModel;
+use think\Controller as BaseController;
 
 class Controller extends BaseController
 {

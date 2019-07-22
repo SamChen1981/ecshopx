@@ -2,8 +2,8 @@
 
 namespace app\api\controller;
 
-use think\facade\Request;
 use app\api\model\v2\Version;
+use think\facade\Request;
 
 class VersionController extends Controller
 {

@@ -4,18 +4,14 @@ namespace app\api\model\v2;
 
 use app\api\model\BaseModel;
 
-use app\api\library\Token;
-use DB;
-
 class Comment extends BaseModel
 {
-    protected $connection = 'shop';
-    protected $table      = 'comment';
+    protected $table = 'comment';
     public $timestamps = false;
 
-    protected $appends = ['id','grade','content', 'is_anonymous', 'created_at','updated_at'];
+    protected $appends = ['id', 'grade', 'content', 'is_anonymous', 'created_at', 'updated_at'];
 
-    protected $visible = ['id','author','grade','content', 'is_anonymous', 'created_at','updated_at'];
+    protected $visible = ['id', 'author', 'grade', 'content', 'is_anonymous', 'created_at', 'updated_at'];
 
     protected $primaryKey = 'comment_id';
 
@@ -25,29 +21,29 @@ class Comment extends BaseModel
     const GOODS = 0;
     const ARTICLE = 1;
 
-    const BAD     = 1;            // 差评
-    const MEDIUM  = 2;            // 中评
-    const GOOD    = 3;            // 好评
+    const BAD = 1;            // 差评
+    const MEDIUM = 2;            // 中评
+    const GOOD = 3;            // 好评
 
     /**
-    * 获取商品评论总数
-    *
-    * @access public
-    * @param integer $goods_id
-    * @return integer
-    */
+     * 获取商品评论总数
+     *
+     * @access public
+     * @param integer $goods_id
+     * @return integer
+     */
     public static function getCommentCountById($goods_id)
     {
         return self::where(['id_value' => $goods_id])->where(['comment_type' => self::GOODS])->count();
     }
 
     /**
-    * 获取商品评论好评率
-    *
-    * @access public
-    * @param integer $goods_id
-    * @return integer
-    */
+     * 获取商品评论好评率
+     *
+     * @access public
+     * @param integer $goods_id
+     * @return integer
+     */
     public static function getCommentRateById($goods_id)
     {
         $rate = self::select('*', DB::raw('concat( sum(comment_rank)/(count(id_value) * 5)) AS goods_rank_rate'))->where('id_value', $goods_id)->where('comment_type', self::GOODS)->where('user_id', '<>', 0)->value('goods_rank_rate');
@@ -86,22 +82,22 @@ class Comment extends BaseModel
         extract($attributes);
 
         $bad = self::where(['comment_type' => self::GOODS, 'id_value' => $product])
-                    ->where('status', 1)
-                    ->where(function ($query) {
-                        $query->where('comment_rank', '<', '3')->where('comment_rank', '>', 0);
-                    })
-                    ->count();
+            ->where('status', 1)
+            ->where(function ($query) {
+                $query->where('comment_rank', '<', '3')->where('comment_rank', '>', 0);
+            })
+            ->count();
 
         $medium = self::where(['comment_type' => self::GOODS, 'id_value' => $product])
-                ->where('status', 1)
-                ->where('comment_rank', '=', 3)->count();
+            ->where('status', 1)
+            ->where('comment_rank', '=', 3)->count();
 
         $good = self::where(['comment_type' => self::GOODS, 'id_value' => $product])
-                ->where('status', 1)
-                ->where(function ($query) {
-                    $query->where('comment_rank', '>', 3)->orWhere('comment_rank', 0);
-                })
-                ->count();
+            ->where('status', 1)
+            ->where(function ($query) {
+                $query->where('comment_rank', '>', 3)->orWhere('comment_rank', 0);
+            })
+            ->count();
 
         $total = self::where(['comment_type' => self::GOODS, 'id_value' => $product])->where('status', 1)->count();
 

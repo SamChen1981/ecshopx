@@ -2,22 +2,21 @@
 
 namespace app\api\controller;
 
-use think\facade\Request;
-
 use app\api\model\v2\Article;
 use app\api\model\v2\ArticleCategory;
+use think\facade\Request;
 
 class ArticleController extends Controller
 {
     /**
-    * POST ecapi.article.list
-    */
+     * POST ecapi.article.list
+     */
     public function index(Request $request)
     {
         $rules = [
-            'id'        => 'required|integer',
-            'page'      => 'required|integer|min:1',
-            'per_page'  => 'required|integer|min:1',
+            'id' => 'required|integer',
+            'page' => 'required|integer|min:1',
+            'per_page' => 'required|integer|min:1',
         ];
 
         if ($error = $this->validateInput($rules)) {
@@ -30,8 +29,8 @@ class ArticleController extends Controller
     }
 
     /**
-    * GET article.{id:[0-9]+}
-    */
+     * GET article.{id:[0-9]+}
+     */
     public function show($id)
     {
         return Article::getArticle($id);

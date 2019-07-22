@@ -2,7 +2,6 @@
 
 namespace app\api\controller;
 
-use think\facade\Request;
 use app\api\model\v2\Shipping;
 use app\api\model\v2\Features;
 
@@ -14,9 +13,9 @@ class ShippingController extends Controller
     public function index()
     {
         $rules = [
-            'shop'       => 'integer|min:1',
-            'address'    => 'required|integer|min:1',
-            'products'   => 'required|string',
+            'shop' => 'integer|min:1',
+            'address' => 'required|integer|min:1',
+            'products' => 'required|string',
         ];
 
         if ($error = $this->validateInput($rules)) {
@@ -34,7 +33,7 @@ class ShippingController extends Controller
     public function info()
     {
         $rules = [
-            'order_id'      => 'required|int',
+            'order_id' => 'required|int',
         ];
 
         if ($res = Features::check('logistics')) {

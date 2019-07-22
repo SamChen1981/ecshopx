@@ -4,18 +4,14 @@ namespace app\api\model\v2;
 
 use app\api\model\BaseModel;
 
-use app\api\library\Token;
-
 class GoodsAttr extends BaseModel
 {
-    protected $connection = 'shop';
-    protected $table      = 'goods_attr';
+    protected $table = 'goods_attr';
     public $timestamps = false;
 
+    protected $visible = ['id', 'attr_name', 'attr_price', 'is_multiselect'];
 
-    protected $visible = ['id','attr_name','attr_price','is_multiselect'];
-
-    protected $appends = ['id','attr_name', 'attr_price','is_multiselect'];
+    protected $appends = ['id', 'attr_name', 'attr_price', 'is_multiselect'];
 
     protected $guarded = [];
 
@@ -33,32 +29,31 @@ class GoodsAttr extends BaseModel
 
     public function getAttrPriceAttribute()
     {
-        return ($this->attributes['attr_price']) ? floatval($this->attributes['attr_price']): 0;
+        return ($this->attributes['attr_price']) ? floatval($this->attributes['attr_price']) : 0;
     }
 
     public function getIsmultiselectAttribute()
     {
-        return Attribute::where('attr_id', $this->attr_id)->value('attr_type') == 2 ? true :false;
+        return Attribute::where('attr_id', $this->attr_id)->value('attr_type') == 2 ? true : false;
     }
-
 
 
     /**
      * 获得指定的规格的价格
      *
      * @access  public
-     * @param   mix     $property   规格ID的数组或者逗号分隔的字符串
+     * @param mix $property 规格ID的数组或者逗号分隔的字符串
      * @return  void
      */
     public static function property_price($property)
     {
         if (!empty($property)) {
             if (is_array($property)) {
-                foreach ($property as $key=>$val) {
+                foreach ($property as $key => $val) {
                     if (strpos($val, ',')) {
                         $property = explode(',', $val);
                     } else {
-                        $property[$key]=addslashes($val);
+                        $property[$key] = addslashes($val);
                     }
                 }
             } else {

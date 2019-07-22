@@ -3,24 +3,20 @@
 namespace app\api\model\v2;
 
 use app\api\model\BaseModel;
-use DB;
 
 class Keywords extends BaseModel
 {
-    protected $connection = 'shop';
-
-    protected $table      = 'keywords';
+    protected $table = 'keywords';
 
     public $timestamps = false;
-
 
     public static function getHot()
     {
         $goods_search_history = Keywords::select('keyword', DB::raw(' sum(`count`) as count'))
-                                        ->groupBy('keyword')
-                                        ->orderBy('count', 'DESC')
-                                        ->limit(10)
-                                        ->get();
+            ->groupBy('keyword')
+            ->orderBy('count', 'DESC')
+            ->limit(10)
+            ->get();
 
         $data = [];
         foreach ($goods_search_history as $key => $value) {

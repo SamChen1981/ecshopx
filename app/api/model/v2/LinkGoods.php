@@ -6,9 +6,7 @@ use app\api\model\BaseModel;
 
 class LinkGoods extends BaseModel
 {
-    protected $connection = 'shop';
-
-    protected $table      = 'link_goods';
+    protected $table = 'link_goods';
 
     public $timestamps = false;
 
@@ -28,7 +26,7 @@ class LinkGoods extends BaseModel
     // {
     //     return $this->act_name;
     // }
-    
+
     public static function getLinkGoodIds($id)
     {
         if ($model = self::where('goods_id', $id)->get(['link_goods_id'])) {

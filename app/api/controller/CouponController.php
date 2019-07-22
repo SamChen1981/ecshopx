@@ -2,7 +2,6 @@
 
 namespace app\api\controller;
 
-use think\facade\Request;
 use app\api\model\v2\Features;
 use app\api\model\v2\Coupon;
 
@@ -12,12 +11,12 @@ class CouponController extends Controller
     public function index()
     {
         $rules = [
-            'page'          => 'required|integer|min:1',
-            'per_page'      => 'required|integer|min:1',
-            'status'        => 'required|integer',
-            'total_price'   => 'integer',
-            'total_amount'  => 'integer',
-            'goods'         => 'json',
+            'page' => 'required|integer|min:1',
+            'per_page' => 'required|integer|min:1',
+            'status' => 'required|integer',
+            'total_price' => 'integer',
+            'total_amount' => 'integer',
+            'goods' => 'json',
         ];
 
         if ($res = Features::check('coupon')) {
@@ -37,10 +36,10 @@ class CouponController extends Controller
     public function available()
     {
         $rules = [
-            'page'          => 'required|integer|min:1',
-            'per_page'      => 'required|integer|min:1',
-            'total_price'   => 'required',
-            'shop'          => 'integer',
+            'page' => 'required|integer|min:1',
+            'per_page' => 'required|integer|min:1',
+            'total_price' => 'required',
+            'shop' => 'integer',
         ];
 
         if ($res = Features::check('coupon')) {

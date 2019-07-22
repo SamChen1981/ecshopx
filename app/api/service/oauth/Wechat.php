@@ -1,4 +1,5 @@
 <?php
+
 namespace app\api\service\oauth;
 
 class Wechat
@@ -50,6 +51,7 @@ class Wechat
      */
     private $user_agent = 'Henter WeChat OAuth SDK';
     private $error;
+
     /**
      * @param $appid
      * @param $secret
@@ -63,6 +65,7 @@ class Wechat
         $this->access_token = $access_token;
         return $this;
     }
+
     public function error($error = null)
     {
         if (is_null($error)) {
@@ -71,6 +74,7 @@ class Wechat
         $this->error = $error;
         return false;
     }
+
     /**
      * 获取二维码授权页，用于PC端登陆
      * get qrcode authorize url, with callback url and scope
@@ -90,6 +94,7 @@ class Wechat
         $params['state'] = $state;
         return "https://open.weixin.qq.com/connect/qrconnect?" . http_build_query($params);
     }
+
     /**
      * 用户授权，用于微信端登陆
      * get authorize url, with callback url and scope
@@ -108,8 +113,9 @@ class Wechat
         $params['scope'] = $scope;
         $params['state'] = $state;
 
-        return "https://open.weixin.qq.com/connect/oauth2/authorize?" . http_build_query($params)."#wechat_redirect";
+        return "https://open.weixin.qq.com/connect/oauth2/authorize?" . http_build_query($params) . "#wechat_redirect";
     }
+
     /**
      * @param $access_token
      * @return $this
@@ -119,6 +125,7 @@ class Wechat
         $this->access_token = $access_token;
         return $this;
     }
+
     /**
      * get access_token
      *
@@ -145,9 +152,9 @@ class Wechat
         } else {
             return $this->error("wrong auth type");
         }
-        $return = $this->request($this->host.$uri, 'GET', $params);
+        $return = $this->request($this->host . $uri, 'GET', $params);
         if (!is_array($return) || !$return) {
-            return $this->error("get access token failed".$return);
+            return $this->error("get access token failed" . $return);
         }
         if (!isset($return['errcode'])) {
             $this->access_token = $return['access_token'];
@@ -160,6 +167,7 @@ class Wechat
         }
         return $this->access_token;
     }
+
     /**
      * refresh access_token
      *
@@ -170,6 +178,7 @@ class Wechat
     {
         return $this->getAccessToken('token', $refresh_token);
     }
+
     /**
      * get refresh_token
      * @return string
@@ -178,6 +187,7 @@ class Wechat
     {
         return $this->refresh_token;
     }
+
     /**
      * get expires time (seconds)
      * @return integer
@@ -186,6 +196,7 @@ class Wechat
     {
         return $this->expires_in;
     }
+
     /**
      * get openid
      * @return string
@@ -194,6 +205,7 @@ class Wechat
     {
         return $this->openid;
     }
+
     /**
      * get unionid
      * @return string
@@ -202,6 +214,7 @@ class Wechat
     {
         return $this->unionid;
     }
+
     /**
      * request api
      *
@@ -216,7 +229,7 @@ class Wechat
             return $this->error('access_token error');
         }
         $params['access_token'] = $this->access_token;
-        $return = $this->request($this->host.$api, $method, $params);
+        $return = $this->request($this->host . $api, $method, $params);
         if (!is_array($return) || !$return) {
             return $this->error("request failed");
         }
@@ -226,6 +239,7 @@ class Wechat
             return $this->error("request failed: " . $return['errmsg']);
         }
     }
+
     /**
      * http request wrapper
      * @param $url

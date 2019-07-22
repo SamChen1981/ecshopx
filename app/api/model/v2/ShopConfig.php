@@ -4,12 +4,9 @@ namespace app\api\model\v2;
 
 use app\api\model\BaseModel;
 
-use app\api\library\Header;
-
 class ShopConfig extends BaseModel
 {
-    protected $connection = 'shop';
-    protected $table      = 'shop_config';
+    protected $table = 'shop_config';
     public $timestamps = true;
 
     public static function findByCode($code)
@@ -19,8 +16,8 @@ class ShopConfig extends BaseModel
 
     public static function getSiteInfo()
     {
-        return[
-            'site_info'=> [
+        return [
+            'site_info' => [
                 'name' => self::findByCode('shop_name'),
                 'desc' => self::findByCode('shop_desc'),
                 'logo' => formatPhoto(self::findByCode('shop_logo')),
@@ -36,7 +33,7 @@ class ShopConfig extends BaseModel
     {
         extract($attributes);
         $key = json_decode($key, 1);
-        $all_key = ['can_invoice','use_integral'];
+        $all_key = ['can_invoice', 'use_integral'];
         foreach ($key as $name) {
             if (in_array($name, $all_key)) {
                 $data[$name] = self::findByCode($name);

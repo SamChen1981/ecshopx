@@ -6,8 +6,7 @@ use app\api\model\BaseModel;
 
 class RegExtendInfo extends BaseModel
 {
-    protected $connection = 'shop';
-    protected $table      = 'reg_extend_info';
+    protected $table = 'reg_extend_info';
     public $timestamps = false;
 
     protected $guarded = [];
@@ -25,7 +24,7 @@ class RegExtendInfo extends BaseModel
                     case '1':
                         $member->msn = $value;
                         break;
-                    
+
                     case '2':
                         $member->qq = $value;
                         break;

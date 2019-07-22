@@ -2,9 +2,6 @@
 
 namespace app\api\controller;
 
-use think\facade\Request;
-
-use app\api\library\Token;
 use app\api\model\v2\Keywords;
 
 class SearchController extends Controller

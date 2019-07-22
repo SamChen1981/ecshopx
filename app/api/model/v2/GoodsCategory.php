@@ -1,35 +1,27 @@
 <?php
 
-/**
- * GoodsCategory Model
- * @authors XiaoGai (xiaogai@geek-zoo.com)
- * Copyright (c) 2015-2016, Geek Zoo Studio
- * http://www.geek-zoo.com
- */
-
 namespace app\api\model\v2;
 
 use app\api\model\BaseModel;
 
 class GoodsCategory extends BaseModel
 {
-    protected $connection = 'shop';
-    protected $table      = 'category';
+    protected $table = 'category';
     public $timestamps = false;
 
     protected $with = [];
-    
+
     protected $guarded = [];
 
-    protected $visible = ['id','name','desc','photo','more','categories','icon'];
+    protected $visible = ['id', 'name', 'desc', 'photo', 'more', 'categories', 'icon'];
 
-    protected $appends = ['id','name','desc','more','categories'];
+    protected $appends = ['id', 'name', 'desc', 'more', 'categories'];
 
 
     public static function getList(array $attributes)
     {
         extract($attributes);
-        
+
         $model = self::where('is_show', 1);
 
         if (isset($category) && $category) {
@@ -43,7 +35,7 @@ class GoodsCategory extends BaseModel
 
         if (isset($keyword) && $keyword) {
             $model->where(function ($query) use ($keyword) {
-                $query->where('cat_name', 'like', '%'.strip_tags($keyword).'%')->orWhere('cat_id', strip_tags($keyword));
+                $query->where('cat_name', 'like', '%' . strip_tags($keyword) . '%')->orWhere('cat_id', strip_tags($keyword));
             });
         }
 
@@ -53,7 +45,7 @@ class GoodsCategory extends BaseModel
             ->orderBy('sort_order', 'ASC')
             ->paginate($per_page)->toArray();
 
-        return self::formatBody(['categories' => $data['data'],'paged' => self::formatPaged($page, $per_page, $total)]);
+        return self::formatBody(['categories' => $data['data'], 'paged' => self::formatPaged($page, $per_page, $total)]);
     }
 
     public static function getCategoryIds($id)
@@ -93,12 +85,12 @@ class GoodsCategory extends BaseModel
     {
         return $this->cat_id;
     }
-    
+
     public function getNameAttribute()
     {
         return $this->cat_name;
     }
-    
+
     public function getDescAttribute()
     {
         return $this->cat_desc;

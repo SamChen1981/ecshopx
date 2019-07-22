@@ -1,4 +1,5 @@
 <?php
+
 namespace app\api\service\oauth;
 
 class Qc
@@ -7,7 +8,7 @@ class Qc
     const GET_ACCESS_TOKEN_URL = "https://graph.qq.com/oauth2.0/token";
     const GET_OPENID_URL = "https://graph.qq.com/oauth2.0/me";
     const GET_USER_INFO_URL = "https://graph.qq.com/user/get_user_info";
-    
+
     private $appid;
     private $appkey;
     
@@ -43,14 +44,14 @@ class Qc
             "client_secret" => $this->appkey,
             "code" => $_GET['code']
         );
-        
+
         //------构造请求access_token的url
         $token_url = $this->combineUrl(self::GET_ACCESS_TOKEN_URL, $keysArr);
         $response = $this->get_distant_contents($token_url);
         if (strpos($response, "callback") !== false) {
             $lpos = strpos($response, "(");
             $rpos = strrpos($response, ")");
-            $response  = substr($response, $lpos + 1, $rpos - $lpos -1);
+            $response = substr($response, $lpos + 1, $rpos - $lpos - 1);
             $msg = json_decode($response);
 
             if (isset($this->error)) {
@@ -66,25 +67,25 @@ class Qc
 
         ###############################
         // $openid = $this->get_openid($params["access_token"]);
-        
+
         // if($openid)
         // {
         //     if($mb = $this->_bind_mod->get(array('conditions'=>"openid='".$openid."' AND app='".$this->_app."'",'fields'=>'user_id')))
         //     {
         //         /* 如果该openid已经绑定， 则检查该用户是否填写了手机或电子邮件 */
         //         $member = $this->_member_mod->get(array('conditions'=>'user_id='.$mb['user_id'], 'fields'=>'phone_mob, email'));
-                
+
         //         /* 如果没有此用户，则说明绑定数据过时，删除绑定 */
         //         if(!$member) {
         //             $this->_bind_mod->drop('user_id='.$mb['user_id']);
         //             $this->show_message('bind_data_error');
         //             return;
         //         }
-                
+
 
         //         // 执行登录
         //         $this->_do_login($mb['user_id']);
-                
+
         //         /* 同步登陆外部系统 */
         //         $ms =& ms();
         //         $synlogin = $ms->user->synlogin($mb['user_id']);
@@ -93,7 +94,7 @@ class Qc
         //     else
         //     {
         //         $user_info = $this->get_user_info($params["access_token"], $openid, $this->_config['appid']);
-                
+
         //         // 进入绑定模式
         //         $_SESSION['bind'] = array(
         //             'openid'            => $openid,
@@ -117,8 +118,8 @@ class Qc
 
     public function combineUrl($baseurl, $arr)
     {
-        $combined = $baseurl."?";
-        $value= array();
+        $combined = $baseurl . "?";
+        $value = array();
         foreach ($arr as $key => $val) {
             $value[] = "$key=$val";
         }
@@ -126,6 +127,7 @@ class Qc
         $combined .= ($imstr);
         return $combined;
     }
+
     public function get_distant_contents($url)
     {
         //if (ini_get("allow_url_fopen") == "1") {
@@ -135,7 +137,7 @@ class Qc
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_URL, $url);
-        $response =  curl_exec($ch);
+        $response = curl_exec($ch);
         curl_close($ch);
         //}
         //-------请求为空
@@ -145,22 +147,23 @@ class Qc
         }
         return $response;
     }
+
     public function get_openid($access_token)
     {
-        
+
         //-------请求参数列表
         $keysArr = array(
             "access_token" => $access_token
         );
         $graph_url = $this->combineUrl(self::GET_OPENID_URL, $keysArr);
-        
+
         $response = $this->get_distant_contents($graph_url);
 
         //--------检测错误是否发生
         if (strpos($response, "callback") !== false) {
             $lpos = strpos($response, "(");
             $rpos = strrpos($response, ")");
-            $response = substr($response, $lpos + 1, $rpos - $lpos -1);
+            $response = substr($response, $lpos + 1, $rpos - $lpos - 1);
         }
 
         $user = json_decode($response);
@@ -170,15 +173,16 @@ class Qc
         }
         return $user->openid;
     }
+
     public function get_user_info($access_token, $openid, $appid)
     {
         $keysArr = array(
-               "oauth_consumer_key" => $appid,
-               "access_token" => $access_token,
-               "openid" =>$openid
-         );
-        $url=$this->combineUrl(self::GET_USER_INFO_URL, $keysArr);
-        $response=json_decode($this->get_distant_contents($url));
+            "oauth_consumer_key" => $appid,
+            "access_token" => $access_token,
+            "openid" => $openid
+        );
+        $url = $this->combineUrl(self::GET_USER_INFO_URL, $keysArr);
+        $response = json_decode($this->get_distant_contents($url));
         $responseArr = $this->objToArr($response);
         //检查返回ret判断api是否成功调用
         if ($responseArr['ret'] == 0) {
@@ -188,6 +192,7 @@ class Qc
             return false;
         }
     }
+
     public function objToArr($obj)
     {
         if (!is_object($obj) && !is_array($obj)) {

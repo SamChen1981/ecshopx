@@ -3,30 +3,26 @@
 namespace app\api\model\v2;
 
 use app\api\model\BaseModel;
-
 use app\api\library\Token;
 use app\api\library\XXTEA;
-use App\Services\Cloud\Client;
 use app\api\service\qiniu\QiNiu;
 use app\api\service\other\JSSDK;
 use app\api\service\shopex\Authorize;
-use Cache;
+use app\api\services\cloud\Client;
 
 class Configs extends BaseModel
 {
-    protected $connection = 'shop';
-
     protected $table = 'config';
 
     protected $guarded = [];
 
-    public $timestamps   = true;
+    public $timestamps = true;
 
     public static function getList(array $attributes)
     {
         extract($attributes);
         $url = isset($url) ? $url : null;
-        
+
         $data = self::where('status', 1)->get();
 
         $config = ['config' => self::formatConfig($data, $url), 'feature' => Features::getList(), 'platform' => self::getApplicationPlatform()];
@@ -46,9 +42,9 @@ class Configs extends BaseModel
     private static function getApplicationPlatform()
     {
         return [
-            'type'      => self::B2C,
-            'vendor'    => self::ECSHOP,
-            'version'   => '3.5.0'
+            'type' => self::B2C,
+            'vendor' => self::ECSHOP,
+            'version' => '3.5.0'
         ];
     }
 
@@ -157,7 +153,7 @@ class Configs extends BaseModel
             return false;
         }
 
-        return  $res;
+        return $res;
     }
 
     private static function formatConfig($data, $url)
@@ -219,7 +215,7 @@ class Configs extends BaseModel
      * 二进制流生成文件
      * $_POST 无法解释二进制流，需要用到 $GLOBALS['HTTP_RAW_POST_DATA'] 或 php://input
      * $GLOBALS['HTTP_RAW_POST_DATA'] 和 php://input 都不能用于 enctype=multipart/form-data
-     * @param    String  $file   要生成的文件路径
+     * @param String $file 要生成的文件路径
      * @return   boolean
      */
     public function binary_to_file($src, $file)

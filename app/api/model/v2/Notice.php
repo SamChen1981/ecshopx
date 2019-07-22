@@ -6,8 +6,7 @@ use app\api\model\BaseModel;
 
 class Notice extends BaseModel
 {
-    protected $connection = 'shop';
-    protected $table      = 'shop_config';
+    protected $table = 'shop_config';
     public $timestamps = true;
 
     protected $appends = ['title', 'url', 'created_at', 'updated_at'];
@@ -22,10 +21,10 @@ class Notice extends BaseModel
         $total = $model->count();
 
         $data = $model
-             ->paginate($per_page)
-             ->toArray();
+            ->paginate($per_page)
+            ->toArray();
 
-        return self::formatBody(['notices' => $data['data'],'paged' => self::formatPaged($page, $per_page, $total)]);
+        return self::formatBody(['notices' => $data['data'], 'paged' => self::formatPaged($page, $per_page, $total)]);
     }
 
     public static function getNotice($id)
@@ -43,7 +42,7 @@ class Notice extends BaseModel
 
     public function getUrlAttribute()
     {
-        return url('/v2/notice.'.$this->attributes['id']);
+        return url('/v2/notice.' . $this->attributes['id']);
     }
 
     public function getCreatedAtAttribute()

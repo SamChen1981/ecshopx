@@ -2,18 +2,16 @@
 
 namespace app\api\controller;
 
-use think\facade\Request;
-
 use app\api\model\v2\UserAddress;
 use app\api\model\v2\Features;
-use app\api\library\Token;
+use think\facade\Request;
 
 class ConsigneeController extends Controller
 {
 
     /**
-    * POST ecapi.consignee.list
-    */
+     * POST ecapi.consignee.list
+     */
     public function index(Request $request)
     {
         $data = UserAddress::getList($this->validated);
@@ -21,18 +19,18 @@ class ConsigneeController extends Controller
     }
 
     /**
-    * POST ecapi.consignee.add
-    */
+     * POST ecapi.consignee.add
+     */
     public function add(Request $request)
     {
         $rules = [
-            'name'      => 'required|string|min:2|max:15',
-            'mobile'    => 'numeric|required_without:tel',
-            'tel'       => 'string|required_without:mobile',
-            'zip_code'  => 'numeric',
-            'region'    => 'required|integer|min:1',
-            'address'   => 'required|string',
-            'identity'  => 'string|min:2|max:19',
+            'name' => 'required|string|min:2|max:15',
+            'mobile' => 'numeric|required_without:tel',
+            'tel' => 'string|required_without:mobile',
+            'zip_code' => 'numeric',
+            'region' => 'required|integer|min:1',
+            'address' => 'required|string',
+            'identity' => 'string|min:2|max:19',
         ];
 
         if ($error = $this->validateInput($rules)) {
@@ -44,8 +42,8 @@ class ConsigneeController extends Controller
     }
 
     /**
-    * POST ecapi.consignee.delete
-    */
+     * POST ecapi.consignee.delete
+     */
     public function remove(Request $request)
     {
         $rules = [
@@ -61,19 +59,19 @@ class ConsigneeController extends Controller
     }
 
     /**
-    * POST ecapi.consignee.update
-    */
+     * POST ecapi.consignee.update
+     */
     public function modify(Request $request)
     {
         $rules = [
             'consignee' => 'required|integer|min:1',
-            'name'      => 'required|string|min:2|max:15',
-            'mobile'    => 'numeric|required_without:tel',
-            'tel'       => 'string|required_without:mobile',
-            'zip_code'  => 'numeric',
-            'region'    => 'required|integer|min:1',
-            'address'   => 'required|string',
-            'identity'  => 'string|min:2|max:19',
+            'name' => 'required|string|min:2|max:15',
+            'mobile' => 'numeric|required_without:tel',
+            'tel' => 'string|required_without:mobile',
+            'zip_code' => 'numeric',
+            'region' => 'required|integer|min:1',
+            'address' => 'required|string',
+            'identity' => 'string|min:2|max:19',
         ];
 
 
@@ -87,8 +85,8 @@ class ConsigneeController extends Controller
     }
 
     /**
-    * POST ecapi.consignee.setDefault
-    */
+     * POST ecapi.consignee.setDefault
+     */
     public function setDefault(Request $request)
     {
         $rules = [
@@ -102,7 +100,6 @@ class ConsigneeController extends Controller
         if ($error = $this->validateInput($rules)) {
             return $error;
         }
-
 
 
         $data = UserAddress::setDefault($this->validated);

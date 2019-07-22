@@ -7,8 +7,6 @@ use app\api\library\Token;
 
 class Account extends BaseModel
 {
-    protected $connection = 'shop';
-
     protected $table = 'account_log';
 
     protected $primaryKey = 'log_id';

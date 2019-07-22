@@ -2,8 +2,6 @@
 
 namespace app\api\service\other;
 
-use Cache;
-
 class JSSDK
 {
     private $appId;
@@ -35,13 +33,13 @@ class JSSDK
         $signature = sha1($string);
 
         $signPackage = array(
-      "app_id"     => $this->appId,
-      "nonceStr"  => $nonceStr,
-      "timestamp" => $timestamp,
-      "url"       => $url,
-      "signature" => $signature,
-      "rawString" => $string
-    );
+            "app_id" => $this->appId,
+            "nonceStr" => $nonceStr,
+            "timestamp" => $timestamp,
+            "url" => $url,
+            "signature" => $signature,
+            "rawString" => $string
+        );
         return $signPackage;
     }
 
@@ -60,7 +58,7 @@ class JSSDK
         if ($ticket = Cache::get("jsapi_ticket")) {
             return $ticket;
         }
-    
+
         $accessToken = $this->getAccessToken();
         // 如果是企业号用以下 URL 获取 ticket
         // $url = "https://qyapi.weixin.qq.com/cgi-bin/get_jsapi_ticket?access_token=$accessToken";
@@ -73,7 +71,7 @@ class JSSDK
             $ticket = '';
             Log::debug('获取jsticket失败', ['in_param' => $url, 'out_param' => [$res]]);
         }
-    
+
         return $ticket;
     }
 
@@ -82,7 +80,7 @@ class JSSDK
         if ($access_token = Cache::get("access_token")) {
             return $access_token;
         }
-    
+
         // 如果是企业号用以下URL获取access_token
         // $url = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=$this->appId&corpsecret=$this->appSecret";
         $url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=$this->appId&secret=$this->appSecret";
