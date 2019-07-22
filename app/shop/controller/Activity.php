@@ -18,7 +18,7 @@ class Activity extends Init
         load_lang('shopping_flow');
         load_lang('user');
 
-        assign_template();
+        $this->assign_template();
         assign_dynamic('activity');
         $position = assign_ur_here(0, $GLOBALS['_LANG']['shopping_activity']);
         $this->assign('page_title', $position['title']);    // 页面标题

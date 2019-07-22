@@ -27,7 +27,7 @@ class Flow extends Init
         //-- PROCESSOR
         /*------------------------------------------------------ */
 
-        assign_template();
+        $this->assign_template();
         assign_dynamic('flow');
         $position = assign_ur_here(0, $GLOBALS['_LANG']['shopping_flow']);
         $this->assign('page_title', $position['title']);    // 页面标题

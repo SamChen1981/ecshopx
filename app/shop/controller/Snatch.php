@@ -71,7 +71,7 @@ class Snatch extends Init
                 $this->assign('vote', $vote['content']);
             }
 
-            assign_template();
+            $this->assign_template();
             assign_dynamic('snatch');
             $this->assign('page_title', $position['title']);
             $this->assign('ur_here', $position['ur_here']);

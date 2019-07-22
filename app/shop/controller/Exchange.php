@@ -58,7 +58,7 @@ class Exchange extends Init
                     $this->assign('description', htmlspecialchars($cat['cat_desc']));
                 }
 
-                assign_template();
+                $this->assign_template();
 
                 $position = assign_ur_here('exchange');
                 $this->assign('page_title', $position['title']);    // 页面标题
@@ -147,7 +147,7 @@ class Exchange extends Init
                     $this->assign('keywords', htmlspecialchars($goods['keywords']));
                     $this->assign('description', htmlspecialchars($goods['goods_brief']));
 
-                    assign_template();
+                    $this->assign_template();
 
                     /* 上一个商品下一个商品 */
                     $sql = "SELECT eg.goods_id FROM " . $GLOBALS['ecs']->table('exchange_goods') . " AS eg," . $GLOBALS['ecs']->table('goods') . " AS g WHERE eg.goods_id = g.goods_id AND eg.goods_id > " . $goods['goods_id'] . " AND eg.is_exchange = 1 AND g.is_delete = 0 LIMIT 1";

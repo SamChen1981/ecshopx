@@ -88,7 +88,7 @@ class Topic extends Init
             }
 
             /* 模板赋值 */
-            assign_template();
+            $this->assign_template();
             $position = assign_ur_here();
             $this->assign('page_title', $position['title']);       // 页面标题
             $this->assign('ur_here', $position['ur_here'] . '> ' . $topic['title']);     // 当前位置

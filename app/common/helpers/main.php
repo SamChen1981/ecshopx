@@ -1369,38 +1369,6 @@ function assign_comment($id, $type, $page = 1)
     return $cmt;
 }
 
-function assign_template($ctype = '', $catlist = array())
-{
-    $GLOBALS['smarty']->assign('image_width', $GLOBALS['_CFG']['image_width']);
-    $GLOBALS['smarty']->assign('image_height', $GLOBALS['_CFG']['image_height']);
-    $GLOBALS['smarty']->assign('points_name', $GLOBALS['_CFG']['integral_name']);
-    $GLOBALS['smarty']->assign('qq', explode(',', $GLOBALS['_CFG']['qq']));
-    $GLOBALS['smarty']->assign('ww', explode(',', $GLOBALS['_CFG']['ww']));
-    $GLOBALS['smarty']->assign('ym', explode(',', $GLOBALS['_CFG']['ym']));
-    $GLOBALS['smarty']->assign('msn', explode(',', $GLOBALS['_CFG']['msn']));
-    $GLOBALS['smarty']->assign('skype', explode(',', $GLOBALS['_CFG']['skype']));
-    $GLOBALS['smarty']->assign('stats_code', $GLOBALS['_CFG']['stats_code']);
-    $GLOBALS['smarty']->assign('copyright', sprintf($GLOBALS['_LANG']['copyright'], date('Y'), $GLOBALS['_CFG']['shop_name']));
-    $GLOBALS['smarty']->assign('shop_name', $GLOBALS['_CFG']['shop_name']);
-    $GLOBALS['smarty']->assign('service_email', $GLOBALS['_CFG']['service_email']);
-    $GLOBALS['smarty']->assign('service_phone', $GLOBALS['_CFG']['service_phone']);
-    $GLOBALS['smarty']->assign('shop_address', $GLOBALS['_CFG']['shop_address']);
-    $GLOBALS['smarty']->assign('licensed', license_info());
-    $GLOBALS['smarty']->assign('ecs_version', VERSION);
-    $GLOBALS['smarty']->assign('icp_number', $GLOBALS['_CFG']['icp_number']);
-    $GLOBALS['smarty']->assign('username', !empty($_SESSION['user_name']) ? $_SESSION['user_name'] : '');
-    $GLOBALS['smarty']->assign('category_list', cat_list(0, 0, true, 2, false));
-    $GLOBALS['smarty']->assign('catalog_list', cat_list(0, 0, false, 1, false));
-    $GLOBALS['smarty']->assign('navigator_list', get_navigator($ctype, $catlist));  //自定义导航栏
-
-    if (!empty($GLOBALS['_CFG']['search_keywords'])) {
-        $searchkeywords = explode(',', trim($GLOBALS['_CFG']['search_keywords']));
-    } else {
-        $searchkeywords = array();
-    }
-    $GLOBALS['smarty']->assign('searchkeywords', $searchkeywords);
-}
-
 /**
  * 将一个本地时间戳转成GMT时间戳
  *

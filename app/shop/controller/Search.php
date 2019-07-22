@@ -66,7 +66,7 @@ class Search extends Init
             $this->assign('goods_type_list', $attributes['cate']);
             $this->assign('goods_attributes', $attributes['attr']);
 
-            assign_template();
+            $this->assign_template();
             assign_dynamic('search');
             $position = assign_ur_here(0, $GLOBALS['_LANG']['advanced_search']);
             $this->assign('page_title', $position['title']);    // 页面标题
@@ -418,7 +418,7 @@ class Search extends Init
             $this->assign('url_format', $url_format);
             $this->assign('pager', $pager);
 
-            assign_template();
+            $this->assign_template();
             assign_dynamic('search');
             $position = assign_ur_here(0, $ur_here . ($_REQUEST['keywords'] ? '_' . $_REQUEST['keywords'] : ''));
             $this->assign('page_title', $position['title']);    // 页面标题

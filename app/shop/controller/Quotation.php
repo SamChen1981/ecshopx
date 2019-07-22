@@ -49,7 +49,7 @@ class Quotation extends Init
             exit($html);
         }
 
-        assign_template();
+        $this->assign_template();
 
         $position = assign_ur_here(0, $GLOBALS['_LANG']['quotation']);
         $this->assign('page_title', $position['title']);   // 页面标题

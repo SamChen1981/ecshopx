@@ -61,7 +61,7 @@ class Article extends Init
                 $catlist[] = $v['cat_id'];
             }
 
-            assign_template('a', $catlist);
+            $this->assign_template('a', $catlist);
 
             $position = assign_ur_here($article['cat_id'], $article['title']);
             $this->assign('page_title', $position['title']);    // 页面标题

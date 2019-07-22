@@ -28,7 +28,7 @@ class ArticleCat extends Init
         if (!$GLOBALS['smarty']->is_cached('article_cat.view.php', $cache_id)) {
             /* 如果页面没有被缓存则重新获得页面的内容 */
 
-            assign_template('a', array($cat_id));
+            $this->assign_template('a', array($cat_id));
             $position = assign_ur_here($cat_id);
             $this->assign('page_title', $position['title']);     // 页面标题
             $this->assign('ur_here', $position['ur_here']);   // 当前位置

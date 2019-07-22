@@ -38,7 +38,7 @@ class Myship extends Init
         //-- PROCESSOR
         /*------------------------------------------------------ */
 
-        assign_template();
+        $this->assign_template();
         assign_dynamic('myship');
         $position = assign_ur_here(0, $GLOBALS['_LANG']['shopping_myship']);
         $this->assign('page_title', $position['title']);    // 页面标题

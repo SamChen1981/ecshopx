@@ -180,7 +180,7 @@ class Goods extends Init
                     $catlist[] = $v['cat_id'];
                 }
 
-                assign_template('c', $catlist);
+                $this->assign_template('c', $catlist);
 
                 /* 上一个商品下一个商品 */
                 $prev_gid = $GLOBALS['db']->getOne("SELECT goods_id FROM " . $GLOBALS['ecs']->table('goods') . " WHERE cat_id=" . $goods['cat_id'] . " AND goods_id > " . $goods['goods_id'] . " AND is_on_sale = 1 AND is_alone_sale = 1 AND is_delete = 0 LIMIT 1");

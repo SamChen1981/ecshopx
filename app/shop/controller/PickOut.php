@@ -212,7 +212,7 @@ class PickOut extends Init
 
         $picks[] = array('name' => $GLOBALS['_LANG']['remove_all'], 'url' => 'pick_out.php');
 
-        assign_template();
+        $this->assign_template();
         $position = assign_ur_here(0, $GLOBALS['_LANG']['pick_out']);
         $this->assign('page_title', $position['title']);    // 页面标题
         $this->assign('ur_here', $position['ur_here']);  // 当前位置

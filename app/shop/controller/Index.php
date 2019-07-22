@@ -45,7 +45,7 @@ class Index extends Init
         $cache_id = sprintf('%X', crc32($_SESSION['user_rank'] . '-' . $GLOBALS['_CFG']['lang']));
 
         if (!$GLOBALS['smarty']->is_cached('index.view.php', $cache_id)) {
-            assign_template();
+            $this->assign_template();
 
             $position = assign_ur_here();
             $this->assign('page_title', $position['title']);    // 页面标题

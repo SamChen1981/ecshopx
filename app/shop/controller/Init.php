@@ -199,4 +199,40 @@ class Init extends Controller
             }
         }
     }
+
+    /**
+     * @param string $ctype
+     * @param array $catlist
+     */
+    protected function assign_template($ctype = '', $catlist = array())
+    {
+        $this->assign('image_width', $GLOBALS['_CFG']['image_width']);
+        $this->assign('image_height', $GLOBALS['_CFG']['image_height']);
+        $this->assign('points_name', $GLOBALS['_CFG']['integral_name']);
+        $this->assign('qq', explode(',', $GLOBALS['_CFG']['qq']));
+        $this->assign('ww', explode(',', $GLOBALS['_CFG']['ww']));
+        $this->assign('ym', explode(',', $GLOBALS['_CFG']['ym']));
+        $this->assign('msn', explode(',', $GLOBALS['_CFG']['msn']));
+        $this->assign('skype', explode(',', $GLOBALS['_CFG']['skype']));
+        $this->assign('stats_code', $GLOBALS['_CFG']['stats_code']);
+        $this->assign('copyright', sprintf($GLOBALS['_LANG']['copyright'], date('Y'), $GLOBALS['_CFG']['shop_name']));
+        $this->assign('shop_name', $GLOBALS['_CFG']['shop_name']);
+        $this->assign('service_email', $GLOBALS['_CFG']['service_email']);
+        $this->assign('service_phone', $GLOBALS['_CFG']['service_phone']);
+        $this->assign('shop_address', $GLOBALS['_CFG']['shop_address']);
+        $this->assign('licensed', license_info());
+        $this->assign('ecs_version', VERSION);
+        $this->assign('icp_number', $GLOBALS['_CFG']['icp_number']);
+        $this->assign('username', !empty($_SESSION['user_name']) ? $_SESSION['user_name'] : '');
+        $this->assign('category_list', cat_list(0, 0, true, 2, false));
+        $this->assign('catalog_list', cat_list(0, 0, false, 1, false));
+        $this->assign('navigator_list', get_navigator($ctype, $catlist));  //自定义导航栏
+
+        if (!empty($GLOBALS['_CFG']['search_keywords'])) {
+            $searchkeywords = explode(',', trim($GLOBALS['_CFG']['search_keywords']));
+        } else {
+            $searchkeywords = array();
+        }
+        $this->assign('searchkeywords', $searchkeywords);
+    }
 }

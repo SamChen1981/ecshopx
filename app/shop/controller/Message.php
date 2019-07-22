@@ -73,7 +73,7 @@ class Message extends Init
         }
 
         if ($action == 'default') {
-            assign_template();
+            $this->assign_template();
             $position = assign_ur_here(0, $GLOBALS['_LANG']['message_board']);
             $this->assign('page_title', $position['title']);    // 页面标题
             $this->assign('ur_here', $position['ur_here']);  // 当前位置

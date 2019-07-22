@@ -9,7 +9,7 @@ class TagCloud extends Init
 {
     public function index()
     {
-        assign_template();
+        $this->assign_template();
         $position = assign_ur_here(0, $GLOBALS['_LANG']['tag_cloud']);
         $this->assign('page_title', $position['title']);    // 页面标题
         $this->assign('ur_here', $position['ur_here']);  // 当前位置
