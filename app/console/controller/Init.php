@@ -96,8 +96,6 @@ class Init extends Controller
             $img = new Captcha('../data/captcha/', 104, 36);
             @ob_end_clean(); //清除之前出现的多余输入
             $img->generate_image();
-
-
         }
 
         load_lang('admin/common');
@@ -107,69 +105,7 @@ class Init extends Controller
             include(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/admin/' . basename(PHP_SELF));
         }
 
-        if (!file_exists('../temp/caches')) {
-            @mkdir('../temp/caches', 0777);
-            @chmod('../temp/caches', 0777);
-        }
-
-        if (!file_exists('../temp/compiled/admin')) {
-            @mkdir('../temp/compiled/admin', 0777);
-            @chmod('../temp/compiled/admin', 0777);
-        }
-
-        clearstatcache();
-
-        /* 如果有新版本，升级 */
-        if (!isset($GLOBALS['_CFG']['ecs_version'])) {
-            $GLOBALS['_CFG']['ecs_version'] = 'v4.0.0';
-        }
-
-        if (preg_replace('/(?:\.|\s+)[a-z]*$/i', '', $GLOBALS['_CFG']['ecs_version']) != preg_replace('/(?:\.|\s+)[a-z]*$/i', '', VERSION)
-            && file_exists('../upgrade/index.php')) {
-            // 转到升级文件
-            return $this->redirect('../upgrade/index.php');
-
-
-        }
-
-        /* 创建 Smarty 对象。*/
-        $GLOBALS['smarty'] = new Template();
-
-        $GLOBALS['smarty']->template_dir = app_path('console/view');
-        $GLOBALS['smarty']->compile_dir = runtime_path('temp/compiled/admin');
-
         $this->assign('lang', $GLOBALS['_LANG']);
-        $this->assign('help_open', $GLOBALS['_CFG']['help_open']);
-
-        if (isset($GLOBALS['_CFG']['enable_order_check'])) {  // 为了从旧版本顺利升级到2.5.0
-            $this->assign('enable_order_check', $GLOBALS['_CFG']['enable_order_check']);
-        } else {
-            $this->assign('enable_order_check', 0);
-        }
-
-        /* 验证通行证信息 */
-        if (isset($_GET['ent_id']) && isset($_GET['ent_ac']) && isset($_GET['ent_sign']) && isset($_GET['ent_email'])) {
-            $ent_id = trim($_GET['ent_id']);
-            $ent_ac = trim($_GET['ent_ac']);
-            $ent_sign = trim($_GET['ent_sign']);
-            $ent_email = trim($_GET['ent_email']);
-            $certificate_id = trim($GLOBALS['_CFG']['certificate_id']);
-            $domain_url = $GLOBALS['ecs']->url();
-            $token = $_GET['token'];
-            if ($token == md5(md5($GLOBALS['_CFG']['token']) . $domain_url . ADMIN_PATH)) {
-                $t = new transport('-1', 5);
-                $apiget = "act=ent_sign&ent_id= $ent_id & certificate_id=$certificate_id";
-
-                // $t->request('https://cloud-ecshop.xyunqi.com/api.php', $apiget);
-                $t->request('https://cloud-ecshop.xyunqi.com/api.php', $apiget);
-                $GLOBALS['db']->query('UPDATE ' . $GLOBALS['ecs']->table('shop_config') . ' SET value = "' . $ent_id . '" WHERE code = "ent_id"');
-                $GLOBALS['db']->query('UPDATE ' . $GLOBALS['ecs']->table('shop_config') . ' SET value = "' . $ent_ac . '" WHERE code = "ent_ac"');
-                $GLOBALS['db']->query('UPDATE ' . $GLOBALS['ecs']->table('shop_config') . ' SET value = "' . $ent_sign . '" WHERE code = "ent_sign"');
-                $GLOBALS['db']->query('UPDATE ' . $GLOBALS['ecs']->table('shop_config') . ' SET value = "' . $ent_email . '" WHERE code = "ent_email"');
-                clear_cache_files();
-                return $this->redirect('/');
-            }
-        }
 
         /* 验证管理员身份 */
         if ((!isset($_SESSION['admin_id']) || intval($_SESSION['admin_id']) <= 0) &&
