@@ -33,7 +33,7 @@ if (isset($set_modules) && $set_modules == true) {
 /**
  * UCenter 会员数据处理类
  */
-class ucenter extends integrate
+class Ucenter extends Integrate
 {
     /**
      * 构造函数

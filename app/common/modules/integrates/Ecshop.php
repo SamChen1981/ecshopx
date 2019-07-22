@@ -27,7 +27,7 @@ if (isset($set_modules) && $set_modules == true) {
 /**
  * 会员数据处理类
  */
-class ecshop extends integrate
+class Ecshop extends Integrate
 {
     public $is_ecshop = 1;
 

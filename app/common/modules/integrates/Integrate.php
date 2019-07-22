@@ -7,7 +7,7 @@ use app\common\libraries\Mysql;
 /**
  * 整合插件类的基类
  */
-class integrate
+class Integrate
 {
     /* 整合对象使用的数据库主机 */
     public $db_host = '';

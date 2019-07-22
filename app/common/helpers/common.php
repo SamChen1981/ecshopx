@@ -182,7 +182,7 @@ function init_users()
         return $cls;
     }
 
-    $integrate = 'app\\common\\modules\\integrates\\' . $GLOBALS['_CFG']['integrate_code'];
+    $integrate = 'app\\common\\modules\\integrates\\' . parse_name($GLOBALS['_CFG']['integrate_code'], 1);
     $cfg = unserialize($GLOBALS['_CFG']['integrate_config']);
     $cls = new $integrate($cfg);
 
