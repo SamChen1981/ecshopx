@@ -47,7 +47,7 @@ class Package extends Init
                 " FROM " . $GLOBALS['ecs']->table('goods_activity') .
                 " WHERE act_type='" . GAT_PACKAGE . "' AND act_name='" . $_POST['package_name'] . "'";
             if ($GLOBALS['db']->getOne($sql)) {
-                sys_msg(sprintf($GLOBALS['_LANG']['package_exist'], $_POST['package_name']), 1);
+                return sys_msg(sprintf($GLOBALS['_LANG']['package_exist'], $_POST['package_name']), 1);
             }
 
 
@@ -77,7 +77,7 @@ class Package extends Init
             admin_log($_POST['package_name'], 'add', 'package');
             $link[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'package.php?act=list');
             $link[] = array('text' => $GLOBALS['_LANG']['continue_add'], 'href' => 'package.php?act=add');
-            sys_msg($GLOBALS['_LANG']['add_succeed'], 0, $link);
+            return sys_msg($GLOBALS['_LANG']['add_succeed'], 0, $link);
         }
 
         /*------------------------------------------------------ */
@@ -118,7 +118,7 @@ class Package extends Init
                 " FROM " . $GLOBALS['ecs']->table('goods_activity') .
                 " WHERE act_type='" . GAT_PACKAGE . "' AND act_name='" . $_POST['package_name'] . "' AND act_id <> '" . $_POST['id'] . "'";
             if ($GLOBALS['db']->getOne($sql)) {
-                sys_msg(sprintf($GLOBALS['_LANG']['package_exist'], $_POST['package_name']), 1);
+                return sys_msg(sprintf($GLOBALS['_LANG']['package_exist'], $_POST['package_name']), 1);
             }
 
 
@@ -131,7 +131,7 @@ class Package extends Init
 
             admin_log($_POST['package_name'], 'edit', 'package');
             $link[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'package.php?act=list&' . list_link_postfix());
-            sys_msg($GLOBALS['_LANG']['edit_succeed'], 0, $link);
+            return sys_msg($GLOBALS['_LANG']['edit_succeed'], 0, $link);
         }
 
         /*------------------------------------------------------ */

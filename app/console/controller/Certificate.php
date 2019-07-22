@@ -145,7 +145,7 @@ class Certificate extends Init
 
             if ($certificate['certificate_id'] == '' || $certificate['token'] == '') {
                 $links[] = array('text' => $GLOBALS['_LANG']['back'], 'href' => 'certificate.php?act=list_edit');
-                sys_msg($GLOBALS['_LANG']['no_license_down'], 0, $links);
+                return sys_msg($GLOBALS['_LANG']['no_license_down'], 0, $links);
             }
             /* 文件下载 TODO BY LANCE */
             ecs_header("Content-Type:text/plain");
@@ -182,7 +182,7 @@ class Certificate extends Init
             $callback = $GLOBALS['ecs']->url() . "admin/certificate.php?act=list_edit";
             $url = $cert->logout_url($callback);
             if (!$cert->delete_cert($msg)) {
-                sys_msg($msg, 1);
+                return sys_msg($msg, 1);
             }
             return '<script type="text/javascript">window.location.href="' . $url . '";</script>';
         }

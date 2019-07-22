@@ -107,7 +107,7 @@ class Database extends Init
             /* 权限判断 */
             $token = trim($_REQUEST['token']);
             if ($token != $GLOBALS['_CFG']['token']) {
-                sys_msg($GLOBALS['_LANG']['backup_failure'], 1);
+                return sys_msg($GLOBALS['_LANG']['backup_failure'], 1);
             }
             admin_priv('db_backup');
 
@@ -116,7 +116,7 @@ class Database extends Init
             $mask = file_mode_info($path);
             if ($mask === false) {
                 $warning = sprintf($GLOBALS['_LANG']['dir_not_exist'], $path);
-                sys_msg($warning, 1);
+                return sys_msg($warning, 1);
             } elseif ($mask != 15) {
                 $warning = sprintf($GLOBALS['_LANG']['dir_priv'], $path);
                 if (($mask & 1) < 1) {
@@ -131,7 +131,7 @@ class Database extends Init
                 if (($mask & 8) < 1) {
                     $warning .= $GLOBALS['_LANG']['cannot_modify'];
                 }
-                sys_msg($warning, 1);
+                return sys_msg($warning, 1);
             }
 
             /* 设置最长执行时间为5分钟 */
@@ -221,7 +221,7 @@ class Database extends Init
                 if ($vol > 1) {
                     /* 有多个文件 */
                     if (!@file_put_contents(ROOT_PATH . DATA_DIR . '/sqldata/' . $sql_file_name . '_' . $vol . '.sql', $dump->dump_sql)) {
-                        sys_msg(sprintf($GLOBALS['_LANG']['fail_write_file'], $sql_file_name . '_' . $vol . '.sql'), 1, array(array('text' => $GLOBALS['_LANG']['02_db_manage'], 'href' => 'database.php?act=backup')), false);
+                        return sys_msg(sprintf($GLOBALS['_LANG']['fail_write_file'], $sql_file_name . '_' . $vol . '.sql'), 1, array(array('text' => $GLOBALS['_LANG']['02_db_manage'], 'href' => 'database.php?act=backup')), false);
                     }
                     $list = array();
                     for ($i = 1; $i <= $vol; $i++) {
@@ -234,7 +234,7 @@ class Database extends Init
                 } else {
                     /* 只有一个文件 */
                     if (!@file_put_contents(ROOT_PATH . DATA_DIR . '/sqldata/' . $sql_file_name . '.sql', $dump->dump_sql)) {
-                        sys_msg(sprintf($GLOBALS['_LANG']['fail_write_file'], $sql_file_name . '_' . $vol . '.sql'), 1, array(array('text' => $GLOBALS['_LANG']['02_db_manage'], 'href' => 'database.php?act=backup')), false);
+                        return sys_msg(sprintf($GLOBALS['_LANG']['fail_write_file'], $sql_file_name . '_' . $vol . '.sql'), 1, array(array('text' => $GLOBALS['_LANG']['02_db_manage'], 'href' => 'database.php?act=backup')), false);
                     };
 
                     $GLOBALS['smarty']->assign('list', array(array('name' => $sql_file_name . '.sql', 'href' => '../' . DATA_DIR . '/sqldata/' . $sql_file_name . '.sql')));
@@ -244,7 +244,7 @@ class Database extends Init
             } else {
                 /* 下一个页面处理 */
                 if (!@file_put_contents(ROOT_PATH . DATA_DIR . '/sqldata/' . $sql_file_name . '_' . $vol . '.sql', $dump->dump_sql)) {
-                    sys_msg(sprintf($GLOBALS['_LANG']['fail_write_file'], $sql_file_name . '_' . $vol . '.sql'), 1, array(array('text' => $GLOBALS['_LANG']['02_db_manage'], 'href' => 'database.php?act=backup')), false);
+                    return sys_msg(sprintf($GLOBALS['_LANG']['fail_write_file'], $sql_file_name . '_' . $vol . '.sql'), 1, array(array('text' => $GLOBALS['_LANG']['02_db_manage'], 'href' => 'database.php?act=backup')), false);
                 }
 
                 $lnk = 'database.php?act=dumpsql&token=' . $GLOBALS['_CFG']['token'] . '&sql_file_name=' . $sql_file_name . '&vol_size=' . $max_size . '&vol=' . ($vol + 1);
@@ -302,7 +302,7 @@ class Database extends Init
                 }
             }
 
-            sys_msg($GLOBALS['_LANG']['remove_success'], 0, array(array('text' => $GLOBALS['_LANG']['restore'], 'href' => 'database.php?act=restore')));
+            return sys_msg($GLOBALS['_LANG']['remove_success'], 0, array(array('text' => $GLOBALS['_LANG']['restore'], 'href' => 'database.php?act=restore')));
         }
 
         /* 从服务器上导入数据 */
@@ -321,7 +321,7 @@ class Database extends Init
                 /* 多卷处理 */
                 if ($is_confirm == false) {
                     /* 提示用户要求确认 */
-                    sys_msg($GLOBALS['_LANG']['confirm_import'], 1, array(array('text' => $GLOBALS['_LANG']['also_continue'], 'href' => 'database.php?act=import&confirm=1&file_name=' . $file_name)), false);
+                    return sys_msg($GLOBALS['_LANG']['confirm_import'], 1, array(array('text' => $GLOBALS['_LANG']['also_continue'], 'href' => 'database.php?act=import&confirm=1&file_name=' . $file_name)), false);
                 }
 
                 $short_name = substr($file_name, 0, strrpos($file_name, '_'));
@@ -350,28 +350,28 @@ class Database extends Init
                 foreach ($post_list as $file) {
                     $info = cls_sql_dump::get_head($path . $file);
                     if ($info['ecs_ver'] != VERSION) {
-                        sys_msg(sprintf($GLOBALS['_LANG']['version_error'], VERSION, $sql_info['ecs_ver']));
+                        return sys_msg(sprintf($GLOBALS['_LANG']['version_error'], VERSION, $sql_info['ecs_ver']));
                     }
                     if (!$this->sql_import($path . $file)) {
-                        sys_msg($GLOBALS['_LANG']['sqlfile_error'], 1);
+                        return sys_msg($GLOBALS['_LANG']['sqlfile_error'], 1);
                     }
                 }
 
                 clear_cache_files();
 
-                sys_msg($GLOBALS['_LANG']['restore_success'], 0, array(array('text' => $GLOBALS['_LANG']['restore'], 'href' => 'database.php?act=restore')));
+                return sys_msg($GLOBALS['_LANG']['restore_success'], 0, array(array('text' => $GLOBALS['_LANG']['restore'], 'href' => 'database.php?act=restore')));
             } else {
                 /* 单卷 */
                 $info = cls_sql_dump::get_head($path . $file_name);
                 if ($info['ecs_ver'] != VERSION) {
-                    sys_msg(sprintf($GLOBALS['_LANG']['version_error'], VERSION, $sql_info['ecs_ver']));
+                    return sys_msg(sprintf($GLOBALS['_LANG']['version_error'], VERSION, $sql_info['ecs_ver']));
                 }
                 if ($this->sql_import($path . $file_name)) {
                     clear_cache_files();
                     admin_log($GLOBALS['_LANG']['backup_time'] . $info['date'], 'restore', 'db_backup');
-                    sys_msg($GLOBALS['_LANG']['restore_success'], 0, array(array('text' => $GLOBALS['_LANG']['restore'], 'href' => 'database.php?act=restore')));
+                    return sys_msg($GLOBALS['_LANG']['restore_success'], 0, array(array('text' => $GLOBALS['_LANG']['restore'], 'href' => 'database.php?act=restore')));
                 } else {
-                    sys_msg($GLOBALS['_LANG']['sqlfile_error'], 1);
+                    return sys_msg($GLOBALS['_LANG']['sqlfile_error'], 1);
                 }
             }
         }
@@ -387,29 +387,29 @@ class Database extends Init
 
             if (empty($_GET['mysql_ver_confirm'])) {
                 if (empty($_FILES['sqlfile'])) {
-                    sys_msg($GLOBALS['_LANG']['empty_upload'], 1);
+                    return sys_msg($GLOBALS['_LANG']['empty_upload'], 1);
                 }
 
                 $file = $_FILES['sqlfile'];
 
                 /* 检查上传是否成功 */
                 if ((isset($file['error']) && $file['error'] > 0) || (!isset($file['error']) && $file['tmp_name'] == 'none')) {
-                    sys_msg($GLOBALS['_LANG']['fail_upload'], 1);
+                    return sys_msg($GLOBALS['_LANG']['fail_upload'], 1);
                 }
 
                 /* 检查文件格式 */
                 if ($file['type'] == 'application/x-zip-compressed') {
-                    sys_msg($GLOBALS['_LANG']['not_support_zip_format'], 1);
+                    return sys_msg($GLOBALS['_LANG']['not_support_zip_format'], 1);
                 }
 
                 if (!preg_match("/\.sql$/i", $file['name'])) {
-                    sys_msg($GLOBALS['_LANG']['not_sql_file'], 1);
+                    return sys_msg($GLOBALS['_LANG']['not_sql_file'], 1);
                 }
 
                 /* 将文件移动到临时目录，避免权限问题 */
                 @unlink($sql_file);
                 if (!move_upload_file($file['tmp_name'], $sql_file)) {
-                    sys_msg($GLOBALS['_LANG']['fail_upload_move'], 1);
+                    return sys_msg($GLOBALS['_LANG']['fail_upload_move'], 1);
                 }
             }
 
@@ -418,24 +418,24 @@ class Database extends Init
 
             /* 如果备份文件的商场系统与现有商城系统版本不同则拒绝执行 */
             if (empty($sql_info['ecs_ver'])) {
-                sys_msg($GLOBALS['_LANG']['unrecognize_version'], 1);
+                return sys_msg($GLOBALS['_LANG']['unrecognize_version'], 1);
             } else {
                 if ($sql_info['ecs_ver'] != VERSION) {
-                    sys_msg(sprintf($GLOBALS['_LANG']['version_error'], VERSION, $sql_info['ecs_ver']));
+                    return sys_msg(sprintf($GLOBALS['_LANG']['version_error'], VERSION, $sql_info['ecs_ver']));
                 }
             }
 
             /* 检查数据库版本是否正确 */
             if (empty($_GET['mysql_ver_confirm'])) {
                 if (empty($sql_info['mysql_ver'])) {
-                    sys_msg($GLOBALS['_LANG']['unrecognize_mysql_version']);
+                    return sys_msg($GLOBALS['_LANG']['unrecognize_mysql_version']);
                 } else {
                     $mysql_ver_arr = $GLOBALS['db']->version();
                     if ($sql_info['mysql_ver'] != $mysql_ver_arr) {
                         $lnk = array();
                         $lnk[] = array('text' => $GLOBALS['_LANG']['confirm_ver'], 'href' => 'database.php?act=upload_sql&mysql_ver_confirm=1');
                         $lnk[] = array('text' => $GLOBALS['_LANG']['unconfirm_ver'], 'href' => 'database.php?act=restore');
-                        sys_msg(sprintf($GLOBALS['_LANG']['mysql_version_error'], $mysql_ver_arr, $sql_info['mysql_ver']), 0, $lnk, false);
+                        return sys_msg(sprintf($GLOBALS['_LANG']['mysql_version_error'], $mysql_ver_arr, $sql_info['mysql_ver']), 0, $lnk, false);
                     }
                 }
             }
@@ -446,10 +446,10 @@ class Database extends Init
             if ($this->sql_import($sql_file)) {
                 clear_all_files();
                 @unlink($sql_file);
-                sys_msg($GLOBALS['_LANG']['restore_success'], 0, array());
+                return sys_msg($GLOBALS['_LANG']['restore_success'], 0, array());
             } else {
                 @unlink($sql_file);
-                sys_msg($GLOBALS['_LANG']['sqlfile_error'], 1);
+                return sys_msg($GLOBALS['_LANG']['sqlfile_error'], 1);
             }
         }
 
@@ -498,7 +498,7 @@ class Database extends Init
                 }
             }
 
-            sys_msg(sprintf($GLOBALS['_LANG']['optimize_ok'], $_POST['num']), 0, array(array('text' => $GLOBALS['_LANG']['go_back'], 'href' => 'database.php?act=optimize')));
+            return sys_msg(sprintf($GLOBALS['_LANG']['optimize_ok'], $_POST['num']), 0, array(array('text' => $GLOBALS['_LANG']['go_back'], 'href' => 'database.php?act=optimize')));
         }
 
         /**
@@ -520,7 +520,7 @@ class Database extends Init
             $data['username'] = isset($_POST['username']) ? trim($_POST['username']) : '';
             $data['password'] = isset($_POST['password']) ? trim($_POST['password']) : '';
             if ((!$data['username'] or !$data['password']) && !$_SESSION['yunqi_login']) {
-                sys_msg($GLOBALS['_LANG']['manage_required']);
+                return sys_msg($GLOBALS['_LANG']['manage_required']);
             }
             $msg = '';
             if ($_SESSION['yunqi_login'] or tryLogin($data, $msg)) {
@@ -543,9 +543,9 @@ class Database extends Init
                 $GLOBALS['db']->query("truncate table " . $GLOBALS['ecs']->table('comment'));
                 $GLOBALS['db']->query("truncate table " . $GLOBALS['ecs']->table('account_log'));
 
-                sys_msg($GLOBALS['_LANG']['clear_success']);
+                return sys_msg($GLOBALS['_LANG']['clear_success']);
             } else {
-                sys_msg($msg);
+                return sys_msg($msg);
             }
         }
     }

@@ -162,7 +162,7 @@ class Index extends Init
         elseif ($_REQUEST['act'] == 'clear_cache') {
             clear_all_files();
 
-            sys_msg($GLOBALS['_LANG']['caches_cleared']);
+            return sys_msg($GLOBALS['_LANG']['caches_cleared']);
         }
 
 
@@ -792,7 +792,7 @@ class Index extends Init
                 if (cat_exists($good_category, 0)) {
                     /* 同级别下不能有重复的分类名称 */
                     $link[] = array('text' => $GLOBALS['_LANG']['go_back'], 'href' => 'javascript:history.back(-1)');
-                    sys_msg($GLOBALS['_LANG']['catname_exist'], 0, $link);
+                    return sys_msg($GLOBALS['_LANG']['catname_exist'], 0, $link);
                 }
             }
 
@@ -800,7 +800,7 @@ class Index extends Init
                 if (brand_exists($good_brand)) {
                     /* 同级别下不能有重复的品牌名称 */
                     $link[] = array('text' => $GLOBALS['_LANG']['go_back'], 'href' => 'javascript:history.back(-1)');
-                    sys_msg($GLOBALS['_LANG']['brand_name_exist'], 0, $link);
+                    return sys_msg($GLOBALS['_LANG']['brand_name_exist'], 0, $link);
                 }
             }
 
@@ -837,19 +837,19 @@ class Index extends Init
                         // 商品图片
                         if ($_FILES['goods_img']['error'] == 0) {
                             if (!$image->check_img_type($_FILES['goods_img']['type'])) {
-                                sys_msg($GLOBALS['_LANG']['invalid_goods_img'], 1, array(), false);
+                                return sys_msg($GLOBALS['_LANG']['invalid_goods_img'], 1, array(), false);
                             }
                         } elseif ($_FILES['goods_img']['error'] == 1) {
-                            sys_msg(sprintf($GLOBALS['_LANG']['goods_img_too_big'], $php_maxsize), 1, array(), false);
+                            return sys_msg(sprintf($GLOBALS['_LANG']['goods_img_too_big'], $php_maxsize), 1, array(), false);
                         } elseif ($_FILES['goods_img']['error'] == 2) {
-                            sys_msg(sprintf($GLOBALS['_LANG']['goods_img_too_big'], $htm_maxsize), 1, array(), false);
+                            return sys_msg(sprintf($GLOBALS['_LANG']['goods_img_too_big'], $htm_maxsize), 1, array(), false);
                         }
                     } /* 4。1版本 */
                     else {
                         // 商品图片
                         if ($_FILES['goods_img']['tmp_name'] != 'none') {
                             if (!$image->check_img_type($_FILES['goods_img']['type'])) {
-                                sys_msg($GLOBALS['_LANG']['invalid_goods_img'], 1, array(), false);
+                                return sys_msg($GLOBALS['_LANG']['invalid_goods_img'], 1, array(), false);
                             }
                         }
                     }
@@ -861,7 +861,7 @@ class Index extends Init
                     if ($_FILES['goods_img']['tmp_name'] != '' && $_FILES['goods_img']['tmp_name'] != 'none') {
                         $original_img = $image->upload_image($_FILES['goods_img']); // 原始图片
                         if ($original_img === false) {
-                            sys_msg($image->error_msg(), 1, array(), false);
+                            return sys_msg($image->error_msg(), 1, array(), false);
                         }
                         $goods_img = $original_img;   // 商品图片
 
@@ -870,7 +870,7 @@ class Index extends Init
                         $pos = strpos(basename($img), '.');
                         $newname = dirname($img) . '/' . $image->random_filename() . substr(basename($img), $pos);
                         if (!copy('../' . $img, '../' . $newname)) {
-                            sys_msg('fail to copy file: ' . realpath('../' . $img), 1, array(), false);
+                            return sys_msg('fail to copy file: ' . realpath('../' . $img), 1, array(), false);
                         }
                         $img = $newname;
 
@@ -883,24 +883,24 @@ class Index extends Init
                             if ($GLOBALS['_CFG']['image_width'] != 0 || $GLOBALS['_CFG']['image_height'] != 0) {
                                 $goods_img = $image->make_thumb('../' . $goods_img, $GLOBALS['_CFG']['image_width'], $GLOBALS['_CFG']['image_height']);
                                 if ($goods_img === false) {
-                                    sys_msg($image->error_msg(), 1, array(), false);
+                                    return sys_msg($image->error_msg(), 1, array(), false);
                                 }
                             }
 
                             $newname = dirname($img) . '/' . $image->random_filename() . substr(basename($img), $pos);
                             if (!copy('../' . $img, '../' . $newname)) {
-                                sys_msg('fail to copy file: ' . realpath('../' . $img), 1, array(), false);
+                                return sys_msg('fail to copy file: ' . realpath('../' . $img), 1, array(), false);
                             }
                             $gallery_img = $newname;
 
                             // 加水印
                             if (intval($GLOBALS['_CFG']['watermark_place']) > 0 && !empty($GLOBALS['_CFG']['watermark'])) {
                                 if ($image->add_watermark('../' . $goods_img, '', $GLOBALS['_CFG']['watermark'], $GLOBALS['_CFG']['watermark_place'], $GLOBALS['_CFG']['watermark_alpha']) === false) {
-                                    sys_msg($image->error_msg(), 1, array(), false);
+                                    return sys_msg($image->error_msg(), 1, array(), false);
                                 }
 
                                 if ($image->add_watermark('../' . $gallery_img, '', $GLOBALS['_CFG']['watermark'], $GLOBALS['_CFG']['watermark_place'], $GLOBALS['_CFG']['watermark_alpha']) === false) {
-                                    sys_msg($image->error_msg(), 1, array(), false);
+                                    return sys_msg($image->error_msg(), 1, array(), false);
                                 }
                             }
 
@@ -908,7 +908,7 @@ class Index extends Init
                             if ($GLOBALS['_CFG']['thumb_width'] != 0 || $GLOBALS['_CFG']['thumb_height'] != 0) {
                                 $gallery_thumb = $image->make_thumb('../' . $img, $GLOBALS['_CFG']['thumb_width'], $GLOBALS['_CFG']['thumb_height']);
                                 if ($gallery_thumb === false) {
-                                    sys_msg($image->error_msg(), 1, array(), false);
+                                    return sys_msg($image->error_msg(), 1, array(), false);
                                 }
                             }
                         } else {
@@ -916,7 +916,7 @@ class Index extends Init
                             $pos = strpos(basename($img), '.');
                             $gallery_img = dirname($img) . '/' . $image->random_filename() . substr(basename($img), $pos);
                             if (!copy('../' . $img, '../' . $gallery_img)) {
-                                sys_msg('fail to copy file: ' . realpath('../' . $img), 1, array(), false);
+                                return sys_msg('fail to copy file: ' . realpath('../' . $img), 1, array(), false);
                             }
                             $gallery_thumb = '';
                         }
@@ -927,7 +927,7 @@ class Index extends Init
                         if ($GLOBALS['_CFG']['thumb_width'] != 0 || $GLOBALS['_CFG']['thumb_height'] != 0) {
                             $goods_thumb = $image->make_thumb('../' . $original_img, $GLOBALS['_CFG']['thumb_width'], $GLOBALS['_CFG']['thumb_height']);
                             if ($goods_thumb === false) {
-                                sys_msg($image->error_msg(), 1, array(), false);
+                                return sys_msg($image->error_msg(), 1, array(), false);
                             }
                         } else {
                             $goods_thumb = $original_img;

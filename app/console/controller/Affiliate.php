@@ -97,7 +97,7 @@ class Affiliate extends Init
             $temp['on'] = 1;
             $this->put_affiliate($temp);
             $links[] = array('text' => $GLOBALS['_LANG']['affiliate'], 'href' => 'affiliate.php?act=list');
-            sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
+            return sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
         }
         /*------------------------------------------------------ */
         //-- 推荐开关
@@ -108,7 +108,7 @@ class Affiliate extends Init
             $config['on'] = $on;
             $this->put_affiliate($config);
             $links[] = array('text' => $GLOBALS['_LANG']['affiliate'], 'href' => 'affiliate.php?act=list');
-            sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
+            return sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
         }
         /*------------------------------------------------------ */
         //-- Ajax修改设置

@@ -124,7 +124,7 @@ class Users extends Init
                 } else {
                     //die('Error:'.$users->error_msg());
                 }
-                sys_msg($msg, 1);
+                return sys_msg($msg, 1);
             }
 
             /* 注册送积分 */
@@ -173,7 +173,7 @@ class Users extends Init
 
             /* 提示信息 */
             $link[] = array('text' => $GLOBALS['_LANG']['go_back'], 'href' => 'users.php?act=list');
-            sys_msg(sprintf($GLOBALS['_LANG']['add_success'], htmlspecialchars(stripslashes($_POST['username']))), 0, $link);
+            return sys_msg(sprintf($GLOBALS['_LANG']['add_success'], htmlspecialchars(stripslashes($_POST['username']))), 0, $link);
         }
 
         /*------------------------------------------------------ */
@@ -219,7 +219,7 @@ class Users extends Init
                 $user['mobile_phone'] = $row['mobile_phone'];
             } else {
                 $link[] = array('text' => $GLOBALS['_LANG']['go_back'], 'href' => 'users.php?act=list');
-                sys_msg($GLOBALS['_LANG']['username_invalid'], 0, $links);
+                return sys_msg($GLOBALS['_LANG']['username_invalid'], 0, $links);
 //        $user['sex']            = 0;
 //        $user['pay_points']     = 0;
 //        $user['rank_points']    = 0;
@@ -335,7 +335,7 @@ class Users extends Init
                 } else {
                     $msg = $GLOBALS['_LANG']['edit_user_failed'];
                 }
-                sys_msg($msg, 1);
+                return sys_msg($msg, 1);
             }
             if (!empty($password)) {
                 $sql = "UPDATE " . $GLOBALS['ecs']->table('users') . "SET `ec_salt`='0' WHERE user_name= '" . $username . "'";
@@ -385,7 +385,7 @@ class Users extends Init
             $links[1]['text'] = $GLOBALS['_LANG']['go_back'];
             $links[1]['href'] = 'javascript:history.back()';
 
-            sys_msg($GLOBALS['_LANG']['update_success'], 0, $links);
+            return sys_msg($GLOBALS['_LANG']['update_success'], 0, $links);
         }
 
         /*------------------------------------------------------ */
@@ -408,10 +408,10 @@ class Users extends Init
                 admin_log($usernames, 'batch_remove', 'users');
 
                 $lnk[] = array('text' => $GLOBALS['_LANG']['go_back'], 'href' => 'users.php?act=list');
-                sys_msg(sprintf($GLOBALS['_LANG']['batch_remove_success'], $count), 0, $lnk);
+                return sys_msg(sprintf($GLOBALS['_LANG']['batch_remove_success'], $count), 0, $lnk);
             } else {
                 $lnk[] = array('text' => $GLOBALS['_LANG']['go_back'], 'href' => 'users.php?act=list');
-                sys_msg($GLOBALS['_LANG']['no_select_user'], 0, $lnk);
+                return sys_msg($GLOBALS['_LANG']['no_select_user'], 0, $lnk);
             }
         } /* 编辑用户名 */
         elseif ($_REQUEST['act'] == 'edit_username') {
@@ -496,7 +496,7 @@ class Users extends Init
 
             /* 提示信息 */
             $link[] = array('text' => $GLOBALS['_LANG']['go_back'], 'href' => 'users.php?act=list');
-            sys_msg(sprintf($GLOBALS['_LANG']['remove_success'], $username), 0, $link);
+            return sys_msg(sprintf($GLOBALS['_LANG']['remove_success'], $username), 0, $link);
         }
 
         /*------------------------------------------------------ */
@@ -537,7 +537,7 @@ class Users extends Init
 
             /* 提示信息 */
             $link[] = array('text' => $GLOBALS['_LANG']['go_back'], 'href' => 'users.php?act=list');
-            sys_msg(sprintf($GLOBALS['_LANG']['update_success'], $username), 0, $link);
+            return sys_msg(sprintf($GLOBALS['_LANG']['update_success'], $username), 0, $link);
         }
 
         /*------------------------------------------------------ */

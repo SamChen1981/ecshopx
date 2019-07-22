@@ -80,19 +80,19 @@ class UserRank extends Init
 
             /* 检查是否存在重名的会员等级 */
             if (!$exc->is_only('rank_name', trim($_POST['rank_name']))) {
-                sys_msg(sprintf($GLOBALS['_LANG']['rank_name_exists'], trim($_POST['rank_name'])), 1);
+                return sys_msg(sprintf($GLOBALS['_LANG']['rank_name_exists'], trim($_POST['rank_name'])), 1);
             }
 
             /* 非特殊会员组检查积分的上下限是否合理 */
             if ($_POST['min_points'] >= $_POST['max_points'] && $special_rank == 0) {
-                sys_msg($GLOBALS['_LANG']['js_languages']['integral_max_small'], 1);
+                return sys_msg($GLOBALS['_LANG']['js_languages']['integral_max_small'], 1);
             }
 
             /* 特殊等级会员组不判断积分限制 */
             if ($special_rank == 0) {
                 /* 检查下限制有无重复 */
                 if (!$exc->is_only('min_points', intval($_POST['min_points']))) {
-                    sys_msg(sprintf($GLOBALS['_LANG']['integral_min_exists'], intval($_POST['min_points'])));
+                    return sys_msg(sprintf($GLOBALS['_LANG']['integral_min_exists'], intval($_POST['min_points'])));
                 }
             }
 
@@ -100,7 +100,7 @@ class UserRank extends Init
             if ($special_rank == 0) {
                 /* 检查上限有无重复 */
                 if (!$exc->is_only('max_points', intval($_POST['max_points']))) {
-                    sys_msg(sprintf($GLOBALS['_LANG']['integral_max_exists'], intval($_POST['max_points'])));
+                    return sys_msg(sprintf($GLOBALS['_LANG']['integral_max_exists'], intval($_POST['max_points'])));
                 }
             }
 
@@ -117,7 +117,7 @@ class UserRank extends Init
 
             $lnk[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'user_rank.php?act=list');
             $lnk[] = array('text' => $GLOBALS['_LANG']['add_continue'], 'href' => 'user_rank.php?act=add');
-            sys_msg($GLOBALS['_LANG']['add_rank_success'], 0, $lnk);
+            return sys_msg($GLOBALS['_LANG']['add_rank_success'], 0, $lnk);
         }
 
         /*------------------------------------------------------ */

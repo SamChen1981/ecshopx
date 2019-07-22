@@ -278,11 +278,11 @@ class CommentManage extends Init
                 admin_log('', $action, 'adminlog');
 
                 $link[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'comment_manage.php?act=list');
-                sys_msg(sprintf($GLOBALS['_LANG']['batch_drop_success'], count($_POST['checkboxes'])), 0, $link);
+                return sys_msg(sprintf($GLOBALS['_LANG']['batch_drop_success'], count($_POST['checkboxes'])), 0, $link);
             } else {
                 /* 提示信息 */
                 $link[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'comment_manage.php?act=list');
-                sys_msg($GLOBALS['_LANG']['no_select_comment'], 0, $link);
+                return sys_msg($GLOBALS['_LANG']['no_select_comment'], 0, $link);
             }
         }
     }

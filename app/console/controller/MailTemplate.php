@@ -127,13 +127,13 @@ class MailTemplate extends Init
 
         elseif ($_REQUEST['act'] == 'save_template') {
             if (empty($_POST['subject'])) {
-                sys_msg($GLOBALS['_LANG']['subject_empty'], 1, array(), false);
+                return sys_msg($GLOBALS['_LANG']['subject_empty'], 1, array(), false);
             } else {
                 $subject = trim($_POST['subject']);
             }
 
             if (empty($_POST['content'])) {
-                sys_msg($GLOBALS['_LANG']['content_empty'], 1, array(), false);
+                return sys_msg($GLOBALS['_LANG']['content_empty'], 1, array(), false);
             } else {
                 $content = trim($_POST['content']);
             }
@@ -151,9 +151,9 @@ class MailTemplate extends Init
 
             if ($GLOBALS['db']->query($sql, "SILENT")) {
                 $link[0] = array('href' => 'mail_template.php?act=list', 'text' => $GLOBALS['_LANG']['update_success']);
-                sys_msg($GLOBALS['_LANG']['update_success'], 0, $link);
+                return sys_msg($GLOBALS['_LANG']['update_success'], 0, $link);
             } else {
-                sys_msg($GLOBALS['_LANG']['update_failed'], 1, array(), false);
+                return sys_msg($GLOBALS['_LANG']['update_failed'], 1, array(), false);
             }
         }
     }

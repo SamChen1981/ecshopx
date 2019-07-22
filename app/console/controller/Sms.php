@@ -87,7 +87,7 @@ class Sms extends Init
 
                 if ($sms->has_registered()) {
                     if (empty($_POST['sms_sign'])) {
-                        sys_msg($GLOBALS['_LANG']['insert_sign'], 1, array(), false);
+                        return sys_msg($GLOBALS['_LANG']['insert_sign'], 1, array(), false);
                     }
 
                     $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('shop_config') . "WHERE  code='sms_sign'";
@@ -127,7 +127,7 @@ class Sms extends Init
                             $this->shop_config_update('sms_sign', $sms_sign);
                             /* 清除缓存 */
                             clear_all_files();
-                            sys_msg($GLOBALS['_LANG']['insert_succ'], 1, array(), false);
+                            return sys_msg($GLOBALS['_LANG']['insert_succ'], 1, array(), false);
                         } else {
                             if ($result['code'] == 1004) {
                                 delete_yunqi_code();
@@ -136,14 +136,14 @@ class Sms extends Init
                             if (EC_CHARSET != 'utf-8') {
                                 $error_smg = iconv('utf-8', 'gb2312', $error_smg);
                             }
-                            sys_msg($error_smg, 1, array(), false);
+                            return sys_msg($error_smg, 1, array(), false);
                         }
                     } else {
                         $this->shop_config_update('default_sms_sign', $content_y);
                         $this->shop_config_update('sms_sign', '');
                         /* 清除缓存 */
                         clear_all_files();
-                        sys_msg($GLOBALS['_LANG']['error_smg'], 1, array(), false);
+                        return sys_msg($GLOBALS['_LANG']['error_smg'], 1, array(), false);
                     }
                 } else {
                     $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['register_sms']);
@@ -168,7 +168,7 @@ class Sms extends Init
                         $new_content_t = $new_content_y = $_POST['new_sms_sign'];
 
                         if (!isset($sms_sign[$GLOBALS['_CFG']['ent_id']][$extend_no]) || empty($extend_no)) {
-                            sys_msg($GLOBALS['_LANG']['error_smg'], 1, array(), false);
+                            return sys_msg($GLOBALS['_LANG']['error_smg'], 1, array(), false);
                         }
                         if (EC_CHARSET != 'utf-8') {
                             $content_t = iconv('gb2312', 'utf-8', $content_y);
@@ -202,7 +202,7 @@ class Sms extends Init
 
                             /* 清除缓存 */
                             clear_all_files();
-                            sys_msg($GLOBALS['_LANG']['edit_succ'], 1, array(), false);
+                            return sys_msg($GLOBALS['_LANG']['edit_succ'], 1, array(), false);
                         } else {
                             if ($result['code'] == 1004) {
                                 delete_yunqi_code();
@@ -211,14 +211,14 @@ class Sms extends Init
                             if (EC_CHARSET != 'utf-8') {
                                 $error_smg = iconv('utf-8', 'gb2312', $error_smg);
                             }
-                            sys_msg($error_smg, 1, array(), false);
+                            return sys_msg($error_smg, 1, array(), false);
                         }
                     } else {
                         $this->shop_config_update('default_sms_sign', $content_y);
                         $this->shop_config_update('sms_sign', '');
                         /* 清除缓存 */
                         clear_all_files();
-                        sys_msg($GLOBALS['_LANG']['error_smg'], 1, array(), false);
+                        return sys_msg($GLOBALS['_LANG']['error_smg'], 1, array(), false);
                     }
                 } else {
                     $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['register_sms']);
@@ -247,16 +247,16 @@ class Sms extends Init
                             $this->shop_config_update('default_sms_sign', $sms_sign_default);
                             /* 清除缓存 */
                             clear_all_files();
-                            sys_msg($GLOBALS['_LANG']['default_succ'], 1, array(), false);
+                            return sys_msg($GLOBALS['_LANG']['default_succ'], 1, array(), false);
                         } else {
-                            sys_msg($GLOBALS['_LANG']['no_default'], 1, array(), false);
+                            return sys_msg($GLOBALS['_LANG']['no_default'], 1, array(), false);
                         }
                     } else {
                         $this->shop_config_update('default_sms_sign', $content_y);
                         $this->shop_config_update('sms_sign', '');
                         /* 清除缓存 */
                         clear_all_files();
-                        sys_msg($GLOBALS['_LANG']['error_smg'], 1, array(), false);
+                        return sys_msg($GLOBALS['_LANG']['error_smg'], 1, array(), false);
                     }
                 } else {
                     $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['register_sms']);
@@ -321,11 +321,11 @@ class Sms extends Init
                     'href' => 'sms.php?act=display_send_ui');
 
                 if ($result === true) {//发送成功
-                    sys_msg($GLOBALS['_LANG']['send_ok'], 0, $link);
+                    return sys_msg($GLOBALS['_LANG']['send_ok'], 0, $link);
                 } else {
                     @$error_detail = $GLOBALS['_LANG']['server_errors'][$sms->errors['server_errors']['error_no']]
                         . $GLOBALS['_LANG']['api_errors']['send'][$sms->errors['api_errors']['error_no']];
-                    sys_msg($GLOBALS['_LANG']['send_error'] . $error_detail, 1, $link);
+                    return sys_msg($GLOBALS['_LANG']['send_error'] . $error_detail, 1, $link);
                 }
 
                 break;

@@ -94,7 +94,7 @@ class H5Setting extends Init
                         $cert_steam = addslashes($cert_steam);
                         $_POST['value']['cert'] = $_FILES['value']['name']['cert'];
                     } else {
-                        sys_msg('证书不能为空', 1, $links);
+                        return sys_msg('证书不能为空', 1, $links);
                     }
                 }
             }
@@ -156,7 +156,7 @@ class H5Setting extends Init
                 }
             }
 
-            sys_msg($GLOBALS['_LANG']['attradd_succed'], 0, $links);
+            return sys_msg($GLOBALS['_LANG']['attradd_succed'], 0, $links);
         } elseif ($_REQUEST['act'] == 'del') {
             admin_priv('flash_manage');
 
@@ -167,7 +167,7 @@ class H5Setting extends Init
             } else {
                 $links[] = array('text' => 'H5配置', 'href' => 'h5_setting.php?act=list');
 //        $links[] = array('text' => $GLOBALS['_LANG']['go_url'], 'href' => 'h5_setting.php?act=list');
-                sys_msg($GLOBALS['_LANG']['id_error'], 0, $links);
+                return sys_msg($GLOBALS['_LANG']['id_error'], 0, $links);
             }
 
             if (strpos($rt['src'], 'http') === false) {
@@ -206,7 +206,7 @@ class H5Setting extends Init
             } elseif ($_POST['step'] == 2) {
                 if (!empty($_FILES['img_file_src']['name'])) {
                     if (!get_file_suffix($_FILES['img_file_src']['name'], $allow_suffix)) {
-                        sys_msg($GLOBALS['_LANG']['invalid_type']);
+                        return sys_msg($GLOBALS['_LANG']['invalid_type']);
                     }
                     $name = date('Ymd');
                     for ($i = 0; $i < 6; $i++) {
@@ -220,7 +220,7 @@ class H5Setting extends Init
                     }
                 } elseif (!empty($_POST['img_src'])) {
                     if (!get_file_suffix($_POST['img_src'], $allow_suffix)) {
-                        sys_msg($GLOBALS['_LANG']['invalid_type']);
+                        return sys_msg($GLOBALS['_LANG']['invalid_type']);
                     }
                     $src = $_POST['img_src'];
                     if (strstr($src, 'http') && !strstr($src, $_SERVER['SERVER_NAME'])) {
@@ -228,12 +228,12 @@ class H5Setting extends Init
                     }
                 } else {
                     $links[] = array('text' => $GLOBALS['_LANG']['add_new'], 'href' => 'h5_setting.php?act=add');
-                    sys_msg($GLOBALS['_LANG']['src_empty'], 0, $links);
+                    return sys_msg($GLOBALS['_LANG']['src_empty'], 0, $links);
                 }
 
                 if (empty($_POST['img_url'])) {
                     $links[] = array('text' => $GLOBALS['_LANG']['add_new'], 'href' => 'h5_setting.php?act=add');
-                    sys_msg($GLOBALS['_LANG']['link_empty'], 0, $links);
+                    return sys_msg($GLOBALS['_LANG']['link_empty'], 0, $links);
                 }
 
                 // 获取flash播放器数据
@@ -258,7 +258,7 @@ class H5Setting extends Init
                 $error_msg = '';
                 $this->set_flash_data($GLOBALS['_CFG']['flash_theme'], $error_msg);
                 $links[] = array('text' => $GLOBALS['_LANG']['go_url'], 'href' => 'h5_setting.php?act=list');
-                sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
+                return sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
             }
         } elseif ($_REQUEST['act'] == 'edit') {
             admin_priv('flash_manage');
@@ -269,7 +269,7 @@ class H5Setting extends Init
                 $rt = $flashdb[$id];
             } else {
                 $links[] = array('text' => $GLOBALS['_LANG']['go_url'], 'href' => 'h5_setting.php?act=list');
-                sys_msg($GLOBALS['_LANG']['id_error'], 0, $links);
+                return sys_msg($GLOBALS['_LANG']['id_error'], 0, $links);
             }
             if (empty($_POST['step'])) {
                 $rt['act'] = 'edit';
@@ -287,12 +287,12 @@ class H5Setting extends Init
                 if (empty($_POST['img_url'])) {
                     //若链接地址为空
                     $links[] = array('text' => $GLOBALS['_LANG']['return_edit'], 'href' => 'h5_setting.php?act=edit&id=' . $id);
-                    sys_msg($GLOBALS['_LANG']['link_empty'], 0, $links);
+                    return sys_msg($GLOBALS['_LANG']['link_empty'], 0, $links);
                 }
 
                 if (!empty($_FILES['img_file_src']['name'])) {
                     if (!get_file_suffix($_FILES['img_file_src']['name'], $allow_suffix)) {
-                        sys_msg($GLOBALS['_LANG']['invalid_type']);
+                        return sys_msg($GLOBALS['_LANG']['invalid_type']);
                     }
                     //有上传
                     $name = date('Ymd');
@@ -309,14 +309,14 @@ class H5Setting extends Init
                 } elseif (!empty($_POST['img_src'])) {
                     $src = $_POST['img_src'];
                     if (!get_file_suffix($_POST['img_src'], $allow_suffix)) {
-                        sys_msg($GLOBALS['_LANG']['invalid_type']);
+                        return sys_msg($GLOBALS['_LANG']['invalid_type']);
                     }
                     if (strstr($src, 'http') && !strstr($src, $_SERVER['SERVER_NAME'])) {
                         $src = $this->get_url_image($src);
                     }
                 } else {
                     $links[] = array('text' => $GLOBALS['_LANG']['return_edit'], 'href' => 'h5_setting.php?act=edit&id=' . $id);
-                    sys_msg($GLOBALS['_LANG']['src_empty'], 0, $links);
+                    return sys_msg($GLOBALS['_LANG']['src_empty'], 0, $links);
                 }
 
                 if (strpos($rt['src'], 'http') === false && $rt['src'] != $src) {
@@ -340,7 +340,7 @@ class H5Setting extends Init
                 $error_msg = '';
                 $this->set_flash_data($GLOBALS['_CFG']['flash_theme'], $error_msg);
                 $links[] = array('text' => $GLOBALS['_LANG']['go_url'], 'href' => 'h5_setting.php?act=list');
-                sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
+                return sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
             }
         } elseif ($_REQUEST['act'] == 'checkapi') {
             $result = test_api();

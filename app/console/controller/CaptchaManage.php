@@ -19,7 +19,7 @@ class CaptchaManage extends Init
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'main') {
             if (gd_version() == 0) {
-                sys_msg($GLOBALS['_LANG']['captcha_note'], 1);
+                return sys_msg($GLOBALS['_LANG']['captcha_note'], 1);
             }
 
             assign_query_info();
@@ -79,7 +79,7 @@ class CaptchaManage extends Init
 
             clear_cache_files();
 
-            sys_msg($GLOBALS['_LANG']['save_ok'], 0, array(array('href' => 'captcha_manage.php?act=main', 'text' => $GLOBALS['_LANG']['captcha_manage'])));
+            return sys_msg($GLOBALS['_LANG']['save_ok'], 0, array(array('href' => 'captcha_manage.php?act=main', 'text' => $GLOBALS['_LANG']['captcha_manage'])));
         }
     }
 }

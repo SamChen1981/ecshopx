@@ -120,9 +120,9 @@ class GoodsType extends Init
 
             if ($GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('goods_type'), $goods_type) !== false) {
                 $links = array(array('href' => 'goods_type.php?act=manage', 'text' => $GLOBALS['_LANG']['back_list']));
-                sys_msg($GLOBALS['_LANG']['add_goodstype_success'], 0, $links);
+                return sys_msg($GLOBALS['_LANG']['add_goodstype_success'], 0, $links);
             } else {
-                sys_msg($GLOBALS['_LANG']['add_goodstype_failed'], 1);
+                return sys_msg($GLOBALS['_LANG']['add_goodstype_failed'], 1);
             }
         }
 
@@ -134,7 +134,7 @@ class GoodsType extends Init
             $goods_type = $this->get_goodstype_info(intval($_GET['cat_id']));
 
             if (empty($goods_type)) {
-                sys_msg($GLOBALS['_LANG']['cannot_found_goodstype'], 1);
+                return sys_msg($GLOBALS['_LANG']['cannot_found_goodstype'], 1);
             }
 
             admin_priv('goods_type');
@@ -173,9 +173,9 @@ class GoodsType extends Init
                 }
 
                 $links = array(array('href' => 'goods_type.php?act=manage', 'text' => $GLOBALS['_LANG']['back_list']));
-                sys_msg($GLOBALS['_LANG']['edit_goodstype_success'], 0, $links);
+                return sys_msg($GLOBALS['_LANG']['edit_goodstype_success'], 0, $links);
             } else {
-                sys_msg($GLOBALS['_LANG']['edit_goodstype_failed'], 1);
+                return sys_msg($GLOBALS['_LANG']['edit_goodstype_failed'], 1);
             }
         }
 

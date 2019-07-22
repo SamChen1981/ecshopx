@@ -110,7 +110,7 @@ class Shophelp extends Init
             clear_cache_files();
 
             admin_log($_POST['title'], 'add', 'shophelp');
-            sys_msg($GLOBALS['_LANG']['articleadd_succeed'], 0, $link);
+            return sys_msg($GLOBALS['_LANG']['articleadd_succeed'], 0, $link);
         }
 
         /*------------------------------------------------------ */
@@ -155,7 +155,7 @@ class Shophelp extends Init
                 $link[0]['text'] = $GLOBALS['_LANG']['back_list'];
                 $link[0]['href'] = 'shophelp.php?act=list_article&cat_id=' . $_POST['cat_id'];
 
-                sys_msg(sprintf($GLOBALS['_LANG']['articleedit_succeed'], $_POST['title']), 0, $link);
+                return sys_msg(sprintf($GLOBALS['_LANG']['articleedit_succeed'], $_POST['title']), 0, $link);
                 admin_log($_POST['title'], 'edit', 'shophelp');
             }
         }

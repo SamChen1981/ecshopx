@@ -60,7 +60,7 @@ class EmailList extends Init
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'batch_remove') {
             if (!isset($_POST['checkboxes']) || !is_array($_POST['checkboxes'])) {
-                sys_msg($GLOBALS['_LANG']['no_select_email'], 1);
+                return sys_msg($GLOBALS['_LANG']['no_select_email'], 1);
             }
 
             $sql = "DELETE FROM " . $GLOBALS['ecs']->table('email_list') .
@@ -68,7 +68,7 @@ class EmailList extends Init
             $GLOBALS['db']->query($sql);
 
             $lnk[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'email_list.php?act=list');
-            sys_msg(sprintf($GLOBALS['_LANG']['batch_remove_succeed'], $GLOBALS['db']->affected_rows()), 0, $lnk);
+            return sys_msg(sprintf($GLOBALS['_LANG']['batch_remove_succeed'], $GLOBALS['db']->affected_rows()), 0, $lnk);
         }
 
         /*------------------------------------------------------ */
@@ -76,7 +76,7 @@ class EmailList extends Init
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'batch_unremove') {
             if (!isset($_POST['checkboxes']) || !is_array($_POST['checkboxes'])) {
-                sys_msg($GLOBALS['_LANG']['no_select_email'], 1);
+                return sys_msg($GLOBALS['_LANG']['no_select_email'], 1);
             }
 
             $sql = "UPDATE " . $GLOBALS['ecs']->table('email_list') .
@@ -84,7 +84,7 @@ class EmailList extends Init
             $GLOBALS['db']->query($sql);
 
             $lnk[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'email_list.php?act=list');
-            sys_msg(sprintf($GLOBALS['_LANG']['batch_unremove_succeed'], $GLOBALS['db']->affected_rows()), 0, $lnk);
+            return sys_msg(sprintf($GLOBALS['_LANG']['batch_unremove_succeed'], $GLOBALS['db']->affected_rows()), 0, $lnk);
         }
 
         /*------------------------------------------------------ */
@@ -92,7 +92,7 @@ class EmailList extends Init
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'batch_exit') {
             if (!isset($_POST['checkboxes']) || !is_array($_POST['checkboxes'])) {
-                sys_msg($GLOBALS['_LANG']['no_select_email'], 1);
+                return sys_msg($GLOBALS['_LANG']['no_select_email'], 1);
             }
 
             $sql = "UPDATE " . $GLOBALS['ecs']->table('email_list') .
@@ -100,7 +100,7 @@ class EmailList extends Init
             $GLOBALS['db']->query($sql);
 
             $lnk[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'email_list.php?act=list');
-            sys_msg(sprintf($GLOBALS['_LANG']['batch_exit_succeed'], $GLOBALS['db']->affected_rows()), 0, $lnk);
+            return sys_msg(sprintf($GLOBALS['_LANG']['batch_exit_succeed'], $GLOBALS['db']->affected_rows()), 0, $lnk);
         }
     }
 

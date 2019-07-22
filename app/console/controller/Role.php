@@ -142,7 +142,7 @@ class Role extends Init
             $link[0]['text'] = $GLOBALS['_LANG']['admin_list_role'];
             $link[0]['href'] = 'role.php?act=list';
 
-            sys_msg($GLOBALS['_LANG']['add'] . "&nbsp;" . $_POST['user_name'] . "&nbsp;" . $GLOBALS['_LANG']['action_succeed'], 0, $link);
+            return sys_msg($GLOBALS['_LANG']['add'] . "&nbsp;" . $_POST['user_name'] . "&nbsp;" . $GLOBALS['_LANG']['action_succeed'], 0, $link);
 
             /* 记录管理员操作 */
             admin_log($_POST['user_name'], 'add', 'role');
@@ -222,7 +222,7 @@ class Role extends Init
             $GLOBALS['db']->query($user_sql);
             /* 提示信息 */
             $link[] = array('text' => $GLOBALS['_LANG']['back_admin_list'], 'href' => 'role.php?act=list');
-            sys_msg($GLOBALS['_LANG']['edit'] . "&nbsp;" . $_POST['user_name'] . "&nbsp;" . $GLOBALS['_LANG']['action_succeed'], 0, $link);
+            return sys_msg($GLOBALS['_LANG']['edit'] . "&nbsp;" . $_POST['user_name'] . "&nbsp;" . $GLOBALS['_LANG']['action_succeed'], 0, $link);
         }
 
         /*------------------------------------------------------ */

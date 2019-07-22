@@ -39,7 +39,7 @@ class ArticleAuto extends Init
             $sql = "DELETE FROM " . $GLOBALS['ecs']->table('auto_manage') . " WHERE item_id = '$goods_id' AND type = 'article'";
             $GLOBALS['db']->query($sql);
             $links[] = array('text' => $GLOBALS['_LANG']['article_auto'], 'href' => 'article_auto.php?act=list');
-            sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
+            return sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
         } elseif ($_REQUEST['act'] == 'edit_starttime') {
             check_authz_json('goods_auto');
 
@@ -81,7 +81,7 @@ class ArticleAuto extends Init
             admin_priv('goods_auto');
 
             if (!isset($_POST['checkboxes']) || !is_array($_POST['checkboxes'])) {
-                sys_msg($GLOBALS['_LANG']['no_select_goods'], 1);
+                return sys_msg($GLOBALS['_LANG']['no_select_goods'], 1);
             }
 
             if ($_POST['date'] == '0000-00-00') {
@@ -96,13 +96,13 @@ class ArticleAuto extends Init
             }
 
             $lnk[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'article_auto.php?act=list');
-            sys_msg($GLOBALS['_LANG']['batch_start_succeed'], 0, $lnk);
+            return sys_msg($GLOBALS['_LANG']['batch_start_succeed'], 0, $lnk);
         } //批量取消发布
         elseif ($_REQUEST['act'] == 'batch_end') {
             admin_priv('goods_auto');
 
             if (!isset($_POST['checkboxes']) || !is_array($_POST['checkboxes'])) {
-                sys_msg($GLOBALS['_LANG']['no_select_goods'], 1);
+                return sys_msg($GLOBALS['_LANG']['no_select_goods'], 1);
             }
 
             if ($_POST['date'] == '0000-00-00') {
@@ -117,7 +117,7 @@ class ArticleAuto extends Init
             }
 
             $lnk[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'article_auto.php?act=list');
-            sys_msg($GLOBALS['_LANG']['batch_end_succeed'], 0, $lnk);
+            return sys_msg($GLOBALS['_LANG']['batch_end_succeed'], 0, $lnk);
         }
 
         function get_auto_goods()

@@ -65,7 +65,7 @@ class Shopinfo extends Init
             $is_only = $exc->is_only('title', $_POST['title']);
 
             if (!$is_only) {
-                sys_msg(sprintf($GLOBALS['_LANG']['title_exist'], stripslashes($_POST['title'])), 1);
+                return sys_msg(sprintf($GLOBALS['_LANG']['title_exist'], stripslashes($_POST['title'])), 1);
             }
 
             /* 插入数据 */
@@ -83,7 +83,7 @@ class Shopinfo extends Init
             clear_cache_files();
 
             admin_log($_POST['title'], 'add', 'shopinfo');
-            sys_msg($GLOBALS['_LANG']['articleadd_succeed'], 0, $link);
+            return sys_msg($GLOBALS['_LANG']['articleadd_succeed'], 0, $link);
         }
 
         /*------------------------------------------------------ */
@@ -117,7 +117,7 @@ class Shopinfo extends Init
                 $is_only = $exc->is_only('title', $_POST['title'], $_POST['id']);
 
                 if (!$is_only) {
-                    sys_msg(sprintf($GLOBALS['_LANG']['title_exist'], stripslashes($_POST['title'])), 1);
+                    return sys_msg(sprintf($GLOBALS['_LANG']['title_exist'], stripslashes($_POST['title'])), 1);
                 }
             }
 
@@ -130,7 +130,7 @@ class Shopinfo extends Init
                 $link[0]['text'] = $GLOBALS['_LANG']['back_list'];
                 $link[0]['href'] = 'shopinfo.php?act=list';
 
-                sys_msg(sprintf($GLOBALS['_LANG']['articleedit_succeed'], $_POST['title']), 0, $link);
+                return sys_msg(sprintf($GLOBALS['_LANG']['articleedit_succeed'], $_POST['title']), 0, $link);
                 admin_log($_POST['title'], 'edit', 'shopinfo');
             }
         }

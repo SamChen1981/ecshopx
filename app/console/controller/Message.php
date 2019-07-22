@@ -102,7 +102,7 @@ class Message extends Init
                 $link[1]['text'] = $GLOBALS['_LANG']['continue_send_msg'];
                 $link[1]['href'] = 'message.php?act=send';
 
-                sys_msg($GLOBALS['_LANG']['send_msg'] . "&nbsp;" . $GLOBALS['_LANG']['action_succeed'], 0, $link);
+                return sys_msg($GLOBALS['_LANG']['send_msg'] . "&nbsp;" . $GLOBALS['_LANG']['action_succeed'], 0, $link);
 
                 /* 记录管理员操作 */
                 admin_log(admin_log($GLOBALS['_LANG']['send_msg']), 'add', 'admin_message');
@@ -122,7 +122,7 @@ class Message extends Init
                 $link[1]['text'] = $GLOBALS['_LANG']['continue_send_msg'];
                 $link[1]['href'] = 'message.php?act=send';
 
-                sys_msg($GLOBALS['_LANG']['send_msg'] . "&nbsp;" . $GLOBALS['_LANG']['action_succeed'], 0, $link);
+                return sys_msg($GLOBALS['_LANG']['send_msg'] . "&nbsp;" . $GLOBALS['_LANG']['action_succeed'], 0, $link);
             }
         }
         /*------------------------------------------------------ */
@@ -161,7 +161,7 @@ class Message extends Init
             $link[0]['text'] = $GLOBALS['_LANG']['back_list'];
             $link[0]['href'] = 'message.php?act=list';
 
-            sys_msg($GLOBALS['_LANG']['edit_msg'] . ' ' . $GLOBALS['_LANG']['action_succeed'], 0, $link);
+            return sys_msg($GLOBALS['_LANG']['edit_msg'] . ' ' . $GLOBALS['_LANG']['action_succeed'], 0, $link);
 
             /* 记录管理员操作 */
             admin_log(addslashes($GLOBALS['_LANG']['edit_msg']), 'edit', 'admin_message');
@@ -243,7 +243,7 @@ class Message extends Init
             $link[0]['text'] = $GLOBALS['_LANG']['back_list'];
             $link[0]['href'] = 'message.php?act=list';
 
-            sys_msg($GLOBALS['_LANG']['send_msg'] . ' ' . $GLOBALS['_LANG']['action_succeed'], 0, $link);
+            return sys_msg($GLOBALS['_LANG']['send_msg'] . ' ' . $GLOBALS['_LANG']['action_succeed'], 0, $link);
 
             /* 记录管理员操作 */
             admin_log(addslashes($GLOBALS['_LANG']['send_msg']), 'add', 'admin_message');
@@ -266,9 +266,9 @@ class Message extends Init
 
                 admin_log('', 'remove', 'admin_message');
                 $link[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'message.php?act=list');
-                sys_msg(sprintf($GLOBALS['_LANG']['batch_drop_success'], $count), 0, $link);
+                return sys_msg(sprintf($GLOBALS['_LANG']['batch_drop_success'], $count), 0, $link);
             } else {
-                sys_msg($GLOBALS['_LANG']['no_select_msg'], 1);
+                return sys_msg($GLOBALS['_LANG']['no_select_msg'], 1);
             }
         }
 

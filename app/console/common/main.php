@@ -59,7 +59,7 @@ function sys_msg($msg_detail, $msg_type = 0, $links = array(), $auto_redirect = 
     $GLOBALS['smarty']->assign('default_url', $links[0]['href']);
     $GLOBALS['smarty']->assign('auto_redirect', $auto_redirect);
 
-    $GLOBALS['smarty']->display('message.htm');
+    return $GLOBALS['smarty']->display('message.htm');
 
 
 }
@@ -154,7 +154,7 @@ function admin_priv($priv_str, $msg_type = '', $msg_output = true)
     if (strpos(',' . $_SESSION['action_list'] . ',', ',' . $priv_str . ',') === false) {
         $link[] = array('text' => $GLOBALS['_LANG']['go_back'], 'href' => 'javascript:history.back(-1)');
         if ($msg_output) {
-            sys_msg($GLOBALS['_LANG']['priv_error'], 0, $link);
+            return sys_msg($GLOBALS['_LANG']['priv_error'], 0, $link);
         }
         return false;
     } else {

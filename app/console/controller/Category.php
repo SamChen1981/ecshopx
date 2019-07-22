@@ -97,13 +97,13 @@ class Category extends Init
             if (cat_exists($cat['cat_name'], $cat['parent_id'])) {
                 /* 同级别下不能有重复的分类名称 */
                 $link[] = array('text' => $GLOBALS['_LANG']['go_back'], 'href' => 'javascript:history.back(-1)');
-                sys_msg($GLOBALS['_LANG']['catname_exist'], 0, $link);
+                return sys_msg($GLOBALS['_LANG']['catname_exist'], 0, $link);
             }
 
             if ($cat['grade'] > 10 || $cat['grade'] < 0) {
                 /* 价格区间数超过范围 */
                 $link[] = array('text' => $GLOBALS['_LANG']['go_back'], 'href' => 'javascript:history.back(-1)');
-                sys_msg($GLOBALS['_LANG']['grade_error'], 0, $link);
+                return sys_msg($GLOBALS['_LANG']['grade_error'], 0, $link);
             }
 
             /* 入库的操作 */
@@ -130,7 +130,7 @@ class Category extends Init
                 $link[1]['text'] = $GLOBALS['_LANG']['back_list'];
                 $link[1]['href'] = 'category.php?act=list';
 
-                sys_msg($GLOBALS['_LANG']['catadd_succed'], 0, $link);
+                return sys_msg($GLOBALS['_LANG']['catadd_succed'], 0, $link);
             }
         }
 
@@ -238,7 +238,7 @@ class Category extends Init
             if ($cat['cat_name'] != $old_cat_name) {
                 if (cat_exists($cat['cat_name'], $cat['parent_id'], $cat_id)) {
                     $link[] = array('text' => $GLOBALS['_LANG']['go_back'], 'href' => 'javascript:history.back(-1)');
-                    sys_msg($GLOBALS['_LANG']['catname_exist'], 0, $link);
+                    return sys_msg($GLOBALS['_LANG']['catname_exist'], 0, $link);
                 }
             }
 
@@ -247,13 +247,13 @@ class Category extends Init
             if (in_array($cat['parent_id'], $children)) {
                 /* 选定的父类是当前分类或当前分类的下级分类 */
                 $link[] = array('text' => $GLOBALS['_LANG']['go_back'], 'href' => 'javascript:history.back(-1)');
-                sys_msg($GLOBALS['_LANG']["is_leaf_error"], 0, $link);
+                return sys_msg($GLOBALS['_LANG']["is_leaf_error"], 0, $link);
             }
 
             if ($cat['grade'] > 10 || $cat['grade'] < 0) {
                 /* 价格区间数超过范围 */
                 $link[] = array('text' => $GLOBALS['_LANG']['go_back'], 'href' => 'javascript:history.back(-1)');
-                sys_msg($GLOBALS['_LANG']['grade_error'], 0, $link);
+                return sys_msg($GLOBALS['_LANG']['grade_error'], 0, $link);
             }
 
             $dat = $GLOBALS['db']->getRow("SELECT cat_name, show_in_nav FROM " . $GLOBALS['ecs']->table('category') . " WHERE cat_id = '$cat_id'");
@@ -294,7 +294,7 @@ class Category extends Init
 
                 /* 提示信息 */
                 $link[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'category.php?act=list');
-                sys_msg($GLOBALS['_LANG']['catedit_succed'], 0, $link);
+                return sys_msg($GLOBALS['_LANG']['catedit_succed'], 0, $link);
             }
         }
 
@@ -332,7 +332,7 @@ class Category extends Init
             /* 商品分类不允许为空 */
             if ($cat_id == 0 || $target_cat_id == 0) {
                 $link[] = array('text' => $GLOBALS['_LANG']['go_back'], 'href' => 'category.php?act=move');
-                sys_msg($GLOBALS['_LANG']['cat_move_empty'], 0, $link);
+                return sys_msg($GLOBALS['_LANG']['cat_move_empty'], 0, $link);
             }
 
             /* 更新商品分类 */
@@ -344,7 +344,7 @@ class Category extends Init
 
                 /* 提示信息 */
                 $link[] = array('text' => $GLOBALS['_LANG']['go_back'], 'href' => 'category.php?act=list');
-                sys_msg($GLOBALS['_LANG']['move_cat_success'], 0, $link);
+                return sys_msg($GLOBALS['_LANG']['move_cat_success'], 0, $link);
             }
         }
 

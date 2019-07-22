@@ -76,7 +76,7 @@ class WxaSetting extends Init
                         $cert_steam = addslashes($cert_steam);
                         $_POST['value']['cert'] = $_FILES['value']['name']['cert'];
                     } else {
-                        sys_msg('证书不能为空', 1, $links);
+                        return sys_msg('证书不能为空', 1, $links);
                     }
                 }
             }
@@ -115,7 +115,7 @@ class WxaSetting extends Init
                     }
                 }
             }
-            sys_msg($GLOBALS['_LANG']['attradd_succed'], 0, $links);
+            return sys_msg($GLOBALS['_LANG']['attradd_succed'], 0, $links);
         }
     }
 

@@ -51,7 +51,7 @@ class Leancloud extends Init
             $config = get_config($GLOBALS['db'], $ecs);
             if (!$config || !json_decode($config['config'], true)) {
                 $links[] = array('text' => $GLOBALS['_LANG']['mobile_setting'], 'href' => 'ecmobile_setting.php?act=list');
-                sys_msg($GLOBALS['_LANG']['push_off'], 1, $links);
+                return sys_msg($GLOBALS['_LANG']['push_off'], 1, $links);
 
             }
             $cert = new certificate;
@@ -123,7 +123,7 @@ class Leancloud extends Init
                 $id = $GLOBALS['db']->getRow("SELECT id FROM " . $GLOBALS['ecs']->table('push') . " ORDER BY `id` DESC LIMIT 1");
             }
             $is_push = push($id, $GLOBALS['db'], $ecs);
-            sys_msg($GLOBALS['_LANG']['attradd_succed'], 0, $links);
+            return sys_msg($GLOBALS['_LANG']['attradd_succed'], 0, $links);
         } elseif ($_REQUEST['act'] == 'resend') {
             /* 检查权限 */
             admin_priv('leancloud');
@@ -134,7 +134,7 @@ class Leancloud extends Init
             $sql = "UPDATE " . $GLOBALS['ecs']->table('push') . " SET `push_at`='$time',`updated_at`='$time',`isPush`='$is_push' WHERE id = $id";
             $GLOBALS['db']->query($sql);
             $links[] = array('text' => $GLOBALS['_LANG']['mobile_setting'], 'href' => 'leancloud.php?act=list');
-            sys_msg($GLOBALS['_LANG']['attradd_succed'], 0, $links);
+            return sys_msg($GLOBALS['_LANG']['attradd_succed'], 0, $links);
         } elseif ($_REQUEST['act'] == 'query') {
             /* 检查权限 */
             admin_priv('leancloud');
@@ -212,7 +212,7 @@ class Leancloud extends Init
             }
             admin_log('', 'remove', 'leancloud');
             $links[] = array('text' => $GLOBALS['_LANG']['mobile_setting'], 'href' => 'leancloud.php?act=list');
-            sys_msg($GLOBALS['_LANG']['attradd_succed'], 0, $links);
+            return sys_msg($GLOBALS['_LANG']['attradd_succed'], 0, $links);
 
         }
     }

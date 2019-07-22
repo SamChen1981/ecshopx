@@ -60,7 +60,7 @@ class MagazineList extends Init
                 $GLOBALS['db']->query($sql);
                 $links[] = array('text' => $GLOBALS['_LANG']['magazine_list'], 'href' => 'magazine_list.php?act=list');
                 $links[] = array('text' => $GLOBALS['_LANG']['add_new'], 'href' => 'magazine_list.php?act=add');
-                sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
+                return sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
             }
         } elseif ($_REQUEST['act'] == 'edit') {
             include_once(ROOT_PATH . 'includes/fckeditor/fckeditor.php'); // 包含 html editor 类文件
@@ -80,13 +80,13 @@ class MagazineList extends Init
                 $time = gmtime();
                 $GLOBALS['db']->query("UPDATE " . $GLOBALS['ecs']->table('mail_templates') . " SET is_html = 1, template_subject = '$magazine_name', template_content = '$magazine_content', last_modify = '$time' WHERE type = 'magazine' AND template_id = '$id'");
                 $links[] = array('text' => $GLOBALS['_LANG']['magazine_list'], 'href' => 'magazine_list.php?act=list');
-                sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
+                return sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
             }
         } elseif ($_REQUEST['act'] == 'del') {
             $id = intval($_REQUEST['id']);
             $GLOBALS['db']->query("DELETE  FROM " . $GLOBALS['ecs']->table('mail_templates') . " WHERE type = 'magazine' AND template_id = '$id' LIMIT 1");
             $links[] = array('text' => $GLOBALS['_LANG']['magazine_list'], 'href' => 'magazine_list.php?act=list');
-            sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
+            return sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
         } elseif ($_REQUEST['act'] == 'addtolist') {
             $id = intval($_REQUEST['id']);
             $pri = !empty($_REQUEST['pri']) ? 1 : 0;
@@ -118,11 +118,11 @@ class MagazineList extends Init
                             $start = $start + $i;
                         }
                         $links[] = array('text' => sprintf($GLOBALS['_LANG']['finish_list'], $start), 'href' => "magazine_list.php?act=addtolist&id=$id&pri=$pri&start=$start&send_rank=$send_rank");
-                        sys_msg($GLOBALS['_LANG']['finishing'], 0, $links);
+                        return sys_msg($GLOBALS['_LANG']['finishing'], 0, $links);
                     } else {
                         $GLOBALS['db']->query("UPDATE " . $GLOBALS['ecs']->table('mail_templates') . " SET last_send = " . time() . " WHERE type = 'magazine' AND template_id = '$id'");
                         $links[] = array('text' => $GLOBALS['_LANG']['magazine_list'], 'href' => 'magazine_list.php?act=list');
-                        sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
+                        return sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
                     }
                 } else {
                     $sql = "SELECT special_rank FROM " . $GLOBALS['ecs']->table('user_rank') . " WHERE rank_id = '" . $rank_array['1'] . "'";
@@ -165,16 +165,16 @@ class MagazineList extends Init
                             $start = $start + $i;
                         }
                         $links[] = array('text' => sprintf($GLOBALS['_LANG']['finish_list'], $start), 'href' => "magazine_list.php?act=addtolist&id=$id&pri=$pri&start=$start&send_rank=$send_rank");
-                        sys_msg($GLOBALS['_LANG']['finishing'], 0, $links);
+                        return sys_msg($GLOBALS['_LANG']['finishing'], 0, $links);
                     } else {
                         $GLOBALS['db']->query("UPDATE " . $GLOBALS['ecs']->table('mail_templates') . " SET last_send = " . time() . " WHERE type = 'magazine' AND template_id = '$id'");
                         $links[] = array('text' => $GLOBALS['_LANG']['magazine_list'], 'href' => 'magazine_list.php?act=list');
-                        sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
+                        return sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
                     }
                 }
             } else {
                 $links[] = array('text' => $GLOBALS['_LANG']['magazine_list'], 'href' => 'magazine_list.php?act=list');
-                sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
+                return sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
             }
         }
     }

@@ -41,7 +41,7 @@ class GetPassword extends Init
                     $link[0]['text'] = $GLOBALS['_LANG']['back'];
                     $link[0]['href'] = 'privilege.php?act=login';
 
-                    sys_msg($GLOBALS['_LANG']['code_param_error'], 0, $link);
+                    return sys_msg($GLOBALS['_LANG']['code_param_error'], 0, $link);
                 } else {
                     $GLOBALS['smarty']->assign('adminid', $adminid);
                     $GLOBALS['smarty']->assign('code', $code);
@@ -105,13 +105,13 @@ class GetPassword extends Init
                         $link[0]['text'] = $GLOBALS['_LANG']['back'];
                         $link[0]['href'] = 'privilege.php?act=login';
 
-                        sys_msg($GLOBALS['_LANG']['send_success'] . $admin_email, 0, $link);
+                        return sys_msg($GLOBALS['_LANG']['send_success'] . $admin_email, 0, $link);
                     } else {
-                        sys_msg($GLOBALS['_LANG']['send_mail_error'], 1);
+                        return sys_msg($GLOBALS['_LANG']['send_mail_error'], 1);
                     }
                 } else {
                     /* 提示信息 */
-                    sys_msg($GLOBALS['_LANG']['email_username_error'], 1);
+                    return sys_msg($GLOBALS['_LANG']['email_username_error'], 1);
                 }
             } /* 验证新密码，更新管理员密码 */
             elseif (!empty($_POST['action']) && $_POST['action'] == 'reset_pwd') {
@@ -133,7 +133,7 @@ class GetPassword extends Init
                     $link[0]['text'] = $GLOBALS['_LANG']['back'];
                     $link[0]['href'] = 'privilege.php?act=login';
 
-                    sys_msg($GLOBALS['_LANG']['code_param_error'], 0, $link);
+                    return sys_msg($GLOBALS['_LANG']['code_param_error'], 0, $link);
                 }
 
                 //更新管理员的密码
@@ -145,9 +145,9 @@ class GetPassword extends Init
                     $link[0]['text'] = $GLOBALS['_LANG']['login_now'];
                     $link[0]['href'] = 'privilege.php?act=login';
 
-                    sys_msg($GLOBALS['_LANG']['update_pwd_success'], 0, $link);
+                    return sys_msg($GLOBALS['_LANG']['update_pwd_success'], 0, $link);
                 } else {
-                    sys_msg($GLOBALS['_LANG']['update_pwd_failed'], 1);
+                    return sys_msg($GLOBALS['_LANG']['update_pwd_failed'], 1);
                 }
             }
         }

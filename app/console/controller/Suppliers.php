@@ -184,7 +184,7 @@ class Suppliers extends Init
         elseif ($_REQUEST['act'] == 'batch') {
             /* 取得要操作的记录编号 */
             if (empty($_POST['checkboxes'])) {
-                sys_msg($GLOBALS['_LANG']['no_record_selected']);
+                return sys_msg($GLOBALS['_LANG']['no_record_selected']);
             } else {
                 /* 检查权限 */
                 admin_priv('suppliers_manage');
@@ -219,7 +219,7 @@ class Suppliers extends Init
                         }
                     }
                     if (empty($suppliers)) {
-                        sys_msg($GLOBALS['_LANG']['batch_drop_no']);
+                        return sys_msg($GLOBALS['_LANG']['batch_drop_no']);
                     }
 
 
@@ -244,7 +244,7 @@ class Suppliers extends Init
                     /* 清除缓存 */
                     clear_cache_files();
 
-                    sys_msg($GLOBALS['_LANG']['batch_drop_ok']);
+                    return sys_msg($GLOBALS['_LANG']['batch_drop_ok']);
                 }
             }
         }
@@ -287,7 +287,7 @@ class Suppliers extends Init
                 $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('suppliers') . " WHERE suppliers_id = '$id'";
                 $suppliers = $GLOBALS['db']->getRow($sql);
                 if (count($suppliers) <= 0) {
-                    sys_msg('suppliers does not exist');
+                    return sys_msg('suppliers does not exist');
                 }
 
                 /* 取得所有管理员，*/
@@ -333,7 +333,7 @@ class Suppliers extends Init
                 FROM " . $GLOBALS['ecs']->table('suppliers') . "
                 WHERE suppliers_name = '" . $suppliers['suppliers_name'] . "' ";
                 if ($GLOBALS['db']->getOne($sql)) {
-                    sys_msg($GLOBALS['_LANG']['suppliers_name_exist']);
+                    return sys_msg($GLOBALS['_LANG']['suppliers_name_exist']);
                 }
 
                 $GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('suppliers'), $suppliers, 'INSERT');
@@ -354,7 +354,7 @@ class Suppliers extends Init
                 $links = array(array('href' => 'suppliers.php?act=add', 'text' => $GLOBALS['_LANG']['continue_add_suppliers']),
                     array('href' => 'suppliers.php?act=list', 'text' => $GLOBALS['_LANG']['back_suppliers_list'])
                 );
-                sys_msg($GLOBALS['_LANG']['add_suppliers_ok'], 0, $links);
+                return sys_msg($GLOBALS['_LANG']['add_suppliers_ok'], 0, $links);
             }
 
             if ($_REQUEST['act'] == 'update') {
@@ -369,7 +369,7 @@ class Suppliers extends Init
                 $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('suppliers') . " WHERE suppliers_id = '" . $suppliers['id'] . "'";
                 $suppliers['old'] = $GLOBALS['db']->getRow($sql);
                 if (empty($suppliers['old']['suppliers_id'])) {
-                    sys_msg('suppliers does not exist');
+                    return sys_msg('suppliers does not exist');
                 }
 
                 /* 判断名称是否重复 */
@@ -378,7 +378,7 @@ class Suppliers extends Init
                 WHERE suppliers_name = '" . $suppliers['new']['suppliers_name'] . "'
                 AND suppliers_id <> '" . $suppliers['id'] . "'";
                 if ($GLOBALS['db']->getOne($sql)) {
-                    sys_msg($GLOBALS['_LANG']['suppliers_name_exist']);
+                    return sys_msg($GLOBALS['_LANG']['suppliers_name_exist']);
                 }
 
                 /* 保存供货商信息 */
@@ -402,7 +402,7 @@ class Suppliers extends Init
 
                 /* 提示信息 */
                 $links[] = array('href' => 'suppliers.php?act=list', 'text' => $GLOBALS['_LANG']['back_suppliers_list']);
-                sys_msg($GLOBALS['_LANG']['edit_suppliers_ok'], 0, $links);
+                return sys_msg($GLOBALS['_LANG']['edit_suppliers_ok'], 0, $links);
             }
         }
     }

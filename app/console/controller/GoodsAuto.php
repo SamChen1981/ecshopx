@@ -41,7 +41,7 @@ class GoodsAuto extends Init
             $sql = "DELETE FROM " . $GLOBALS['ecs']->table('auto_manage') . " WHERE item_id = '$goods_id' AND type = 'goods'";
             $GLOBALS['db']->query($sql);
             $links[] = array('text' => $GLOBALS['_LANG']['goods_auto'], 'href' => 'goods_auto.php?act=list');
-            sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
+            return sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
         } elseif ($_REQUEST['act'] == 'edit_starttime') {
             check_authz_json('goods_auto');
 
@@ -83,7 +83,7 @@ class GoodsAuto extends Init
             admin_priv('goods_auto');
 
             if (!isset($_POST['checkboxes']) || !is_array($_POST['checkboxes'])) {
-                sys_msg($GLOBALS['_LANG']['no_select_goods'], 1);
+                return sys_msg($GLOBALS['_LANG']['no_select_goods'], 1);
             }
 
             if ($_POST['date'] == '0000-00-00') {
@@ -98,13 +98,13 @@ class GoodsAuto extends Init
             }
 
             $lnk[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'goods_auto.php?act=list');
-            sys_msg($GLOBALS['_LANG']['batch_start_succeed'], 0, $lnk);
+            return sys_msg($GLOBALS['_LANG']['batch_start_succeed'], 0, $lnk);
         } //批量下架
         elseif ($_REQUEST['act'] == 'batch_end') {
             admin_priv('goods_auto');
 
             if (!isset($_POST['checkboxes']) || !is_array($_POST['checkboxes'])) {
-                sys_msg($GLOBALS['_LANG']['no_select_goods'], 1);
+                return sys_msg($GLOBALS['_LANG']['no_select_goods'], 1);
             }
 
             if ($_POST['date'] == '0000-00-00') {
@@ -119,7 +119,7 @@ class GoodsAuto extends Init
             }
 
             $lnk[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'goods_auto.php?act=list');
-            sys_msg($GLOBALS['_LANG']['batch_end_succeed'], 0, $lnk);
+            return sys_msg($GLOBALS['_LANG']['batch_end_succeed'], 0, $lnk);
         }
     }
 

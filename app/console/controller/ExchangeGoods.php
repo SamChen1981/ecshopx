@@ -99,7 +99,7 @@ class ExchangeGoods extends Init
             $is_only = $exc->is_only('goods_id', $_POST['goods_id'], 0, " goods_id ='$_POST[goods_id]'");
 
             if (!$is_only) {
-                sys_msg($GLOBALS['_LANG']['goods_exist'], 1);
+                return sys_msg($GLOBALS['_LANG']['goods_exist'], 1);
             }
 
             /*插入数据*/
@@ -121,7 +121,7 @@ class ExchangeGoods extends Init
 
             clear_cache_files(); // 清除相关的缓存文件
 
-            sys_msg($GLOBALS['_LANG']['articleadd_succeed'], 0, $link);
+            return sys_msg($GLOBALS['_LANG']['articleadd_succeed'], 0, $link);
         }
 
         /*------------------------------------------------------ */
@@ -166,7 +166,7 @@ class ExchangeGoods extends Init
                 admin_log($_POST['goods_id'], 'edit', 'exchange_goods');
 
                 clear_cache_files();
-                sys_msg($GLOBALS['_LANG']['articleedit_succeed'], 0, $link);
+                return sys_msg($GLOBALS['_LANG']['articleedit_succeed'], 0, $link);
             } else {
                 die($GLOBALS['db']->error());
             }
@@ -232,7 +232,7 @@ class ExchangeGoods extends Init
             admin_priv('exchange_goods');
 
             if (!isset($_POST['checkboxes']) || !is_array($_POST['checkboxes'])) {
-                sys_msg($GLOBALS['_LANG']['no_select_goods'], 1);
+                return sys_msg($GLOBALS['_LANG']['no_select_goods'], 1);
             }
 
             $count = 0;
@@ -244,7 +244,7 @@ class ExchangeGoods extends Init
             }
 
             $lnk[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'exchange_goods.php?act=list');
-            sys_msg(sprintf($GLOBALS['_LANG']['batch_remove_succeed'], $count), 0, $lnk);
+            return sys_msg(sprintf($GLOBALS['_LANG']['batch_remove_succeed'], $count), 0, $lnk);
         }
 
         /*------------------------------------------------------ */

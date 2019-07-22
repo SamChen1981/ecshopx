@@ -72,7 +72,7 @@ class RegFields extends Init
 
             /* 检查是否存在重名的会员注册项 */
             if (!$exc->is_only('reg_field_name', trim($_POST['reg_field_name']))) {
-                sys_msg(sprintf($GLOBALS['_LANG']['field_name_exist'], trim($_POST['reg_field_name'])), 1);
+                return sys_msg(sprintf($GLOBALS['_LANG']['field_name_exist'], trim($_POST['reg_field_name'])), 1);
             }
 
             $sql = "INSERT INTO " . $GLOBALS['ecs']->table('reg_fields') . "( " .
@@ -87,7 +87,7 @@ class RegFields extends Init
 
             $lnk[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'reg_fields.php?act=list');
             $lnk[] = array('text' => $GLOBALS['_LANG']['add_continue'], 'href' => 'reg_fields.php?act=add');
-            sys_msg($GLOBALS['_LANG']['add_field_success'], 0, $lnk);
+            return sys_msg($GLOBALS['_LANG']['add_field_success'], 0, $lnk);
         }
 
         /*------------------------------------------------------ */
@@ -121,7 +121,7 @@ class RegFields extends Init
 
             /* 检查是否存在重名的会员注册项 */
             if ($_POST['reg_field_name'] != $_POST['old_field_name'] && !$exc->is_only('reg_field_name', trim($_POST['reg_field_name']))) {
-                sys_msg(sprintf($GLOBALS['_LANG']['field_name_exist'], trim($_POST['reg_field_name'])), 1);
+                return sys_msg(sprintf($GLOBALS['_LANG']['field_name_exist'], trim($_POST['reg_field_name'])), 1);
             }
 
             $sql = "UPDATE " . $GLOBALS['ecs']->table('reg_fields') . " SET `reg_field_name` = '$_POST[reg_field_name]', `dis_order` = '$_POST[reg_field_order]', `display` = '$_POST[reg_field_display]', `is_need` = '$_POST[reg_field_need]' WHERE `id` = '$_POST[id]'";
@@ -132,7 +132,7 @@ class RegFields extends Init
             clear_cache_files();
 
             $lnk[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'reg_fields.php?act=list');
-            sys_msg($GLOBALS['_LANG']['update_field_success'], 0, $lnk);
+            return sys_msg($GLOBALS['_LANG']['update_field_success'], 0, $lnk);
         }
 
         /*------------------------------------------------------ */

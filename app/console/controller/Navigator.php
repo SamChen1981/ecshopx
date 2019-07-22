@@ -90,7 +90,7 @@ class Navigator extends Init
                 clear_cache_files();
                 $links[] = array('text' => $GLOBALS['_LANG']['navigator'], 'href' => 'navigator.php?act=list');
                 $links[] = array('text' => $GLOBALS['_LANG']['add_new'], 'href' => 'navigator.php?act=add');
-                sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
+                return sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
             }
         }
         /*------------------------------------------------------ */
@@ -166,7 +166,7 @@ class Navigator extends Init
                 $GLOBALS['db']->query($sql);
                 clear_cache_files();
                 $links[] = array('text' => $GLOBALS['_LANG']['navigator'], 'href' => 'navigator.php?act=list');
-                sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
+                return sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $links);
             }
         }
         /*------------------------------------------------------ */

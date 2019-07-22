@@ -149,7 +149,7 @@ class ShopConfig extends Init
                 $cert = new certificate();
                 if (false == $cert->open_logistics_trace()) {
                     $links[] = array('text' => $GLOBALS['_LANG']['back_shop_config'], 'href' => 'shop_config.php?act=list_edit');
-                    sys_msg($GLOBALS['_LANG']['open_logistics_trace_fail'], 0, $links);
+                    return sys_msg($GLOBALS['_LANG']['open_logistics_trace_fail'], 0, $links);
                 }
             }
 
@@ -166,7 +166,7 @@ class ShopConfig extends Init
                 if ((isset($file['error']) && $file['error'] == 0) || (!isset($file['error']) && $file['tmp_name'] != 'none')) {
                     /* 检查上传的文件类型是否合法 */
                     if (!check_file_type($file['tmp_name'], $file['name'], $allow_file_types)) {
-                        sys_msg(sprintf($GLOBALS['_LANG']['msg_invalid_file'], $file['name']));
+                        return sys_msg(sprintf($GLOBALS['_LANG']['msg_invalid_file'], $file['name']));
                     } else {
                         if ($code == 'shop_logo') {
                             load_helper('template', 'console');
@@ -196,7 +196,7 @@ class ShopConfig extends Init
                             $sql = "UPDATE " . $GLOBALS['ecs']->table('shop_config') . " SET value = '$file_name' WHERE code = '$code'";
                             $GLOBALS['db']->query($sql);
                         } else {
-                            sys_msg(sprintf($GLOBALS['_LANG']['msg_upload_failed'], $file['name'], $file_var_list[$code]['store_dir']));
+                            return sys_msg(sprintf($GLOBALS['_LANG']['msg_upload_failed'], $file['name'], $file_var_list[$code]['store_dir']));
                         }
                     }
                 }
@@ -250,10 +250,10 @@ class ShopConfig extends Init
 
             if ($type == 'mail_setting') {
                 $links[] = array('text' => $GLOBALS['_LANG']['back_mail_settings'], 'href' => 'shop_config.php?act=mail_settings');
-                sys_msg($GLOBALS['_LANG']['mail_save_success'] . $spt, 0, $links);
+                return sys_msg($GLOBALS['_LANG']['mail_save_success'] . $spt, 0, $links);
             } else {
                 $links[] = array('text' => $GLOBALS['_LANG']['back_shop_config'], 'href' => 'shop_config.php?act=list_edit');
-                sys_msg($GLOBALS['_LANG']['save_success'] . $spt, 0, $links);
+                return sys_msg($GLOBALS['_LANG']['save_success'] . $spt, 0, $links);
             }
         }
 
@@ -307,7 +307,7 @@ class ShopConfig extends Init
             /* 清除缓存 */
             clear_all_files();
 
-            sys_msg($GLOBALS['_LANG']['save_success'], 0);
+            return sys_msg($GLOBALS['_LANG']['save_success'], 0);
         }
     }
 

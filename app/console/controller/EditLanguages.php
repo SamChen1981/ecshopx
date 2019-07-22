@@ -105,7 +105,7 @@ class EditLanguages extends Init
             if ($result === false) {
                 /* 修改失败提示信息 */
                 $link[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'javascript:history.back(-1)');
-                sys_msg($GLOBALS['_LANG']['edit_languages_false'], 0, $link);
+                return sys_msg($GLOBALS['_LANG']['edit_languages_false'], 0, $link);
             } else {
                 /* 记录管理员操作 */
                 admin_log('', 'edit', 'languages');
@@ -115,7 +115,7 @@ class EditLanguages extends Init
 
                 /* 成功提示信息 */
                 $link[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'edit_languages.php?act=list');
-                sys_msg($GLOBALS['_LANG']['edit_languages_success'], 0, $link);
+                return sys_msg($GLOBALS['_LANG']['edit_languages_success'], 0, $link);
             }
         }
     }

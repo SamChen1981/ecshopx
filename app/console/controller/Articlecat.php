@@ -68,7 +68,7 @@ class Articlecat extends Init
             $is_only = $exc->is_only('cat_name', $_POST['cat_name']);
 
             if (!$is_only) {
-                sys_msg(sprintf($GLOBALS['_LANG']['catname_exist'], stripslashes($_POST['cat_name'])), 1);
+                return sys_msg(sprintf($GLOBALS['_LANG']['catname_exist'], stripslashes($_POST['cat_name'])), 1);
             }
 
             $cat_type = 1;
@@ -76,7 +76,7 @@ class Articlecat extends Init
                 $sql = "SELECT cat_type FROM " . $GLOBALS['ecs']->table('article_cat') . " WHERE cat_id = '$_POST[parent_id]'";
                 $p_cat_type = $GLOBALS['db']->getOne($sql);
                 if ($p_cat_type == 2 || $p_cat_type == 3 || $p_cat_type == 5) {
-                    sys_msg($GLOBALS['_LANG']['not_allow_add'], 0);
+                    return sys_msg($GLOBALS['_LANG']['not_allow_add'], 0);
                 } elseif ($p_cat_type == 4) {
                     $cat_type = 5;
                 }
@@ -103,7 +103,7 @@ class Articlecat extends Init
             $link[1]['text'] = $GLOBALS['_LANG']['back_list'];
             $link[1]['href'] = 'articlecat.php?act=list';
             clear_cache_files();
-            sys_msg($_POST['cat_name'] . $GLOBALS['_LANG']['catadd_succed'], 0, $link);
+            return sys_msg($_POST['cat_name'] . $GLOBALS['_LANG']['catadd_succed'], 0, $link);
         }
 
         /*------------------------------------------------------ */
@@ -154,7 +154,7 @@ class Articlecat extends Init
                 $is_only = $exc->is_only('cat_name', $_POST['cat_name'], $_POST['id']);
 
                 if (!$is_only) {
-                    sys_msg(sprintf($GLOBALS['_LANG']['catname_exist'], stripslashes($_POST['cat_name'])), 1);
+                    return sys_msg(sprintf($GLOBALS['_LANG']['catname_exist'], stripslashes($_POST['cat_name'])), 1);
                 }
             }
 
@@ -176,7 +176,7 @@ class Articlecat extends Init
                 }
             }
             if (in_array($_POST['parent_id'], $catid_array)) {
-                sys_msg(sprintf($GLOBALS['_LANG']['parent_id_err'], stripslashes($_POST['cat_name'])), 1);
+                return sys_msg(sprintf($GLOBALS['_LANG']['parent_id_err'], stripslashes($_POST['cat_name'])), 1);
             }
 
             if ($cat_type == 1 || $cat_type == 5) {
@@ -226,7 +226,7 @@ class Articlecat extends Init
                 $note = sprintf($GLOBALS['_LANG']['catedit_succed'], $_POST['cat_name']);
                 admin_log($_POST['cat_name'], 'edit', 'articlecat');
                 clear_cache_files();
-                sys_msg($note, 0, $link);
+                return sys_msg($note, 0, $link);
             } else {
                 die($GLOBALS['db']->error());
             }

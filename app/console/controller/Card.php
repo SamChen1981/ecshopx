@@ -101,7 +101,7 @@ class Card extends Init
             $is_only = $exc->is_only('card_name', $_POST['card_name']);
 
             if (!$is_only) {
-                sys_msg(sprintf($GLOBALS['_LANG']['cardname_exist'], stripslashes($_POST['card_name'])), 1);
+                return sys_msg(sprintf($GLOBALS['_LANG']['cardname_exist'], stripslashes($_POST['card_name'])), 1);
             }
 
             /*处理图片*/
@@ -121,7 +121,7 @@ class Card extends Init
             $link[1]['text'] = $GLOBALS['_LANG']['back_list'];
             $link[1]['href'] = 'card.php?act=list';
 
-            sys_msg($_POST['card_name'] . $GLOBALS['_LANG']['cardadd_succeed'], 0, $link);
+            return sys_msg($_POST['card_name'] . $GLOBALS['_LANG']['cardadd_succeed'], 0, $link);
         }
 
         /*------------------------------------------------------ */
@@ -150,7 +150,7 @@ class Card extends Init
                 $is_only = $exc->is_only('card_name', $_POST['card_name'], $_POST['id']);
 
                 if (!$is_only) {
-                    sys_msg(sprintf($GLOBALS['_LANG']['cardname_exist'], stripslashes($_POST['card_name'])), 1);
+                    return sys_msg(sprintf($GLOBALS['_LANG']['cardname_exist'], stripslashes($_POST['card_name'])), 1);
                 }
             }
             $param = "card_name = '$_POST[card_name]', card_fee = '$_POST[card_fee]', free_money= $_POST[free_money], card_desc = '$_POST[card_desc]'";
@@ -167,7 +167,7 @@ class Card extends Init
                 $link[0]['href'] = 'card.php?act=list&' . list_link_postfix();
 
                 $note = sprintf($GLOBALS['_LANG']['cardedit_succeed'], $_POST['card_name']);
-                sys_msg($note, 0, $link);
+                return sys_msg($note, 0, $link);
             } else {
                 die($GLOBALS['db']->error());
             }
@@ -187,7 +187,7 @@ class Card extends Init
                 $GLOBALS['db']->query($sql);
             }
             $link = array(array('text' => $GLOBALS['_LANG']['card_edit_lnk'], 'href' => 'card.php?act=edit&id=' . $card_id), array('text' => $GLOBALS['_LANG']['card_list_lnk'], 'href' => 'brand.php?act=list'));
-            sys_msg($GLOBALS['_LANG']['drop_card_img_success'], 0, $link);
+            return sys_msg($GLOBALS['_LANG']['drop_card_img_success'], 0, $link);
         }
         /*------------------------------------------------------ */
         //-- ajax编辑卡片名字

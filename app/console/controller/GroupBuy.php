@@ -105,18 +105,18 @@ class GroupBuy extends Init
             $group_buy_id = intval($_POST['act_id']);
             if (isset($_POST['finish']) || isset($_POST['succeed']) || isset($_POST['fail']) || isset($_POST['mail'])) {
                 if ($group_buy_id <= 0) {
-                    sys_msg($GLOBALS['_LANG']['error_group_buy'], 1);
+                    return sys_msg($GLOBALS['_LANG']['error_group_buy'], 1);
                 }
                 $group_buy = group_buy_info($group_buy_id);
                 if (empty($group_buy)) {
-                    sys_msg($GLOBALS['_LANG']['error_group_buy'], 1);
+                    return sys_msg($GLOBALS['_LANG']['error_group_buy'], 1);
                 }
             }
 
             if (isset($_POST['finish'])) {
                 /* 判断订单状态 */
                 if ($group_buy['status'] != GBS_UNDER_WAY) {
-                    sys_msg($GLOBALS['_LANG']['error_status'], 1);
+                    return sys_msg($GLOBALS['_LANG']['error_status'], 1);
                 }
 
                 /* 结束团购活动，修改结束时间为当前时间 */
@@ -132,13 +132,13 @@ class GroupBuy extends Init
                 $links = array(
                     array('href' => 'group_buy.php?act=list', 'text' => $GLOBALS['_LANG']['back_list'])
                 );
-                sys_msg($GLOBALS['_LANG']['edit_success'], 0, $links);
+                return sys_msg($GLOBALS['_LANG']['edit_success'], 0, $links);
             } elseif (isset($_POST['succeed'])) {
                 /* 设置活动成功 */
 
                 /* 判断订单状态 */
                 if ($group_buy['status'] != GBS_FINISHED) {
-                    sys_msg($GLOBALS['_LANG']['error_status'], 1);
+                    return sys_msg($GLOBALS['_LANG']['error_status'], 1);
                 }
 
                 /* 如果有订单，更新订单信息 */
@@ -258,13 +258,13 @@ class GroupBuy extends Init
                 $links = array(
                     array('href' => 'group_buy.php?act=list', 'text' => $GLOBALS['_LANG']['back_list'])
                 );
-                sys_msg($GLOBALS['_LANG']['edit_success'], 0, $links);
+                return sys_msg($GLOBALS['_LANG']['edit_success'], 0, $links);
             } elseif (isset($_POST['fail'])) {
                 /* 设置活动失败 */
 
                 /* 判断订单状态 */
                 if ($group_buy['status'] != GBS_FINISHED) {
-                    sys_msg($GLOBALS['_LANG']['error_status'], 1);
+                    return sys_msg($GLOBALS['_LANG']['error_status'], 1);
                 }
 
                 /* 如果有有效订单，取消订单 */
@@ -314,13 +314,13 @@ class GroupBuy extends Init
                 $links = array(
                     array('href' => 'group_buy.php?act=list', 'text' => $GLOBALS['_LANG']['back_list'])
                 );
-                sys_msg($GLOBALS['_LANG']['edit_success'], 0, $links);
+                return sys_msg($GLOBALS['_LANG']['edit_success'], 0, $links);
             } elseif (isset($_POST['mail'])) {
                 /* 发送通知邮件 */
 
                 /* 判断订单状态 */
                 if ($group_buy['status'] != GBS_SUCCEED) {
-                    sys_msg($GLOBALS['_LANG']['error_status'], 1);
+                    return sys_msg($GLOBALS['_LANG']['error_status'], 1);
                 }
 
                 /* 取得邮件模板 */
@@ -361,16 +361,16 @@ class GroupBuy extends Init
                 }
 
                 /* 提示信息 */
-                sys_msg(sprintf($GLOBALS['_LANG']['mail_result'], $count, $send_count));
+                return sys_msg(sprintf($GLOBALS['_LANG']['mail_result'], $count, $send_count));
             } else {
                 /* 保存团购信息 */
                 $goods_id = intval($_POST['goods_id']);
                 if ($goods_id <= 0) {
-                    sys_msg($GLOBALS['_LANG']['error_goods_null']);
+                    return sys_msg($GLOBALS['_LANG']['error_goods_null']);
                 }
                 $info = $this->goods_group_buy($goods_id);
                 if ($info && $info['act_id'] != $group_buy_id) {
-                    sys_msg($GLOBALS['_LANG']['error_goods_exist']);
+                    return sys_msg($GLOBALS['_LANG']['error_goods_exist']);
                 }
 
                 $goods_name = $GLOBALS['db']->getOne("SELECT goods_name FROM " . $GLOBALS['ecs']->table('goods') . " WHERE goods_id = '$goods_id'");
@@ -411,13 +411,13 @@ class GroupBuy extends Init
                     $price_ladder[$amount] = array('amount' => $amount, 'price' => $price);
                 }
                 if (count($price_ladder) < 1) {
-                    sys_msg($GLOBALS['_LANG']['error_price_ladder']);
+                    return sys_msg($GLOBALS['_LANG']['error_price_ladder']);
                 }
 
                 /* 限购数量不能小于价格阶梯中的最大数量 */
                 $amount_list = array_keys($price_ladder);
                 if ($restrict_amount > 0 && max($amount_list) > $restrict_amount) {
-                    sys_msg($GLOBALS['_LANG']['error_restrict_amount']);
+                    return sys_msg($GLOBALS['_LANG']['error_restrict_amount']);
                 }
 
                 ksort($price_ladder);
@@ -427,7 +427,7 @@ class GroupBuy extends Init
                 $start_time = local_strtotime($_POST['start_time']);
                 $end_time = local_strtotime($_POST['end_time']);
                 if ($start_time >= $end_time) {
-                    sys_msg($GLOBALS['_LANG']['invalid_time']);
+                    return sys_msg($GLOBALS['_LANG']['invalid_time']);
                 }
 
                 $group_buy = array(
@@ -463,7 +463,7 @@ class GroupBuy extends Init
                     $links = array(
                         array('href' => 'group_buy.php?act=list&' . list_link_postfix(), 'text' => $GLOBALS['_LANG']['back_list'])
                     );
-                    sys_msg($GLOBALS['_LANG']['edit_success'], 0, $links);
+                    return sys_msg($GLOBALS['_LANG']['edit_success'], 0, $links);
                 } else {
                     /* insert */
                     $GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('goods_activity'), $group_buy, 'INSERT');
@@ -476,7 +476,7 @@ class GroupBuy extends Init
                         array('href' => 'group_buy.php?act=add', 'text' => $GLOBALS['_LANG']['continue_add']),
                         array('href' => 'group_buy.php?act=list', 'text' => $GLOBALS['_LANG']['back_list'])
                     );
-                    sys_msg($GLOBALS['_LANG']['add_success'], 0, $links);
+                    return sys_msg($GLOBALS['_LANG']['add_success'], 0, $links);
                 }
             }
         }
@@ -509,10 +509,10 @@ class GroupBuy extends Init
                 }
 
                 $links[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'group_buy.php?act=list');
-                sys_msg(sprintf($GLOBALS['_LANG']['batch_drop_success'], $del_count), 0, $links);
+                return sys_msg(sprintf($GLOBALS['_LANG']['batch_drop_success'], $del_count), 0, $links);
             } else {
                 $links[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'group_buy.php?act=list');
-                sys_msg($GLOBALS['_LANG']['no_select_group_buy'], 0, $links);
+                return sys_msg($GLOBALS['_LANG']['no_select_group_buy'], 0, $links);
             }
         }
 

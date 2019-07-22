@@ -137,7 +137,7 @@ class UserAccount extends Init
             /* 此会员是否存在 */
             if ($user_id == 0) {
                 $link[] = array('text' => $GLOBALS['_LANG']['go_back'], 'href' => 'javascript:history.back(-1)');
-                sys_msg($GLOBALS['_LANG']['username_not_exist'], 0, $link);
+                return sys_msg($GLOBALS['_LANG']['username_not_exist'], 0, $link);
             }
 
             /* 退款，检查余额是否足够 */
@@ -147,7 +147,7 @@ class UserAccount extends Init
                 /* 如果扣除的余额多于此会员拥有的余额，提示 */
                 if ($amount > $user_account) {
                     $link[] = array('text' => $GLOBALS['_LANG']['go_back'], 'href' => 'javascript:history.back(-1)');
-                    sys_msg($GLOBALS['_LANG']['surplus_amount_error'], 0, $link);
+                    return sys_msg($GLOBALS['_LANG']['surplus_amount_error'], 0, $link);
                 }
             }
 
@@ -214,7 +214,7 @@ class UserAccount extends Init
             $link[1]['text'] = $GLOBALS['_LANG']['continue_add'];
             $link[1]['href'] = 'user_account.php?act=add';
 
-            sys_msg($GLOBALS['_LANG']['attradd_succed'], 0, $link);
+            return sys_msg($GLOBALS['_LANG']['attradd_succed'], 0, $link);
         }
 
         /*------------------------------------------------------ */
@@ -300,7 +300,7 @@ class UserAccount extends Init
                     //如果扣除的余额多于此会员拥有的余额，提示
                     if ($fmt_amount > $user_account) {
                         $link[] = array('text' => $GLOBALS['_LANG']['go_back'], 'href' => 'javascript:history.back(-1)');
-                        sys_msg($GLOBALS['_LANG']['surplus_amount_error'], 0, $link);
+                        return sys_msg($GLOBALS['_LANG']['surplus_amount_error'], 0, $link);
                     }
 
                     $this->update_user_account($id, $amount, $admin_note, $is_paid);
@@ -329,7 +329,7 @@ class UserAccount extends Init
                 $link[0]['text'] = $GLOBALS['_LANG']['back_list'];
                 $link[0]['href'] = 'user_account.php?act=list&' . list_link_postfix();
 
-                sys_msg($GLOBALS['_LANG']['attradd_succed'], 0, $link);
+                return sys_msg($GLOBALS['_LANG']['attradd_succed'], 0, $link);
             }
         }
 

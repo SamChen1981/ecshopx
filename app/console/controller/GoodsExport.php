@@ -483,7 +483,7 @@ class GoodsExport extends Init
         } elseif ($_REQUEST['act'] == 'act_export_custom') {
             /* 检查输出列 */
             if (empty($_POST['custom_goods_export'])) {
-                sys_msg($GLOBALS['_LANG']['custom_goods_field_not_null'], 1, array(), false);
+                return sys_msg($GLOBALS['_LANG']['custom_goods_field_not_null'], 1, array(), false);
             }
 
             /* 检查权限 */

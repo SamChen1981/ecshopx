@@ -109,13 +109,13 @@ class Sitemap extends Init
 
             $sm_file = '../sitemaps.xml';
             if ($sm->build($sm_file)) {
-                sys_msg(sprintf($GLOBALS['_LANG']['generate_success'], $GLOBALS['ecs']->url() . "sitemaps.xml"));
+                return sys_msg(sprintf($GLOBALS['_LANG']['generate_success'], $GLOBALS['ecs']->url() . "sitemaps.xml"));
             } else {
                 $sm_file = '../' . DATA_DIR . '/sitemaps.xml';
                 if ($sm->build($sm_file)) {
-                    sys_msg(sprintf($GLOBALS['_LANG']['generate_success'], $GLOBALS['ecs']->url() . DATA_DIR . '/sitemaps.xml'));
+                    return sys_msg(sprintf($GLOBALS['_LANG']['generate_success'], $GLOBALS['ecs']->url() . DATA_DIR . '/sitemaps.xml'));
                 } else {
-                    sys_msg(sprintf($GLOBALS['_LANG']['generate_failed']));
+                    return sys_msg(sprintf($GLOBALS['_LANG']['generate_failed']));
                 }
             }
         }

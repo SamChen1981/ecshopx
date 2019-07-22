@@ -94,7 +94,7 @@ class Favourable extends Init
         elseif ($_REQUEST['act'] == 'batch') {
             /* 取得要操作的记录编号 */
             if (empty($_POST['checkboxes'])) {
-                sys_msg($GLOBALS['_LANG']['no_record_selected']);
+                return sys_msg($GLOBALS['_LANG']['no_record_selected']);
             } else {
                 /* 检查权限 */
                 admin_priv('favourable');
@@ -114,7 +114,7 @@ class Favourable extends Init
                     clear_cache_files();
 
                     $links[] = array('text' => $GLOBALS['_LANG']['back_favourable_list'], 'href' => 'favourable.php?act=list&' . list_link_postfix());
-                    sys_msg($GLOBALS['_LANG']['batch_drop_ok']);
+                    return sys_msg($GLOBALS['_LANG']['batch_drop_ok']);
                 }
             }
         }
@@ -166,12 +166,12 @@ class Favourable extends Init
                 );
             } else {
                 if (empty($_GET['id'])) {
-                    sys_msg('invalid param');
+                    return sys_msg('invalid param');
                 }
                 $id = intval($_GET['id']);
                 $favourable = favourable_info($id);
                 if (empty($favourable)) {
-                    sys_msg($GLOBALS['_LANG']['favourable_not_exist']);
+                    return sys_msg($GLOBALS['_LANG']['favourable_not_exist']);
                 }
             }
             $GLOBALS['smarty']->assign('favourable', $favourable);
@@ -240,24 +240,24 @@ class Favourable extends Init
             /* 检查名称是否重复 */
             $act_name = sub_str($_POST['act_name'], 255, false);
             if (!$exc->is_only('act_name', $act_name, intval($_POST['id']))) {
-                sys_msg($GLOBALS['_LANG']['act_name_exists']);
+                return sys_msg($GLOBALS['_LANG']['act_name_exists']);
             }
 
             /* 检查享受优惠的会员等级 */
             if (!isset($_POST['user_rank'])) {
-                sys_msg($GLOBALS['_LANG']['pls_set_user_rank']);
+                return sys_msg($GLOBALS['_LANG']['pls_set_user_rank']);
             }
 
             /* 检查优惠范围扩展信息 */
             if (intval($_POST['act_range']) > 0 && !isset($_POST['act_range_ext'])) {
-                sys_msg($GLOBALS['_LANG']['pls_set_act_range']);
+                return sys_msg($GLOBALS['_LANG']['pls_set_act_range']);
             }
 
             /* 检查金额上下限 */
             $min_amount = floatval($_POST['min_amount']) >= 0 ? floatval($_POST['min_amount']) : 0;
             $max_amount = floatval($_POST['max_amount']) >= 0 ? floatval($_POST['max_amount']) : 0;
             if ($max_amount > 0 && $min_amount > $max_amount) {
-                sys_msg($GLOBALS['_LANG']['amount_error']);
+                return sys_msg($GLOBALS['_LANG']['amount_error']);
             }
 
             /* 取得赠品 */
@@ -311,12 +311,12 @@ class Favourable extends Init
                     array('href' => 'favourable.php?act=add', 'text' => $GLOBALS['_LANG']['continue_add_favourable']),
                     array('href' => 'favourable.php?act=list', 'text' => $GLOBALS['_LANG']['back_favourable_list'])
                 );
-                sys_msg($GLOBALS['_LANG']['add_favourable_ok'], 0, $links);
+                return sys_msg($GLOBALS['_LANG']['add_favourable_ok'], 0, $links);
             } else {
                 $links = array(
                     array('href' => 'favourable.php?act=list&' . list_link_postfix(), 'text' => $GLOBALS['_LANG']['back_favourable_list'])
                 );
-                sys_msg($GLOBALS['_LANG']['edit_favourable_ok'], 0, $links);
+                return sys_msg($GLOBALS['_LANG']['edit_favourable_ok'], 0, $links);
             }
         }
 

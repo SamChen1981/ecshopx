@@ -500,7 +500,7 @@ class GoodsBatch extends Init
 
             /* 显示提示信息，返回商品列表 */
             $link[] = array('href' => 'goods.php?act=list', 'text' => $GLOBALS['_LANG']['01_goods_list']);
-            sys_msg($GLOBALS['_LANG']['batch_upload_ok'], 0, $link);
+            return sys_msg($GLOBALS['_LANG']['batch_upload_ok'], 0, $link);
         }
 
         /*------------------------------------------------------ */
@@ -734,7 +734,7 @@ class GoodsBatch extends Init
 
             // 提示成功
             $link[] = array('href' => 'goods_batch.php?act=select', 'text' => $GLOBALS['_LANG']['15_batch_edit']);
-            sys_msg($GLOBALS['_LANG']['batch_edit_ok'], 0, $link);
+            return sys_msg($GLOBALS['_LANG']['batch_edit_ok'], 0, $link);
         }
 
         /*------------------------------------------------------ */

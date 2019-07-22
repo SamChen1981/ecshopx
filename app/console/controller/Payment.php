@@ -194,7 +194,7 @@ class Payment extends Init
             $pay = $GLOBALS['db']->getRow($sql);
             if (empty($pay)) {
                 $links[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'payment.php?act=list');
-                sys_msg($GLOBALS['_LANG']['payment_not_available'], 0, $links);
+                return sys_msg($GLOBALS['_LANG']['payment_not_available'], 0, $links);
             }
 
             /* 取相应插件信息 */
@@ -259,13 +259,13 @@ class Payment extends Init
             admin_priv('payment');
             /* 检查输入 */
             if (empty($_POST['pay_name'])) {
-                sys_msg($GLOBALS['_LANG']['payment_name'] . $GLOBALS['_LANG']['empty']);
+                return sys_msg($GLOBALS['_LANG']['payment_name'] . $GLOBALS['_LANG']['empty']);
             }
 
             $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('payment') .
                 " WHERE pay_name = '$_POST[pay_name]' AND pay_code <> '$_POST[pay_code]'";
             if ($GLOBALS['db']->GetOne($sql) > 0) {
-                sys_msg($GLOBALS['_LANG']['payment_name'] . $GLOBALS['_LANG']['repeat'], 1);
+                return sys_msg($GLOBALS['_LANG']['payment_name'] . $GLOBALS['_LANG']['repeat'], 1);
             }
 
             /* 取得配置信息 */
@@ -284,13 +284,13 @@ class Payment extends Init
                 if ($_FILES['upop_cert']['size'] > 0) {
                     $pathinfo = pathinfo($_FILES['upop_cert']['name']);
                     if ($pathinfo['extension'] != 'pfx') {
-                        sys_msg($GLOBALS['_LANG']['cert_invalid_file'], 1);
+                        return sys_msg($GLOBALS['_LANG']['cert_invalid_file'], 1);
                     }
                     $destination = 'cert/' . $_FILES['upop_cert']['name'];
                     if (move_upload_file($_FILES['upop_cert']['tmp_name'], ROOT_PATH . $destination)) {
                         $upop_cert_path = $destination;
                     } else {
-                        sys_msg($GLOBALS['_LANG']['fail_upload'], 1);
+                        return sys_msg($GLOBALS['_LANG']['fail_upload'], 1);
                     }
                 }
                 foreach ($pay_config as $key => &$value) {
@@ -299,7 +299,7 @@ class Payment extends Init
                             $value['value'] = $upop_cert_path;
                         } else {
                             if (empty($value['value'])) {
-                                sys_msg($GLOBALS['_LANG']['lack_cert_file'], 1);
+                                return sys_msg($GLOBALS['_LANG']['lack_cert_file'], 1);
                             }
                         }
                     }
@@ -312,25 +312,25 @@ class Payment extends Init
                 if ($_FILES['chinapay_pfx']['size'] > 0) {
                     $pathinfo = pathinfo($_FILES['chinapay_pfx']['name']);
                     if ($pathinfo['extension'] != 'pfx') {
-                        sys_msg($GLOBALS['_LANG']['cert_invalid_file'], 1);
+                        return sys_msg($GLOBALS['_LANG']['cert_invalid_file'], 1);
                     }
                     $destination = 'cert/' . $_FILES['chinapay_pfx']['name'];
                     if (move_upload_file($_FILES['chinapay_pfx']['tmp_name'], ROOT_PATH . $destination)) {
                         $pfx_path = $destination;
                     } else {
-                        sys_msg($GLOBALS['_LANG']['fail_upload'], 1);
+                        return sys_msg($GLOBALS['_LANG']['fail_upload'], 1);
                     }
                 }
                 if ($_FILES['chinapay_cer']['size'] > 0) {
                     $pathinfo = pathinfo($_FILES['chinapay_cer']['name']);
                     if ($pathinfo['extension'] != 'cer') {
-                        sys_msg($GLOBALS['_LANG']['cert_invalid_file'], 1);
+                        return sys_msg($GLOBALS['_LANG']['cert_invalid_file'], 1);
                     }
                     $destination = 'cert/' . $_FILES['chinapay_cer']['name'];
                     if (move_upload_file($_FILES['chinapay_cer']['tmp_name'], ROOT_PATH . $destination)) {
                         $cer_path = $destination;
                     } else {
-                        sys_msg($GLOBALS['_LANG']['fail_upload'], 1);
+                        return sys_msg($GLOBALS['_LANG']['fail_upload'], 1);
                     }
                 }
                 foreach ($pay_config as $key => $value) {
@@ -339,7 +339,7 @@ class Payment extends Init
                             $pay_config[$key]['value'] = $pfx_path;
                         } else {
                             if (empty($value['value'])) {
-                                sys_msg($GLOBALS['_LANG']['lack_cert_file'], 1);
+                                return sys_msg($GLOBALS['_LANG']['lack_cert_file'], 1);
                             }
                         }
                     } elseif ($value['name'] == 'chinapay_cer') {
@@ -347,7 +347,7 @@ class Payment extends Init
                             $pay_config[$key]['value'] = $cer_path;
                         } else {
                             if (empty($value['value'])) {
-                                sys_msg($GLOBALS['_LANG']['lack_cert_file'], 1);
+                                return sys_msg($GLOBALS['_LANG']['lack_cert_file'], 1);
                             }
                         }
                     } elseif ($value['name'] = 'chinapay_pfx_pwd') {
@@ -357,7 +357,7 @@ class Payment extends Init
                     }
                 }
                 if (!$pfx_pwd) {
-                    sys_msg($GLOBALS['_LANG']['pfx_pwd_null'], 1);
+                    return sys_msg($GLOBALS['_LANG']['pfx_pwd_null'], 1);
                 }
 
                 // 重新编写 security.properties 配置文件
@@ -427,7 +427,7 @@ class Payment extends Init
                 /* 记录日志 */
                 admin_log($_POST['pay_name'], 'edit', 'payment');
 
-                sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $link);
+                return sys_msg($GLOBALS['_LANG']['edit_ok'], 0, $link);
             } else {
                 /* 安装，检查该支付方式是否曾经安装过 */
                 $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('payment') . " WHERE pay_code = '$_REQUEST[pay_code]'";
@@ -452,7 +452,7 @@ class Payment extends Init
                 /* 记录日志 */
                 admin_log($_POST['pay_name'], 'install', 'payment');
 
-                sys_msg($GLOBALS['_LANG']['install_ok'], 0, $link);
+                return sys_msg($GLOBALS['_LANG']['install_ok'], 0, $link);
             }
         }
 
@@ -477,7 +477,7 @@ class Payment extends Init
             admin_log($_REQUEST['code'], 'uninstall', 'payment');
 
             $link[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'payment.php?act=list');
-            sys_msg($GLOBALS['_LANG']['uninstall_ok'], 0, $link);
+            return sys_msg($GLOBALS['_LANG']['uninstall_ok'], 0, $link);
         }
 
         /*------------------------------------------------------ */

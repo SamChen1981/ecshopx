@@ -40,7 +40,7 @@ class Snatch extends Init
             $sql = "SELECT goods_name FROM " . $GLOBALS['ecs']->table('goods') . " WHERE goods_id = '$_POST[goods_id]'";
             $_POST['goods_name'] = $GLOBALS['db']->GetOne($sql);
             if (empty($_POST['goods_name'])) {
-                sys_msg($GLOBALS['_LANG']['no_goods'], 1);
+                return sys_msg($GLOBALS['_LANG']['no_goods'], 1);
 
             }
 
@@ -48,7 +48,7 @@ class Snatch extends Init
                 " FROM " . $GLOBALS['ecs']->table('goods_activity') .
                 " WHERE act_type='" . GAT_SNATCH . "' AND act_name='" . $_POST['snatch_name'] . "'";
             if ($GLOBALS['db']->getOne($sql)) {
-                sys_msg(sprintf($GLOBALS['_LANG']['snatch_name_exist'], $_POST['snatch_name']), 1);
+                return sys_msg(sprintf($GLOBALS['_LANG']['snatch_name_exist'], $_POST['snatch_name']), 1);
             }
 
             /* 将时间转换成整数 */
@@ -86,7 +86,7 @@ class Snatch extends Init
             admin_log($_POST['snatch_name'], 'add', 'snatch');
             $link[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'snatch.php?act=list');
             $link[] = array('text' => $GLOBALS['_LANG']['continue_add'], 'href' => 'snatch.php?act=add');
-            sys_msg($GLOBALS['_LANG']['add_succeed'], 0, $link);
+            return sys_msg($GLOBALS['_LANG']['add_succeed'], 0, $link);
         }
 
         /*------------------------------------------------------ */
@@ -230,7 +230,7 @@ class Snatch extends Init
                 " FROM " . $GLOBALS['ecs']->table('goods_activity') .
                 " WHERE act_type='" . GAT_SNATCH . "' AND act_name='" . $_POST['snatch_name'] . "' AND act_id <> '" . $_POST['id'] . "'";
             if ($GLOBALS['db']->getOne($sql)) {
-                sys_msg(sprintf($GLOBALS['_LANG']['snatch_name_exist'], $_POST['snatch_name']), 1);
+                return sys_msg(sprintf($GLOBALS['_LANG']['snatch_name_exist'], $_POST['snatch_name']), 1);
             }
 
             $info = array('start_price' => $_POST['start_price'], 'end_price' => $_POST['end_price'], 'max_price' => $_POST['max_price'], 'cost_points' => $_POST['cost_points']);
@@ -245,7 +245,7 @@ class Snatch extends Init
 
             admin_log($_POST['snatch_name'], 'edit', 'snatch');
             $link[] = array('text' => $GLOBALS['_LANG']['back_list'], 'href' => 'snatch.php?act=list&' . list_link_postfix());
-            sys_msg($GLOBALS['_LANG']['edit_succeed'], 0, $link);
+            return sys_msg($GLOBALS['_LANG']['edit_succeed'], 0, $link);
         }
 
         /*------------------------------------------------------ */

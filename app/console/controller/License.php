@@ -16,6 +16,7 @@ class License extends Init
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list_edit') {
             /* 检查权限 */
+            // TODO BY LANCE 待处理return
             admin_priv('shop_authorized');
 
             load_helper('license');
@@ -48,7 +49,7 @@ class License extends Init
 
             if ($license['certificate_id'] == '' || $license['token'] == '') {
                 $links[] = array('text' => $GLOBALS['_LANG']['back'], 'href' => 'license.php?act=list_edit');
-                sys_msg($GLOBALS['_LANG']['no_license_down'], 0, $links);
+                return sys_msg($GLOBALS['_LANG']['no_license_down'], 0, $links);
             }
             /* 文件下载 TODO BY LANCE */
             ecs_header("Content-Type:text/plain");
@@ -86,7 +87,7 @@ class License extends Init
             /* 恢复证书 */
             if (count($license_arr) != 2 || $license_arr[0] == '' || $license_arr[1] == '') {
                 $links[] = array('text' => $GLOBALS['_LANG']['back'], 'href' => 'license.php?act=list_edit');
-                sys_msg($GLOBALS['_LANG']['fail_license'], 1, $links);
+                return sys_msg($GLOBALS['_LANG']['fail_license'], 1, $links);
             } else {
                 load_helper('main');
                 load_helper('license');
@@ -95,7 +96,7 @@ class License extends Init
                 $login_result = license_login();
                 if ($login_result['flag'] != 'login_succ') {
                     $links[] = array('text' => $GLOBALS['_LANG']['back'], 'href' => 'license.php?act=list_edit');
-                    sys_msg($GLOBALS['_LANG']['fail_license_login'], 1, $links);
+                    return sys_msg($GLOBALS['_LANG']['fail_license_login'], 1, $links);
                 }
 
                 $sql = "UPDATE " . $GLOBALS['ecs']->table('shop_config') . "
@@ -108,7 +109,7 @@ class License extends Init
                 $GLOBALS['db']->query($sql);
 
                 $links[] = array('text' => $GLOBALS['_LANG']['back'], 'href' => 'license.php?act=list_edit');
-                sys_msg($GLOBALS['_LANG']['recover_license'], 0, $links);
+                return sys_msg($GLOBALS['_LANG']['recover_license'], 0, $links);
             }
         }
 
@@ -126,7 +127,7 @@ class License extends Init
             $GLOBALS['db']->query($sql);
 
             $links[] = array('text' => $GLOBALS['_LANG']['back'], 'href' => 'license.php?act=list_edit');
-            sys_msg($GLOBALS['_LANG']['delete_license'], 0, $links);
+            return sys_msg($GLOBALS['_LANG']['delete_license'], 0, $links);
         }
     }
 }

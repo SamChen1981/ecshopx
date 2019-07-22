@@ -55,7 +55,7 @@ class Brand extends Init
             $is_only = $exc->is_only('brand_name', $_POST['brand_name']);
 
             if (!$is_only) {
-                sys_msg(sprintf($GLOBALS['_LANG']['brandname_exist'], stripslashes($_POST['brand_name'])), 1);
+                return sys_msg(sprintf($GLOBALS['_LANG']['brandname_exist'], stripslashes($_POST['brand_name'])), 1);
             }
 
             /*对描述处理*/
@@ -86,7 +86,7 @@ class Brand extends Init
             $link[1]['text'] = $GLOBALS['_LANG']['back_list'];
             $link[1]['href'] = 'brand.php?act=list';
 
-            sys_msg($GLOBALS['_LANG']['brandadd_succed'], 0, $link);
+            return sys_msg($GLOBALS['_LANG']['brandadd_succed'], 0, $link);
         }
 
         /*------------------------------------------------------ */
@@ -113,7 +113,7 @@ class Brand extends Init
                 $is_only = $exc->is_only('brand_name', $_POST['brand_name'], $_POST['id']);
 
                 if (!$is_only) {
-                    sys_msg(sprintf($GLOBALS['_LANG']['brandname_exist'], stripslashes($_POST['brand_name'])), 1);
+                    return sys_msg(sprintf($GLOBALS['_LANG']['brandname_exist'], stripslashes($_POST['brand_name'])), 1);
                 }
             }
 
@@ -143,7 +143,7 @@ class Brand extends Init
                 $link[0]['text'] = $GLOBALS['_LANG']['back_list'];
                 $link[0]['href'] = 'brand.php?act=list&' . list_link_postfix();
                 $note = vsprintf($GLOBALS['_LANG']['brandedit_succed'], $_POST['brand_name']);
-                sys_msg($note, 0, $link);
+                return sys_msg($note, 0, $link);
             } else {
                 die($GLOBALS['db']->error());
             }
@@ -264,7 +264,7 @@ class Brand extends Init
                 $GLOBALS['db']->query($sql);
             }
             $link = array(array('text' => $GLOBALS['_LANG']['brand_edit_lnk'], 'href' => 'brand.php?act=edit&id=' . $brand_id), array('text' => $GLOBALS['_LANG']['brand_list_lnk'], 'href' => 'brand.php?act=list'));
-            sys_msg($GLOBALS['_LANG']['drop_brand_logo_success'], 0, $link);
+            return sys_msg($GLOBALS['_LANG']['drop_brand_logo_success'], 0, $link);
         }
 
         /*------------------------------------------------------ */

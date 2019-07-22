@@ -15,7 +15,7 @@ class Filecheck extends Init
         admin_priv('file_check');
 
         if (!$ecshopfiles = @file('./ecshopfiles.md5')) {
-            sys_msg($GLOBALS['_LANG']['filecheck_nofound_md5file'], 1);
+            return sys_msg($GLOBALS['_LANG']['filecheck_nofound_md5file'], 1);
         }
 
         $step = empty($_REQUEST['step']) ? 1 : max(1, intval($_REQUEST['step']));
