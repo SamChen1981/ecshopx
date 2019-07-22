@@ -22,13 +22,13 @@ class Certificate extends Init
             $is_bind_erp = $cert->is_bind_sn('ecos.ome', 'bind_type');
             $is_bind_crm = $cert->is_bind_sn('ecos.taocrm', 'bind_type');
             //echo"<pre>";var_dump($is_bind_crm,$is_bind_erp,$is_bind_taoda);
-            $is_bind_taoda or $is_bind_erp and $GLOBALS['smarty']->assign('is_bind', true);
-            $is_bind_crm and $GLOBALS['smarty']->assign('is_bind_crm', true);
+            $is_bind_taoda or $is_bind_erp and $this->assign('is_bind', true);
+            $is_bind_crm and $this->assign('is_bind_crm', true);
 
             if (!$certificate['certificate_id']) {
                 $callback = $GLOBALS['ecs']->url() . "admin/certificate.php?act=get_certificate";
                 $iframe_url = $cert->get_authorize_url($callback);
-                $GLOBALS['smarty']->assign('iframe_url', $iframe_url);
+                $this->assign('iframe_url', $iframe_url);
             }
             //版本检查
             $release_url = VERSION_UTF8;
@@ -68,14 +68,14 @@ class Certificate extends Init
             $bind_crm_member_push_no = $member_count - $bind_crm_member_push;
             $bind_crm_order_push_no = $order_count - $bind_crm_order_push;
 
-            $GLOBALS['smarty']->assign('certi', $certificate);
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['certificate_here']);
-            $GLOBALS['smarty']->assign('bind_crm_member_push', $bind_crm_member_push);
-            $GLOBALS['smarty']->assign('bind_crm_order_push', $bind_crm_order_push);
-            $GLOBALS['smarty']->assign('bind_crm_member_push_no', $bind_crm_member_push_no);
-            $GLOBALS['smarty']->assign('bind_crm_order_push_no', $bind_crm_order_push_no);
-            $GLOBALS['smarty']->assign('message', $message);
-            return $GLOBALS['smarty']->display('certificate.view.php');
+            $this->assign('certi', $certificate);
+            $this->assign('ur_here', $GLOBALS['_LANG']['certificate_here']);
+            $this->assign('bind_crm_member_push', $bind_crm_member_push);
+            $this->assign('bind_crm_order_push', $bind_crm_order_push);
+            $this->assign('bind_crm_member_push_no', $bind_crm_member_push_no);
+            $this->assign('bind_crm_order_push_no', $bind_crm_order_push_no);
+            $this->assign('message', $message);
+            return $this->display('certificate.view.php');
         }
 
 
@@ -104,9 +104,9 @@ class Certificate extends Init
             }
             $str_url = MATRIX_REALTION_URL . implode("&", $array_params);
             $callback = urlencode($domain_url . "matrix_callback.php");
-            $GLOBALS['smarty']->assign('callback', $callback);
-            $GLOBALS['smarty']->assign('str_url', $str_url);
-            return $GLOBALS['smarty']->display('apply_bindrelation.view.php');
+            $this->assign('callback', $callback);
+            $this->assign('str_url', $str_url);
+            return $this->display('apply_bindrelation.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -131,8 +131,8 @@ class Certificate extends Init
                 $array_params[] = $str_key . "=" . rawurlencode($str_value);
             }
             $str_url = MATRIX_REALTION_URL . implode("&", $array_params);
-            $GLOBALS['smarty']->assign('str_url', $str_url);
-            return $GLOBALS['smarty']->display('accept_bindrelation.view.php');
+            $this->assign('str_url', $str_url);
+            return $this->display('accept_bindrelation.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -174,8 +174,8 @@ class Certificate extends Init
             }
         } elseif ($_REQUEST['act'] == 'authority_url') {
             $authority_url = $cert->get_authority_url();
-            $GLOBALS['smarty']->assign('authority_url', $authority_url);
-            return $GLOBALS['smarty']->display('authority.view.php');
+            $this->assign('authority_url', $authority_url);
+            return $this->display('authority.view.php');
         } elseif ($_REQUEST['act'] == 'delete') {
             /* 检查权限 */
             admin_priv('certificate');

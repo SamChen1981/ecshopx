@@ -11,7 +11,7 @@ class SaleList extends Init
     {
         load_helper('order');
         load_lang('admin/statistic');
-        $GLOBALS['smarty']->assign('lang', $GLOBALS['_LANG']);
+        $this->assign('lang', $GLOBALS['_LANG']);
 
         if (isset($_REQUEST['act']) && ($_REQUEST['act'] == 'query' || $_REQUEST['act'] == 'download')) {
             /* 检查权限 */
@@ -50,10 +50,10 @@ class SaleList extends Init
 
             }
             $sale_list_data = $this->get_sale_list();
-            $GLOBALS['smarty']->assign('goods_sales_list', $sale_list_data['sale_list_data']);
-            $GLOBALS['smarty']->assign('filter', $sale_list_data['filter']);
-            $GLOBALS['smarty']->assign('record_count', $sale_list_data['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $sale_list_data['page_count']);
+            $this->assign('goods_sales_list', $sale_list_data['sale_list_data']);
+            $this->assign('filter', $sale_list_data['filter']);
+            $this->assign('record_count', $sale_list_data['record_count']);
+            $this->assign('page_count', $sale_list_data['page_count']);
 
             return make_json_result($GLOBALS['smarty']->fetch('sale_list.htm'), '', array('filter' => $sale_list_data['filter'], 'page_count' => $sale_list_data['page_count']));
         }
@@ -73,21 +73,21 @@ class SaleList extends Init
 
             $sale_list_data = $this->get_sale_list();
             /* 赋值到模板 */
-            $GLOBALS['smarty']->assign('filter', $sale_list_data['filter']);
-            $GLOBALS['smarty']->assign('record_count', $sale_list_data['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $sale_list_data['page_count']);
-            $GLOBALS['smarty']->assign('goods_sales_list', $sale_list_data['sale_list_data']);
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['sell_stats']);
-            $GLOBALS['smarty']->assign('full_page', 1);
-            $GLOBALS['smarty']->assign('start_date', local_date('Y-m-d', $start_date));
-            $GLOBALS['smarty']->assign('end_date', local_date('Y-m-d', $end_date));
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['sale_list']);
-            $GLOBALS['smarty']->assign('cfg_lang', $GLOBALS['_CFG']['lang']);
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['down_sales'], 'href' => '#download'));
+            $this->assign('filter', $sale_list_data['filter']);
+            $this->assign('record_count', $sale_list_data['record_count']);
+            $this->assign('page_count', $sale_list_data['page_count']);
+            $this->assign('goods_sales_list', $sale_list_data['sale_list_data']);
+            $this->assign('ur_here', $GLOBALS['_LANG']['sell_stats']);
+            $this->assign('full_page', 1);
+            $this->assign('start_date', local_date('Y-m-d', $start_date));
+            $this->assign('end_date', local_date('Y-m-d', $end_date));
+            $this->assign('ur_here', $GLOBALS['_LANG']['sale_list']);
+            $this->assign('cfg_lang', $GLOBALS['_CFG']['lang']);
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['down_sales'], 'href' => '#download'));
 
             /* 显示页面 */
             assign_query_info();
-            return $GLOBALS['smarty']->display('sale_list.view.php');
+            return $this->display('sale_list.view.php');
         }
     }
 

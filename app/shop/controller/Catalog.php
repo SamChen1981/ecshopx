@@ -22,16 +22,16 @@ class Catalog extends Init
             assign_template();
             assign_dynamic('catalog');
             $position = assign_ur_here(0, $GLOBALS['_LANG']['catalog']);
-            $GLOBALS['smarty']->assign('page_title', $position['title']);   // 页面标题
-            $GLOBALS['smarty']->assign('ur_here', $position['ur_here']); // 当前位置
+            $this->assign('page_title', $position['title']);   // 页面标题
+            $this->assign('ur_here', $position['ur_here']); // 当前位置
 
-            $GLOBALS['smarty']->assign('helps', get_shop_help()); // 网店帮助
-            $GLOBALS['smarty']->assign('cat_list', $cat_list);       // 分类列表
-            $GLOBALS['smarty']->assign('brand_list', get_brands());    // 所以品牌赋值
-            $GLOBALS['smarty']->assign('promotion_info', get_promotion_info());
+            $this->assign('helps', get_shop_help()); // 网店帮助
+            $this->assign('cat_list', $cat_list);       // 分类列表
+            $this->assign('brand_list', get_brands());    // 所以品牌赋值
+            $this->assign('promotion_info', get_promotion_info());
         }
 
-        return $GLOBALS['smarty']->display('catalog.view.php');
+        return $this->display('catalog.view.php');
     }
 
     /**

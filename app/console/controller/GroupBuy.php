@@ -28,33 +28,33 @@ class GroupBuy extends Init
 
         if ($_REQUEST['act'] == 'list') {
             /* 模板赋值 */
-            $GLOBALS['smarty']->assign('full_page', 1);
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['group_buy_list']);
-            $GLOBALS['smarty']->assign('action_link', array('href' => 'group_buy.php?act=add', 'text' => $GLOBALS['_LANG']['add_group_buy']));
+            $this->assign('full_page', 1);
+            $this->assign('ur_here', $GLOBALS['_LANG']['group_buy_list']);
+            $this->assign('action_link', array('href' => 'group_buy.php?act=add', 'text' => $GLOBALS['_LANG']['add_group_buy']));
 
             $list = $this->group_buy_list();
 
-            $GLOBALS['smarty']->assign('group_buy_list', $list['item']);
-            $GLOBALS['smarty']->assign('filter', $list['filter']);
-            $GLOBALS['smarty']->assign('record_count', $list['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $list['page_count']);
+            $this->assign('group_buy_list', $list['item']);
+            $this->assign('filter', $list['filter']);
+            $this->assign('record_count', $list['record_count']);
+            $this->assign('page_count', $list['page_count']);
 
             $sort_flag = sort_flag($list['filter']);
-            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
+            $this->assign($sort_flag['tag'], $sort_flag['img']);
 
             /* 显示商品列表页面 */
             assign_query_info();
-            return $GLOBALS['smarty']->display('group_buy_list.view.php');
+            return $this->display('group_buy_list.view.php');
         } elseif ($_REQUEST['act'] == 'query') {
             $list = $this->group_buy_list();
 
-            $GLOBALS['smarty']->assign('group_buy_list', $list['item']);
-            $GLOBALS['smarty']->assign('filter', $list['filter']);
-            $GLOBALS['smarty']->assign('record_count', $list['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $list['page_count']);
+            $this->assign('group_buy_list', $list['item']);
+            $this->assign('filter', $list['filter']);
+            $this->assign('record_count', $list['record_count']);
+            $this->assign('page_count', $list['page_count']);
 
             $sort_flag = sort_flag($list['filter']);
-            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
+            $this->assign($sort_flag['tag'], $sort_flag['img']);
 
             return make_json_result(
                 $GLOBALS['smarty']->fetch('group_buy_list.htm'),
@@ -83,17 +83,17 @@ class GroupBuy extends Init
                 }
                 $group_buy = group_buy_info($group_buy_id);
             }
-            $GLOBALS['smarty']->assign('group_buy', $group_buy);
+            $this->assign('group_buy', $group_buy);
 
             /* 模板赋值 */
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['add_group_buy']);
-            $GLOBALS['smarty']->assign('action_link', $this->list_link($_REQUEST['act'] == 'add'));
-            $GLOBALS['smarty']->assign('cat_list', cat_list());
-            $GLOBALS['smarty']->assign('brand_list', get_brand_list());
+            $this->assign('ur_here', $GLOBALS['_LANG']['add_group_buy']);
+            $this->assign('action_link', $this->list_link($_REQUEST['act'] == 'add'));
+            $this->assign('cat_list', cat_list());
+            $this->assign('brand_list', get_brand_list());
 
             /* 显示模板 */
             assign_query_info();
-            return $GLOBALS['smarty']->display('group_buy_info.view.php');
+            return $this->display('group_buy_info.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -342,15 +342,15 @@ class GroupBuy extends Init
                 $res = $GLOBALS['db']->query($sql);
                 foreach ($res as $order) {
                     /* 邮件模板赋值 */
-                    $GLOBALS['smarty']->assign('consignee', $order['consignee']);
-                    $GLOBALS['smarty']->assign('add_time', local_date($GLOBALS['_CFG']['time_format'], $order['add_time']));
-                    $GLOBALS['smarty']->assign('goods_name', $group_buy['goods_name']);
-                    $GLOBALS['smarty']->assign('goods_number', $order['goods_number']);
-                    $GLOBALS['smarty']->assign('order_sn', $order['order_sn']);
-                    $GLOBALS['smarty']->assign('order_amount', price_format($order['order_amount']));
-                    $GLOBALS['smarty']->assign('shop_url', $GLOBALS['ecs']->url() . 'user.php?act=order_detail&order_id=' . $order['order_id']);
-                    $GLOBALS['smarty']->assign('shop_name', $GLOBALS['_CFG']['shop_name']);
-                    $GLOBALS['smarty']->assign('send_date', local_date($GLOBALS['_CFG']['date_format']));
+                    $this->assign('consignee', $order['consignee']);
+                    $this->assign('add_time', local_date($GLOBALS['_CFG']['time_format'], $order['add_time']));
+                    $this->assign('goods_name', $group_buy['goods_name']);
+                    $this->assign('goods_number', $order['goods_number']);
+                    $this->assign('order_sn', $order['order_sn']);
+                    $this->assign('order_amount', price_format($order['order_amount']));
+                    $this->assign('shop_url', $GLOBALS['ecs']->url() . 'user.php?act=order_detail&order_id=' . $order['order_id']);
+                    $this->assign('shop_name', $GLOBALS['_CFG']['shop_name']);
+                    $this->assign('send_date', local_date($GLOBALS['_CFG']['date_format']));
 
                     /* 取得模板内容，发邮件 */
                     $content = $GLOBALS['smarty']->fetch('str:' . $tpl['template_content']);

@@ -20,14 +20,14 @@ class UserRank extends Init
             $ranks = array();
             $ranks = $GLOBALS['db']->getAll("SELECT * FROM " . $GLOBALS['ecs']->table('user_rank'));
 
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['05_user_rank_list']);
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['add_user_rank'], 'href' => 'user_rank.php?act=add'));
-            $GLOBALS['smarty']->assign('full_page', 1);
+            $this->assign('ur_here', $GLOBALS['_LANG']['05_user_rank_list']);
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['add_user_rank'], 'href' => 'user_rank.php?act=add'));
+            $this->assign('full_page', 1);
 
-            $GLOBALS['smarty']->assign('user_ranks', $ranks);
+            $this->assign('user_ranks', $ranks);
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('user_rank.view.php');
+            return $this->display('user_rank.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -37,7 +37,7 @@ class UserRank extends Init
             $ranks = array();
             $ranks = $GLOBALS['db']->getAll("SELECT * FROM " . $GLOBALS['ecs']->table('user_rank'));
 
-            $GLOBALS['smarty']->assign('user_ranks', $ranks);
+            $this->assign('user_ranks', $ranks);
             return make_json_result($GLOBALS['smarty']->fetch('user_rank.htm'));
         }
 
@@ -57,14 +57,14 @@ class UserRank extends Init
 
             $form_action = 'insert';
 
-            $GLOBALS['smarty']->assign('rank', $rank);
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['add_user_rank']);
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['05_user_rank_list'], 'href' => 'user_rank.php?act=list'));
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['add_user_rank']);
-            $GLOBALS['smarty']->assign('form_action', $form_action);
+            $this->assign('rank', $rank);
+            $this->assign('ur_here', $GLOBALS['_LANG']['add_user_rank']);
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['05_user_rank_list'], 'href' => 'user_rank.php?act=list'));
+            $this->assign('ur_here', $GLOBALS['_LANG']['add_user_rank']);
+            $this->assign('form_action', $form_action);
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('user_rank_info.view.php');
+            return $this->display('user_rank_info.view.php');
         }
 
         /*------------------------------------------------------ */

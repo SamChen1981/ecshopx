@@ -115,10 +115,10 @@ class CheckFilePriv extends Init
                 }
             }
             $tpl_msg = implode(', ', $tpl_list);
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['check_file_priv']);
-            $GLOBALS['smarty']->assign('list', $list);
-            $GLOBALS['smarty']->assign('tpl_msg', $tpl_msg);
-            return $GLOBALS['smarty']->display('file_priv.html');
+            $this->assign('ur_here', $GLOBALS['_LANG']['check_file_priv']);
+            $this->assign('list', $list);
+            $this->assign('tpl_msg', $tpl_msg);
+            return $this->display('file_priv.html');
         }
     }
 

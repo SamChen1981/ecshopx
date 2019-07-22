@@ -61,12 +61,12 @@ class Payment extends Init
             $yunqi_payment and array_unshift($modules, $yunqi_payment);
 
             assign_query_info();
-            $GLOBALS['smarty']->assign('certi', $certificate);
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['02_payment_list']);
-            $GLOBALS['smarty']->assign('modules', $modules);
-            $GLOBALS['smarty']->assign('tenpayc2c', $tenpayc2c);
-            $GLOBALS['smarty']->assign('account_url', TEEGON_PASSPORT_URL);
-            return $GLOBALS['smarty']->display('payment_list.view.php');
+            $this->assign('certi', $certificate);
+            $this->assign('ur_here', $GLOBALS['_LANG']['02_payment_list']);
+            $this->assign('modules', $modules);
+            $this->assign('tenpayc2c', $tenpayc2c);
+            $this->assign('account_url', TEEGON_PASSPORT_URL);
+            return $this->display('payment_list.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -132,9 +132,9 @@ class Payment extends Init
 
             assign_query_info();
 
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['02_payment_list'], 'href' => 'payment.php?act=list'));
-            $GLOBALS['smarty']->assign('pay', $pay);
-            return $GLOBALS['smarty']->display('payment_edit.view.php');
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['02_payment_list'], 'href' => 'payment.php?act=list'));
+            $this->assign('pay', $pay);
+            return $this->display('payment_edit.view.php');
         } elseif ($_REQUEST['act'] == 'get_config') {
             check_authz_json('payment');
 
@@ -246,10 +246,10 @@ class Payment extends Init
 
             assign_query_info();
 
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['02_payment_list'], 'href' => 'payment.php?act=list'));
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['edit'] . $GLOBALS['_LANG']['payment']);
-            $GLOBALS['smarty']->assign('pay', $pay);
-            return $GLOBALS['smarty']->display('payment_edit.view.php');
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['02_payment_list'], 'href' => 'payment.php?act=list'));
+            $this->assign('ur_here', $GLOBALS['_LANG']['edit'] . $GLOBALS['_LANG']['payment']);
+            $this->assign('pay', $pay);
+            return $this->display('payment_edit.view.php');
         }
 
         /*------------------------------------------------------ */

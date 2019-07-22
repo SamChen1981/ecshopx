@@ -65,9 +65,9 @@ class Category extends Init
             $cat = $this->get_cat_info($cat_id);   // 获得分类的相关信息
 
             if (!empty($cat)) {
-                $GLOBALS['smarty']->assign('keywords', htmlspecialchars($cat['keywords']));
-                $GLOBALS['smarty']->assign('description', htmlspecialchars($cat['cat_desc']));
-                $GLOBALS['smarty']->assign('cat_style', htmlspecialchars($cat['style']));
+                $this->assign('keywords', htmlspecialchars($cat['keywords']));
+                $this->assign('description', htmlspecialchars($cat['cat_desc']));
+                $this->assign('cat_style', htmlspecialchars($cat['style']));
             } else {
                 /* 如果分类不存在则返回首页 */
                 return $this->redirect('/');
@@ -176,7 +176,7 @@ class Category extends Init
                 $price_grade[0]['url'] = build_uri('category', array('cid' => $cat_id, 'bid' => $brand, 'price_min' => 0, 'price_max' => 0, 'filter_attr' => $filter_attr_str), $cat['cat_name']);
                 $price_grade[0]['selected'] = empty($price_max) ? 1 : 0;
 
-                $GLOBALS['smarty']->assign('price_grade', $price_grade);
+                $this->assign('price_grade', $price_grade);
             }
 
 
@@ -208,7 +208,7 @@ class Category extends Init
             $brands[0]['url'] = build_uri('category', array('cid' => $cat_id, 'bid' => 0, 'price_min' => $price_min, 'price_max' => $price_max, 'filter_attr' => $filter_attr_str), $cat['cat_name']);
             $brands[0]['selected'] = empty($brand) ? 1 : 0;
 
-            $GLOBALS['smarty']->assign('brands', $brands);
+            $this->assign('brands', $brands);
 
 
             /* 属性筛选 */
@@ -259,7 +259,7 @@ class Category extends Init
                     }
                 }
 
-                $GLOBALS['smarty']->assign('filter_attr_list', $all_attr_list);
+                $this->assign('filter_attr_list', $all_attr_list);
                 /* 扩展商品查询条件 */
                 if (!empty($filter_attr)) {
                     $ext_sql = "SELECT DISTINCT(b.goods_id) FROM " . $GLOBALS['ecs']->table('goods_attr') . " AS a, " . $GLOBALS['ecs']->table('goods_attr') . " AS b " . "WHERE ";
@@ -278,19 +278,19 @@ class Category extends Init
             assign_template('c', array($cat_id));
 
             $position = assign_ur_here($cat_id, $brand_name);
-            $GLOBALS['smarty']->assign('page_title', $position['title']);    // 页面标题
-            $GLOBALS['smarty']->assign('ur_here', $position['ur_here']);  // 当前位置
+            $this->assign('page_title', $position['title']);    // 页面标题
+            $this->assign('ur_here', $position['ur_here']);  // 当前位置
 
-            $GLOBALS['smarty']->assign('categories', get_categories_tree($cat_id)); // 分类树
-            $GLOBALS['smarty']->assign('helps', get_shop_help());              // 网店帮助
-            $GLOBALS['smarty']->assign('top_goods', get_top10());                  // 销售排行
-            $GLOBALS['smarty']->assign('show_marketprice', $GLOBALS['_CFG']['show_marketprice']);
-            $GLOBALS['smarty']->assign('category', $cat_id);
-            $GLOBALS['smarty']->assign('brand_id', $brand);
-            $GLOBALS['smarty']->assign('price_max', $price_max);
-            $GLOBALS['smarty']->assign('price_min', $price_min);
-            $GLOBALS['smarty']->assign('filter_attr', $filter_attr_str);
-            $GLOBALS['smarty']->assign('feed_url', ($GLOBALS['_CFG']['rewrite'] == 1) ? "feed-c$cat_id.xml" : 'feed.php?cat=' . $cat_id); // RSS URL
+            $this->assign('categories', get_categories_tree($cat_id)); // 分类树
+            $this->assign('helps', get_shop_help());              // 网店帮助
+            $this->assign('top_goods', get_top10());                  // 销售排行
+            $this->assign('show_marketprice', $GLOBALS['_CFG']['show_marketprice']);
+            $this->assign('category', $cat_id);
+            $this->assign('brand_id', $brand);
+            $this->assign('price_max', $price_max);
+            $this->assign('price_min', $price_min);
+            $this->assign('filter_attr', $filter_attr_str);
+            $this->assign('feed_url', ($GLOBALS['_CFG']['rewrite'] == 1) ? "feed-c$cat_id.xml" : 'feed.php?cat=' . $cat_id); // RSS URL
 
             if ($brand > 0) {
                 $arr['all'] = array('brand_id' => 0,
@@ -305,21 +305,21 @@ class Category extends Init
 
             $brand_list = array_merge($arr, get_brands($cat_id, 'category'));
 
-            $GLOBALS['smarty']->assign('data_dir', DATA_DIR);
-            $GLOBALS['smarty']->assign('brand_list', $brand_list);
-            $GLOBALS['smarty']->assign('promotion_info', get_promotion_info());
+            $this->assign('data_dir', DATA_DIR);
+            $this->assign('brand_list', $brand_list);
+            $this->assign('promotion_info', get_promotion_info());
 
 
             /* 调查 */
             $vote = get_vote();
             if (!empty($vote)) {
-                $GLOBALS['smarty']->assign('vote_id', $vote['id']);
-                $GLOBALS['smarty']->assign('vote', $vote['content']);
+                $this->assign('vote_id', $vote['id']);
+                $this->assign('vote', $vote['content']);
             }
 
-            $GLOBALS['smarty']->assign('best_goods', get_category_recommend_goods('best', $children, $brand, $price_min, $price_max, $ext));
-            $GLOBALS['smarty']->assign('promotion_goods', get_category_recommend_goods('promote', $children, $brand, $price_min, $price_max, $ext));
-            $GLOBALS['smarty']->assign('hot_goods', get_category_recommend_goods('hot', $children, $brand, $price_min, $price_max, $ext));
+            $this->assign('best_goods', get_category_recommend_goods('best', $children, $brand, $price_min, $price_max, $ext));
+            $this->assign('promotion_goods', get_category_recommend_goods('promote', $children, $brand, $price_min, $price_max, $ext));
+            $this->assign('hot_goods', get_category_recommend_goods('hot', $children, $brand, $price_min, $price_max, $ext));
 
             $count = $this->get_cagtegory_goods_count($children, $brand, $price_min, $price_max, $ext);
             $max_page = ($count > 0) ? ceil($count / $size) : 1;
@@ -332,15 +332,15 @@ class Category extends Init
                     $goodslist[] = array();
                 }
             }
-            $GLOBALS['smarty']->assign('goods_list', $goodslist);
-            $GLOBALS['smarty']->assign('category', $cat_id);
-            $GLOBALS['smarty']->assign('script_name', 'category');
+            $this->assign('goods_list', $goodslist);
+            $this->assign('category', $cat_id);
+            $this->assign('script_name', 'category');
 
             assign_pager('category', $cat_id, $count, $size, $sort, $order, $page, '', $brand, $price_min, $price_max, $display, $filter_attr_str); // 分页
             assign_dynamic('category'); // 动态内容
         }
 
-        return $GLOBALS['smarty']->display('category.view.php', $cache_id);
+        return $this->display('category.view.php', $cache_id);
     }
 
     /**

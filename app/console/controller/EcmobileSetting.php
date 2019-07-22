@@ -19,7 +19,7 @@ class EcmobileSetting extends Init
         if ($_REQUEST['act'] == 'list') {
             /* 检查权限 */
             admin_priv('mobile_setting');
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['lead_here']);
+            $this->assign('ur_here', $GLOBALS['_LANG']['lead_here']);
             $cert = new Certificate();
             $isOpenWap = $cert->is_open_sn('fy');
             if ($isOpenWap == false && $_SESSION['yunqi_login'] && $_SESSION['TOKEN']) {
@@ -47,9 +47,9 @@ class EcmobileSetting extends Init
                 }
             }
 
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['mobile_setting']);
-            $GLOBALS['smarty']->assign('group_list', $grouplist);
-            return $GLOBALS['smarty']->display('mobile_config.html');
+            $this->assign('ur_here', $GLOBALS['_LANG']['mobile_setting']);
+            $this->assign('group_list', $grouplist);
+            return $this->display('mobile_config.html');
         } elseif ($_REQUEST['act'] == 'post') {
             /* 检查权限 */
             admin_priv('mobile_setting');

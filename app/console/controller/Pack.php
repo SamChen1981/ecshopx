@@ -17,32 +17,32 @@ class Pack extends Init
         //-- 包装列表
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['06_pack_list']);
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['pack_add'], 'href' => 'pack.php?act=add'));
-            $GLOBALS['smarty']->assign('full_page', 1);
+            $this->assign('ur_here', $GLOBALS['_LANG']['06_pack_list']);
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['pack_add'], 'href' => 'pack.php?act=add'));
+            $this->assign('full_page', 1);
 
             $packs_list = $this->packs_list();
 
-            $GLOBALS['smarty']->assign('packs_list', $packs_list['packs_list']);
-            $GLOBALS['smarty']->assign('filter', $packs_list['filter']);
-            $GLOBALS['smarty']->assign('record_count', $packs_list['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $packs_list['page_count']);
+            $this->assign('packs_list', $packs_list['packs_list']);
+            $this->assign('filter', $packs_list['filter']);
+            $this->assign('record_count', $packs_list['record_count']);
+            $this->assign('page_count', $packs_list['page_count']);
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('pack_list.view.php');
+            return $this->display('pack_list.view.php');
         }
         /*------------------------------------------------------ */
         //-- ajax 列表
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'query') {
             $packs_list = $this->packs_list();
-            $GLOBALS['smarty']->assign('packs_list', $packs_list['packs_list']);
-            $GLOBALS['smarty']->assign('filter', $packs_list['filter']);
-            $GLOBALS['smarty']->assign('record_count', $packs_list['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $packs_list['page_count']);
+            $this->assign('packs_list', $packs_list['packs_list']);
+            $this->assign('filter', $packs_list['filter']);
+            $this->assign('record_count', $packs_list['record_count']);
+            $this->assign('page_count', $packs_list['page_count']);
 
             $sort_flag = sort_flag($packs_list['filter']);
-            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
+            $this->assign($sort_flag['tag'], $sort_flag['img']);
 
             return make_json_result($GLOBALS['smarty']->fetch('pack_list.htm'), '', array('filter' => $packs_list['filter'], 'page_count' => $packs_list['page_count']));
         }
@@ -56,13 +56,13 @@ class Pack extends Init
             $pack['pack_fee'] = 0;
             $pack['free_money'] = 0;
 
-            $GLOBALS['smarty']->assign('pack', $pack);
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['pack_add']);
-            $GLOBALS['smarty']->assign('form_action', 'insert');
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['06_pack_list'], 'href' => 'pack.php?act=list'));
+            $this->assign('pack', $pack);
+            $this->assign('ur_here', $GLOBALS['_LANG']['pack_add']);
+            $this->assign('form_action', 'insert');
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['06_pack_list'], 'href' => 'pack.php?act=list'));
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('pack_info.view.php');
+            return $this->display('pack_info.view.php');
         }
         if ($_REQUEST['act'] == 'insert') {
             /* 权限判断 */
@@ -109,11 +109,11 @@ class Pack extends Init
 
             $sql = "SELECT pack_id, pack_name, pack_fee, free_money, pack_desc, pack_img FROM " . $GLOBALS['ecs']->table('pack') . " WHERE pack_id='$_REQUEST[id]'";
             $pack = $GLOBALS['db']->GetRow($sql);
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['pack_edit']);
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['06_pack_list'], 'href' => 'pack.php?act=list&' . list_link_postfix()));
-            $GLOBALS['smarty']->assign('pack', $pack);
-            $GLOBALS['smarty']->assign('form_action', 'update');
-            return $GLOBALS['smarty']->display('pack_info.view.php');
+            $this->assign('ur_here', $GLOBALS['_LANG']['pack_edit']);
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['06_pack_list'], 'href' => 'pack.php?act=list&' . list_link_postfix()));
+            $this->assign('pack', $pack);
+            $this->assign('form_action', 'update');
+            return $this->display('pack_info.view.php');
         }
         if ($_REQUEST['act'] == 'update') {
             /* 权限判断 */

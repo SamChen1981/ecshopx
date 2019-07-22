@@ -11,18 +11,18 @@ class TagCloud extends Init
     {
         assign_template();
         $position = assign_ur_here(0, $GLOBALS['_LANG']['tag_cloud']);
-        $GLOBALS['smarty']->assign('page_title', $position['title']);    // 页面标题
-        $GLOBALS['smarty']->assign('ur_here', $position['ur_here']);  // 当前位置
-        $GLOBALS['smarty']->assign('categories', get_categories_tree()); // 分类树
-        $GLOBALS['smarty']->assign('helps', get_shop_help());       // 网店帮助
-        $GLOBALS['smarty']->assign('top_goods', get_top10());           // 销售排行
-        $GLOBALS['smarty']->assign('promotion_info', get_promotion_info());
+        $this->assign('page_title', $position['title']);    // 页面标题
+        $this->assign('ur_here', $position['ur_here']);  // 当前位置
+        $this->assign('categories', get_categories_tree()); // 分类树
+        $this->assign('helps', get_shop_help());       // 网店帮助
+        $this->assign('top_goods', get_top10());           // 销售排行
+        $this->assign('promotion_info', get_promotion_info());
 
         /* 调查 */
         $vote = get_vote();
         if (!empty($vote)) {
-            $GLOBALS['smarty']->assign('vote_id', $vote['id']);
-            $GLOBALS['smarty']->assign('vote', $vote['content']);
+            $this->assign('vote_id', $vote['id']);
+            $this->assign('vote', $vote['content']);
         }
 
         assign_dynamic('tag_cloud');
@@ -34,8 +34,8 @@ class TagCloud extends Init
             color_tag($tags);
         }
 
-        $GLOBALS['smarty']->assign('tags', $tags);
+        $this->assign('tags', $tags);
 
-        return $GLOBALS['smarty']->display('tag_cloud.view.php');
+        return $this->display('tag_cloud.view.php');
     }
 }

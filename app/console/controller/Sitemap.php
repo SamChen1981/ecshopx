@@ -20,10 +20,10 @@ class Sitemap extends Init
             /*------------------------------------------------------ */
             assign_query_info();
             $config = unserialize($GLOBALS['_CFG']['sitemap']);
-            $GLOBALS['smarty']->assign('config', $config);
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['sitemap']);
-            $GLOBALS['smarty']->assign('arr_changefreq', array(1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1));
-            return $GLOBALS['smarty']->display('sitemap.view.php');
+            $this->assign('config', $config);
+            $this->assign('ur_here', $GLOBALS['_LANG']['sitemap']);
+            $this->assign('arr_changefreq', array(1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1));
+            return $this->display('sitemap.view.php');
         } else {
             /*------------------------------------------------------ */
             //-- 生成站点地图

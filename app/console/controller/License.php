@@ -23,16 +23,16 @@ class License extends Init
 
             $license = get_shop_license();
 
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['license_here']);
-            $GLOBALS['smarty']->assign('is_download', '0');
+            $this->assign('ur_here', $GLOBALS['_LANG']['license_here']);
+            $this->assign('is_download', '0');
             if ($license['certificate_id'] != '' && $license['token'] != '') {
-                $GLOBALS['smarty']->assign('is_download', '1');
+                $this->assign('is_download', '1');
             }
 
-            $GLOBALS['smarty']->assign('certificate_id', $license['certificate_id']);
-            $GLOBALS['smarty']->assign('token', $license['token']);
+            $this->assign('certificate_id', $license['certificate_id']);
+            $this->assign('token', $license['token']);
 
-            return $GLOBALS['smarty']->display('license.view.php');
+            return $this->display('license.view.php');
         }
 
         /*------------------------------------------------------ */

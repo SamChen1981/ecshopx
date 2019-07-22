@@ -34,17 +34,17 @@ class Leancloud extends Init
             unset($push_list['count']);
             $order_by = array('ORDER BY created_at ASC' => '创建时间从新到旧', 'ORDER BY created_at DESC' => '创建时间从旧到新', 'ORDER BY push_at ASC' => '推送时间从新到旧', 'ORDER BY push_at DESC' => '推送时间从旧到新');
             $filter = array('page' => '1', 'page_size' => '10', 'page_count' => ceil($count / 10), 'record_count' => $count, 'status' => '0', 'platform' => '0', 'title' => '', 'order_by' => '0');
-            $GLOBALS['smarty']->assign('filter', $filter);
-            $GLOBALS['smarty']->assign('order_by', $order_by);
-            $GLOBALS['smarty']->assign('platform', $platform);
-            $GLOBALS['smarty']->assign('status', $status);
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['leancloud']);
-            $GLOBALS['smarty']->assign('record_count', $count);
-            $GLOBALS['smarty']->assign('page_count', ceil($count / 10));
-            $GLOBALS['smarty']->assign('push_list', $push_list);
-            $GLOBALS['smarty']->assign('full_page', 1);
+            $this->assign('filter', $filter);
+            $this->assign('order_by', $order_by);
+            $this->assign('platform', $platform);
+            $this->assign('status', $status);
+            $this->assign('ur_here', $GLOBALS['_LANG']['leancloud']);
+            $this->assign('record_count', $count);
+            $this->assign('page_count', ceil($count / 10));
+            $this->assign('push_list', $push_list);
+            $this->assign('full_page', 1);
 
-            return $GLOBALS['smarty']->display('leancloud.html');
+            return $this->display('leancloud.html');
         } elseif ($_REQUEST['act'] == 'edit') {
             /* 检查权限 */
             admin_priv('leancloud');
@@ -67,15 +67,15 @@ class Leancloud extends Init
             $charset = EC_CHARSET == 'utf-8' ? "utf8" : 'gbk';
             if ($_GET['id']) {
                 $params = $this->getrow($_GET['id'], $GLOBALS['db'], $ecs);
-                $GLOBALS['smarty']->assign('params', $params);
+                $this->assign('params', $params);
             }
             $links = $this->get_url();
             $push_type = array(0 => '立即发送', 1 => '定时发送');
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['leancloud']);
-            $GLOBALS['smarty']->assign('platform', $platform);
-            $GLOBALS['smarty']->assign('links', $links);
-            $GLOBALS['smarty']->assign('push_type', $push_type);
-            return $GLOBALS['smarty']->display('leancloud_edit.html');
+            $this->assign('ur_here', $GLOBALS['_LANG']['leancloud']);
+            $this->assign('platform', $platform);
+            $this->assign('links', $links);
+            $this->assign('push_type', $push_type);
+            return $this->display('leancloud_edit.html');
         } elseif ($_REQUEST['act'] == 'remove') {
             /* 检查权限 */
             admin_priv('leancloud');
@@ -193,12 +193,12 @@ class Leancloud extends Init
             $filter['order_by'] = $_POST['order_by'];
             $filter['status'] = $_POST['status'];
 
-            $GLOBALS['smarty']->assign('platform', $platform);
-            $GLOBALS['smarty']->assign('status', $status);
-            $GLOBALS['smarty']->assign('push_list', $push_list);
-            $GLOBALS['smarty']->assign('filter', $filter);
-            $GLOBALS['smarty']->assign('record_count', $count);
-            $GLOBALS['smarty']->assign('page_count', $page_count);
+            $this->assign('platform', $platform);
+            $this->assign('status', $status);
+            $this->assign('push_list', $push_list);
+            $this->assign('filter', $filter);
+            $this->assign('record_count', $count);
+            $this->assign('page_count', $page_count);
 
             return make_json_result($GLOBALS['smarty']->fetch('leancloud.html'), '', array('filter' => $filter, 'page_count' => $page_count));
         } elseif ($_REQUEST['act'] == 'batch_remove') {

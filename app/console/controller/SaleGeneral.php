@@ -10,7 +10,7 @@ class SaleGeneral extends Init
     public function index()
     {
         load_lang('admin/statistic');
-        $GLOBALS['smarty']->assign('lang', $GLOBALS['_LANG']);
+        $this->assign('lang', $GLOBALS['_LANG']);
 
         /* 权限判断 */
         admin_priv('sale_order_stats');
@@ -65,8 +65,8 @@ class SaleGeneral extends Init
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
             /* 赋值查询时间段 */
-            $GLOBALS['smarty']->assign('start_time', local_date('Y-m-d', $start_time));
-            $GLOBALS['smarty']->assign('end_time', local_date('Y-m-d', $end_time));
+            $this->assign('start_time', local_date('Y-m-d', $start_time));
+            $this->assign('end_time', local_date('Y-m-d', $end_time));
 
             /* 赋值统计数据 */
             $xml = "<chart caption='' xAxisName='%s' showValues='0' decimals='0' formatNumberScale='0'>%s</chart>";
@@ -80,11 +80,11 @@ class SaleGeneral extends Init
                 $i++;
             }
 
-            $GLOBALS['smarty']->assign('data_count', sprintf($xml, '', $data_count)); // 订单数统计数据
-            $GLOBALS['smarty']->assign('data_amount', sprintf($xml, '', $data_amount));    // 销售额统计数据
+            $this->assign('data_count', sprintf($xml, '', $data_count)); // 订单数统计数据
+            $this->assign('data_amount', sprintf($xml, '', $data_amount));    // 销售额统计数据
 
-            $GLOBALS['smarty']->assign('data_count_name', $GLOBALS['_LANG']['order_count_trend']);
-            $GLOBALS['smarty']->assign('data_amount_name', $GLOBALS['_LANG']['order_amount_trend']);
+            $this->assign('data_count_name', $GLOBALS['_LANG']['order_count_trend']);
+            $this->assign('data_amount_name', $GLOBALS['_LANG']['order_amount_trend']);
 
             /* 根据查询类型生成文件名 */
             if ($query_type == 'year') {
@@ -92,7 +92,7 @@ class SaleGeneral extends Init
             } else {
                 $filename = date('Ym', $start_time) . "_" . date('Ym', $end_time) . '_report';
             }
-            $GLOBALS['smarty']->assign(
+            $this->assign(
                 'action_link',
                 array('text' => $GLOBALS['_LANG']['down_sales_stats'],
                     'href' => 'sale_general.php?act=download&filename=' . $filename .
@@ -100,9 +100,9 @@ class SaleGeneral extends Init
             );
 
             /* 显示模板 */
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['report_sell']);
+            $this->assign('ur_here', $GLOBALS['_LANG']['report_sell']);
             assign_query_info();
-            return $GLOBALS['smarty']->display('sale_general.view.php');
+            return $this->display('sale_general.view.php');
         }
 
         /*------------------------------------------------------ */

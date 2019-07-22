@@ -12,8 +12,8 @@ class Quotation extends Init
         $action = isset($_REQUEST['act']) ? trim($_REQUEST['act']) : 'default';
         if ($action == 'print_quotation') {
             $GLOBALS['smarty']->template_dir = DATA_DIR;
-            $GLOBALS['smarty']->assign('shop_name', $GLOBALS['_CFG']['shop_title']);
-            $GLOBALS['smarty']->assign('cfg', $GLOBALS['_CFG']);
+            $this->assign('shop_name', $GLOBALS['_CFG']['shop_title']);
+            $this->assign('cfg', $GLOBALS['_CFG']);
             $where = $this->get_quotation_where($_POST);
             $sql = "SELECT g.goods_id, g.goods_name, g.shop_price, g.goods_number, c.cat_name AS goods_category,p.product_id,p.product_number,p.goods_attr" .
                 " FROM " . $GLOBALS['ecs']->table('goods') . " AS g LEFT JOIN " . $GLOBALS['ecs']->table('category') . " AS c ON g.cat_id = c.cat_id LEFT JOIN " . $GLOBALS['ecs']->table('products') . "as p  On g.goods_id=p.goods_id" . $where . " AND is_on_sale = 1 AND is_alone_sale = 1 ";
@@ -41,9 +41,9 @@ class Quotation extends Init
             }
             $user_rank = $this->calc_user_rank($user_rank, $rank_point);
             $user_men = $this->serve_user($goods_list);
-            $GLOBALS['smarty']->assign('extend_price', $user_rank['ext_price']);
-            $GLOBALS['smarty']->assign('extend_rank', $user_men);
-            $GLOBALS['smarty']->assign('goods_list', $goods_list);
+            $this->assign('extend_price', $user_rank['ext_price']);
+            $this->assign('extend_rank', $user_men);
+            $this->assign('goods_list', $goods_list);
 
             $html = $GLOBALS['smarty']->fetch('quotation_print.html');
             exit($html);
@@ -52,17 +52,17 @@ class Quotation extends Init
         assign_template();
 
         $position = assign_ur_here(0, $GLOBALS['_LANG']['quotation']);
-        $GLOBALS['smarty']->assign('page_title', $position['title']);   // 页面标题
-        $GLOBALS['smarty']->assign('ur_here', $position['ur_here']); // 当前位置
+        $this->assign('page_title', $position['title']);   // 页面标题
+        $this->assign('ur_here', $position['ur_here']); // 当前位置
 
-        $GLOBALS['smarty']->assign('cat_list', cat_list());
-        $GLOBALS['smarty']->assign('brand_list', get_brand_list());
+        $this->assign('cat_list', cat_list());
+        $this->assign('brand_list', get_brand_list());
 
         if (is_null($GLOBALS['smarty']->get_template_vars('helps'))) {
-            $GLOBALS['smarty']->assign('helps', get_shop_help()); // 网店帮助
+            $this->assign('helps', get_shop_help()); // 网店帮助
         }
 
-        return $GLOBALS['smarty']->display('quotation.view.php');
+        return $this->display('quotation.view.php');
     }
 
     private function get_quotation_where($filter)

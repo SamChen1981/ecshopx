@@ -31,7 +31,7 @@ class Goods extends Init
             $handler_list['virtual_card'][] = array('url' => 'virtual_card.php?act=batch_card_add', 'title' => $GLOBALS['_LANG']['batch_card_add'], 'img' => 'icon_output.gif');
 
             if ($_REQUEST['act'] == 'list' && isset($handler_list[$code])) {
-                $GLOBALS['smarty']->assign('add_handler', $handler_list[$code]);
+                $this->assign('add_handler', $handler_list[$code]);
             }
 
             /* 供货商名 */
@@ -40,52 +40,52 @@ class Goods extends Init
             if (empty($suppliers_list_name)) {
                 $suppliers_exists = 0;
             }
-            $GLOBALS['smarty']->assign('is_on_sale', $is_on_sale);
-            $GLOBALS['smarty']->assign('suppliers_id', $suppliers_id);
-            $GLOBALS['smarty']->assign('suppliers_exists', $suppliers_exists);
-            $GLOBALS['smarty']->assign('suppliers_list_name', $suppliers_list_name);
+            $this->assign('is_on_sale', $is_on_sale);
+            $this->assign('suppliers_id', $suppliers_id);
+            $this->assign('suppliers_exists', $suppliers_exists);
+            $this->assign('suppliers_list_name', $suppliers_list_name);
             unset($suppliers_list_name, $suppliers_exists);
 
             /* 模板赋值 */
             $goods_ur = array('' => $GLOBALS['_LANG']['01_goods_list'], 'virtual_card' => $GLOBALS['_LANG']['50_virtual_card_list']);
             $ur_here = ($_REQUEST['act'] == 'list') ? $goods_ur[$code] : $GLOBALS['_LANG']['11_goods_trash'];
-            $GLOBALS['smarty']->assign('ur_here', $ur_here);
+            $this->assign('ur_here', $ur_here);
 
             $action_link = ($_REQUEST['act'] == 'list') ? $this->add_link($code) : array('href' => 'goods.php?act=list', 'text' => $GLOBALS['_LANG']['01_goods_list']);
-            $GLOBALS['smarty']->assign('action_link', $action_link);
-            $GLOBALS['smarty']->assign('code', $code);
-            $GLOBALS['smarty']->assign('cat_list', cat_list(0, $cat_id));
-            $GLOBALS['smarty']->assign('brand_list', get_brand_list());
-            $GLOBALS['smarty']->assign('intro_list', get_intro_list());
-            $GLOBALS['smarty']->assign('lang', $GLOBALS['_LANG']);
-            $GLOBALS['smarty']->assign('list_type', $_REQUEST['act'] == 'list' ? 'goods' : 'trash');
-            $GLOBALS['smarty']->assign('use_storage', empty($GLOBALS['_CFG']['use_storage']) ? 0 : 1);
+            $this->assign('action_link', $action_link);
+            $this->assign('code', $code);
+            $this->assign('cat_list', cat_list(0, $cat_id));
+            $this->assign('brand_list', get_brand_list());
+            $this->assign('intro_list', get_intro_list());
+            $this->assign('lang', $GLOBALS['_LANG']);
+            $this->assign('list_type', $_REQUEST['act'] == 'list' ? 'goods' : 'trash');
+            $this->assign('use_storage', empty($GLOBALS['_CFG']['use_storage']) ? 0 : 1);
 
             $suppliers_list = suppliers_list_info(' is_check = 1 ');
             $suppliers_list_count = count($suppliers_list);
-            $GLOBALS['smarty']->assign('suppliers_list', ($suppliers_list_count == 0 ? 0 : $suppliers_list)); // 取供货商列表
+            $this->assign('suppliers_list', ($suppliers_list_count == 0 ? 0 : $suppliers_list)); // 取供货商列表
 
             $goods_list = goods_list($_REQUEST['act'] == 'list' ? 0 : 1, ($_REQUEST['act'] == 'list') ? (($code == '') ? 1 : 0) : -1);
-            $GLOBALS['smarty']->assign('goods_list', $goods_list['goods']);
-            $GLOBALS['smarty']->assign('filter', $goods_list['filter']);
-            $GLOBALS['smarty']->assign('record_count', $goods_list['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $goods_list['page_count']);
-            $GLOBALS['smarty']->assign('full_page', 1);
+            $this->assign('goods_list', $goods_list['goods']);
+            $this->assign('filter', $goods_list['filter']);
+            $this->assign('record_count', $goods_list['record_count']);
+            $this->assign('page_count', $goods_list['page_count']);
+            $this->assign('full_page', 1);
 
             /* 排序标记 */
             $sort_flag = sort_flag($goods_list['filter']);
-            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
+            $this->assign($sort_flag['tag'], $sort_flag['img']);
 
             /* 获取商品类型存在规格的类型 */
             $specifications = get_goods_type_specifications();
-            $GLOBALS['smarty']->assign('specifications', $specifications);
+            $this->assign('specifications', $specifications);
 
             /* 显示商品列表页面 */
             assign_query_info();
             $htm_file = ($_REQUEST['act'] == 'list') ?
                 'goods_list.htm' : (($_REQUEST['act'] == 'trash') ? 'goods_trash.htm' : 'group_list.htm');
-            $GLOBALS['smarty']->assign('pageHtml', $htm_file);
-            return $GLOBALS['smarty']->display($htm_file);
+            $this->assign('pageHtml', $htm_file);
+            return $this->display($htm_file);
         }
 
         /*------------------------------------------------------ */
@@ -111,20 +111,20 @@ class Goods extends Init
             if (empty($suppliers_list_name)) {
                 $suppliers_exists = 0;
             }
-            $GLOBALS['smarty']->assign('suppliers_exists', $suppliers_exists);
-            $GLOBALS['smarty']->assign('suppliers_list_name', $suppliers_list_name);
+            $this->assign('suppliers_exists', $suppliers_exists);
+            $this->assign('suppliers_list_name', $suppliers_list_name);
             unset($suppliers_list_name, $suppliers_exists);
 
             /* 如果是安全模式，检查目录是否存在 */
             if (ini_get('safe_mode') == 1 && (!file_exists('../' . IMAGE_DIR . '/' . date('Ym')) || !is_dir('../' . IMAGE_DIR . '/' . date('Ym')))) {
                 if (@!mkdir('../' . IMAGE_DIR . '/' . date('Ym'), 0777)) {
                     $warning = sprintf($GLOBALS['_LANG']['safe_mode_warning'], '../' . IMAGE_DIR . '/' . date('Ym'));
-                    $GLOBALS['smarty']->assign('warning', $warning);
+                    $this->assign('warning', $warning);
                 }
             } /* 如果目录存在但不可写，提示用户 */
             elseif (file_exists('../' . IMAGE_DIR . '/' . date('Ym')) && file_mode_info('../' . IMAGE_DIR . '/' . date('Ym')) < 2) {
                 $warning = sprintf($GLOBALS['_LANG']['not_writable_warning'], '../' . IMAGE_DIR . '/' . date('Ym'));
-                $GLOBALS['smarty']->assign('warning', $warning);
+                $this->assign('warning', $warning);
             }
 
             /* 取得商品信息 */
@@ -334,7 +334,7 @@ class Goods extends Init
                 foreach ($goods['other_cat'] as $cat_id) {
                     $other_cat_list[$cat_id] = cat_list(0, $cat_id);
                 }
-                $GLOBALS['smarty']->assign('other_cat_list', $other_cat_list);
+                $this->assign('other_cat_list', $other_cat_list);
 
                 $link_goods_list = get_linked_goods($goods['goods_id']); // 关联商品
                 $group_goods_list = get_group_goods($goods['goods_id']); // 配件
@@ -370,34 +370,34 @@ class Goods extends Init
             create_html_editor('goods_desc', $goods['goods_desc']);
 
             /* 模板赋值 */
-            $GLOBALS['smarty']->assign('code', $code);
-            $GLOBALS['smarty']->assign('ur_here', $is_add ? (empty($code) ? $GLOBALS['_LANG']['02_goods_add'] : $GLOBALS['_LANG']['51_virtual_card_add']) : ($_REQUEST['act'] == 'edit' ? $GLOBALS['_LANG']['edit_goods'] : $GLOBALS['_LANG']['copy_goods']));
-            $GLOBALS['smarty']->assign('action_link', $this->list_link($is_add, $code));
-            $GLOBALS['smarty']->assign('goods', $goods);
-            $GLOBALS['smarty']->assign('goods_name_color', $goods_name_style[0]);
-            $GLOBALS['smarty']->assign('goods_name_style', $goods_name_style[1]);
-            $GLOBALS['smarty']->assign('cat_list', cat_list(0, $goods['cat_id']));
-            $GLOBALS['smarty']->assign('brand_list', get_brand_list());
-            $GLOBALS['smarty']->assign('unit_list', get_unit_list());
-            $GLOBALS['smarty']->assign('user_rank_list', get_user_rank_list());
-            $GLOBALS['smarty']->assign('weight_unit', $is_add ? '1' : ($goods['goods_weight'] >= 1 ? '1' : '0.001'));
-            $GLOBALS['smarty']->assign('cfg', $GLOBALS['_CFG']);
-            $GLOBALS['smarty']->assign('form_act', $is_add ? 'insert' : ($_REQUEST['act'] == 'edit' ? 'update' : 'insert'));
+            $this->assign('code', $code);
+            $this->assign('ur_here', $is_add ? (empty($code) ? $GLOBALS['_LANG']['02_goods_add'] : $GLOBALS['_LANG']['51_virtual_card_add']) : ($_REQUEST['act'] == 'edit' ? $GLOBALS['_LANG']['edit_goods'] : $GLOBALS['_LANG']['copy_goods']));
+            $this->assign('action_link', $this->list_link($is_add, $code));
+            $this->assign('goods', $goods);
+            $this->assign('goods_name_color', $goods_name_style[0]);
+            $this->assign('goods_name_style', $goods_name_style[1]);
+            $this->assign('cat_list', cat_list(0, $goods['cat_id']));
+            $this->assign('brand_list', get_brand_list());
+            $this->assign('unit_list', get_unit_list());
+            $this->assign('user_rank_list', get_user_rank_list());
+            $this->assign('weight_unit', $is_add ? '1' : ($goods['goods_weight'] >= 1 ? '1' : '0.001'));
+            $this->assign('cfg', $GLOBALS['_CFG']);
+            $this->assign('form_act', $is_add ? 'insert' : ($_REQUEST['act'] == 'edit' ? 'update' : 'insert'));
             if ($_REQUEST['act'] == 'add' || $_REQUEST['act'] == 'edit') {
-                $GLOBALS['smarty']->assign('is_add', true);
+                $this->assign('is_add', true);
             }
             if (!$is_add) {
-                $GLOBALS['smarty']->assign('member_price_list', get_member_price_list($_REQUEST['goods_id']));
+                $this->assign('member_price_list', get_member_price_list($_REQUEST['goods_id']));
             }
-            $GLOBALS['smarty']->assign('link_goods_list', $link_goods_list);
-            $GLOBALS['smarty']->assign('group_goods_list', $group_goods_list);
-            $GLOBALS['smarty']->assign('goods_article_list', $goods_article_list);
-            $GLOBALS['smarty']->assign('img_list', $img_list);
-            $GLOBALS['smarty']->assign('goods_type_list', goods_type_list($goods['goods_type']));
-            $GLOBALS['smarty']->assign('gd', gd_version());
-            $GLOBALS['smarty']->assign('thumb_width', $GLOBALS['_CFG']['thumb_width']);
-            $GLOBALS['smarty']->assign('thumb_height', $GLOBALS['_CFG']['thumb_height']);
-            $GLOBALS['smarty']->assign('goods_attr_html', build_attr_html($goods['goods_type'], $goods['goods_id']));
+            $this->assign('link_goods_list', $link_goods_list);
+            $this->assign('group_goods_list', $group_goods_list);
+            $this->assign('goods_article_list', $goods_article_list);
+            $this->assign('img_list', $img_list);
+            $this->assign('goods_type_list', goods_type_list($goods['goods_type']));
+            $this->assign('gd', gd_version());
+            $this->assign('thumb_width', $GLOBALS['_CFG']['thumb_width']);
+            $this->assign('thumb_height', $GLOBALS['_CFG']['thumb_height']);
+            $this->assign('goods_attr_html', build_attr_html($goods['goods_type'], $goods['goods_id']));
             $volume_price_list = '';
             if (isset($_REQUEST['goods_id'])) {
                 $volume_price_list = get_volume_price_list($_REQUEST['goods_id']);
@@ -405,10 +405,10 @@ class Goods extends Init
             if (empty($volume_price_list)) {
                 $volume_price_list = array('0' => array('number' => '', 'price' => ''));
             }
-            $GLOBALS['smarty']->assign('volume_price_list', $volume_price_list);
+            $this->assign('volume_price_list', $volume_price_list);
             /* 显示商品信息页面 */
             assign_query_info();
-            return $GLOBALS['smarty']->display('goods_info.view.php');
+            return $this->display('goods_info.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -1124,8 +1124,8 @@ class Goods extends Init
                     $img_url = '../' . $_GET['img_url'];
                 }
             }
-            $GLOBALS['smarty']->assign('img_url', $img_url);
-            return $GLOBALS['smarty']->display('goods_show_image.view.php');
+            $this->assign('img_url', $img_url);
+            return $this->display('goods_show_image.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -1345,7 +1345,7 @@ class Goods extends Init
             $handler_list['virtual_card'][] = array('url' => 'virtual_card.php?act=batch_card_add', 'title' => $GLOBALS['_LANG']['batch_card_add'], 'img' => 'icon_output.gif');
 
             if (isset($handler_list[$code])) {
-                $GLOBALS['smarty']->assign('add_handler', $handler_list[$code]);
+                $this->assign('add_handler', $handler_list[$code]);
             }
 
             /* 供货商名 */
@@ -1354,35 +1354,35 @@ class Goods extends Init
             if (empty($suppliers_list_name)) {
                 $suppliers_exists = 0;
             }
-            $GLOBALS['smarty']->assign('is_on_sale', $is_on_sale);
-            $GLOBALS['smarty']->assign('suppliers_id', $suppliers_id);
-            $GLOBALS['smarty']->assign('suppliers_exists', $suppliers_exists);
-            $GLOBALS['smarty']->assign('suppliers_list_name', $suppliers_list_name);
+            $this->assign('is_on_sale', $is_on_sale);
+            $this->assign('suppliers_id', $suppliers_id);
+            $this->assign('suppliers_exists', $suppliers_exists);
+            $this->assign('suppliers_list_name', $suppliers_list_name);
             unset($suppliers_list_name, $suppliers_exists);
 
             $suppliers_list = suppliers_list_info(' is_check = 1 ');
             $suppliers_list_count = count($suppliers_list);
-            $GLOBALS['smarty']->assign('suppliers_list', ($suppliers_list_count == 0 ? 0 : $suppliers_list)); // 取供货商列表
+            $this->assign('suppliers_list', ($suppliers_list_count == 0 ? 0 : $suppliers_list)); // 取供货商列表
 
-            $GLOBALS['smarty']->assign('cat_list', cat_list(0, $cat_id));
-            $GLOBALS['smarty']->assign('brand_list', get_brand_list());
-            $GLOBALS['smarty']->assign('intro_list', get_intro_list());
+            $this->assign('cat_list', cat_list(0, $cat_id));
+            $this->assign('brand_list', get_brand_list());
+            $this->assign('intro_list', get_intro_list());
 
-            $GLOBALS['smarty']->assign('code', $code);
-            $GLOBALS['smarty']->assign('goods_list', $goods_list['goods']);
-            $GLOBALS['smarty']->assign('filter', $goods_list['filter']);
-            $GLOBALS['smarty']->assign('record_count', $goods_list['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $goods_list['page_count']);
-            $GLOBALS['smarty']->assign('list_type', $is_delete ? 'trash' : 'goods');
-            $GLOBALS['smarty']->assign('use_storage', empty($GLOBALS['_CFG']['use_storage']) ? 0 : 1);
+            $this->assign('code', $code);
+            $this->assign('goods_list', $goods_list['goods']);
+            $this->assign('filter', $goods_list['filter']);
+            $this->assign('record_count', $goods_list['record_count']);
+            $this->assign('page_count', $goods_list['page_count']);
+            $this->assign('list_type', $is_delete ? 'trash' : 'goods');
+            $this->assign('use_storage', empty($GLOBALS['_CFG']['use_storage']) ? 0 : 1);
 
             /* 排序标记 */
             $sort_flag = sort_flag($goods_list['filter']);
-            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
+            $this->assign($sort_flag['tag'], $sort_flag['img']);
 
             /* 获取商品类型存在规格的类型 */
             $specifications = get_goods_type_specifications();
-            $GLOBALS['smarty']->assign('specifications', $specifications);
+            $this->assign('specifications', $specifications);
 
             $tpl = $is_delete ? 'goods_trash.htm' : 'goods_list.htm';
 
@@ -1862,10 +1862,10 @@ class Goods extends Init
                 $link[] = array('href' => 'goods.php?act=list', 'text' => $GLOBALS['_LANG']['01_goods_list']);
                 return sys_msg($GLOBALS['_LANG']['cannot_found_goods'], 1, $link);
             }
-            $GLOBALS['smarty']->assign('sn', sprintf($GLOBALS['_LANG']['good_goods_sn'], $goods['goods_sn']));
-            $GLOBALS['smarty']->assign('price', sprintf($GLOBALS['_LANG']['good_shop_price'], $goods['shop_price']));
-            $GLOBALS['smarty']->assign('goods_name', sprintf($GLOBALS['_LANG']['products_title'], $goods['goods_name']));
-            $GLOBALS['smarty']->assign('goods_sn', sprintf($GLOBALS['_LANG']['products_title_2'], $goods['goods_sn']));
+            $this->assign('sn', sprintf($GLOBALS['_LANG']['good_goods_sn'], $goods['goods_sn']));
+            $this->assign('price', sprintf($GLOBALS['_LANG']['good_shop_price'], $goods['shop_price']));
+            $this->assign('goods_name', sprintf($GLOBALS['_LANG']['products_title'], $goods['goods_name']));
+            $this->assign('goods_sn', sprintf($GLOBALS['_LANG']['products_title_2'], $goods['goods_sn']));
 
 
             /* 获取商品规格列表 */
@@ -1884,10 +1884,10 @@ class Goods extends Init
 
             $attribute_count = count($_attribute);
 
-            $GLOBALS['smarty']->assign('attribute_count', $attribute_count);
-            $GLOBALS['smarty']->assign('attribute_count_3', ($attribute_count + 3));
-            $GLOBALS['smarty']->assign('product_sn', $goods['goods_sn'] . '_');
-            $GLOBALS['smarty']->assign('product_number', $GLOBALS['_CFG']['default_storage']);
+            $this->assign('attribute_count', $attribute_count);
+            $this->assign('attribute_count_3', ($attribute_count + 3));
+            $this->assign('product_sn', $goods['goods_sn'] . '_');
+            $this->assign('product_number', $GLOBALS['_CFG']['default_storage']);
 
             /* 取商品的货品 */
             $product = product_list($goods_id, '');
@@ -1912,20 +1912,20 @@ class Goods extends Init
                 $new_attribute = $_attribute;
             }
 
-            $GLOBALS['smarty']->assign('attribute', $new_attribute);
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['18_product_list']);
-            $GLOBALS['smarty']->assign('action_link', array('href' => 'goods.php?act=list', 'text' => $GLOBALS['_LANG']['01_goods_list']));
-            $GLOBALS['smarty']->assign('product_list', $product['product']);
-            $GLOBALS['smarty']->assign('product_null', empty($product['product']) ? 0 : 1);
-            $GLOBALS['smarty']->assign('use_storage', empty($GLOBALS['_CFG']['use_storage']) ? 0 : 1);
-            $GLOBALS['smarty']->assign('goods_id', $goods_id);
-            $GLOBALS['smarty']->assign('filter', $product['filter']);
-            $GLOBALS['smarty']->assign('full_page', 1);
+            $this->assign('attribute', $new_attribute);
+            $this->assign('ur_here', $GLOBALS['_LANG']['18_product_list']);
+            $this->assign('action_link', array('href' => 'goods.php?act=list', 'text' => $GLOBALS['_LANG']['01_goods_list']));
+            $this->assign('product_list', $product['product']);
+            $this->assign('product_null', empty($product['product']) ? 0 : 1);
+            $this->assign('use_storage', empty($GLOBALS['_CFG']['use_storage']) ? 0 : 1);
+            $this->assign('goods_id', $goods_id);
+            $this->assign('filter', $product['filter']);
+            $this->assign('full_page', 1);
 
             /* 显示商品列表页面 */
             assign_query_info();
 
-            return $GLOBALS['smarty']->display('product_info.view.php');
+            return $this->display('product_info.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -1945,10 +1945,10 @@ class Goods extends Init
             if (empty($goods)) {
                 return make_json_error($GLOBALS['_LANG']['sys']['wrong'] . $GLOBALS['_LANG']['cannot_found_goods']);
             }
-            $GLOBALS['smarty']->assign('sn', sprintf($GLOBALS['_LANG']['good_goods_sn'], $goods['goods_sn']));
-            $GLOBALS['smarty']->assign('price', sprintf($GLOBALS['_LANG']['good_shop_price'], $goods['shop_price']));
-            $GLOBALS['smarty']->assign('goods_name', sprintf($GLOBALS['_LANG']['products_title'], $goods['goods_name']));
-            $GLOBALS['smarty']->assign('goods_sn', sprintf($GLOBALS['_LANG']['products_title_2'], $goods['goods_sn']));
+            $this->assign('sn', sprintf($GLOBALS['_LANG']['good_goods_sn'], $goods['goods_sn']));
+            $this->assign('price', sprintf($GLOBALS['_LANG']['good_shop_price'], $goods['shop_price']));
+            $this->assign('goods_name', sprintf($GLOBALS['_LANG']['products_title'], $goods['goods_name']));
+            $this->assign('goods_sn', sprintf($GLOBALS['_LANG']['products_title_2'], $goods['goods_sn']));
 
 
             /* 获取商品规格列表 */
@@ -1964,25 +1964,25 @@ class Goods extends Init
             }
             $attribute_count = count($_attribute);
 
-            $GLOBALS['smarty']->assign('attribute_count', $attribute_count);
-            $GLOBALS['smarty']->assign('attribute', $_attribute);
-            $GLOBALS['smarty']->assign('attribute_count_3', ($attribute_count + 3));
-            $GLOBALS['smarty']->assign('product_sn', $goods['goods_sn'] . '_');
-            $GLOBALS['smarty']->assign('product_number', $GLOBALS['_CFG']['default_storage']);
+            $this->assign('attribute_count', $attribute_count);
+            $this->assign('attribute', $_attribute);
+            $this->assign('attribute_count_3', ($attribute_count + 3));
+            $this->assign('product_sn', $goods['goods_sn'] . '_');
+            $this->assign('product_number', $GLOBALS['_CFG']['default_storage']);
 
             /* 取商品的货品 */
             $product = product_list($goods_id, '');
 
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['18_product_list']);
-            $GLOBALS['smarty']->assign('action_link', array('href' => 'goods.php?act=list', 'text' => $GLOBALS['_LANG']['01_goods_list']));
-            $GLOBALS['smarty']->assign('product_list', $product['product']);
-            $GLOBALS['smarty']->assign('use_storage', empty($GLOBALS['_CFG']['use_storage']) ? 0 : 1);
-            $GLOBALS['smarty']->assign('goods_id', $goods_id);
-            $GLOBALS['smarty']->assign('filter', $product['filter']);
+            $this->assign('ur_here', $GLOBALS['_LANG']['18_product_list']);
+            $this->assign('action_link', array('href' => 'goods.php?act=list', 'text' => $GLOBALS['_LANG']['01_goods_list']));
+            $this->assign('product_list', $product['product']);
+            $this->assign('use_storage', empty($GLOBALS['_CFG']['use_storage']) ? 0 : 1);
+            $this->assign('goods_id', $goods_id);
+            $this->assign('filter', $product['filter']);
 
             /* 排序标记 */
             $sort_flag = sort_flag($product['filter']);
-            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
+            $this->assign($sort_flag['tag'], $sort_flag['img']);
 
             return make_json_result(
                 $GLOBALS['smarty']->fetch('product_info.htm'),

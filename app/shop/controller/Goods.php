@@ -10,7 +10,7 @@ class Goods extends Init
     public function index()
     {
         $affiliate = unserialize($GLOBALS['_CFG']['affiliate']);
-        $GLOBALS['smarty']->assign('affiliate', $affiliate);
+        $this->assign('affiliate', $affiliate);
 
         /*------------------------------------------------------ */
         //-- INPUT
@@ -104,8 +104,8 @@ class Goods extends Init
                 $pager['page_next'] = $page < $page_count ? 'javascript:gotoBuyPage(' . ($page + 1) . ",$goods_id)" : 'javascript:;';
                 $pager['page_last'] = $page < $page_count ? 'javascript:gotoBuyPage(' . $page_count . ",$goods_id)" : 'javascript:;';
 
-                $GLOBALS['smarty']->assign('notes', $bought_notes);
-                $GLOBALS['smarty']->assign('pager', $pager);
+                $this->assign('notes', $bought_notes);
+                $this->assign('pager', $pager);
 
 
                 $res['result'] = $GLOBALS['smarty']->fetch('library/bought_notes.view.php');
@@ -125,14 +125,14 @@ class Goods extends Init
         $cache_id = $goods_id . '-' . $_SESSION['user_rank'] . '-' . $GLOBALS['_CFG']['lang'];
         $cache_id = sprintf('%X', crc32($cache_id));
         if (!$GLOBALS['smarty']->is_cached('goods.view.php', $cache_id)) {
-            $GLOBALS['smarty']->assign('image_width', $GLOBALS['_CFG']['image_width']);
-            $GLOBALS['smarty']->assign('image_height', $GLOBALS['_CFG']['image_height']);
-            $GLOBALS['smarty']->assign('helps', get_shop_help()); // 网店帮助
-            $GLOBALS['smarty']->assign('id', $goods_id);
-            $GLOBALS['smarty']->assign('type', 0);
-            $GLOBALS['smarty']->assign('cfg', $GLOBALS['_CFG']);
-            $GLOBALS['smarty']->assign('promotion', get_promotion_info($goods_id));//促销信息
-            $GLOBALS['smarty']->assign('promotion_info', get_promotion_info());
+            $this->assign('image_width', $GLOBALS['_CFG']['image_width']);
+            $this->assign('image_height', $GLOBALS['_CFG']['image_height']);
+            $this->assign('helps', get_shop_help()); // 网店帮助
+            $this->assign('id', $goods_id);
+            $this->assign('type', 0);
+            $this->assign('cfg', $GLOBALS['_CFG']);
+            $this->assign('promotion', get_promotion_info($goods_id));//促销信息
+            $this->assign('promotion_info', get_promotion_info());
 
             /* 获得商品的信息 */
             $goods = get_goods_info($goods_id);
@@ -165,14 +165,14 @@ class Goods extends Init
                     }
                 }
 
-                $GLOBALS['smarty']->assign('goods', $goods);
-                $GLOBALS['smarty']->assign('goods_id', $goods['goods_id']);
-                $GLOBALS['smarty']->assign('promote_end_time', $goods['gmt_end_time']);
-                $GLOBALS['smarty']->assign('categories', get_categories_tree($goods['cat_id']));  // 分类树
+                $this->assign('goods', $goods);
+                $this->assign('goods_id', $goods['goods_id']);
+                $this->assign('promote_end_time', $goods['gmt_end_time']);
+                $this->assign('categories', get_categories_tree($goods['cat_id']));  // 分类树
 
                 /* meta */
-                $GLOBALS['smarty']->assign('keywords', htmlspecialchars($goods['keywords']));
-                $GLOBALS['smarty']->assign('description', htmlspecialchars($goods['goods_brief']));
+                $this->assign('keywords', htmlspecialchars($goods['keywords']));
+                $this->assign('description', htmlspecialchars($goods['goods_brief']));
 
 
                 $catlist = array();
@@ -186,45 +186,45 @@ class Goods extends Init
                 $prev_gid = $GLOBALS['db']->getOne("SELECT goods_id FROM " . $GLOBALS['ecs']->table('goods') . " WHERE cat_id=" . $goods['cat_id'] . " AND goods_id > " . $goods['goods_id'] . " AND is_on_sale = 1 AND is_alone_sale = 1 AND is_delete = 0 LIMIT 1");
                 if (!empty($prev_gid)) {
                     $prev_good['url'] = build_uri('goods', array('gid' => $prev_gid), $goods['goods_name']);
-                    $GLOBALS['smarty']->assign('prev_good', $prev_good);//上一个商品
+                    $this->assign('prev_good', $prev_good);//上一个商品
                 }
 
                 $next_gid = $GLOBALS['db']->getOne("SELECT max(goods_id) FROM " . $GLOBALS['ecs']->table('goods') . " WHERE cat_id=" . $goods['cat_id'] . " AND goods_id < " . $goods['goods_id'] . " AND is_on_sale = 1 AND is_alone_sale = 1 AND is_delete = 0");
                 if (!empty($next_gid)) {
                     $next_good['url'] = build_uri('goods', array('gid' => $next_gid), $goods['goods_name']);
-                    $GLOBALS['smarty']->assign('next_good', $next_good);//下一个商品
+                    $this->assign('next_good', $next_good);//下一个商品
                 }
 
                 $position = assign_ur_here($goods['cat_id'], $goods['goods_name']);
 
                 /* current position */
-                $GLOBALS['smarty']->assign('page_title', $position['title']);                    // 页面标题
-                $GLOBALS['smarty']->assign('ur_here', $position['ur_here']);                  // 当前位置
+                $this->assign('page_title', $position['title']);                    // 页面标题
+                $this->assign('ur_here', $position['ur_here']);                  // 当前位置
 
                 $properties = get_goods_properties($goods_id);  // 获得商品的规格和属性
 
-                $GLOBALS['smarty']->assign('properties', $properties['pro']);                              // 商品属性
-                $GLOBALS['smarty']->assign('specification', $properties['spe']);                              // 商品规格
-                $GLOBALS['smarty']->assign('attribute_linked', get_same_attribute_goods($properties));           // 相同属性的关联商品
-                $GLOBALS['smarty']->assign('related_goods', $linked_goods);                                   // 关联商品
-                $GLOBALS['smarty']->assign('goods_article_list', $this->get_linked_articles($goods_id));                  // 关联文章
-                $GLOBALS['smarty']->assign('fittings', get_goods_fittings(array($goods_id)));                   // 配件
-                $GLOBALS['smarty']->assign('rank_prices', $this->get_user_rank_prices($goods_id, $shop_price));    // 会员等级价格
-                $GLOBALS['smarty']->assign('pictures', get_goods_gallery($goods_id));                    // 商品相册
-                $GLOBALS['smarty']->assign('bought_goods', $this->get_also_bought($goods_id));                      // 购买了该商品的用户还购买了哪些商品
-                $GLOBALS['smarty']->assign('goods_rank', $this->get_goods_rank($goods_id));                       // 商品的销售排名
+                $this->assign('properties', $properties['pro']);                              // 商品属性
+                $this->assign('specification', $properties['spe']);                              // 商品规格
+                $this->assign('attribute_linked', get_same_attribute_goods($properties));           // 相同属性的关联商品
+                $this->assign('related_goods', $linked_goods);                                   // 关联商品
+                $this->assign('goods_article_list', $this->get_linked_articles($goods_id));                  // 关联文章
+                $this->assign('fittings', get_goods_fittings(array($goods_id)));                   // 配件
+                $this->assign('rank_prices', $this->get_user_rank_prices($goods_id, $shop_price));    // 会员等级价格
+                $this->assign('pictures', get_goods_gallery($goods_id));                    // 商品相册
+                $this->assign('bought_goods', $this->get_also_bought($goods_id));                      // 购买了该商品的用户还购买了哪些商品
+                $this->assign('goods_rank', $this->get_goods_rank($goods_id));                       // 商品的销售排名
 
                 //获取tag
                 $tag_array = get_tags($goods_id);
-                $GLOBALS['smarty']->assign('tags', $tag_array);                                       // 商品的标记
+                $this->assign('tags', $tag_array);                                       // 商品的标记
 
                 //获取关联礼包
                 $package_goods_list = $this->get_package_goods_list($goods['goods_id']);
-                $GLOBALS['smarty']->assign('package_goods_list', $package_goods_list);    // 获取关联礼包
+                $this->assign('package_goods_list', $package_goods_list);    // 获取关联礼包
 
                 assign_dynamic('goods');
                 $volume_price_list = get_volume_price_list($goods['goods_id'], '1');
-                $GLOBALS['smarty']->assign('volume_price_list', $volume_price_list);    // 商品优惠价格区间
+                $this->assign('volume_price_list', $volume_price_list);    // 商品优惠价格区间
             }
         }
 
@@ -248,8 +248,8 @@ class Goods extends Init
         /* 更新点击次数 */
         $GLOBALS['db']->query('UPDATE ' . $GLOBALS['ecs']->table('goods') . " SET click_count = click_count + 1 WHERE goods_id = '$_REQUEST[id]'");
 
-        $GLOBALS['smarty']->assign('now_time', gmtime());           // 当前系统时间
-        return $GLOBALS['smarty']->display('goods.view.php', $cache_id);
+        $this->assign('now_time', gmtime());           // 当前系统时间
+        return $this->display('goods.view.php', $cache_id);
     }
 
     /**

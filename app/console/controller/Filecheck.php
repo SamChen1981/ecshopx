@@ -21,15 +21,15 @@ class Filecheck extends Init
         $step = empty($_REQUEST['step']) ? 1 : max(1, intval($_REQUEST['step']));
 
         if ($step == 1 || $step == 2) {
-            $GLOBALS['smarty']->assign('step', $step);
+            $this->assign('step', $step);
             if ($step == 1) {
-                $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['file_check']);
+                $this->assign('ur_here', $GLOBALS['_LANG']['file_check']);
             }
             if ($step == 2) {
-                $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['fileperms_verify']);
+                $this->assign('ur_here', $GLOBALS['_LANG']['fileperms_verify']);
             }
             assign_query_info();
-            return $GLOBALS['smarty']->display('filecheck.view.php');
+            return $this->display('filecheck.view.php');
         } elseif ($step == 3) {
             @set_time_limit(0);
 
@@ -114,15 +114,15 @@ class Filecheck extends Init
             $result[$GLOBALS['_LANG']['result_delete']] = count($dellist);
             $result[$GLOBALS['_LANG']['result_unknown']] = count($addlist);
 
-            $GLOBALS['smarty']->assign('result', $result);
-            $GLOBALS['smarty']->assign('dirlog', $dirlog);
-            $GLOBALS['smarty']->assign('filelist', $filelist);
-            $GLOBALS['smarty']->assign('step', $step);
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['filecheck_completed']);
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['filecheck_return'], 'href' => 'filecheck.php?step=1'));
+            $this->assign('result', $result);
+            $this->assign('dirlog', $dirlog);
+            $this->assign('filelist', $filelist);
+            $this->assign('step', $step);
+            $this->assign('ur_here', $GLOBALS['_LANG']['filecheck_completed']);
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['filecheck_return'], 'href' => 'filecheck.php?step=1'));
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('filecheck.view.php');
+            return $this->display('filecheck.view.php');
         }
     }
 

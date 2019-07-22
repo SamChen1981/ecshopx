@@ -18,7 +18,7 @@ class MobileSetting extends Init
         if ($_REQUEST['act'] == 'list') {
             /* 检查权限 */
             admin_priv('mobile_setting');
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['banner_mobile']);
+            $this->assign('ur_here', $GLOBALS['_LANG']['banner_mobile']);
             $cert = new certificate;
             $isOpenWap = $cert->is_open_sn('fy');
             if ($isOpenWap == false && $_SESSION['yunqi_login'] && $_SESSION['TOKEN']) {
@@ -44,9 +44,9 @@ class MobileSetting extends Init
             assign_query_info();
             $flash_dir = ROOT_PATH . 'data/flashdata/';
 
-            $GLOBALS['smarty']->assign('playerdb', $playerdb);
-            $GLOBALS['smarty']->assign('group_list', $grouplist);
-            return $GLOBALS['smarty']->display('banner_config.html');
+            $this->assign('playerdb', $playerdb);
+            $this->assign('group_list', $grouplist);
+            return $this->display('banner_config.html');
         } elseif ($_REQUEST['act'] == 'del') {
             admin_priv('flash_manage');
 
@@ -85,13 +85,13 @@ class MobileSetting extends Init
                 $width_height = $this->get_width_height();
                 assign_query_info();
                 if (isset($width_height['width']) || isset($width_height['height'])) {
-                    $GLOBALS['smarty']->assign('width_height', sprintf($GLOBALS['_LANG']['width_height'], $width_height['width'], $width_height['height']));
+                    $this->assign('width_height', sprintf($GLOBALS['_LANG']['width_height'], $width_height['width'], $width_height['height']));
                 }
 
-                $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['go_url'], 'href' => 'mobile_setting.php?act=list'));
-                $GLOBALS['smarty']->assign('rt', $rt);
-                $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['add_picad']);
-                return $GLOBALS['smarty']->display('flashplay_add.view.php');
+                $this->assign('action_link', array('text' => $GLOBALS['_LANG']['go_url'], 'href' => 'mobile_setting.php?act=list'));
+                $this->assign('rt', $rt);
+                $this->assign('ur_here', $GLOBALS['_LANG']['add_picad']);
+                return $this->display('flashplay_add.view.php');
             } elseif ($_POST['step'] == 2) {
                 if (!empty($_FILES['img_file_src']['name'])) {
                     if (!get_file_suffix($_FILES['img_file_src']['name'], $allow_suffix)) {
@@ -168,10 +168,10 @@ class MobileSetting extends Init
                 $rt['img_sort'] = empty($rt['sort']) ? 0 : $rt['sort'];
 
                 $rt['id'] = $id;
-                $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['go_url'], 'href' => 'mobile_setting.php?act=list'));
-                $GLOBALS['smarty']->assign('rt', $rt);
-                $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['edit_picad']);
-                return $GLOBALS['smarty']->display('flashplay_add.view.php');
+                $this->assign('action_link', array('text' => $GLOBALS['_LANG']['go_url'], 'href' => 'mobile_setting.php?act=list'));
+                $this->assign('rt', $rt);
+                $this->assign('ur_here', $GLOBALS['_LANG']['edit_picad']);
+                return $this->display('flashplay_add.view.php');
             } elseif ($_POST['step'] == 2) {
                 // if (empty($_POST['img_url']))
                 // {

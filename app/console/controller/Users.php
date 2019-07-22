@@ -28,23 +28,23 @@ class Users extends Init
                 $ranks[$row['rank_id']] = $row['rank_name'];
             }
 
-            $GLOBALS['smarty']->assign('user_ranks', $ranks);
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['03_users_list']);
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['04_users_add'], 'href' => 'users.php?act=add'));
+            $this->assign('user_ranks', $ranks);
+            $this->assign('ur_here', $GLOBALS['_LANG']['03_users_list']);
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['04_users_add'], 'href' => 'users.php?act=add'));
 
             $user_list = $this->user_list();
             $cert = new Certificate();
             $is_bind_crm = $cert->is_bind_sn('ecos.taocrm', 'bind_type');
-            $GLOBALS['smarty']->assign('is_bind_crm', $is_bind_crm);
-            $GLOBALS['smarty']->assign('user_list', $user_list['user_list']);
-            $GLOBALS['smarty']->assign('filter', $user_list['filter']);
-            $GLOBALS['smarty']->assign('record_count', $user_list['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $user_list['page_count']);
-            $GLOBALS['smarty']->assign('full_page', 1);
-            $GLOBALS['smarty']->assign('sort_user_id', '<img src="images/sort_desc.png">');
-            $GLOBALS['smarty']->assign('pageHtml', 'users_list.htm');
+            $this->assign('is_bind_crm', $is_bind_crm);
+            $this->assign('user_list', $user_list['user_list']);
+            $this->assign('filter', $user_list['filter']);
+            $this->assign('record_count', $user_list['record_count']);
+            $this->assign('page_count', $user_list['page_count']);
+            $this->assign('full_page', 1);
+            $this->assign('sort_user_id', '<img src="images/sort_desc.png">');
+            $this->assign('pageHtml', 'users_list.htm');
             assign_query_info();
-            return $GLOBALS['smarty']->display('users_list.view.php');
+            return $this->display('users_list.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -53,12 +53,12 @@ class Users extends Init
         elseif ($_REQUEST['act'] == 'query') {
             $user_list = $this->user_list();
 
-            $GLOBALS['smarty']->assign('user_list', $user_list['user_list']);
-            $GLOBALS['smarty']->assign('filter', $user_list['filter']);
-            $GLOBALS['smarty']->assign('record_count', $user_list['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $user_list['page_count']);
+            $this->assign('user_list', $user_list['user_list']);
+            $this->assign('filter', $user_list['filter']);
+            $this->assign('record_count', $user_list['record_count']);
+            $this->assign('page_count', $user_list['page_count']);
             $sort_flag = sort_flag($user_list['filter']);
-            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
+            $this->assign($sort_flag['tag'], $sort_flag['img']);
 
             return make_json_result($GLOBALS['smarty']->fetch('users_list.htm'), '', array('filter' => $user_list['filter'], 'page_count' => $user_list['page_count']));
         }
@@ -78,16 +78,16 @@ class Users extends Init
             /* 取出注册扩展字段 */
             $sql = 'SELECT * FROM ' . $GLOBALS['ecs']->table('reg_fields') . ' WHERE type < 2 AND display = 1 AND id != 6 ORDER BY dis_order, id';
             $extend_info_list = $GLOBALS['db']->getAll($sql);
-            $GLOBALS['smarty']->assign('extend_info_list', $extend_info_list);
+            $this->assign('extend_info_list', $extend_info_list);
 
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['04_users_add']);
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['03_users_list'], 'href' => 'users.php?act=list'));
-            $GLOBALS['smarty']->assign('form_action', 'insert');
-            $GLOBALS['smarty']->assign('user', $user);
-            $GLOBALS['smarty']->assign('special_ranks', get_rank_list(true));
+            $this->assign('ur_here', $GLOBALS['_LANG']['04_users_add']);
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['03_users_list'], 'href' => 'users.php?act=list'));
+            $this->assign('form_action', 'insert');
+            $this->assign('user', $user);
+            $this->assign('special_ranks', get_rank_list(true));
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('user_info.view.php');
+            return $this->display('user_info.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -266,11 +266,11 @@ class Users extends Init
                 }
             }
 
-            $GLOBALS['smarty']->assign('extend_info_list', $extend_info_list);
+            $this->assign('extend_info_list', $extend_info_list);
 
             /* 当前会员推荐信息 */
             $affiliate = unserialize($GLOBALS['_CFG']['affiliate']);
-            $GLOBALS['smarty']->assign('affiliate', $affiliate);
+            $this->assign('affiliate', $affiliate);
 
             empty($affiliate) && $affiliate = array();
 
@@ -297,18 +297,18 @@ class Users extends Init
                     $affdb[$i]['num'] = $count;
                 }
                 if ($affdb[1]['num'] > 0) {
-                    $GLOBALS['smarty']->assign('affdb', $affdb);
+                    $this->assign('affdb', $affdb);
                 }
             }
 
 
             assign_query_info();
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['users_edit']);
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['03_users_list'], 'href' => 'users.php?act=list&' . list_link_postfix()));
-            $GLOBALS['smarty']->assign('user', $user);
-            $GLOBALS['smarty']->assign('form_action', 'update');
-            $GLOBALS['smarty']->assign('special_ranks', get_rank_list(true));
-            return $GLOBALS['smarty']->display('user_info.view.php');
+            $this->assign('ur_here', $GLOBALS['_LANG']['users_edit']);
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['03_users_list'], 'href' => 'users.php?act=list&' . list_link_postfix()));
+            $this->assign('user', $user);
+            $this->assign('form_action', 'update');
+            $this->assign('special_ranks', get_rank_list(true));
+            return $this->display('user_info.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -512,11 +512,11 @@ class Users extends Init
                 " LEFT JOIN " . $GLOBALS['ecs']->table('region') . " AS d ON d.region_id = a.district " .
                 " WHERE user_id='$id'";
             $address = $GLOBALS['db']->getAll($sql);
-            $GLOBALS['smarty']->assign('address', $address);
+            $this->assign('address', $address);
             assign_query_info();
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['address_list']);
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['03_users_list'], 'href' => 'users.php?act=list&' . list_link_postfix()));
-            return $GLOBALS['smarty']->display('user_address_list.view.php');
+            $this->assign('ur_here', $GLOBALS['_LANG']['address_list']);
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['03_users_list'], 'href' => 'users.php?act=list&' . list_link_postfix()));
+            return $this->display('user_address_list.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -547,13 +547,13 @@ class Users extends Init
         elseif ($_REQUEST['act'] == 'aff_list') {
             /* 检查权限 */
             admin_priv('users_manage');
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['03_users_list']);
+            $this->assign('ur_here', $GLOBALS['_LANG']['03_users_list']);
 
             $auid = $_GET['auid'];
             $user_list['user_list'] = array();
 
             $affiliate = unserialize($GLOBALS['_CFG']['affiliate']);
-            $GLOBALS['smarty']->assign('affiliate', $affiliate);
+            $this->assign('affiliate', $affiliate);
 
             empty($affiliate) && $affiliate = array();
 
@@ -588,13 +588,13 @@ class Users extends Init
 
             $user_list['record_count'] = $all_count;
 
-            $GLOBALS['smarty']->assign('user_list', $user_list['user_list']);
-            $GLOBALS['smarty']->assign('record_count', $user_list['record_count']);
-            $GLOBALS['smarty']->assign('full_page', 1);
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['back_note'], 'href' => "users.php?act=edit&id=$auid"));
+            $this->assign('user_list', $user_list['user_list']);
+            $this->assign('record_count', $user_list['record_count']);
+            $this->assign('full_page', 1);
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['back_note'], 'href' => "users.php?act=edit&id=$auid"));
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('affiliate_list.view.php');
+            return $this->display('affiliate_list.view.php');
         }
     }
 

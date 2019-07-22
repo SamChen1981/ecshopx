@@ -79,8 +79,8 @@ class SearchengineStats extends Init
             $general_xml .= '</chart>';
 
             /* 模板赋值 */
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['searchengine_stats']);
-            $GLOBALS['smarty']->assign('general_data', $general_xml);
+            $this->assign('ur_here', $GLOBALS['_LANG']['searchengine_stats']);
+            $this->assign('general_data', $general_xml);
 
             $searchengines = array('ecshop' => false,
                 'MSLIVE' => false,
@@ -95,19 +95,19 @@ class SearchengineStats extends Init
                     $searchengines[$v] = true;
                 }
             }
-            $GLOBALS['smarty']->assign('searchengines', $searchengines);
+            $this->assign('searchengines', $searchengines);
 
             /* 显示日期 */
-            $GLOBALS['smarty']->assign('start_date', $start_date);
-            $GLOBALS['smarty']->assign('end_date', $end_date);
+            $this->assign('start_date', $start_date);
+            $this->assign('end_date', $end_date);
 
             $filename = local_date('Ymd', $start_date) . '_' . local_date('Ymd', $end_date);
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['down_search_stats'], 'href' => 'searchengine_stats.php?act=download&start_date=' . $start_date . '&end_date=' . $end_date . '&filename=' . $filename));
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['down_search_stats'], 'href' => 'searchengine_stats.php?act=download&start_date=' . $start_date . '&end_date=' . $end_date . '&filename=' . $filename));
 
-            $GLOBALS['smarty']->assign('lang', $GLOBALS['_LANG']);
+            $this->assign('lang', $GLOBALS['_LANG']);
             /* 显示页面 */
             assign_query_info();
-            return $GLOBALS['smarty']->display('searchengine_stats.view.php');
+            return $this->display('searchengine_stats.view.php');
         } elseif ($_REQUEST['act'] == 'download') {
             $start_date = empty($_REQUEST['start_date']) ? strtotime('-20 day') : intval($_REQUEST['start_date']);
             $end_date = empty($_REQUEST['end_date']) ? time() : intval($_REQUEST['end_date']);

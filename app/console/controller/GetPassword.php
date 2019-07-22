@@ -43,18 +43,18 @@ class GetPassword extends Init
 
                     return sys_msg($GLOBALS['_LANG']['code_param_error'], 0, $link);
                 } else {
-                    $GLOBALS['smarty']->assign('adminid', $adminid);
-                    $GLOBALS['smarty']->assign('code', $code);
-                    $GLOBALS['smarty']->assign('form_act', 'reset_pwd');
+                    $this->assign('adminid', $adminid);
+                    $this->assign('code', $code);
+                    $this->assign('form_act', 'reset_pwd');
                 }
             } elseif (!empty($_GET['act']) && $_GET['act'] == 'forget_pwd') {
-                $GLOBALS['smarty']->assign('form_act', 'forget_pwd');
+                $this->assign('form_act', 'forget_pwd');
             }
 
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['get_newpassword']);
+            $this->assign('ur_here', $GLOBALS['_LANG']['get_newpassword']);
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('get_pwd.view.php');
+            return $this->display('get_pwd.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -85,11 +85,11 @@ class GetPassword extends Init
                     $template = get_mail_template('send_password');
                     $reset_email = $GLOBALS['ecs']->url() . ADMIN_PATH . '/get_password.php?act=reset_pwd&uid=' . $admin_id . '&code=' . $code;
 
-                    $GLOBALS['smarty']->assign('user_name', $admin_username);
-                    $GLOBALS['smarty']->assign('reset_email', $reset_email);
-                    $GLOBALS['smarty']->assign('shop_name', $GLOBALS['_CFG']['shop_name']);
-                    $GLOBALS['smarty']->assign('send_date', local_date($GLOBALS['_CFG']['date_format']));
-                    $GLOBALS['smarty']->assign('sent_date', local_date($GLOBALS['_CFG']['date_format']));
+                    $this->assign('user_name', $admin_username);
+                    $this->assign('reset_email', $reset_email);
+                    $this->assign('shop_name', $GLOBALS['_CFG']['shop_name']);
+                    $this->assign('send_date', local_date($GLOBALS['_CFG']['date_format']));
+                    $this->assign('sent_date', local_date($GLOBALS['_CFG']['date_format']));
 
                     $content = $GLOBALS['smarty']->fetch('str:' . $template['template_content']);
 

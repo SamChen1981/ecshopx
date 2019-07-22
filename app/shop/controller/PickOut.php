@@ -214,32 +214,32 @@ class PickOut extends Init
 
         assign_template();
         $position = assign_ur_here(0, $GLOBALS['_LANG']['pick_out']);
-        $GLOBALS['smarty']->assign('page_title', $position['title']);    // 页面标题
-        $GLOBALS['smarty']->assign('ur_here', $position['ur_here']);  // 当前位置
+        $this->assign('page_title', $position['title']);    // 页面标题
+        $this->assign('ur_here', $position['ur_here']);  // 当前位置
 
-        $GLOBALS['smarty']->assign('brand_list', $brand_list);       //品牌
-        $GLOBALS['smarty']->assign('cat_list', $cat_list);        //分类列表
+        $this->assign('brand_list', $brand_list);       //品牌
+        $this->assign('cat_list', $cat_list);        //分类列表
 
-        $GLOBALS['smarty']->assign('categories', get_categories_tree()); // 分类树
-        $GLOBALS['smarty']->assign('helps', get_shop_help());  // 网店帮助
-        $GLOBALS['smarty']->assign('top_goods', get_top10());      // 销售排行
-        $GLOBALS['smarty']->assign('data_dir', DATA_DIR);  // 数据目录
+        $this->assign('categories', get_categories_tree()); // 分类树
+        $this->assign('helps', get_shop_help());  // 网店帮助
+        $this->assign('top_goods', get_top10());      // 销售排行
+        $this->assign('data_dir', DATA_DIR);  // 数据目录
 
         /* 调查 */
         $vote = get_vote();
         if (!empty($vote)) {
-            $GLOBALS['smarty']->assign('vote_id', $vote['id']);
-            $GLOBALS['smarty']->assign('vote', $vote['content']);
+            $this->assign('vote_id', $vote['id']);
+            $this->assign('vote', $vote['content']);
         }
 
         assign_dynamic('pick_out');
 
-        $GLOBALS['smarty']->assign('url', $url);
-        $GLOBALS['smarty']->assign('pickout_goods', $goods);
-        $GLOBALS['smarty']->assign('count', $goods_count);
-        $GLOBALS['smarty']->assign('picks', $picks);
-        $GLOBALS['smarty']->assign('condition', $condition);
-        return $GLOBALS['smarty']->display('pick_out.view.php');
+        $this->assign('url', $url);
+        $this->assign('pickout_goods', $goods);
+        $this->assign('count', $goods_count);
+        $this->assign('picks', $picks);
+        $this->assign('condition', $condition);
+        return $this->display('pick_out.view.php');
     }
 
     /**

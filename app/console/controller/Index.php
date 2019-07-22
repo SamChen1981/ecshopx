@@ -14,8 +14,8 @@ class Index extends Init
         //-- 框架
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == '') {
-            $GLOBALS['smarty']->assign('shop_url', urlencode($GLOBALS['ecs']->url()));
-            return $GLOBALS['smarty']->display('index.view.php');
+            $this->assign('shop_url', urlencode($GLOBALS['ecs']->url()));
+            return $this->display('index.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -45,23 +45,23 @@ class Index extends Init
             // 获得管理员设置的菜单
 
             // 获得管理员ID
-            $GLOBALS['smarty']->assign('send_mail_on', $GLOBALS['_CFG']['send_mail_on']);
-            $GLOBALS['smarty']->assign('nav_list', $lst);
-            $GLOBALS['smarty']->assign('admin_id', $_SESSION['admin_id']);
+            $this->assign('send_mail_on', $GLOBALS['_CFG']['send_mail_on']);
+            $this->assign('nav_list', $lst);
+            $this->assign('admin_id', $_SESSION['admin_id']);
             if ($certificate['certificate_id']) {
                 $single_page = 'active';
                 $certificate['use_yunqi_authority'] and $single_page = 'detail';
                 $authority_url = $cert->get_authority_url($single_page);
                 $single_url = $cert->get_authority_url('single');
-                $GLOBALS['smarty']->assign('authority_url', $authority_url);
-                $GLOBALS['smarty']->assign('single_url', $single_url);
-                $GLOBALS['smarty']->assign('authorization', $_SESSION['authorization']);//是否授权
-                $GLOBALS['smarty']->assign('authorize_name', $_SESSION['authorize_name']);//授权名称
+                $this->assign('authority_url', $authority_url);
+                $this->assign('single_url', $single_url);
+                $this->assign('authorization', $_SESSION['authorization']);//是否授权
+                $this->assign('authorize_name', $_SESSION['authorize_name']);//授权名称
             }
-            $GLOBALS['smarty']->assign('http_host', $_SERVER['HTTP_HOST']);
-            $GLOBALS['smarty']->assign('yunqi_login', $_SESSION['yunqi_login']);
-            $GLOBALS['smarty']->assign('certi', $certificate);
-            return $GLOBALS['smarty']->display('top.view.php');
+            $this->assign('http_host', $_SERVER['HTTP_HOST']);
+            $this->assign('yunqi_login', $_SESSION['yunqi_login']);
+            $this->assign('certi', $certificate);
+            return $this->display('top.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -69,7 +69,7 @@ class Index extends Init
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'calculator') {
-            return $GLOBALS['smarty']->display('calculator.view.php');
+            return $this->display('calculator.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -138,20 +138,20 @@ class Index extends Init
                 $certificate['use_yunqi_authority'] and $single_page = 'detail';
                 $authority_url = $cert->get_authority_url($single_page);
                 $single_url = $cert->get_authority_url('single');
-                $GLOBALS['smarty']->assign('authority_url', $authority_url);
-                $GLOBALS['smarty']->assign('single_url', $single_url);
-                $GLOBALS['smarty']->assign('authorization', $_SESSION['authorization']);//是否授权
-                $GLOBALS['smarty']->assign('authorize_name', $_SESSION['authorize_name']);//授权名称
+                $this->assign('authority_url', $authority_url);
+                $this->assign('single_url', $single_url);
+                $this->assign('authorization', $_SESSION['authorization']);//是否授权
+                $this->assign('authorize_name', $_SESSION['authorize_name']);//授权名称
             }
 
-            $GLOBALS['smarty']->assign('menus', $menus);
-            $GLOBALS['smarty']->assign('no_help', $GLOBALS['_LANG']['no_help']);
-            $GLOBALS['smarty']->assign('help_lang', $GLOBALS['_CFG']['lang']);
-            $GLOBALS['smarty']->assign('charset', EC_CHARSET);
-            $GLOBALS['smarty']->assign('admin_id', $_SESSION['admin_id']);
-            $GLOBALS['smarty']->assign('admin_name', $_SESSION['admin_name']);
-            $GLOBALS['smarty']->assign('certi', $certificate);
-            return $GLOBALS['smarty']->display('menu.view.php');
+            $this->assign('menus', $menus);
+            $this->assign('no_help', $GLOBALS['_LANG']['no_help']);
+            $this->assign('help_lang', $GLOBALS['_CFG']['lang']);
+            $this->assign('charset', EC_CHARSET);
+            $this->assign('admin_id', $_SESSION['admin_id']);
+            $this->assign('admin_name', $_SESSION['admin_name']);
+            $this->assign('certi', $certificate);
+            return $this->display('menu.view.php');
         }
 
 
@@ -301,10 +301,10 @@ class Index extends Init
                 }
             }
             if ($message) {
-                $GLOBALS['smarty']->assign('update_message', $message);
+                $this->assign('update_message', $message);
             }
 
-            $GLOBALS['smarty']->assign('warning_arr', $warning);
+            $this->assign('warning_arr', $warning);
 
 
             /* 管理员留言信息 */
@@ -314,7 +314,7 @@ class Index extends Init
                 "a.readed = 0 AND deleted = 0 ORDER BY a.sent_time DESC";
             $admin_msg = $GLOBALS['db']->GetAll($sql);
 
-            $GLOBALS['smarty']->assign('admin_msg', $admin_msg);
+            $this->assign('admin_msg', $admin_msg);
 
             /* 取得支持货到付款和不支持货到付款的支付方式 */
             $ids = get_pay_ids();
@@ -350,8 +350,8 @@ class Index extends Init
             $order['stats'] = $GLOBALS['db']->getRow('SELECT COUNT(*) AS oCount, IFNULL(SUM(order_amount), 0) AS oAmount' .
                 ' FROM ' . $GLOBALS['ecs']->table('order_info'));
 
-            $GLOBALS['smarty']->assign('order', $order);
-            $GLOBALS['smarty']->assign('status', $status);
+            $this->assign('order', $order);
+            $this->assign('status', $status);
 
             /* 商品信息 */
             $goods['total'] = $GLOBALS['db']->GetOne('SELECT COUNT(*) FROM ' . $GLOBALS['ecs']->table('goods') .
@@ -392,8 +392,8 @@ class Index extends Init
                 $goods['warn'] = 0;
                 $virtual_card['warn'] = 0;
             }
-            $GLOBALS['smarty']->assign('goods', $goods);
-            $GLOBALS['smarty']->assign('virtual_card', $virtual_card);
+            $this->assign('goods', $goods);
+            $this->assign('virtual_card', $virtual_card);
 
             /* 访问统计信息 */
             $today = local_getdate();
@@ -401,20 +401,20 @@ class Index extends Init
                 ' WHERE access_time > ' . (mktime(0, 0, 0, $today['mon'], $today['mday'], $today['year']) - date('Z'));
 
             $today_visit = $GLOBALS['db']->GetOne($sql);
-            $GLOBALS['smarty']->assign('today_visit', $today_visit);
+            $this->assign('today_visit', $today_visit);
 
             $online_users = $GLOBALS['sess']->get_users_count();
-            $GLOBALS['smarty']->assign('online_users', $online_users);
+            $this->assign('online_users', $online_users);
 
             /* 最近反馈 */
             $sql = "SELECT COUNT(f.msg_id) " .
                 "FROM " . $GLOBALS['ecs']->table('feedback') . " AS f " .
                 "LEFT JOIN " . $GLOBALS['ecs']->table('feedback') . " AS r ON r.parent_id=f.msg_id " .
                 'WHERE f.parent_id=0 AND ISNULL(r.msg_id) ';
-            $GLOBALS['smarty']->assign('feedback_number', $GLOBALS['db']->GetOne($sql));
+            $this->assign('feedback_number', $GLOBALS['db']->GetOne($sql));
 
             /* 未审核评论 */
-            $GLOBALS['smarty']->assign('comment_number', $GLOBALS['db']->getOne('SELECT COUNT(*) FROM ' . $GLOBALS['ecs']->table('comment') .
+            $this->assign('comment_number', $GLOBALS['db']->getOne('SELECT COUNT(*) FROM ' . $GLOBALS['ecs']->table('comment') .
                 ' WHERE status = 0 AND parent_id = 0'));
 
             $mysql_ver = $GLOBALS['db']->version();   // 获得 MySQL 版本
@@ -464,25 +464,25 @@ class Index extends Init
             /* 允许上传的最大文件大小 */
             $sys_info['max_filesize'] = ini_get('upload_max_filesize');
 
-            $GLOBALS['smarty']->assign('sys_info', $sys_info);
+            $this->assign('sys_info', $sys_info);
 
             /* 缺货登记 */
-            $GLOBALS['smarty']->assign('booking_goods', $GLOBALS['db']->getOne('SELECT COUNT(*) FROM ' . $GLOBALS['ecs']->table('booking_goods') . ' WHERE is_dispose = 0'));
+            $this->assign('booking_goods', $GLOBALS['db']->getOne('SELECT COUNT(*) FROM ' . $GLOBALS['ecs']->table('booking_goods') . ' WHERE is_dispose = 0'));
 
             /* 退款申请 */
-            $GLOBALS['smarty']->assign('new_repay', $GLOBALS['db']->getOne('SELECT COUNT(*) FROM ' . $GLOBALS['ecs']->table('user_account') . ' WHERE process_type = ' . SURPLUS_RETURN . ' AND is_paid = 0 '));
+            $this->assign('new_repay', $GLOBALS['db']->getOne('SELECT COUNT(*) FROM ' . $GLOBALS['ecs']->table('user_account') . ' WHERE process_type = ' . SURPLUS_RETURN . ' AND is_paid = 0 '));
 
             assign_query_info();
 
-            $GLOBALS['smarty']->assign('msg', $message);
-            $GLOBALS['smarty']->assign('ecs_version', VERSION);
-            $GLOBALS['smarty']->assign('ecs_release', RELEASE);
-            $GLOBALS['smarty']->assign('ecs_lang', $GLOBALS['_CFG']['lang']);
-            $GLOBALS['smarty']->assign('ecs_charset', strtoupper(EC_CHARSET));
-            $GLOBALS['smarty']->assign('install_date', local_date($GLOBALS['_CFG']['date_format'], $GLOBALS['_CFG']['install_date']));
-            $GLOBALS['smarty']->assign('pmp_desktop', PMP_DESKTOP);
-            $GLOBALS['smarty']->assign('pmp_market', PMS_MARKET);
-            return $GLOBALS['smarty']->display('start.view.php');
+            $this->assign('msg', $message);
+            $this->assign('ecs_version', VERSION);
+            $this->assign('ecs_release', RELEASE);
+            $this->assign('ecs_lang', $GLOBALS['_CFG']['lang']);
+            $this->assign('ecs_charset', strtoupper(EC_CHARSET));
+            $this->assign('install_date', local_date($GLOBALS['_CFG']['date_format'], $GLOBALS['_CFG']['install_date']));
+            $this->assign('pmp_desktop', PMP_DESKTOP);
+            $this->assign('pmp_market', PMS_MARKET);
+            return $this->display('start.view.php');
         } elseif ($_REQUEST['act'] == 'main_api') {
             load_helper('base');
             $data = read_static_cache('api_str');
@@ -534,19 +534,19 @@ class Index extends Init
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'first') {
-            $GLOBALS['smarty']->assign('countries', get_regions());
-            $GLOBALS['smarty']->assign('provinces', get_regions(1, 1));
-            $GLOBALS['smarty']->assign('cities', get_regions(2, 2));
+            $this->assign('countries', get_regions());
+            $this->assign('provinces', get_regions(1, 1));
+            $this->assign('cities', get_regions(2, 2));
 
             $sql = 'SELECT value from ' . $GLOBALS['ecs']->table('shop_config') . " WHERE code='shop_name'";
             $shop_name = $GLOBALS['db']->getOne($sql);
 
-            $GLOBALS['smarty']->assign('shop_name', $shop_name);
+            $this->assign('shop_name', $shop_name);
 
             $sql = 'SELECT value from ' . $GLOBALS['ecs']->table('shop_config') . " WHERE code='shop_title'";
             $shop_title = $GLOBALS['db']->getOne($sql);
 
-            $GLOBALS['smarty']->assign('shop_title', $shop_title);
+            $this->assign('shop_title', $shop_title);
 
             //获取配送方式
 //    $modules = read_modules('../includes/modules/shipping');
@@ -579,7 +579,7 @@ class Index extends Init
                 $modules[$i]['cod'] = $modules[$i]['cod'];
                 $modules[$i]['install'] = 0;
             }
-            $GLOBALS['smarty']->assign('modules', $modules);
+            $this->assign('modules', $modules);
 
             unset($modules);
 
@@ -595,12 +595,12 @@ class Index extends Init
                 $modules[$i]['desc'] = $GLOBALS['_LANG'][$modules[$i]['desc']];
             }
             //        $modules[$i]['install'] = '0';
-            $GLOBALS['smarty']->assign('modules_payment', $modules);
+            $this->assign('modules_payment', $modules);
 
             assign_query_info();
 
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['ur_config']);
-            return $GLOBALS['smarty']->display('setting_first.view.php');
+            $this->assign('ur_here', $GLOBALS['_LANG']['ur_config']);
+            return $this->display('setting_first.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -765,8 +765,8 @@ class Index extends Init
 
             assign_query_info();
 
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['ur_add']);
-            return $GLOBALS['smarty']->display('setting_second.view.php');
+            $this->assign('ur_here', $GLOBALS['_LANG']['ur_add']);
+            return $this->display('setting_second.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -952,8 +952,8 @@ class Index extends Init
             }
 
             assign_query_info();
-            //    $GLOBALS['smarty']->assign('ur_here', '开店向导－添加商品');
-            return $GLOBALS['smarty']->display('setting_third.view.php');
+            //    $this->assign('ur_here', '开店向导－添加商品');
+            return $this->display('setting_third.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -962,7 +962,7 @@ class Index extends Init
 
         elseif ($_REQUEST['act'] == 'about_us') {
             assign_query_info();
-            return $GLOBALS['smarty']->display('about_us.view.php');
+            return $this->display('about_us.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -970,7 +970,7 @@ class Index extends Init
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'drag') {
-            return $GLOBALS['smarty']->display('drag.view.php');
+            return $this->display('drag.view.php');
         }
 
         /*------------------------------------------------------ */

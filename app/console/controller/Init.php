@@ -138,13 +138,13 @@ class Init extends Controller
         $GLOBALS['smarty']->template_dir = app_path('console/view');
         $GLOBALS['smarty']->compile_dir = runtime_path('temp/compiled/admin');
 
-        $GLOBALS['smarty']->assign('lang', $GLOBALS['_LANG']);
-        $GLOBALS['smarty']->assign('help_open', $GLOBALS['_CFG']['help_open']);
+        $this->assign('lang', $GLOBALS['_LANG']);
+        $this->assign('help_open', $GLOBALS['_CFG']['help_open']);
 
         if (isset($GLOBALS['_CFG']['enable_order_check'])) {  // 为了从旧版本顺利升级到2.5.0
-            $GLOBALS['smarty']->assign('enable_order_check', $GLOBALS['_CFG']['enable_order_check']);
+            $this->assign('enable_order_check', $GLOBALS['_CFG']['enable_order_check']);
         } else {
-            $GLOBALS['smarty']->assign('enable_order_check', 0);
+            $this->assign('enable_order_check', 0);
         }
 
         /* 验证通行证信息 */
@@ -229,7 +229,7 @@ class Init extends Controller
             }
         }
 
-        $GLOBALS['smarty']->assign('token', $GLOBALS['_CFG']['token']);
+        $this->assign('token', $GLOBALS['_CFG']['token']);
 
         if ($_REQUEST['act'] != 'login' && $_REQUEST['act'] != 'signin' &&
             $_REQUEST['act'] != 'forget_pwd' && $_REQUEST['act'] != 'reset_pwd' && $_REQUEST['act'] != 'check_order') {

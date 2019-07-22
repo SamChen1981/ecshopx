@@ -22,12 +22,12 @@ class Integrate extends Init
 
             $allow_set_points = $GLOBALS['_CFG']['integrate_code'] == 'ecshop' ? 0 : 1;
 
-            $GLOBALS['smarty']->assign('allow_set_points', $allow_set_points);
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['06_list_integrate']);
-            $GLOBALS['smarty']->assign('modules', $modules);
+            $this->assign('allow_set_points', $allow_set_points);
+            $this->assign('ur_here', $GLOBALS['_LANG']['06_list_integrate']);
+            $this->assign('modules', $modules);
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('integrates_list.view.php');
+            return $this->display('integrates_list.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -81,12 +81,12 @@ class Integrate extends Init
 
                 assign_query_info();
 
-                $GLOBALS['smarty']->assign('cfg', $cfg);
-                $GLOBALS['smarty']->assign('save', 0);
-                $GLOBALS['smarty']->assign('set_list', get_charset_list());
-                $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['integrate_setup']);
-                $GLOBALS['smarty']->assign('code', $_GET['code']);
-                return $GLOBALS['smarty']->display('integrates_setup.view.php');
+                $this->assign('cfg', $cfg);
+                $this->assign('save', 0);
+                $this->assign('set_list', get_charset_list());
+                $this->assign('ur_here', $GLOBALS['_LANG']['integrate_setup']);
+                $this->assign('code', $_GET['code']);
+                return $this->display('integrates_setup.view.php');
             }
         }
 
@@ -125,12 +125,12 @@ class Integrate extends Init
                 $cfg = unserialize($GLOBALS['_CFG']['integrate_config']);
                 assign_query_info();
 
-                $GLOBALS['smarty']->assign('save', 1);
-                $GLOBALS['smarty']->assign('set_list', get_charset_list());
-                $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['integrate_setup']);
-                $GLOBALS['smarty']->assign('code', $_GET['code']);
-                $GLOBALS['smarty']->assign('cfg', $cfg);
-                return $GLOBALS['smarty']->display('integrates_setup.view.php');
+                $this->assign('save', 1);
+                $this->assign('set_list', get_charset_list());
+                $this->assign('ur_here', $GLOBALS['_LANG']['integrate_setup']);
+                $this->assign('code', $_GET['code']);
+                $this->assign('cfg', $cfg);
+                return $this->display('integrates_setup.view.php');
             }
         }
 
@@ -219,11 +219,11 @@ class Integrate extends Init
 
             $size = 100;
 
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['conflict_username_check']);
-            $GLOBALS['smarty']->assign('domain', '@ecshop');
-            $GLOBALS['smarty']->assign('lang_total', sprintf($GLOBALS['_LANG']['shop_user_total'], $total));
-            $GLOBALS['smarty']->assign('size', $size);
-            return $GLOBALS['smarty']->display('integrates_check.view.php');
+            $this->assign('ur_here', $GLOBALS['_LANG']['conflict_username_check']);
+            $this->assign('domain', '@ecshop');
+            $this->assign('lang_total', sprintf($GLOBALS['_LANG']['shop_user_total'], $total));
+            $this->assign('size', $size);
+            return $this->display('integrates_check.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -328,9 +328,9 @@ class Integrate extends Init
             /* 保存完成整合 */
             $this->save_integrate_config($code, $cfg);
 
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['ucenter_import_username']);
-            $GLOBALS['smarty']->assign('user_startid_intro', sprintf($GLOBALS['_LANG']['user_startid_intro'], $maxuid, $maxuid));
-            return $GLOBALS['smarty']->display('integrates_uc_import.view.php');
+            $this->assign('ur_here', $GLOBALS['_LANG']['ucenter_import_username']);
+            $this->assign('user_startid_intro', sprintf($GLOBALS['_LANG']['user_startid_intro'], $maxuid, $maxuid));
+            return $this->display('integrates_uc_import.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -506,27 +506,27 @@ class Integrate extends Init
             $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('users') . " WHERE flag = 1";
             if ($GLOBALS['db']->getOne($sql) > 0) {
                 $_REQUEST['flag'] = 1;
-                $GLOBALS['smarty']->assign('default_flag', 1);
+                $this->assign('default_flag', 1);
             } else {
                 $_REQUEST['flag'] = 0;
-                $GLOBALS['smarty']->assign('default_flag', 0);
+                $this->assign('default_flag', 0);
             }
 
             /* 显示重名用户及处理方法 */
             $flags = array(0 => $GLOBALS['_LANG']['all_user'], 1 => $GLOBALS['_LANG']['error_user'], 2 => $GLOBALS['_LANG']['rename_user'], 3 => $GLOBALS['_LANG']['delete_user'], 4 => $GLOBALS['_LANG']['ignore_user']);
-            $GLOBALS['smarty']->assign('flags', $flags);
+            $this->assign('flags', $flags);
 
             $arr = $this->conflict_userlist();
 
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['conflict_username_modify']);
-            $GLOBALS['smarty']->assign('domain', '@ecshop');
-            $GLOBALS['smarty']->assign('list', $arr['list']);
-            $GLOBALS['smarty']->assign('filter', $arr['filter']);
-            $GLOBALS['smarty']->assign('record_count', $arr['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $arr['page_count']);
-            $GLOBALS['smarty']->assign('full_page', 1);
+            $this->assign('ur_here', $GLOBALS['_LANG']['conflict_username_modify']);
+            $this->assign('domain', '@ecshop');
+            $this->assign('list', $arr['list']);
+            $this->assign('filter', $arr['filter']);
+            $this->assign('record_count', $arr['record_count']);
+            $this->assign('page_count', $arr['page_count']);
+            $this->assign('full_page', 1);
 
-            return $GLOBALS['smarty']->display('integrates_modify.view.php');
+            return $this->display('integrates_modify.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -534,11 +534,11 @@ class Integrate extends Init
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'query') {
             $arr = $this->conflict_userlist();
-            $GLOBALS['smarty']->assign('list', $arr['list']);
-            $GLOBALS['smarty']->assign('filter', $arr['filter']);
-            $GLOBALS['smarty']->assign('record_count', $arr['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $arr['page_count']);
-            $GLOBALS['smarty']->assign('full_page', 0);
+            $this->assign('list', $arr['list']);
+            $this->assign('filter', $arr['filter']);
+            $this->assign('record_count', $arr['record_count']);
+            $this->assign('page_count', $arr['page_count']);
+            $this->assign('full_page', 0);
             return make_json_result($GLOBALS['smarty']->fetch('integrates_modify.htm'), '', array('filter' => $arr['filter'], 'page_count' => $arr['page_count']));
         }
 
@@ -663,10 +663,10 @@ class Integrate extends Init
             fwrite($fp, $log);
             fclose($fp);
 
-            $GLOBALS['smarty']->assign('tasks', $tasks);
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['user_sync']);
-            $GLOBALS['smarty']->assign('size', $size);
-            return $GLOBALS['smarty']->display('integrates_sync.view.php');
+            $this->assign('tasks', $tasks);
+            $this->assign('ur_here', $GLOBALS['_LANG']['user_sync']);
+            $this->assign('size', $size);
+            return $this->display('integrates_sync.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -902,19 +902,19 @@ class Integrate extends Init
                 list($from_val, $to_val) = explode(':', $rule[$rule_index]);
 
                 $select_rule[$rule_index] = $exist_rule[$rule_index];
-                $GLOBALS['smarty']->assign('from_val', $from_val);
-                $GLOBALS['smarty']->assign('to_val', $to_val);
+                $this->assign('from_val', $from_val);
+                $this->assign('to_val', $to_val);
             }
 
-            $GLOBALS['smarty']->assign('rule_index', $rule_index);
-            $GLOBALS['smarty']->assign('allow_add', $allow_add);
-            $GLOBALS['smarty']->assign('select_rule', $select_rule);
-            $GLOBALS['smarty']->assign('exist_rule', $exist_rule);
-            $GLOBALS['smarty']->assign('rule_list', $rule);
-            $GLOBALS['smarty']->assign('integral_name', $GLOBALS['_CFG']['integral_name']);
-            $GLOBALS['smarty']->assign('full_page', 1);
-            $GLOBALS['smarty']->assign('points', $points);
-            return $GLOBALS['smarty']->display('integrates_points.view.php');
+            $this->assign('rule_index', $rule_index);
+            $this->assign('allow_add', $allow_add);
+            $this->assign('select_rule', $select_rule);
+            $this->assign('exist_rule', $exist_rule);
+            $this->assign('rule_list', $rule);
+            $this->assign('integral_name', $GLOBALS['_CFG']['integral_name']);
+            $this->assign('full_page', 1);
+            $this->assign('points', $points);
+            return $this->display('integrates_points.view.php');
         }
 
         if ($_REQUEST['act'] == 'edit_points') {

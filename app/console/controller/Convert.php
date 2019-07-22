@@ -25,7 +25,7 @@ class Convert extends Init
                 load_lang('convert/' . $code);
                 $modules[$i]['desc'] = $GLOBALS['_LANG'][$modules[$i]['desc']];
             }
-            $GLOBALS['smarty']->assign('module_list', $modules);
+            $this->assign('module_list', $modules);
 
             /* 设置默认值 */
             $def_val = array(
@@ -36,15 +36,15 @@ class Convert extends Init
                 'prefix' => 'sdb_',
                 'path' => ''
             );
-            $GLOBALS['smarty']->assign('def_val', $def_val);
+            $this->assign('def_val', $def_val);
 
             /* 取得字符集数组 */
-            $GLOBALS['smarty']->assign('charset_list', get_charset_list());
+            $this->assign('charset_list', get_charset_list());
 
             /* 显示模板 */
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['convert']);
+            $this->assign('ur_here', $GLOBALS['_LANG']['convert']);
             assign_query_info();
-            return $GLOBALS['smarty']->display('convert_main.view.php');
+            return $this->display('convert_main.view.php');
         }
 
         /*------------------------------------------------------ */

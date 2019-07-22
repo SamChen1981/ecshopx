@@ -88,8 +88,8 @@ class Compare extends Init
                 $attribute[$rt['attr_id']] = $rt['attr_name'];
             }
 
-            $GLOBALS['smarty']->assign('attribute', $attribute);
-            $GLOBALS['smarty']->assign('goods_list', $arr);
+            $this->assign('attribute', $attribute);
+            $this->assign('goods_list', $arr);
         } else {
             return show_message($GLOBALS['_LANG']['compare_no_goods']);
 
@@ -97,14 +97,14 @@ class Compare extends Init
 
         assign_template();
         $position = assign_ur_here(0, $GLOBALS['_LANG']['goods_compare']);
-        $GLOBALS['smarty']->assign('page_title', $position['title']);    // 页面标题
-        $GLOBALS['smarty']->assign('ur_here', $position['ur_here']);  // 当前位置
+        $this->assign('page_title', $position['title']);    // 页面标题
+        $this->assign('ur_here', $position['ur_here']);  // 当前位置
 
-        $GLOBALS['smarty']->assign('categories', get_categories_tree()); // 分类树
-        $GLOBALS['smarty']->assign('helps', get_shop_help());       // 网店帮助
+        $this->assign('categories', get_categories_tree()); // 分类树
+        $this->assign('helps', get_shop_help());       // 网店帮助
 
         assign_dynamic('compare');
 
-        return $GLOBALS['smarty']->display('compare.view.php');
+        return $this->display('compare.view.php');
     }
 }

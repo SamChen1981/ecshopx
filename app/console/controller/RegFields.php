@@ -19,14 +19,14 @@ class RegFields extends Init
             $fields = array();
             $fields = $GLOBALS['db']->getAll("SELECT * FROM " . $GLOBALS['ecs']->table('reg_fields') . " ORDER BY dis_order, id");
 
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['021_reg_fields']);
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['add_reg_field'], 'href' => 'reg_fields.php?act=add'));
-            $GLOBALS['smarty']->assign('full_page', 1);
+            $this->assign('ur_here', $GLOBALS['_LANG']['021_reg_fields']);
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['add_reg_field'], 'href' => 'reg_fields.php?act=add'));
+            $this->assign('full_page', 1);
 
-            $GLOBALS['smarty']->assign('reg_fields', $fields);
+            $this->assign('reg_fields', $fields);
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('reg_fields.view.php');
+            return $this->display('reg_fields.view.php');
         }
 
 
@@ -37,7 +37,7 @@ class RegFields extends Init
             $fields = array();
             $fields = $GLOBALS['db']->getAll("SELECT * FROM " . $GLOBALS['ecs']->table('reg_fields') . "ORDER BY id");
 
-            $GLOBALS['smarty']->assign('reg_fields', $fields);
+            $this->assign('reg_fields', $fields);
             return make_json_result($GLOBALS['smarty']->fetch('reg_fields.htm'));
         }
 
@@ -54,13 +54,13 @@ class RegFields extends Init
             $reg_field['reg_field_display'] = 1;
             $reg_field['reg_field_need'] = 1;
 
-            $GLOBALS['smarty']->assign('reg_field', $reg_field);
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['add_reg_field']);
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['021_reg_fields'], 'href' => 'reg_fields.php?act=list'));
-            $GLOBALS['smarty']->assign('form_action', $form_action);
+            $this->assign('reg_field', $reg_field);
+            $this->assign('ur_here', $GLOBALS['_LANG']['add_reg_field']);
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['021_reg_fields'], 'href' => 'reg_fields.php?act=list'));
+            $this->assign('form_action', $form_action);
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('reg_field_info.view.php');
+            return $this->display('reg_field_info.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -103,13 +103,13 @@ class RegFields extends Init
                 $GLOBALS['ecs']->table('reg_fields') . " WHERE id='$_REQUEST[id]'";
             $reg_field = $GLOBALS['db']->GetRow($sql);
 
-            $GLOBALS['smarty']->assign('reg_field', $reg_field);
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['add_reg_field']);
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['021_reg_fields'], 'href' => 'reg_fields.php?act=list'));
-            $GLOBALS['smarty']->assign('form_action', $form_action);
+            $this->assign('reg_field', $reg_field);
+            $this->assign('ur_here', $GLOBALS['_LANG']['add_reg_field']);
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['021_reg_fields'], 'href' => 'reg_fields.php?act=list'));
+            $this->assign('form_action', $form_action);
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('reg_field_info.view.php');
+            return $this->display('reg_field_info.view.php');
         }
 
         /*------------------------------------------------------ */

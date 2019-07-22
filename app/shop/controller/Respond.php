@@ -51,15 +51,15 @@ class Respond extends Init
 
         assign_template();
         $position = assign_ur_here();
-        $GLOBALS['smarty']->assign('page_title', $position['title']);   // 页面标题
-        $GLOBALS['smarty']->assign('ur_here', $position['ur_here']); // 当前位置
-        $GLOBALS['smarty']->assign('page_title', $position['title']);   // 页面标题
-        $GLOBALS['smarty']->assign('ur_here', $position['ur_here']); // 当前位置
-        $GLOBALS['smarty']->assign('helps', get_shop_help());      // 网店帮助
+        $this->assign('page_title', $position['title']);   // 页面标题
+        $this->assign('ur_here', $position['ur_here']); // 当前位置
+        $this->assign('page_title', $position['title']);   // 页面标题
+        $this->assign('ur_here', $position['ur_here']); // 当前位置
+        $this->assign('helps', get_shop_help());      // 网店帮助
 
-        $GLOBALS['smarty']->assign('message', $msg);
-        $GLOBALS['smarty']->assign('shop_url', $GLOBALS['ecs']->url());
+        $this->assign('message', $msg);
+        $this->assign('shop_url', $GLOBALS['ecs']->url());
 
-        return $GLOBALS['smarty']->display('respond.view.php');
+        return $this->display('respond.view.php');
     }
 }

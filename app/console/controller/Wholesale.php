@@ -19,24 +19,24 @@ class Wholesale extends Init
             admin_priv('whole_sale');
 
             /* 模板赋值 */
-            $GLOBALS['smarty']->assign('full_page', 1);
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['wholesale_list']);
-            $GLOBALS['smarty']->assign('action_link', array('href' => 'wholesale.php?act=add', 'text' => $GLOBALS['_LANG']['add_wholesale']));
-            $GLOBALS['smarty']->assign('action_link2', array('href' => 'wholesale.php?act=batch_add', 'text' => $GLOBALS['_LANG']['add_batch_wholesale']));
+            $this->assign('full_page', 1);
+            $this->assign('ur_here', $GLOBALS['_LANG']['wholesale_list']);
+            $this->assign('action_link', array('href' => 'wholesale.php?act=add', 'text' => $GLOBALS['_LANG']['add_wholesale']));
+            $this->assign('action_link2', array('href' => 'wholesale.php?act=batch_add', 'text' => $GLOBALS['_LANG']['add_batch_wholesale']));
 
             $list = $this->wholesale_list();
 
-            $GLOBALS['smarty']->assign('wholesale_list', $list['item']);
-            $GLOBALS['smarty']->assign('filter', $list['filter']);
-            $GLOBALS['smarty']->assign('record_count', $list['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $list['page_count']);
+            $this->assign('wholesale_list', $list['item']);
+            $this->assign('filter', $list['filter']);
+            $this->assign('record_count', $list['record_count']);
+            $this->assign('page_count', $list['page_count']);
 
             $sort_flag = sort_flag($list['filter']);
-            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
+            $this->assign($sort_flag['tag'], $sort_flag['img']);
 
             /* 显示商品列表页面 */
             assign_query_info();
-            return $GLOBALS['smarty']->display('wholesale_list.view.php');
+            return $this->display('wholesale_list.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -46,13 +46,13 @@ class Wholesale extends Init
         elseif ($_REQUEST['act'] == 'query') {
             $list = $this->wholesale_list();
 
-            $GLOBALS['smarty']->assign('wholesale_list', $list['item']);
-            $GLOBALS['smarty']->assign('filter', $list['filter']);
-            $GLOBALS['smarty']->assign('record_count', $list['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $list['page_count']);
+            $this->assign('wholesale_list', $list['item']);
+            $this->assign('filter', $list['filter']);
+            $this->assign('record_count', $list['record_count']);
+            $this->assign('page_count', $list['page_count']);
 
             $sort_flag = sort_flag($list['filter']);
-            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
+            $this->assign($sort_flag['tag'], $sort_flag['img']);
 
             return make_json_result(
                 $GLOBALS['smarty']->fetch('wholesale_list.htm'),
@@ -146,7 +146,7 @@ class Wholesale extends Init
         elseif ($_REQUEST['act'] == 'batch_add') {
             /* 检查权限 */
             admin_priv('whole_sale');
-            $GLOBALS['smarty']->assign('form_action', 'batch_add_insert');
+            $this->assign('form_action', 'batch_add_insert');
 
             /* 初始化、取得批发活动信息 */
             $wholesale = array(
@@ -165,7 +165,7 @@ class Wholesale extends Init
                     )
                 )
             );
-            $GLOBALS['smarty']->assign('wholesale', $wholesale);
+            $this->assign('wholesale', $wholesale);
 
             /* 取得用户等级 */
             $user_rank_list = array();
@@ -178,19 +178,19 @@ class Wholesale extends Init
                 }
                 $user_rank_list[] = $rank;
             }
-            $GLOBALS['smarty']->assign('user_rank_list', $user_rank_list);
+            $this->assign('user_rank_list', $user_rank_list);
 
-            $GLOBALS['smarty']->assign('cat_list', cat_list());
-            $GLOBALS['smarty']->assign('brand_list', get_brand_list());
+            $this->assign('cat_list', cat_list());
+            $this->assign('brand_list', get_brand_list());
 
             /* 显示模板 */
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['add_wholesale']);
+            $this->assign('ur_here', $GLOBALS['_LANG']['add_wholesale']);
 
             $href = 'wholesale.php?act=list';
-            $GLOBALS['smarty']->assign('action_link', array('href' => $href, 'text' => $GLOBALS['_LANG']['wholesale_list']));
+            $this->assign('action_link', array('href' => $href, 'text' => $GLOBALS['_LANG']['wholesale_list']));
             assign_query_info();
 
-            return $GLOBALS['smarty']->display('wholesale_batch_info.view.php');
+            return $this->display('wholesale_batch_info.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -302,7 +302,7 @@ class Wholesale extends Init
 
             /* 是否添加 */
             $is_add = $_REQUEST['act'] == 'add';
-            $GLOBALS['smarty']->assign('form_action', $is_add ? 'insert' : 'update');
+            $this->assign('form_action', $is_add ? 'insert' : 'update');
 
             /* 初始化、取得批发活动信息 */
             if ($is_add) {
@@ -324,7 +324,7 @@ class Wholesale extends Init
                 }
 
                 /* 取得商品属性 */
-                $GLOBALS['smarty']->assign('attr_list', get_goods_attr($wholesale['goods_id']));
+                $this->assign('attr_list', get_goods_attr($wholesale['goods_id']));
             }
             if (empty($wholesale['price_list'])) {
                 $wholesale['price_list'] = array(
@@ -336,7 +336,7 @@ class Wholesale extends Init
                     )
                 );
             }
-            $GLOBALS['smarty']->assign('wholesale', $wholesale);
+            $this->assign('wholesale', $wholesale);
 
             /* 取得用户等级 */
             $user_rank_list = array();
@@ -349,24 +349,24 @@ class Wholesale extends Init
                 }
                 $user_rank_list[] = $rank;
             }
-            $GLOBALS['smarty']->assign('user_rank_list', $user_rank_list);
+            $this->assign('user_rank_list', $user_rank_list);
 
-            $GLOBALS['smarty']->assign('cat_list', cat_list());
-            $GLOBALS['smarty']->assign('brand_list', get_brand_list());
+            $this->assign('cat_list', cat_list());
+            $this->assign('brand_list', get_brand_list());
 
             /* 显示模板 */
             if ($is_add) {
-                $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['add_wholesale']);
+                $this->assign('ur_here', $GLOBALS['_LANG']['add_wholesale']);
             } else {
-                $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['edit_wholesale']);
+                $this->assign('ur_here', $GLOBALS['_LANG']['edit_wholesale']);
             }
             $href = 'wholesale.php?act=list';
             if (!$is_add) {
                 $href .= '&' . list_link_postfix();
             }
-            $GLOBALS['smarty']->assign('action_link', array('href' => $href, 'text' => $GLOBALS['_LANG']['wholesale_list']));
+            $this->assign('action_link', array('href' => $href, 'text' => $GLOBALS['_LANG']['wholesale_list']));
             assign_query_info();
-            return $GLOBALS['smarty']->display('wholesale_info.view.php');
+            return $this->display('wholesale_info.view.php');
         }
 
         /*------------------------------------------------------ */

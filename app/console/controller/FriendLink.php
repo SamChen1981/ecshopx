@@ -25,23 +25,23 @@ class FriendLink extends Init
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
             /* 模板赋值 */
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['list_link']);
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['add_link'], 'href' => 'friend_link.php?act=add'));
-            $GLOBALS['smarty']->assign('full_page', 1);
+            $this->assign('ur_here', $GLOBALS['_LANG']['list_link']);
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['add_link'], 'href' => 'friend_link.php?act=add'));
+            $this->assign('full_page', 1);
 
             /* 获取友情链接数据 */
             $links_list = $this->get_links_list();
 
-            $GLOBALS['smarty']->assign('links_list', $links_list['list']);
-            $GLOBALS['smarty']->assign('filter', $links_list['filter']);
-            $GLOBALS['smarty']->assign('record_count', $links_list['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $links_list['page_count']);
+            $this->assign('links_list', $links_list['list']);
+            $this->assign('filter', $links_list['filter']);
+            $this->assign('record_count', $links_list['record_count']);
+            $this->assign('page_count', $links_list['page_count']);
 
             $sort_flag = sort_flag($links_list['filter']);
-            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
+            $this->assign($sort_flag['tag'], $sort_flag['img']);
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('link_list.view.php');
+            return $this->display('link_list.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -51,13 +51,13 @@ class FriendLink extends Init
             /* 获取友情链接数据 */
             $links_list = $this->get_links_list();
 
-            $GLOBALS['smarty']->assign('links_list', $links_list['list']);
-            $GLOBALS['smarty']->assign('filter', $links_list['filter']);
-            $GLOBALS['smarty']->assign('record_count', $links_list['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $links_list['page_count']);
+            $this->assign('links_list', $links_list['list']);
+            $this->assign('filter', $links_list['filter']);
+            $this->assign('record_count', $links_list['record_count']);
+            $this->assign('page_count', $links_list['page_count']);
 
             $sort_flag = sort_flag($links_list['filter']);
-            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
+            $this->assign($sort_flag['tag'], $sort_flag['img']);
 
             return make_json_result(
                 $GLOBALS['smarty']->fetch('link_list.htm'),
@@ -72,13 +72,13 @@ class FriendLink extends Init
         elseif ($_REQUEST['act'] == 'add') {
             admin_priv('friendlink');
 
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['add_link']);
-            $GLOBALS['smarty']->assign('action_link', array('href' => 'friend_link.php?act=list', 'text' => $GLOBALS['_LANG']['list_link']));
-            $GLOBALS['smarty']->assign('action', 'add');
-            $GLOBALS['smarty']->assign('form_act', 'insert');
+            $this->assign('ur_here', $GLOBALS['_LANG']['add_link']);
+            $this->assign('action_link', array('href' => 'friend_link.php?act=list', 'text' => $GLOBALS['_LANG']['list_link']));
+            $this->assign('action', 'add');
+            $this->assign('form_act', 'insert');
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('link_info.view.php');
+            return $this->display('link_info.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -167,17 +167,17 @@ class FriendLink extends Init
             $link_arr['link_name'] = sub_str($link_arr['link_name'], 250, false); // 截取字符串为250个字符避免出现非法字符的情况
 
             /* 模板赋值 */
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['edit_link']);
-            $GLOBALS['smarty']->assign('action_link', array('href' => 'friend_link.php?act=list&' . list_link_postfix(), 'text' => $GLOBALS['_LANG']['list_link']));
-            $GLOBALS['smarty']->assign('form_act', 'update');
-            $GLOBALS['smarty']->assign('action', 'edit');
+            $this->assign('ur_here', $GLOBALS['_LANG']['edit_link']);
+            $this->assign('action_link', array('href' => 'friend_link.php?act=list&' . list_link_postfix(), 'text' => $GLOBALS['_LANG']['list_link']));
+            $this->assign('form_act', 'update');
+            $this->assign('action', 'edit');
 
-            $GLOBALS['smarty']->assign('type', $type);
-            $GLOBALS['smarty']->assign('link_logo', $link_logo);
-            $GLOBALS['smarty']->assign('link_arr', $link_arr);
+            $this->assign('type', $type);
+            $this->assign('link_logo', $link_logo);
+            $this->assign('link_arr', $link_arr);
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('link_info.view.php');
+            return $this->display('link_info.view.php');
         }
 
         /*------------------------------------------------------ */

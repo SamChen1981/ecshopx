@@ -11,7 +11,7 @@ class UserAccountManage extends Init
     {
         load_helper('order');
         load_lang('admin/statistic');
-        $GLOBALS['smarty']->assign('lang', $GLOBALS['_LANG']);
+        $this->assign('lang', $GLOBALS['_LANG']);
 
         /* act操作项的初始化 */
         if (empty($_REQUEST['act'])) {
@@ -63,29 +63,29 @@ class UserAccountManage extends Init
             $account['integral_money'] = price_format($money_list['integral_money']);   //积分使用余额
 
             /* 赋值到模板 */
-            $GLOBALS['smarty']->assign('account', $account);
-            $GLOBALS['smarty']->assign('start_date', local_date('Y-m-d', $start_date));
-            $GLOBALS['smarty']->assign('end_date', local_date('Y-m-d', $end_date));
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['user_account_manage']);
+            $this->assign('account', $account);
+            $this->assign('start_date', local_date('Y-m-d', $start_date));
+            $this->assign('end_date', local_date('Y-m-d', $end_date));
+            $this->assign('ur_here', $GLOBALS['_LANG']['user_account_manage']);
 
             /* 显示页面 */
             assign_query_info();
-            return $GLOBALS['smarty']->display('user_account_manage.view.php');
+            return $this->display('user_account_manage.view.php');
         } elseif ($_REQUEST['act'] == 'surplus') {
             $order_list = $this->order_list();
 
             /* 赋值到模板 */
-            $GLOBALS['smarty']->assign('order_list', $order_list['order_list']);
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['order_by_surplus']);
-            $GLOBALS['smarty']->assign('filter', $order_list['filter']);
-            $GLOBALS['smarty']->assign('record_count', $order_list['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $order_list['page_count']);
-            $GLOBALS['smarty']->assign('full_page', 1);
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['user_account_manage'], 'href' => 'user_account_manage.php?act=list&start_date=' . local_date('Y-m-d', $start_date) . '&end_date=' . local_date('Y-m-d', $end_date)));
+            $this->assign('order_list', $order_list['order_list']);
+            $this->assign('ur_here', $GLOBALS['_LANG']['order_by_surplus']);
+            $this->assign('filter', $order_list['filter']);
+            $this->assign('record_count', $order_list['record_count']);
+            $this->assign('page_count', $order_list['page_count']);
+            $this->assign('full_page', 1);
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['user_account_manage'], 'href' => 'user_account_manage.php?act=list&start_date=' . local_date('Y-m-d', $start_date) . '&end_date=' . local_date('Y-m-d', $end_date)));
 
             /* 显示页面 */
             assign_query_info();
-            return $GLOBALS['smarty']->display('order_surplus_list.view.php');
+            return $this->display('order_surplus_list.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -94,13 +94,13 @@ class UserAccountManage extends Init
         elseif ($_REQUEST['act'] == 'query') {
             $order_list = $this->order_list();
 
-            $GLOBALS['smarty']->assign('order_list', $order_list['order_list']);
-            $GLOBALS['smarty']->assign('filter', $order_list['filter']);
-            $GLOBALS['smarty']->assign('record_count', $order_list['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $order_list['page_count']);
+            $this->assign('order_list', $order_list['order_list']);
+            $this->assign('filter', $order_list['filter']);
+            $this->assign('record_count', $order_list['record_count']);
+            $this->assign('page_count', $order_list['page_count']);
 
             $sort_flag = sort_flag($order_list['filter']);
-            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
+            $this->assign($sort_flag['tag'], $sort_flag['img']);
 
             return make_json_result($GLOBALS['smarty']->fetch('order_surplus_list.htm'), '', array('filter' => $order_list['filter'], 'page_count' => $order_list['page_count']));
         }

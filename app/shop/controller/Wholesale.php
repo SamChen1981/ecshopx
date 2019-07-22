@@ -41,14 +41,14 @@ class Wholesale extends Init
             if ($search_category) {
                 $where .= " AND g.cat_id = '$search_category' ";
                 $param['search_category'] = $search_category;
-                $GLOBALS['smarty']->assign('search_category', $search_category);
+                $this->assign('search_category', $search_category);
             }
             /* 搜索商品名称和关键字 */
             if ($search_keywords) {
                 $where .= " AND (g.keywords LIKE '%$search_keywords%'
                     OR g.goods_name LIKE '%$search_keywords%') ";
                 $param['search_keywords'] = $search_keywords;
-                $GLOBALS['smarty']->assign('search_keywords', $search_keywords);
+                $this->assign('search_keywords', $search_keywords);
             }
 
             /* 取得批发商品总数 */
@@ -73,30 +73,30 @@ class Wholesale extends Init
 
                 /* 取得当前页的批发商品 */
                 $wholesale_list = $this->wholesale_list($size, $page, $where);
-                $GLOBALS['smarty']->assign('wholesale_list', $wholesale_list);
+                $this->assign('wholesale_list', $wholesale_list);
 
                 $param['act'] = 'list';
                 $pager = get_pager('wholesale.php', array_reverse($param, true), $count, $page, $size);
                 $pager['display'] = $display;
-                $GLOBALS['smarty']->assign('pager', $pager);
+                $this->assign('pager', $pager);
 
                 /* 批发商品购物车 */
-                $GLOBALS['smarty']->assign('cart_goods', isset($_SESSION['wholesale_goods']) ? $_SESSION['wholesale_goods'] : array());
+                $this->assign('cart_goods', isset($_SESSION['wholesale_goods']) ? $_SESSION['wholesale_goods'] : array());
             }
 
             /* 模板赋值 */
             assign_template();
             $position = assign_ur_here();
-            $GLOBALS['smarty']->assign('page_title', $position['title']);    // 页面标题
-            $GLOBALS['smarty']->assign('ur_here', $position['ur_here']);  // 当前位置
-            $GLOBALS['smarty']->assign('categories', get_categories_tree()); // 分类树
-            $GLOBALS['smarty']->assign('helps', get_shop_help());       // 网店帮助
-            $GLOBALS['smarty']->assign('top_goods', get_top10());           // 销售排行
+            $this->assign('page_title', $position['title']);    // 页面标题
+            $this->assign('ur_here', $position['ur_here']);  // 当前位置
+            $this->assign('categories', get_categories_tree()); // 分类树
+            $this->assign('helps', get_shop_help());       // 网店帮助
+            $this->assign('top_goods', get_top10());           // 销售排行
 
             assign_dynamic('wholesale');
 
             /* 显示模板 */
-            return $GLOBALS['smarty']->display('wholesale_list.view.php');
+            return $this->display('wholesale_list.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -347,9 +347,9 @@ class Wholesale extends Init
             /* 给商家发邮件 */
             if ($GLOBALS['_CFG']['service_email'] != '') {
                 $tpl = get_mail_template('remind_of_new_order');
-                $GLOBALS['smarty']->assign('order', $order);
-                $GLOBALS['smarty']->assign('shop_name', $GLOBALS['_CFG']['shop_name']);
-                $GLOBALS['smarty']->assign('send_date', date($GLOBALS['_CFG']['time_format']));
+                $this->assign('order', $order);
+                $this->assign('shop_name', $GLOBALS['_CFG']['shop_name']);
+                $this->assign('send_date', date($GLOBALS['_CFG']['time_format']));
                 $content = $GLOBALS['smarty']->fetch('str:' . $tpl['template_content']);
                 send_mail($GLOBALS['_CFG']['shop_name'], $GLOBALS['_CFG']['service_email'], $tpl['template_subject'], $content, $tpl['is_html']);
             }

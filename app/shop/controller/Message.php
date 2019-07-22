@@ -75,17 +75,17 @@ class Message extends Init
         if ($action == 'default') {
             assign_template();
             $position = assign_ur_here(0, $GLOBALS['_LANG']['message_board']);
-            $GLOBALS['smarty']->assign('page_title', $position['title']);    // 页面标题
-            $GLOBALS['smarty']->assign('ur_here', $position['ur_here']);  // 当前位置
-            $GLOBALS['smarty']->assign('helps', get_shop_help());       // 网店帮助
+            $this->assign('page_title', $position['title']);    // 页面标题
+            $this->assign('ur_here', $position['ur_here']);  // 当前位置
+            $this->assign('helps', get_shop_help());       // 网店帮助
 
-            $GLOBALS['smarty']->assign('categories', get_categories_tree()); // 分类树
-            $GLOBALS['smarty']->assign('top_goods', get_top10());           // 销售排行
-            $GLOBALS['smarty']->assign('cat_list', cat_list(0, 0, true, 2, false));
-            $GLOBALS['smarty']->assign('brand_list', get_brand_list());
-            $GLOBALS['smarty']->assign('promotion_info', get_promotion_info());
+            $this->assign('categories', get_categories_tree()); // 分类树
+            $this->assign('top_goods', get_top10());           // 销售排行
+            $this->assign('cat_list', cat_list(0, 0, true, 2, false));
+            $this->assign('brand_list', get_brand_list());
+            $this->assign('promotion_info', get_promotion_info());
 
-            $GLOBALS['smarty']->assign('enabled_mes_captcha', (intval($GLOBALS['_CFG']['captcha']) & CAPTCHA_MESSAGE));
+            $this->assign('enabled_mes_captcha', (intval($GLOBALS['_CFG']['captcha']) & CAPTCHA_MESSAGE));
 
             $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('comment') . " WHERE STATUS =1 AND comment_type =0 ";
             $record_count = $GLOBALS['db']->getOne($sql);
@@ -98,10 +98,10 @@ class Message extends Init
             $pager = get_pager('message.php', array(), $record_count, $page, $pagesize);
             $msg_lists = $this->get_msg_list($pagesize, $pager['start']);
             assign_dynamic('message_board');
-            $GLOBALS['smarty']->assign('rand', mt_rand());
-            $GLOBALS['smarty']->assign('msg_lists', $msg_lists);
-            $GLOBALS['smarty']->assign('pager', $pager);
-            return $GLOBALS['smarty']->display('message_board.view.php');
+            $this->assign('rand', mt_rand());
+            $this->assign('msg_lists', $msg_lists);
+            $this->assign('pager', $pager);
+            return $this->display('message_board.view.php');
         }
     }
 

@@ -25,21 +25,21 @@ class CommentManage extends Init
             /* 检查权限 */
             admin_priv('comment_priv');
 
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['05_comment_manage']);
-            $GLOBALS['smarty']->assign('full_page', 1);
+            $this->assign('ur_here', $GLOBALS['_LANG']['05_comment_manage']);
+            $this->assign('full_page', 1);
 
             $list = $this->get_comment_list();
 
-            $GLOBALS['smarty']->assign('comment_list', $list['item']);
-            $GLOBALS['smarty']->assign('filter', $list['filter']);
-            $GLOBALS['smarty']->assign('record_count', $list['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $list['page_count']);
+            $this->assign('comment_list', $list['item']);
+            $this->assign('filter', $list['filter']);
+            $this->assign('record_count', $list['record_count']);
+            $this->assign('page_count', $list['page_count']);
 
             $sort_flag = sort_flag($list['filter']);
-            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
+            $this->assign($sort_flag['tag'], $sort_flag['img']);
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('comment_list.view.php');
+            return $this->display('comment_list.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -48,13 +48,13 @@ class CommentManage extends Init
         if ($_REQUEST['act'] == 'query') {
             $list = $this->get_comment_list();
 
-            $GLOBALS['smarty']->assign('comment_list', $list['item']);
-            $GLOBALS['smarty']->assign('filter', $list['filter']);
-            $GLOBALS['smarty']->assign('record_count', $list['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $list['page_count']);
+            $this->assign('comment_list', $list['item']);
+            $this->assign('filter', $list['filter']);
+            $this->assign('record_count', $list['record_count']);
+            $this->assign('page_count', $list['page_count']);
 
             $sort_flag = sort_flag($list['filter']);
-            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
+            $this->assign($sort_flag['tag'], $sort_flag['img']);
 
             return make_json_result(
                 $GLOBALS['smarty']->fetch('comment_list.htm'),
@@ -109,19 +109,19 @@ class CommentManage extends Init
             }
 
             /* 模板赋值 */
-            $GLOBALS['smarty']->assign('msg', $comment_info); //评论信息
-            $GLOBALS['smarty']->assign('admin_info', $admin_info);   //管理员信息
-            $GLOBALS['smarty']->assign('reply_info', $reply_info);   //回复的内容
-            $GLOBALS['smarty']->assign('id_value', $id_value);  //评论的对象
-            $GLOBALS['smarty']->assign('send_fail', !empty($_REQUEST['send_ok']));
+            $this->assign('msg', $comment_info); //评论信息
+            $this->assign('admin_info', $admin_info);   //管理员信息
+            $this->assign('reply_info', $reply_info);   //回复的内容
+            $this->assign('id_value', $id_value);  //评论的对象
+            $this->assign('send_fail', !empty($_REQUEST['send_ok']));
 
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['comment_info']);
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['05_comment_manage'],
+            $this->assign('ur_here', $GLOBALS['_LANG']['comment_info']);
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['05_comment_manage'],
                 'href' => 'comment_manage.php?act=list'));
 
             /* 页面显示 */
             assign_query_info();
-            return $GLOBALS['smarty']->display('comment_info.view.php');
+            return $this->display('comment_info.view.php');
         }
         /*------------------------------------------------------ */
         //-- 处理 回复用户评论
@@ -171,11 +171,11 @@ class CommentManage extends Init
                 /* 设置留言回复模板所需要的内容信息 */
                 $template = get_mail_template('recomment');
 
-                $GLOBALS['smarty']->assign('user_name', $comment_info['user_name']);
-                $GLOBALS['smarty']->assign('recomment', $_POST['content']);
-                $GLOBALS['smarty']->assign('comment', $comment_info['content']);
-                $GLOBALS['smarty']->assign('shop_name', "<a href='" . $GLOBALS['ecs']->url() . "'>" . $GLOBALS['_CFG']['shop_name'] . '</a>');
-                $GLOBALS['smarty']->assign('send_date', date('Y-m-d'));
+                $this->assign('user_name', $comment_info['user_name']);
+                $this->assign('recomment', $_POST['content']);
+                $this->assign('comment', $comment_info['content']);
+                $this->assign('shop_name', "<a href='" . $GLOBALS['ecs']->url() . "'>" . $GLOBALS['_CFG']['shop_name'] . '</a>');
+                $this->assign('send_date', date('Y-m-d'));
 
                 $content = $GLOBALS['smarty']->fetch('str:' . $template['template_content']);
 

@@ -22,26 +22,26 @@ class Order extends Init
             admin_priv('order_view');
 
             /* 载入配送方式 */
-            $GLOBALS['smarty']->assign('shipping_list', shipping_list());
+            $this->assign('shipping_list', shipping_list());
 
             /* 载入支付方式 */
-            $GLOBALS['smarty']->assign('pay_list', payment_list());
+            $this->assign('pay_list', payment_list());
 
             /* 载入国家 */
-            $GLOBALS['smarty']->assign('country_list', get_regions());
+            $this->assign('country_list', get_regions());
 
             /* 载入订单状态、付款状态、发货状态 */
-            $GLOBALS['smarty']->assign('os_list', $this->get_status_list('order'));
-            $GLOBALS['smarty']->assign('ps_list', $this->get_status_list('payment'));
-            $GLOBALS['smarty']->assign('ss_list', $this->get_status_list('shipping'));
+            $this->assign('os_list', $this->get_status_list('order'));
+            $this->assign('ps_list', $this->get_status_list('payment'));
+            $this->assign('ss_list', $this->get_status_list('shipping'));
 
             /* 模板赋值 */
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['03_order_query']);
-            $GLOBALS['smarty']->assign('action_link', array('href' => 'order.php?act=list', 'text' => $GLOBALS['_LANG']['02_order_list']));
+            $this->assign('ur_here', $GLOBALS['_LANG']['03_order_query']);
+            $this->assign('action_link', array('href' => 'order.php?act=list', 'text' => $GLOBALS['_LANG']['02_order_list']));
 
             /* 显示模板 */
             assign_query_info();
-            return $GLOBALS['smarty']->display('order_query.view.php');
+            return $this->display('order_query.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -54,44 +54,44 @@ class Order extends Init
 
 
             /* 载入配送方式 */
-            $GLOBALS['smarty']->assign('shipping_list', shipping_list());
+            $this->assign('shipping_list', shipping_list());
 
             /* 载入支付方式 */
-            $GLOBALS['smarty']->assign('pay_list', payment_list());
+            $this->assign('pay_list', payment_list());
 
             /* 载入国家 */
-            $GLOBALS['smarty']->assign('country_list', get_regions());
+            $this->assign('country_list', get_regions());
 
             /* 载入订单状态、付款状态、发货状态 */
-            $GLOBALS['smarty']->assign('os_list', $this->get_status_list('order'));
-            $GLOBALS['smarty']->assign('ps_list', $this->get_status_list('payment'));
-            $GLOBALS['smarty']->assign('ss_list', $this->get_status_list('shipping'));
+            $this->assign('os_list', $this->get_status_list('order'));
+            $this->assign('ps_list', $this->get_status_list('payment'));
+            $this->assign('ss_list', $this->get_status_list('shipping'));
 
             /* 模板赋值 */
-            // $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['03_order_query']);
-            // $GLOBALS['smarty']->assign('action_link', array('href' => 'order.php?act=list', 'text' => $GLOBALS['_LANG']['02_order_list']));
+            // $this->assign('ur_here', $GLOBALS['_LANG']['03_order_query']);
+            // $this->assign('action_link', array('href' => 'order.php?act=list', 'text' => $GLOBALS['_LANG']['02_order_list']));
 
             $cert = new certificate();
-            $cert->is_bind_sn('ecos.ome') ? $GLOBALS['smarty']->assign('is_bind_erp', true) : $GLOBALS['smarty']->assign('is_bind_erp', false);
-            $cert->is_bind_sn('taodali') ? $GLOBALS['smarty']->assign('is_bind_taoda', true) : $GLOBALS['smarty']->assign('is_bind_taoda', false);
+            $cert->is_bind_sn('ecos.ome') ? $this->assign('is_bind_erp', true) : $this->assign('is_bind_erp', false);
+            $cert->is_bind_sn('taodali') ? $this->assign('is_bind_taoda', true) : $this->assign('is_bind_taoda', false);
 
             /* 模板赋值 */
-            // $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['02_order_list']);
-            // $GLOBALS['smarty']->assign('action_link', array('href' => 'order.php?act=order_query', 'text' => $GLOBALS['_LANG']['03_order_query']));
+            // $this->assign('ur_here', $GLOBALS['_LANG']['02_order_list']);
+            // $this->assign('action_link', array('href' => 'order.php?act=order_query', 'text' => $GLOBALS['_LANG']['03_order_query']));
 
-            $GLOBALS['smarty']->assign('status_list', $GLOBALS['_LANG']['cs']);   // 订单状态
+            $this->assign('status_list', $GLOBALS['_LANG']['cs']);   // 订单状态
 
-            $GLOBALS['smarty']->assign('os_unconfirmed', OS_UNCONFIRMED);
-            $GLOBALS['smarty']->assign('cs_await_pay', CS_AWAIT_PAY);
-            $GLOBALS['smarty']->assign('cs_await_ship', CS_AWAIT_SHIP);
-            $GLOBALS['smarty']->assign('full_page', 1);
+            $this->assign('os_unconfirmed', OS_UNCONFIRMED);
+            $this->assign('cs_await_pay', CS_AWAIT_PAY);
+            $this->assign('cs_await_ship', CS_AWAIT_SHIP);
+            $this->assign('full_page', 1);
 
             $order_list = $this->order_list();
-            $GLOBALS['smarty']->assign('order_list', $order_list['orders']);
-            $GLOBALS['smarty']->assign('filter', $order_list['filter']);
-            $GLOBALS['smarty']->assign('record_count', $order_list['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $order_list['page_count']);
-            $GLOBALS['smarty']->assign('sort_order_time', '<img src="images/sort_desc.png">');
+            $this->assign('order_list', $order_list['orders']);
+            $this->assign('filter', $order_list['filter']);
+            $this->assign('record_count', $order_list['record_count']);
+            $this->assign('page_count', $order_list['page_count']);
+            $this->assign('sort_order_time', '<img src="images/sort_desc.png">');
 
             $panel_flag = 0;
             $erp_icon_html = "";
@@ -123,16 +123,16 @@ class Order extends Init
                     $erp_icon_html = '<a href="' . $erp_url . '" target="_blank" onclick="getSnList();" class="btn-ERP" >' . $GLOBALS['_LANG']['erp_open_details'] . '<i class="cl-red">ERP</i></a>';//了解详情开通
                 }
             }
-            $GLOBALS['smarty']->assign('panel_flag', $panel_flag);
-            $GLOBALS['smarty']->assign('panel_display', $panel_display);
-            $GLOBALS['smarty']->assign('erp_str', $erpstr);
-            $GLOBALS['smarty']->assign('erp_url', $erp_url);
-            $GLOBALS['smarty']->assign('erp_icon_html', $erp_icon_html);
+            $this->assign('panel_flag', $panel_flag);
+            $this->assign('panel_display', $panel_display);
+            $this->assign('erp_str', $erpstr);
+            $this->assign('erp_url', $erp_url);
+            $this->assign('erp_icon_html', $erp_icon_html);
 
 
             /* 显示模板 */
             assign_query_info();
-            return $GLOBALS['smarty']->display('order_list.view.php');
+            return $this->display('order_list.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -144,16 +144,16 @@ class Order extends Init
             /*
              * TODO BY LANCE
              * $matrix = new matrix();
-            $matrix->get_bind_info(array('ecos.ome')) ? $GLOBALS['smarty']->assign('node_info', true) : $GLOBALS['smarty']->assign('node_info', false);*/
+            $matrix->get_bind_info(array('ecos.ome')) ? $this->assign('node_info', true) : $this->assign('node_info', false);*/
 
             $order_list = $this->order_list();
 
-            $GLOBALS['smarty']->assign('order_list', $order_list['orders']);
-            $GLOBALS['smarty']->assign('filter', $order_list['filter']);
-            $GLOBALS['smarty']->assign('record_count', $order_list['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $order_list['page_count']);
+            $this->assign('order_list', $order_list['orders']);
+            $this->assign('filter', $order_list['filter']);
+            $this->assign('record_count', $order_list['record_count']);
+            $this->assign('page_count', $order_list['page_count']);
             $sort_flag = sort_flag($order_list['filter']);
-            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
+            $this->assign($sort_flag['tag'], $sort_flag['img']);
             return make_json_result($GLOBALS['smarty']->fetch('order_list.htm'), '', array('filter' => $order_list['filter'], 'page_count' => $order_list['page_count']));
         }
 
@@ -165,7 +165,7 @@ class Order extends Init
             /*
              * TODO BY LANCE
              * $matrix = new matrix();
-            $matrix->get_bind_info(array('ecos.ome')) ? $GLOBALS['smarty']->assign('node_info', true) : $GLOBALS['smarty']->assign('node_info', false);*/
+            $matrix->get_bind_info(array('ecos.ome')) ? $this->assign('node_info', true) : $this->assign('node_info', false);*/
             /* 根据订单id或订单号查询订单信息 */
             if (isset($_REQUEST['order_id'])) {
                 $order_id = intval($_REQUEST['order_id']);
@@ -231,7 +231,7 @@ class Order extends Init
             if (!empty($where)) {
                 $sql .= $where;
             }
-            $GLOBALS['smarty']->assign('prev_id', $GLOBALS['db']->getOne($sql));
+            $this->assign('prev_id', $GLOBALS['db']->getOne($sql));
             $sql = "SELECT MIN(order_id) FROM " . $GLOBALS['ecs']->table('order_info') . " as o WHERE order_id > '$order[order_id]'";
             if ($agency_id > 0) {
                 $sql .= " AND agency_id = '$agency_id'";
@@ -239,7 +239,7 @@ class Order extends Init
             if (!empty($where)) {
                 $sql .= $where;
             }
-            $GLOBALS['smarty']->assign('next_id', $GLOBALS['db']->getOne($sql));
+            $this->assign('next_id', $GLOBALS['db']->getOne($sql));
 
             /* 取得用户名 */
             if ($order['user_id'] > 0) {
@@ -251,7 +251,7 @@ class Order extends Init
 
             /* 取得所有办事处 */
             $sql = "SELECT agency_id, agency_name FROM " . $GLOBALS['ecs']->table('agency');
-            $GLOBALS['smarty']->assign('agency_list', $GLOBALS['db']->getAll($sql));
+            $this->assign('agency_list', $GLOBALS['db']->getAll($sql));
 
             /* 取得区域名 */
             $sql = "SELECT concat(IFNULL(c.region_name, ''), '  ', IFNULL(p.region_name, ''), " .
@@ -300,7 +300,7 @@ class Order extends Init
             $order['total_weight'] = $weight_price['formated_weight'];
 
             /* 参数赋值：订单 */
-            $GLOBALS['smarty']->assign('order', $order);
+            $this->assign('order', $order);
 
             /* 取得用户信息 */
             if ($order['user_id'] > 0) {
@@ -324,11 +324,11 @@ class Order extends Init
                     "AND bt.use_start_date <= '$today' " .
                     "AND bt.use_end_date >= '$today'";
                 $user['bonus_count'] = $GLOBALS['db']->getOne($sql);
-                $GLOBALS['smarty']->assign('user', $user);
+                $this->assign('user', $user);
 
                 // 地址信息
                 $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('user_address') . " WHERE user_id = '$order[user_id]'";
-                $GLOBALS['smarty']->assign('address_list', $GLOBALS['db']->getAll($sql));
+                $this->assign('address_list', $GLOBALS['db']->getAll($sql));
             }
 
             /* 取得订单商品及货品 */
@@ -380,12 +380,12 @@ class Order extends Init
                 }
             }
 
-            $GLOBALS['smarty']->assign('goods_attr', $attr);
-            $GLOBALS['smarty']->assign('goods_list', $goods_list);
+            $this->assign('goods_attr', $attr);
+            $this->assign('goods_list', $goods_list);
 
             /* 取得能执行的操作列表 */
             $operable_list = $this->operable_list($order);
-            $GLOBALS['smarty']->assign('operable_list', $operable_list);
+            $this->assign('operable_list', $operable_list);
 
             /* 取得订单操作记录 */
             $act_list = array();
@@ -398,25 +398,25 @@ class Order extends Init
                 $row['action_time'] = local_date($GLOBALS['_CFG']['time_format'], $row['log_time']);
                 $act_list[] = $row;
             }
-            $GLOBALS['smarty']->assign('action_list', $act_list);
+            $this->assign('action_list', $act_list);
 
             /* 取得是否存在实体商品 */
-            $GLOBALS['smarty']->assign('exist_real_goods', exist_real_goods($order['order_id']));
+            $this->assign('exist_real_goods', exist_real_goods($order['order_id']));
 
             /* 是否打印订单，分别赋值 */
             if (isset($_GET['print'])) {
-                $GLOBALS['smarty']->assign('shop_name', $GLOBALS['_CFG']['shop_name']);
-                $GLOBALS['smarty']->assign('shop_url', $GLOBALS['ecs']->url());
-                $GLOBALS['smarty']->assign('shop_address', $GLOBALS['_CFG']['shop_address']);
-                $GLOBALS['smarty']->assign('service_phone', $GLOBALS['_CFG']['service_phone']);
-                $GLOBALS['smarty']->assign('print_time', local_date($GLOBALS['_CFG']['time_format']));
-                $GLOBALS['smarty']->assign('action_user', $_SESSION['admin_name']);
+                $this->assign('shop_name', $GLOBALS['_CFG']['shop_name']);
+                $this->assign('shop_url', $GLOBALS['ecs']->url());
+                $this->assign('shop_address', $GLOBALS['_CFG']['shop_address']);
+                $this->assign('service_phone', $GLOBALS['_CFG']['service_phone']);
+                $this->assign('print_time', local_date($GLOBALS['_CFG']['time_format']));
+                $this->assign('action_user', $_SESSION['admin_name']);
 
                 $GLOBALS['smarty']->template_dir = '../' . DATA_DIR;
-                return $GLOBALS['smarty']->display('order_print.html');
+                return $this->display('order_print.html');
             } /* 打印快递单 */
             elseif (isset($_GET['shipping_print'])) {
-                //$GLOBALS['smarty']->assign('print_time',   local_date($GLOBALS['_CFG']['time_format']));
+                //$this->assign('print_time',   local_date($GLOBALS['_CFG']['time_format']));
                 //发货地址所在地
                 $region_array = array();
                 $region_id = !empty($GLOBALS['_CFG']['shop_country']) ? $GLOBALS['_CFG']['shop_country'] . ',' : '';
@@ -432,12 +432,12 @@ class Order extends Init
                         $region_array[$region_data['region_id']] = $region_data['region_name'];
                     }
                 }
-                $GLOBALS['smarty']->assign('shop_name', $GLOBALS['_CFG']['shop_name']);
-                $GLOBALS['smarty']->assign('order_id', $order_id);
-                $GLOBALS['smarty']->assign('province', $region_array[$GLOBALS['_CFG']['shop_province']]);
-                $GLOBALS['smarty']->assign('city', $region_array[$GLOBALS['_CFG']['shop_city']]);
-                $GLOBALS['smarty']->assign('shop_address', $GLOBALS['_CFG']['shop_address']);
-                $GLOBALS['smarty']->assign('service_phone', $GLOBALS['_CFG']['service_phone']);
+                $this->assign('shop_name', $GLOBALS['_CFG']['shop_name']);
+                $this->assign('order_id', $order_id);
+                $this->assign('province', $region_array[$GLOBALS['_CFG']['shop_province']]);
+                $this->assign('city', $region_array[$GLOBALS['_CFG']['shop_city']]);
+                $this->assign('shop_address', $GLOBALS['_CFG']['shop_address']);
+                $this->assign('service_phone', $GLOBALS['_CFG']['service_phone']);
                 $shipping = $GLOBALS['db']->getRow("SELECT * FROM " . $GLOBALS['ecs']->table("shipping") . " WHERE shipping_id = " . $order['shipping_id']);
 
                 //打印单模式
@@ -503,9 +503,9 @@ class Order extends Init
                     }
                     $shipping['config_lable'] = implode('||,||', $temp_config_lable);
 
-                    $GLOBALS['smarty']->assign('shipping', $shipping);
+                    $this->assign('shipping', $shipping);
 
-                    return $GLOBALS['smarty']->display('print.view.php');
+                    return $this->display('print.view.php');
                 } elseif (!empty($shipping['shipping_print'])) {
                     /* 代码 */
                     echo $GLOBALS['smarty']->fetch("str:" . $shipping['shipping_print']);
@@ -523,12 +523,12 @@ class Order extends Init
                 }
             } else {
                 /* 模板赋值 */
-                $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['order_info']);
-                $GLOBALS['smarty']->assign('action_link', array('href' => 'order.php?act=list&' . list_link_postfix(), 'text' => $GLOBALS['_LANG']['02_order_list']));
+                $this->assign('ur_here', $GLOBALS['_LANG']['order_info']);
+                $this->assign('action_link', array('href' => 'order.php?act=list&' . list_link_postfix(), 'text' => $GLOBALS['_LANG']['02_order_list']));
 
                 /* 显示模板 */
                 assign_query_info();
-                return $GLOBALS['smarty']->display('order_info.view.php');
+                return $this->display('order_info.view.php');
             }
         }
 
@@ -541,28 +541,28 @@ class Order extends Init
             /*
              * TODO BY LANCE
              * $matrix = new matrix();
-            $matrix->get_bind_info(array('ecos.ome')) ? $GLOBALS['smarty']->assign('node_info', true) : $GLOBALS['smarty']->assign('node_info', false);*/
+            $matrix->get_bind_info(array('ecos.ome')) ? $this->assign('node_info', true) : $this->assign('node_info', false);*/
 
             /* 查询 */
             $result = $this->delivery_list();
 
             /* 模板赋值 */
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['09_delivery_order']);
+            $this->assign('ur_here', $GLOBALS['_LANG']['09_delivery_order']);
 
-            $GLOBALS['smarty']->assign('os_unconfirmed', OS_UNCONFIRMED);
-            $GLOBALS['smarty']->assign('cs_await_pay', CS_AWAIT_PAY);
-            $GLOBALS['smarty']->assign('cs_await_ship', CS_AWAIT_SHIP);
-            $GLOBALS['smarty']->assign('full_page', 1);
+            $this->assign('os_unconfirmed', OS_UNCONFIRMED);
+            $this->assign('cs_await_pay', CS_AWAIT_PAY);
+            $this->assign('cs_await_ship', CS_AWAIT_SHIP);
+            $this->assign('full_page', 1);
 
-            $GLOBALS['smarty']->assign('delivery_list', $result['delivery']);
-            $GLOBALS['smarty']->assign('filter', $result['filter']);
-            $GLOBALS['smarty']->assign('record_count', $result['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $result['page_count']);
-            $GLOBALS['smarty']->assign('sort_update_time', '<img src="images/sort_desc.png">');
+            $this->assign('delivery_list', $result['delivery']);
+            $this->assign('filter', $result['filter']);
+            $this->assign('record_count', $result['record_count']);
+            $this->assign('page_count', $result['page_count']);
+            $this->assign('sort_update_time', '<img src="images/sort_desc.png">');
 
             /* 显示模板 */
             assign_query_info();
-            return $GLOBALS['smarty']->display('delivery_list.view.php');
+            return $this->display('delivery_list.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -574,13 +574,13 @@ class Order extends Init
 
             $result = $this->delivery_list();
 
-            $GLOBALS['smarty']->assign('delivery_list', $result['delivery']);
-            $GLOBALS['smarty']->assign('filter', $result['filter']);
-            $GLOBALS['smarty']->assign('record_count', $result['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $result['page_count']);
+            $this->assign('delivery_list', $result['delivery']);
+            $this->assign('filter', $result['filter']);
+            $this->assign('record_count', $result['record_count']);
+            $this->assign('page_count', $result['page_count']);
 
             $sort_flag = sort_flag($result['filter']);
-            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
+            $this->assign($sort_flag['tag'], $sort_flag['img']);
             return make_json_result($GLOBALS['smarty']->fetch('delivery_list.htm'), '', array('filter' => $result['filter'], 'page_count' => $result['page_count']));
         }
 
@@ -593,7 +593,7 @@ class Order extends Init
             /*
              * TODO BY LANCE
              * $matrix = new matrix();
-            $matrix->get_bind_info(array('ecos.ome')) ? $GLOBALS['smarty']->assign('node_info', true) : $GLOBALS['smarty']->assign('node_info', false);*/
+            $matrix->get_bind_info(array('ecos.ome')) ? $this->assign('node_info', true) : $this->assign('node_info', false);*/
 
             $delivery_id = intval(trim($_REQUEST['delivery_id']));
 
@@ -667,20 +667,20 @@ class Order extends Init
                 $row['action_time'] = local_date($GLOBALS['_CFG']['time_format'], $row['log_time']);
                 $act_list[] = $row;
             }
-            $GLOBALS['smarty']->assign('action_list', $act_list);
+            $this->assign('action_list', $act_list);
 
             /* 模板赋值 */
-            $GLOBALS['smarty']->assign('delivery_order', $delivery_order);
-            $GLOBALS['smarty']->assign('exist_real_goods', $exist_real_goods);
-            $GLOBALS['smarty']->assign('goods_list', $goods_list);
-            $GLOBALS['smarty']->assign('delivery_id', $delivery_id); // 发货单id
+            $this->assign('delivery_order', $delivery_order);
+            $this->assign('exist_real_goods', $exist_real_goods);
+            $this->assign('goods_list', $goods_list);
+            $this->assign('delivery_id', $delivery_id); // 发货单id
 
             /* 显示模板 */
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['delivery_operate'] . $GLOBALS['_LANG']['detail']);
-            $GLOBALS['smarty']->assign('action_link', array('href' => 'order.php?act=delivery_list&' . list_link_postfix(), 'text' => $GLOBALS['_LANG']['09_delivery_order']));
-            $GLOBALS['smarty']->assign('action_act', ($delivery_order['status'] == 2) ? 'delivery_ship' : 'delivery_cancel_ship');
+            $this->assign('ur_here', $GLOBALS['_LANG']['delivery_operate'] . $GLOBALS['_LANG']['detail']);
+            $this->assign('action_link', array('href' => 'order.php?act=delivery_list&' . list_link_postfix(), 'text' => $GLOBALS['_LANG']['09_delivery_order']));
+            $this->assign('action_act', ($delivery_order['status'] == 2) ? 'delivery_ship' : 'delivery_cancel_ship');
             assign_query_info();
-            return $GLOBALS['smarty']->display('delivery_info.view.php');
+            return $this->display('delivery_info.view.php');
              //
         }
 
@@ -844,13 +844,13 @@ class Order extends Init
                 if ($cfg == '1') {
                     $order['invoice_no'] = $invoice_no;
                     $tpl = get_mail_template('deliver_notice');
-                    $GLOBALS['smarty']->assign('order', $order);
-                    $GLOBALS['smarty']->assign('send_time', local_date($GLOBALS['_CFG']['time_format']));
-                    $GLOBALS['smarty']->assign('shop_name', $GLOBALS['_CFG']['shop_name']);
-                    $GLOBALS['smarty']->assign('send_date', local_date($GLOBALS['_CFG']['date_format']));
-                    $GLOBALS['smarty']->assign('sent_date', local_date($GLOBALS['_CFG']['date_format']));
-                    $GLOBALS['smarty']->assign('confirm_url', $GLOBALS['ecs']->url() . 'receive.php?id=' . $order['order_id'] . '&con=' . rawurlencode($order['consignee']));
-                    $GLOBALS['smarty']->assign('send_msg_url', $GLOBALS['ecs']->url() . 'user.php?act=message_list&order_id=' . $order['order_id']);
+                    $this->assign('order', $order);
+                    $this->assign('send_time', local_date($GLOBALS['_CFG']['time_format']));
+                    $this->assign('shop_name', $GLOBALS['_CFG']['shop_name']);
+                    $this->assign('send_date', local_date($GLOBALS['_CFG']['date_format']));
+                    $this->assign('sent_date', local_date($GLOBALS['_CFG']['date_format']));
+                    $this->assign('confirm_url', $GLOBALS['ecs']->url() . 'receive.php?id=' . $order['order_id'] . '&con=' . rawurlencode($order['consignee']));
+                    $this->assign('send_msg_url', $GLOBALS['ecs']->url() . 'user.php?act=message_list&order_id=' . $order['order_id']);
                     $content = $GLOBALS['smarty']->fetch('str:' . $tpl['template_content']);
                     if (!send_mail($order['consignee'], $order['email'], $tpl['template_subject'], $content, $tpl['is_html'])) {
                         $msg = $GLOBALS['_LANG']['send_mail_fail'];
@@ -1005,28 +1005,28 @@ class Order extends Init
             /*
              * TODO BY LANCE
              * $matrix = new matrix();
-            $matrix->get_bind_info(array('ecos.ome')) ? $GLOBALS['smarty']->assign('node_info', true) : $GLOBALS['smarty']->assign('node_info', false);*/
+            $matrix->get_bind_info(array('ecos.ome')) ? $this->assign('node_info', true) : $this->assign('node_info', false);*/
 
             /* 查询 */
             $result = $this->back_list();
 
             /* 模板赋值 */
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['10_back_order']);
+            $this->assign('ur_here', $GLOBALS['_LANG']['10_back_order']);
 
-            $GLOBALS['smarty']->assign('os_unconfirmed', OS_UNCONFIRMED);
-            $GLOBALS['smarty']->assign('cs_await_pay', CS_AWAIT_PAY);
-            $GLOBALS['smarty']->assign('cs_await_ship', CS_AWAIT_SHIP);
-            $GLOBALS['smarty']->assign('full_page', 1);
+            $this->assign('os_unconfirmed', OS_UNCONFIRMED);
+            $this->assign('cs_await_pay', CS_AWAIT_PAY);
+            $this->assign('cs_await_ship', CS_AWAIT_SHIP);
+            $this->assign('full_page', 1);
 
-            $GLOBALS['smarty']->assign('back_list', $result['back']);
-            $GLOBALS['smarty']->assign('filter', $result['filter']);
-            $GLOBALS['smarty']->assign('record_count', $result['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $result['page_count']);
-            $GLOBALS['smarty']->assign('sort_update_time', '<img src="images/sort_desc.png">');
+            $this->assign('back_list', $result['back']);
+            $this->assign('filter', $result['filter']);
+            $this->assign('record_count', $result['record_count']);
+            $this->assign('page_count', $result['page_count']);
+            $this->assign('sort_update_time', '<img src="images/sort_desc.png">');
 
             /* 显示模板 */
             assign_query_info();
-            return $GLOBALS['smarty']->display('back_list.view.php');
+            return $this->display('back_list.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -1038,13 +1038,13 @@ class Order extends Init
 
             $result = $this->back_list();
 
-            $GLOBALS['smarty']->assign('back_list', $result['back']);
-            $GLOBALS['smarty']->assign('filter', $result['filter']);
-            $GLOBALS['smarty']->assign('record_count', $result['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $result['page_count']);
+            $this->assign('back_list', $result['back']);
+            $this->assign('filter', $result['filter']);
+            $this->assign('record_count', $result['record_count']);
+            $this->assign('page_count', $result['page_count']);
 
             $sort_flag = sort_flag($result['filter']);
-            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
+            $this->assign($sort_flag['tag'], $sort_flag['img']);
             return make_json_result($GLOBALS['smarty']->fetch('back_list.htm'), '', array('filter' => $result['filter'], 'page_count' => $result['page_count']));
         }
 
@@ -1117,16 +1117,16 @@ class Order extends Init
             }
 
             /* 模板赋值 */
-            $GLOBALS['smarty']->assign('back_order', $back_order);
-            $GLOBALS['smarty']->assign('exist_real_goods', $exist_real_goods);
-            $GLOBALS['smarty']->assign('goods_list', $goods_list);
-            $GLOBALS['smarty']->assign('back_id', $back_id); // 发货单id
+            $this->assign('back_order', $back_order);
+            $this->assign('exist_real_goods', $exist_real_goods);
+            $this->assign('goods_list', $goods_list);
+            $this->assign('back_id', $back_id); // 发货单id
 
             /* 显示模板 */
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['back_operate'] . $GLOBALS['_LANG']['detail']);
-            $GLOBALS['smarty']->assign('action_link', array('href' => 'order.php?act=back_list&' . list_link_postfix(), 'text' => $GLOBALS['_LANG']['10_back_order']));
+            $this->assign('ur_here', $GLOBALS['_LANG']['back_operate'] . $GLOBALS['_LANG']['detail']);
+            $this->assign('action_link', array('href' => 'order.php?act=back_list&' . list_link_postfix(), 'text' => $GLOBALS['_LANG']['10_back_order']));
             assign_query_info();
-            return $GLOBALS['smarty']->display('back_info.view.php');
+            return $this->display('back_info.view.php');
              //
         }
 
@@ -1872,21 +1872,21 @@ class Order extends Init
             /*
              * TODO BY LANCE
              * $matrix = new matrix();
-            $matrix->get_bind_info(array('ecos.ome')) ? $GLOBALS['smarty']->assign('node_info', true) : $GLOBALS['smarty']->assign('node_info', false);*/
+            $matrix->get_bind_info(array('ecos.ome')) ? $this->assign('node_info', true) : $this->assign('node_info', false);*/
 
             /* 取得参数 order_id */
             $order_id = isset($_GET['order_id']) ? intval($_GET['order_id']) : 0;
-            $GLOBALS['smarty']->assign('order_id', $order_id);
+            $this->assign('order_id', $order_id);
 
             /* 取得参数 step */
             $step_list = array('user', 'goods', 'consignee', 'shipping', 'payment', 'other', 'money');
             $step = isset($_GET['step']) && in_array($_GET['step'], $step_list) ? $_GET['step'] : 'user';
-            $GLOBALS['smarty']->assign('step', $step);
+            $this->assign('step', $step);
 
             /* 取得参数 act */
             $act = $_GET['act'];
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['add_order']);
-            $GLOBALS['smarty']->assign('step_act', $act);
+            $this->assign('ur_here', $GLOBALS['_LANG']['add_order']);
+            $this->assign('step_act', $act);
 
             /* 取得订单信息 */
             if ($order_id > 0) {
@@ -1901,11 +1901,11 @@ class Order extends Init
                         return sys_msg($GLOBALS['_LANG']['cannot_edit_order_shipped']);
                     } else {
                         $step = 'invoice';
-                        $GLOBALS['smarty']->assign('step', $step);
+                        $this->assign('step', $step);
                     }
                 }
 
-                $GLOBALS['smarty']->assign('order', $order);
+                $this->assign('order', $order);
             } else {
                 if ($act != 'add' || $step != 'user') {
                     die('invalid params');
@@ -1931,19 +1931,19 @@ class Order extends Init
                     }
                 }
 
-                $GLOBALS['smarty']->assign('goods_list', $goods_list);
+                $this->assign('goods_list', $goods_list);
 
                 /* 取得商品总金额 */
-                $GLOBALS['smarty']->assign('goods_amount', order_amount($order_id));
+                $this->assign('goods_amount', order_amount($order_id));
             } // 设置收货人
             elseif ('consignee' == $step) {
                 /* 查询是否存在实体商品 */
                 $exist_real_goods = exist_real_goods($order_id);
-                $GLOBALS['smarty']->assign('exist_real_goods', $exist_real_goods);
+                $this->assign('exist_real_goods', $exist_real_goods);
 
                 /* 取得收货地址列表 */
                 if ($order['user_id'] > 0) {
-                    $GLOBALS['smarty']->assign('address_list', address_list($order['user_id']));
+                    $this->assign('address_list', address_list($order['user_id']));
 
                     $address_id = isset($_REQUEST['address_id']) ? intval($_REQUEST['address_id']) : 0;
                     if ($address_id > 0) {
@@ -1961,23 +1961,23 @@ class Order extends Init
                             $order['mobile'] = $address['mobile'];
                             $order['sign_building'] = $address['sign_building'];
                             $order['best_time'] = $address['best_time'];
-                            $GLOBALS['smarty']->assign('order', $order);
+                            $this->assign('order', $order);
                         }
                     }
                 }
 
                 if ($exist_real_goods) {
                     /* 取得国家 */
-                    $GLOBALS['smarty']->assign('country_list', get_regions());
+                    $this->assign('country_list', get_regions());
                     if ($order['country'] > 0) {
                         /* 取得省份 */
-                        $GLOBALS['smarty']->assign('province_list', get_regions(1, $order['country']));
+                        $this->assign('province_list', get_regions(1, $order['country']));
                         if ($order['province'] > 0) {
                             /* 取得城市 */
-                            $GLOBALS['smarty']->assign('city_list', get_regions(2, $order['province']));
+                            $this->assign('city_list', get_regions(2, $order['province']));
                             if ($order['city'] > 0) {
                                 /* 取得区域 */
-                                $GLOBALS['smarty']->assign('district_list', get_regions(3, $order['city']));
+                                $this->assign('district_list', get_regions(3, $order['city']));
                             }
                         }
                     }
@@ -2010,7 +2010,7 @@ class Order extends Init
                     $shipping_list[$key]['format_shipping_fee'] = price_format($shipping_fee);
                     $shipping_list[$key]['free_money'] = price_format($shipping['configure']['free_money']);
                 }
-                $GLOBALS['smarty']->assign('shipping_list', $shipping_list);
+                $this->assign('shipping_list', $shipping_list);
             } // 选择支付方式
             elseif ('payment' == $step) {
                 /* 取得可用的支付方式列表 */
@@ -2034,35 +2034,35 @@ class Order extends Init
                         unset($payment_list[$key]);
                     }
                 }
-                $GLOBALS['smarty']->assign('payment_list', $payment_list);
+                $this->assign('payment_list', $payment_list);
             } // 选择包装、贺卡
             elseif ('other' == $step) {
                 /* 查询是否存在实体商品 */
                 $exist_real_goods = exist_real_goods($order_id);
-                $GLOBALS['smarty']->assign('exist_real_goods', $exist_real_goods);
+                $this->assign('exist_real_goods', $exist_real_goods);
 
                 if ($exist_real_goods) {
                     /* 取得包装列表 */
-                    $GLOBALS['smarty']->assign('pack_list', pack_list());
+                    $this->assign('pack_list', pack_list());
 
                     /* 取得贺卡列表 */
-                    $GLOBALS['smarty']->assign('card_list', card_list());
+                    $this->assign('card_list', card_list());
                 }
             } // 费用
             elseif ('money' == $step) {
                 /* 查询是否存在实体商品 */
                 $exist_real_goods = exist_real_goods($order_id);
-                $GLOBALS['smarty']->assign('exist_real_goods', $exist_real_goods);
+                $this->assign('exist_real_goods', $exist_real_goods);
 
                 /* 取得用户信息 */
                 if ($order['user_id'] > 0) {
                     $user = user_info($order['user_id']);
 
                     /* 计算可用余额 */
-                    $GLOBALS['smarty']->assign('available_user_money', $order['surplus'] + $user['user_money']);
+                    $this->assign('available_user_money', $order['surplus'] + $user['user_money']);
 
                     /* 计算可用积分 */
-                    $GLOBALS['smarty']->assign('available_pay_points', $order['integral'] + $user['pay_points']);
+                    $this->assign('available_pay_points', $order['integral'] + $user['pay_points']);
 
                     /* 取得用户可用红包 */
                     $user_bonus = user_bonus($order['user_id'], $order['goods_amount']);
@@ -2070,7 +2070,7 @@ class Order extends Init
                         $bonus = bonus_info($order['bonus_id']);
                         $user_bonus[] = $bonus;
                     }
-                    $GLOBALS['smarty']->assign('available_bonus', $user_bonus);
+                    $this->assign('available_bonus', $user_bonus);
                 }
             } // 发货后修改配送方式和发货单号
             elseif ('invoice' == $step) {
@@ -2095,12 +2095,12 @@ class Order extends Init
 //            $shipping_list[$key]['format_shipping_fee'] = price_format($shipping_fee);
 //            $shipping_list[$key]['free_money'] = price_format($shipping['configure']['free_money']);
 //        }
-                $GLOBALS['smarty']->assign('shipping_list', $shipping_list);
+                $this->assign('shipping_list', $shipping_list);
             }
 
             /* 显示模板 */
             assign_query_info();
-            return $GLOBALS['smarty']->display('order_step.view.php');
+            return $this->display('order_step.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -2179,19 +2179,19 @@ class Order extends Init
             } /* 载入退款页面 */
             elseif ('load_refund' == $func) {
                 $refund_amount = floatval($_REQUEST['refund_amount']);
-                $GLOBALS['smarty']->assign('refund_amount', $refund_amount);
-                $GLOBALS['smarty']->assign('formated_refund_amount', price_format($refund_amount));
+                $this->assign('refund_amount', $refund_amount);
+                $this->assign('formated_refund_amount', price_format($refund_amount));
 
                 $anonymous = $_REQUEST['anonymous'];
-                $GLOBALS['smarty']->assign('anonymous', $anonymous); // 是否匿名
+                $this->assign('anonymous', $anonymous); // 是否匿名
 
                 $order_id = intval($_REQUEST['order_id']);
-                $GLOBALS['smarty']->assign('order_id', $order_id); // 订单id
+                $this->assign('order_id', $order_id); // 订单id
 
                 /* 显示模板 */
-                $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['refund']);
+                $this->assign('ur_here', $GLOBALS['_LANG']['refund']);
                 assign_query_info();
-                return $GLOBALS['smarty']->display('order_refund.view.php');
+                return $this->display('order_refund.view.php');
             } else {
                 die('invalid params');
             }
@@ -2207,7 +2207,7 @@ class Order extends Init
             /*
              * TODO BY LANCE
              * $matrix = new matrix();
-            $matrix->get_bind_info(array('ecos.ome')) ? $GLOBALS['smarty']->assign('node_info', true) : $GLOBALS['smarty']->assign('node_info', false);*/
+            $matrix->get_bind_info(array('ecos.ome')) ? $this->assign('node_info', true) : $this->assign('node_info', false);*/
 
             /* 取得满足条件的订单 */
             $sql = "SELECT o.order_sn, u.user_name " .
@@ -2215,15 +2215,15 @@ class Order extends Init
                 "LEFT JOIN " . $GLOBALS['ecs']->table('users') . " AS u ON o.user_id = u.user_id " .
                 "WHERE o.user_id > 0 " .
                 "AND o.extension_code = '' " . order_query_sql('unprocessed');
-            $GLOBALS['smarty']->assign('order_list', $GLOBALS['db']->getAll($sql));
+            $this->assign('order_list', $GLOBALS['db']->getAll($sql));
 
             /* 模板赋值 */
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['04_merge_order']);
-            $GLOBALS['smarty']->assign('action_link', array('href' => 'order.php?act=list', 'text' => $GLOBALS['_LANG']['02_order_list']));
+            $this->assign('ur_here', $GLOBALS['_LANG']['04_merge_order']);
+            $this->assign('action_link', array('href' => 'order.php?act=list', 'text' => $GLOBALS['_LANG']['02_order_list']));
 
             /* 显示模板 */
             assign_query_info();
-            return $GLOBALS['smarty']->display('merge_order.view.php');
+            return $this->display('merge_order.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -2250,16 +2250,16 @@ class Order extends Init
             $editor->Value = $file_content;
 
             $fckeditor = $editor->CreateHtml();
-            $GLOBALS['smarty']->assign('fckeditor', $fckeditor);
+            $this->assign('fckeditor', $fckeditor);
 
             /* 模板赋值 */
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['edit_order_templates']);
-            $GLOBALS['smarty']->assign('action_link', array('href' => 'order.php?act=list', 'text' => $GLOBALS['_LANG']['02_order_list']));
-            $GLOBALS['smarty']->assign('act', 'edit_templates');
+            $this->assign('ur_here', $GLOBALS['_LANG']['edit_order_templates']);
+            $this->assign('action_link', array('href' => 'order.php?act=list', 'text' => $GLOBALS['_LANG']['02_order_list']));
+            $this->assign('act', 'edit_templates');
 
             /* 显示模板 */
             assign_query_info();
-            return $GLOBALS['smarty']->display('order_templates.view.php');
+            return $this->display('order_templates.view.php');
         }
         /*------------------------------------------------------ */
         //-- 订单打印模板（提交修改）
@@ -2430,23 +2430,23 @@ class Order extends Init
                 }
 
                 /* 模板赋值 */
-                $GLOBALS['smarty']->assign('order', $order);
-                $GLOBALS['smarty']->assign('exist_real_goods', $exist_real_goods);
-                $GLOBALS['smarty']->assign('goods_attr', $attr);
-                $GLOBALS['smarty']->assign('goods_list', $goods_list);
-                $GLOBALS['smarty']->assign('order_id', $order_id); // 订单id
-                $GLOBALS['smarty']->assign('operation', 'split'); // 订单id
-                $GLOBALS['smarty']->assign('action_note', $action_note); // 发货操作信息
+                $this->assign('order', $order);
+                $this->assign('exist_real_goods', $exist_real_goods);
+                $this->assign('goods_attr', $attr);
+                $this->assign('goods_list', $goods_list);
+                $this->assign('order_id', $order_id); // 订单id
+                $this->assign('operation', 'split'); // 订单id
+                $this->assign('action_note', $action_note); // 发货操作信息
 
                 $suppliers_list = $this->get_suppliers_list();
                 $suppliers_list_count = count($suppliers_list);
-                $GLOBALS['smarty']->assign('suppliers_name', suppliers_list_name()); // 取供货商名
-                $GLOBALS['smarty']->assign('suppliers_list', ($suppliers_list_count == 0 ? 0 : $suppliers_list)); // 取供货商列表
+                $this->assign('suppliers_name', suppliers_list_name()); // 取供货商名
+                $this->assign('suppliers_list', ($suppliers_list_count == 0 ? 0 : $suppliers_list)); // 取供货商列表
 
                 /* 显示模板 */
-                $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['order_operate'] . $GLOBALS['_LANG']['op_split']);
+                $this->assign('ur_here', $GLOBALS['_LANG']['order_operate'] . $GLOBALS['_LANG']['op_split']);
                 assign_query_info();
-                return $GLOBALS['smarty']->display('order_delivery_info.view.php');
+                return $this->display('order_delivery_info.view.php');
 
             } /* 未发货 */
             elseif (isset($_POST['unship'])) {
@@ -2605,12 +2605,12 @@ class Order extends Init
                 }
 
                 /* 赋值公用信息 */
-                $GLOBALS['smarty']->assign('shop_name', $GLOBALS['_CFG']['shop_name']);
-                $GLOBALS['smarty']->assign('shop_url', $GLOBALS['ecs']->url());
-                $GLOBALS['smarty']->assign('shop_address', $GLOBALS['_CFG']['shop_address']);
-                $GLOBALS['smarty']->assign('service_phone', $GLOBALS['_CFG']['service_phone']);
-                $GLOBALS['smarty']->assign('print_time', local_date($GLOBALS['_CFG']['time_format']));
-                $GLOBALS['smarty']->assign('action_user', $_SESSION['admin_name']);
+                $this->assign('shop_name', $GLOBALS['_CFG']['shop_name']);
+                $this->assign('shop_url', $GLOBALS['ecs']->url());
+                $this->assign('shop_address', $GLOBALS['_CFG']['shop_address']);
+                $this->assign('service_phone', $GLOBALS['_CFG']['service_phone']);
+                $this->assign('print_time', local_date($GLOBALS['_CFG']['time_format']));
+                $this->assign('action_user', $_SESSION['admin_name']);
 
                 $html = '';
                 $order_sn_list = explode(',', $_POST['order_id']);
@@ -2675,7 +2675,7 @@ class Order extends Init
                     $order['invoice_note'] = $GLOBALS['db']->getOne($sql);
 
                     /* 参数赋值：订单 */
-                    $GLOBALS['smarty']->assign('order', $order);
+                    $this->assign('order', $order);
 
                     /* 取得订单商品 */
                     $goods_list = array();
@@ -2715,8 +2715,8 @@ class Order extends Init
                         }
                     }
 
-                    $GLOBALS['smarty']->assign('goods_attr', $attr);
-                    $GLOBALS['smarty']->assign('goods_list', $goods_list);
+                    $this->assign('goods_attr', $attr);
+                    $this->assign('goods_list', $goods_list);
 
                     $GLOBALS['smarty']->template_dir = '../' . DATA_DIR;
                     $html .= $GLOBALS['smarty']->fetch('order_print.html') .
@@ -2737,20 +2737,20 @@ class Order extends Init
             if (($require_note && $action_note == '') || isset($show_invoice_no) || isset($show_refund)) {
 
                 /* 模板赋值 */
-                $GLOBALS['smarty']->assign('require_note', $require_note); // 是否要求填写备注
-                $GLOBALS['smarty']->assign('action_note', $action_note);   // 备注
-                $GLOBALS['smarty']->assign('show_cancel_note', isset($show_cancel_note)); // 是否显示取消原因
-                $GLOBALS['smarty']->assign('show_invoice_no', isset($show_invoice_no)); // 是否显示发货单号
-                $GLOBALS['smarty']->assign('show_refund', isset($show_refund)); // 是否显示退款
-                $GLOBALS['smarty']->assign('anonymous', isset($anonymous) ? $anonymous : true); // 是否匿名
-                $GLOBALS['smarty']->assign('order_id', $order_id); // 订单id
-                $GLOBALS['smarty']->assign('batch', $batch);   // 是否批处理
-                $GLOBALS['smarty']->assign('operation', $operation); // 操作
+                $this->assign('require_note', $require_note); // 是否要求填写备注
+                $this->assign('action_note', $action_note);   // 备注
+                $this->assign('show_cancel_note', isset($show_cancel_note)); // 是否显示取消原因
+                $this->assign('show_invoice_no', isset($show_invoice_no)); // 是否显示发货单号
+                $this->assign('show_refund', isset($show_refund)); // 是否显示退款
+                $this->assign('anonymous', isset($anonymous) ? $anonymous : true); // 是否匿名
+                $this->assign('order_id', $order_id); // 订单id
+                $this->assign('batch', $batch);   // 是否批处理
+                $this->assign('operation', $operation); // 操作
 
                 /* 显示模板 */
-                $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['order_operate'] . $action);
+                $this->assign('ur_here', $GLOBALS['_LANG']['order_operate'] . $action);
                 assign_query_info();
-                return $GLOBALS['smarty']->display('order_operate.view.php');
+                return $this->display('order_operate.view.php');
             } else {
                 /* 直接处理 */
                 if (!$batch) {
@@ -2815,10 +2815,10 @@ class Order extends Init
                         if ($GLOBALS['_CFG']['send_confirm_email'] == '1') {
                             $tpl = get_mail_template('order_confirm');
                             $order['formated_add_time'] = local_date($GLOBALS['_CFG']['time_format'], $order['add_time']);
-                            $GLOBALS['smarty']->assign('order', $order);
-                            $GLOBALS['smarty']->assign('shop_name', $GLOBALS['_CFG']['shop_name']);
-                            $GLOBALS['smarty']->assign('send_date', local_date($GLOBALS['_CFG']['date_format']));
-                            $GLOBALS['smarty']->assign('sent_date', local_date($GLOBALS['_CFG']['date_format']));
+                            $this->assign('order', $order);
+                            $this->assign('shop_name', $GLOBALS['_CFG']['shop_name']);
+                            $this->assign('send_date', local_date($GLOBALS['_CFG']['date_format']));
+                            $this->assign('sent_date', local_date($GLOBALS['_CFG']['date_format']));
                             $content = $GLOBALS['smarty']->fetch('str:' . $tpl['template_content']);
                             send_mail($order['consignee'], $order['email'], $tpl['template_subject'], $content, $tpl['is_html']);
                         }
@@ -2862,10 +2862,10 @@ class Order extends Init
                         /* 发送邮件 */
                         if ($GLOBALS['_CFG']['send_invalid_email'] == '1') {
                             $tpl = get_mail_template('order_invalid');
-                            $GLOBALS['smarty']->assign('order', $order);
-                            $GLOBALS['smarty']->assign('shop_name', $GLOBALS['_CFG']['shop_name']);
-                            $GLOBALS['smarty']->assign('send_date', local_date($GLOBALS['_CFG']['date_format']));
-                            $GLOBALS['smarty']->assign('sent_date', local_date($GLOBALS['_CFG']['date_format']));
+                            $this->assign('order', $order);
+                            $this->assign('shop_name', $GLOBALS['_CFG']['shop_name']);
+                            $this->assign('send_date', local_date($GLOBALS['_CFG']['date_format']));
+                            $this->assign('sent_date', local_date($GLOBALS['_CFG']['date_format']));
                             $content = $GLOBALS['smarty']->fetch('str:' . $tpl['template_content']);
                             send_mail($order['consignee'], $order['email'], $tpl['template_subject'], $content, $tpl['is_html']);
                         }
@@ -2918,10 +2918,10 @@ class Order extends Init
                         /* 发送邮件 */
                         if ($GLOBALS['_CFG']['send_cancel_email'] == '1') {
                             $tpl = get_mail_template('order_cancel');
-                            $GLOBALS['smarty']->assign('order', $order);
-                            $GLOBALS['smarty']->assign('shop_name', $GLOBALS['_CFG']['shop_name']);
-                            $GLOBALS['smarty']->assign('send_date', local_date($GLOBALS['_CFG']['date_format']));
-                            $GLOBALS['smarty']->assign('sent_date', local_date($GLOBALS['_CFG']['date_format']));
+                            $this->assign('order', $order);
+                            $this->assign('shop_name', $GLOBALS['_CFG']['shop_name']);
+                            $this->assign('send_date', local_date($GLOBALS['_CFG']['date_format']));
+                            $this->assign('sent_date', local_date($GLOBALS['_CFG']['date_format']));
                             $content = $GLOBALS['smarty']->fetch('str:' . $tpl['template_content']);
                             send_mail($order['consignee'], $order['email'], $tpl['template_subject'], $content, $tpl['is_html']);
                         }
@@ -3001,13 +3001,13 @@ class Order extends Init
                 }
 
                 /* 模板赋值 */
-                $GLOBALS['smarty']->assign('order_info', $sn_str);
-                $GLOBALS['smarty']->assign('action_link', array('href' => 'order.php?act=list', 'text' => $GLOBALS['_LANG']['02_order_list']));
-                $GLOBALS['smarty']->assign('order_list', $order_list_no_fail);
+                $this->assign('order_info', $sn_str);
+                $this->assign('action_link', array('href' => 'order.php?act=list', 'text' => $GLOBALS['_LANG']['02_order_list']));
+                $this->assign('order_list', $order_list_no_fail);
 
                 /* 显示模板 */
                 assign_query_info();
-                return $GLOBALS['smarty']->display('order_operate_info.view.php');
+                return $this->display('order_operate_info.view.php');
             }
         }
 
@@ -3056,10 +3056,10 @@ class Order extends Init
                 $cfg = $GLOBALS['_CFG']['send_confirm_email'];
                 if ($cfg == '1') {
                     $tpl = get_mail_template('order_confirm');
-                    $GLOBALS['smarty']->assign('order', $order);
-                    $GLOBALS['smarty']->assign('shop_name', $GLOBALS['_CFG']['shop_name']);
-                    $GLOBALS['smarty']->assign('send_date', local_date($GLOBALS['_CFG']['date_format']));
-                    $GLOBALS['smarty']->assign('sent_date', local_date($GLOBALS['_CFG']['date_format']));
+                    $this->assign('order', $order);
+                    $this->assign('shop_name', $GLOBALS['_CFG']['shop_name']);
+                    $this->assign('send_date', local_date($GLOBALS['_CFG']['date_format']));
+                    $this->assign('sent_date', local_date($GLOBALS['_CFG']['date_format']));
                     $content = $GLOBALS['smarty']->fetch('str:' . $tpl['template_content']);
                     if (!send_mail($order['consignee'], $order['email'], $tpl['template_subject'], $content, $tpl['is_html'])) {
                         $msg = $GLOBALS['_LANG']['send_mail_fail'];
@@ -3539,10 +3539,10 @@ class Order extends Init
                 $cfg = $GLOBALS['_CFG']['send_cancel_email'];
                 if ($cfg == '1') {
                     $tpl = get_mail_template('order_cancel');
-                    $GLOBALS['smarty']->assign('order', $order);
-                    $GLOBALS['smarty']->assign('shop_name', $GLOBALS['_CFG']['shop_name']);
-                    $GLOBALS['smarty']->assign('send_date', local_date($GLOBALS['_CFG']['date_format']));
-                    $GLOBALS['smarty']->assign('sent_date', local_date($GLOBALS['_CFG']['date_format']));
+                    $this->assign('order', $order);
+                    $this->assign('shop_name', $GLOBALS['_CFG']['shop_name']);
+                    $this->assign('send_date', local_date($GLOBALS['_CFG']['date_format']));
+                    $this->assign('sent_date', local_date($GLOBALS['_CFG']['date_format']));
                     $content = $GLOBALS['smarty']->fetch('str:' . $tpl['template_content']);
                     if (!send_mail($order['consignee'], $order['email'], $tpl['template_subject'], $content, $tpl['is_html'])) {
                         $msg = $GLOBALS['_LANG']['send_mail_fail'];
@@ -3578,10 +3578,10 @@ class Order extends Init
                 $cfg = $GLOBALS['_CFG']['send_invalid_email'];
                 if ($cfg == '1') {
                     $tpl = get_mail_template('order_invalid');
-                    $GLOBALS['smarty']->assign('order', $order);
-                    $GLOBALS['smarty']->assign('shop_name', $GLOBALS['_CFG']['shop_name']);
-                    $GLOBALS['smarty']->assign('send_date', local_date($GLOBALS['_CFG']['date_format']));
-                    $GLOBALS['smarty']->assign('sent_date', local_date($GLOBALS['_CFG']['date_format']));
+                    $this->assign('order', $order);
+                    $this->assign('shop_name', $GLOBALS['_CFG']['shop_name']);
+                    $this->assign('send_date', local_date($GLOBALS['_CFG']['date_format']));
+                    $this->assign('sent_date', local_date($GLOBALS['_CFG']['date_format']));
                     $content = $GLOBALS['smarty']->fetch('str:' . $tpl['template_content']);
                     if (!send_mail($order['consignee'], $order['email'], $tpl['template_subject'], $content, $tpl['is_html'])) {
                         $msg = $GLOBALS['_LANG']['send_mail_fail'];
@@ -4003,8 +4003,8 @@ class Order extends Init
                 }
             }
 
-            $GLOBALS['smarty']->assign('goods_attr', $attr);
-            $GLOBALS['smarty']->assign('goods_list', $goods_list);
+            $this->assign('goods_attr', $attr);
+            $this->assign('goods_list', $goods_list);
             $str = $GLOBALS['smarty']->fetch('order_goods_info.htm');
             $goods[] = array('order_id' => $order_id, 'str' => $str);
             return make_json_result($goods);
@@ -4012,7 +4012,7 @@ class Order extends Init
             /**
              *  激活云起页面
              **/
-            return $GLOBALS['smarty']->display('install-icloud.view.php');
+            return $this->display('install-icloud.view.php');
         } elseif ($_REQUEST['act'] == 'cancelErpPanel') {
             //更新订单总金额
             $sql = "UPDATE " . $GLOBALS['ecs']->table('shop_config') .
@@ -5512,14 +5512,14 @@ class Order extends Init
             $cfg = $GLOBALS['_CFG']['send_ship_email'];
             if ($cfg == '1') {
                 /* 发送邮件 */
-                $GLOBALS['smarty']->assign('virtual_card', $cards);
-                $GLOBALS['smarty']->assign('order', $order);
-                $GLOBALS['smarty']->assign('goods', $virtual_goods_value);
+                $this->assign('virtual_card', $cards);
+                $this->assign('order', $order);
+                $this->assign('goods', $virtual_goods_value);
 
-                $GLOBALS['smarty']->assign('send_time', date('Y-m-d H:i:s'));
-                $GLOBALS['smarty']->assign('shop_name', $GLOBALS['_CFG']['shop_name']);
-                $GLOBALS['smarty']->assign('send_date', date('Y-m-d'));
-                $GLOBALS['smarty']->assign('sent_date', date('Y-m-d'));
+                $this->assign('send_time', date('Y-m-d H:i:s'));
+                $this->assign('shop_name', $GLOBALS['_CFG']['shop_name']);
+                $this->assign('send_date', date('Y-m-d'));
+                $this->assign('sent_date', date('Y-m-d'));
 
                 $tpl = get_mail_template('virtual_card');
                 $content = $GLOBALS['smarty']->fetch('str:' . $tpl['template_content']);

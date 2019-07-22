@@ -12,25 +12,25 @@ class ViewSendlist extends Init
         admin_priv('view_sendlist');
         if ($_REQUEST['act'] == 'list') {
             $listdb = $this->get_sendlist();
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['view_sendlist']);
-            $GLOBALS['smarty']->assign('full_page', 1);
+            $this->assign('ur_here', $GLOBALS['_LANG']['view_sendlist']);
+            $this->assign('full_page', 1);
 
-            $GLOBALS['smarty']->assign('listdb', $listdb['listdb']);
-            $GLOBALS['smarty']->assign('filter', $listdb['filter']);
-            $GLOBALS['smarty']->assign('record_count', $listdb['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $listdb['page_count']);
+            $this->assign('listdb', $listdb['listdb']);
+            $this->assign('filter', $listdb['filter']);
+            $this->assign('record_count', $listdb['record_count']);
+            $this->assign('page_count', $listdb['page_count']);
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('view_sendlist.view.php');
+            return $this->display('view_sendlist.view.php');
         } elseif ($_REQUEST['act'] == 'query') {
             $listdb = $this->get_sendlist();
-            $GLOBALS['smarty']->assign('listdb', $listdb['listdb']);
-            $GLOBALS['smarty']->assign('filter', $listdb['filter']);
-            $GLOBALS['smarty']->assign('record_count', $listdb['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $listdb['page_count']);
+            $this->assign('listdb', $listdb['listdb']);
+            $this->assign('filter', $listdb['filter']);
+            $this->assign('record_count', $listdb['record_count']);
+            $this->assign('page_count', $listdb['page_count']);
 
             $sort_flag = sort_flag($listdb['filter']);
-            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
+            $this->assign($sort_flag['tag'], $sort_flag['img']);
 
             return make_json_result($GLOBALS['smarty']->fetch('view_sendlist.htm'), '', array('filter' => $listdb['filter'], 'page_count' => $listdb['page_count']));
         } elseif ($_REQUEST['act'] == 'del') {

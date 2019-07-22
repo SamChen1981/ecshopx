@@ -36,47 +36,47 @@ class Topic extends Init
         if ($_REQUEST['act'] == 'list') {
             admin_priv('topic_manage');
 
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['09_topic']);
+            $this->assign('ur_here', $GLOBALS['_LANG']['09_topic']);
 
-            $GLOBALS['smarty']->assign('full_page', 1);
+            $this->assign('full_page', 1);
             $list = $this->get_topic_list();
 
-            $GLOBALS['smarty']->assign('topic_list', $list['item']);
-            $GLOBALS['smarty']->assign('filter', $list['filter']);
-            $GLOBALS['smarty']->assign('record_count', $list['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $list['page_count']);
+            $this->assign('topic_list', $list['item']);
+            $this->assign('filter', $list['filter']);
+            $this->assign('record_count', $list['record_count']);
+            $this->assign('page_count', $list['page_count']);
 
             $sort_flag = sort_flag($list['filter']);
-            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
+            $this->assign($sort_flag['tag'], $sort_flag['img']);
 
             assign_query_info();
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['topic_add'], 'href' => 'topic.php?act=add'));
-            return $GLOBALS['smarty']->display('topic_list.view.php');
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['topic_add'], 'href' => 'topic.php?act=add'));
+            return $this->display('topic_list.view.php');
         }
         /* 添加,编辑 */
         if ($_REQUEST['act'] == 'add' || $_REQUEST['act'] == 'edit') {
             admin_priv('topic_manage');
 
             $isadd = $_REQUEST['act'] == 'add';
-            $GLOBALS['smarty']->assign('isadd', $isadd);
+            $this->assign('isadd', $isadd);
             $topic_id = empty($_REQUEST['topic_id']) ? 0 : intval($_REQUEST['topic_id']);
 
             include_once(ROOT_PATH . 'includes/fckeditor/fckeditor.php'); // 包含 html editor 类文件
 
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['09_topic']);
-            $GLOBALS['smarty']->assign('action_link', $this->list_link($isadd));
+            $this->assign('ur_here', $GLOBALS['_LANG']['09_topic']);
+            $this->assign('action_link', $this->list_link($isadd));
 
-            $GLOBALS['smarty']->assign('cat_list', cat_list(0, 1));
-            $GLOBALS['smarty']->assign('brand_list', get_brand_list());
-            $GLOBALS['smarty']->assign('cfg_lang', $GLOBALS['_CFG']['lang']);
-            $GLOBALS['smarty']->assign('topic_style_color', $topic_style_color);
+            $this->assign('cat_list', cat_list(0, 1));
+            $this->assign('brand_list', get_brand_list());
+            $this->assign('cfg_lang', $GLOBALS['_CFG']['lang']);
+            $this->assign('topic_style_color', $topic_style_color);
 
             $width_height = $this->get_toppic_width_height();
             if (isset($width_height['pic']['width']) && isset($width_height['pic']['height'])) {
-                $GLOBALS['smarty']->assign('width_height', sprintf($GLOBALS['_LANG']['tips_width_height'], $width_height['pic']['width'], $width_height['pic']['height']));
+                $this->assign('width_height', sprintf($GLOBALS['_LANG']['tips_width_height'], $width_height['pic']['width'], $width_height['pic']['height']));
             }
             if (isset($width_height['title_pic']['width']) && isset($width_height['title_pic']['height'])) {
-                $GLOBALS['smarty']->assign('title_width_height', sprintf($GLOBALS['_LANG']['tips_title_width_height'], $width_height['title_pic']['width'], $width_height['title_pic']['height']));
+                $this->assign('title_width_height', sprintf($GLOBALS['_LANG']['tips_title_width_height'], $width_height['title_pic']['width'], $width_height['title_pic']['height']));
             }
 
             if (!$isadd) {
@@ -102,16 +102,16 @@ class Topic extends Init
                     $topic['topic_type'] = '';
                 }
 
-                $GLOBALS['smarty']->assign('topic', $topic);
-                $GLOBALS['smarty']->assign('act', "update");
+                $this->assign('topic', $topic);
+                $this->assign('act', "update");
             } else {
                 $topic = array('title' => '', 'topic_type' => 0, 'url' => defined('FORCE_SSL_LOGIN') ? 'https://' : 'http://');
-                $GLOBALS['smarty']->assign('topic', $topic);
+                $this->assign('topic', $topic);
 
                 create_html_editor('topic_intro');
-                $GLOBALS['smarty']->assign('act', "insert");
+                $this->assign('act', "insert");
             }
-            return $GLOBALS['smarty']->display('topic_edit.view.php');
+            return $this->display('topic_edit.view.php');
         } elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update') {
             admin_priv('topic_manage');
 
@@ -264,15 +264,15 @@ class Topic extends Init
             return sys_msg($GLOBALS['_LANG']['succed'], 0, $links);
         } elseif ($_REQUEST["act"] == "query") {
             $topic_list = $this->get_topic_list();
-            $GLOBALS['smarty']->assign('topic_list', $topic_list['item']);
-            $GLOBALS['smarty']->assign('filter', $topic_list['filter']);
-            $GLOBALS['smarty']->assign('record_count', $topic_list['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $topic_list['page_count']);
-            $GLOBALS['smarty']->assign('use_storage', empty($GLOBALS['_CFG']['use_storage']) ? 0 : 1);
+            $this->assign('topic_list', $topic_list['item']);
+            $this->assign('filter', $topic_list['filter']);
+            $this->assign('record_count', $topic_list['record_count']);
+            $this->assign('page_count', $topic_list['page_count']);
+            $this->assign('use_storage', empty($GLOBALS['_CFG']['use_storage']) ? 0 : 1);
 
             /* 排序标记 */
             $sort_flag = sort_flag($topic_list['filter']);
-            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
+            $this->assign($sort_flag['tag'], $sort_flag['img']);
 
             $tpl = 'topic_list.htm';
             return make_json_result($GLOBALS['smarty']->fetch($tpl), '', array('filter' => $topic_list['filter'], 'page_count' => $topic_list['page_count']));

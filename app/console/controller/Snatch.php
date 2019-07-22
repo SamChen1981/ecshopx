@@ -23,15 +23,15 @@ class Snatch extends Init
             $end_time = local_date('Y-m-d H:i', strtotime('+1 week'));
             $snatch = array('start_price' => '1.00', 'end_price' => '800.00', 'max_price' => '0', 'cost_points' => '1', 'start_time' => $start_time, 'end_time' => $end_time, 'option' => '<option value="0">' . $GLOBALS['_LANG']['make_option'] . '</option>');
 
-            $GLOBALS['smarty']->assign('snatch', $snatch);
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['snatch_add']);
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['02_snatch_list'], 'href' => 'snatch.php?act=list'));
-            $GLOBALS['smarty']->assign('cat_list', cat_list());
-            $GLOBALS['smarty']->assign('brand_list', get_brand_list());
-            $GLOBALS['smarty']->assign('form_action', 'insert');
+            $this->assign('snatch', $snatch);
+            $this->assign('ur_here', $GLOBALS['_LANG']['snatch_add']);
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['02_snatch_list'], 'href' => 'snatch.php?act=list'));
+            $this->assign('cat_list', cat_list());
+            $this->assign('brand_list', get_brand_list());
+            $this->assign('form_action', 'insert');
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('snatch_info.view.php');
+            return $this->display('snatch_info.view.php');
         } elseif ($_REQUEST['act'] == 'insert') {
             /* 权限判断 */
             admin_priv('snatch_manage');
@@ -93,22 +93,22 @@ class Snatch extends Init
         //-- 活动列表
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'list') {
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['02_snatch_list']);
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['snatch_add'], 'href' => 'snatch.php?act=add'));
+            $this->assign('ur_here', $GLOBALS['_LANG']['02_snatch_list']);
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['snatch_add'], 'href' => 'snatch.php?act=add'));
 
             $snatchs = $this->get_snatchlist();
 
-            $GLOBALS['smarty']->assign('snatch_list', $snatchs['snatchs']);
-            $GLOBALS['smarty']->assign('filter', $snatchs['filter']);
-            $GLOBALS['smarty']->assign('record_count', $snatchs['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $snatchs['page_count']);
+            $this->assign('snatch_list', $snatchs['snatchs']);
+            $this->assign('filter', $snatchs['filter']);
+            $this->assign('record_count', $snatchs['record_count']);
+            $this->assign('page_count', $snatchs['page_count']);
 
             $sort_flag = sort_flag($snatchs['filter']);
-            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
+            $this->assign($sort_flag['tag'], $sort_flag['img']);
 
-            $GLOBALS['smarty']->assign('full_page', 1);
+            $this->assign('full_page', 1);
             assign_query_info();
-            return $GLOBALS['smarty']->display('snatch_list.view.php');
+            return $this->display('snatch_list.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -118,13 +118,13 @@ class Snatch extends Init
         elseif ($_REQUEST['act'] == 'query') {
             $snatchs = $this->get_snatchlist();
 
-            $GLOBALS['smarty']->assign('snatch_list', $snatchs['snatchs']);
-            $GLOBALS['smarty']->assign('filter', $snatchs['filter']);
-            $GLOBALS['smarty']->assign('record_count', $snatchs['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $snatchs['page_count']);
+            $this->assign('snatch_list', $snatchs['snatchs']);
+            $this->assign('filter', $snatchs['filter']);
+            $this->assign('record_count', $snatchs['record_count']);
+            $this->assign('page_count', $snatchs['page_count']);
 
             $sort_flag = sort_flag($snatchs['filter']);
-            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
+            $this->assign($sort_flag['tag'], $sort_flag['img']);
 
             return make_json_result(
                 $GLOBALS['smarty']->fetch('snatch_list.htm'),
@@ -182,16 +182,16 @@ class Snatch extends Init
             $snatch = $this->get_snatch_info($_REQUEST['id']);
 
             $snatch['option'] = '<option value="' . $snatch['goods_id'] . '">' . $snatch['goods_name'] . '</option>';
-            $GLOBALS['smarty']->assign('snatch', $snatch);
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['snatch_edit']);
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['02_snatch_list'], 'href' => 'snatch.php?act=list&' . list_link_postfix()));
-            $GLOBALS['smarty']->assign('form_action', 'update');
+            $this->assign('snatch', $snatch);
+            $this->assign('ur_here', $GLOBALS['_LANG']['snatch_edit']);
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['02_snatch_list'], 'href' => 'snatch.php?act=list&' . list_link_postfix()));
+            $this->assign('form_action', 'update');
 
             /* 商品货品表 */
-            $GLOBALS['smarty']->assign('good_products_select', get_good_products_select($snatch['goods_id']));
+            $this->assign('good_products_select', get_good_products_select($snatch['goods_id']));
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('snatch_info.view.php');
+            return $this->display('snatch_info.view.php');
         } elseif ($_REQUEST['act'] == 'update') {
             /* 权限判断 */
             admin_priv('snatch_manage');
@@ -259,20 +259,20 @@ class Snatch extends Init
 
             $bid_list = $this->get_snatch_detail();
 
-            $GLOBALS['smarty']->assign('bid_list', $bid_list['bid']);
-            $GLOBALS['smarty']->assign('filter', $bid_list['filter']);
-            $GLOBALS['smarty']->assign('record_count', $bid_list['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $bid_list['page_count']);
+            $this->assign('bid_list', $bid_list['bid']);
+            $this->assign('filter', $bid_list['filter']);
+            $this->assign('record_count', $bid_list['record_count']);
+            $this->assign('page_count', $bid_list['page_count']);
 
             $sort_flag = sort_flag($bid_list['filter']);
-            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
+            $this->assign($sort_flag['tag'], $sort_flag['img']);
             /* 赋值 */
-            $GLOBALS['smarty']->assign('info', $this->get_snatch_info($id));
-            $GLOBALS['smarty']->assign('full_page', 1);
-            $GLOBALS['smarty']->assign('result', get_snatch_result($id));
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['view_detail']);
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['02_snatch_list'], 'href' => 'snatch.php?act=list'));
-            return $GLOBALS['smarty']->display('snatch_view.view.php');
+            $this->assign('info', $this->get_snatch_info($id));
+            $this->assign('full_page', 1);
+            $this->assign('result', get_snatch_result($id));
+            $this->assign('ur_here', $GLOBALS['_LANG']['view_detail']);
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['02_snatch_list'], 'href' => 'snatch.php?act=list'));
+            return $this->display('snatch_view.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -282,13 +282,13 @@ class Snatch extends Init
         elseif ($_REQUEST['act'] == 'query_bid') {
             $bid_list = $this->get_snatch_detail();
 
-            $GLOBALS['smarty']->assign('bid_list', $bid_list['bid']);
-            $GLOBALS['smarty']->assign('filter', $bid_list['filter']);
-            $GLOBALS['smarty']->assign('record_count', $bid_list['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $bid_list['page_count']);
+            $this->assign('bid_list', $bid_list['bid']);
+            $this->assign('filter', $bid_list['filter']);
+            $this->assign('record_count', $bid_list['record_count']);
+            $this->assign('page_count', $bid_list['page_count']);
 
             $sort_flag = sort_flag($bid_list['filter']);
-            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
+            $this->assign($sort_flag['tag'], $sort_flag['img']);
 
             return make_json_result(
                 $GLOBALS['smarty']->fetch('snatch_view.htm'),

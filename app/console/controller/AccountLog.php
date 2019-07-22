@@ -24,7 +24,7 @@ class AccountLog extends Init
             if (empty($user)) {
                 return sys_msg($GLOBALS['_LANG']['user_not_exist']);
             }
-            $GLOBALS['smarty']->assign('user', $user);
+            $this->assign('user', $user);
 
             if (empty($_REQUEST['account_type']) || !in_array(
                     $_REQUEST['account_type'],
@@ -34,20 +34,20 @@ class AccountLog extends Init
             } else {
                 $account_type = $_REQUEST['account_type'];
             }
-            $GLOBALS['smarty']->assign('account_type', $account_type);
+            $this->assign('account_type', $account_type);
 
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['account_list']);
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['add_account'], 'href' => 'account_log.php?act=add&user_id=' . $user_id));
-            $GLOBALS['smarty']->assign('full_page', 1);
+            $this->assign('ur_here', $GLOBALS['_LANG']['account_list']);
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['add_account'], 'href' => 'account_log.php?act=add&user_id=' . $user_id));
+            $this->assign('full_page', 1);
 
             $account_list = $this->get_accountlist($user_id, $account_type);
-            $GLOBALS['smarty']->assign('account_list', $account_list['account']);
-            $GLOBALS['smarty']->assign('filter', $account_list['filter']);
-            $GLOBALS['smarty']->assign('record_count', $account_list['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $account_list['page_count']);
+            $this->assign('account_list', $account_list['account']);
+            $this->assign('filter', $account_list['filter']);
+            $this->assign('record_count', $account_list['record_count']);
+            $this->assign('page_count', $account_list['page_count']);
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('account_list.view.php');
+            return $this->display('account_list.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -63,7 +63,7 @@ class AccountLog extends Init
             if (empty($user)) {
                 return sys_msg($GLOBALS['_LANG']['user_not_exist']);
             }
-            $GLOBALS['smarty']->assign('user', $user);
+            $this->assign('user', $user);
 
             if (empty($_REQUEST['account_type']) || !in_array(
                     $_REQUEST['account_type'],
@@ -73,13 +73,13 @@ class AccountLog extends Init
             } else {
                 $account_type = $_REQUEST['account_type'];
             }
-            $GLOBALS['smarty']->assign('account_type', $account_type);
+            $this->assign('account_type', $account_type);
 
             $account_list = $this->get_accountlist($user_id, $account_type);
-            $GLOBALS['smarty']->assign('account_list', $account_list['account']);
-            $GLOBALS['smarty']->assign('filter', $account_list['filter']);
-            $GLOBALS['smarty']->assign('record_count', $account_list['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $account_list['page_count']);
+            $this->assign('account_list', $account_list['account']);
+            $this->assign('filter', $account_list['filter']);
+            $this->assign('record_count', $account_list['record_count']);
+            $this->assign('page_count', $account_list['page_count']);
 
             return make_json_result(
                 $GLOBALS['smarty']->fetch('account_list.htm'),
@@ -103,13 +103,13 @@ class AccountLog extends Init
             if (empty($user)) {
                 return sys_msg($GLOBALS['_LANG']['user_not_exist']);
             }
-            $GLOBALS['smarty']->assign('user', $user);
+            $this->assign('user', $user);
 
             /* 显示模板 */
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['add_account']);
-            $GLOBALS['smarty']->assign('action_link', array('href' => 'account_log.php?act=list&user_id=' . $user_id, 'text' => $GLOBALS['_LANG']['account_list']));
+            $this->assign('ur_here', $GLOBALS['_LANG']['add_account']);
+            $this->assign('action_link', array('href' => 'account_log.php?act=list&user_id=' . $user_id, 'text' => $GLOBALS['_LANG']['account_list']));
             assign_query_info();
-            return $GLOBALS['smarty']->display('account_info.view.php');
+            return $this->display('account_info.view.php');
         }
 
         /*------------------------------------------------------ */

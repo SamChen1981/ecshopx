@@ -29,8 +29,8 @@ class Vote extends Init
 
             $vote = get_vote($vote_id);
             if (!empty($vote)) {
-                $GLOBALS['smarty']->assign('vote_id', $vote['id']);
-                $GLOBALS['smarty']->assign('vote', $vote['content']);
+                $this->assign('vote_id', $vote['id']);
+                $this->assign('vote', $vote['content']);
             }
 
             $str = $GLOBALS['smarty']->fetch("library/vote.view.php");

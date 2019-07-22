@@ -90,19 +90,19 @@ class Topic extends Init
             /* 模板赋值 */
             assign_template();
             $position = assign_ur_here();
-            $GLOBALS['smarty']->assign('page_title', $position['title']);       // 页面标题
-            $GLOBALS['smarty']->assign('ur_here', $position['ur_here'] . '> ' . $topic['title']);     // 当前位置
-            $GLOBALS['smarty']->assign('show_marketprice', $GLOBALS['_CFG']['show_marketprice']);
-            $GLOBALS['smarty']->assign('sort_goods_arr', $sort_goods_arr);          // 商品列表
-            $GLOBALS['smarty']->assign('topic', $topic);                   // 专题信息
-            $GLOBALS['smarty']->assign('keywords', $topic['keywords']);       // 专题信息
-            $GLOBALS['smarty']->assign('description', $topic['description']);    // 专题信息
-            $GLOBALS['smarty']->assign('title_pic', $topic['title_pic']);      // 分类标题图片地址
-            $GLOBALS['smarty']->assign('base_style', '#' . $topic['base_style']);     // 基本风格样式颜色
+            $this->assign('page_title', $position['title']);       // 页面标题
+            $this->assign('ur_here', $position['ur_here'] . '> ' . $topic['title']);     // 当前位置
+            $this->assign('show_marketprice', $GLOBALS['_CFG']['show_marketprice']);
+            $this->assign('sort_goods_arr', $sort_goods_arr);          // 商品列表
+            $this->assign('topic', $topic);                   // 专题信息
+            $this->assign('keywords', $topic['keywords']);       // 专题信息
+            $this->assign('description', $topic['description']);    // 专题信息
+            $this->assign('title_pic', $topic['title_pic']);      // 分类标题图片地址
+            $this->assign('base_style', '#' . $topic['base_style']);     // 基本风格样式颜色
 
             $template_file = empty($topic['template']) ? 'topic.view.php' : $topic['template'];
         }
         /* 显示模板 */
-        return $GLOBALS['smarty']->display($templates, $cache_id);
+        return $this->display($templates, $cache_id);
     }
 }

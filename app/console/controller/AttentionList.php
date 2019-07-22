@@ -12,21 +12,21 @@ class AttentionList extends Init
         admin_priv('attention_list');
         if ($_REQUEST['act'] == 'list') {
             $goodsdb = $this->get_attention();
-            $GLOBALS['smarty']->assign('full_page', 1);
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['attention_list']);
-            $GLOBALS['smarty']->assign('goodsdb', $goodsdb['goodsdb']);
-            $GLOBALS['smarty']->assign('filter', $goodsdb['filter']);
-            $GLOBALS['smarty']->assign('cfg_lang', $GLOBALS['_CFG']['lang']);
-            $GLOBALS['smarty']->assign('record_count', $goodsdb['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $goodsdb['page_count']);
+            $this->assign('full_page', 1);
+            $this->assign('ur_here', $GLOBALS['_LANG']['attention_list']);
+            $this->assign('goodsdb', $goodsdb['goodsdb']);
+            $this->assign('filter', $goodsdb['filter']);
+            $this->assign('cfg_lang', $GLOBALS['_CFG']['lang']);
+            $this->assign('record_count', $goodsdb['record_count']);
+            $this->assign('page_count', $goodsdb['page_count']);
             assign_query_info();
-            return $GLOBALS['smarty']->display('attention_list.view.php');
+            return $this->display('attention_list.view.php');
         } elseif ($_REQUEST['act'] == 'query') {
             $goodsdb = $this->get_attention();
-            $GLOBALS['smarty']->assign('goodsdb', $goodsdb['goodsdb']);
-            $GLOBALS['smarty']->assign('filter', $goodsdb['filter']);
-            $GLOBALS['smarty']->assign('record_count', $goodsdb['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $goodsdb['page_count']);
+            $this->assign('goodsdb', $goodsdb['goodsdb']);
+            $this->assign('filter', $goodsdb['filter']);
+            $this->assign('record_count', $goodsdb['record_count']);
+            $this->assign('page_count', $goodsdb['page_count']);
             return make_json_result(
                 $GLOBALS['smarty']->fetch('attention_list.htm'),
                 '',
@@ -57,7 +57,7 @@ class AttentionList extends Init
                 foreach ($query as $rt) {
                     $time = time();
                     $goods_url = $GLOBALS['ecs']->url() . build_uri('goods', array('gid' => $id), $rt['goods_name']);
-                    $GLOBALS['smarty']->assign(array('user_name' => $rt['user_name'], 'goods_name' => $rt['goods_name'], 'goods_url' => $goods_url, 'shop_name' => $GLOBALS['_CFG']['shop_title'], 'send_date' => local_date($GLOBALS['_CFG']['date_format'])));
+                    $this->assign(array('user_name' => $rt['user_name'], 'goods_name' => $rt['goods_name'], 'goods_url' => $goods_url, 'shop_name' => $GLOBALS['_CFG']['shop_title'], 'send_date' => local_date($GLOBALS['_CFG']['date_format'])));
                     $content = $GLOBALS['smarty']->fetch("str:$template[template_content]");
                     $add .= $add ? ",('$rt[email]','$template[template_id]','$content','$pri','$time')" : "('$rt[email]','$template[template_id]','$content','$pri','$time')";
                     $i++;
@@ -106,7 +106,7 @@ class AttentionList extends Init
 
                     $goods_url = $GLOBALS['ecs']->url() . build_uri('goods', array('gid' => $rt['goods_id']), $rt['user_name']);
 
-                    $GLOBALS['smarty']->assign(array('user_name' => $rt['user_name'], 'goods_name' => $rt['goods_name'], 'goods_url' => $goods_url));
+                    $this->assign(array('user_name' => $rt['user_name'], 'goods_name' => $rt['goods_name'], 'goods_url' => $goods_url));
                     $content = $GLOBALS['smarty']->fetch("str:$template[template_content]");
                     $add .= $add ? ",('$rt[email]','$template[template_id]','$content','$pri','$time')" : "('$rt[email]','$template[template_id]','$content','$pri','$time')";
                     $i++;

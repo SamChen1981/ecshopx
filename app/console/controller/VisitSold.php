@@ -11,7 +11,7 @@ class VisitSold extends Init
     {
         load_helper('order');
         require_once('../languages/' . $GLOBALS['_CFG']['lang'] . '/admin/statistic.php');
-        $GLOBALS['smarty']->assign('lang', $GLOBALS['_LANG']);
+        $this->assign('lang', $GLOBALS['_LANG']);
 
         /* act操作项的初始化 */
         if (empty($_REQUEST['act'])) {
@@ -50,21 +50,21 @@ class VisitSold extends Init
             }
 
             /* 赋值到模板 */
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['visit_buy_per']);
+            $this->assign('ur_here', $GLOBALS['_LANG']['visit_buy_per']);
 
-            $GLOBALS['smarty']->assign('show_num', $show_num);
-            $GLOBALS['smarty']->assign('brand_id', $brand_id);
-            $GLOBALS['smarty']->assign('click_sold_info', $click_sold_info);
+            $this->assign('show_num', $show_num);
+            $this->assign('brand_id', $brand_id);
+            $this->assign('click_sold_info', $click_sold_info);
 
-            $GLOBALS['smarty']->assign('cat_list', cat_list(0, $cat_id));
-            $GLOBALS['smarty']->assign('brand_list', get_brand_list());
+            $this->assign('cat_list', cat_list(0, $cat_id));
+            $this->assign('brand_list', get_brand_list());
 
             $filename = 'visit_sold';
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['download_visit_buy'], 'href' => 'visit_sold.php?act=download&show_num=' . $show_num . '&cat_id=' . $cat_id . '&brand_id=' . $brand_id . '&show_num=' . $show_num));
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['download_visit_buy'], 'href' => 'visit_sold.php?act=download&show_num=' . $show_num . '&cat_id=' . $cat_id . '&brand_id=' . $brand_id . '&show_num=' . $show_num));
 
             /* 显示页面 */
             assign_query_info();
-            return $GLOBALS['smarty']->display('visit_sold.view.php');
+            return $this->display('visit_sold.view.php');
         }
     }
 

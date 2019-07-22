@@ -17,19 +17,19 @@ class Brand extends Init
         //-- 品牌列表
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['06_goods_brand_list']);
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['07_brand_add'], 'href' => 'brand.php?act=add'));
-            $GLOBALS['smarty']->assign('full_page', 1);
+            $this->assign('ur_here', $GLOBALS['_LANG']['06_goods_brand_list']);
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['07_brand_add'], 'href' => 'brand.php?act=add'));
+            $this->assign('full_page', 1);
 
             $brand_list = $this->get_brandlist();
 
-            $GLOBALS['smarty']->assign('brand_list', $brand_list['brand']);
-            $GLOBALS['smarty']->assign('filter', $brand_list['filter']);
-            $GLOBALS['smarty']->assign('record_count', $brand_list['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $brand_list['page_count']);
+            $this->assign('brand_list', $brand_list['brand']);
+            $this->assign('filter', $brand_list['filter']);
+            $this->assign('record_count', $brand_list['record_count']);
+            $this->assign('page_count', $brand_list['page_count']);
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('brand_list.view.php');
+            return $this->display('brand_list.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -39,13 +39,13 @@ class Brand extends Init
             /* 权限判断 */
             admin_priv('brand_manage');
 
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['07_brand_add']);
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['06_goods_brand_list'], 'href' => 'brand.php?act=list'));
-            $GLOBALS['smarty']->assign('form_action', 'insert');
+            $this->assign('ur_here', $GLOBALS['_LANG']['07_brand_add']);
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['06_goods_brand_list'], 'href' => 'brand.php?act=list'));
+            $this->assign('form_action', 'insert');
 
             assign_query_info();
-            $GLOBALS['smarty']->assign('brand', array('sort_order' => 50, 'is_show' => 1));
-            return $GLOBALS['smarty']->display('brand_info.view.php');
+            $this->assign('brand', array('sort_order' => 50, 'is_show' => 1));
+            return $this->display('brand_info.view.php');
         } elseif ($_REQUEST['act'] == 'insert') {
             /*检查品牌名是否重复*/
             admin_priv('brand_manage');
@@ -99,13 +99,13 @@ class Brand extends Init
                 "FROM " . $GLOBALS['ecs']->table('brand') . " WHERE brand_id='$_REQUEST[id]'";
             $brand = $GLOBALS['db']->GetRow($sql);
 
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['brand_edit']);
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['06_goods_brand_list'], 'href' => 'brand.php?act=list&' . list_link_postfix()));
-            $GLOBALS['smarty']->assign('brand', $brand);
-            $GLOBALS['smarty']->assign('form_action', 'updata');
+            $this->assign('ur_here', $GLOBALS['_LANG']['brand_edit']);
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['06_goods_brand_list'], 'href' => 'brand.php?act=list&' . list_link_postfix()));
+            $this->assign('brand', $brand);
+            $this->assign('form_action', 'updata');
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('brand_info.view.php');
+            return $this->display('brand_info.view.php');
         } elseif ($_REQUEST['act'] == 'updata') {
             admin_priv('brand_manage');
             if ($_POST['brand_name'] != $_POST['old_brandname']) {
@@ -272,10 +272,10 @@ class Brand extends Init
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'query') {
             $brand_list = $this->get_brandlist();
-            $GLOBALS['smarty']->assign('brand_list', $brand_list['brand']);
-            $GLOBALS['smarty']->assign('filter', $brand_list['filter']);
-            $GLOBALS['smarty']->assign('record_count', $brand_list['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $brand_list['page_count']);
+            $this->assign('brand_list', $brand_list['brand']);
+            $this->assign('filter', $brand_list['filter']);
+            $this->assign('record_count', $brand_list['record_count']);
+            $this->assign('page_count', $brand_list['page_count']);
 
             return make_json_result(
                 $GLOBALS['smarty']->fetch('brand_list.htm'),

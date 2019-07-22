@@ -25,22 +25,22 @@ class Bonus extends Init
         //-- 红包类型列表页面
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['04_bonustype_list']);
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['bonustype_add'], 'href' => 'bonus.php?act=add'));
-            $GLOBALS['smarty']->assign('full_page', 1);
+            $this->assign('ur_here', $GLOBALS['_LANG']['04_bonustype_list']);
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['bonustype_add'], 'href' => 'bonus.php?act=add'));
+            $this->assign('full_page', 1);
 
             $list = $this->get_type_list();
 
-            $GLOBALS['smarty']->assign('type_list', $list['item']);
-            $GLOBALS['smarty']->assign('filter', $list['filter']);
-            $GLOBALS['smarty']->assign('record_count', $list['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $list['page_count']);
+            $this->assign('type_list', $list['item']);
+            $this->assign('filter', $list['filter']);
+            $this->assign('record_count', $list['record_count']);
+            $this->assign('page_count', $list['page_count']);
 
             $sort_flag = sort_flag($list['filter']);
-            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
+            $this->assign($sort_flag['tag'], $sort_flag['img']);
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('bonus_type.view.php');
+            return $this->display('bonus_type.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -50,13 +50,13 @@ class Bonus extends Init
         if ($_REQUEST['act'] == 'query') {
             $list = $this->get_type_list();
 
-            $GLOBALS['smarty']->assign('type_list', $list['item']);
-            $GLOBALS['smarty']->assign('filter', $list['filter']);
-            $GLOBALS['smarty']->assign('record_count', $list['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $list['page_count']);
+            $this->assign('type_list', $list['item']);
+            $this->assign('filter', $list['filter']);
+            $this->assign('record_count', $list['record_count']);
+            $this->assign('page_count', $list['page_count']);
 
             $sort_flag = sort_flag($list['filter']);
-            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
+            $this->assign($sort_flag['tag'], $sort_flag['img']);
 
             return make_json_result(
                 $GLOBALS['smarty']->fetch('bonus_type.htm'),
@@ -152,13 +152,13 @@ class Bonus extends Init
         if ($_REQUEST['act'] == 'add') {
             admin_priv('bonus_manage');
 
-            $GLOBALS['smarty']->assign('lang', $GLOBALS['_LANG']);
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['bonustype_add']);
-            $GLOBALS['smarty']->assign('action_link', array('href' => 'bonus.php?act=list', 'text' => $GLOBALS['_LANG']['04_bonustype_list']));
-            $GLOBALS['smarty']->assign('action', 'add');
+            $this->assign('lang', $GLOBALS['_LANG']);
+            $this->assign('ur_here', $GLOBALS['_LANG']['bonustype_add']);
+            $this->assign('action_link', array('href' => 'bonus.php?act=list', 'text' => $GLOBALS['_LANG']['04_bonustype_list']));
+            $this->assign('action', 'add');
 
-            $GLOBALS['smarty']->assign('form_act', 'insert');
-            $GLOBALS['smarty']->assign('cfg_lang', $GLOBALS['_CFG']['lang']);
+            $this->assign('form_act', 'insert');
+            $this->assign('cfg_lang', $GLOBALS['_CFG']['lang']);
 
             $next_month = local_strtotime_new('+1 months');
             $bonus_arr['send_start_date'] = local_date('Y-m-d');
@@ -166,10 +166,10 @@ class Bonus extends Init
             $bonus_arr['send_end_date'] = local_date('Y-m-d', $next_month);
             $bonus_arr['use_end_date'] = local_date('Y-m-d', $next_month);
             $bonus_arr['send_type'] = 0;
-            $GLOBALS['smarty']->assign('bonus_arr', $bonus_arr);
+            $this->assign('bonus_arr', $bonus_arr);
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('bonus_type_info.view.php');
+            return $this->display('bonus_type_info.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -239,14 +239,14 @@ class Bonus extends Init
             $bonus_arr['use_start_date'] = local_date('Y-m-d', $bonus_arr['use_start_date']);
             $bonus_arr['use_end_date'] = local_date('Y-m-d', $bonus_arr['use_end_date']);
 
-            $GLOBALS['smarty']->assign('lang', $GLOBALS['_LANG']);
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['bonustype_edit']);
-            $GLOBALS['smarty']->assign('action_link', array('href' => 'bonus.php?act=list&' . list_link_postfix(), 'text' => $GLOBALS['_LANG']['04_bonustype_list']));
-            $GLOBALS['smarty']->assign('form_act', 'update');
-            $GLOBALS['smarty']->assign('bonus_arr', $bonus_arr);
+            $this->assign('lang', $GLOBALS['_LANG']);
+            $this->assign('ur_here', $GLOBALS['_LANG']['bonustype_edit']);
+            $this->assign('action_link', array('href' => 'bonus.php?act=list&' . list_link_postfix(), 'text' => $GLOBALS['_LANG']['04_bonustype_list']));
+            $this->assign('form_act', 'update');
+            $this->assign('bonus_arr', $bonus_arr);
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('bonus_type_info.view.php');
+            return $this->display('bonus_type_info.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -299,14 +299,14 @@ class Bonus extends Init
 
             assign_query_info();
 
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['send_bonus']);
-            $GLOBALS['smarty']->assign('action_link', array('href' => 'bonus.php?act=list', 'text' => $GLOBALS['_LANG']['04_bonustype_list']));
+            $this->assign('ur_here', $GLOBALS['_LANG']['send_bonus']);
+            $this->assign('action_link', array('href' => 'bonus.php?act=list', 'text' => $GLOBALS['_LANG']['04_bonustype_list']));
 
             if ($_REQUEST['send_by'] == SEND_BY_USER) {
-                $GLOBALS['smarty']->assign('id', $id);
-                $GLOBALS['smarty']->assign('ranklist', get_rank_list());
+                $this->assign('id', $id);
+                $this->assign('ranklist', get_rank_list());
 
-                return $GLOBALS['smarty']->display('bonus_by_user.view.php');
+                return $this->display('bonus_by_user.view.php');
             } elseif ($_REQUEST['send_by'] == SEND_BY_GOODS) {
                 /* 查询此红包类型信息 */
                 $bonus_type = $GLOBALS['db']->GetRow("SELECT type_id, type_name FROM " . $GLOBALS['ecs']->table('bonus_type') .
@@ -319,20 +319,20 @@ class Bonus extends Init
                 $sql = "SELECT goods_id FROM " . $GLOBALS['ecs']->table('goods') .
                     " WHERE bonus_type_id > 0 AND bonus_type_id <> '$_REQUEST[id]'";
                 $other_goods_list = $GLOBALS['db']->getCol($sql);
-                $GLOBALS['smarty']->assign('other_goods', join(',', $other_goods_list));
+                $this->assign('other_goods', join(',', $other_goods_list));
 
                 /* 模板赋值 */
-                $GLOBALS['smarty']->assign('cat_list', cat_list());
-                $GLOBALS['smarty']->assign('brand_list', get_brand_list());
+                $this->assign('cat_list', cat_list());
+                $this->assign('brand_list', get_brand_list());
 
-                $GLOBALS['smarty']->assign('bonus_type', $bonus_type);
-                $GLOBALS['smarty']->assign('goods_list', $goods_list);
+                $this->assign('bonus_type', $bonus_type);
+                $this->assign('goods_list', $goods_list);
 
-                return $GLOBALS['smarty']->display('bonus_by_goods.view.php');
+                return $this->display('bonus_by_goods.view.php');
             } elseif ($_REQUEST['send_by'] == SEND_BY_PRINT) {
-                $GLOBALS['smarty']->assign('type_list', get_bonus_type());
+                $this->assign('type_list', get_bonus_type());
 
-                return $GLOBALS['smarty']->display('bonus_by_print.view.php');
+                return $this->display('bonus_by_print.view.php');
             }
         }
 
@@ -413,12 +413,12 @@ class Bonus extends Init
 
             foreach ($user_list as $key => $val) {
                 /* 发送邮件通知 */
-                $GLOBALS['smarty']->assign('user_name', $val['user_name']);
-                $GLOBALS['smarty']->assign('shop_name', $GLOBALS['_CFG']['shop_name']);
-                $GLOBALS['smarty']->assign('send_date', $today);
-                $GLOBALS['smarty']->assign('sent_date', $today);
-                $GLOBALS['smarty']->assign('count', 1);
-                $GLOBALS['smarty']->assign('money', price_format($bonus_type['type_money']));
+                $this->assign('user_name', $val['user_name']);
+                $this->assign('shop_name', $GLOBALS['_CFG']['shop_name']);
+                $this->assign('send_date', $today);
+                $this->assign('sent_date', $today);
+                $this->assign('count', 1);
+                $this->assign('money', price_format($bonus_type['type_money']));
 
                 $content = $GLOBALS['smarty']->fetch('str:' . $tpl['template_content']);
 
@@ -676,31 +676,31 @@ class Bonus extends Init
         /*------------------------------------------------------ */
 
         if ($_REQUEST['act'] == 'bonus_list') {
-            $GLOBALS['smarty']->assign('full_page', 1);
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['bonus_list']);
-            $GLOBALS['smarty']->assign('action_link', array('href' => 'bonus.php?act=list', 'text' => $GLOBALS['_LANG']['04_bonustype_list']));
+            $this->assign('full_page', 1);
+            $this->assign('ur_here', $GLOBALS['_LANG']['bonus_list']);
+            $this->assign('action_link', array('href' => 'bonus.php?act=list', 'text' => $GLOBALS['_LANG']['04_bonustype_list']));
 
             $list = $this->get_bonus_list();
 
             /* 赋值是否显示红包序列号 */
             $bonus_type = $this->bonus_type_info(intval($_REQUEST['bonus_type']));
             if ($bonus_type['send_type'] == SEND_BY_PRINT) {
-                $GLOBALS['smarty']->assign('show_bonus_sn', 1);
+                $this->assign('show_bonus_sn', 1);
             } /* 赋值是否显示发邮件操作和是否发过邮件 */
             elseif ($bonus_type['send_type'] == SEND_BY_USER) {
-                $GLOBALS['smarty']->assign('show_mail', 1);
+                $this->assign('show_mail', 1);
             }
 
-            $GLOBALS['smarty']->assign('bonus_list', $list['item']);
-            $GLOBALS['smarty']->assign('filter', $list['filter']);
-            $GLOBALS['smarty']->assign('record_count', $list['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $list['page_count']);
+            $this->assign('bonus_list', $list['item']);
+            $this->assign('filter', $list['filter']);
+            $this->assign('record_count', $list['record_count']);
+            $this->assign('page_count', $list['page_count']);
 
             $sort_flag = sort_flag($list['filter']);
-            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
+            $this->assign($sort_flag['tag'], $sort_flag['img']);
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('bonus_list.view.php');
+            return $this->display('bonus_list.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -713,19 +713,19 @@ class Bonus extends Init
             /* 赋值是否显示红包序列号 */
             $bonus_type = $this->bonus_type_info(intval($_REQUEST['bonus_type']));
             if ($bonus_type['send_type'] == SEND_BY_PRINT) {
-                $GLOBALS['smarty']->assign('show_bonus_sn', 1);
+                $this->assign('show_bonus_sn', 1);
             } /* 赋值是否显示发邮件操作和是否发过邮件 */
             elseif ($bonus_type['send_type'] == SEND_BY_USER) {
-                $GLOBALS['smarty']->assign('show_mail', 1);
+                $this->assign('show_mail', 1);
             }
 
-            $GLOBALS['smarty']->assign('bonus_list', $list['item']);
-            $GLOBALS['smarty']->assign('filter', $list['filter']);
-            $GLOBALS['smarty']->assign('record_count', $list['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $list['page_count']);
+            $this->assign('bonus_list', $list['item']);
+            $this->assign('filter', $list['filter']);
+            $this->assign('record_count', $list['record_count']);
+            $this->assign('page_count', $list['page_count']);
 
             $sort_flag = sort_flag($list['filter']);
-            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
+            $this->assign($sort_flag['tag'], $sort_flag['img']);
 
             return make_json_result(
                 $GLOBALS['smarty']->fetch('bonus_list.htm'),
@@ -958,12 +958,12 @@ class Bonus extends Init
         $tpl = get_mail_template('send_bonus');
         $today = local_date($GLOBALS['_CFG']['date_format']);
         foreach ($bonus_list as $bonus) {
-            $GLOBALS['smarty']->assign('user_name', $bonus['user_name']);
-            $GLOBALS['smarty']->assign('shop_name', $GLOBALS['_CFG']['shop_name']);
-            $GLOBALS['smarty']->assign('send_date', $today);
-            $GLOBALS['smarty']->assign('sent_date', $today);
-            $GLOBALS['smarty']->assign('count', 1);
-            $GLOBALS['smarty']->assign('money', price_format($bonus_type['type_money']));
+            $this->assign('user_name', $bonus['user_name']);
+            $this->assign('shop_name', $GLOBALS['_CFG']['shop_name']);
+            $this->assign('send_date', $today);
+            $this->assign('sent_date', $today);
+            $this->assign('count', 1);
+            $this->assign('money', price_format($bonus_type['type_money']));
 
             $content = $GLOBALS['smarty']->fetch('str:' . $tpl['template_content']);
             if ($this->add_to_maillist($bonus['user_name'], $bonus['email'], $tpl['template_subject'], $content, $tpl['is_html'], false)) {

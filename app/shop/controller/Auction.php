@@ -49,30 +49,30 @@ class Auction extends Init
                 if ($count > 0) {
                     /* 取得当前页的拍卖活动 */
                     $auction_list = $this->auction_list($size, $page);
-                    $GLOBALS['smarty']->assign('auction_list', $auction_list);
+                    $this->assign('auction_list', $auction_list);
 
                     /* 设置分页链接 */
                     $pager = get_pager('auction.php', array('act' => 'list'), $count, $page, $size);
-                    $GLOBALS['smarty']->assign('pager', $pager);
+                    $this->assign('pager', $pager);
                 }
 
                 /* 模板赋值 */
-                $GLOBALS['smarty']->assign('cfg', $GLOBALS['_CFG']);
+                $this->assign('cfg', $GLOBALS['_CFG']);
                 assign_template();
                 $position = assign_ur_here();
-                $GLOBALS['smarty']->assign('page_title', $position['title']);    // 页面标题
-                $GLOBALS['smarty']->assign('ur_here', $position['ur_here']);  // 当前位置
-                $GLOBALS['smarty']->assign('categories', get_categories_tree()); // 分类树
-                $GLOBALS['smarty']->assign('helps', get_shop_help());       // 网店帮助
-                $GLOBALS['smarty']->assign('top_goods', get_top10());           // 销售排行
-                $GLOBALS['smarty']->assign('promotion_info', get_promotion_info());
-                $GLOBALS['smarty']->assign('feed_url', ($GLOBALS['_CFG']['rewrite'] == 1) ? "feed-typeauction.xml" : 'feed.php?type=auction'); // RSS URL
+                $this->assign('page_title', $position['title']);    // 页面标题
+                $this->assign('ur_here', $position['ur_here']);  // 当前位置
+                $this->assign('categories', get_categories_tree()); // 分类树
+                $this->assign('helps', get_shop_help());       // 网店帮助
+                $this->assign('top_goods', get_top10());           // 销售排行
+                $this->assign('promotion_info', get_promotion_info());
+                $this->assign('feed_url', ($GLOBALS['_CFG']['rewrite'] == 1) ? "feed-typeauction.xml" : 'feed.php?type=auction'); // RSS URL
 
                 assign_dynamic('auction_list');
             }
 
             /* 显示模板 */
-            return $GLOBALS['smarty']->display('auction_list.view.php', $cache_id);
+            return $this->display('auction_list.view.php', $cache_id);
         }
 
         /*------------------------------------------------------ */
@@ -120,12 +120,12 @@ class Auction extends Init
                     foreach ($_good_products as $value) {
                         $products_info .= ' ' . $goods_specifications[$value]['attr_name'] . '：' . $goods_specifications[$value]['attr_value'];
                     }
-                    $GLOBALS['smarty']->assign('products_info', $products_info);
+                    $this->assign('products_info', $products_info);
                     unset($goods_specifications, $good_products, $_good_products, $products_info);
                 }
 
                 $auction['gmt_end_time'] = local_strtotime($auction['end_time']);
-                $GLOBALS['smarty']->assign('auction', $auction);
+                $this->assign('auction', $auction);
 
                 /* 取得拍卖商品信息 */
                 $goods_id = $auction['goods_id'];
@@ -135,23 +135,23 @@ class Auction extends Init
 
                 }
                 $goods['url'] = build_uri('goods', array('gid' => $goods_id), $goods['goods_name']);
-                $GLOBALS['smarty']->assign('auction_goods', $goods);
+                $this->assign('auction_goods', $goods);
 
                 /* 出价记录 */
-                $GLOBALS['smarty']->assign('auction_log', auction_log($id));
+                $this->assign('auction_log', auction_log($id));
 
                 //模板赋值
-                $GLOBALS['smarty']->assign('cfg', $GLOBALS['_CFG']);
+                $this->assign('cfg', $GLOBALS['_CFG']);
                 assign_template();
 
                 $position = assign_ur_here(0, $goods['goods_name']);
-                $GLOBALS['smarty']->assign('page_title', $position['title']);    // 页面标题
-                $GLOBALS['smarty']->assign('ur_here', $position['ur_here']);  // 当前位置
+                $this->assign('page_title', $position['title']);    // 页面标题
+                $this->assign('ur_here', $position['ur_here']);  // 当前位置
 
-                $GLOBALS['smarty']->assign('categories', get_categories_tree()); // 分类树
-                $GLOBALS['smarty']->assign('helps', get_shop_help());       // 网店帮助
-                $GLOBALS['smarty']->assign('top_goods', get_top10());           // 销售排行
-                $GLOBALS['smarty']->assign('promotion_info', get_promotion_info());
+                $this->assign('categories', get_categories_tree()); // 分类树
+                $this->assign('helps', get_shop_help());       // 网店帮助
+                $this->assign('top_goods', get_top10());           // 销售排行
+                $this->assign('promotion_info', get_promotion_info());
 
                 assign_dynamic('auction');
             }
@@ -161,8 +161,8 @@ class Auction extends Init
                 "WHERE goods_id = '" . $auction['goods_id'] . "'";
             $GLOBALS['db']->query($sql);
 
-            $GLOBALS['smarty']->assign('now_time', gmtime());           // 当前系统时间
-            return $GLOBALS['smarty']->display('auction.view.php', $cache_id);
+            $this->assign('now_time', gmtime());           // 当前系统时间
+            return $this->display('auction.view.php', $cache_id);
         }
 
         /*------------------------------------------------------ */

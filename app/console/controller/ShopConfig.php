@@ -42,25 +42,25 @@ class ShopConfig extends Init
             }
             @closedir($dir);
 
-            $GLOBALS['smarty']->assign('lang_list', $lang_list);
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['01_shop_config']);
-            $GLOBALS['smarty']->assign('group_list', $this->get_settings(null, array('5')));
-            $GLOBALS['smarty']->assign('countries', get_regions());
+            $this->assign('lang_list', $lang_list);
+            $this->assign('ur_here', $GLOBALS['_LANG']['01_shop_config']);
+            $this->assign('group_list', $this->get_settings(null, array('5')));
+            $this->assign('countries', get_regions());
 
             if (strpos(strtolower($_SERVER['SERVER_SOFTWARE']), 'iis') !== false) {
                 $rewrite_confirm = $GLOBALS['_LANG']['rewrite_confirm_iis'];
             } else {
                 $rewrite_confirm = $GLOBALS['_LANG']['rewrite_confirm_apache'];
             }
-            $GLOBALS['smarty']->assign('rewrite_confirm', $rewrite_confirm);
+            $this->assign('rewrite_confirm', $rewrite_confirm);
 
             if ($GLOBALS['_CFG']['shop_country'] > 0) {
-                $GLOBALS['smarty']->assign('provinces', get_regions(1, $GLOBALS['_CFG']['shop_country']));
+                $this->assign('provinces', get_regions(1, $GLOBALS['_CFG']['shop_country']));
                 if ($GLOBALS['_CFG']['shop_province']) {
-                    $GLOBALS['smarty']->assign('cities', get_regions(2, $GLOBALS['_CFG']['shop_province']));
+                    $this->assign('cities', get_regions(2, $GLOBALS['_CFG']['shop_province']));
                 }
             }
-            $GLOBALS['smarty']->assign('cfg', $GLOBALS['_CFG']);
+            $this->assign('cfg', $GLOBALS['_CFG']);
 
             assign_query_info();
 
@@ -85,8 +85,8 @@ class ShopConfig extends Init
                 $demo_data['delivery_time'],
                 $demo_data['sms_sign']
             );
-            $GLOBALS['smarty']->assign('demo_sms_info', $demo_sms_info);
-            return $GLOBALS['smarty']->display('shop_config.view.php');
+            $this->assign('demo_sms_info', $demo_sms_info);
+            return $this->display('shop_config.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -100,9 +100,9 @@ class ShopConfig extends Init
 
             assign_query_info();
 
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['mail_settings']);
-            $GLOBALS['smarty']->assign('cfg', $arr[5]['vars']);
-            return $GLOBALS['smarty']->display('shop_config_mail_settings.view.php');
+            $this->assign('ur_here', $GLOBALS['_LANG']['mail_settings']);
+            $this->assign('cfg', $arr[5]['vars']);
+            return $this->display('shop_config_mail_settings.view.php');
         }
 
         /*------------------------------------------------------ */

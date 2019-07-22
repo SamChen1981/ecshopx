@@ -24,8 +24,8 @@ class Package extends Init
         assign_template();
         assign_dynamic('package');
         $position = assign_ur_here(0, $GLOBALS['_LANG']['shopping_package']);
-        $GLOBALS['smarty']->assign('page_title', $position['title']);    // 页面标题
-        $GLOBALS['smarty']->assign('ur_here', $position['ur_here']);  // 当前位置
+        $this->assign('page_title', $position['title']);    // 页面标题
+        $this->assign('ur_here', $position['ur_here']);  // 当前位置
 
         /* 读出所有礼包信息 */
 
@@ -76,12 +76,12 @@ class Package extends Init
             $list[] = $row;
         }
 
-        $GLOBALS['smarty']->assign('list', $list);
+        $this->assign('list', $list);
 
-        $GLOBALS['smarty']->assign('helps', get_shop_help());       // 网店帮助
-        $GLOBALS['smarty']->assign('lang', $GLOBALS['_LANG']);
+        $this->assign('helps', get_shop_help());       // 网店帮助
+        $this->assign('lang', $GLOBALS['_LANG']);
 
-        $GLOBALS['smarty']->assign('feed_url', ($GLOBALS['_CFG']['rewrite'] == 1) ? "feed-typepackage.xml" : 'feed.php?type=package'); // RSS URL
-        return $GLOBALS['smarty']->display('package.view.php');
+        $this->assign('feed_url', ($GLOBALS['_CFG']['rewrite'] == 1) ? "feed-typepackage.xml" : 'feed.php?type=package'); // RSS URL
+        return $this->display('package.view.php');
     }
 }

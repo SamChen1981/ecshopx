@@ -36,22 +36,22 @@ class AdminLogs extends Init
                 $ip_list[$row['ip_address']] = $row['ip_address'];
             }
 
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['admin_logs']);
-            $GLOBALS['smarty']->assign('ip_list', $ip_list);
-            $GLOBALS['smarty']->assign('full_page', 1);
+            $this->assign('ur_here', $GLOBALS['_LANG']['admin_logs']);
+            $this->assign('ip_list', $ip_list);
+            $this->assign('full_page', 1);
 
             $log_list = $this->get_admin_logs();
 
-            $GLOBALS['smarty']->assign('log_list', $log_list['list']);
-            $GLOBALS['smarty']->assign('filter', $log_list['filter']);
-            $GLOBALS['smarty']->assign('record_count', $log_list['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $log_list['page_count']);
+            $this->assign('log_list', $log_list['list']);
+            $this->assign('filter', $log_list['filter']);
+            $this->assign('record_count', $log_list['record_count']);
+            $this->assign('page_count', $log_list['page_count']);
 
             $sort_flag = sort_flag($log_list['filter']);
-            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
+            $this->assign($sort_flag['tag'], $sort_flag['img']);
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('admin_logs.view.php');
+            return $this->display('admin_logs.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -60,13 +60,13 @@ class AdminLogs extends Init
         elseif ($_REQUEST['act'] == 'query') {
             $log_list = $this->get_admin_logs();
 
-            $GLOBALS['smarty']->assign('log_list', $log_list['list']);
-            $GLOBALS['smarty']->assign('filter', $log_list['filter']);
-            $GLOBALS['smarty']->assign('record_count', $log_list['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $log_list['page_count']);
+            $this->assign('log_list', $log_list['list']);
+            $this->assign('filter', $log_list['filter']);
+            $this->assign('record_count', $log_list['record_count']);
+            $this->assign('page_count', $log_list['page_count']);
 
             $sort_flag = sort_flag($log_list['filter']);
-            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
+            $this->assign($sort_flag['tag'], $sort_flag['img']);
 
             return make_json_result(
                 $GLOBALS['smarty']->fetch('admin_logs.htm'),

@@ -99,22 +99,22 @@ class GoodsScript extends Init
                 $columns_num = ceil($goods_num / $rows_num);
                 $goods_items = array_chunk($goods_list, $columns_num);
             }
-            $GLOBALS['smarty']->assign('goods_list', $goods_items);
+            $this->assign('goods_list', $goods_items);
 
 
             /* 是否需要图片 */
             $need_image = empty($_GET['need_image']) || $_GET['need_image'] == 'true' ? 1 : 0;
-            $GLOBALS['smarty']->assign('need_image', $need_image);
+            $this->assign('need_image', $need_image);
 
             /* 图片大小 */
-            $GLOBALS['smarty']->assign('thumb_width', intval($GLOBALS['_CFG']['thumb_width']));
-            $GLOBALS['smarty']->assign('thumb_height', intval($GLOBALS['_CFG']['thumb_height']));
+            $this->assign('thumb_width', intval($GLOBALS['_CFG']['thumb_width']));
+            $this->assign('thumb_height', intval($GLOBALS['_CFG']['thumb_height']));
 
             /* 网站根目录 */
-            $GLOBALS['smarty']->assign('url', $GLOBALS['ecs']->url());
+            $this->assign('url', $GLOBALS['ecs']->url());
 
             /* 商品页面连接 */
-            $GLOBALS['smarty']->assign('goods_url', $goods_url);
+            $this->assign('goods_url', $goods_url);
         }
         $output = $GLOBALS['smarty']->fetch($tpl, $cache_id);
         $output = str_replace("\r", '', $output);

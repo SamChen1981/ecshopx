@@ -18,14 +18,14 @@ class WxaSetting extends Init
         if ($_REQUEST['act'] == 'list') {
             /* 检查权限 */
             admin_priv('wxa_setting');
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['wxa_setting']);
+            $this->assign('ur_here', $GLOBALS['_LANG']['wxa_setting']);
             $auth_sql = 'SELECT * FROM ' . $GLOBALS['ecs']->table('shop_config') . ' WHERE code = "authorize"';
             $auth = $GLOBALS['db']->getRow($auth_sql);
             $params = unserialize($auth['value']);
             if ($params['authorize_code'] != 'NDE') {
                 $url = $params['authorize_code'] == 'NCH' ? 'https://account.shopex.cn/order/confirm/goods_2460-946 ' : 'https://account.shopex.cn/order/confirm/goods_2540-1050 ';
-                $GLOBALS['smarty']->assign('url', $url);
-                return $GLOBALS['smarty']->display('accredit.html');
+                $this->assign('url', $url);
+                return $this->display('accredit.html');
 
             }
             $cert = new certificate;
@@ -57,8 +57,8 @@ class WxaSetting extends Init
 
             assign_query_info();
 
-            $GLOBALS['smarty']->assign('group_list', $grouplist);
-            return $GLOBALS['smarty']->display('wxa_config.html');
+            $this->assign('group_list', $grouplist);
+            return $this->display('wxa_config.html');
         } elseif ($_REQUEST['act'] == 'post') {
             /* 检查权限 */
             admin_priv('mobile_setting');

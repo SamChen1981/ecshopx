@@ -47,11 +47,11 @@ class CaptchaManage extends Init
                 $captcha_check['login_fail_no'] = 'checked="checked"';
             }
 
-            $GLOBALS['smarty']->assign('captcha', $captcha_check);
-            $GLOBALS['smarty']->assign('captcha_width', $GLOBALS['_CFG']['captcha_width']);
-            $GLOBALS['smarty']->assign('captcha_height', $GLOBALS['_CFG']['captcha_height']);
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['captcha_manage']);
-            return $GLOBALS['smarty']->display('captcha_manage.view.php');
+            $this->assign('captcha', $captcha_check);
+            $this->assign('captcha_width', $GLOBALS['_CFG']['captcha_width']);
+            $this->assign('captcha_height', $GLOBALS['_CFG']['captcha_height']);
+            $this->assign('ur_here', $GLOBALS['_LANG']['captcha_manage']);
+            return $this->display('captcha_manage.view.php');
         }
 
         /*------------------------------------------------------ */

@@ -192,17 +192,17 @@ class Comment extends Init
         if ($result['error'] == 0) {
             $comments = assign_comment($cmt->id, $cmt->type, $cmt->page);
 
-            $GLOBALS['smarty']->assign('comment_type', $cmt->type);
-            $GLOBALS['smarty']->assign('id', $cmt->id);
-            $GLOBALS['smarty']->assign('username', $_SESSION['user_name']);
-            $GLOBALS['smarty']->assign('email', $_SESSION['email']);
-            $GLOBALS['smarty']->assign('comments', $comments['comments']);
-            $GLOBALS['smarty']->assign('pager', $comments['pager']);
+            $this->assign('comment_type', $cmt->type);
+            $this->assign('id', $cmt->id);
+            $this->assign('username', $_SESSION['user_name']);
+            $this->assign('email', $_SESSION['email']);
+            $this->assign('comments', $comments['comments']);
+            $this->assign('pager', $comments['pager']);
 
             /* 验证码相关设置 */
             if ((intval($GLOBALS['_CFG']['captcha']) & CAPTCHA_COMMENT) && gd_version() > 0) {
-                $GLOBALS['smarty']->assign('enabled_captcha', 1);
-                $GLOBALS['smarty']->assign('rand', mt_rand());
+                $this->assign('enabled_captcha', 1);
+                $this->assign('rand', mt_rand());
             }
 
             $result['message'] = $GLOBALS['_CFG']['comment_check'] ? $GLOBALS['_LANG']['cmt_submit_wait'] : $GLOBALS['_LANG']['cmt_submit_done'];

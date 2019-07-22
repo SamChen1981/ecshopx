@@ -10,28 +10,28 @@ class ArticleAuto extends Init
     public function index()
     {
         admin_priv('article_auto');
-        $GLOBALS['smarty']->assign('thisfile', 'article_auto.php');
+        $this->assign('thisfile', 'article_auto.php');
         if ($_REQUEST['act'] == 'list') {
             $goodsdb = get_auto_goods();
             $crons_enable = $GLOBALS['db']->getOne("SELECT enable FROM " . $GLOBALS['ecs']->table('crons') . " WHERE cron_code='ipdel'");
-            $GLOBALS['smarty']->assign('crons_enable', $crons_enable);
-            $GLOBALS['smarty']->assign('full_page', 1);
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['article_auto']);
-            $GLOBALS['smarty']->assign('goodsdb', $goodsdb['goodsdb']);
-            $GLOBALS['smarty']->assign('filter', $goodsdb['filter']);
-            $GLOBALS['smarty']->assign('record_count', $goodsdb['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $goodsdb['page_count']);
+            $this->assign('crons_enable', $crons_enable);
+            $this->assign('full_page', 1);
+            $this->assign('ur_here', $GLOBALS['_LANG']['article_auto']);
+            $this->assign('goodsdb', $goodsdb['goodsdb']);
+            $this->assign('filter', $goodsdb['filter']);
+            $this->assign('record_count', $goodsdb['record_count']);
+            $this->assign('page_count', $goodsdb['page_count']);
             assign_query_info();
-            return $GLOBALS['smarty']->display('goods_auto.view.php');
+            return $this->display('goods_auto.view.php');
         } elseif ($_REQUEST['act'] == 'query') {
             $goodsdb = get_auto_goods();
-            $GLOBALS['smarty']->assign('goodsdb', $goodsdb['goodsdb']);
-            $GLOBALS['smarty']->assign('filter', $goodsdb['filter']);
-            $GLOBALS['smarty']->assign('record_count', $goodsdb['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $goodsdb['page_count']);
+            $this->assign('goodsdb', $goodsdb['goodsdb']);
+            $this->assign('filter', $goodsdb['filter']);
+            $this->assign('record_count', $goodsdb['record_count']);
+            $this->assign('page_count', $goodsdb['page_count']);
 
             $sort_flag = sort_flag($goodsdb['filter']);
-            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
+            $this->assign($sort_flag['tag'], $sort_flag['img']);
 
             return make_json_result($GLOBALS['smarty']->fetch('goods_auto.htm'), '', array('filter' => $goodsdb['filter'], 'page_count' => $goodsdb['page_count']));
         } elseif ($_REQUEST['act'] == 'del') {

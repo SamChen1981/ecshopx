@@ -14,21 +14,21 @@ class GoodsBooking extends Init
         //-- 列出所有订购信息
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list_all') {
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['list_all']);
-            $GLOBALS['smarty']->assign('full_page', 1);
+            $this->assign('ur_here', $GLOBALS['_LANG']['list_all']);
+            $this->assign('full_page', 1);
 
             $list = $this->get_bookinglist();
 
-            $GLOBALS['smarty']->assign('booking_list', $list['item']);
-            $GLOBALS['smarty']->assign('filter', $list['filter']);
-            $GLOBALS['smarty']->assign('record_count', $list['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $list['page_count']);
+            $this->assign('booking_list', $list['item']);
+            $this->assign('filter', $list['filter']);
+            $this->assign('record_count', $list['record_count']);
+            $this->assign('page_count', $list['page_count']);
 
             $sort_flag = sort_flag($list['filter']);
-            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
+            $this->assign($sort_flag['tag'], $sort_flag['img']);
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('booking_list.view.php');
+            return $this->display('booking_list.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -37,13 +37,13 @@ class GoodsBooking extends Init
         if ($_REQUEST['act'] == 'query') {
             $list = $this->get_bookinglist();
 
-            $GLOBALS['smarty']->assign('booking_list', $list['item']);
-            $GLOBALS['smarty']->assign('filter', $list['filter']);
-            $GLOBALS['smarty']->assign('record_count', $list['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $list['page_count']);
+            $this->assign('booking_list', $list['item']);
+            $this->assign('filter', $list['filter']);
+            $this->assign('record_count', $list['record_count']);
+            $this->assign('page_count', $list['page_count']);
 
             $sort_flag = sort_flag($list['filter']);
-            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
+            $this->assign($sort_flag['tag'], $sort_flag['img']);
 
             return make_json_result(
                 $GLOBALS['smarty']->fetch('booking_list.htm'),
@@ -75,11 +75,11 @@ class GoodsBooking extends Init
         if ($_REQUEST['act'] == 'detail') {
             $id = intval($_REQUEST['id']);
 
-            $GLOBALS['smarty']->assign('send_fail', !empty($_REQUEST['send_ok']));
-            $GLOBALS['smarty']->assign('booking', $this->get_booking_info($id));
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['detail']);
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['06_undispose_booking'], 'href' => 'goods_booking.php?act=list_all'));
-            return $GLOBALS['smarty']->display('booking_info.view.php');
+            $this->assign('send_fail', !empty($_REQUEST['send_ok']));
+            $this->assign('booking', $this->get_booking_info($id));
+            $this->assign('ur_here', $GLOBALS['_LANG']['detail']);
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['06_undispose_booking'], 'href' => 'goods_booking.php?act=list_all'));
+            return $this->display('booking_info.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -109,12 +109,12 @@ class GoodsBooking extends Init
                 $template = get_mail_template('goods_booking');
                 $goods_link = $GLOBALS['ecs']->url() . 'goods.php?id=' . $booking_info['goods_id'];
 
-                $GLOBALS['smarty']->assign('user_name', $booking_info['link_man']);
-                $GLOBALS['smarty']->assign('goods_link', $goods_link);
-                $GLOBALS['smarty']->assign('goods_name', $booking_info['goods_name']);
-                $GLOBALS['smarty']->assign('dispose_note', $dispose_note);
-                $GLOBALS['smarty']->assign('shop_name', "<a href='" . $GLOBALS['ecs']->url() . "'>" . $GLOBALS['_CFG']['shop_name'] . '</a>');
-                $GLOBALS['smarty']->assign('send_date', date('Y-m-d'));
+                $this->assign('user_name', $booking_info['link_man']);
+                $this->assign('goods_link', $goods_link);
+                $this->assign('goods_name', $booking_info['goods_name']);
+                $this->assign('dispose_note', $dispose_note);
+                $this->assign('shop_name', "<a href='" . $GLOBALS['ecs']->url() . "'>" . $GLOBALS['_CFG']['shop_name'] . '</a>');
+                $this->assign('send_date', date('Y-m-d'));
 
                 $content = $GLOBALS['smarty']->fetch('str:' . $template['template_content']);
 

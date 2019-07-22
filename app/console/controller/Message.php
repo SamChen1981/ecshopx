@@ -21,22 +21,22 @@ class Message extends Init
         //-- 留言列表页面
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
-            $GLOBALS['smarty']->assign('full_page', 1);
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['msg_list']);
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['send_msg'], 'href' => 'message.php?act=send'));
+            $this->assign('full_page', 1);
+            $this->assign('ur_here', $GLOBALS['_LANG']['msg_list']);
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['send_msg'], 'href' => 'message.php?act=send'));
 
             $list = $this->get_message_list();
 
-            $GLOBALS['smarty']->assign('message_list', $list['item']);
-            $GLOBALS['smarty']->assign('filter', $list['filter']);
-            $GLOBALS['smarty']->assign('record_count', $list['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $list['page_count']);
+            $this->assign('message_list', $list['item']);
+            $this->assign('filter', $list['filter']);
+            $this->assign('record_count', $list['record_count']);
+            $this->assign('page_count', $list['page_count']);
 
             $sort_flag = sort_flag($list['filter']);
-            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
+            $this->assign($sort_flag['tag'], $sort_flag['img']);
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('message_list.view.php');
+            return $this->display('message_list.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -45,13 +45,13 @@ class Message extends Init
         elseif ($_REQUEST['act'] == 'query') {
             $list = $this->get_message_list();
 
-            $GLOBALS['smarty']->assign('message_list', $list['item']);
-            $GLOBALS['smarty']->assign('filter', $list['filter']);
-            $GLOBALS['smarty']->assign('record_count', $list['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $list['page_count']);
+            $this->assign('message_list', $list['item']);
+            $this->assign('filter', $list['filter']);
+            $this->assign('record_count', $list['record_count']);
+            $this->assign('page_count', $list['page_count']);
 
             $sort_flag = sort_flag($list['filter']);
-            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
+            $this->assign($sort_flag['tag'], $sort_flag['img']);
 
             return make_json_result(
                 $GLOBALS['smarty']->fetch('message_list.htm'),
@@ -67,14 +67,14 @@ class Message extends Init
             /* 获取管理员列表 */
             $admin_list = $GLOBALS['db']->getAll('SELECT user_id, user_name FROM ' . $GLOBALS['ecs']->table('admin_user'));
 
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['send_msg']);
-            $GLOBALS['smarty']->assign('action_link', array('href' => 'message.php?act=list', 'text' => $GLOBALS['_LANG']['msg_list']));
-            $GLOBALS['smarty']->assign('action', 'add');
-            $GLOBALS['smarty']->assign('form_act', 'insert');
-            $GLOBALS['smarty']->assign('admin_list', $admin_list);
+            $this->assign('ur_here', $GLOBALS['_LANG']['send_msg']);
+            $this->assign('action_link', array('href' => 'message.php?act=list', 'text' => $GLOBALS['_LANG']['msg_list']));
+            $this->assign('action', 'add');
+            $this->assign('form_act', 'insert');
+            $this->assign('admin_list', $admin_list);
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('message_info.view.php');
+            return $this->display('message_info.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -139,14 +139,14 @@ class Message extends Init
                 'FROM ' . $GLOBALS['ecs']->table('admin_message') . " WHERE message_id='$id'";
             $msg_arr = $GLOBALS['db']->getRow($sql);
 
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['edit_msg']);
-            $GLOBALS['smarty']->assign('action_link', array('href' => 'message.php?act=list', 'text' => $GLOBALS['_LANG']['msg_list']));
-            $GLOBALS['smarty']->assign('form_act', 'update');
-            $GLOBALS['smarty']->assign('admin_list', $admin_list);
-            $GLOBALS['smarty']->assign('msg_arr', $msg_arr);
+            $this->assign('ur_here', $GLOBALS['_LANG']['edit_msg']);
+            $this->assign('action_link', array('href' => 'message.php?act=list', 'text' => $GLOBALS['_LANG']['msg_list']));
+            $this->assign('form_act', 'update');
+            $this->assign('admin_list', $admin_list);
+            $this->assign('msg_arr', $msg_arr);
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('message_info.view.php');
+            return $this->display('message_info.view.php');
         } elseif ($_REQUEST['act'] == 'update') {
             /* 获得留言数据*/
             $msg_arr = array();
@@ -196,13 +196,13 @@ class Message extends Init
             }
 
             //模板赋值，显示
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['view_msg']);
-            $GLOBALS['smarty']->assign('action_link', array('href' => 'message.php?act=list', 'text' => $GLOBALS['_LANG']['msg_list']));
-            $GLOBALS['smarty']->assign('admin_user', $_SESSION['admin_name']);
-            $GLOBALS['smarty']->assign('msg_arr', $msg_arr);
+            $this->assign('ur_here', $GLOBALS['_LANG']['view_msg']);
+            $this->assign('action_link', array('href' => 'message.php?act=list', 'text' => $GLOBALS['_LANG']['msg_list']));
+            $this->assign('admin_user', $_SESSION['admin_name']);
+            $this->assign('msg_arr', $msg_arr);
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('message_view.view.php');
+            return $this->display('message_view.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -219,15 +219,15 @@ class Message extends Init
                 "WHERE a.message_id = '$msg_id'";
             $msg_val = $GLOBALS['db']->getRow($sql);
 
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['reply_msg']);
-            $GLOBALS['smarty']->assign('action_link', array('href' => 'message.php?act=list', 'text' => $GLOBALS['_LANG']['msg_list']));
+            $this->assign('ur_here', $GLOBALS['_LANG']['reply_msg']);
+            $this->assign('action_link', array('href' => 'message.php?act=list', 'text' => $GLOBALS['_LANG']['msg_list']));
 
-            $GLOBALS['smarty']->assign('action', 'reply');
-            $GLOBALS['smarty']->assign('form_act', 're_msg');
-            $GLOBALS['smarty']->assign('msg_val', $msg_val);
+            $this->assign('action', 'reply');
+            $this->assign('form_act', 're_msg');
+            $this->assign('msg_val', $msg_val);
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('message_info.view.php');
+            return $this->display('message_info.view.php');
         }
 
         /*------------------------------------------------------ */

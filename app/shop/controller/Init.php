@@ -125,13 +125,13 @@ class Init extends Controller
                 $GLOBALS['smarty']->force_compile = false;
             }
 
-            $GLOBALS['smarty']->assign('lang', $GLOBALS['_LANG']);
-            $GLOBALS['smarty']->assign('ecs_charset', EC_CHARSET);
-            $GLOBALS['smarty']->assign('template_dir', 'themes/' . $GLOBALS['_CFG']['template']);
+            $this->assign('lang', $GLOBALS['_LANG']);
+            $this->assign('ecs_charset', EC_CHARSET);
+            $this->assign('template_dir', 'themes/' . $GLOBALS['_CFG']['template']);
             if (!empty($GLOBALS['_CFG']['stylename'])) {
-                $GLOBALS['smarty']->assign('ecs_css_path', 'themes/' . $GLOBALS['_CFG']['template'] . '/style_' . $GLOBALS['_CFG']['stylename'] . '.css');
+                $this->assign('ecs_css_path', 'themes/' . $GLOBALS['_CFG']['template'] . '/style_' . $GLOBALS['_CFG']['stylename'] . '.css');
             } else {
-                $GLOBALS['smarty']->assign('ecs_css_path', 'themes/' . $GLOBALS['_CFG']['template'] . '/style.css');
+                $this->assign('ecs_css_path', 'themes/' . $GLOBALS['_CFG']['template'] . '/style.css');
             }
         }
 

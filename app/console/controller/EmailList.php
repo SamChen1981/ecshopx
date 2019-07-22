@@ -13,14 +13,14 @@ class EmailList extends Init
 
         if ($_REQUEST['act'] == 'list') {
             $emaildb = $this->get_email_list();
-            $GLOBALS['smarty']->assign('full_page', 1);
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['email_list']);
-            $GLOBALS['smarty']->assign('emaildb', $emaildb['emaildb']);
-            $GLOBALS['smarty']->assign('filter', $emaildb['filter']);
-            $GLOBALS['smarty']->assign('record_count', $emaildb['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $emaildb['page_count']);
+            $this->assign('full_page', 1);
+            $this->assign('ur_here', $GLOBALS['_LANG']['email_list']);
+            $this->assign('emaildb', $emaildb['emaildb']);
+            $this->assign('filter', $emaildb['filter']);
+            $this->assign('record_count', $emaildb['record_count']);
+            $this->assign('page_count', $emaildb['page_count']);
             assign_query_info();
-            return $GLOBALS['smarty']->display('email_list.view.php');
+            return $this->display('email_list.view.php');
         } elseif ($_REQUEST['act'] == 'export') {
             $sql = "SELECT email FROM " . $GLOBALS['ecs']->table('email_list') . "WHERE stat = 1";
             $emails = $GLOBALS['db']->getAll($sql);
@@ -40,13 +40,13 @@ class EmailList extends Init
 
         } elseif ($_REQUEST['act'] == 'query') {
             $emaildb = $this->get_email_list();
-            $GLOBALS['smarty']->assign('emaildb', $emaildb['emaildb']);
-            $GLOBALS['smarty']->assign('filter', $emaildb['filter']);
-            $GLOBALS['smarty']->assign('record_count', $emaildb['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $emaildb['page_count']);
+            $this->assign('emaildb', $emaildb['emaildb']);
+            $this->assign('filter', $emaildb['filter']);
+            $this->assign('record_count', $emaildb['record_count']);
+            $this->assign('page_count', $emaildb['page_count']);
 
             $sort_flag = sort_flag($emaildb['filter']);
-            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
+            $this->assign($sort_flag['tag'], $sort_flag['img']);
 
             return make_json_result(
                 $GLOBALS['smarty']->fetch('email_list.htm'),

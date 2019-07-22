@@ -24,7 +24,7 @@ class Database extends Init
             $mask = file_mode_info($path);
             if ($mask === false) {
                 $warning = sprintf($GLOBALS['_LANG']['dir_not_exist'], $path);
-                $GLOBALS['smarty']->assign('warning', $warning);
+                $this->assign('warning', $warning);
             } elseif ($mask != 15) {
                 $warning = sprintf($GLOBALS['_LANG']['dir_priv'], $path) . '<br/>';
                 if (($mask & 1) < 1) {
@@ -39,16 +39,16 @@ class Database extends Init
                 if (($mask & 8) < 1) {
                     $warning .= $GLOBALS['_LANG']['cannot_modify'];
                 }
-                $GLOBALS['smarty']->assign('warning', $warning);
+                $this->assign('warning', $warning);
             }
 
             assign_query_info();
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['restore'], 'href' => 'database.php?act=restore'));
-            $GLOBALS['smarty']->assign('tables', $tables);
-            $GLOBALS['smarty']->assign('vol_size', $allow_max_size);
-            $GLOBALS['smarty']->assign('sql_name', cls_sql_dump::get_random_name() . '.sql');
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['02_db_manage']);
-            return $GLOBALS['smarty']->display('db_backup.view.php');
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['restore'], 'href' => 'database.php?act=restore'));
+            $this->assign('tables', $tables);
+            $this->assign('vol_size', $allow_max_size);
+            $this->assign('sql_name', cls_sql_dump::get_random_name() . '.sql');
+            $this->assign('ur_here', $GLOBALS['_LANG']['02_db_manage']);
+            return $this->display('db_backup.view.php');
         }
 
         /* 备份恢复页面 */
@@ -63,10 +63,10 @@ class Database extends Init
             $mask = file_mode_info($path);
             if ($mask === false) {
                 $warning = sprintf($GLOBALS['_LANG']['dir_not_exist'], $path);
-                $GLOBALS['smarty']->assign('warning', $warning);
+                $this->assign('warning', $warning);
             } elseif (($mask & 1) < 1) {
                 $warning = $path . '&nbsp;&nbsp;' . $GLOBALS['_LANG']['cannot_read'];
-                $GLOBALS['smarty']->assign('warning', $warning);
+                $this->assign('warning', $warning);
             } else {
                 /* 获取文件列表 */
                 $real_list = array();
@@ -97,10 +97,10 @@ class Database extends Init
             }
 
             assign_query_info();
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['02_db_manage'], 'href' => 'database.php?act=backup'));
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['restore']);
-            $GLOBALS['smarty']->assign('list', $list);
-            return $GLOBALS['smarty']->display('db_restore.view.php');
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['02_db_manage'], 'href' => 'database.php?act=backup'));
+            $this->assign('ur_here', $GLOBALS['_LANG']['restore']);
+            $this->assign('list', $list);
+            return $this->display('db_restore.view.php');
         }
 
         if ($_REQUEST['act'] == 'dumpsql') {
@@ -228,18 +228,18 @@ class Database extends Init
                         $list[] = array('name' => $sql_file_name . '_' . $i . '.sql', 'href' => '../' . DATA_DIR . '/sqldata/' . $sql_file_name . '_' . $i . '.sql');
                     }
 
-                    $GLOBALS['smarty']->assign('list', $list);
-                    $GLOBALS['smarty']->assign('title', $GLOBALS['_LANG']['backup_success']);
-                    return $GLOBALS['smarty']->display('sql_dump_msg.view.php');
+                    $this->assign('list', $list);
+                    $this->assign('title', $GLOBALS['_LANG']['backup_success']);
+                    return $this->display('sql_dump_msg.view.php');
                 } else {
                     /* 只有一个文件 */
                     if (!@file_put_contents(ROOT_PATH . DATA_DIR . '/sqldata/' . $sql_file_name . '.sql', $dump->dump_sql)) {
                         return sys_msg(sprintf($GLOBALS['_LANG']['fail_write_file'], $sql_file_name . '_' . $vol . '.sql'), 1, array(array('text' => $GLOBALS['_LANG']['02_db_manage'], 'href' => 'database.php?act=backup')), false);
                     };
 
-                    $GLOBALS['smarty']->assign('list', array(array('name' => $sql_file_name . '.sql', 'href' => '../' . DATA_DIR . '/sqldata/' . $sql_file_name . '.sql')));
-                    $GLOBALS['smarty']->assign('title', $GLOBALS['_LANG']['backup_success']);
-                    return $GLOBALS['smarty']->display('sql_dump_msg.view.php');
+                    $this->assign('list', array(array('name' => $sql_file_name . '.sql', 'href' => '../' . DATA_DIR . '/sqldata/' . $sql_file_name . '.sql')));
+                    $this->assign('title', $GLOBALS['_LANG']['backup_success']);
+                    return $this->display('sql_dump_msg.view.php');
                 }
             } else {
                 /* 下一个页面处理 */
@@ -248,10 +248,10 @@ class Database extends Init
                 }
 
                 $lnk = 'database.php?act=dumpsql&token=' . $GLOBALS['_CFG']['token'] . '&sql_file_name=' . $sql_file_name . '&vol_size=' . $max_size . '&vol=' . ($vol + 1);
-                $GLOBALS['smarty']->assign('title', sprintf($GLOBALS['_LANG']['backup_title'], '#' . $vol));
-                $GLOBALS['smarty']->assign('auto_redirect', 1);
-                $GLOBALS['smarty']->assign('auto_link', $lnk);
-                return $GLOBALS['smarty']->display('sql_dump_msg.view.php');
+                $this->assign('title', sprintf($GLOBALS['_LANG']['backup_title'], '#' . $vol));
+                $this->assign('auto_redirect', 1);
+                $this->assign('auto_link', $lnk);
+                return $this->display('sql_dump_msg.view.php');
             }
         }
 
@@ -480,10 +480,10 @@ class Database extends Init
             unset($ret);
             /* 赋值 */
             assign_query_info();
-            $GLOBALS['smarty']->assign('list', $list);
-            $GLOBALS['smarty']->assign('num', $num);
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['03_db_optimize']);
-            return $GLOBALS['smarty']->display('optimize.view.php');
+            $this->assign('list', $list);
+            $this->assign('num', $num);
+            $this->assign('ur_here', $GLOBALS['_LANG']['03_db_optimize']);
+            return $this->display('optimize.view.php');
         }
 
         if ($_REQUEST['act'] == 'run_optimize') {
@@ -506,9 +506,9 @@ class Database extends Init
          */
         if ($_REQUEST['act'] == 'clear') {
             admin_priv('db_clear');
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['clear']);
-            $GLOBALS['smarty']->assign('yunqi_login', $_SESSION['yunqi_login']);
-            return $GLOBALS['smarty']->display('clear.view.php');
+            $this->assign('ur_here', $GLOBALS['_LANG']['clear']);
+            $this->assign('yunqi_login', $_SESSION['yunqi_login']);
+            return $this->display('clear.view.php');
         }
 
         /**

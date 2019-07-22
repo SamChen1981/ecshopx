@@ -61,17 +61,17 @@ class EditLanguages extends Init
             $language_arr = $this->get_language_item_list($file_path, $keyword);
 
             /* 模板赋值 */
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['edit_languages']);
-            $GLOBALS['smarty']->assign('keyword', $keyword);  //关键字
-            $GLOBALS['smarty']->assign('action_link', array());
-            $GLOBALS['smarty']->assign('file_attr', $file_attr);//文件权限
-            $GLOBALS['smarty']->assign('lang_arr', $lang_arr); //语言文件列表
-            $GLOBALS['smarty']->assign('file_path', $file_path);//语言文件
-            $GLOBALS['smarty']->assign('lang_file', $lang_file);//语言文件
-            $GLOBALS['smarty']->assign('language_arr', $language_arr); //需要编辑的语言项列表
+            $this->assign('ur_here', $GLOBALS['_LANG']['edit_languages']);
+            $this->assign('keyword', $keyword);  //关键字
+            $this->assign('action_link', array());
+            $this->assign('file_attr', $file_attr);//文件权限
+            $this->assign('lang_arr', $lang_arr); //语言文件列表
+            $this->assign('file_path', $file_path);//语言文件
+            $this->assign('lang_file', $lang_file);//语言文件
+            $this->assign('language_arr', $language_arr); //需要编辑的语言项列表
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('language_list.view.php');
+            return $this->display('language_list.view.php');
         }
 
         /*------------------------------------------------------ */

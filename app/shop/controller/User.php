@@ -16,7 +16,7 @@ class User extends Init
         $action = isset($_REQUEST['act']) ? trim($_REQUEST['act']) : 'default';
 
         $affiliate = unserialize($GLOBALS['_CFG']['affiliate']);
-        $GLOBALS['smarty']->assign('affiliate', $affiliate);
+        $this->assign('affiliate', $affiliate);
         $back_act = '';
 
 
@@ -58,34 +58,34 @@ class User extends Init
         if (in_array($action, $ui_arr)) {
             assign_template();
             $position = assign_ur_here(0, $GLOBALS['_LANG']['user_center']);
-            $GLOBALS['smarty']->assign('page_title', $position['title']); // 页面标题
-            $GLOBALS['smarty']->assign('ur_here', $position['ur_here']);
+            $this->assign('page_title', $position['title']); // 页面标题
+            $this->assign('ur_here', $position['ur_here']);
             $sql = "SELECT value FROM " . $GLOBALS['ecs']->table('shop_config') . " WHERE id = 419";
             $row = $GLOBALS['db']->getRow($sql);
             $car_off = $row['value'];
-            $GLOBALS['smarty']->assign('car_off', $car_off);
+            $this->assign('car_off', $car_off);
             /* 是否显示积分兑换 */
             if (!empty($GLOBALS['_CFG']['points_rule']) && unserialize($GLOBALS['_CFG']['points_rule'])) {
-                $GLOBALS['smarty']->assign('show_transform_points', 1);
+                $this->assign('show_transform_points', 1);
             }
-            $GLOBALS['smarty']->assign('helps', get_shop_help());        // 网店帮助
-            $GLOBALS['smarty']->assign('data_dir', DATA_DIR);   // 数据目录
-            $GLOBALS['smarty']->assign('action', $action);
-            $GLOBALS['smarty']->assign('lang', $GLOBALS['_LANG']);
+            $this->assign('helps', get_shop_help());        // 网店帮助
+            $this->assign('data_dir', DATA_DIR);   // 数据目录
+            $this->assign('action', $action);
+            $this->assign('lang', $GLOBALS['_LANG']);
         }
         //用户中心欢迎页
         if ($action == 'default') {
             load_helper('clips');
             if ($rank = get_rank_info()) {
-                $GLOBALS['smarty']->assign('rank_name', sprintf($GLOBALS['_LANG']['your_level'], $rank['rank_name']));
+                $this->assign('rank_name', sprintf($GLOBALS['_LANG']['your_level'], $rank['rank_name']));
                 if (!empty($rank['next_rank_name'])) {
-                    $GLOBALS['smarty']->assign('next_rank_name', sprintf($GLOBALS['_LANG']['next_level'], $rank['next_rank'], $rank['next_rank_name']));
+                    $this->assign('next_rank_name', sprintf($GLOBALS['_LANG']['next_level'], $rank['next_rank'], $rank['next_rank_name']));
                 }
             }
-            $GLOBALS['smarty']->assign('info', get_user_default($user_id));
-            $GLOBALS['smarty']->assign('user_notice', $GLOBALS['_CFG']['user_notice']);
-            $GLOBALS['smarty']->assign('prompt', get_user_prompt($user_id));
-            return $GLOBALS['smarty']->display('user_clips.view.php');
+            $this->assign('info', get_user_default($user_id));
+            $this->assign('user_notice', $GLOBALS['_CFG']['user_notice']);
+            $this->assign('prompt', get_user_prompt($user_id));
+            return $this->display('user_clips.view.php');
         }
 
         /* 显示会员注册界面 */
@@ -96,27 +96,27 @@ class User extends Init
             /* 取出注册扩展字段 */
             $sql = 'SELECT * FROM ' . $GLOBALS['ecs']->table('reg_fields') . ' WHERE type < 2 AND display = 1 ORDER BY dis_order, id';
             $extend_info_list = $GLOBALS['db']->getAll($sql);
-            $GLOBALS['smarty']->assign('extend_info_list', $extend_info_list);
+            $this->assign('extend_info_list', $extend_info_list);
 
             /* 验证码相关设置 */
             if ((intval($GLOBALS['_CFG']['captcha']) & CAPTCHA_REGISTER) && gd_version() > 0) {
-                $GLOBALS['smarty']->assign('enabled_captcha', 1);
-                $GLOBALS['smarty']->assign('rand', mt_rand());
+                $this->assign('enabled_captcha', 1);
+                $this->assign('rand', mt_rand());
             }
 
             /* 密码提示问题 */
-            $GLOBALS['smarty']->assign('passwd_questions', $GLOBALS['_LANG']['passwd_questions']);
+            $this->assign('passwd_questions', $GLOBALS['_LANG']['passwd_questions']);
 
             /* 增加是否关闭注册 */
-            $GLOBALS['smarty']->assign('shop_reg_closed', $GLOBALS['_CFG']['shop_reg_closed']);
-            return $GLOBALS['smarty']->display('user_passport.view.php');
+            $this->assign('shop_reg_closed', $GLOBALS['_CFG']['shop_reg_closed']);
+            return $this->display('user_passport.view.php');
         } /* 注册会员的处理 */
         elseif ($action == 'act_register') {
             /* 增加是否关闭注册 */
             if ($GLOBALS['_CFG']['shop_reg_closed']) {
-                $GLOBALS['smarty']->assign('action', 'register');
-                $GLOBALS['smarty']->assign('shop_reg_closed', $GLOBALS['_CFG']['shop_reg_closed']);
-                return $GLOBALS['smarty']->display('user_passport.view.php');
+                $this->assign('action', 'register');
+                $this->assign('shop_reg_closed', $GLOBALS['_CFG']['shop_reg_closed']);
+                return $this->display('user_passport.view.php');
             } else {
                 load_helper('passport');
 
@@ -282,11 +282,11 @@ class User extends Init
 
             $captcha = intval($GLOBALS['_CFG']['captcha']);
             if (($captcha & CAPTCHA_LOGIN) && (!($captcha & CAPTCHA_LOGIN_FAIL) || (($captcha & CAPTCHA_LOGIN_FAIL) && $_SESSION['login_fail'] > 2)) && gd_version() > 0) {
-                $GLOBALS['smarty']->assign('enabled_captcha', 1);
-                $GLOBALS['smarty']->assign('rand', mt_rand());
+                $this->assign('enabled_captcha', 1);
+                $this->assign('rand', mt_rand());
             }
             $_SESSION['back_act'] = $back_act;
-            return $GLOBALS['smarty']->display('user_passport.view.php');
+            return $this->display('user_passport.view.php');
         } /* 处理会员的登录 */
         elseif ($action == 'act_login') {
             $username = isset($_POST['username']) ? trim($_POST['username']) : '';
@@ -354,14 +354,14 @@ class User extends Init
                 update_cart_offline(); //离线购物车绑定会员id
                 update_user_info();  //更新用户信息
                 recalculate_price(); // 重新计算购物车中的商品价格
-                $GLOBALS['smarty']->assign('user_info', get_user_info());
+                $this->assign('user_info', get_user_info());
                 $ucdata = empty($GLOBALS['user']->ucdata) ? "" : $GLOBALS['user']->ucdata;
                 $result['ucdata'] = $ucdata;
                 $result['content'] = $GLOBALS['smarty']->fetch('library/member_info.view.php');
             } else {
                 $_SESSION['login_fail']++;
                 if ($_SESSION['login_fail'] > 2) {
-                    $GLOBALS['smarty']->assign('enabled_captcha', 1);
+                    $this->assign('enabled_captcha', 1);
                     $result['html'] = $GLOBALS['smarty']->fetch('library/member_info.view.php');
                 }
                 $result['error'] = 1;
@@ -418,13 +418,13 @@ class User extends Init
                 }
             }
 
-            $GLOBALS['smarty']->assign('extend_info_list', $extend_info_list);
+            $this->assign('extend_info_list', $extend_info_list);
 
             /* 密码提示问题 */
-            $GLOBALS['smarty']->assign('passwd_questions', $GLOBALS['_LANG']['passwd_questions']);
+            $this->assign('passwd_questions', $GLOBALS['_LANG']['passwd_questions']);
 
-            $GLOBALS['smarty']->assign('profile', $user_info);
-            return $GLOBALS['smarty']->display('user_transaction.view.php');
+            $this->assign('profile', $user_info);
+            return $this->display('user_transaction.view.php');
         } /* 修改个人资料的处理 */
         elseif ($action == 'act_edit_profile') {
             load_helper('transaction');
@@ -517,18 +517,18 @@ class User extends Init
                     return show_message($GLOBALS['_LANG']['parm_error'], $GLOBALS['_LANG']['back_home_lnk'], './', 'info');
                 }
 
-                $GLOBALS['smarty']->assign('uid', $uid);
-                $GLOBALS['smarty']->assign('code', $code);
-                $GLOBALS['smarty']->assign('action', 'reset_password');
-                return $GLOBALS['smarty']->display('user_passport.view.php');
+                $this->assign('uid', $uid);
+                $this->assign('code', $code);
+                $this->assign('action', 'reset_password');
+                return $this->display('user_passport.view.php');
             } else {
                 //显示用户名和email表单
-                return $GLOBALS['smarty']->display('user_passport.view.php');
+                return $this->display('user_passport.view.php');
             }
         } /* 密码找回-->输入用户名界面 */
         elseif ($action == 'qpassword_name') {
             //显示输入要找回密码的账号表单
-            return $GLOBALS['smarty']->display('user_passport.view.php');
+            return $this->display('user_passport.view.php');
         } /* 密码找回-->根据注册用户名取得密码提示问题界面 */
         elseif ($action == 'get_passwd_question') {
             if (empty($_POST['user_name'])) {
@@ -552,12 +552,12 @@ class User extends Init
 
             $captcha = intval($GLOBALS['_CFG']['captcha']);
             if (($captcha & CAPTCHA_LOGIN) && (!($captcha & CAPTCHA_LOGIN_FAIL) || (($captcha & CAPTCHA_LOGIN_FAIL) && $_SESSION['login_fail'] > 2)) && gd_version() > 0) {
-                $GLOBALS['smarty']->assign('enabled_captcha', 1);
-                $GLOBALS['smarty']->assign('rand', mt_rand());
+                $this->assign('enabled_captcha', 1);
+                $this->assign('rand', mt_rand());
             }
 
-            $GLOBALS['smarty']->assign('passwd_question', $GLOBALS['_LANG']['passwd_questions'][$user_question_arr['passwd_question']]);
-            return $GLOBALS['smarty']->display('user_passport.view.php');
+            $this->assign('passwd_question', $GLOBALS['_LANG']['passwd_questions'][$user_question_arr['passwd_question']]);
+            return $this->display('user_passport.view.php');
         } /* 密码找回-->根据提交的密码答案进行相应处理 */
         elseif ($action == 'check_answer') {
             $captcha = intval($GLOBALS['_CFG']['captcha']);
@@ -582,9 +582,9 @@ class User extends Init
                 $_SESSION['user_name'] = $_SESSION['temp_user_name'];
                 unset($_SESSION['temp_user']);
                 unset($_SESSION['temp_user_name']);
-                $GLOBALS['smarty']->assign('uid', $_SESSION['user_id']);
-                $GLOBALS['smarty']->assign('action', 'reset_password');
-                return $GLOBALS['smarty']->display('user_passport.view.php');
+                $this->assign('uid', $_SESSION['user_id']);
+                $this->assign('action', 'reset_password');
+                return $this->display('user_passport.view.php');
             }
         } /* 发送密码修改确认邮件 */
         elseif ($action == 'send_pwd_email') {
@@ -616,7 +616,7 @@ class User extends Init
         } /* 重置新密码 */
         elseif ($action == 'reset_password') {
             //显示重置密码的表单
-            return $GLOBALS['smarty']->display('user_passport.view.php');
+            return $this->display('user_passport.view.php');
         } /* 修改会员密码 */
         elseif ($action == 'act_edit_password') {
             load_helper('passport');
@@ -667,13 +667,13 @@ class User extends Init
             $merge = get_user_merge($user_id);
 
             $cert = new certificate();
-            $cert->is_bind_sn('erp', 'goods_name') ? $GLOBALS['smarty']->assign('no_bind_erp', 0) : $GLOBALS['smarty']->assign('no_bind_erp', 1);
+            $cert->is_bind_sn('erp', 'goods_name') ? $this->assign('no_bind_erp', 0) : $this->assign('no_bind_erp', 1);
 
-            $GLOBALS['smarty']->assign('open_logistics_trace', is_open_logistics_trace());
-            $GLOBALS['smarty']->assign('merge', $merge);
-            $GLOBALS['smarty']->assign('pager', $pager);
-            $GLOBALS['smarty']->assign('orders', $orders);
-            return $GLOBALS['smarty']->display('user_transaction.view.php');
+            $this->assign('open_logistics_trace', is_open_logistics_trace());
+            $this->assign('merge', $merge);
+            $this->assign('pager', $pager);
+            $this->assign('orders', $orders);
+            return $this->display('user_transaction.view.php');
         } /* 查看订单详情 */
         elseif ($action == 'order_detail') {
             load_helper('transaction');
@@ -694,7 +694,7 @@ class User extends Init
 
             /* 是否显示添加到购物车 */
             if ($order['extension_code'] != 'group_buy' && $order['extension_code'] != 'exchange_goods') {
-                $GLOBALS['smarty']->assign('allow_to_cart', 1);
+                $this->assign('allow_to_cart', 1);
             }
 
             /* 订单商品 */
@@ -710,8 +710,8 @@ class User extends Init
                 if ($order['order_status'] == OS_UNCONFIRMED || $order['order_status'] == OS_CONFIRMED) {
                     $user = user_info($order['user_id']);
                     if ($user['user_money'] + $user['credit_line'] > 0) {
-                        $GLOBALS['smarty']->assign('allow_edit_surplus', 1);
-                        $GLOBALS['smarty']->assign('max_surplus', sprintf($GLOBALS['_LANG']['max_surplus'], $user['user_money']));
+                        $this->assign('allow_edit_surplus', 1);
+                        $this->assign('max_surplus', sprintf($GLOBALS['_LANG']['max_surplus'], $user['user_money']));
                     }
                 }
             }
@@ -728,16 +728,16 @@ class User extends Init
                         }
                     }
                 }
-                $GLOBALS['smarty']->assign('payment_list', $payment_list);
+                $this->assign('payment_list', $payment_list);
             }
 
             /* 订单 支付 配送 状态语言项 */
             $order['order_status'] = $GLOBALS['_LANG']['os'][$order['order_status']];
             $order['pay_status'] = $GLOBALS['_LANG']['ps'][$order['pay_status']];
             $order['shipping_status'] = $GLOBALS['_LANG']['ss'][$order['shipping_status']];
-            $GLOBALS['smarty']->assign('order', $order);
-            $GLOBALS['smarty']->assign('goods_list', $goods_list);
-            return $GLOBALS['smarty']->display('user_transaction.view.php');
+            $this->assign('order', $order);
+            $this->assign('goods_list', $goods_list);
+            return $this->display('user_transaction.view.php');
         } elseif ($action == 'get_yunqi_online') {
             $order_id = $_POST['order_id'];
             if (!$order_id) {
@@ -848,11 +848,11 @@ class User extends Init
         elseif ($action == 'address_list') {
             load_helper('transaction');
             load_lang('shopping_flow');
-            $GLOBALS['smarty']->assign('lang', $GLOBALS['_LANG']);
+            $this->assign('lang', $GLOBALS['_LANG']);
 
             /* 取得国家列表、商店所在国家、商店所在国家的省列表 */
-            $GLOBALS['smarty']->assign('country_list', get_regions());
-            $GLOBALS['smarty']->assign('shop_province_list', get_regions(1, $GLOBALS['_CFG']['shop_country']));
+            $this->assign('country_list', get_regions());
+            $this->assign('shop_province_list', get_regions(1, $GLOBALS['_CFG']['shop_country']));
 
             /* 获得用户所有的收货人信息 */
             $consignee_list = get_consignee_list($_SESSION['user_id']);
@@ -862,7 +862,7 @@ class User extends Init
                 $consignee_list[] = array('country' => $GLOBALS['_CFG']['shop_country'], 'email' => isset($_SESSION['email']) ? $_SESSION['email'] : '');
             }
 
-            $GLOBALS['smarty']->assign('consignee_list', $consignee_list);
+            $this->assign('consignee_list', $consignee_list);
 
             //取得国家列表，如果有收货人列表，取得省市区列表
             foreach ($consignee_list as $region_id => $consignee) {
@@ -879,26 +879,26 @@ class User extends Init
             $address_id = $GLOBALS['db']->getOne("SELECT address_id FROM " . $GLOBALS['ecs']->table('users') . " WHERE user_id='$user_id'");
 
             //赋值于模板
-            $GLOBALS['smarty']->assign('real_goods_count', 1);
-            $GLOBALS['smarty']->assign('shop_country', $GLOBALS['_CFG']['shop_country']);
-            $GLOBALS['smarty']->assign('shop_province', get_regions(1, $GLOBALS['_CFG']['shop_country']));
-            $GLOBALS['smarty']->assign('province_list', $province_list);
-            $GLOBALS['smarty']->assign('address', $address_id);
-            $GLOBALS['smarty']->assign('city_list', $city_list);
-            $GLOBALS['smarty']->assign('district_list', $district_list);
-            $GLOBALS['smarty']->assign('currency_format', $GLOBALS['_CFG']['currency_format']);
-            $GLOBALS['smarty']->assign('integral_scale', $GLOBALS['_CFG']['integral_scale']);
-            $GLOBALS['smarty']->assign('name_of_region', array($GLOBALS['_CFG']['name_of_region_1'], $GLOBALS['_CFG']['name_of_region_2'], $GLOBALS['_CFG']['name_of_region_3'], $GLOBALS['_CFG']['name_of_region_4']));
+            $this->assign('real_goods_count', 1);
+            $this->assign('shop_country', $GLOBALS['_CFG']['shop_country']);
+            $this->assign('shop_province', get_regions(1, $GLOBALS['_CFG']['shop_country']));
+            $this->assign('province_list', $province_list);
+            $this->assign('address', $address_id);
+            $this->assign('city_list', $city_list);
+            $this->assign('district_list', $district_list);
+            $this->assign('currency_format', $GLOBALS['_CFG']['currency_format']);
+            $this->assign('integral_scale', $GLOBALS['_CFG']['integral_scale']);
+            $this->assign('name_of_region', array($GLOBALS['_CFG']['name_of_region_1'], $GLOBALS['_CFG']['name_of_region_2'], $GLOBALS['_CFG']['name_of_region_3'], $GLOBALS['_CFG']['name_of_region_4']));
 
-            return $GLOBALS['smarty']->display('user_transaction.view.php');
+            return $this->display('user_transaction.view.php');
         } /* 绑定账户*/
         elseif ($action == 'account_bind') {
-            return $GLOBALS['smarty']->display('account_bind.view.php');
+            return $this->display('account_bind.view.php');
         } /* 添加/编辑收货地址的处理 */
         elseif ($action == 'act_edit_address') {
             load_helper('transaction');
             load_lang('shopping_flow');
-            $GLOBALS['smarty']->assign('lang', $GLOBALS['_LANG']);
+            $this->assign('lang', $GLOBALS['_LANG']);
 
             $address = array(
                 'user_id' => $user_id,
@@ -942,17 +942,17 @@ class User extends Init
                 " WHERE user_id='$user_id' ORDER BY add_time DESC");
 
             $pager = get_pager('user.php', array('act' => $action), $record_count, $page);
-            $GLOBALS['smarty']->assign('pager', $pager);
-            $GLOBALS['smarty']->assign('goods_list', get_collection_goods($user_id, $pager['size'], $pager['start']));
-            $GLOBALS['smarty']->assign('url', $GLOBALS['ecs']->url());
+            $this->assign('pager', $pager);
+            $this->assign('goods_list', get_collection_goods($user_id, $pager['size'], $pager['start']));
+            $this->assign('url', $GLOBALS['ecs']->url());
             $lang_list = array(
                 'UTF8' => $GLOBALS['_LANG']['charset']['utf8'],
                 'GB2312' => $GLOBALS['_LANG']['charset']['zh_cn'],
                 'BIG5' => $GLOBALS['_LANG']['charset']['zh_tw'],
             );
-            $GLOBALS['smarty']->assign('lang_list', $lang_list);
-            $GLOBALS['smarty']->assign('user_id', $user_id);
-            return $GLOBALS['smarty']->display('user_clips.view.php');
+            $this->assign('lang_list', $lang_list);
+            $this->assign('user_id', $user_id);
+            return $this->display('user_clips.view.php');
         } /* 删除收藏的商品 */
         elseif ($action == 'delete_collection') {
             load_helper('clips');
@@ -1010,10 +1010,10 @@ class User extends Init
 
             $pager = get_pager('user.php', $act, $record_count, $page, 5);
 
-            $GLOBALS['smarty']->assign('message_list', get_message_list($user_id, $_SESSION['user_name'], $pager['size'], $pager['start'], $order_id));
-            $GLOBALS['smarty']->assign('pager', $pager);
-            $GLOBALS['smarty']->assign('order_info', $order_info);
-            return $GLOBALS['smarty']->display('user_clips.view.php');
+            $this->assign('message_list', get_message_list($user_id, $_SESSION['user_name'], $pager['size'], $pager['start'], $order_id));
+            $this->assign('pager', $pager);
+            $this->assign('order_info', $order_info);
+            return $this->display('user_clips.view.php');
         } /* 显示评论列表 */
         elseif ($action == 'comment_list') {
             load_helper('clips');
@@ -1026,9 +1026,9 @@ class User extends Init
             $record_count = $GLOBALS['db']->getOne($sql);
             $pager = get_pager('user.php', array('act' => $action), $record_count, $page, 5);
 
-            $GLOBALS['smarty']->assign('comment_list', get_comment_list($user_id, $pager['size'], $pager['start']));
-            $GLOBALS['smarty']->assign('pager', $pager);
-            return $GLOBALS['smarty']->display('user_clips.view.php');
+            $this->assign('comment_list', get_comment_list($user_id, $pager['size'], $pager['start']));
+            $this->assign('pager', $pager);
+            return $this->display('user_clips.view.php');
         } /* 添加我的留言 */
         elseif ($action == 'act_add_message') {
             load_helper('clips');
@@ -1062,9 +1062,9 @@ class User extends Init
 
             $good_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
-            $GLOBALS['smarty']->assign('tags', get_user_tags($user_id));
-            $GLOBALS['smarty']->assign('tags_from', 'user');
-            return $GLOBALS['smarty']->display('user_clips.view.php');
+            $this->assign('tags', get_user_tags($user_id));
+            $this->assign('tags_from', 'user');
+            return $this->display('user_clips.view.php');
         } /* 删除标签云的处理 */
         elseif ($action == 'act_del_tag') {
             load_helper('clips');
@@ -1088,9 +1088,9 @@ class User extends Init
             $record_count = $GLOBALS['db']->getOne($sql);
             $pager = get_pager('user.php', array('act' => $action), $record_count, $page);
 
-            $GLOBALS['smarty']->assign('booking_list', get_booking_list($user_id, $pager['size'], $pager['start']));
-            $GLOBALS['smarty']->assign('pager', $pager);
-            return $GLOBALS['smarty']->display('user_clips.view.php');
+            $this->assign('booking_list', get_booking_list($user_id, $pager['size'], $pager['start']));
+            $this->assign('pager', $pager);
+            return $this->display('user_clips.view.php');
         } /* 添加缺货登记页面 */
         elseif ($action == 'add_booking') {
             load_helper('clips');
@@ -1117,10 +1117,10 @@ class User extends Init
                 }
                 $goods_attr = join(chr(13) . chr(10), $attr_list);
             }
-            $GLOBALS['smarty']->assign('goods_attr', $goods_attr);
+            $this->assign('goods_attr', $goods_attr);
 
-            $GLOBALS['smarty']->assign('info', get_goodsinfo($goods_id));
-            return $GLOBALS['smarty']->display('user_clips.view.php');
+            $this->assign('info', get_goodsinfo($goods_id));
+            return $this->display('user_clips.view.php');
         } /* 添加缺货登记的处理 */
         elseif ($action == 'act_add_booking') {
             load_helper('clips');
@@ -1180,7 +1180,7 @@ class User extends Init
             }
         } /* 会员退款申请界面 */
         elseif ($action == 'account_raply') {
-            return $GLOBALS['smarty']->display('user_transaction.view.php');
+            return $this->display('user_transaction.view.php');
         } /* 会员预付款界面 */
         elseif ($action == 'account_deposit') {
             load_helper('clips');
@@ -1188,9 +1188,9 @@ class User extends Init
             $surplus_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
             $account = get_surplus_info($surplus_id);
 
-            $GLOBALS['smarty']->assign('payment', get_online_payment_list(false));
-            $GLOBALS['smarty']->assign('order', $account);
-            return $GLOBALS['smarty']->display('user_transaction.view.php');
+            $this->assign('payment', get_online_payment_list(false));
+            $this->assign('order', $account);
+            return $this->display('user_transaction.view.php');
         } /* 会员账目明细界面 */
         elseif ($action == 'account_detail') {
             load_helper('clips');
@@ -1234,10 +1234,10 @@ class User extends Init
             }
 
             //模板赋值
-            $GLOBALS['smarty']->assign('surplus_amount', price_format($surplus_amount, false));
-            $GLOBALS['smarty']->assign('account_log', $account_log);
-            $GLOBALS['smarty']->assign('pager', $pager);
-            return $GLOBALS['smarty']->display('user_transaction.view.php');
+            $this->assign('surplus_amount', price_format($surplus_amount, false));
+            $this->assign('account_log', $account_log);
+            $this->assign('pager', $pager);
+            return $this->display('user_transaction.view.php');
         } /* 会员充值和提现申请记录 */
         elseif ($action == 'account_log') {
             load_helper('clips');
@@ -1263,10 +1263,10 @@ class User extends Init
             $account_log = get_account_log($user_id, $pager['size'], $pager['start']);
 
             //模板赋值
-            $GLOBALS['smarty']->assign('surplus_amount', price_format($surplus_amount, false));
-            $GLOBALS['smarty']->assign('account_log', $account_log);
-            $GLOBALS['smarty']->assign('pager', $pager);
-            return $GLOBALS['smarty']->display('user_transaction.view.php');
+            $this->assign('surplus_amount', price_format($surplus_amount, false));
+            $this->assign('account_log', $account_log);
+            $this->assign('pager', $pager);
+            return $this->display('user_transaction.view.php');
         } /* 对会员余额申请的处理 */
         elseif ($action == 'act_account') {
             load_helper('clips');
@@ -1361,11 +1361,11 @@ class User extends Init
                 $payment_info['pay_button'] = $pay_obj->get_code($order, $payment);
 
                 /* 模板赋值 */
-                $GLOBALS['smarty']->assign('payment', $payment_info);
-                $GLOBALS['smarty']->assign('pay_fee', price_format($payment_info['pay_fee'], false));
-                $GLOBALS['smarty']->assign('amount', price_format($amount, false));
-                $GLOBALS['smarty']->assign('order', $order);
-                return $GLOBALS['smarty']->display('user_transaction.view.php');
+                $this->assign('payment', $payment_info);
+                $this->assign('pay_fee', price_format($payment_info['pay_fee'], false));
+                $this->assign('amount', price_format($amount, false));
+                $this->assign('order', $order);
+                return $this->display('user_transaction.view.php');
             }
         } /* 删除会员余额 */
         elseif ($action == 'cancel') {
@@ -1446,20 +1446,20 @@ class User extends Init
                 $payment_info['pay_button'] = $pay_obj->get_code($order, $payment);
 
                 /* 模板赋值 */
-                $GLOBALS['smarty']->assign('payment', $payment_info);
-                $GLOBALS['smarty']->assign('order', $order);
-                $GLOBALS['smarty']->assign('pay_fee', price_format($payment_info['pay_fee'], false));
-                $GLOBALS['smarty']->assign('amount', price_format($order['surplus_amount'], false));
-                $GLOBALS['smarty']->assign('action', 'act_account');
-                return $GLOBALS['smarty']->display('user_transaction.view.php');
+                $this->assign('payment', $payment_info);
+                $this->assign('order', $order);
+                $this->assign('pay_fee', price_format($payment_info['pay_fee'], false));
+                $this->assign('amount', price_format($order['surplus_amount'], false));
+                $this->assign('action', 'act_account');
+                return $this->display('user_transaction.view.php');
             } /* 重新选择支付方式 */
             else {
                 load_helper('clips');
 
-                $GLOBALS['smarty']->assign('payment', get_online_payment_list());
-                $GLOBALS['smarty']->assign('order', $order);
-                $GLOBALS['smarty']->assign('action', 'account_deposit');
-                return $GLOBALS['smarty']->display('user_transaction.view.php');
+                $this->assign('payment', get_online_payment_list());
+                $this->assign('order', $order);
+                $this->assign('action', 'account_deposit');
+                return $this->display('user_transaction.view.php');
             }
         } /* 添加标签(ajax) */
         elseif ($action == 'add_tag') {
@@ -1819,21 +1819,21 @@ class User extends Init
             $pager = get_pager('user . php', array('act' => $action), $record_count, $page);
             $bonus = get_user_bouns_list($user_id, $pager['size'], $pager['start']);
 
-            $GLOBALS['smarty']->assign('pager', $pager);
-            $GLOBALS['smarty']->assign('bonus', $bonus);
-            return $GLOBALS['smarty']->display('user_transaction . dwt');
+            $this->assign('pager', $pager);
+            $this->assign('bonus', $bonus);
+            return $this->display('user_transaction . dwt');
         } /* 我的团购列表 */
         elseif ($action == 'group_buy') {
             load_helper('transaction');
 
             //待议
-            return $GLOBALS['smarty']->display('user_transaction . dwt');
+            return $this->display('user_transaction . dwt');
         } /* 团购订单详情 */
         elseif ($action == 'group_buy_detail') {
             load_helper('transaction');
 
             //待议
-            return $GLOBALS['smarty']->display('user_transaction . dwt');
+            return $this->display('user_transaction . dwt');
         } // 用户推荐页面
         elseif ($action == 'affiliate') {
             $goodsid = intval(isset($_REQUEST['goodsid']) ? $_REQUEST['goodsid'] : 0);
@@ -1873,7 +1873,7 @@ class User extends Init
                         $affdb[$i]['point'] = $affiliate['item'][$i - 1]['level_point'];
                         $affdb[$i]['money'] = $affiliate['item'][$i - 1]['level_money'];
                     }
-                    $GLOBALS['smarty']->assign('affdb', $affdb);
+                    $this->assign('affdb', $affdb);
 
                     $sqlcount = "SELECT count(*) FROM " . $GLOBALS['ecs']->table('order_info') . " o" .
                         " LEFT JOIN" . $GLOBALS['ecs']->table('users') . " u ON o . user_id = u . user_id" .
@@ -1980,21 +1980,21 @@ class User extends Init
                 $short_url = createShortUrl($share_url);
 
 
-                $GLOBALS['smarty']->assign('url_format', $url_format);
-                $GLOBALS['smarty']->assign('pager', $pager);
+                $this->assign('url_format', $url_format);
+                $this->assign('pager', $pager);
 
 
-                $GLOBALS['smarty']->assign('affiliate_intro', $affiliate_intro);
-                $GLOBALS['smarty']->assign('affiliate_type', $affiliate['config']['separate_by']);
+                $this->assign('affiliate_intro', $affiliate_intro);
+                $this->assign('affiliate_type', $affiliate['config']['separate_by']);
 
-                $GLOBALS['smarty']->assign('logdb', $logdb);
+                $this->assign('logdb', $logdb);
             } else {
                 //单个商品推荐
-                $GLOBALS['smarty']->assign('userid', $user_id);
-                $GLOBALS['smarty']->assign('goodsid', $goodsid);
+                $this->assign('userid', $user_id);
+                $this->assign('goodsid', $goodsid);
 
                 $types = array(1, 2, 3, 4, 5);
-                $GLOBALS['smarty']->assign('types', $types);
+                $this->assign('types', $types);
 
                 $goods = get_goods_info($goodsid);
                 $shopurl = $GLOBALS['ecs']->url();
@@ -2002,7 +2002,7 @@ class User extends Init
                 $goods['goods_thumb'] = (strpos($goods['goods_thumb'], 'http://') === false && strpos($goods['goods_thumb'], 'https://') === false) ? $shopurl . $goods['goods_thumb'] : $goods['goods_thumb'];
                 $goods['shop_price'] = price_format($goods['shop_price']);
 
-                $GLOBALS['smarty']->assign('goods', $goods);
+                $this->assign('goods', $goods);
                 //生成二维码
                 $share_url = $GLOBALS['ecs']->url() . "goods . php ? id ={
                     $goodsid}&u ={
@@ -2011,15 +2011,15 @@ class User extends Init
                 // 短链接
                 $short_url = createShortUrl($share_url);
             }
-            $GLOBALS['smarty']->assign('share_url', $_share_url);
-            $GLOBALS['smarty']->assign('short_url', $short_url);
+            $this->assign('share_url', $_share_url);
+            $this->assign('short_url', $short_url);
 
-            $GLOBALS['smarty']->assign('shopname', $GLOBALS['_CFG']['shop_name']);
-            $GLOBALS['smarty']->assign('userid', $user_id);
-            $GLOBALS['smarty']->assign('shopurl', $GLOBALS['ecs']->url());
-            $GLOBALS['smarty']->assign('logosrc', 'themes/' . $GLOBALS['_CFG']['template'] . '/images/logo.gif');
+            $this->assign('shopname', $GLOBALS['_CFG']['shop_name']);
+            $this->assign('userid', $user_id);
+            $this->assign('shopurl', $GLOBALS['ecs']->url());
+            $this->assign('logosrc', 'themes/' . $GLOBALS['_CFG']['template'] . '/images/logo.gif');
 
-            return $GLOBALS['smarty']->display('user_clips.view.php');
+            return $this->display('user_clips.view.php');
         } //首页邮件订阅ajax操做和验证操作
         elseif ($action == 'email_list') {
             $job = $_GET['job'];
@@ -2147,9 +2147,9 @@ class User extends Init
                 $record_count += 1;
             }
             $pager = get_pager('user.php', array('act' => $action), $record_count, $page);
-            $GLOBALS['smarty']->assign('pager', $pager);
-            $GLOBALS['smarty']->assign('orders', $orders);
-            return $GLOBALS['smarty']->display('user_transaction.view.php');
+            $this->assign('pager', $pager);
+            $this->assign('orders', $orders);
+            return $this->display('user_transaction.view.php');
         } elseif
         ($action == 'order_query') {
             $_GET['order_sn'] = trim(substr($_GET['order_sn'], 1));
@@ -2207,7 +2207,7 @@ class User extends Init
             if ($row['user_id'] == 0 && $row['shipping_time'] > 0) {
                 $order_query['shipping_date'] = local_date($GLOBALS['_CFG']['date_format'], $row['shipping_time']);
             }
-            $GLOBALS['smarty']->assign('order_query', $order_query);
+            $this->assign('order_query', $order_query);
             $result['content'] = $GLOBALS['smarty']->fetch('library/order_query.view.php');
             die(json_encode($result));
         } elseif
@@ -2234,14 +2234,14 @@ class User extends Init
                         $to_credits_options[$credit['appiddesc'] . '|' . $credit['creditdesc']] = $credit['title'];
                     }
                 }
-                $GLOBALS['smarty']->assign('selected_org', $rule[0]['creditsrc']);
-                $GLOBALS['smarty']->assign('selected_dst', $rule[0]['appiddesc'] . '|' . $rule[0]['creditdesc']);
-                $GLOBALS['smarty']->assign('descreditunit', $rule[0]['unit']);
-                $GLOBALS['smarty']->assign('orgcredittitle', $GLOBALS['_LANG']['exchange_points'][$rule[0]['creditsrc']]);
-                $GLOBALS['smarty']->assign('descredittitle', $rule[0]['title']);
-                $GLOBALS['smarty']->assign('descreditamount', round((1 / $rule[0]['ratio']), 2));
-                $GLOBALS['smarty']->assign('to_credits_options', $to_credits_options);
-                $GLOBALS['smarty']->assign('out_exchange_allow', $out_exchange_allow);
+                $this->assign('selected_org', $rule[0]['creditsrc']);
+                $this->assign('selected_dst', $rule[0]['appiddesc'] . '|' . $rule[0]['creditdesc']);
+                $this->assign('descreditunit', $rule[0]['unit']);
+                $this->assign('orgcredittitle', $GLOBALS['_LANG']['exchange_points'][$rule[0]['creditsrc']]);
+                $this->assign('descredittitle', $rule[0]['title']);
+                $this->assign('descreditamount', round((1 / $rule[0]['ratio']), 2));
+                $this->assign('to_credits_options', $to_credits_options);
+                $this->assign('out_exchange_allow', $out_exchange_allow);
             } else {
                 $exchange_type = 'other';
 
@@ -2280,14 +2280,14 @@ class User extends Init
                             break;
                     }
                 }
-                $GLOBALS['smarty']->assign('bbs_points', $bbs_points);
-                $GLOBALS['smarty']->assign('rule_list', $rule_list);
+                $this->assign('bbs_points', $bbs_points);
+                $this->assign('rule_list', $rule_list);
             }
-            $GLOBALS['smarty']->assign('shop_points', $row);
-            $GLOBALS['smarty']->assign('exchange_type', $exchange_type);
-            $GLOBALS['smarty']->assign('action', $action);
-            $GLOBALS['smarty']->assign('lang', $GLOBALS['_LANG']);
-            return $GLOBALS['smarty']->display('user_transaction.view.php');
+            $this->assign('shop_points', $row);
+            $this->assign('exchange_type', $exchange_type);
+            $this->assign('action', $action);
+            $this->assign('lang', $GLOBALS['_LANG']);
+            return $this->display('user_transaction.view.php');
         } elseif
         ($action == 'act_transform_points') {
             $rule_index = empty($_POST['rule_index']) ? '' : trim($_POST['rule_index']);
@@ -2437,8 +2437,8 @@ class User extends Init
                 return show_message($GLOBALS['_LANG']['invalid_order_sn'], '', 'user.php?act=order_list');
             }
             load_helper('order');
-            $GLOBALS['smarty']->assign('logistics_info', get_logistics_trace($order_sn, 0, $GLOBALS['_CFG']['lang']));
-            return $GLOBALS['smarty']->display('delivery_info.view.php');
+            $this->assign('logistics_info', get_logistics_trace($order_sn, 0, $GLOBALS['_CFG']['lang']));
+            return $this->display('delivery_info.view.php');
         } /* ajax 物流信息 */
         elseif
         ($action == 'ajax_delivery_info') {
@@ -2463,8 +2463,8 @@ class User extends Init
                 die(json_encode($result));
             }
             load_helper('order');
-            $GLOBALS['smarty']->assign('order_info', $row);
-            $GLOBALS['smarty']->assign('logistics_info', get_logistics_trace($order_sn, 2, $GLOBALS['_CFG']['lang']));
+            $this->assign('order_info', $row);
+            $this->assign('logistics_info', get_logistics_trace($order_sn, 2, $GLOBALS['_CFG']['lang']));
             $result['content'] = $GLOBALS['smarty']->fetch('library/delivery_info.view.php');
 
             die(json_encode($result));
@@ -2549,15 +2549,15 @@ class User extends Init
                     $_SESSION['change_password'] = 'true';
                     $GLOBALS['user']->set_cookie($username);
                     $GLOBALS['user']->set_session($username);
-                    $GLOBALS['smarty']->assign('action', 'reset_password_rep');
-                    $GLOBALS['smarty']->assign('uid', $user_info['user_id']);
-                    return $GLOBALS['smarty']->display('user_passport.view.php');
+                    $this->assign('action', 'reset_password_rep');
+                    $this->assign('uid', $user_info['user_id']);
+                    return $this->display('user_passport.view.php');
                 } else {
                     return show_message('短信验证码错误', '返回上一页', 'user.php?act=sms_get_password', 'info');
                 }
             } else {
                 //显示用户名和email表单
-                return $GLOBALS['smarty']->display('user_passport.view.php');
+                return $this->display('user_passport.view.php');
             }
         }
     }

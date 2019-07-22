@@ -48,10 +48,10 @@ class Shipping extends Init
                 }
             }
 
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['03_shipping_list']);
-            $GLOBALS['smarty']->assign('modules', $modules);
+            $this->assign('ur_here', $GLOBALS['_LANG']['03_shipping_list']);
+            $this->assign('modules', $modules);
             assign_query_info();
-            return $GLOBALS['smarty']->display('shipping_list.view.php');
+            return $this->display('shipping_list.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -144,10 +144,10 @@ class Shipping extends Init
                 $row['shipping_print'] = !empty($row['shipping_print']) ? $row['shipping_print'] : '';
                 $row['print_bg'] = empty($row['print_bg']) ? '' : $this->get_site_root_url() . $row['print_bg'];
             }
-            $GLOBALS['smarty']->assign('shipping', $row);
-            $GLOBALS['smarty']->assign('shipping_id', $shipping_id);
+            $this->assign('shipping', $row);
+            $this->assign('shipping_id', $shipping_id);
 
-            return $GLOBALS['smarty']->display('print_index.view.php');
+            return $this->display('print_index.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -264,19 +264,19 @@ class Shipping extends Init
                 $row['shipping_print'] = !empty($row['shipping_print']) ? $row['shipping_print'] : '';
                 $row['print_model'] = empty($row['print_model']) ? 1 : $row['print_model']; //兼容以前版本
 
-                $GLOBALS['smarty']->assign('shipping', $row);
+                $this->assign('shipping', $row);
             } else {
                 $lnk[] = array('text' => $GLOBALS['_LANG']['go_back'], 'href' => 'shipping.php?act=list');
                 return sys_msg($GLOBALS['_LANG']['no_shipping_install'], 0, $lnk);
             }
 
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['03_shipping_list'] . ' - ' . $row['shipping_name'] . ' - ' . $GLOBALS['_LANG']['shipping_print_template']);
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['03_shipping_list'], 'href' => 'shipping.php?act=list'));
-            $GLOBALS['smarty']->assign('shipping_id', $shipping_id);
+            $this->assign('ur_here', $GLOBALS['_LANG']['03_shipping_list'] . ' - ' . $row['shipping_name'] . ' - ' . $GLOBALS['_LANG']['shipping_print_template']);
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['03_shipping_list'], 'href' => 'shipping.php?act=list'));
+            $this->assign('shipping_id', $shipping_id);
 
             assign_query_info();
 
-            return $GLOBALS['smarty']->display('shipping_template.view.php');
+            return $this->display('shipping_template.view.php');
         }
 
         /*------------------------------------------------------ */

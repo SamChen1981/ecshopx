@@ -38,16 +38,16 @@ class Flashplay extends Init
             assign_query_info();
             $flash_dir = ROOT_PATH . 'data/flashdata/';
 
-            $GLOBALS['smarty']->assign('current', 'sys');
-            $GLOBALS['smarty']->assign('group_list', $group_list);
-            $GLOBALS['smarty']->assign('group_selected', $GLOBALS['_CFG']['index_ad']);
-            $GLOBALS['smarty']->assign('uri', $uri);
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['flashplay']);
-            $GLOBALS['smarty']->assign('action_link_special', array('text' => $GLOBALS['_LANG']['add_new'], 'href' => 'flashplay.php?act=add'));
-            $GLOBALS['smarty']->assign('flashtpls', $this->get_flash_templates($flash_dir));
-            $GLOBALS['smarty']->assign('current_flashtpl', $GLOBALS['_CFG']['flash_theme']);
-            $GLOBALS['smarty']->assign('playerdb', $playerdb);
-            return $GLOBALS['smarty']->display('flashplay_list.view.php');
+            $this->assign('current', 'sys');
+            $this->assign('group_list', $group_list);
+            $this->assign('group_selected', $GLOBALS['_CFG']['index_ad']);
+            $this->assign('uri', $uri);
+            $this->assign('ur_here', $GLOBALS['_LANG']['flashplay']);
+            $this->assign('action_link_special', array('text' => $GLOBALS['_LANG']['add_new'], 'href' => 'flashplay.php?act=add'));
+            $this->assign('flashtpls', $this->get_flash_templates($flash_dir));
+            $this->assign('current_flashtpl', $GLOBALS['_CFG']['flash_theme']);
+            $this->assign('playerdb', $playerdb);
+            return $this->display('flashplay_list.view.php');
         } elseif ($_REQUEST['act'] == 'del') {
             admin_priv('flash_manage');
 
@@ -85,13 +85,13 @@ class Flashplay extends Init
                 $width_height = $this->get_width_height();
                 assign_query_info();
                 if (isset($width_height['width']) || isset($width_height['height'])) {
-                    $GLOBALS['smarty']->assign('width_height', sprintf($GLOBALS['_LANG']['width_height'], $width_height['width'], $width_height['height']));
+                    $this->assign('width_height', sprintf($GLOBALS['_LANG']['width_height'], $width_height['width'], $width_height['height']));
                 }
 
-                $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['go_url'], 'href' => 'flashplay.php?act=list'));
-                $GLOBALS['smarty']->assign('rt', $rt);
-                $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['add_picad']);
-                return $GLOBALS['smarty']->display('flashplay_add.view.php');
+                $this->assign('action_link', array('text' => $GLOBALS['_LANG']['go_url'], 'href' => 'flashplay.php?act=list'));
+                $this->assign('rt', $rt);
+                $this->assign('ur_here', $GLOBALS['_LANG']['add_picad']);
+                return $this->display('flashplay_add.view.php');
             } elseif ($_POST['step'] == 2) {
                 if (!empty($_FILES['img_file_src']['name'])) {
                     if (!get_file_suffix($_FILES['img_file_src']['name'], $allow_suffix)) {
@@ -168,10 +168,10 @@ class Flashplay extends Init
                 $rt['img_sort'] = empty($rt['sort']) ? 0 : $rt['sort'];
 
                 $rt['id'] = $id;
-                $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['go_url'], 'href' => 'flashplay.php?act=list'));
-                $GLOBALS['smarty']->assign('rt', $rt);
-                $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['edit_picad']);
-                return $GLOBALS['smarty']->display('flashplay_add.view.php');
+                $this->assign('action_link', array('text' => $GLOBALS['_LANG']['go_url'], 'href' => 'flashplay.php?act=list'));
+                $this->assign('rt', $rt);
+                $this->assign('ur_here', $GLOBALS['_LANG']['edit_picad']);
+                return $this->display('flashplay_add.view.php');
             } elseif ($_POST['step'] == 2) {
                 if (empty($_POST['img_url'])) {
                     //若链接地址为空
@@ -266,29 +266,29 @@ class Flashplay extends Init
 
             /* 列表 */
             $ad_list = $this->ad_list();
-            $GLOBALS['smarty']->assign('ad_list', $ad_list['ad']);
+            $this->assign('ad_list', $ad_list['ad']);
 
             assign_query_info();
             $width_height = $this->get_width_height();
 //        if(isset($width_height['width'])|| isset($width_height['height']))
 //        {
-            $GLOBALS['smarty']->assign('width_height', sprintf($GLOBALS['_LANG']['width_height'], $width_height['width'], $width_height['height']));
+            $this->assign('width_height', sprintf($GLOBALS['_LANG']['width_height'], $width_height['width'], $width_height['height']));
 //        }
-            $GLOBALS['smarty']->assign('full_page', 1);
-            $GLOBALS['smarty']->assign('current', 'cus');
-            $GLOBALS['smarty']->assign('group_list', $group_list);
-            $GLOBALS['smarty']->assign('group_selected', $GLOBALS['_CFG']['index_ad']);
-            $GLOBALS['smarty']->assign('uri', $uri);
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['flashplay']);
-            $GLOBALS['smarty']->assign('action_link_special', array('text' => $GLOBALS['_LANG']['add_flash'], 'href' => 'flashplay.php?act=custom_add'));
+            $this->assign('full_page', 1);
+            $this->assign('current', 'cus');
+            $this->assign('group_list', $group_list);
+            $this->assign('group_selected', $GLOBALS['_CFG']['index_ad']);
+            $this->assign('uri', $uri);
+            $this->assign('ur_here', $GLOBALS['_LANG']['flashplay']);
+            $this->assign('action_link_special', array('text' => $GLOBALS['_LANG']['add_flash'], 'href' => 'flashplay.php?act=custom_add'));
 
             /* 添加 */
             $ad = array('ad_name' => '', 'ad_type' => 0, 'ad_url' => 'http://', 'htmls' => '',
                 'ad_status' => '1', 'ad_id' => '0', 'url' => 'http://');
-            $GLOBALS['smarty']->assign('ad', $ad);
-            $GLOBALS['smarty']->assign('form_act', 'custom_insert');
+            $this->assign('ad', $ad);
+            $this->assign('form_act', 'custom_insert');
 
-            return $GLOBALS['smarty']->display('flashplay_custom.view.php');
+            return $this->display('flashplay_custom.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -304,29 +304,29 @@ class Flashplay extends Init
 
             /* 列表 */
             $ad_list = $this->ad_list();
-            $GLOBALS['smarty']->assign('ad_list', $ad_list['ad']);
+            $this->assign('ad_list', $ad_list['ad']);
 
             assign_query_info();
             $width_height = $this->get_width_height();
 //        if(isset($width_height['width'])|| isset($width_height['height']))
 //        {
-            $GLOBALS['smarty']->assign('width_height', sprintf($GLOBALS['_LANG']['width_height'], $width_height['width'], $width_height['height']));
+            $this->assign('width_height', sprintf($GLOBALS['_LANG']['width_height'], $width_height['width'], $width_height['height']));
 //        }
-            $GLOBALS['smarty']->assign('full_page', 1);
-            $GLOBALS['smarty']->assign('current', 'cus');
-            $GLOBALS['smarty']->assign('group_list', $group_list);
-            $GLOBALS['smarty']->assign('group_selected', $GLOBALS['_CFG']['index_ad']);
-            $GLOBALS['smarty']->assign('uri', $uri);
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['add_ad']);
-            $GLOBALS['smarty']->assign('action_link_special', array('text' => $GLOBALS['_LANG']['add_flash'], 'href' => 'flashplay.php?act=custom_add'));
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['ad_play_url'], 'href' => 'flashplay.php?act=custom_list'));
+            $this->assign('full_page', 1);
+            $this->assign('current', 'cus');
+            $this->assign('group_list', $group_list);
+            $this->assign('group_selected', $GLOBALS['_CFG']['index_ad']);
+            $this->assign('uri', $uri);
+            $this->assign('ur_here', $GLOBALS['_LANG']['add_ad']);
+            $this->assign('action_link_special', array('text' => $GLOBALS['_LANG']['add_flash'], 'href' => 'flashplay.php?act=custom_add'));
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['ad_play_url'], 'href' => 'flashplay.php?act=custom_list'));
             /* 添加 */
             $ad = array('ad_name' => '', 'ad_type' => 0, 'ad_url' => 'http://', 'htmls' => '',
                 'ad_status' => '1', 'ad_id' => '0', 'url' => 'http://');
-            $GLOBALS['smarty']->assign('ad', $ad);
-            $GLOBALS['smarty']->assign('form_act', 'custom_insert');
+            $this->assign('ad', $ad);
+            $this->assign('form_act', 'custom_insert');
 
-            return $GLOBALS['smarty']->display('flashplay_custom_add.view.php');
+            return $this->display('flashplay_custom_add.view.php');
         }
 
 
@@ -485,18 +485,18 @@ class Flashplay extends Init
 
                 /* 列表 */
                 $ad_list = $this->ad_list();
-                $GLOBALS['smarty']->assign('ad_list', $ad_list['ad']);
-                $GLOBALS['smarty']->assign('current', 'cus');
-                $GLOBALS['smarty']->assign('group_list', $group_list);
-                $GLOBALS['smarty']->assign('group_selected', $GLOBALS['_CFG']['index_ad']);
-                $GLOBALS['smarty']->assign('uri', $uri);
-                $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['flashplay']);
-                $GLOBALS['smarty']->assign('action_link_special', array('text' => $GLOBALS['_LANG']['add_flash'], 'href' => 'flashplay.php?act=custom_add'));
+                $this->assign('ad_list', $ad_list['ad']);
+                $this->assign('current', 'cus');
+                $this->assign('group_list', $group_list);
+                $this->assign('group_selected', $GLOBALS['_CFG']['index_ad']);
+                $this->assign('uri', $uri);
+                $this->assign('ur_here', $GLOBALS['_LANG']['flashplay']);
+                $this->assign('action_link_special', array('text' => $GLOBALS['_LANG']['add_flash'], 'href' => 'flashplay.php?act=custom_add'));
                 /* 添加 */
                 $ad = array('ad_name' => '', 'ad_type' => 0, 'ad_url' => 'http://', 'htmls' => '',
                     'ad_status' => '1', 'ad_id' => '0', 'url' => 'http://');
-                $GLOBALS['smarty']->assign('ad', $ad);
-                $GLOBALS['smarty']->assign('form_act', 'custom_insert');
+                $this->assign('ad', $ad);
+                $this->assign('form_act', 'custom_insert');
 
                 $GLOBALS['smarty']->fetch('flashplay_custom.htm');
 
@@ -519,17 +519,17 @@ class Flashplay extends Init
 
             assign_query_info();
             $width_height = $this->get_width_height();
-            $GLOBALS['smarty']->assign('width_height', sprintf($GLOBALS['_LANG']['width_height'], $width_height['width'], $width_height['height']));
+            $this->assign('width_height', sprintf($GLOBALS['_LANG']['width_height'], $width_height['width'], $width_height['height']));
 
-            $GLOBALS['smarty']->assign('group_selected', $GLOBALS['_CFG']['index_ad']);
-            $GLOBALS['smarty']->assign('uri', $uri);
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['flashplay']);
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['ad_play_url'], 'href' => 'flashplay.php?act=custom_list'));
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['edit_ad']);
+            $this->assign('group_selected', $GLOBALS['_CFG']['index_ad']);
+            $this->assign('uri', $uri);
+            $this->assign('ur_here', $GLOBALS['_LANG']['flashplay']);
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['ad_play_url'], 'href' => 'flashplay.php?act=custom_list'));
+            $this->assign('ur_here', $GLOBALS['_LANG']['edit_ad']);
 
             /* 添加 */
-            $GLOBALS['smarty']->assign('ad', $ad);
-            return $GLOBALS['smarty']->display('flashplay_ccustom_edit.view.php');
+            $this->assign('ad', $ad);
+            return $this->display('flashplay_ccustom_edit.view.php');
         }
 
         /*------------------------------------------------------ */

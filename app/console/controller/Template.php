@@ -62,13 +62,13 @@ class Template extends Init
 
             assign_query_info();
 
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['template_manage']);
-            $GLOBALS['smarty']->assign('curr_tpl_style', $curr_style);
-            $GLOBALS['smarty']->assign('template_style', $templates_style);
-            $GLOBALS['smarty']->assign('curr_template', get_template_info($curr_template, $curr_style));
-            $GLOBALS['smarty']->assign('available_templates', $available_templates);
-            $GLOBALS['smarty']->assign('theme_online_url', YUNQI_SERVICE_URL . 'cid=40&source=' . iframe_source_encode('ecshop'));
-            return $GLOBALS['smarty']->display('templates_list.view.php');
+            $this->assign('ur_here', $GLOBALS['_LANG']['template_manage']);
+            $this->assign('curr_tpl_style', $curr_style);
+            $this->assign('template_style', $templates_style);
+            $this->assign('curr_template', get_template_info($curr_template, $curr_style));
+            $this->assign('available_templates', $available_templates);
+            $this->assign('theme_online_url', YUNQI_SERVICE_URL . 'cid=40&source=' . iframe_source_encode('ecshop'));
+            return $this->display('templates_list.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -182,19 +182,19 @@ class Template extends Init
             }
 
             assign_query_info();
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['03_template_setup']);
-            $GLOBALS['smarty']->assign('curr_template_file', $curr_template);
-            $GLOBALS['smarty']->assign('temp_options', $temp_options);
-            $GLOBALS['smarty']->assign('temp_regions', $temp_regions);
-            $GLOBALS['smarty']->assign('cate_goods', $cate_goods);
-            $GLOBALS['smarty']->assign('brand_goods', $brand_goods);
-            $GLOBALS['smarty']->assign('cat_articles', $cat_articles);
-            $GLOBALS['smarty']->assign('ad_positions', $ad_positions);
-            $GLOBALS['smarty']->assign('arr_cates', cat_list(0, 0, true));
-            $GLOBALS['smarty']->assign('arr_brands', get_brand_list());
-            $GLOBALS['smarty']->assign('arr_article_cats', article_cat_list(0, 0, true));
-            $GLOBALS['smarty']->assign('arr_ad_positions', get_position_list());
-            return $GLOBALS['smarty']->display('template_setup.view.php');
+            $this->assign('ur_here', $GLOBALS['_LANG']['03_template_setup']);
+            $this->assign('curr_template_file', $curr_template);
+            $this->assign('temp_options', $temp_options);
+            $this->assign('temp_regions', $temp_regions);
+            $this->assign('cate_goods', $cate_goods);
+            $this->assign('brand_goods', $brand_goods);
+            $this->assign('cat_articles', $cat_articles);
+            $this->assign('ad_positions', $ad_positions);
+            $this->assign('arr_cates', cat_list(0, 0, true));
+            $this->assign('arr_brands', get_brand_list());
+            $this->assign('arr_article_cats', article_cat_list(0, 0, true));
+            $this->assign('arr_ad_positions', get_position_list());
+            return $this->display('template_setup.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -434,11 +434,11 @@ class Template extends Init
             $lib = $this->load_library($curr_template, $curr_library);
 
             assign_query_info();
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['04_template_library']);
-            $GLOBALS['smarty']->assign('curr_library', $curr_library);
-            $GLOBALS['smarty']->assign('libraries', $arr_library);
-            $GLOBALS['smarty']->assign('library_html', $lib['html']);
-            return $GLOBALS['smarty']->display('template_library.view.php');
+            $this->assign('ur_here', $GLOBALS['_LANG']['04_template_library']);
+            $this->assign('curr_library', $curr_library);
+            $this->assign('libraries', $arr_library);
+            $this->assign('library_html', $lib['html']);
+            return $this->display('template_library.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -565,10 +565,10 @@ class Template extends Init
             }
 
             assign_query_info();
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['backup_setting']);
-            $GLOBALS['smarty']->assign('list', $remarks);
-            $GLOBALS['smarty']->assign('files', $files);
-            return $GLOBALS['smarty']->display('templates_backup.view.php');
+            $this->assign('ur_here', $GLOBALS['_LANG']['backup_setting']);
+            $this->assign('list', $remarks);
+            $this->assign('files', $files);
+            return $this->display('templates_backup.view.php');
         }
 
         if ($_REQUEST['act'] == 'act_backup_setting') {

@@ -19,13 +19,13 @@ class Shophelp extends Init
         //-- 列出所有文章分类
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list_cat') {
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['article_add'], 'href' => 'shophelp.php?act=add'));
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['cat_list']);
-            $GLOBALS['smarty']->assign('full_page', 1);
-            $GLOBALS['smarty']->assign('list', $this->get_shophelp_list());
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['article_add'], 'href' => 'shophelp.php?act=add'));
+            $this->assign('ur_here', $GLOBALS['_LANG']['cat_list']);
+            $this->assign('full_page', 1);
+            $this->assign('list', $this->get_shophelp_list());
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('shophelp_cat_list.view.php');
+            return $this->display('shophelp_cat_list.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -33,14 +33,14 @@ class Shophelp extends Init
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list_article') {
             $_REQUEST['cat_id'] = intval($_REQUEST['cat_id']);
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['article_list']);
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['article_add'], 'href' => 'shophelp.php?act=add&cat_id=' . $_REQUEST['cat_id']));
-            $GLOBALS['smarty']->assign('full_page', 1);
-            $GLOBALS['smarty']->assign('cat', article_cat_list($_REQUEST['cat_id'], true, 'cat_id', 0, "onchange=\"location.href='?act=list_article&cat_id='+this.value\""));
-            $GLOBALS['smarty']->assign('list', $this->shophelp_article_list($_REQUEST['cat_id']));
+            $this->assign('ur_here', $GLOBALS['_LANG']['article_list']);
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['article_add'], 'href' => 'shophelp.php?act=add&cat_id=' . $_REQUEST['cat_id']));
+            $this->assign('full_page', 1);
+            $this->assign('cat', article_cat_list($_REQUEST['cat_id'], true, 'cat_id', 0, "onchange=\"location.href='?act=list_article&cat_id='+this.value\""));
+            $this->assign('list', $this->shophelp_article_list($_REQUEST['cat_id']));
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('shophelp_article_list.view.php');
+            return $this->display('shophelp_article_list.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -49,7 +49,7 @@ class Shophelp extends Init
         elseif ($_REQUEST['act'] == 'query_art') {
             $cat_id = intval($_GET['cat']);
 
-            $GLOBALS['smarty']->assign('list', $this->shophelp_article_list($cat_id));
+            $this->assign('list', $this->shophelp_article_list($cat_id));
             return make_json_result($GLOBALS['smarty']->fetch('shophelp_article_list.htm'));
         }
 
@@ -57,7 +57,7 @@ class Shophelp extends Init
         //-- 查询
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'query') {
-            $GLOBALS['smarty']->assign('list', $this->get_shophelp_list());
+            $this->assign('list', $this->get_shophelp_list());
 
             return make_json_result($GLOBALS['smarty']->fetch('shophelp_cat_list.htm'));
         }
@@ -81,11 +81,11 @@ class Shophelp extends Init
             }
             $cat_list = article_cat_list($selected, true, 'cat_id', 0);
             $cat_list = str_replace('select please', $GLOBALS['_LANG']['select_plz'], $cat_list);
-            $GLOBALS['smarty']->assign('cat_list', $cat_list);
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['article_add']);
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['cat_list'], 'href' => 'shophelp.php?act=list_cat'));
-            $GLOBALS['smarty']->assign('form_action', 'insert');
-            return $GLOBALS['smarty']->display('shophelp_info.view.php');
+            $this->assign('cat_list', $cat_list);
+            $this->assign('ur_here', $GLOBALS['_LANG']['article_add']);
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['cat_list'], 'href' => 'shophelp.php?act=list_cat'));
+            $this->assign('form_action', 'insert');
+            return $this->display('shophelp_info.view.php');
         }
         if ($_REQUEST['act'] == 'insert') {
             /* 权限判断 */
@@ -128,14 +128,14 @@ class Shophelp extends Init
             /* 创建 html editor */
             create_html_editor('FCKeditor1', $article['content']);
 
-            $GLOBALS['smarty']->assign('cat_list', article_cat_list($article['cat_id'], true, 'cat_id', 0));
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['article_add']);
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['article_list'], 'href' => 'shophelp.php?act=list_article&cat_id=' . $article['cat_id']));
-            $GLOBALS['smarty']->assign('article', $article);
-            $GLOBALS['smarty']->assign('form_action', 'update');
+            $this->assign('cat_list', article_cat_list($article['cat_id'], true, 'cat_id', 0));
+            $this->assign('ur_here', $GLOBALS['_LANG']['article_add']);
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['article_list'], 'href' => 'shophelp.php?act=list_article&cat_id=' . $article['cat_id']));
+            $this->assign('article', $article);
+            $this->assign('form_action', 'update');
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('shophelp_info.view.php');
+            return $this->display('shophelp_info.view.php');
         }
         if ($_REQUEST['act'] == 'update') {
             /* 权限判断 */

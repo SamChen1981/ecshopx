@@ -62,26 +62,26 @@ class Search extends Init
         if ($_REQUEST['act'] == 'advanced_search') {
             $goods_type = !empty($_REQUEST['goods_type']) ? intval($_REQUEST['goods_type']) : 0;
             $attributes = $this->get_seachable_attributes($goods_type);
-            $GLOBALS['smarty']->assign('goods_type_selected', $goods_type);
-            $GLOBALS['smarty']->assign('goods_type_list', $attributes['cate']);
-            $GLOBALS['smarty']->assign('goods_attributes', $attributes['attr']);
+            $this->assign('goods_type_selected', $goods_type);
+            $this->assign('goods_type_list', $attributes['cate']);
+            $this->assign('goods_attributes', $attributes['attr']);
 
             assign_template();
             assign_dynamic('search');
             $position = assign_ur_here(0, $GLOBALS['_LANG']['advanced_search']);
-            $GLOBALS['smarty']->assign('page_title', $position['title']);    // 页面标题
-            $GLOBALS['smarty']->assign('ur_here', $position['ur_here']);  // 当前位置
+            $this->assign('page_title', $position['title']);    // 页面标题
+            $this->assign('ur_here', $position['ur_here']);  // 当前位置
 
-            $GLOBALS['smarty']->assign('categories', get_categories_tree()); // 分类树
-            $GLOBALS['smarty']->assign('helps', get_shop_help());       // 网店帮助
-            $GLOBALS['smarty']->assign('top_goods', get_top10());           // 销售排行
-            $GLOBALS['smarty']->assign('promotion_info', get_promotion_info());
-            $GLOBALS['smarty']->assign('cat_list', cat_list(0, 0, true, 2, false));
-            $GLOBALS['smarty']->assign('brand_list', get_brand_list());
-            $GLOBALS['smarty']->assign('action', 'form');
-            $GLOBALS['smarty']->assign('use_storage', $GLOBALS['_CFG']['use_storage']);
+            $this->assign('categories', get_categories_tree()); // 分类树
+            $this->assign('helps', get_shop_help());       // 网店帮助
+            $this->assign('top_goods', get_top10());           // 销售排行
+            $this->assign('promotion_info', get_promotion_info());
+            $this->assign('cat_list', cat_list(0, 0, true, 2, false));
+            $this->assign('brand_list', get_brand_list());
+            $this->assign('action', 'form');
+            $this->assign('use_storage', $GLOBALS['_CFG']['use_storage']);
 
-            return $GLOBALS['smarty']->display('search.view.php');
+            return $this->display('search.view.php');
 
 
         }
@@ -121,16 +121,16 @@ class Search extends Init
                     }
                 }
                 if ($_REQUEST['sc_ds']) {
-                    $GLOBALS['smarty']->assign('scck', 'checked');
+                    $this->assign('scck', 'checked');
                 }
-                $GLOBALS['smarty']->assign('adv_val', $adv_value);
-                $GLOBALS['smarty']->assign('goods_type_list', $attributes['cate']);
-                $GLOBALS['smarty']->assign('goods_attributes', $attributes['attr']);
-                $GLOBALS['smarty']->assign('goods_type_selected', $_REQUEST['goods_type']);
-                $GLOBALS['smarty']->assign('cat_list', cat_list(0, $adv_value['category'], true, 2, false));
-                $GLOBALS['smarty']->assign('brand_list', get_brand_list());
-                $GLOBALS['smarty']->assign('action', 'form');
-                $GLOBALS['smarty']->assign('use_storage', $GLOBALS['_CFG']['use_storage']);
+                $this->assign('adv_val', $adv_value);
+                $this->assign('goods_type_list', $attributes['cate']);
+                $this->assign('goods_attributes', $attributes['attr']);
+                $this->assign('goods_type_selected', $_REQUEST['goods_type']);
+                $this->assign('cat_list', cat_list(0, $adv_value['category'], true, 2, false));
+                $this->assign('brand_list', get_brand_list());
+                $this->assign('action', 'form');
+                $this->assign('use_storage', $GLOBALS['_CFG']['use_storage']);
 
                 $action = 'form';
             }
@@ -375,14 +375,14 @@ class Search extends Init
                     $arr[] = array();
                 }
             }
-            $GLOBALS['smarty']->assign('goods_list', $arr);
-            $GLOBALS['smarty']->assign('category', $category);
-            $GLOBALS['smarty']->assign('keywords', htmlspecialchars(stripslashes($_REQUEST['keywords'])));
-            $GLOBALS['smarty']->assign('search_keywords', stripslashes(htmlspecialchars_decode($_REQUEST['keywords'])));
-            $GLOBALS['smarty']->assign('brand', $_REQUEST['brand']);
-            $GLOBALS['smarty']->assign('min_price', $min_price);
-            $GLOBALS['smarty']->assign('max_price', $max_price);
-            $GLOBALS['smarty']->assign('outstock', $_REQUEST['outstock']);
+            $this->assign('goods_list', $arr);
+            $this->assign('category', $category);
+            $this->assign('keywords', htmlspecialchars(stripslashes($_REQUEST['keywords'])));
+            $this->assign('search_keywords', stripslashes(htmlspecialchars_decode($_REQUEST['keywords'])));
+            $this->assign('brand', $_REQUEST['brand']);
+            $this->assign('min_price', $min_price);
+            $this->assign('max_price', $max_price);
+            $this->assign('outstock', $_REQUEST['outstock']);
 
             /* 分页 */
             $url_format = "search.php?category=$category&amp;keywords=" . urlencode(stripslashes($_REQUEST['keywords'])) . "&amp;brand=" . $_REQUEST['brand'] . "&amp;action=" . $action . "&amp;goods_type=" . $_REQUEST['goods_type'] . "&amp;sc_ds=" . $_REQUEST['sc_ds'];
@@ -415,21 +415,21 @@ class Search extends Init
             $pager = get_pager('search.php', $pager['search'], $count, $page, $size);
             $pager['display'] = $display;
 
-            $GLOBALS['smarty']->assign('url_format', $url_format);
-            $GLOBALS['smarty']->assign('pager', $pager);
+            $this->assign('url_format', $url_format);
+            $this->assign('pager', $pager);
 
             assign_template();
             assign_dynamic('search');
             $position = assign_ur_here(0, $ur_here . ($_REQUEST['keywords'] ? '_' . $_REQUEST['keywords'] : ''));
-            $GLOBALS['smarty']->assign('page_title', $position['title']);    // 页面标题
-            $GLOBALS['smarty']->assign('ur_here', $position['ur_here']);  // 当前位置
-            $GLOBALS['smarty']->assign('intromode', $intromode);
-            $GLOBALS['smarty']->assign('categories', get_categories_tree()); // 分类树
-            $GLOBALS['smarty']->assign('helps', get_shop_help());      // 网店帮助
-            $GLOBALS['smarty']->assign('top_goods', get_top10());           // 销售排行
-            $GLOBALS['smarty']->assign('promotion_info', get_promotion_info());
+            $this->assign('page_title', $position['title']);    // 页面标题
+            $this->assign('ur_here', $position['ur_here']);  // 当前位置
+            $this->assign('intromode', $intromode);
+            $this->assign('categories', get_categories_tree()); // 分类树
+            $this->assign('helps', get_shop_help());      // 网店帮助
+            $this->assign('top_goods', get_top10());           // 销售排行
+            $this->assign('promotion_info', get_promotion_info());
 
-            return $GLOBALS['smarty']->display('search.view.php');
+            return $this->display('search.view.php');
         }
     }
 

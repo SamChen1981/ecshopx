@@ -24,24 +24,24 @@ class Article extends Init
         if ($_REQUEST['act'] == 'list') {
             /* 取得过滤条件 */
             $filter = array();
-            $GLOBALS['smarty']->assign('cat_select', article_cat_list(0));
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['03_article_list']);
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['article_add'], 'href' => 'article.php?act=add'));
-            $GLOBALS['smarty']->assign('full_page', 1);
-            $GLOBALS['smarty']->assign('filter', $filter);
+            $this->assign('cat_select', article_cat_list(0));
+            $this->assign('ur_here', $GLOBALS['_LANG']['03_article_list']);
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['article_add'], 'href' => 'article.php?act=add'));
+            $this->assign('full_page', 1);
+            $this->assign('filter', $filter);
 
             $article_list = $this->get_articleslist();
 
-            $GLOBALS['smarty']->assign('article_list', $article_list['arr']);
-            $GLOBALS['smarty']->assign('filter', $article_list['filter']);
-            $GLOBALS['smarty']->assign('record_count', $article_list['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $article_list['page_count']);
+            $this->assign('article_list', $article_list['arr']);
+            $this->assign('filter', $article_list['filter']);
+            $this->assign('record_count', $article_list['record_count']);
+            $this->assign('page_count', $article_list['page_count']);
 
             $sort_flag = sort_flag($article_list['filter']);
-            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
+            $this->assign($sort_flag['tag'], $sort_flag['img']);
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('article_list.view.php');
+            return $this->display('article_list.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -52,13 +52,13 @@ class Article extends Init
 
             $article_list = $this->get_articleslist();
 
-            $GLOBALS['smarty']->assign('article_list', $article_list['arr']);
-            $GLOBALS['smarty']->assign('filter', $article_list['filter']);
-            $GLOBALS['smarty']->assign('record_count', $article_list['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $article_list['page_count']);
+            $this->assign('article_list', $article_list['arr']);
+            $this->assign('filter', $article_list['filter']);
+            $this->assign('record_count', $article_list['record_count']);
+            $this->assign('page_count', $article_list['page_count']);
 
             $sort_flag = sort_flag($article_list['filter']);
-            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
+            $this->assign($sort_flag['tag'], $sort_flag['img']);
 
             return make_json_result(
                 $GLOBALS['smarty']->fetch('article_list.htm'),
@@ -82,24 +82,24 @@ class Article extends Init
             $article['is_open'] = 1;
 
             /* 取得分类、品牌 */
-            $GLOBALS['smarty']->assign('goods_cat_list', cat_list());
-            $GLOBALS['smarty']->assign('brand_list', get_brand_list());
+            $this->assign('goods_cat_list', cat_list());
+            $this->assign('brand_list', get_brand_list());
 
             /* 清理关联商品 */
             $sql = "DELETE FROM " . $GLOBALS['ecs']->table('goods_article') . " WHERE article_id = 0";
             $GLOBALS['db']->query($sql);
 
             if (isset($_GET['id'])) {
-                $GLOBALS['smarty']->assign('cur_id', $_GET['id']);
+                $this->assign('cur_id', $_GET['id']);
             }
-            $GLOBALS['smarty']->assign('article', $article);
-            $GLOBALS['smarty']->assign('cat_select', article_cat_list(0));
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['article_add']);
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['03_article_list'], 'href' => 'article.php?act=list'));
-            $GLOBALS['smarty']->assign('form_action', 'insert');
+            $this->assign('article', $article);
+            $this->assign('cat_select', article_cat_list(0));
+            $this->assign('ur_here', $GLOBALS['_LANG']['article_add']);
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['03_article_list'], 'href' => 'article.php?act=list'));
+            $this->assign('form_action', 'insert');
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('article_info.view.php');
+            return $this->display('article_info.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -187,21 +187,21 @@ class Article extends Init
             create_html_editor('FCKeditor1', $article['content']);
 
             /* 取得分类、品牌 */
-            $GLOBALS['smarty']->assign('goods_cat_list', cat_list());
-            $GLOBALS['smarty']->assign('brand_list', get_brand_list());
+            $this->assign('goods_cat_list', cat_list());
+            $this->assign('brand_list', get_brand_list());
 
             /* 取得关联商品 */
             $goods_list = $this->get_article_goods($_REQUEST['id']);
-            $GLOBALS['smarty']->assign('goods_list', $goods_list);
+            $this->assign('goods_list', $goods_list);
 
-            $GLOBALS['smarty']->assign('article', $article);
-            $GLOBALS['smarty']->assign('cat_select', article_cat_list(0, $article['cat_id']));
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['article_edit']);
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['03_article_list'], 'href' => 'article.php?act=list&' . list_link_postfix()));
-            $GLOBALS['smarty']->assign('form_action', 'update');
+            $this->assign('article', $article);
+            $this->assign('cat_select', article_cat_list(0, $article['cat_id']));
+            $this->assign('ur_here', $GLOBALS['_LANG']['article_edit']);
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['03_article_list'], 'href' => 'article.php?act=list&' . list_link_postfix()));
+            $this->assign('form_action', 'update');
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('article_info.view.php');
+            return $this->display('article_info.view.php');
         }
 
         if ($_REQUEST['act'] == 'update') {

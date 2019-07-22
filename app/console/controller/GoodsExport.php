@@ -10,10 +10,10 @@ class GoodsExport extends Init
             /* 检查权限 */
             admin_priv('goods_export');
 
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['14_goods_export']);
-            $GLOBALS['smarty']->assign('cat_list', cat_list());
-            $GLOBALS['smarty']->assign('brand_list', get_brand_list());
-            $GLOBALS['smarty']->assign('goods_type_list', goods_type_list(0));
+            $this->assign('ur_here', $GLOBALS['_LANG']['14_goods_export']);
+            $this->assign('cat_list', cat_list());
+            $this->assign('brand_list', get_brand_list());
+            $this->assign('goods_type_list', goods_type_list(0));
             $goods_fields = $this->my_array_merge($GLOBALS['_LANG']['custom'], $this->get_attributes());
             $data_format_array = array(
                 'ecshop' => $GLOBALS['_LANG']['export_ecshop'],
@@ -24,10 +24,10 @@ class GoodsExport extends Init
                 'paipai4' => $GLOBALS['_LANG']['export_paipai4'],
                 'custom' => $GLOBALS['_LANG']['export_custom'],
             );
-            $GLOBALS['smarty']->assign('data_format', $data_format_array);
-            $GLOBALS['smarty']->assign('goods_fields', $goods_fields);
+            $this->assign('data_format', $data_format_array);
+            $this->assign('goods_fields', $goods_fields);
             assign_query_info();
-            return $GLOBALS['smarty']->display('goods_export.view.php');
+            return $this->display('goods_export.view.php');
         } elseif ($_REQUEST['act'] == 'act_export_taobao') {
             /* 检查权限 */
             admin_priv('goods_export');
@@ -169,7 +169,7 @@ class GoodsExport extends Init
             die($zip->file());
         } /* 从淘宝导入数据 */
         elseif ($_REQUEST['act'] == 'import_taobao') {
-            return $GLOBALS['smarty']->display('import_taobao.view.php');
+            return $this->display('import_taobao.view.php');
         } elseif ($_REQUEST['act'] == 'act_export_ecshop') {
             /* 检查权限 */
             admin_priv('goods_export');
@@ -474,7 +474,7 @@ class GoodsExport extends Init
             die($zip->file());
         } /* 从拍拍网导入数据 */
         elseif ($_REQUEST['act'] == 'import_paipai') {
-            return $GLOBALS['smarty']->display('import_paipai.view.php');
+            return $this->display('import_paipai.view.php');
         } /* 处理Ajax调用 */
         elseif ($_REQUEST['act'] == 'get_goods_fields') {
             $cat_id = isset($_REQUEST['cat_id']) ? intval($_REQUEST['cat_id']) : 0;

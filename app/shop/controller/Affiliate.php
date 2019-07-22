@@ -48,12 +48,12 @@ class Affiliate extends Init
                 $goods['shop_price'] = ecs_iconv('UTF8', $charset, $goods['shop_price']);
             }*/
 
-            $GLOBALS['smarty']->assign('goods', $goods);
-            $GLOBALS['smarty']->assign('userid', $userid);
-            $GLOBALS['smarty']->assign('type', $type);
+            $this->assign('goods', $goods);
+            $this->assign('userid', $userid);
+            $this->assign('type', $type);
 
-            $GLOBALS['smarty']->assign('url', $GLOBALS['ecs']->url());
-            $GLOBALS['smarty']->assign('goods_url', $goods_url);
+            $this->assign('url', $GLOBALS['ecs']->url());
+            $this->assign('goods_url', $goods_url);
         }
         $output = $GLOBALS['smarty']->fetch($tpl, $cache_id);
         $output = str_replace("\r", '', $output);

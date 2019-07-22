@@ -30,15 +30,15 @@ class Package extends Init
             $end_time = local_date('Y-m-d H:i', strtotime('+1 month'));
             $package = array('package_price' => '', 'start_time' => $start_time, 'end_time' => $end_time);
 
-            $GLOBALS['smarty']->assign('package', $package);
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['package_add']);
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['14_package_list'], 'href' => 'package.php?act=list'));
-            $GLOBALS['smarty']->assign('cat_list', cat_list());
-            $GLOBALS['smarty']->assign('brand_list', get_brand_list());
-            $GLOBALS['smarty']->assign('form_action', 'insert');
+            $this->assign('package', $package);
+            $this->assign('ur_here', $GLOBALS['_LANG']['package_add']);
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['14_package_list'], 'href' => 'package.php?act=list'));
+            $this->assign('cat_list', cat_list());
+            $this->assign('brand_list', get_brand_list());
+            $this->assign('form_action', 'insert');
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('package_info.view.php');
+            return $this->display('package_info.view.php');
         } elseif ($_REQUEST['act'] == 'insert') {
             /* 权限判断 */
             admin_priv('package_manage');
@@ -90,16 +90,16 @@ class Package extends Init
             $package = get_package_info($_REQUEST['id']);
             $package_goods_list = get_package_goods($_REQUEST['id']); // 礼包商品
 
-            $GLOBALS['smarty']->assign('package', $package);
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['package_edit']);
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['14_package_list'], 'href' => 'package.php?act=list&' . list_link_postfix()));
-            $GLOBALS['smarty']->assign('cat_list', cat_list());
-            $GLOBALS['smarty']->assign('brand_list', get_brand_list());
-            $GLOBALS['smarty']->assign('form_action', 'update');
-            $GLOBALS['smarty']->assign('package_goods_list', $package_goods_list);
+            $this->assign('package', $package);
+            $this->assign('ur_here', $GLOBALS['_LANG']['package_edit']);
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['14_package_list'], 'href' => 'package.php?act=list&' . list_link_postfix()));
+            $this->assign('cat_list', cat_list());
+            $this->assign('brand_list', get_brand_list());
+            $this->assign('form_action', 'update');
+            $this->assign('package_goods_list', $package_goods_list);
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('package_info.view.php');
+            return $this->display('package_info.view.php');
         } elseif ($_REQUEST['act'] == 'update') {
             /* 权限判断 */
             admin_priv('package_manage');
@@ -159,22 +159,22 @@ class Package extends Init
         //-- 活动列表
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'list') {
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['14_package_list']);
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['package_add'], 'href' => 'package.php?act=add'));
+            $this->assign('ur_here', $GLOBALS['_LANG']['14_package_list']);
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['package_add'], 'href' => 'package.php?act=add'));
 
             $packages = $this->get_packagelist();
 
-            $GLOBALS['smarty']->assign('package_list', $packages['packages']);
-            $GLOBALS['smarty']->assign('filter', $packages['filter']);
-            $GLOBALS['smarty']->assign('record_count', $packages['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $packages['page_count']);
+            $this->assign('package_list', $packages['packages']);
+            $this->assign('filter', $packages['filter']);
+            $this->assign('record_count', $packages['record_count']);
+            $this->assign('page_count', $packages['page_count']);
 
             $sort_flag = sort_flag($packages['filter']);
-            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
+            $this->assign($sort_flag['tag'], $sort_flag['img']);
 
-            $GLOBALS['smarty']->assign('full_page', 1);
+            $this->assign('full_page', 1);
             assign_query_info();
-            return $GLOBALS['smarty']->display('package_list.view.php');
+            return $this->display('package_list.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -184,13 +184,13 @@ class Package extends Init
         elseif ($_REQUEST['act'] == 'query') {
             $packages = $this->get_packagelist();
 
-            $GLOBALS['smarty']->assign('package_list', $packages['packages']);
-            $GLOBALS['smarty']->assign('filter', $packages['filter']);
-            $GLOBALS['smarty']->assign('record_count', $packages['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $packages['page_count']);
+            $this->assign('package_list', $packages['packages']);
+            $this->assign('filter', $packages['filter']);
+            $this->assign('record_count', $packages['record_count']);
+            $this->assign('page_count', $packages['page_count']);
 
             $sort_flag = sort_flag($packages['filter']);
-            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
+            $this->assign($sort_flag['tag'], $sort_flag['img']);
 
             return make_json_result(
                 $GLOBALS['smarty']->fetch('package_list.htm'),

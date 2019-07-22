@@ -99,34 +99,34 @@ class GuestStats extends Init
             }
 
             /* 赋值到模板 */
-            $GLOBALS['smarty']->assign('user_num', $user_num);                    // 会员总数
-            $GLOBALS['smarty']->assign('have_order_usernum', $have_order_usernum);          // 有过订单的会员数
-            $GLOBALS['smarty']->assign('user_order_turnover', $user_all_order['order_num']); // 会员总订单数
-            $GLOBALS['smarty']->assign('user_all_turnover', price_format($user_all_order['turnover']));  //会员购物总额
-            $GLOBALS['smarty']->assign('guest_all_turnover', price_format($guest_all_order['turnover'])); //匿名会员购物总额
-            $GLOBALS['smarty']->assign('guest_order_num', $guest_all_order['order_num']);              //匿名会员订单总数
+            $this->assign('user_num', $user_num);                    // 会员总数
+            $this->assign('have_order_usernum', $have_order_usernum);          // 有过订单的会员数
+            $this->assign('user_order_turnover', $user_all_order['order_num']); // 会员总订单数
+            $this->assign('user_all_turnover', price_format($user_all_order['turnover']));  //会员购物总额
+            $this->assign('guest_all_turnover', price_format($guest_all_order['turnover'])); //匿名会员购物总额
+            $this->assign('guest_order_num', $guest_all_order['order_num']);              //匿名会员订单总数
 
             /* 每会员订单数 */
-            $GLOBALS['smarty']->assign('ave_user_ordernum', $user_num > 0 ? sprintf("%0.2f", $user_all_order['order_num'] / $user_num) : 0);
+            $this->assign('ave_user_ordernum', $user_num > 0 ? sprintf("%0.2f", $user_all_order['order_num'] / $user_num) : 0);
 
             /* 每会员购物额 */
-            $GLOBALS['smarty']->assign('ave_user_turnover', $user_num > 0 ? price_format($user_all_order['turnover'] / $user_num) : 0);
+            $this->assign('ave_user_turnover', $user_num > 0 ? price_format($user_all_order['turnover'] / $user_num) : 0);
 
             /* 注册会员购买率 */
-            $GLOBALS['smarty']->assign('user_ratio', sprintf("%0.2f", ($user_num > 0 ? $have_order_usernum / $user_num : 0) * 100));
+            $this->assign('user_ratio', sprintf("%0.2f", ($user_num > 0 ? $have_order_usernum / $user_num : 0) * 100));
 
             /* 匿名会员平均订单额 */
-            $GLOBALS['smarty']->assign('guest_order_amount', $guest_all_order['order_num'] > 0 ? price_format($guest_all_order['turnover'] / $guest_all_order['order_num']) : 0);
+            $this->assign('guest_order_amount', $guest_all_order['order_num'] > 0 ? price_format($guest_all_order['turnover'] / $guest_all_order['order_num']) : 0);
 
-            $GLOBALS['smarty']->assign('all_order', $user_all_order);    //所有订单总数以及所有购物总额
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['report_guest']);
-            $GLOBALS['smarty']->assign('lang', $GLOBALS['_LANG']);
+            $this->assign('all_order', $user_all_order);    //所有订单总数以及所有购物总额
+            $this->assign('ur_here', $GLOBALS['_LANG']['report_guest']);
+            $this->assign('lang', $GLOBALS['_LANG']);
 
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['down_guest_stats'],
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['down_guest_stats'],
                 'href' => 'guest_stats.php?flag=download'));
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('guest_stats.view.php');
+            return $this->display('guest_stats.view.php');
         }
     }
 }

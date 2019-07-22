@@ -18,18 +18,18 @@ class Card extends Init
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == 'list') {
             assign_query_info();
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['07_card_list']);
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['card_add'], 'href' => 'card.php?act=add'));
-            $GLOBALS['smarty']->assign('full_page', 1);
+            $this->assign('ur_here', $GLOBALS['_LANG']['07_card_list']);
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['card_add'], 'href' => 'card.php?act=add'));
+            $this->assign('full_page', 1);
 
             $cards_list = $this->cards_list();
 
-            $GLOBALS['smarty']->assign('card_list', $cards_list['card_list']);
-            $GLOBALS['smarty']->assign('filter', $cards_list['filter']);
-            $GLOBALS['smarty']->assign('record_count', $cards_list['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $cards_list['page_count']);
+            $this->assign('card_list', $cards_list['card_list']);
+            $this->assign('filter', $cards_list['filter']);
+            $this->assign('record_count', $cards_list['record_count']);
+            $this->assign('page_count', $cards_list['page_count']);
 
-            return $GLOBALS['smarty']->display('card_list.view.php');
+            return $this->display('card_list.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -37,13 +37,13 @@ class Card extends Init
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'query') {
             $cards_list = $this->cards_list();
-            $GLOBALS['smarty']->assign('card_list', $cards_list['card_list']);
-            $GLOBALS['smarty']->assign('filter', $cards_list['filter']);
-            $GLOBALS['smarty']->assign('record_count', $cards_list['record_count']);
-            $GLOBALS['smarty']->assign('page_count', $cards_list['page_count']);
+            $this->assign('card_list', $cards_list['card_list']);
+            $this->assign('filter', $cards_list['filter']);
+            $this->assign('record_count', $cards_list['record_count']);
+            $this->assign('page_count', $cards_list['page_count']);
 
             $sort_flag = sort_flag($cards_list['filter']);
-            $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
+            $this->assign($sort_flag['tag'], $sort_flag['img']);
 
             return make_json_result($GLOBALS['smarty']->fetch('card_list.htm'), '', array('filter' => $cards_list['filter'], 'page_count' => $cards_list['page_count']));
         }
@@ -86,13 +86,13 @@ class Card extends Init
             $card['card_fee'] = 0;
             $card['free_money'] = 0;
 
-            $GLOBALS['smarty']->assign('card', $card);
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['card_add']);
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['07_card_list'], 'href' => 'card.php?act=list'));
-            $GLOBALS['smarty']->assign('form_action', 'insert');
+            $this->assign('card', $card);
+            $this->assign('ur_here', $GLOBALS['_LANG']['card_add']);
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['07_card_list'], 'href' => 'card.php?act=list'));
+            $this->assign('form_action', 'insert');
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('card_info.view.php');
+            return $this->display('card_info.view.php');
         } elseif ($_REQUEST['act'] == 'insert') {
             /* 权限判断 */
             admin_priv('card_manage');
@@ -134,13 +134,13 @@ class Card extends Init
             $sql = "SELECT card_id, card_name, card_fee, free_money, card_desc, card_img FROM " . $GLOBALS['ecs']->table('card') . " WHERE card_id='$_REQUEST[id]'";
             $card = $GLOBALS['db']->GetRow($sql);
 
-            $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['card_edit']);
-            $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['07_card_list'], 'href' => 'card.php?act=list&' . list_link_postfix()));
-            $GLOBALS['smarty']->assign('card', $card);
-            $GLOBALS['smarty']->assign('form_action', 'update');
+            $this->assign('ur_here', $GLOBALS['_LANG']['card_edit']);
+            $this->assign('action_link', array('text' => $GLOBALS['_LANG']['07_card_list'], 'href' => 'card.php?act=list&' . list_link_postfix()));
+            $this->assign('card', $card);
+            $this->assign('form_action', 'update');
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('card_info.view.php');
+            return $this->display('card_info.view.php');
         } elseif ($_REQUEST['act'] == 'update') {
             /* 权限判断 */
             admin_priv('card_manage');

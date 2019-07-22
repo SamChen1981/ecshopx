@@ -47,30 +47,30 @@ class GroupBuy extends Init
                 if ($count > 0) {
                     /* 取得当前页的团购活动 */
                     $gb_list = $this->group_buy_list($size, $page);
-                    $GLOBALS['smarty']->assign('gb_list', $gb_list);
+                    $this->assign('gb_list', $gb_list);
 
                     /* 设置分页链接 */
                     $pager = get_pager('group_buy.php', array('act' => 'list'), $count, $page, $size);
-                    $GLOBALS['smarty']->assign('pager', $pager);
+                    $this->assign('pager', $pager);
                 }
 
                 /* 模板赋值 */
-                $GLOBALS['smarty']->assign('cfg', $GLOBALS['_CFG']);
+                $this->assign('cfg', $GLOBALS['_CFG']);
                 assign_template();
                 $position = assign_ur_here();
-                $GLOBALS['smarty']->assign('page_title', $position['title']);    // 页面标题
-                $GLOBALS['smarty']->assign('ur_here', $position['ur_here']);  // 当前位置
-                $GLOBALS['smarty']->assign('categories', get_categories_tree()); // 分类树
-                $GLOBALS['smarty']->assign('helps', get_shop_help());       // 网店帮助
-                $GLOBALS['smarty']->assign('top_goods', get_top10());           // 销售排行
-                $GLOBALS['smarty']->assign('promotion_info', get_promotion_info());
-                $GLOBALS['smarty']->assign('feed_url', ($GLOBALS['_CFG']['rewrite'] == 1) ? "feed-typegroup_buy.xml" : 'feed.php?type=group_buy'); // RSS URL
+                $this->assign('page_title', $position['title']);    // 页面标题
+                $this->assign('ur_here', $position['ur_here']);  // 当前位置
+                $this->assign('categories', get_categories_tree()); // 分类树
+                $this->assign('helps', get_shop_help());       // 网店帮助
+                $this->assign('top_goods', get_top10());           // 销售排行
+                $this->assign('promotion_info', get_promotion_info());
+                $this->assign('feed_url', ($GLOBALS['_CFG']['rewrite'] == 1) ? "feed-typegroup_buy.xml" : 'feed.php?type=group_buy'); // RSS URL
 
                 assign_dynamic('group_buy_list');
             }
 
             /* 显示模板 */
-            return $GLOBALS['smarty']->display('group_buy_list.view.php', $cache_id);
+            return $this->display('group_buy_list.view.php', $cache_id);
         }
 
         /*------------------------------------------------------ */
@@ -102,7 +102,7 @@ class GroupBuy extends Init
             /* 如果没有缓存，生成缓存 */
             if (!$GLOBALS['smarty']->is_cached('group_buy_goods.view.php', $cache_id)) {
                 $group_buy['gmt_end_date'] = $group_buy['end_date'];
-                $GLOBALS['smarty']->assign('group_buy', $group_buy);
+                $this->assign('group_buy', $group_buy);
 
                 /* 取得团购商品信息 */
                 $goods_id = $group_buy['goods_id'];
@@ -112,24 +112,24 @@ class GroupBuy extends Init
 
                 }
                 $goods['url'] = build_uri('goods', array('gid' => $goods_id), $goods['goods_name']);
-                $GLOBALS['smarty']->assign('gb_goods', $goods);
+                $this->assign('gb_goods', $goods);
 
                 /* 取得商品的规格 */
                 $properties = get_goods_properties($goods_id);
-                $GLOBALS['smarty']->assign('specification', $properties['spe']); // 商品规格
+                $this->assign('specification', $properties['spe']); // 商品规格
 
                 //模板赋值
-                $GLOBALS['smarty']->assign('cfg', $GLOBALS['_CFG']);
+                $this->assign('cfg', $GLOBALS['_CFG']);
                 assign_template();
 
                 $position = assign_ur_here(0, $goods['goods_name']);
-                $GLOBALS['smarty']->assign('page_title', $position['title']);    // 页面标题
-                $GLOBALS['smarty']->assign('ur_here', $position['ur_here']);  // 当前位置
+                $this->assign('page_title', $position['title']);    // 页面标题
+                $this->assign('ur_here', $position['ur_here']);  // 当前位置
 
-                $GLOBALS['smarty']->assign('categories', get_categories_tree()); // 分类树
-                $GLOBALS['smarty']->assign('helps', get_shop_help());       // 网店帮助
-                $GLOBALS['smarty']->assign('top_goods', get_top10());           // 销售排行
-                $GLOBALS['smarty']->assign('promotion_info', get_promotion_info());
+                $this->assign('categories', get_categories_tree()); // 分类树
+                $this->assign('helps', get_shop_help());       // 网店帮助
+                $this->assign('top_goods', get_top10());           // 销售排行
+                $this->assign('promotion_info', get_promotion_info());
                 assign_dynamic('group_buy_goods');
             }
 
@@ -138,8 +138,8 @@ class GroupBuy extends Init
                 "WHERE goods_id = '" . $group_buy['goods_id'] . "'";
             $GLOBALS['db']->query($sql);
 
-            $GLOBALS['smarty']->assign('now_time', gmtime());           // 当前系统时间
-            return $GLOBALS['smarty']->display('group_buy_goods.view.php', $cache_id);
+            $this->assign('now_time', gmtime());           // 当前系统时间
+            return $this->display('group_buy_goods.view.php', $cache_id);
         }
 
         /*------------------------------------------------------ */
