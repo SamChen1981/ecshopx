@@ -68,12 +68,11 @@ class Init extends Controller
 
         /* 载入系统参数 */
         $GLOBALS['_CFG'] = load_config();
-        /* 载入语言文件 */
-        require(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/common.php');
 
-        $document_uri = $_SERVER['DOCUMENT_URI'];
-        $document_uris = ['/captcha.php', '/yunqi_check.php'];
-        if ($GLOBALS['_CFG']['shop_closed'] == 1 && !in_array($document_uri, $document_uris)) {
+        /* 载入语言文件 */
+        load_lang('common');
+
+        if ($GLOBALS['_CFG']['shop_closed'] == 1) {
             /* 商店关闭了，输出关闭的消息 */
             header('Content-type: text/html; charset=' . EC_CHARSET);
 
