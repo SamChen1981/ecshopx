@@ -170,9 +170,7 @@ class Brand extends Init
         }
 
         /* 取得每一项的数量限制 */
-        $num = 0;
-        $type2lib = array('best' => 'recommend_best', 'new' => 'recommend_new', 'hot' => 'recommend_hot', 'promote' => 'recommend_promotion');
-        $num = get_library_number($type2lib[$type]);
+        $num = 10; // TODO BY LANCE TEST get_library_number($type2lib[$type]);
 
         $idx = 0;
         $goods = array();

@@ -94,7 +94,7 @@ class Message extends Init
 
             /* 获取留言的数量 */
             $page = isset($_REQUEST['page']) ? intval($_REQUEST['page']) : 1;
-            $pagesize = get_library_number('message_list', 'message_board');
+            $pagesize = 10; // TODO BY LANCE TEST get_library_number('message_list', 'message_board');
             $pager = get_pager('message.php', array(), $record_count, $page, $pagesize);
             $msg_lists = $this->get_msg_list($pagesize, $pager['start']);
             assign_dynamic('message_board');

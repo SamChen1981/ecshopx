@@ -432,7 +432,7 @@ class Exchange extends Init
             'WHERE eg.is_exchange = 1 AND g.is_delete = 0 ' . $price_where . $ext;
         $num = 0;
         $type2lib = array('best' => 'exchange_best', 'new' => 'exchange_new', 'hot' => 'exchange_hot');
-        $num = get_library_number($type2lib[$type], 'exchange_list');
+        $num = 10; // TODO BY LANCE TEST get_library_number($type2lib[$type], 'exchange_list');
 
         switch ($type) {
             case 'best':

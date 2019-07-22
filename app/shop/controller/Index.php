@@ -176,7 +176,7 @@ class Index extends Init
     private function index_get_group_buy()
     {
         $time = gmtime();
-        $limit = get_library_number('group_buy', 'index');
+        $limit = 10; // TODO BY LANCE TEST get_library_number('group_buy', 'index');
 
         $group_buy_list = array();
         if ($limit > 0) {
@@ -227,7 +227,7 @@ class Index extends Init
     private function index_get_auction()
     {
         $now = gmtime();
-        $limit = get_library_number('auction', 'index');
+        $limit = 10; // TODO BY LANCE TEST get_library_number('auction', 'index');
         $sql = "SELECT a.act_id, a.goods_id, a.goods_name, a.ext_info, g.goods_thumb " .
             "FROM " . $GLOBALS['ecs']->table('goods_activity') . " AS a," .
             $GLOBALS['ecs']->table('goods') . " AS g" .

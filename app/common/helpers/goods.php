@@ -207,7 +207,7 @@ function get_recommend_goods($type = '', $cats = '')
         if (empty($type_array)) {
             foreach ($type2lib as $key => $data) {
                 if (!empty($goods_data[$key])) {
-                    $num = get_library_number($data);
+                    $num = 10; // TODO BY LANCE TEST get_library_number($data);
                     $data_count = count($goods_data[$key]);
                     $num = $data_count > $num ? $num : $data_count;
                     if ($order_type == 0) {
@@ -294,7 +294,7 @@ function get_promote_goods($cats = '')
     $order_type = $GLOBALS['_CFG']['recommend_order'];
 
     /* 取得促销lbi的数量限制 */
-    $num = get_library_number("recommend_promotion");
+    $num = 10; // TODO BY LANCE TEST get_library_number("recommend_promotion");
     $sql = 'SELECT g.goods_id, g.goods_name, g.goods_name_style, g.market_price, g.shop_price AS org_price, g.promote_price, ' .
         "IFNULL(mp.user_price, g.shop_price * '$_SESSION[discount]') AS shop_price, " .
         "promote_start_date, promote_end_date, g.goods_brief, g.goods_thumb, goods_img, b.brand_name, " .
@@ -362,9 +362,7 @@ function get_category_recommend_goods($type = '', $cats = '', $brand = 0, $min =
         "LEFT JOIN " . $GLOBALS['ecs']->table('member_price') . " AS mp " .
         "ON mp.goods_id = g.goods_id AND mp.user_rank = '$_SESSION[user_rank]' " .
         'WHERE g.is_on_sale = 1 AND g.is_alone_sale = 1 AND g.is_delete = 0 ' . $brand_where . $price_where . $ext;
-    $num = 0;
-    $type2lib = array('best' => 'recommend_best', 'new' => 'recommend_new', 'hot' => 'recommend_hot', 'promote' => 'recommend_promotion');
-    $num = get_library_number($type2lib[$type]);
+    $num = 10; // TODO BY LANCE TEST get_library_number($type2lib[$type]);
 
     switch ($type) {
         case 'best':
