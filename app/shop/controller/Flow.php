@@ -1537,21 +1537,6 @@ class Flow extends Init
 
                 include_once('includes/modules/payment/' . $payment['pay_code'] . '.php');
                 $pay_obj = new $payment['pay_code'];
-                //为天宫支付传递商品名
-                $sql = "SELECT goods_name FROM " . $GLOBALS['ecs']->table('order_goods') . " WHERE order_id =" . $order['order_id'];
-                $res = $GLOBALS['db']->query($sql);
-                foreach ($res as $aaa[]) {
-                    $bbb = array_values($aaa);
-                }
-                foreach ($bbb as $v) {
-                    $ccc[] = $v['goods_name'];
-                }
-                $goods_name = implode(',', $ccc);
-                $order['goods_name'] = $goods_name;
-                //天工结束
-
-                //云起收银
-                $payment['pay_code'] = 'yunqi' and $order['yunqi_paymethod'] = $_POST['yunqi_paymethod'];
                 $pay_online = $pay_obj->get_code($order, unserialize_config($payment['pay_config']));
 
                 $order['pay_desc'] = $payment['pay_desc'];
@@ -1590,7 +1575,6 @@ class Flow extends Init
             }
 
             show_message($GLOBALS['_LANG']['update_cart_notice'], $GLOBALS['_LANG']['back_to_cart'], 'flow.php');
-
         }
 
         /*------------------------------------------------------ */

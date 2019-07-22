@@ -235,19 +235,6 @@ class Payment extends Init
                 }
             }
 
-            //天工收银配置
-            /*  兼容老的站点和移动端 以shop_config表里的那条为准 */
-            if ($pay['pay_code'] == 'yunqi') {
-                $teegon_data = $cert->get_yunqi_account();
-                $pay['pay_config'][0]['name'] = 'appkey';
-                $pay['pay_config'][0]['label'] = $GLOBALS['_LANG']['appkey'];
-                $pay['pay_config'][0]['type'] = 'text';
-                $pay['pay_config'][0]['value'] = $teegon_data['appkey'];
-                $pay['pay_config'][1]['name'] = 'appsecret';
-                $pay['pay_config'][1]['label'] = $GLOBALS['_LANG']['appsecret'];
-                $pay['pay_config'][1]['type'] = 'text';
-                $pay['pay_config'][1]['value'] = $teegon_data['appsecret'];
-            }
             /* 如果以前没设置支付费用，编辑时补上 */
             if (!isset($pay['pay_fee'])) {
                 if (isset($data['pay_fee'])) {

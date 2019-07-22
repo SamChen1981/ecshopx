@@ -14,39 +14,6 @@ class Respond extends Init
         /* 支付方式代码 */
         $pay_code = !empty($_REQUEST['code']) ? trim($_REQUEST['code']) : '';
 
-        //获取首信支付方式
-        if (empty($pay_code) && !empty($_REQUEST['v_pmode']) && !empty($_REQUEST['v_pstring'])) {
-            $pay_code = 'cappay';
-        }
-
-        //pc微信扫码的判断
-        if (empty($pay_code)) {
-            $xml = file_get_contents('php://input');
-            if (strpos($xml, '<xml><appid>') !== false && strpos($xml, 'openid') !== false) {
-                $pay_code = 'wxpaynative';
-            }
-        }
-
-        //获取快钱神州行支付方式
-        if (empty($pay_code) && ($_REQUEST['ext1'] == 'shenzhou') && ($_REQUEST['ext2'] == 'ecshop')) {
-            $pay_code = 'shenzhou';
-        }
-        //获取天工支付方式
-        if (empty($pay_code)) {
-            if ($_GET['metadata'] == 'tiangong') {
-                $pay_code = 'tiangong';
-            }
-            if ($_GET['metadata'] == 'tiangongwx') {
-                $pay_code = 'tiangongwx';
-            }
-
-            if ($_GET['metadata'] == 'yunqiwx') {
-                $pay_code = 'yunqi';
-            }
-            if (isset($_REQUEST['Version']) && $_REQUEST['Version'] == '20140728') {
-                $pay_code = 'chinapay';
-            }
-        }
         /* 参数是否为空 */
         if (empty($pay_code)) {
             $msg = $GLOBALS['_LANG']['pay_not_exist'];
