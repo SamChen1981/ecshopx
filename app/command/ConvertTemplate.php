@@ -76,13 +76,10 @@ class ConvertTemplate extends Command
             '/\s+elt\s+/' => '<=',
             '/\s+lt\s+/' => '<',
 
-            '/\{foreach\s+from=\$(\S+?)\s+item=(\S+?)\}/' => "<?php \$n=1;if(is_array($\\1)) foreach($\\1 as $\\2) { ?>",
             '/\{foreach\s+from=\$(\S+?)\s+item=(\S+?)\s+key=(\S+?)\}/' => "<?php \$n=1; if(is_array($\\1)) foreach($\\1 as $\\3 => $\\2) { ?>",
+            '/\{foreach\s+from=\$(\S+?)\s+item=(\S+?)\s+name=(\S+?)\}/' => "<?php \$n=1; if(is_array($\\1)) foreach($\\1 as $\\3 => $\\2) { ?>",
+            '/\{foreach\s+from=\$(\S+?)\s+item=(\S+?)\}/' => "<?php \$n=1;if(is_array($\\1)) foreach($\\1 as $\\2) { ?>",
 
-            '{foreach from=$pickout_goods item=goods name=goods}' => '',
-            '{foreach from=$lang.js_languages item=item key=key}' => '',
-            '{foreach from=$extend_info_list item=field}' => '',
-            '{foreach from=$cat_goods item=goods}' => '',
             '{insert_scripts files=\'common.js,index.js\'}' => '',
             '{insert name=\'ads\' id=$ads_id num=$ads_num}' => '',
         ];
