@@ -86,4 +86,25 @@ if (!function_exists('load_helper')) {
     }
 }
 
+if (!function_exists('load_lang')) {
+    /**
+     * 加载语言包
+     *
+     * @param $name
+     * @param null $module
+     */
+    function load_lang($name, $module = null)
+    {
+        $language = is_array($name) ? $name : [$name];
+        $path = is_null($module) ? app_path('resource/lang') : app_path($module . 'lang');
+
+        foreach ($language as $lang) {
+            $langFile = $path . '/' . config('app.default_lang') . '/' . $lang . '.php';
+            if (file_exists($langFile)) {
+                require $langFile;
+            }
+        }
+    }
+}
+
 require_once __DIR__ . '/safety.php';
