@@ -40,7 +40,7 @@ class Bonus extends Init
             $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('bonus_type.htm');
+            return $GLOBALS['smarty']->display('bonus_type.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -169,7 +169,7 @@ class Bonus extends Init
             $GLOBALS['smarty']->assign('bonus_arr', $bonus_arr);
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('bonus_type_info.htm');
+            return $GLOBALS['smarty']->display('bonus_type_info.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -246,7 +246,7 @@ class Bonus extends Init
             $GLOBALS['smarty']->assign('bonus_arr', $bonus_arr);
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('bonus_type_info.htm');
+            return $GLOBALS['smarty']->display('bonus_type_info.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -306,7 +306,7 @@ class Bonus extends Init
                 $GLOBALS['smarty']->assign('id', $id);
                 $GLOBALS['smarty']->assign('ranklist', get_rank_list());
 
-                return $GLOBALS['smarty']->display('bonus_by_user.htm');
+                return $GLOBALS['smarty']->display('bonus_by_user.view.php');
             } elseif ($_REQUEST['send_by'] == SEND_BY_GOODS) {
                 /* 查询此红包类型信息 */
                 $bonus_type = $GLOBALS['db']->GetRow("SELECT type_id, type_name FROM " . $GLOBALS['ecs']->table('bonus_type') .
@@ -328,11 +328,11 @@ class Bonus extends Init
                 $GLOBALS['smarty']->assign('bonus_type', $bonus_type);
                 $GLOBALS['smarty']->assign('goods_list', $goods_list);
 
-                return $GLOBALS['smarty']->display('bonus_by_goods.htm');
+                return $GLOBALS['smarty']->display('bonus_by_goods.view.php');
             } elseif ($_REQUEST['send_by'] == SEND_BY_PRINT) {
                 $GLOBALS['smarty']->assign('type_list', get_bonus_type());
 
-                return $GLOBALS['smarty']->display('bonus_by_print.htm');
+                return $GLOBALS['smarty']->display('bonus_by_print.view.php');
             }
         }
 
@@ -700,7 +700,7 @@ class Bonus extends Init
             $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('bonus_list.htm');
+            return $GLOBALS['smarty']->display('bonus_list.view.php');
         }
 
         /*------------------------------------------------------ */

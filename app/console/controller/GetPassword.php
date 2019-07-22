@@ -54,7 +54,7 @@ class GetPassword extends Init
             $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['get_newpassword']);
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('get_pwd.htm');
+            return $GLOBALS['smarty']->display('get_pwd.view.php');
         }
 
         /*------------------------------------------------------ */

@@ -44,7 +44,7 @@ class Users extends Init
             $GLOBALS['smarty']->assign('sort_user_id', '<img src="images/sort_desc.png">');
             $GLOBALS['smarty']->assign('pageHtml', 'users_list.htm');
             assign_query_info();
-            return $GLOBALS['smarty']->display('users_list.htm');
+            return $GLOBALS['smarty']->display('users_list.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -87,7 +87,7 @@ class Users extends Init
             $GLOBALS['smarty']->assign('special_ranks', get_rank_list(true));
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('user_info.htm');
+            return $GLOBALS['smarty']->display('user_info.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -308,7 +308,7 @@ class Users extends Init
             $GLOBALS['smarty']->assign('user', $user);
             $GLOBALS['smarty']->assign('form_action', 'update');
             $GLOBALS['smarty']->assign('special_ranks', get_rank_list(true));
-            return $GLOBALS['smarty']->display('user_info.htm');
+            return $GLOBALS['smarty']->display('user_info.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -516,7 +516,7 @@ class Users extends Init
             assign_query_info();
             $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['address_list']);
             $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['03_users_list'], 'href' => 'users.php?act=list&' . list_link_postfix()));
-            return $GLOBALS['smarty']->display('user_address_list.htm');
+            return $GLOBALS['smarty']->display('user_address_list.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -594,7 +594,7 @@ class Users extends Init
             $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['back_note'], 'href' => "users.php?act=edit&id=$auid"));
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('affiliate_list.htm');
+            return $GLOBALS['smarty']->display('affiliate_list.view.php');
         }
     }
 

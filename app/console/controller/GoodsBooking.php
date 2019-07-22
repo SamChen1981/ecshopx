@@ -28,7 +28,7 @@ class GoodsBooking extends Init
             $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('booking_list.htm');
+            return $GLOBALS['smarty']->display('booking_list.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -79,7 +79,7 @@ class GoodsBooking extends Init
             $GLOBALS['smarty']->assign('booking', $this->get_booking_info($id));
             $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['detail']);
             $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['06_undispose_booking'], 'href' => 'goods_booking.php?act=list_all'));
-            return $GLOBALS['smarty']->display('booking_info.htm');
+            return $GLOBALS['smarty']->display('booking_info.view.php');
         }
 
         /*------------------------------------------------------ */

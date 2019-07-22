@@ -36,6 +36,6 @@ class TagCloud extends Init
 
         $GLOBALS['smarty']->assign('tags', $tags);
 
-        return $GLOBALS['smarty']->display('tag_cloud.dwt');
+        return $GLOBALS['smarty']->display('tag_cloud.view.php');
     }
 }

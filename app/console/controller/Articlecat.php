@@ -30,7 +30,7 @@ class Articlecat extends Init
             $GLOBALS['smarty']->assign('articlecat', $articlecat);
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('articlecat_list.htm');
+            return $GLOBALS['smarty']->display('articlecat_list.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -59,7 +59,7 @@ class Articlecat extends Init
             $GLOBALS['smarty']->assign('form_action', 'insert');
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('articlecat_info.htm');
+            return $GLOBALS['smarty']->display('articlecat_info.view.php');
         } elseif ($_REQUEST['act'] == 'insert') {
             /* 权限判断 */
             admin_priv('article_cat');
@@ -144,7 +144,7 @@ class Articlecat extends Init
             $GLOBALS['smarty']->assign('form_action', 'update');
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('articlecat_info.htm');
+            return $GLOBALS['smarty']->display('articlecat_info.view.php');
         } elseif ($_REQUEST['act'] == 'update') {
             /* 权限判断 */
             admin_priv('article_cat');

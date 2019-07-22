@@ -71,7 +71,7 @@ class EditLanguages extends Init
             $GLOBALS['smarty']->assign('language_arr', $language_arr); //需要编辑的语言项列表
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('language_list.htm');
+            return $GLOBALS['smarty']->display('language_list.view.php');
         }
 
         /*------------------------------------------------------ */

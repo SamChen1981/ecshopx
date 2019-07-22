@@ -70,7 +70,7 @@ class UserAccountManage extends Init
 
             /* 显示页面 */
             assign_query_info();
-            return $GLOBALS['smarty']->display('user_account_manage.htm');
+            return $GLOBALS['smarty']->display('user_account_manage.view.php');
         } elseif ($_REQUEST['act'] == 'surplus') {
             $order_list = $this->order_list();
 
@@ -85,7 +85,7 @@ class UserAccountManage extends Init
 
             /* 显示页面 */
             assign_query_info();
-            return $GLOBALS['smarty']->display('order_surplus_list.htm');
+            return $GLOBALS['smarty']->display('order_surplus_list.view.php');
         }
 
         /*------------------------------------------------------ */

@@ -64,7 +64,7 @@ class Init extends Controller
         $GLOBALS['db'] = new Mysql();
 
         /* 创建错误处理对象 */
-        $GLOBALS['err'] = new Error('message.dwt');
+        $GLOBALS['err'] = new Error('message.view.php');
 
         /* 载入系统参数 */
         $GLOBALS['_CFG'] = load_config();

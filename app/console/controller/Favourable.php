@@ -37,7 +37,7 @@ class Favourable extends Init
 
             /* 显示商品列表页面 */
             assign_query_info();
-            return $GLOBALS['smarty']->display('favourable_list.htm');
+            return $GLOBALS['smarty']->display('favourable_list.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -223,7 +223,7 @@ class Favourable extends Init
             }
             $GLOBALS['smarty']->assign('action_link', array('href' => $href, 'text' => $GLOBALS['_LANG']['favourable_list']));
             assign_query_info();
-            return $GLOBALS['smarty']->display('favourable_info.htm');
+            return $GLOBALS['smarty']->display('favourable_info.view.php');
         }
 
         /*------------------------------------------------------ */

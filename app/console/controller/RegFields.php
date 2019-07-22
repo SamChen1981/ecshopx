@@ -26,7 +26,7 @@ class RegFields extends Init
             $GLOBALS['smarty']->assign('reg_fields', $fields);
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('reg_fields.htm');
+            return $GLOBALS['smarty']->display('reg_fields.view.php');
         }
 
 
@@ -60,7 +60,7 @@ class RegFields extends Init
             $GLOBALS['smarty']->assign('form_action', $form_action);
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('reg_field_info.htm');
+            return $GLOBALS['smarty']->display('reg_field_info.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -109,7 +109,7 @@ class RegFields extends Init
             $GLOBALS['smarty']->assign('form_action', $form_action);
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('reg_field_info.htm');
+            return $GLOBALS['smarty']->display('reg_field_info.view.php');
         }
 
         /*------------------------------------------------------ */

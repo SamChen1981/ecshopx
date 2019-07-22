@@ -25,7 +25,7 @@ class Shophelp extends Init
             $GLOBALS['smarty']->assign('list', $this->get_shophelp_list());
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('shophelp_cat_list.htm');
+            return $GLOBALS['smarty']->display('shophelp_cat_list.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -40,7 +40,7 @@ class Shophelp extends Init
             $GLOBALS['smarty']->assign('list', $this->shophelp_article_list($_REQUEST['cat_id']));
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('shophelp_article_list.htm');
+            return $GLOBALS['smarty']->display('shophelp_article_list.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -85,7 +85,7 @@ class Shophelp extends Init
             $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['article_add']);
             $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['cat_list'], 'href' => 'shophelp.php?act=list_cat'));
             $GLOBALS['smarty']->assign('form_action', 'insert');
-            return $GLOBALS['smarty']->display('shophelp_info.htm');
+            return $GLOBALS['smarty']->display('shophelp_info.view.php');
         }
         if ($_REQUEST['act'] == 'insert') {
             /* 权限判断 */
@@ -135,7 +135,7 @@ class Shophelp extends Init
             $GLOBALS['smarty']->assign('form_action', 'update');
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('shophelp_info.htm');
+            return $GLOBALS['smarty']->display('shophelp_info.view.php');
         }
         if ($_REQUEST['act'] == 'update') {
             /* 权限判断 */

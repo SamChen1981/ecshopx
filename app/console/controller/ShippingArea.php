@@ -27,7 +27,7 @@ class ShippingArea extends Init
             $GLOBALS['smarty']->assign('full_page', 1);
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('shipping_area_list.htm');
+            return $GLOBALS['smarty']->display('shipping_area_list.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -71,7 +71,7 @@ class ShippingArea extends Init
             $GLOBALS['smarty']->assign('countries', get_regions());
             $GLOBALS['smarty']->assign('default_country', $GLOBALS['_CFG']['shop_country']);
             assign_query_info();
-            return $GLOBALS['smarty']->display('shipping_area_info.htm');
+            return $GLOBALS['smarty']->display('shipping_area_info.view.php');
         } elseif ($_REQUEST['act'] == 'insert') {
             admin_priv('shiparea_manage');
 
@@ -209,7 +209,7 @@ class ShippingArea extends Init
             $GLOBALS['smarty']->assign('form_action', 'update');
             $GLOBALS['smarty']->assign('countries', get_regions());
             $GLOBALS['smarty']->assign('default_country', 1);
-            return $GLOBALS['smarty']->display('shipping_area_info.htm');
+            return $GLOBALS['smarty']->display('shipping_area_info.view.php');
         } elseif ($_REQUEST['act'] == 'update') {
             admin_priv('shiparea_manage');
 

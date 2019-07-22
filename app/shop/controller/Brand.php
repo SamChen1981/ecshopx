@@ -23,7 +23,7 @@ class Brand extends Init
         if (empty($brand_id)) {
             /* 缓存编号 */
             $cache_id = sprintf('%X', crc32($GLOBALS['_CFG']['lang']));
-            if (!$GLOBALS['smarty']->is_cached('brand_list.dwt', $cache_id)) {
+            if (!$GLOBALS['smarty']->is_cached('brand_list.view.php', $cache_id)) {
                 assign_template();
                 $position = assign_ur_here('', $GLOBALS['_LANG']['all_brand']);
                 $GLOBALS['smarty']->assign('page_title', $position['title']);    // 页面标题
@@ -35,7 +35,7 @@ class Brand extends Init
 
                 $GLOBALS['smarty']->assign('brand_list', get_brands());
             }
-            return $GLOBALS['smarty']->display('brand_list.dwt', $cache_id);
+            return $GLOBALS['smarty']->display('brand_list.view.php', $cache_id);
         }
 
         /* 初始化分页信息 */
@@ -61,7 +61,7 @@ class Brand extends Init
         /* 页面的缓存ID */
         $cache_id = sprintf('%X', crc32($brand_id . '-' . $display . '-' . $sort . '-' . $order . '-' . $page . '-' . $size . '-' . $_SESSION['user_rank'] . '-' . $GLOBALS['_CFG']['lang'] . '-' . $cate));
 
-        if (!$GLOBALS['smarty']->is_cached('brand.dwt', $cache_id)) {
+        if (!$GLOBALS['smarty']->is_cached('brand.view.php', $cache_id)) {
             $brand_info = $this->get_brand_info($brand_id);
 
             if (empty($brand_info)) {
@@ -116,7 +116,7 @@ class Brand extends Init
             assign_dynamic('brand'); // 动态内容
         }
 
-        return $GLOBALS['smarty']->display('brand.dwt', $cache_id);
+        return $GLOBALS['smarty']->display('brand.view.php', $cache_id);
     }
 
     /**

@@ -408,7 +408,7 @@ class Goods extends Init
             $GLOBALS['smarty']->assign('volume_price_list', $volume_price_list);
             /* 显示商品信息页面 */
             assign_query_info();
-            return $GLOBALS['smarty']->display('goods_info.htm');
+            return $GLOBALS['smarty']->display('goods_info.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -1125,7 +1125,7 @@ class Goods extends Init
                 }
             }
             $GLOBALS['smarty']->assign('img_url', $img_url);
-            return $GLOBALS['smarty']->display('goods_show_image.htm');
+            return $GLOBALS['smarty']->display('goods_show_image.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -1925,7 +1925,7 @@ class Goods extends Init
             /* 显示商品列表页面 */
             assign_query_info();
 
-            return $GLOBALS['smarty']->display('product_info.htm');
+            return $GLOBALS['smarty']->display('product_info.view.php');
         }
 
         /*------------------------------------------------------ */

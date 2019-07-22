@@ -101,7 +101,7 @@ class Message extends Init
             $GLOBALS['smarty']->assign('rand', mt_rand());
             $GLOBALS['smarty']->assign('msg_lists', $msg_lists);
             $GLOBALS['smarty']->assign('pager', $pager);
-            return $GLOBALS['smarty']->display('message_board.dwt');
+            return $GLOBALS['smarty']->display('message_board.view.php');
         }
     }
 

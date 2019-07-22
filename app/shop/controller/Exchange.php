@@ -46,7 +46,7 @@ class Exchange extends Init
             $cache_id = sprintf('%X', crc32($cat_id . '-' . $display . '-' . $sort . '-' . $order . '-' . $page . '-' . $size . '-' . $_SESSION['user_rank'] . '-' .
                 $GLOBALS['_CFG']['lang'] . '-' . $integral_max . '-' . $integral_min));
 
-            if (!$GLOBALS['smarty']->is_cached('exchange.dwt', $cache_id)) {
+            if (!$GLOBALS['smarty']->is_cached('exchange.view.php', $cache_id)) {
                 /* 如果页面没有被缓存则重新获取页面的内容 */
 
                 $children = get_children($cat_id);
@@ -105,7 +105,7 @@ class Exchange extends Init
             }
 
             $GLOBALS['smarty']->assign('feed_url', ($GLOBALS['_CFG']['rewrite'] == 1) ? "feed-typeexchange.xml" : 'feed.php?type=exchange'); // RSS URL
-            return $GLOBALS['smarty']->display('exchange_list.dwt', $cache_id);
+            return $GLOBALS['smarty']->display('exchange_list.view.php', $cache_id);
         }
 
         /*------------------------------------------------------ */
@@ -117,7 +117,7 @@ class Exchange extends Init
             $cache_id = $goods_id . '-' . $_SESSION['user_rank'] . '-' . $GLOBALS['_CFG']['lang'] . '-exchange';
             $cache_id = sprintf('%X', crc32($cache_id));
 
-            if (!$GLOBALS['smarty']->is_cached('exchange_goods.dwt', $cache_id)) {
+            if (!$GLOBALS['smarty']->is_cached('exchange_goods.view.php', $cache_id)) {
                 $GLOBALS['smarty']->assign('image_width', $GLOBALS['_CFG']['image_width']);
                 $GLOBALS['smarty']->assign('image_height', $GLOBALS['_CFG']['image_height']);
                 $GLOBALS['smarty']->assign('helps', get_shop_help()); // 网店帮助
@@ -179,7 +179,7 @@ class Exchange extends Init
                 }
             }
 
-            return $GLOBALS['smarty']->display('exchange_goods.dwt', $cache_id);
+            return $GLOBALS['smarty']->display('exchange_goods.view.php', $cache_id);
         }
 
         /*------------------------------------------------------ */

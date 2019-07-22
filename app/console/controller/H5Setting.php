@@ -202,7 +202,7 @@ class H5Setting extends Init
                 $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['go_url'], 'href' => 'h5_setting.php?act=list'));
                 $GLOBALS['smarty']->assign('rt', $rt);
                 $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['add_picad']);
-                return $GLOBALS['smarty']->display('flashplay_add.htm');
+                return $GLOBALS['smarty']->display('flashplay_add.view.php');
             } elseif ($_POST['step'] == 2) {
                 if (!empty($_FILES['img_file_src']['name'])) {
                     if (!get_file_suffix($_FILES['img_file_src']['name'], $allow_suffix)) {
@@ -282,7 +282,7 @@ class H5Setting extends Init
                 $GLOBALS['smarty']->assign('action_link', array('text' => $GLOBALS['_LANG']['go_url'], 'href' => 'h5_setting.php?act=list'));
                 $GLOBALS['smarty']->assign('rt', $rt);
                 $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['edit_picad']);
-                return $GLOBALS['smarty']->display('flashplay_add.htm');
+                return $GLOBALS['smarty']->display('flashplay_add.view.php');
             } elseif ($_POST['step'] == 2) {
                 if (empty($_POST['img_url'])) {
                     //若链接地址为空
@@ -423,7 +423,7 @@ class H5Setting extends Init
 
         $width_height = array();
         while ($file = readdir($template_dir)) {
-            if ($file == 'index_ad.lbi') {
+            if ($file == 'index_ad.view.php') {
                 $string = file_get_contents($path . $file);
                 $pattern_width = '/var\s*swf_width\s*=\s*(\d+);/';
                 $pattern_height = '/var\s*swf_height\s*=\s*(\d+);/';

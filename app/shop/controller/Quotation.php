@@ -62,7 +62,7 @@ class Quotation extends Init
             $GLOBALS['smarty']->assign('helps', get_shop_help()); // 网店帮助
         }
 
-        return $GLOBALS['smarty']->display('quotation.dwt');
+        return $GLOBALS['smarty']->display('quotation.view.php');
     }
 
     private function get_quotation_where($filter)

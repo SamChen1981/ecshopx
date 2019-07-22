@@ -81,7 +81,7 @@ class Search extends Init
             $GLOBALS['smarty']->assign('action', 'form');
             $GLOBALS['smarty']->assign('use_storage', $GLOBALS['_CFG']['use_storage']);
 
-            return $GLOBALS['smarty']->display('search.dwt');
+            return $GLOBALS['smarty']->display('search.view.php');
 
 
         }
@@ -429,7 +429,7 @@ class Search extends Init
             $GLOBALS['smarty']->assign('top_goods', get_top10());           // 销售排行
             $GLOBALS['smarty']->assign('promotion_info', get_promotion_info());
 
-            return $GLOBALS['smarty']->display('search.dwt');
+            return $GLOBALS['smarty']->display('search.view.php');
         }
     }
 

@@ -9,7 +9,7 @@ class Catalog extends Init
 {
     public function index()
     {
-        if (!$GLOBALS['smarty']->is_cached('catalog.dwt')) {
+        if (!$GLOBALS['smarty']->is_cached('catalog.view.php')) {
             /* 取出所有分类 */
             $cat_list = cat_list(0, 0, false);
 
@@ -31,7 +31,7 @@ class Catalog extends Init
             $GLOBALS['smarty']->assign('promotion_info', get_promotion_info());
         }
 
-        return $GLOBALS['smarty']->display('catalog.dwt');
+        return $GLOBALS['smarty']->display('catalog.view.php');
     }
 
     /**

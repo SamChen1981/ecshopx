@@ -554,7 +554,7 @@ function get_brands($cat = 0, $app = 'brand')
         "WHERE g.brand_id = b.brand_id $children AND is_show = 1 " .
         " AND g.is_on_sale = 1 AND g.is_alone_sale = 1 AND g.is_delete = 0 " .
         "GROUP BY b.brand_id HAVING goods_num > 0 ORDER BY tag DESC, b.sort_order ASC";
-    if (isset($static_page_libs[$template]['/library/brands.lbi'])) {
+    if (isset($static_page_libs[$template]['/library/brands.view.php'])) {
         $num = get_library_number("brands");
         $sql .= " LIMIT $num ";
     }

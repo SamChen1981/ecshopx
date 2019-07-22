@@ -51,6 +51,6 @@ class Receive extends Init
         assign_dynamic('receive');
 
         $GLOBALS['smarty']->assign('msg', $msg);
-        return $GLOBALS['smarty']->display('receive.dwt');
+        return $GLOBALS['smarty']->display('receive.view.php');
     }
 }

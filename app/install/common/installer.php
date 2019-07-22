@@ -97,8 +97,8 @@ function get_system_info()
 
     /* 检查系统是否支持以dwt,lib,dat为扩展名的文件 */
     $file_types = array(
-        'dwt' => ROOT_PATH . 'themes/default/index.dwt',
-        'lbi' => ROOT_PATH . 'themes/default/library/member.lbi',
+        'dwt' => ROOT_PATH . 'themes/default/index.view.php',
+        'lbi' => ROOT_PATH . 'themes/default/library/member.view.php',
         'dat' => ROOT_PATH . 'includes/codetable/ipdata.dat'
     );
     $exists_info = file_types_exists($file_types);

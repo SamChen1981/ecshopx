@@ -21,7 +21,7 @@ class ViewSendlist extends Init
             $GLOBALS['smarty']->assign('page_count', $listdb['page_count']);
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('view_sendlist.htm');
+            return $GLOBALS['smarty']->display('view_sendlist.view.php');
         } elseif ($_REQUEST['act'] == 'query') {
             $listdb = $this->get_sendlist();
             $GLOBALS['smarty']->assign('listdb', $listdb['listdb']);

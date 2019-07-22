@@ -25,7 +25,7 @@ class Sql extends Init
             $GLOBALS['smarty']->assign('type', -1);
             $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['04_sql_query']);
 
-            return $GLOBALS['smarty']->display('sql.htm');
+            return $GLOBALS['smarty']->display('sql.view.php');
         }
 
         if ($_REQUEST['act'] == 'query') {
@@ -34,7 +34,7 @@ class Sql extends Init
             assign_query_info();
             $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['04_sql_query']);
 
-            return $GLOBALS['smarty']->display('sql.htm');
+            return $GLOBALS['smarty']->display('sql.view.php');
         }
     }
 

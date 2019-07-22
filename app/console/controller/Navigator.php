@@ -29,7 +29,7 @@ class Navigator extends Init
             $GLOBALS['smarty']->assign('page_count', $navdb['page_count']);
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('navigator.htm');
+            return $GLOBALS['smarty']->display('navigator.view.php');
         }
         /*------------------------------------------------------ */
         //-- 自定义导航栏列表Ajax
@@ -60,7 +60,7 @@ class Navigator extends Init
                 assign_query_info();
                 $GLOBALS['smarty']->assign('sysmain', $sysmain);
                 $GLOBALS['smarty']->assign('rt', $rt);
-                return $GLOBALS['smarty']->display('navigator_add.htm');
+                return $GLOBALS['smarty']->display('navigator_add.view.php');
             } elseif ($_REQUEST['step'] == 2) {
                 $item_name = $_REQUEST['item_name'];
                 $item_url = $_REQUEST['item_url'];
@@ -115,7 +115,7 @@ class Navigator extends Init
                 assign_query_info();
                 $GLOBALS['smarty']->assign('sysmain', $sysmain);
                 $GLOBALS['smarty']->assign('rt', $rt);
-                return $GLOBALS['smarty']->display('navigator_add.htm');
+                return $GLOBALS['smarty']->display('navigator_add.view.php');
             } elseif ($_REQUEST['step'] == 2) {
                 $item_name = $_REQUEST['item_name'];
                 $item_url = $_REQUEST['item_url'];

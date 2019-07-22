@@ -910,7 +910,7 @@ class Template
         /**
          * 处理模板文件
          */
-        if ($file_type == '.dwt') {
+        if ($file_type == '.view.php') {
             /* 将模板中所有library替换为链接 */
             $pattern = '/<!--\s#BeginLibraryItem\s\"\/(.*?)\"\s-->.*?<!--\s#EndLibraryItem\s-->/s';
             $source = preg_replace_callback($pattern, function ($r) {
@@ -956,7 +956,7 @@ class Template
         } /**
          * 处理库文件
          */
-        elseif ($file_type == '.lbi') {
+        elseif ($file_type == '.view.php') {
             /* 去除meta */
             $source = preg_replace('/<meta\shttp-equiv=["|\']Content-Type["|\']\scontent=["|\']text\/html;\scharset=(?:.*?)["|\']>\r?\n?/i', '', $source);
         }

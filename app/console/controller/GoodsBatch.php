@@ -55,7 +55,7 @@ class GoodsBatch extends Init
 
             /* 显示模板 */
             assign_query_info();
-            return $GLOBALS['smarty']->display('goods_batch_add.htm');
+            return $GLOBALS['smarty']->display('goods_batch_add.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -311,7 +311,7 @@ class GoodsBatch extends Init
 
             /* 显示模板 */
             assign_query_info();
-            return $GLOBALS['smarty']->display('goods_batch_confirm.htm');
+            return $GLOBALS['smarty']->display('goods_batch_confirm.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -523,7 +523,7 @@ class GoodsBatch extends Init
 
             /* 显示模板 */
             assign_query_info();
-            return $GLOBALS['smarty']->display('goods_batch_select.htm');
+            return $GLOBALS['smarty']->display('goods_batch_select.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -606,7 +606,7 @@ class GoodsBatch extends Init
 
             /* 显示模板 */
             assign_query_info();
-            return $GLOBALS['smarty']->display('goods_batch_edit.htm');
+            return $GLOBALS['smarty']->display('goods_batch_edit.view.php');
         }
 
         /*------------------------------------------------------ */

@@ -87,7 +87,7 @@ class SaleList extends Init
 
             /* 显示页面 */
             assign_query_info();
-            return $GLOBALS['smarty']->display('sale_list.htm');
+            return $GLOBALS['smarty']->display('sale_list.view.php');
         }
     }
 

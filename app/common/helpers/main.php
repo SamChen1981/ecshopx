@@ -545,7 +545,7 @@ function assign_pager(
 }
 
 /**
- *  生成给pager.lbi赋值的数组
+ *  生成给pager.view.php赋值的数组
  *
  * @access  public
  * @param string $url 分页的链接地址(必须是带有参数的地址，若不是可以伪造一个无用参数)
@@ -1227,7 +1227,7 @@ function show_message($content, $links = '', $hrefs = '', $type = 'info', $auto_
 
     $GLOBALS['smarty']->assign('auto_redirect', $auto_redirect);
     $GLOBALS['smarty']->assign('message', $msg);
-    return $GLOBALS['smarty']->display('message.dwt');
+    return $GLOBALS['smarty']->display('message.view.php');
 
 
 }
@@ -1626,7 +1626,7 @@ function get_library_number($library, $template = null)
         if ($static_page_libs == null) {
             $static_page_libs = $page_libs;
         }
-        $lib = '/library/' . $library . '.lbi';
+        $lib = '/library/' . $library . '.view.php';
 
         $num = isset($static_page_libs[$template][$lib]) ? $static_page_libs[$template][$lib] : 3;
     }

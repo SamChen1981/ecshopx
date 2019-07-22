@@ -20,7 +20,7 @@ class SmsResource extends Init
         $data[] = getRandChar(6);
         $source_str = implode('|', $data);
         $GLOBALS['smarty']->assign('resource_url', SMS_RESOURCE_URL . '/index.php?source=' . base64_encode($source_str));
-        return $GLOBALS['smarty']->display('sms_resource.htm');
+        return $GLOBALS['smarty']->display('sms_resource.view.php');
 
         function getRandChar($length)
         {

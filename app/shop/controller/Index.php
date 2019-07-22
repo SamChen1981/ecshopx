@@ -34,7 +34,7 @@ class Index extends Init
             $children = get_children($cat_id);
             $GLOBALS['smarty']->assign($rec_array[$rec_type] . '_goods', get_category_recommend_goods($rec_array[$rec_type], $children));    // 推荐商品
             $GLOBALS['smarty']->assign('cat_rec_sign', 1);
-            $result['content'] = $GLOBALS['smarty']->fetch('library/recommend_' . $rec_array[$rec_type] . '.lbi');
+            $result['content'] = $GLOBALS['smarty']->fetch('library/recommend_' . $rec_array[$rec_type] . '.view.php');
             die(json_encode($result));
         }
 
@@ -44,7 +44,7 @@ class Index extends Init
         /* 缓存编号 */
         $cache_id = sprintf('%X', crc32($_SESSION['user_rank'] . '-' . $GLOBALS['_CFG']['lang']));
 
-        if (!$GLOBALS['smarty']->is_cached('index.dwt', $cache_id)) {
+        if (!$GLOBALS['smarty']->is_cached('index.view.php', $cache_id)) {
             assign_template();
 
             $position = assign_ur_here();
@@ -103,7 +103,7 @@ class Index extends Init
             assign_dynamic('index');
         }
 
-        return $GLOBALS['smarty']->display('index.dwt', $cache_id);
+        return $GLOBALS['smarty']->display('index.view.php', $cache_id);
     }
 
     /**

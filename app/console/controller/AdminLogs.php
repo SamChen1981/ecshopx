@@ -51,7 +51,7 @@ class AdminLogs extends Init
             $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('admin_logs.htm');
+            return $GLOBALS['smarty']->display('admin_logs.view.php');
         }
 
         /*------------------------------------------------------ */

@@ -39,12 +39,12 @@ class Sms extends Init
                     $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('shop_config') . "WHERE  code='default_sms_sign'";
                     $row = $GLOBALS['db']->getRow($sql);
                     $GLOBALS['smarty']->assign('default_sms_sign', $row['value']);
-                    return $GLOBALS['smarty']->display('sms_send_ui.htm');
+                    return $GLOBALS['smarty']->display('sms_send_ui.view.php');
                 } else {
                     $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['register_sms']);
                     $GLOBALS['smarty']->assign('sms_site_info', $sms->get_site_info());
                     assign_query_info();
-                    return $GLOBALS['smarty']->display('sms_register_ui.htm');
+                    return $GLOBALS['smarty']->display('sms_register_ui.view.php');
                 }
 
                 break;
@@ -73,12 +73,12 @@ class Sms extends Init
                     $GLOBALS['smarty']->assign('default_sign', $default_sms_sign['value']);
 
 
-                    return $GLOBALS['smarty']->display('sms_sign.htm');
+                    return $GLOBALS['smarty']->display('sms_sign.view.php');
                 } else {
                     $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['register_sms']);
                     $GLOBALS['smarty']->assign('sms_site_info', $sms->get_site_info());
                     assign_query_info();
-                    return $GLOBALS['smarty']->display('sms_register_ui.htm');
+                    return $GLOBALS['smarty']->display('sms_register_ui.view.php');
                 }
                 break;
 
@@ -149,7 +149,7 @@ class Sms extends Init
                     $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['register_sms']);
                     $GLOBALS['smarty']->assign('sms_site_info', $sms->get_site_info());
                     assign_query_info();
-                    return $GLOBALS['smarty']->display('sms_register_ui.htm');
+                    return $GLOBALS['smarty']->display('sms_register_ui.view.php');
                 }
                 break;
 
@@ -224,7 +224,7 @@ class Sms extends Init
                     $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['register_sms']);
                     $GLOBALS['smarty']->assign('sms_site_info', $sms->get_site_info());
                     assign_query_info();
-                    return $GLOBALS['smarty']->display('sms_register_ui.htm');
+                    return $GLOBALS['smarty']->display('sms_register_ui.view.php');
                 }
                 break;
 
@@ -262,7 +262,7 @@ class Sms extends Init
                     $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['register_sms']);
                     $GLOBALS['smarty']->assign('sms_site_info', $sms->get_site_info());
                     assign_query_info();
-                    return $GLOBALS['smarty']->display('sms_register_ui.htm');
+                    return $GLOBALS['smarty']->display('sms_register_ui.view.php');
                 }
                 break;
 

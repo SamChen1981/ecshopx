@@ -23,7 +23,7 @@ class GoodsAuto extends Init
             $GLOBALS['smarty']->assign('record_count', $goodsdb['record_count']);
             $GLOBALS['smarty']->assign('page_count', $goodsdb['page_count']);
             assign_query_info();
-            return $GLOBALS['smarty']->display('goods_auto.htm');
+            return $GLOBALS['smarty']->display('goods_auto.view.php');
         } elseif ($_REQUEST['act'] == 'query') {
             $goodsdb = $this->get_auto_goods();
             $GLOBALS['smarty']->assign('goodsdb', $goodsdb['goodsdb']);

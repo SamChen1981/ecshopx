@@ -30,7 +30,7 @@ class Agency extends Init
             $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('agency_list.htm');
+            return $GLOBALS['smarty']->display('agency_list.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -208,7 +208,7 @@ class Agency extends Init
             }
             $GLOBALS['smarty']->assign('action_link', array('href' => $href, 'text' => $GLOBALS['_LANG']['agency_list']));
             assign_query_info();
-            return $GLOBALS['smarty']->display('agency_info.htm');
+            return $GLOBALS['smarty']->display('agency_info.view.php');
         }
 
         /*------------------------------------------------------ */

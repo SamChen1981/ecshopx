@@ -36,7 +36,7 @@ class Message extends Init
             $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('message_list.htm');
+            return $GLOBALS['smarty']->display('message_list.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -74,7 +74,7 @@ class Message extends Init
             $GLOBALS['smarty']->assign('admin_list', $admin_list);
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('message_info.htm');
+            return $GLOBALS['smarty']->display('message_info.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -146,7 +146,7 @@ class Message extends Init
             $GLOBALS['smarty']->assign('msg_arr', $msg_arr);
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('message_info.htm');
+            return $GLOBALS['smarty']->display('message_info.view.php');
         } elseif ($_REQUEST['act'] == 'update') {
             /* 获得留言数据*/
             $msg_arr = array();
@@ -202,7 +202,7 @@ class Message extends Init
             $GLOBALS['smarty']->assign('msg_arr', $msg_arr);
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('message_view.htm');
+            return $GLOBALS['smarty']->display('message_view.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -227,7 +227,7 @@ class Message extends Init
             $GLOBALS['smarty']->assign('msg_val', $msg_val);
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('message_info.htm');
+            return $GLOBALS['smarty']->display('message_info.view.php');
         }
 
         /*------------------------------------------------------ */

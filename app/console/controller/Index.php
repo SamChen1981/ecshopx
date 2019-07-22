@@ -15,7 +15,7 @@ class Index extends Init
         /*------------------------------------------------------ */
         if ($_REQUEST['act'] == '') {
             $GLOBALS['smarty']->assign('shop_url', urlencode($GLOBALS['ecs']->url()));
-            return $GLOBALS['smarty']->display('index.htm');
+            return $GLOBALS['smarty']->display('index.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -61,7 +61,7 @@ class Index extends Init
             $GLOBALS['smarty']->assign('http_host', $_SERVER['HTTP_HOST']);
             $GLOBALS['smarty']->assign('yunqi_login', $_SESSION['yunqi_login']);
             $GLOBALS['smarty']->assign('certi', $certificate);
-            return $GLOBALS['smarty']->display('top.htm');
+            return $GLOBALS['smarty']->display('top.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -69,7 +69,7 @@ class Index extends Init
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'calculator') {
-            return $GLOBALS['smarty']->display('calculator.htm');
+            return $GLOBALS['smarty']->display('calculator.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -151,7 +151,7 @@ class Index extends Init
             $GLOBALS['smarty']->assign('admin_id', $_SESSION['admin_id']);
             $GLOBALS['smarty']->assign('admin_name', $_SESSION['admin_name']);
             $GLOBALS['smarty']->assign('certi', $certificate);
-            return $GLOBALS['smarty']->display('menu.htm');
+            return $GLOBALS['smarty']->display('menu.view.php');
         }
 
 
@@ -482,7 +482,7 @@ class Index extends Init
             $GLOBALS['smarty']->assign('install_date', local_date($GLOBALS['_CFG']['date_format'], $GLOBALS['_CFG']['install_date']));
             $GLOBALS['smarty']->assign('pmp_desktop', PMP_DESKTOP);
             $GLOBALS['smarty']->assign('pmp_market', PMS_MARKET);
-            return $GLOBALS['smarty']->display('start.htm');
+            return $GLOBALS['smarty']->display('start.view.php');
         } elseif ($_REQUEST['act'] == 'main_api') {
             load_helper('base');
             $data = read_static_cache('api_str');
@@ -600,7 +600,7 @@ class Index extends Init
             assign_query_info();
 
             $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['ur_config']);
-            return $GLOBALS['smarty']->display('setting_first.htm');
+            return $GLOBALS['smarty']->display('setting_first.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -766,7 +766,7 @@ class Index extends Init
             assign_query_info();
 
             $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['ur_add']);
-            return $GLOBALS['smarty']->display('setting_second.htm');
+            return $GLOBALS['smarty']->display('setting_second.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -953,7 +953,7 @@ class Index extends Init
 
             assign_query_info();
             //    $GLOBALS['smarty']->assign('ur_here', '开店向导－添加商品');
-            return $GLOBALS['smarty']->display('setting_third.htm');
+            return $GLOBALS['smarty']->display('setting_third.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -962,7 +962,7 @@ class Index extends Init
 
         elseif ($_REQUEST['act'] == 'about_us') {
             assign_query_info();
-            return $GLOBALS['smarty']->display('about_us.htm');
+            return $GLOBALS['smarty']->display('about_us.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -970,7 +970,7 @@ class Index extends Init
         /*------------------------------------------------------ */
 
         elseif ($_REQUEST['act'] == 'drag') {
-            return $GLOBALS['smarty']->display('drag.htm');
+            return $GLOBALS['smarty']->display('drag.view.php');
         }
 
         /*------------------------------------------------------ */

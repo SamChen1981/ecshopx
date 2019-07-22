@@ -81,7 +81,7 @@ class Snatch extends Init
             $GLOBALS['smarty']->assign('price_list', $this->get_price_list($id));
             $GLOBALS['smarty']->assign('promotion_info', get_promotion_info());
             $GLOBALS['smarty']->assign('feed_url', ($GLOBALS['_CFG']['rewrite'] == 1) ? "feed-typesnatch.xml" : 'feed.php?type=snatch'); // RSS URL
-            return $GLOBALS['smarty']->display('snatch.dwt');
+            return $GLOBALS['smarty']->display('snatch.view.php');
 
 
         }
@@ -89,7 +89,7 @@ class Snatch extends Init
         /* 最新出价列表 */
         if ($_REQUEST['act'] == 'new_price_list') {
             $GLOBALS['smarty']->assign('price_list', $this->get_price_list($id));
-            return $GLOBALS['smarty']->display('library/snatch_price.lbi');
+            return $GLOBALS['smarty']->display('library/snatch_price.view.php');
 
 
         }
@@ -164,7 +164,7 @@ class Snatch extends Init
 
             $GLOBALS['smarty']->assign('myprice', $this->get_myprice($id));
             $GLOBALS['smarty']->assign('id', $id);
-            $result['content'] = $GLOBALS['smarty']->fetch('library/snatch.lbi');
+            $result['content'] = $GLOBALS['smarty']->fetch('library/snatch.view.php');
             die(json_encode($result));
         }
 

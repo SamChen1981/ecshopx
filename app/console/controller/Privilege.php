@@ -174,7 +174,7 @@ class Privilege extends Init
                     $GLOBALS['smarty']->assign('yunqi_ad_link', $yunqi_bg[0]['link']);
                 }
 
-                return $GLOBALS['smarty']->display('login.htm');
+                return $GLOBALS['smarty']->display('login.view.php');
             }
         }
 
@@ -278,7 +278,7 @@ class Privilege extends Init
 
             /* 显示页面 */
             assign_query_info();
-            return $GLOBALS['smarty']->display('privilege_list.htm');
+            return $GLOBALS['smarty']->display('privilege_list.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -306,7 +306,7 @@ class Privilege extends Init
 
             /* 显示页面 */
             assign_query_info();
-            return $GLOBALS['smarty']->display('privilege_info.htm');
+            return $GLOBALS['smarty']->display('privilege_info.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -417,7 +417,7 @@ class Privilege extends Init
             $GLOBALS['smarty']->assign('action', 'edit');
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('privilege_info.htm');
+            return $GLOBALS['smarty']->display('privilege_info.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -614,7 +614,7 @@ class Privilege extends Init
 
             /* 显示页面 */
             assign_query_info();
-            return $GLOBALS['smarty']->display('privilege_info.htm');
+            return $GLOBALS['smarty']->display('privilege_info.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -672,7 +672,7 @@ class Privilege extends Init
 
             /* 显示页面 */
             assign_query_info();
-            return $GLOBALS['smarty']->display('privilege_allot.htm');
+            return $GLOBALS['smarty']->display('privilege_allot.view.php');
         }
 
         /*------------------------------------------------------ */

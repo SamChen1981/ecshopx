@@ -29,7 +29,7 @@ class Card extends Init
             $GLOBALS['smarty']->assign('record_count', $cards_list['record_count']);
             $GLOBALS['smarty']->assign('page_count', $cards_list['page_count']);
 
-            return $GLOBALS['smarty']->display('card_list.htm');
+            return $GLOBALS['smarty']->display('card_list.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -92,7 +92,7 @@ class Card extends Init
             $GLOBALS['smarty']->assign('form_action', 'insert');
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('card_info.htm');
+            return $GLOBALS['smarty']->display('card_info.view.php');
         } elseif ($_REQUEST['act'] == 'insert') {
             /* 权限判断 */
             admin_priv('card_manage');
@@ -140,7 +140,7 @@ class Card extends Init
             $GLOBALS['smarty']->assign('form_action', 'update');
 
             assign_query_info();
-            return $GLOBALS['smarty']->display('card_info.htm');
+            return $GLOBALS['smarty']->display('card_info.view.php');
         } elseif ($_REQUEST['act'] == 'update') {
             /* 权限判断 */
             admin_priv('card_manage');

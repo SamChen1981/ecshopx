@@ -82,6 +82,6 @@ class Package extends Init
         $GLOBALS['smarty']->assign('lang', $GLOBALS['_LANG']);
 
         $GLOBALS['smarty']->assign('feed_url', ($GLOBALS['_CFG']['rewrite'] == 1) ? "feed-typepackage.xml" : 'feed.php?type=package'); // RSS URL
-        return $GLOBALS['smarty']->display('package.dwt');
+        return $GLOBALS['smarty']->display('package.view.php');
     }
 }

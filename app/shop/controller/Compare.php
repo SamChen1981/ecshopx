@@ -105,6 +105,6 @@ class Compare extends Init
 
         assign_dynamic('compare');
 
-        return $GLOBALS['smarty']->display('compare.dwt');
+        return $GLOBALS['smarty']->display('compare.view.php');
     }
 }

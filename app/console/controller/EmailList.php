@@ -20,7 +20,7 @@ class EmailList extends Init
             $GLOBALS['smarty']->assign('record_count', $emaildb['record_count']);
             $GLOBALS['smarty']->assign('page_count', $emaildb['page_count']);
             assign_query_info();
-            return $GLOBALS['smarty']->display('email_list.htm');
+            return $GLOBALS['smarty']->display('email_list.view.php');
         } elseif ($_REQUEST['act'] == 'export') {
             $sql = "SELECT email FROM " . $GLOBALS['ecs']->table('email_list') . "WHERE stat = 1";
             $emails = $GLOBALS['db']->getAll($sql);

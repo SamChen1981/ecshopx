@@ -34,7 +34,7 @@ class Suppliers extends Init
 
             /* 显示模板 */
             assign_query_info();
-            return $GLOBALS['smarty']->display('suppliers_list.htm');
+            return $GLOBALS['smarty']->display('suppliers_list.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -278,7 +278,7 @@ class Suppliers extends Init
 
                 assign_query_info();
 
-                return $GLOBALS['smarty']->display('suppliers_info.htm');
+                return $GLOBALS['smarty']->display('suppliers_info.view.php');
             } elseif ($_REQUEST['act'] == 'edit') {
                 $suppliers = array();
 
@@ -310,7 +310,7 @@ class Suppliers extends Init
 
                 assign_query_info();
 
-                return $GLOBALS['smarty']->display('suppliers_info.htm');
+                return $GLOBALS['smarty']->display('suppliers_info.view.php');
             }
         }
 

@@ -42,7 +42,7 @@ class Attribute extends Init
 
             /* 显示模板 */
             assign_query_info();
-            return $GLOBALS['smarty']->display('attribute_list.htm');
+            return $GLOBALS['smarty']->display('attribute_list.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -108,7 +108,7 @@ class Attribute extends Init
 
             /* 显示模板 */
             assign_query_info();
-            return $GLOBALS['smarty']->display('attribute_info.htm');
+            return $GLOBALS['smarty']->display('attribute_info.view.php');
         }
 
         /*------------------------------------------------------ */

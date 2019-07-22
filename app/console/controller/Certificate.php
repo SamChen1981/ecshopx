@@ -75,7 +75,7 @@ class Certificate extends Init
             $GLOBALS['smarty']->assign('bind_crm_member_push_no', $bind_crm_member_push_no);
             $GLOBALS['smarty']->assign('bind_crm_order_push_no', $bind_crm_order_push_no);
             $GLOBALS['smarty']->assign('message', $message);
-            return $GLOBALS['smarty']->display('certificate.htm');
+            return $GLOBALS['smarty']->display('certificate.view.php');
         }
 
 
@@ -106,7 +106,7 @@ class Certificate extends Init
             $callback = urlencode($domain_url . "matrix_callback.php");
             $GLOBALS['smarty']->assign('callback', $callback);
             $GLOBALS['smarty']->assign('str_url', $str_url);
-            return $GLOBALS['smarty']->display('apply_bindrelation.htm');
+            return $GLOBALS['smarty']->display('apply_bindrelation.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -132,7 +132,7 @@ class Certificate extends Init
             }
             $str_url = MATRIX_REALTION_URL . implode("&", $array_params);
             $GLOBALS['smarty']->assign('str_url', $str_url);
-            return $GLOBALS['smarty']->display('accept_bindrelation.htm');
+            return $GLOBALS['smarty']->display('accept_bindrelation.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -175,7 +175,7 @@ class Certificate extends Init
         } elseif ($_REQUEST['act'] == 'authority_url') {
             $authority_url = $cert->get_authority_url();
             $GLOBALS['smarty']->assign('authority_url', $authority_url);
-            return $GLOBALS['smarty']->display('authority.htm');
+            return $GLOBALS['smarty']->display('authority.view.php');
         } elseif ($_REQUEST['act'] == 'delete') {
             /* 检查权限 */
             admin_priv('certificate');

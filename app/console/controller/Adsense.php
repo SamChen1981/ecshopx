@@ -87,7 +87,7 @@ class Adsense extends Init
 
             /* 显示页面 */
             assign_query_info();
-            return $GLOBALS['smarty']->display('adsense.htm');
+            return $GLOBALS['smarty']->display('adsense.view.php');
         }
     }
 }

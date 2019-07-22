@@ -75,14 +75,14 @@ class CheckFilePriv extends Init
             $dwt = @opendir(ROOT_PATH . $tpl);
             $tpl_file = array(); //获取要检查的文件
             while ($file = readdir($dwt)) {
-                if (is_file(ROOT_PATH . $tpl . $file) && strrpos($file, '.dwt') > 0) {
+                if (is_file(ROOT_PATH . $tpl . $file) && strrpos($file, '.view.php') > 0) {
                     $tpl_file[] = $tpl . $file;
                 }
             }
             @closedir($dwt);
             $lib = @opendir(ROOT_PATH . $tpl . 'library/');
             while ($file = readdir($lib)) {
-                if (is_file(ROOT_PATH . $tpl . 'library/' . $file) && strrpos($file, '.lbi') > 0) {
+                if (is_file(ROOT_PATH . $tpl . 'library/' . $file) && strrpos($file, '.view.php') > 0) {
                     $tpl_file[] = $tpl . 'library/' . $file;
                 }
             }

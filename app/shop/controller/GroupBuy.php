@@ -43,7 +43,7 @@ class GroupBuy extends Init
             }
 
             /* 如果没有缓存，生成缓存 */
-            if (!$GLOBALS['smarty']->is_cached('group_buy_list.dwt', $cache_id)) {
+            if (!$GLOBALS['smarty']->is_cached('group_buy_list.view.php', $cache_id)) {
                 if ($count > 0) {
                     /* 取得当前页的团购活动 */
                     $gb_list = $this->group_buy_list($size, $page);
@@ -70,7 +70,7 @@ class GroupBuy extends Init
             }
 
             /* 显示模板 */
-            return $GLOBALS['smarty']->display('group_buy_list.dwt', $cache_id);
+            return $GLOBALS['smarty']->display('group_buy_list.view.php', $cache_id);
         }
 
         /*------------------------------------------------------ */
@@ -100,7 +100,7 @@ class GroupBuy extends Init
             $cache_id = sprintf('%X', crc32($cache_id));
 
             /* 如果没有缓存，生成缓存 */
-            if (!$GLOBALS['smarty']->is_cached('group_buy_goods.dwt', $cache_id)) {
+            if (!$GLOBALS['smarty']->is_cached('group_buy_goods.view.php', $cache_id)) {
                 $group_buy['gmt_end_date'] = $group_buy['end_date'];
                 $GLOBALS['smarty']->assign('group_buy', $group_buy);
 
@@ -139,7 +139,7 @@ class GroupBuy extends Init
             $GLOBALS['db']->query($sql);
 
             $GLOBALS['smarty']->assign('now_time', gmtime());           // 当前系统时间
-            return $GLOBALS['smarty']->display('group_buy_goods.dwt', $cache_id);
+            return $GLOBALS['smarty']->display('group_buy_goods.view.php', $cache_id);
         }
 
         /*------------------------------------------------------ */

@@ -106,6 +106,6 @@ class Activity extends Init
         $GLOBALS['smarty']->assign('lang', $GLOBALS['_LANG']);
 
         $GLOBALS['smarty']->assign('feed_url', ($GLOBALS['_CFG']['rewrite'] == 1) ? "feed-typeactivity.xml" : 'feed.php?type=activity'); // RSS URL
-        return $GLOBALS['smarty']->display('activity.dwt');
+        return $GLOBALS['smarty']->display('activity.view.php');
     }
 }

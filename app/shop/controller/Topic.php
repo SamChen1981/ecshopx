@@ -22,7 +22,7 @@ class Topic extends Init
 
         }
 
-        $templates = empty($topic['template']) ? 'topic.dwt' : $topic['template'];
+        $templates = empty($topic['template']) ? 'topic.view.php' : $topic['template'];
 
         $cache_id = sprintf('%X', crc32($_SESSION['user_rank'] . '-' . $GLOBALS['_CFG']['lang'] . '-' . $topic_id));
 
@@ -100,7 +100,7 @@ class Topic extends Init
             $GLOBALS['smarty']->assign('title_pic', $topic['title_pic']);      // 分类标题图片地址
             $GLOBALS['smarty']->assign('base_style', '#' . $topic['base_style']);     // 基本风格样式颜色
 
-            $template_file = empty($topic['template']) ? 'topic.dwt' : $topic['template'];
+            $template_file = empty($topic['template']) ? 'topic.view.php' : $topic['template'];
         }
         /* 显示模板 */
         return $GLOBALS['smarty']->display($templates, $cache_id);

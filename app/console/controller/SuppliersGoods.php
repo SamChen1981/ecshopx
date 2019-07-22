@@ -365,7 +365,7 @@ class SuppliersGoods extends Init
 
             /* 显示商品信息页面 */
             assign_query_info();
-            return $GLOBALS['smarty']->display('goods_info.htm');
+            return $GLOBALS['smarty']->display('goods_info.view.php');
         }
 
         /*------------------------------------------------------ */
@@ -1013,7 +1013,7 @@ class SuppliersGoods extends Init
                 }
             }
             $GLOBALS['smarty']->assign('img_url', $img_url);
-            return $GLOBALS['smarty']->display('goods_show_image.htm');
+            return $GLOBALS['smarty']->display('goods_show_image.view.php');
         }
 
         /*------------------------------------------------------ */
