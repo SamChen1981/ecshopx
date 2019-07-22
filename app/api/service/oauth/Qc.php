@@ -55,7 +55,6 @@ class Qc
             $msg = json_decode($response);
 
             if (isset($this->error)) {
-                // ErrorCase::showError($msg->error, $msg->error_description);
                 return false;
             }
         }
@@ -65,55 +64,6 @@ class Qc
 
         return $params["access_token"];
 
-        ###############################
-        // $openid = $this->get_openid($params["access_token"]);
-
-        // if($openid)
-        // {
-        //     if($mb = $this->_bind_mod->get(array('conditions'=>"openid='".$openid."' AND app='".$this->_app."'",'fields'=>'user_id')))
-        //     {
-        //         /* 如果该openid已经绑定， 则检查该用户是否填写了手机或电子邮件 */
-        //         $member = $this->_member_mod->get(array('conditions'=>'user_id='.$mb['user_id'], 'fields'=>'phone_mob, email'));
-
-        //         /* 如果没有此用户，则说明绑定数据过时，删除绑定 */
-        //         if(!$member) {
-        //             $this->_bind_mod->drop('user_id='.$mb['user_id']);
-        //             $this->show_message('bind_data_error');
-        //             return;
-        //         }
-
-
-        //         // 执行登录
-        //         $this->_do_login($mb['user_id']);
-
-        //         /* 同步登陆外部系统 */
-        //         $ms =& ms();
-        //         $synlogin = $ms->user->synlogin($mb['user_id']);
-        //         $this->show_message(Lang::get('login_successed') . $synlogin, 'back_index', site_url());
-        //     }
-        //     else
-        //     {
-        //         $user_info = $this->get_user_info($params["access_token"], $openid, $this->_config['appid']);
-
-        //         // 进入绑定模式
-        //         $_SESSION['bind'] = array(
-        //             'openid'            => $openid,
-        //             'app'               => $this->_app,
-        //             'bind_expire_time'  => gmtime() + 600,
-        //             'nickname'          => $user_info['nickname'],
-        //             'portrait'          => $user_info['figureurl_qq_2'],
-        //             'real_name'         => $user_info['nickname']
-        //         );
-        //         $url = SITE_URL . '/' . url('app=member&act=bind&codeType=phone');
-        //         header("Location:".htmlspecialchars_decode($url));
-        //     }
-        // }
-        // else
-        // {
-        //     $this->show_warning('verify_fail');
-        //     return;
-        // }
-        ###################
     }
 
     public function combineUrl($baseurl, $arr)
@@ -130,19 +80,14 @@ class Qc
 
     public function get_distant_contents($url)
     {
-        //if (ini_get("allow_url_fopen") == "1") {
-        // $response = file_get_contents($url);
-        //}else{
+        
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_URL, $url);
         $response = curl_exec($ch);
         curl_close($ch);
-        //}
-        //-------请求为空
         if (empty($response)) {
-            // $this->error->showError("50001");
             return false;
         }
         return $response;
@@ -168,7 +113,6 @@ class Qc
 
         $user = json_decode($response);
         if (isset($user->error)) {
-            // $this->error->showError($user->error, $user->error_description);
             return false;
         }
         return $user->openid;
@@ -188,7 +132,6 @@ class Qc
         if ($responseArr['ret'] == 0) {
             return $responseArr;
         } else {
-            // $this->error->showError($response->ret, $response->msg);
             return false;
         }
     }
