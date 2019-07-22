@@ -239,11 +239,10 @@ class Template
             }
         }
 
-        if (!function_exists('version_compare') || version_compare(phpversion(), '5.3.0', '<')) {
-            return preg_replace("/{([^\}\{\n]*)}/e", "\$this->select('\\1');", $source);
-        } else {
-            return include(ROOT_PATH . 'includes' . DIRECTORY_SEPARATOR . 'patch' . DIRECTORY_SEPARATOR . 'includes_cls_template_fetch_str.php');
-        }
+        $template = $this;
+        return preg_replace_callback("/{([^\}\{\n]*)}/", function ($r) use (&$template) {
+            return $template->select($r[1]);
+        }, $source);
     }
 
     /**
@@ -409,11 +408,9 @@ class Template
 
                 case 'insert':
                     $t = $this->get_para(substr($tag, 7), false);
-                    if (!function_exists('version_compare') || version_compare(phpversion(), '5.3.0', '<')) {
-                        $out = "<?php \n" . '$k = ' . preg_replace("/(\'\\$[^,]+)/e", "stripslashes(trim('\\1','\''));", var_export($t, true)) . ";\n";
-                    } else {
-                        include(ROOT_PATH . 'includes' . DIRECTORY_SEPARATOR . 'patch' . DIRECTORY_SEPARATOR . 'includes_cls_template_select.php');
-                    }
+                    $out = "<?php \n" . '$k = ' . preg_replace_callback("/(\'\\$[^,]+)/", function ($r) {
+                            return stripcslashes(trim($r[1], '\''));
+                        }, var_export($t, true)) . ";\n";
                     $out .= 'echo $this->_echash . $k[\'name\'] . \'|\' . serialize($k) . $this->_echash;' . "\n?>";
 
                     return $out;
@@ -471,11 +468,9 @@ class Template
     public function get_val($val)
     {
         if (strrpos($val, '[') !== false) {
-            if (!function_exists('version_compare') || version_compare(phpversion(), '5.3.0', '<')) {
-                $val = preg_replace("/\[([^\[\]]*)\]/eis", "'.'.str_replace('$','\$','\\1')", $val);
-            } else {
-                include(ROOT_PATH . 'includes' . DIRECTORY_SEPARATOR . 'patch' . DIRECTORY_SEPARATOR . 'includes_cls_template_get_val.php');
-            }
+            $val = preg_replace_callback("/\[([^\[\]]*)\]/is", function ($r) {
+                return '.' . $r[1];
+            }, $val);
         }
 
         if (strrpos($val, '|') !== false) {
@@ -917,13 +912,10 @@ class Template
          */
         if ($file_type == '.dwt') {
             /* 将模板中所有library替换为链接 */
-            if (!function_exists('version_compare') || version_compare(phpversion(), '5.3.0', '<')) {
-                $pattern = '/<!--\s#BeginLibraryItem\s\"\/(.*?)\"\s-->.*?<!--\s#EndLibraryItem\s-->/se';
-                $replacement = "'{include file='.strtolower('\\1'). '}'";
-                $source = preg_replace($pattern, $replacement, $source);
-            } else {
-                include(ROOT_PATH . 'includes' . DIRECTORY_SEPARATOR . 'patch' . DIRECTORY_SEPARATOR . 'includes_cls_template_smarty_prefilter_preCompile.php');
-            }
+            $pattern = '/<!--\s#BeginLibraryItem\s\"\/(.*?)\"\s-->.*?<!--\s#EndLibraryItem\s-->/s';
+            $source = preg_replace_callback($pattern, function ($r) {
+                return '{include file=' . strtolower($r[1]) . '}';
+            }, $source);
 
             /* 检查有无动态库文件，如果有为其赋值 */
             $dyna_libs = get_dyna_libs($GLOBALS['_CFG']['template'], $this->_current_file);
