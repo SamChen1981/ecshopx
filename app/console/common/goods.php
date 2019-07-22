@@ -289,7 +289,8 @@ function handle_gallery_image($goods_id, $image_files, $image_descs, $image_urls
             }
             $img_original = $GLOBALS['image']->upload_image($upload);
             if ($img_original === false) {
-                sys_msg($GLOBALS['image']->error_msg(), 1, array(), false);
+                // TODO BY LANCE 待处理return
+                return sys_msg($GLOBALS['image']->error_msg(), 1, array(), false);
             }
             $img_url = $img_original;
 

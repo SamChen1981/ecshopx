@@ -243,7 +243,7 @@ class Flow extends Init
                         return $this->redirect('flow.php?step=consignee');
 
                     } else {
-                        $GLOBALS['err']->show();
+                        return $GLOBALS['err']->show();
                     }
                 } else {
                     // TODO: 非法访问的处理

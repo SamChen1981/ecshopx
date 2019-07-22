@@ -203,7 +203,7 @@ class User extends Init
                     }*/
                     return show_message(sprintf($GLOBALS['_LANG']['register_success'], $username . $ucdata), array($GLOBALS['_LANG']['back_up_page'], $GLOBALS['_LANG']['profile_lnk']), array($back_act, 'user.php'), 'info');
                 } else {
-                    $GLOBALS['err']->show($GLOBALS['_LANG']['sign_up'], 'user.php?act=register');
+                    return $GLOBALS['err']->show($GLOBALS['_LANG']['sign_up'], 'user.php?act=register');
                 }
             }
 
@@ -651,7 +651,7 @@ class User extends Init
             if (add_bonus($user_id, $bouns_sn)) {
                 return show_message($GLOBALS['_LANG']['add_bonus_sucess'], $GLOBALS['_LANG']['back_up_page'], 'user.php?act=bonus', 'info');
             } else {
-                $GLOBALS['err']->show($GLOBALS['_LANG']['back_up_page'], 'user.php?act=bonus');
+                return $GLOBALS['err']->show($GLOBALS['_LANG']['back_up_page'], 'user.php?act=bonus');
             }
         } /* 查看订单列表 */
         elseif ($action == 'order_list') {
@@ -687,7 +687,7 @@ class User extends Init
             $order = get_order_detail($order_id, $user_id);
 
             if ($order === false) {
-                $GLOBALS['err']->show($GLOBALS['_LANG']['back_home_lnk'], './');
+                return $GLOBALS['err']->show($GLOBALS['_LANG']['back_home_lnk'], './');
 
 
             }
@@ -842,7 +842,7 @@ class User extends Init
                 return $this->redirect('user.php?act=order_list');
 
             } else {
-                $GLOBALS['err']->show($GLOBALS['_LANG']['order_list_lnk'], 'user.php?act=order_list');
+                return $GLOBALS['err']->show($GLOBALS['_LANG']['order_list_lnk'], 'user.php?act=order_list');
             }
         } /* 收货地址列表界面*/
         elseif ($action == 'address_list') {
@@ -1054,7 +1054,7 @@ class User extends Init
                 // }
                 return show_message($GLOBALS['_LANG']['add_message_success'], $GLOBALS['_LANG']['message_list_lnk'], 'user.php?act=message_list&order_id=' . $message['order_id'], 'info');
             } else {
-                $GLOBALS['err']->show($GLOBALS['_LANG']['message_list_lnk'], 'user.php?act=message_list');
+                return $GLOBALS['err']->show($GLOBALS['_LANG']['message_list_lnk'], 'user.php?act=message_list');
             }
         } /* 标签云列表 */
         elseif ($action == 'tag_list') {
@@ -1149,7 +1149,7 @@ class User extends Init
                     'info'
                 );
             } else {
-                $GLOBALS['err']->show($GLOBALS['_LANG']['booking_list_lnk'], 'user.php?act=booking_list');
+                return $GLOBALS['err']->show($GLOBALS['_LANG']['booking_list_lnk'], 'user.php?act=booking_list');
             }
         } /* 删除缺货登记 */
         elseif ($action == 'act_del_booking') {
@@ -1176,7 +1176,7 @@ class User extends Init
                 return $this->redirect('user.php?act=order_list');
 
             } else {
-                $GLOBALS['err']->show($GLOBALS['_LANG']['order_list_lnk'], 'user.php?act=order_list');
+                return $GLOBALS['err']->show($GLOBALS['_LANG']['order_list_lnk'], 'user.php?act=order_list');
             }
         } /* 会员退款申请界面 */
         elseif ($action == 'account_raply') {
@@ -1558,7 +1558,7 @@ class User extends Init
             if (merge_user_order($from_order, $to_order, $user_id)) {
                 return show_message($GLOBALS['_LANG']['merge_order_success'], $GLOBALS['_LANG']['order_list_lnk'], 'user.php?act=order_list', 'info');
             } else {
-                $GLOBALS['err']->show($GLOBALS['_LANG']['order_list_lnk']);
+                return $GLOBALS['err']->show($GLOBALS['_LANG']['order_list_lnk']);
             }
         } /* 将指定订单中商品添加到购物车 */
         elseif ($action == 'return_to_cart') {
@@ -1623,7 +1623,7 @@ class User extends Init
             $surplus = floatval($_POST['surplus']);
             if ($surplus <= 0) {
                 $GLOBALS['err']->add($GLOBALS['_LANG']['error_surplus_invalid']);
-                $GLOBALS['err']->show($GLOBALS['_LANG']['order_detail'], 'user.php?act=order_detail&order_id=' . $order_id);
+                return $GLOBALS['err']->show($GLOBALS['_LANG']['order_detail'], 'user.php?act=order_detail&order_id=' . $order_id);
             }
 
             load_helper('order');
@@ -1644,7 +1644,7 @@ class User extends Init
             /* 检查订单是否未付款，检查应付款金额是否大于0 */
             if ($order['pay_status'] != PS_UNPAYED || $order['order_amount'] <= 0) {
                 $GLOBALS['err']->add($GLOBALS['_LANG']['error_order_is_paid']);
-                $GLOBALS['err']->show($GLOBALS['_LANG']['order_detail'], 'user.php?act=order_detail&order_id=' . $order_id);
+                return $GLOBALS['err']->show($GLOBALS['_LANG']['order_detail'], 'user.php?act=order_detail&order_id=' . $order_id);
             }
 
             /* 计算应付款金额（减去支付费用） */
@@ -1661,7 +1661,7 @@ class User extends Init
             /* 用户帐户余额是否足够 */
             if ($surplus > $user['user_money'] + $user['credit_line']) {
                 $GLOBALS['err']->add($GLOBALS['_LANG']['error_surplus_not_enough']);
-                $GLOBALS['err']->show($GLOBALS['_LANG']['order_detail'], 'user.php?act=order_detail&order_id=' . $order_id);
+                return $GLOBALS['err']->show($GLOBALS['_LANG']['order_detail'], 'user.php?act=order_detail&order_id=' . $order_id);
             }
 
             /* 修改订单，重新计算支付费用 */
@@ -1807,7 +1807,7 @@ class User extends Init
                 return $this->redirect('user.php?act=order_detail&order_id=' . $address['order_id']);
 
             } else {
-                $GLOBALS['err']->show($GLOBALS['_LANG']['order_list_lnk'], 'user . php ? act = order_list');
+                return $GLOBALS['err']->show($GLOBALS['_LANG']['order_list_lnk'], 'user . php ? act = order_list');
             }
         } /* 我的红包列表 */
         elseif ($action == 'bonus') {

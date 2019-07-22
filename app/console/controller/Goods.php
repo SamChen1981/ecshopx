@@ -944,7 +944,6 @@ class Goods extends Init
             }
 
             /* 处理相册图片 */
-            /* handle_gallery_image($goods_id, $_FILES['img_url'], $_POST['img_desc'], $_POST['img_file']); */
             if (isset($_POST['img_sn']) and $_POST['img_sn']) {
                 $_POST['img_sn'] = explode(',', $_POST['img_sn']);
                 $gallery_sort_order = 1;

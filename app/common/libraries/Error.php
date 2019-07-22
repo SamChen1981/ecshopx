@@ -114,12 +114,10 @@ class Error
                 assign_template();
                 $GLOBALS['smarty']->assign('auto_redirect', true);
                 $GLOBALS['smarty']->assign('message', $message);
-                $GLOBALS['smarty']->display($this->_template);
+                return $GLOBALS['smarty']->display($this->_template);
             } else {
-                die($message['content']);
+                return $message['content'];
             }
-
-
         }
     }
 }

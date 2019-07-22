@@ -68,7 +68,7 @@ class Message extends Init
                 $msg_info = $GLOBALS['_CFG']['message_check'] ? $GLOBALS['_LANG']['message_submit_wait'] : $GLOBALS['_LANG']['message_submit_done'];
                 return show_message($msg_info, $GLOBALS['_LANG']['message_list_lnk'], 'message.php');
             } else {
-                $GLOBALS['err']->show($GLOBALS['_LANG']['message_list_lnk'], 'message.php');
+                return $GLOBALS['err']->show($GLOBALS['_LANG']['message_list_lnk'], 'message.php');
             }
         }
 
