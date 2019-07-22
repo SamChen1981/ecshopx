@@ -160,3 +160,5 @@ $_LANG['mobile_setting'] = 'APP应用配置';
 $_LANG['h5_setting'] = 'H5应用配置';
 $_LANG['wxa_setting'] = '小程序应用配置';
 $_LANG['leancloud'] = 'APP推送管理';
+
+return $_LANG;

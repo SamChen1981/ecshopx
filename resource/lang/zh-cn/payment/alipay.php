@@ -38,3 +38,5 @@ $_LANG['alipay_pay_method_desc'] = '请选择您最后一次跟支付宝签订�
 $_LANG['alipay_pay_method_range'][0] = '使用标准双接口';
 $_LANG['alipay_pay_method_range'][1] = '使用担保交易接口';
 $_LANG['alipay_pay_method_range'][2] = '使用即时到帐交易接口';
+
+return $_LANG;

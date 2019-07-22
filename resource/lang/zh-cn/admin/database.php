@@ -116,3 +116,5 @@ $_LANG['manage_required'] = '请输入超级管理员账号和密码';
 $_LANG['login_failure'] = '用户名或密码错误';
 $_LANG['clear_success'] = '清除成功';
 $_LANG['confirm_clear_demo'] = '确认要清除体验数据吗？';
+
+return $_LANG;

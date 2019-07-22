@@ -11,3 +11,5 @@ $_LANG['wxpaynative_appsecret'] = '微信公众号AppSecret';
 $_LANG['wxpaynative_key'] = '商户支付密钥Key';
 $_LANG['wxpaynative_mchid'] = '商户ID';
 $_LANG['wxpaynative_button'] = '立即用微信支付';
+
+return $_LANG;

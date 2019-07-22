@@ -11,3 +11,5 @@ $_LANG['tiangongcpb2c_desc'] = '天工支付 是国内先进的网上支付平�
 $_LANG['tiangongcpb2c_client_id'] = '天工用户身份id';
 $_LANG['tiangongcpb2c_client_secret'] = '天工用户身份secret';
 $_LANG['pay_button'] = '立即使用天工支付';
+
+return $_LANG;

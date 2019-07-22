@@ -12,3 +12,5 @@ $_LANG['chinabank_desc']    = '网银在线（www.chinabank.com.cn）与中国�
 $_LANG['chinabank_account'] = '商户编号';
 $_LANG['chinabank_key']     = 'MD5 密钥';
 $_LANG['pay_button']        = '立即支付';
+
+return $_LANG;

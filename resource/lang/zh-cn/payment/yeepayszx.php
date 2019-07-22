@@ -12,3 +12,5 @@ $_LANG['ypszx_desc']    = 'YeePay易宝神州行支付是只要是中国移动�
 $_LANG['yp_account'] = '商户编号';
 $_LANG['yp_key']     = '商户密钥';
 $_LANG['pay_button'] = '立即支付';
+
+return $_LANG;

@@ -151,3 +151,5 @@ return $corp = array(
     'ZYWL'      =>  '中邮物流',
     'ZZJH'      =>  '郑州建华',
 );
+
+return $_LANG;

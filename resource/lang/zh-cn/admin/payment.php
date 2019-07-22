@@ -41,3 +41,5 @@ $_LANG['cert_invalid_file'] = '上传的证书文件格式不正确';
 $_LANG['fail_upload'] = '文件上传失败';
 $_LANG['lack_cert_file'] = '缺少证书文件';
 $_LANG['pfx_pwd_null']                  = '密码不能为空';
+
+return $_LANG;

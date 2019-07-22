@@ -15,3 +15,5 @@ $_LANG['pay_button']        = '立即支付';
 $_LANG['account_voucher']   = '会员帐户充值';
 $_LANG['shop_order_sn']     = '商城订单号';
 $_LANG['penpay_register']     = "<a href='https://cloud-ecshop.xyunqi.com/payment_apply.php?mod=tenpay&par=1202822001' target=\"_blank\">立即免费申请：单笔费率1%</a>";
+
+return $_LANG;
