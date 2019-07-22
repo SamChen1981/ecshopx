@@ -4,10 +4,7 @@
  * 订单自动确认收货
  */
 
-$cron_lang = ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/cron/auto_confirm.php';
-if (file_exists($cron_lang)) {
-    include_once($cron_lang);
-}
+load_lang('cron/auto_confirm');
 
 /* 模块的基本信息 */
 if (isset($set_modules) && $set_modules == true) {

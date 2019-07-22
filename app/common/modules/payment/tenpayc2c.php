@@ -4,11 +4,7 @@
  * 财付通中介担保支付插件
  */
 
-$payment_lang = ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/payment/tenpayc2c.php';
-
-if (file_exists($payment_lang)) {
-    include_once($payment_lang);
-}
+load_lang('shipping/tenpayc2c');
 
 /* 模块的基本信息 */
 if (isset($set_modules) && $set_modules == true) {

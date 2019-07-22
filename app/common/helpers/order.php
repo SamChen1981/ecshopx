@@ -1467,7 +1467,7 @@ function order_refund($order, $refund_type, $refund_note, $refund_amount = 0)
     if ($refund_note) {
         $change_desc = $refund_note;
     } else {
-        include_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/admin/order.php');
+        load_lang('admin/order');
         $change_desc = sprintf($GLOBALS['_LANG']['order_refund'], $order['order_sn']);
     }
 
@@ -2967,7 +2967,7 @@ function is_open_logistics_trace()
 
 function get_logistics_trace($order_sn, $limit = 0, $lang)
 {
-    require_once(ROOT_PATH . 'languages/' . $lang . '/corp.php');
+    load_lang('corp');
     $sql = "select shipping_id,shipping_name,invoice_no from " . $GLOBALS['ecs']->table('delivery_order') . " where order_sn='" . $order_sn . "'";
     $row = $GLOBALS['db']->getRow($sql);
     if ($row['shipping_id'] == 0) {

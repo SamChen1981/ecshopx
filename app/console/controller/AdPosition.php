@@ -9,7 +9,7 @@ class AdPosition extends Init
 {
     public function index()
     {
-        require_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/admin/ads.php');
+        load_lang('admin/ads');
 
         /* act操作项的初始化 */
         if (empty($_REQUEST['act'])) {

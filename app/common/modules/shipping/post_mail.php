@@ -4,10 +4,7 @@
  * 邮局平邮插件
  */
 
-$shipping_lang = ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/shipping/post_mail.php';
-if (file_exists($shipping_lang)) {
-    include_once($shipping_lang);
-}
+load_lang('shipping/post_mail');
 
 /* 模块的基本信息 */
 if (isset($set_modules) && $set_modules == true) {

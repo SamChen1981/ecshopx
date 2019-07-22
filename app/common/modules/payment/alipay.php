@@ -3,13 +3,8 @@
 /**
  * 支付宝插件
  */
-require(ROOT_PATH . 'includes/safety.php');
 
-$payment_lang = ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/payment/alipay.php';
-
-if (file_exists($payment_lang)) {
-    include_once($payment_lang);
-}
+load_lang('shipping/alipay');
 
 /* 模块的基本信息 */
 if (isset($set_modules) && $set_modules == true) {

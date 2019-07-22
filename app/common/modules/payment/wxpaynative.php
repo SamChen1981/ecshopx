@@ -3,12 +3,7 @@
  * 中国银联支付
  */
 
-$payment_lang = ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/payment/wxpaynative.php';
-
-if (file_exists($payment_lang)) {
-    include_once($payment_lang);
-}
-
+load_lang('payment/wxpaynative');
 
 /* 模块的基本信息 */
 if (isset($set_modules) && $set_modules == true) {

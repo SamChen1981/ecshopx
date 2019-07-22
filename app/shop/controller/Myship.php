@@ -13,8 +13,8 @@ class Myship extends Init
         load_helper('transaction');
 
         /* 载入语言文件 */
-        require_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/shopping_flow.php');
-        require_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/user.php');
+        load_lang('shopping_flow');
+        load_lang('user');
 
         /*------------------------------------------------------ */
         //-- INPUT

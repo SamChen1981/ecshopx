@@ -4,11 +4,7 @@
  * 余额支付插件
  */
 
-$payment_lang = ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/payment/balance.php';
-
-if (file_exists($payment_lang)) {
-    include_once($payment_lang);
-}
+load_lang('shipping/balance');
 
 /* 模块的基本信息 */
 if (isset($set_modules) && $set_modules == true) {

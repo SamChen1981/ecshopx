@@ -4,10 +4,7 @@
  * 订单自动取消
  */
 
-$cron_lang = ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/cron/auto_cancel.php';
-if (file_exists($cron_lang)) {
-    include_once($cron_lang);
-}
+load_lang('cron/auto_cancel');
 
 /* 模块的基本信息 */
 if (isset($set_modules) && $set_modules == true) {

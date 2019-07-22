@@ -81,7 +81,7 @@ class Role extends Init
         elseif ($_REQUEST['act'] == 'add') {
             /* 检查权限 */
             admin_priv('admin_manage');
-            include_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/admin/priv_action.php');
+            load_lang('admin/priv_action');
 
             $priv_str = '';
 
@@ -152,7 +152,7 @@ class Role extends Init
         //-- 编辑角色信息
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'edit') {
-            include_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/admin/priv_action.php');
+            load_lang('admin/priv_action');
             $_REQUEST['id'] = !empty($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
             /* 获得该管理员的权限 */
             $priv_str = $GLOBALS['db']->getOne("SELECT action_list FROM " . $GLOBALS['ecs']->table('role') . " WHERE role_id = '$_GET[id]'");

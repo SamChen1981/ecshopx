@@ -100,8 +100,8 @@ class Init extends Controller
 
         }
 
-        require(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/admin/common.php');
-        require(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/admin/log_action.php');
+        load_lang('admin/common');
+        load_lang('admin/log_action');
 
         if (file_exists(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/admin/' . basename(PHP_SELF))) {
             include(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/admin/' . basename(PHP_SELF));

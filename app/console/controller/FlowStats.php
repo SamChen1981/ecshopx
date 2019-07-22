@@ -9,7 +9,7 @@ class FlowStats extends Init
 {
     public function index()
     {
-        require_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/admin/statistic.php');
+        load_lang('admin/statistic');
         $GLOBALS['smarty']->assign('lang', $GLOBALS['_LANG']);
 
         global $timezone;

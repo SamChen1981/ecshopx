@@ -10,7 +10,7 @@ class User extends Init
     public function index()
     {
         /* 载入语言文件 */
-        require_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/user.php');
+        load_lang('user');
 
         $user_id = $_SESSION['user_id'];
         $action = isset($_REQUEST['act']) ? trim($_REQUEST['act']) : 'default';
@@ -847,7 +847,7 @@ class User extends Init
         } /* 收货地址列表界面*/
         elseif ($action == 'address_list') {
             load_helper('transaction');
-            include_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/shopping_flow.php');
+            load_lang('shopping_flow');
             $GLOBALS['smarty']->assign('lang', $GLOBALS['_LANG']);
 
             /* 取得国家列表、商店所在国家、商店所在国家的省列表 */
@@ -897,7 +897,7 @@ class User extends Init
         } /* 添加/编辑收货地址的处理 */
         elseif ($action == 'act_edit_address') {
             load_helper('transaction');
-            include_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/shopping_flow.php');
+            load_lang('shopping_flow');
             $GLOBALS['smarty']->assign('lang', $GLOBALS['_LANG']);
 
             $address = array(

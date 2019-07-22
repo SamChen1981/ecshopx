@@ -22,10 +22,7 @@ class Convert extends Init
             $modules = read_modules('../includes/modules/convert');
             for ($i = 0; $i < count($modules); $i++) {
                 $code = $modules[$i]['code'];
-                $lang_file = ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/convert/' . $code . '.php';
-                if (file_exists($lang_file)) {
-                    include_once($lang_file);
-                }
+                load_lang('convert/' . $code);
                 $modules[$i]['desc'] = $GLOBALS['_LANG'][$modules[$i]['desc']];
             }
             $GLOBALS['smarty']->assign('module_list', $modules);
@@ -127,7 +124,7 @@ class Convert extends Init
             $_SESSION['convert_config'] = $config;
 
             /* 包含插件语言文件 */
-            include_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/convert/' . $config->code . '.php');
+            load_lang('convert/' . $config->code . '');
 
             /* 取得第一步操作 */
             $step = $convert->next_step('');
@@ -161,7 +158,7 @@ class Convert extends Init
             $convert = new $config->code($sdb, $config->prefix, $config->path, $config->charset);
 
             /* 包含插件语言文件 */
-            include_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/convert/' . $config->code . '.php');
+            load_lang('convert/' . $config->code . '');
 
             /* 执行步骤 */
             $result = $convert->process($step);

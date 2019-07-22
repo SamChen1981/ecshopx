@@ -621,7 +621,7 @@ class Privilege extends Init
         //-- 为管理员分配权限
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'allot') {
-            include_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/admin/priv_action.php');
+            load_lang('admin/priv_action');
 
             admin_priv('allot_priv');
             if ($_SESSION['admin_id'] == $_GET['id']) {

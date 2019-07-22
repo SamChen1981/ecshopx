@@ -10,7 +10,7 @@ class UserAccountManage extends Init
     public function index()
     {
         load_helper('order');
-        require_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/admin/statistic.php');
+        load_lang('admin/statistic');
         $GLOBALS['smarty']->assign('lang', $GLOBALS['_LANG']);
 
         /* act操作项的初始化 */

@@ -19,12 +19,7 @@ class Shipping extends Init
             $modules = read_modules('../includes/modules/shipping');
 
             for ($i = 0; $i < count($modules); $i++) {
-                $lang_file = ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/shipping/' . $modules[$i]['code'] . '.php';
-
-                if (file_exists($lang_file)) {
-                    include_once($lang_file);
-                }
-
+                load_lang('shipping/' . $modules[$i]['code']);
                 /* 检查该插件是否已经安装 */
                 $sql = "SELECT shipping_id, shipping_name, shipping_desc, insure, support_cod,shipping_order FROM " . $GLOBALS['ecs']->table('shipping') . " WHERE shipping_code='" . $modules[$i]['code'] . "' ORDER BY shipping_order";
                 $row = $GLOBALS['db']->GetRow($sql);

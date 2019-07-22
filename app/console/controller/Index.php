@@ -571,11 +571,7 @@ class Index extends Init
             ksort($modules);
 
             for ($i = 0; $i < count($modules); $i++) {
-                $lang_file = ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/shipping/' . $modules[$i]['code'] . '.php';
-
-                if (file_exists($lang_file)) {
-                    include_once($lang_file);
-                }
+                load_lang('shipping/' . $modules[$i]['code']);
 
                 $modules[$i]['name'] = $GLOBALS['_LANG'][$modules[$i]['code']];
                 $modules[$i]['desc'] = $GLOBALS['_LANG'][$modules[$i]['desc']];

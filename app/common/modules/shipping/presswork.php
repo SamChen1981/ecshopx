@@ -4,10 +4,7 @@
  * 挂号印刷品插件
  */
 
-$shipping_lang = ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/shipping/presswork.php';
-if (file_exists($shipping_lang)) {
-    include_once($shipping_lang);
-}
+load_lang('shipping/presswork');
 
 /* 模块的基本信息 */
 if (isset($set_modules) && $set_modules == true) {

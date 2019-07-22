@@ -12,8 +12,8 @@ class Flow extends Init
         load_helper('order');
 
         /* 载入语言文件 */
-        require_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/user.php');
-        require_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/shopping_flow.php');
+        load_lang('user');
+        load_lang('shopping_flow');
 
         /*------------------------------------------------------ */
         //-- INPUT
@@ -150,7 +150,7 @@ class Flow extends Init
             return $this->redirect('flow.php');
 
         } elseif ($_REQUEST['step'] == 'login') {
-            include_once('languages/' . $GLOBALS['_CFG']['lang'] . '/user.php');
+            load_lang('user');
 
             $where = "session_id = '" . SESS_ID . "'";
             if ($_SESSION['user_id']) {

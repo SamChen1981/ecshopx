@@ -10,8 +10,8 @@ class OrderStats extends Init
     public function index()
     {
         load_helper('order');
-        require_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/admin/statistic.php');
-        require_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/admin/order.php');
+        load_lang('admin/statistic');
+        load_lang('admin/order');
 
         $GLOBALS['smarty']->assign('lang', $GLOBALS['_LANG']);
 

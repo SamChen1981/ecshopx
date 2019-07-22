@@ -244,7 +244,7 @@ function order_paid($log_id, $pay_status = PS_PAYED, $note = '')
 
                     /* 修改会员帐户金额 */
                     $GLOBALS['_LANG'] = array();
-                    include_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/user.php');
+                    load_lang('user');
                     log_account_change($arr['user_id'], $arr['amount'], 0, 0, 0, $GLOBALS['_LANG']['surplus_type_0'], ACT_SAVING);
 
                     $order = $GLOBALS['db']->getRow("select order_sn FROM " . $GLOBALS['ecs']->table('order_info') . " WHERE order_id=" . $pay_log['order_id']);

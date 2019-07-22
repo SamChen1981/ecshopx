@@ -4,15 +4,11 @@
  * 申通快递 配送方式插件
  */
 
-$shipping_lang = ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/shipping/sto_express.php';
-if (file_exists($shipping_lang)) {
-    include_once($shipping_lang);
-}
-
+load_lang('shipping/sto_express');
 
 /* 模块的基本信息 */
 if (isset($set_modules) && $set_modules == true) {
-    include_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/admin/shipping.php');
+    load_lang('admin/shipping');
 
     $i = (isset($modules)) ? count($modules) : 0;
 

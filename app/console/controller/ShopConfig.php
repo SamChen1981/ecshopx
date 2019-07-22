@@ -73,9 +73,9 @@ class ShopConfig extends Init
             foreach ($demo_data as $k => $v) {
                 $demo_data[$k] = sprintf("<font color='red'>%s</font>", $v);
             }
-            require_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/common.php');
-            require_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/shopping_flow.php');
-            require_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/admin/order.php');
+            load_lang('common');
+            load_lang('shopping_flow');
+            load_lang('admin/order');
             $demo_sms_info['sms_order_placed'] = sprintf($GLOBALS['_LANG']['order_placed_sms'], $demo_data['name'], $demo_data['mobile']);
             $demo_sms_info['sms_order_payed'] = sprintf($GLOBALS['_LANG']['order_payed_sms'], $demo_data['order_sn'], $demo_data['name'], $demo_data['mobile']);
             $demo_sms_info['sms_order_payed_to_customer'] = sprintf($GLOBALS['_LANG']['order_payed_to_customer_sms'], $demo_data['order_sn'], $demo_data['order_amount']);

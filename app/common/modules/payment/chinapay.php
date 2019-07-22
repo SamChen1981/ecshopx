@@ -4,12 +4,7 @@
  * 银联在线支付
  */
 
-// 包含配置文件
-$payment_lang = ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/payment/chinapay.php';
-
-if (file_exists($payment_lang)) {
-    include_once($payment_lang);
-}
+load_lang('payment/chinapay');
 
 /* 模块的基本信息 */
 if (isset($set_modules) && $set_modules == true) {

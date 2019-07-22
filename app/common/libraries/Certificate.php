@@ -472,8 +472,7 @@ class Certificate
         if ($GLOBALS['db']->GetOne($sql) > 0) {
             return true;
         } else {
-            $payment_lang = ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/payment/yunqi.php';
-            include_once($payment_lang);
+            load_lang('payment/yunqi');
             $payment['pay_name'] = $GLOBALS['_LANG']['yunqi'];
             $payment['pay_desc'] = $GLOBALS['_LANG']['yunqi_desc'];
             $payment['pay_config'] = serialize(array());
