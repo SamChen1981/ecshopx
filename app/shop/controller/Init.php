@@ -6,7 +6,6 @@ use app\common\libraries\Error;
 use app\common\libraries\Mysql;
 use app\common\libraries\Session;
 use app\common\libraries\Shop;
-use app\common\libraries\Template;
 use think\Controller;
 
 /**
@@ -32,6 +31,7 @@ class Init extends Controller
         } else {
             $php_self .= '.php';
         }
+        $_SERVER['PHP_SELF'] = $php_self;
         define('PHP_SELF', $php_self);
 
         load_helper('time');
@@ -102,38 +102,9 @@ class Init extends Controller
 
             define('SESS_ID', $GLOBALS['sess']->get_session_id());
         }
-        if (isset($_SERVER['PHP_SELF'])) {
-            $_SERVER['PHP_SELF'] = htmlspecialchars($_SERVER['PHP_SELF']);
-        }
-        if (!defined('INIT_NO_SMARTY')) {
-            header('Cache-control: private');
-            header('Content-type: text/html; charset=' . EC_CHARSET);
 
-            /* 创建 Smarty 对象。*/
-            $GLOBALS['smarty'] = new Template();
-
-            $GLOBALS['smarty']->cache_lifetime = $GLOBALS['_CFG']['cache_time'];
-            $GLOBALS['smarty']->template_dir = public_path('themes/' . $GLOBALS['_CFG']['template']);
-            $GLOBALS['smarty']->cache_dir = runtime_path('temp/caches');
-            $GLOBALS['smarty']->compile_dir = runtime_path('temp/compiled');
-
-            if (config('app.app_debug')) {
-                $GLOBALS['smarty']->direct_output = true;
-                $GLOBALS['smarty']->force_compile = true;
-            } else {
-                $GLOBALS['smarty']->direct_output = false;
-                $GLOBALS['smarty']->force_compile = false;
-            }
-
-            $this->assign('lang', $GLOBALS['_LANG']);
-            $this->assign('ecs_charset', EC_CHARSET);
-            $this->assign('template_dir', 'themes/' . $GLOBALS['_CFG']['template']);
-            if (!empty($GLOBALS['_CFG']['stylename'])) {
-                $this->assign('ecs_css_path', 'themes/' . $GLOBALS['_CFG']['template'] . '/style_' . $GLOBALS['_CFG']['stylename'] . '.css');
-            } else {
-                $this->assign('ecs_css_path', 'themes/' . $GLOBALS['_CFG']['template'] . '/style.css');
-            }
-        }
+        $view_path = 'themes/' . $GLOBALS['_CFG']['template'] . '/' . config('template.tpl_path') . '/';
+        $this->view->config('view_path', public_path($view_path));
 
         if (!defined('INIT_NO_USERS')) {
             /* 会员信息 */

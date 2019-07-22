@@ -9,8 +9,6 @@ class Receive extends Init
 {
     public function index()
     {
-
-
         /* 取得参数 */
         $order_id = !empty($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;  // 订单号
         $consignee = !empty($_REQUEST['con']) ? rawurldecode(trim($_REQUEST['con'])) : ''; // 收货人
