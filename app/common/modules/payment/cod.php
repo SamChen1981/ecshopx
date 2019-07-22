@@ -49,22 +49,6 @@ if (isset($set_modules) && $set_modules == true) {
  */
 class cod
 {
-    public function __construct()
-    {
-        $this->cod();
-    }
-
-    /**
-     * 构造函数
-     *
-     * @access  public
-     * @param
-     *
-     * @return void
-     */
-    public function cod()
-    {
-    }
 
     /**
      * 提交函数

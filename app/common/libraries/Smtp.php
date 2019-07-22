@@ -35,7 +35,7 @@ class Smtp
      *  timeout     连接超时的时间          默认：5
      * @return  bool
      */
-    public function smtp($params = array())
+    public function __construct($params = array())
     {
         if (!defined('CRLF')) {
             define('CRLF', "\r\n", true);

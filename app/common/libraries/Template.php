@@ -32,11 +32,6 @@ class Template
 
     public function __construct()
     {
-        $this->cls_template();
-    }
-
-    public function cls_template()
-    {
         $this->_errorlevel = error_reporting();
         $this->_nowtime = time();
         if (defined('EC_CHARSET')) {

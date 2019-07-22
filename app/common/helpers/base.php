@@ -4,6 +4,7 @@
  * 基础函数库
  */
 
+use app\common\libraries\Iconv;
 use app\common\libraries\Image;
 
 /**
@@ -698,7 +699,7 @@ function ecs_iconv($source_lang, $target_lang, $source_string = '')
     }
 
     if ($chs === null) {
-        $chs = new Chinese(ROOT_PATH);
+        $chs = new Iconv();
     }
 
     return $chs->Convert($source_lang, $target_lang, $source_string);

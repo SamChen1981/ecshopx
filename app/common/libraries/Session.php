@@ -27,11 +27,6 @@ class Session
 
     public function __construct(&$db, $session_table, $session_data_table, $session_name = 'ECS_ID', $session_id = '')
     {
-        $this->cls_session($db, $session_table, $session_data_table, $session_name, $session_id);
-    }
-
-    public function cls_session(&$db, $session_table, $session_data_table, $session_name = 'ECS_ID', $session_id = '')
-    {
         $GLOBALS['_SESSION'] = array();
 
         if (!empty($GLOBALS['cookie_path'])) {

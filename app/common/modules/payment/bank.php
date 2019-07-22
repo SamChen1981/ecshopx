@@ -46,23 +46,6 @@ if (isset($set_modules) && $set_modules == true) {
  */
 class bank
 {
-    public function __construct()
-    {
-        $this->bank();
-    }
-
-    /**
-     * 构造函数
-     *
-     * @access  public
-     * @param
-     *
-     * @return void
-     */
-    public function bank()
-    {
-    }
-
     /**
      * 提交函数
      */

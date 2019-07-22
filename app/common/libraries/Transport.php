@@ -51,21 +51,6 @@ class Transport
      */
     public function __construct($time_limit = -1, $connect_timeout = -1, $stream_timeout = -1, $use_curl = true)
     {
-        $this->transport($time_limit, $connect_timeout, $stream_timeout, $use_curl);
-    }
-
-    /**
-     * 构造函数
-     *
-     * @access  public
-     * @param integer $time_limit
-     * @param integer $connect_timeout
-     * @param integer $stream_timeout
-     * @param boolean $use_curl
-     * @return  void
-     */
-    public function transport($time_limit = -1, $connect_timeout = -1, $stream_timeout = -1, $use_curl = false)
-    {
         $this->time_limit = $time_limit;
         $this->connect_timeout = $connect_timeout;
         $this->stream_timeout = $stream_timeout;

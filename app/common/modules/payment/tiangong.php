@@ -54,18 +54,6 @@ class tiangong
 {
 
     /**
-     * 构造函数
-     *
-     * @access  public
-     * @param
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-    }
-
-    /**
      * 生成支付代码
      * @param array $order 订单信息
      * @param array $payment 支付方式信息

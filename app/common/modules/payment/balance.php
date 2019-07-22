@@ -46,23 +46,6 @@ if (isset($set_modules) && $set_modules == true) {
  */
 class balance
 {
-    public function __construct()
-    {
-        $this->balance();
-    }
-
-    /**
-     * 构造函数
-     *
-     * @access  public
-     * @param
-     *
-     * @return void
-     */
-    public function balance()
-    {
-    }
-
     /**
      * 提交函数
      */

@@ -1,8 +1,6 @@
 <?php
 
-/**
- * UCenter 会员数据处理类
- */
+namespace app\common\modules\integrates;
 
 /* 模块的基本信息 */
 if (isset($set_modules) && $set_modules == true) {
@@ -32,8 +30,9 @@ if (isset($set_modules) && $set_modules == true) {
     return;
 }
 
-require_once(ROOT_PATH . 'includes/modules/integrates/integrate.php');
-
+/**
+ * UCenter 会员数据处理类
+ */
 class ucenter extends integrate
 {
     /**
@@ -46,21 +45,7 @@ class ucenter extends integrate
      */
     public function __construct($cfg)
     {
-        /* 使用默认数据库连接 */
-        $this->ucenter($cfg);
-    }
-
-    /**
-     * 构造函数
-     *
-     * @access  public
-     * @param
-     *
-     * @return void
-     */
-    public function ucenter($cfg)
-    {
-        parent::integrate(array());
+        parent::__construct(array());
         $this->user_table = 'users';
         $this->field_id = 'user_id';
         $this->field_name = 'user_name';

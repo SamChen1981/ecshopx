@@ -1,8 +1,6 @@
 <?php
 
-/**
- * 会员数据处理类
- */
+namespace app\common\modules\integrates;
 
 /* 模块的基本信息 */
 if (isset($set_modules) && $set_modules == true) {
@@ -26,26 +24,14 @@ if (isset($set_modules) && $set_modules == true) {
     return;
 }
 
-require_once(ROOT_PATH . 'includes/modules/integrates/integrate.php');
-
+/**
+ * 会员数据处理类
+ */
 class ecshop extends integrate
 {
     public $is_ecshop = 1;
 
-    public function __construct($cfg)
-    {
-        $this->ecshop($cfg);
-    }
-
-    /**
-     *
-     *
-     * @access  public
-     * @param
-     *
-     * @return void
-     */
-    public function ecshop($cfg)
+    public function __construct()
     {
         parent::__construct(array());
         $this->user_table = 'users';
@@ -60,7 +46,6 @@ class ecshop extends integrate
         $this->need_sync = false;
         $this->is_ecshop = 1;
     }
-
 
     /**
      *  检查指定用户是否存在及密码是否正确(重载基类check_user函数，支持zc加密方法)
