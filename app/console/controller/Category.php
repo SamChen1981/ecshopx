@@ -9,7 +9,7 @@ class Category extends Init
 {
     public function index()
     {
-        $exc = new Exchange($GLOBALS['ecs']->table("category"), $db, 'cat_id', 'cat_name');
+        $exc = new Exchange($GLOBALS['ecs']->table("category"), $GLOBALS['db'], 'cat_id', 'cat_name');
 
         /* act操作项的初始化 */
         if (empty($_REQUEST['act'])) {

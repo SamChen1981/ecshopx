@@ -18,24 +18,20 @@ class Session
 
     public function destroy_session()
     {
-        /* ECSHOP 自定义执行部分 */
         if (!empty($GLOBALS['ecs'])) {
-            $this->db->query('DELETE FROM ' . $GLOBALS['ecs']->table('cart') . " WHERE session_id = '$this->session_id' AND user_id='0'");
+            $this->db->query('DELETE FROM ' . $GLOBALS['ecs']->table('cart') . " WHERE session_id = '" . $this->get_session_id() . "' AND user_id='0'");
         }
-        /* ECSHOP 自定义执行部分 */
 
-        $this->db->query('DELETE FROM ' . $this->session_data_table . " WHERE sesskey = '" . $this->session_id . "' LIMIT 1");
-
-        return $this->db->query('DELETE FROM ' . $this->session_table . " WHERE sesskey = '" . $this->session_id . "' LIMIT 1");
+        return session(null);
     }
 
     public function get_session_id()
     {
-        return $this->session_id;
+        return session_id();
     }
 
     public function get_users_count()
     {
-        return $this->db->getOne('SELECT count(*) FROM ' . $this->session_table);
+        return 0; // TODO BY LANCE
     }
 }

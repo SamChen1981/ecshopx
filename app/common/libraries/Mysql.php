@@ -88,13 +88,7 @@ class Mysql extends Db
 
         $res = $this->query($sql);
         if ($res !== false) {
-            $row = mysqli_fetch_row($res);
-
-            if ($row !== false) {
-                return $row[0];
-            } else {
-                return '';
-            }
+            return reset($res[0]);
         } else {
             return false;
         }
@@ -102,37 +96,14 @@ class Mysql extends Db
 
     public function getOneCached($sql, $cached = 'FILEFIRST')
     {
-        $sql = trim($sql . ' LIMIT 1');
-
-        $cachefirst = ($cached == 'FILEFIRST' || ($cached == 'MYSQLFIRST' && $this->platform != 'WINDOWS')) && $this->max_cache_time;
-        if (!$cachefirst) {
-            return $this->getOne($sql, true);
-        } else {
-            $result = $this->getSqlCacheData($sql, $cached);
-            if (empty($result['storecache']) == true) {
-                return $result['data'];
-            }
-        }
-
-        $arr = $this->getOne($sql, true);
-
-        if ($arr !== false && $cachefirst) {
-            $this->setSqlCacheData($result, $arr);
-        }
-
-        return $arr;
+        return false;
     }
 
     public function getAll($sql)
     {
         $res = $this->query($sql);
         if ($res !== false) {
-            $arr = array();
-            foreach ($res as $row) {
-                $arr[] = $row;
-            }
-
-            return $arr;
+            return $res;
         } else {
             return false;
         }
@@ -140,23 +111,7 @@ class Mysql extends Db
 
     public function getAllCached($sql, $cached = 'FILEFIRST')
     {
-        $cachefirst = ($cached == 'FILEFIRST' || ($cached == 'MYSQLFIRST' && $this->platform != 'WINDOWS')) && $this->max_cache_time;
-        if (!$cachefirst) {
-            return $this->getAll($sql);
-        } else {
-            $result = $this->getSqlCacheData($sql, $cached);
-            if (empty($result['storecache']) == true) {
-                return $result['data'];
-            }
-        }
-
-        $arr = $this->getAll($sql);
-
-        if ($arr !== false && $cachefirst) {
-            $this->setSqlCacheData($result, $arr);
-        }
-
-        return $arr;
+        return false;
     }
 
     public function getRow($sql, $limited = false)
@@ -167,7 +122,7 @@ class Mysql extends Db
 
         $res = $this->query($sql);
         if ($res !== false) {
-            return mysqli_fetch_assoc($res);
+            return $res[0];
         } else {
             return false;
         }
@@ -175,25 +130,7 @@ class Mysql extends Db
 
     public function getRowCached($sql, $cached = 'FILEFIRST')
     {
-        $sql = trim($sql . ' LIMIT 1');
-
-        $cachefirst = ($cached == 'FILEFIRST' || ($cached == 'MYSQLFIRST' && $this->platform != 'WINDOWS')) && $this->max_cache_time;
-        if (!$cachefirst) {
-            return $this->getRow($sql, true);
-        } else {
-            $result = $this->getSqlCacheData($sql, $cached);
-            if (empty($result['storecache']) == true) {
-                return $result['data'];
-            }
-        }
-
-        $arr = $this->getRow($sql, true);
-
-        if ($arr !== false && $cachefirst) {
-            $this->setSqlCacheData($result, $arr);
-        }
-
-        return $arr;
+        return false;
     }
 
     public function getCol($sql)
@@ -213,23 +150,7 @@ class Mysql extends Db
 
     public function getColCached($sql, $cached = 'FILEFIRST')
     {
-        $cachefirst = ($cached == 'FILEFIRST' || ($cached == 'MYSQLFIRST' && $this->platform != 'WINDOWS')) && $this->max_cache_time;
-        if (!$cachefirst) {
-            return $this->getCol($sql);
-        } else {
-            $result = $this->getSqlCacheData($sql, $cached);
-            if (empty($result['storecache']) == true) {
-                return $result['data'];
-            }
-        }
-
-        $arr = $this->getCol($sql);
-
-        if ($arr !== false && $cachefirst) {
-            $this->setSqlCacheData($result, $arr);
-        }
-
-        return $arr;
+        return false;
     }
 
     public function autoExecute($table, $field_values, $mode = 'INSERT', $where = '', $querymode = '')

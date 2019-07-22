@@ -11,7 +11,7 @@ class Shopinfo extends Init
     {
         require_once(ROOT_PATH . "includes/fckeditor/fckeditor.php");
 
-        $exc = new Exchange($GLOBALS['ecs']->table("article"), $db, 'article_id', 'title');
+        $exc = new Exchange($GLOBALS['ecs']->table("article"), $GLOBALS['db'], 'article_id', 'title');
 
         /*------------------------------------------------------ */
         //-- 文章列表

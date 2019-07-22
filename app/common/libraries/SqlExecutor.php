@@ -95,7 +95,7 @@ class SqlExecutor
      * @param array $ignored_errors 忽略的错误号数组
      * @return  void
      */
-    public function __construct($db, $charset = 'gbk', $sprefix = 'ecs_', $tprefix = 'ecs_', $log_path = '', $auto_match = false, $ignored_errors = array())
+    public function __construct($GLOBALS['db'], $charset = 'gbk', $sprefix = 'ecs_', $tprefix = 'ecs_', $log_path = '', $auto_match = false, $ignored_errors = array())
     {
         $this->db = $db;
         $this->db_charset = $charset;

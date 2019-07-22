@@ -9,7 +9,7 @@ class Shipping extends Init
 {
     public function index()
     {
-        $exc = new Exchange($GLOBALS['ecs']->table('shipping'), $db, 'shipping_code', 'shipping_name');
+        $exc = new Exchange($GLOBALS['ecs']->table('shipping'), $GLOBALS['db'], 'shipping_code', 'shipping_name');
 
         /*------------------------------------------------------ */
         //-- 配送方式列表

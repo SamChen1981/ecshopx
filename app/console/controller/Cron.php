@@ -11,7 +11,7 @@ class Cron extends Init
     {
         $_REQUEST['act'] = trim($_REQUEST['act']);
         admin_priv('cron');
-        $exc = new Exchange($GLOBALS['ecs']->table('crons'), $db, 'cron_code', 'cron_name');
+        $exc = new Exchange($GLOBALS['ecs']->table('crons'), $GLOBALS['db'], 'cron_code', 'cron_name');
         if ($_REQUEST['act'] == 'list') {
             $cron_list = array();
             $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('crons');

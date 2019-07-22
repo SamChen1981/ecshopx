@@ -75,7 +75,7 @@ class Init extends Controller
         $GLOBALS['err'] = new Error('message.htm');
 
         /* 初始化session */
-        $GLOBALS['sess'] = new Session($db, $GLOBALS['ecs']->table('sessions'), $GLOBALS['ecs']->table('sessions_data'), 'ECSCP_ID');
+        $GLOBALS['sess'] = new Session($GLOBALS['db'], $GLOBALS['ecs']->table('sessions'), $GLOBALS['ecs']->table('sessions_data'), 'ECSCP_ID');
 
         /* 初始化 action */
         if (!isset($_REQUEST['act'])) {

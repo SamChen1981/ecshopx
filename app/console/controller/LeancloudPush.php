@@ -3,10 +3,10 @@
 namespace app\console\controller;
 
 include('leancloud_client.php');
-function delivery_msg_push($id, $db, $ecs)
+function delivery_msg_push($id, $GLOBALS['db'], $ecs)
 {
     //判断开启状态
-    $config = get_config($db, $ecs);
+    $config = get_config($GLOBALS['db'], $ecs);
     if (!$config || !json_decode($config['config'], true)) {
         return false;
     }
@@ -21,23 +21,23 @@ function delivery_msg_push($id, $db, $ecs)
         $sql = "INSERT INTO " . $GLOBALS['ecs']->table('push') . " (`user_id`,`title`,`content`,`link`,`platform`,`push_type`,`message_type`,`push_at`,`created_at`,`updated_at`) VALUES ('$user_id','$title','$content','$link','0','0','2','$time','$time','$time')";
         $GLOBALS['db']->query($sql);
         $msg_id = $GLOBALS['db']->getRow("SELECT id FROM " . $GLOBALS['ecs']->table('push') . " ORDER BY `id` DESC LIMIT 1");
-        $is_push = push($msg_id['id'], $db, $ecs);
+        $is_push = push($msg_id['id'], $GLOBALS['db'], $ecs);
         return $is_push;
     }
     return false;
 }
 
-function push($message_id, $db, $ecs)
+function push($message_id, $GLOBALS['db'], $ecs)
 {
     //判断开启状态
-    $config = get_config($db, $ecs);
+    $config = get_config($GLOBALS['db'], $ecs);
     if (!$config || !json_decode($config['config'], true)) {
         return false;
     }
     $config = json_decode($config['config'], true);
     leancloud_client::initialize($config['app_id'], $config['app_key']);
 
-    $messageInfo = get_msginfo($message_id, $db, $ecs);
+    $messageInfo = get_msginfo($message_id, $GLOBALS['db'], $ecs);
     if (!$messageInfo) {
         return false;
     }
@@ -109,7 +109,7 @@ function push($message_id, $db, $ecs)
     }
 }
 
-function get_config($db, $ecs)
+function get_config($GLOBALS['db'], $ecs)
 {
     $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('config') . " WHERE code = 'leancloud' AND status = '1'";
     $res = $GLOBALS['db']->getAll($sql);
@@ -120,7 +120,7 @@ function get_config($db, $ecs)
     }
 }
 
-function get_msginfo($msg_id, $db, $ecs)
+function get_msginfo($msg_id, $GLOBALS['db'], $ecs)
 {
     $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('push') . " WHERE id = '$msg_id'";
     $res = $GLOBALS['db']->getAll($sql);

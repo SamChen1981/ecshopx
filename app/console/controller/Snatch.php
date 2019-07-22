@@ -9,7 +9,7 @@ class Snatch extends Init
 {
     public function index()
     {
-        $exc = new Exchange($GLOBALS['ecs']->table("goods_activity"), $db, 'act_id', 'act_name');
+        $exc = new Exchange($GLOBALS['ecs']->table("goods_activity"), $GLOBALS['db'], 'act_id', 'act_name');
 
         /*------------------------------------------------------ */
         //-- 添加活动

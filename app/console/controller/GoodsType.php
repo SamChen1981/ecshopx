@@ -9,7 +9,7 @@ class GoodsType extends Init
 {
     public function index()
     {
-        $exc = new Exchange($GLOBALS['ecs']->table("goods_type"), $db, 'cat_id', 'cat_name');
+        $exc = new Exchange($GLOBALS['ecs']->table("goods_type"), $GLOBALS['db'], 'cat_id', 'cat_name');
 
         /*------------------------------------------------------ */
         //-- 管理界面

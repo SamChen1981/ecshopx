@@ -12,7 +12,7 @@ class ExchangeGoods extends Init
 
 
         /*初始化数据交换对象 */
-        $exc = new Exchange($GLOBALS['ecs']->table("exchange_goods"), $db, 'goods_id', 'exchange_integral');
+        $exc = new Exchange($GLOBALS['ecs']->table("exchange_goods"), $GLOBALS['db'], 'goods_id', 'exchange_integral');
         //$image = new Image();
 
         /*------------------------------------------------------ */

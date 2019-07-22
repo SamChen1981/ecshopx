@@ -181,9 +181,10 @@ function init_users()
     if ($cls != null) {
         return $cls;
     }
-    include_once(ROOT_PATH . 'includes/modules/integrates/' . $GLOBALS['_CFG']['integrate_code'] . '.php');
+
+    $integrate = 'app\\common\\modules\\integrates\\' . $GLOBALS['_CFG']['integrate_code'];
     $cfg = unserialize($GLOBALS['_CFG']['integrate_config']);
-    $cls = new $GLOBALS['_CFG']['integrate_code']($cfg);
+    $cls = new $integrate($cfg);
 
     return $cls;
 }
@@ -540,6 +541,7 @@ function get_brand_list()
  */
 function get_brands($cat = 0, $app = 'brand')
 {
+    global $page_libs;
     $template = basename(PHP_SELF);
     $template = substr($template, 0, strrpos($template, '.'));
     load_helper('template', 'console');

@@ -19,7 +19,7 @@ class Role extends Init
         }
 
         /* 初始化 $exc 对象 */
-        $exc = new Exchange($GLOBALS['ecs']->table("role"), $db, 'role_id', 'role_name');
+        $exc = new Exchange($GLOBALS['ecs']->table("role"), $GLOBALS['db'], 'role_id', 'role_name');
 
         /*------------------------------------------------------ */
         //-- 退出登录

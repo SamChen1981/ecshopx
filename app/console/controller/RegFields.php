@@ -9,7 +9,7 @@ class RegFields extends Init
 {
     public function index()
     {
-        $exc = new Exchange($GLOBALS['ecs']->table("reg_fields"), $db, 'id', 'reg_field_name');
+        $exc = new Exchange($GLOBALS['ecs']->table("reg_fields"), $GLOBALS['db'], 'id', 'reg_field_name');
 
         /*------------------------------------------------------ */
         //-- 会员注册项列表

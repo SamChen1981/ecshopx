@@ -11,7 +11,7 @@ class SuppliersGoods extends Init
     {
         load_helper('goods', 'console');
         $image = new Image($GLOBALS['_CFG']['bgcolor']);
-        $exc = new Exchange($GLOBALS['ecs']->table('goods'), $db, 'goods_id', 'goods_name');
+        $exc = new Exchange($GLOBALS['ecs']->table('goods'), $GLOBALS['db'], 'goods_id', 'goods_name');
 
         /*------------------------------------------------------ */
         //-- 商品列表，商品回收站

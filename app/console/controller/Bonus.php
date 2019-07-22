@@ -19,7 +19,7 @@ class Bonus extends Init
         }
 
         /* 初始化$exc对象 */
-        $exc = new Exchange($GLOBALS['ecs']->table('bonus_type'), $db, 'type_id', 'type_name');
+        $exc = new Exchange($GLOBALS['ecs']->table('bonus_type'), $GLOBALS['db'], 'type_id', 'type_name');
 
         /*------------------------------------------------------ */
         //-- 红包类型列表页面

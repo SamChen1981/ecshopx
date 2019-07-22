@@ -13,7 +13,7 @@ class Ads extends Init
     public function index()
     {
         $image = new Image($GLOBALS['_CFG']['bgcolor']);
-        $exc = new Exchange($GLOBALS['ecs']->table("ad"), $db, 'ad_id', 'ad_name');
+        $exc = new Exchange($GLOBALS['ecs']->table("ad"), $GLOBALS['db'], 'ad_id', 'ad_name');
         $allow_suffix = array('gif', 'jpg', 'png', 'jpeg', 'bmp', 'swf');
         /* act操作项的初始化 */
         if (empty($_REQUEST['act'])) {

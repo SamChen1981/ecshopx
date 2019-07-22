@@ -9,7 +9,7 @@ class ShippingArea extends Init
 {
     public function index()
     {
-        $exc = new Exchange($GLOBALS['ecs']->table('shipping_area'), $db, 'shipping_area_id', 'shipping_area_name');
+        $exc = new Exchange($GLOBALS['ecs']->table('shipping_area'), $GLOBALS['db'], 'shipping_area_id', 'shipping_area_name');
 
         /*------------------------------------------------------ */
         //-- 配送区域列表

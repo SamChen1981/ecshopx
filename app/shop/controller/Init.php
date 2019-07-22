@@ -98,7 +98,7 @@ class Init extends Controller
 
         if (!defined('INIT_NO_USERS')) {
             /* 初始化session */
-            $GLOBALS['sess'] = new Session($db, $GLOBALS['ecs']->table('sessions'), $GLOBALS['ecs']->table('sessions_data'));
+            $GLOBALS['sess'] = new Session($GLOBALS['db'], $GLOBALS['ecs']->table('sessions'), $GLOBALS['ecs']->table('sessions_data'));
 
             define('SESS_ID', $GLOBALS['sess']->get_session_id());
         }

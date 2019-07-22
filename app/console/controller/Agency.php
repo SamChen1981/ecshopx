@@ -9,7 +9,7 @@ class Agency extends Init
 {
     public function index()
     {
-        $exc = new Exchange($GLOBALS['ecs']->table('agency'), $db, 'agency_id', 'agency_name');
+        $exc = new Exchange($GLOBALS['ecs']->table('agency'), $GLOBALS['db'], 'agency_id', 'agency_name');
 
         /*------------------------------------------------------ */
         //-- 办事处列表

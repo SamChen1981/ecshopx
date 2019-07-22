@@ -19,7 +19,7 @@ class AdPosition extends Init
         }
 
         $GLOBALS['smarty']->assign('lang', $GLOBALS['_LANG']);
-        $exc = new Exchange($GLOBALS['ecs']->table("ad_position"), $db, 'position_id', 'position_name');
+        $exc = new Exchange($GLOBALS['ecs']->table("ad_position"), $GLOBALS['db'], 'position_id', 'position_name');
 
         /*------------------------------------------------------ */
         //-- 广告位置列表

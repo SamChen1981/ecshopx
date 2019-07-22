@@ -326,7 +326,7 @@ function install_data($sql_files)
     include(ROOT_PATH . 'data/config.php');
 
     $db = new Mysql();
-    $se = new sql_executor($db, EC_DB_CHARSET, 'ecs_', $prefix);
+    $se = new sql_executor($GLOBALS['db'], EC_DB_CHARSET, 'ecs_', $prefix);
     $result = $se->run_all($sql_files);
     if ($result === false) {
         $GLOBALS['err']->add($se->error);

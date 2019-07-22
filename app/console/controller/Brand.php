@@ -11,7 +11,7 @@ class Brand extends Init
     {
         $image = new Image($GLOBALS['_CFG']['bgcolor']);
 
-        $exc = new Exchange($GLOBALS['ecs']->table("brand"), $db, 'brand_id', 'brand_name');
+        $exc = new Exchange($GLOBALS['ecs']->table("brand"), $GLOBALS['db'], 'brand_id', 'brand_name');
 
         /*------------------------------------------------------ */
         //-- 品牌列表

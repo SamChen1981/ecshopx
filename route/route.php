@@ -1,5 +1,3 @@
 <?php
 
-Route::get('hello', function () {
-    return 'hello world!';
-});
+Route::get('user.php', 'shop/user/index');

@@ -12,8 +12,8 @@ class Shophelp extends Init
         require_once(ROOT_PATH . "includes/fckeditor/fckeditor.php");
 
         /*初始化数据交换对象 */
-        $exc_article = new Exchange($GLOBALS['ecs']->table("article"), $db, 'article_id', 'title');
-        $exc_cat = new Exchange($GLOBALS['ecs']->table("article_cat"), $db, 'cat_id', 'cat_name');
+        $exc_article = new Exchange($GLOBALS['ecs']->table("article"), $GLOBALS['db'], 'article_id', 'title');
+        $exc_cat = new Exchange($GLOBALS['ecs']->table("article_cat"), $GLOBALS['db'], 'cat_id', 'cat_name');
 
         /*------------------------------------------------------ */
         //-- 列出所有文章分类

@@ -870,7 +870,7 @@ class Order extends Init
             }
 
             //发货通知APP
-            $is_push = delivery_msg_push($delivery_id, $db, $ecs);
+            $is_push = delivery_msg_push($delivery_id, $GLOBALS['db'], $ecs);
             /* 清除缓存 */
             clear_cache_files();
 

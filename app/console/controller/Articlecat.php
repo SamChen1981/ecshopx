@@ -9,7 +9,7 @@ class Articlecat extends Init
 {
     public function index()
     {
-        $exc = new Exchange($GLOBALS['ecs']->table("article_cat"), $db, 'cat_id', 'cat_name');
+        $exc = new Exchange($GLOBALS['ecs']->table("article_cat"), $GLOBALS['db'], 'cat_id', 'cat_name');
         /* act操作项的初始化 */
         $_REQUEST['act'] = trim($_REQUEST['act']);
         if (empty($_REQUEST['act'])) {

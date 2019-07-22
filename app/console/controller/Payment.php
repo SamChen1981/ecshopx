@@ -9,7 +9,7 @@ class Payment extends Init
 {
     public function index()
     {
-        $exc = new Exchange($GLOBALS['ecs']->table('payment'), $db, 'pay_code', 'pay_name');
+        $exc = new Exchange($GLOBALS['ecs']->table('payment'), $GLOBALS['db'], 'pay_code', 'pay_name');
 
         /*------------------------------------------------------ */
         //-- 支付方式列表 ?act=list

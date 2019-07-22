@@ -11,7 +11,7 @@ class FriendLink extends Init
     {
         $image = new Image($GLOBALS['_CFG']['bgcolor']);
 
-        $exc = new Exchange($GLOBALS['ecs']->table('friend_link'), $db, 'link_id', 'link_name');
+        $exc = new Exchange($GLOBALS['ecs']->table('friend_link'), $GLOBALS['db'], 'link_id', 'link_name');
 
         /* act操作项的初始化 */
         if (empty($_REQUEST['act'])) {

@@ -18,8 +18,8 @@ class Vote extends Init
             $_REQUEST['act'] = trim($_REQUEST['act']);
         }
 
-        $exc = new Exchange($GLOBALS['ecs']->table("vote"), $db, 'vote_id', 'vote_name');
-        $exc_opn = new Exchange($GLOBALS['ecs']->table("vote_option"), $db, 'option_id', 'option_name');
+        $exc = new Exchange($GLOBALS['ecs']->table("vote"), $GLOBALS['db'], 'vote_id', 'vote_name');
+        $exc_opn = new Exchange($GLOBALS['ecs']->table("vote_option"), $GLOBALS['db'], 'option_id', 'option_name');
 
         /*------------------------------------------------------ */
         //-- 投票列表页面

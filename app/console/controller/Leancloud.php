@@ -29,7 +29,7 @@ class Leancloud extends Init
             }
             $tab = !$isOpenWap ? 'open' : 'enter';
             $charset = EC_CHARSET == 'utf-8' ? "utf8" : 'gbk';
-            $push_list = $this->get_list(1, $db, $ecs);
+            $push_list = $this->get_list(1, $GLOBALS['db'], $ecs);
             $count = $push_list['count'];
             unset($push_list['count']);
             $order_by = array('ORDER BY created_at ASC' => '创建时间从新到旧', 'ORDER BY created_at DESC' => '创建时间从旧到新', 'ORDER BY push_at ASC' => '推送时间从新到旧', 'ORDER BY push_at DESC' => '推送时间从旧到新');
@@ -48,7 +48,7 @@ class Leancloud extends Init
         } elseif ($_REQUEST['act'] == 'edit') {
             /* 检查权限 */
             admin_priv('leancloud');
-            $config = get_config($db, $ecs);
+            $config = get_config($GLOBALS['db'], $ecs);
             if (!$config || !json_decode($config['config'], true)) {
                 $links[] = array('text' => $GLOBALS['_LANG']['mobile_setting'], 'href' => 'ecmobile_setting.php?act=list');
                 sys_msg($GLOBALS['_LANG']['push_off'], 1, $links);
@@ -66,7 +66,7 @@ class Leancloud extends Init
             $tab = !$isOpenWap ? 'open' : 'enter';
             $charset = EC_CHARSET == 'utf-8' ? "utf8" : 'gbk';
             if ($_GET['id']) {
-                $params = $this->getrow($_GET['id'], $db, $ecs);
+                $params = $this->getrow($_GET['id'], $GLOBALS['db'], $ecs);
                 $GLOBALS['smarty']->assign('params', $params);
             }
             $links = $this->get_url();
@@ -122,13 +122,13 @@ class Leancloud extends Init
             if (!$id && $res) {
                 $id = $GLOBALS['db']->getRow("SELECT id FROM " . $GLOBALS['ecs']->table('push') . " ORDER BY `id` DESC LIMIT 1");
             }
-            $is_push = push($id, $db, $ecs);
+            $is_push = push($id, $GLOBALS['db'], $ecs);
             sys_msg($GLOBALS['_LANG']['attradd_succed'], 0, $links);
         } elseif ($_REQUEST['act'] == 'resend') {
             /* 检查权限 */
             admin_priv('leancloud');
             $id = $_GET['id'];
-            $is_push = push($id, $db, $ecs);
+            $is_push = push($id, $GLOBALS['db'], $ecs);
             $is_push = $is_push ? 1 : 0;
             $time = date('Y-m-d H:i:s', time());
             $sql = "UPDATE " . $GLOBALS['ecs']->table('push') . " SET `push_at`='$time',`updated_at`='$time',`isPush`='$is_push' WHERE id = $id";
@@ -217,7 +217,7 @@ class Leancloud extends Init
         }
     }
 
-    private function get_list($page, $db, $ecs)
+    private function get_list($page, $GLOBALS['db'], $ecs)
     {
         $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('push');
         $count = $GLOBALS['db']->getONE($sql);
@@ -232,7 +232,7 @@ class Leancloud extends Init
         return $push_list ? $push_list : false;
     }
 
-    private function getrow($id, $db, $ecs)
+    private function getrow($id, $GLOBALS['db'], $ecs)
     {
         $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('push') . " WHERE id = $id";
         $push_list = $GLOBALS['db']->getAll($sql);

@@ -25,7 +25,7 @@ class Exchange
      *
      * @return void
      */
-    public function __construct($table, $db, $id, $name)
+    public function __construct($table, $GLOBALS['db'], $id, $name)
     {
         $this->table = $table;
         $this->db = $db;

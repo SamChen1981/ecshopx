@@ -9,8 +9,6 @@ class User extends Init
 {
     public function index()
     {
-
-
         /* 载入语言文件 */
         require_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/user.php');
 
@@ -1718,8 +1716,8 @@ class User extends Init
             $matrix->createOrder($order['order_sn']);*/
 
             /* 跳转 */
-            return $this->redirect('user.php?act=order_detail&order_id=' . $order_id . "');
-            
+            return $this->redirect('user.php?act=order_detail&order_id=' . $order_id);
+
         } /* 编辑使用余额支付的处理 */
         elseif ($action == 'act_edit_payment') {
             /* 检查是否登录 */
@@ -1764,7 +1762,7 @@ class User extends Init
 
             /* 检查订单是否未付款和未发货 以及订单金额是否为0 和支付id是否为改变*/
             if ($order['pay_status'] != PS_UNPAYED || $order['shipping_status'] != SS_UNSHIPPED || $order['goods_amount'] <= 0 || $order['pay_id'] == $pay_id) {
-                return $this->redirect('user.php?act=order_detail&order_id=$order_id');
+                return $this->redirect('user.php?act=order_detail&order_id=' . $order_id);
 
             }
 
@@ -1773,12 +1771,12 @@ class User extends Init
             $order_amount += $pay_fee;
 
             $sql = "UPDATE " . $GLOBALS['ecs']->table('order_info') .
-                " SET pay_id='$pay_id', pay_name='$payment_info[pay_name]', pay_fee='$pay_fee', order_amount='$order_amount'" .
+                " SET pay_id = '$pay_id', pay_name = '$payment_info[pay_name]', pay_fee = '$pay_fee', order_amount = '$order_amount'" .
                 " WHERE order_id = '$order_id'";
             $GLOBALS['db']->query($sql);
 
             /* 跳转 */
-            return $this->redirect('user.php?act=order_detail&order_id=$order_id');
+            return $this->redirect('user.php?act=order_detail&order_id=' . $order_id);
 
         } /* 保存订单详情收货地址 */
         elseif ($action == 'save_order_address') {
@@ -1796,20 +1794,20 @@ class User extends Init
                 'order_id' => isset($_POST['order_id']) ? intval($_POST['order_id']) : 0
             );
             if (save_order_address($address, $user_id)) {
-                $order_sn = $GLOBALS['db']->getOne("SELECT order_sn FROM " . $GLOBALS['ecs']->table('order_info') . " WHERE order_id='{$address['order_id']}'");
+                $order_sn = $GLOBALS['db']->getOne("SELECT order_sn FROM " . $GLOBALS['ecs']->table('order_info') . " WHERE order_id = '{$address['order_id']}'");
                 if ($order_sn) {
                     $sql = "UPDATE " . $GLOBALS['ecs']->table('order_info') .
-                        " SET lastmodify=" . gmtime() . "  WHERE order_id = " . $address['order_id'];
+                        " SET lastmodify = " . gmtime() . "  WHERE order_id = " . $address['order_id'];
                     $GLOBALS['db']->query($sql);
                     /*
                      * TODO BY LANCE
                      * $matrix = new matrix;
                     $matrix->createOrder($order_sn);*/
                 }
-                return $this->redirect('user.php?act=order_detail&order_id=' . $address['order_id'] . "');
-                
+                return $this->redirect('user.php?act=order_detail&order_id=' . $address['order_id']);
+
             } else {
-                $GLOBALS['err']->show($GLOBALS['_LANG']['order_list_lnk'], 'user.php?act=order_list');
+                $GLOBALS['err']->show($GLOBALS['_LANG']['order_list_lnk'], 'user . php ? act = order_list');
             }
         } /* 我的红包列表 */
         elseif ($action == 'bonus') {
@@ -1818,24 +1816,24 @@ class User extends Init
             $page = isset($_REQUEST['page']) ? intval($_REQUEST['page']) : 1;
             $record_count = $GLOBALS['db']->getOne("SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('user_bonus') . " WHERE user_id = '$user_id'");
 
-            $pager = get_pager('user.php', array('act' => $action), $record_count, $page);
+            $pager = get_pager('user . php', array('act' => $action), $record_count, $page);
             $bonus = get_user_bouns_list($user_id, $pager['size'], $pager['start']);
 
             $GLOBALS['smarty']->assign('pager', $pager);
             $GLOBALS['smarty']->assign('bonus', $bonus);
-            $GLOBALS['smarty']->display('user_transaction.dwt');
+            $GLOBALS['smarty']->display('user_transaction . dwt');
         } /* 我的团购列表 */
         elseif ($action == 'group_buy') {
             load_helper('transaction');
 
             //待议
-            $GLOBALS['smarty']->display('user_transaction.dwt');
+            $GLOBALS['smarty']->display('user_transaction . dwt');
         } /* 团购订单详情 */
         elseif ($action == 'group_buy_detail') {
             load_helper('transaction');
 
             //待议
-            $GLOBALS['smarty']->display('user_transaction.dwt');
+            $GLOBALS['smarty']->display('user_transaction . dwt');
         } // 用户推荐页面
         elseif ($action == 'affiliate') {
             $goodsid = intval(isset($_REQUEST['goodsid']) ? $_REQUEST['goodsid'] : 0);
@@ -1878,14 +1876,14 @@ class User extends Init
                     $GLOBALS['smarty']->assign('affdb', $affdb);
 
                     $sqlcount = "SELECT count(*) FROM " . $GLOBALS['ecs']->table('order_info') . " o" .
-                        " LEFT JOIN" . $GLOBALS['ecs']->table('users') . " u ON o.user_id = u.user_id" .
-                        " LEFT JOIN " . $GLOBALS['ecs']->table('affiliate_log') . " a ON o.order_id = a.order_id" .
-                        " WHERE o.user_id > 0 AND (u.parent_id IN ($all_uid) AND o.is_separate = 0 OR a.user_id = '$user_id' AND o.is_separate > 0)";
+                        " LEFT JOIN" . $GLOBALS['ecs']->table('users') . " u ON o . user_id = u . user_id" .
+                        " LEFT JOIN " . $GLOBALS['ecs']->table('affiliate_log') . " a ON o . order_id = a . order_id" .
+                        " WHERE o . user_id > 0 AND (u . parent_id IN($all_uid) AND o . is_separate = 0 OR a . user_id = '$user_id' AND o . is_separate > 0)";
 
-                    $sql = "SELECT o.*, a.log_id, a.user_id as suid,  a.user_name as auser, a.money, a.point, a.separate_type FROM " . $GLOBALS['ecs']->table('order_info') . " o" .
-                        " LEFT JOIN" . $GLOBALS['ecs']->table('users') . " u ON o.user_id = u.user_id" .
-                        " LEFT JOIN " . $GLOBALS['ecs']->table('affiliate_log') . " a ON o.order_id = a.order_id" .
-                        " WHERE o.user_id > 0 AND (u.parent_id IN ($all_uid) AND o.is_separate = 0 OR a.user_id = '$user_id' AND o.is_separate > 0)" .
+                    $sql = "SELECT o .*, a . log_id, a . user_id as suid,  a . user_name as auser, a . money, a . point, a . separate_type FROM " . $GLOBALS['ecs']->table('order_info') . " o" .
+                        " LEFT JOIN" . $GLOBALS['ecs']->table('users') . " u ON o . user_id = u . user_id" .
+                        " LEFT JOIN " . $GLOBALS['ecs']->table('affiliate_log') . " a ON o . order_id = a . order_id" .
+                        " WHERE o . user_id > 0 AND (u . parent_id IN($all_uid) AND o . is_separate = 0 OR a . user_id = '$user_id' AND o . is_separate > 0)" .
                         " ORDER BY order_id DESC";
 
                     /*
@@ -1906,15 +1904,15 @@ class User extends Init
                 } else {
                     //推荐订单分成
                     $sqlcount = "SELECT count(*) FROM " . $GLOBALS['ecs']->table('order_info') . " o" .
-                        " LEFT JOIN" . $GLOBALS['ecs']->table('users') . " u ON o.user_id = u.user_id" .
-                        " LEFT JOIN " . $GLOBALS['ecs']->table('affiliate_log') . " a ON o.order_id = a.order_id" .
-                        " WHERE o.user_id > 0 AND (o.parent_id = '$user_id' AND o.is_separate = 0 OR a.user_id = '$user_id' AND o.is_separate > 0)";
+                        " LEFT JOIN" . $GLOBALS['ecs']->table('users') . " u ON o . user_id = u . user_id" .
+                        " LEFT JOIN " . $GLOBALS['ecs']->table('affiliate_log') . " a ON o . order_id = a . order_id" .
+                        " WHERE o . user_id > 0 AND (o . parent_id = '$user_id' AND o . is_separate = 0 OR a . user_id = '$user_id' AND o . is_separate > 0)";
 
 
-                    $sql = "SELECT o.*, a.log_id,a.user_id as suid, a.user_name as auser, a.money, a.point, a.separate_type,u.parent_id as up FROM " . $GLOBALS['ecs']->table('order_info') . " o" .
-                        " LEFT JOIN" . $GLOBALS['ecs']->table('users') . " u ON o.user_id = u.user_id" .
-                        " LEFT JOIN " . $GLOBALS['ecs']->table('affiliate_log') . " a ON o.order_id = a.order_id" .
-                        " WHERE o.user_id > 0 AND (o.parent_id = '$user_id' AND o.is_separate = 0 OR a.user_id = '$user_id' AND o.is_separate > 0)" .
+                    $sql = "SELECT o .*, a . log_id,a . user_id as suid, a . user_name as auser, a . money, a . point, a . separate_type,u . parent_id as up FROM " . $GLOBALS['ecs']->table('order_info') . " o" .
+                        " LEFT JOIN" . $GLOBALS['ecs']->table('users') . " u ON o . user_id = u . user_id" .
+                        " LEFT JOIN " . $GLOBALS['ecs']->table('affiliate_log') . " a ON o . order_id = a . order_id" .
+                        " WHERE o . user_id > 0 AND (o . parent_id = '$user_id' AND o . is_separate = 0 OR a . user_id = '$user_id' AND o . is_separate > 0)" .
                         " ORDER BY order_id DESC";
 
                     /*
@@ -1950,11 +1948,11 @@ class User extends Init
                             $rt['is_separate'] = 3;
                         }
                     }
-                    $rt['order_sn'] = substr($rt['order_sn'], 0, strlen($rt['order_sn']) - 5) . "***" . substr($rt['order_sn'], -2, 2);
+                    $rt['order_sn'] = substr($rt['order_sn'], 0, strlen($rt['order_sn']) - 5) . " ***" . substr($rt['order_sn'], -2, 2);
                     $logdb[] = $rt;
                 }
 
-                $url_format = "user.php?act=affiliate&page=";
+                $url_format = "user . php ? act = affiliate & page = ";
 
                 $pager = array(
                     'page' => $page,
@@ -1974,7 +1972,8 @@ class User extends Init
                 }
 
                 //生成二维码
-                $share_url = $GLOBALS['ecs']->url() . "?u={$user_id}";
+                $share_url = $GLOBALS['ecs']->url() . " ? u ={
+                    $user_id}";
                 $_share_url = createQrCode($share_url);
 
                 // 短链接
@@ -2005,7 +2004,9 @@ class User extends Init
 
                 $GLOBALS['smarty']->assign('goods', $goods);
                 //生成二维码
-                $share_url = $GLOBALS['ecs']->url() . "goods.php?id={$goodsid}&u={$user_id}";
+                $share_url = $GLOBALS['ecs']->url() . "goods . php ? id ={
+                    $goodsid}&u ={
+                    $user_id}";
                 $_share_url = createQrCode($share_url);
                 // 短链接
                 $short_url = createShortUrl($share_url);
@@ -2043,10 +2044,10 @@ class User extends Init
             if ($job == 'add') {
                 if (empty($ck)) {
                     $hash = substr(md5(time()), 1, 10);
-                    $sql = "INSERT INTO " . $GLOBALS['ecs']->table('email_list') . " (email, stat, hash) VALUES ('$email', 0, '$hash')";
+                    $sql = "INSERT INTO " . $GLOBALS['ecs']->table('email_list') . " (email, stat, hash) VALUES('$email', 0, '$hash')";
                     $GLOBALS['db']->query($sql);
                     $info = $GLOBALS['_LANG']['email_check'];
-                    $url = $GLOBALS['ecs']->url() . "user.php?act=email_list&job=add_check&hash=$hash&email=$email";
+                    $url = $GLOBALS['ecs']->url() . "user . php ? act = email_list & job = add_check & hash = $hash & email = $email";
                     send_mail('', $email, $GLOBALS['_LANG']['check_mail'], sprintf($GLOBALS['_LANG']['check_mail_content'], $email, $GLOBALS['_CFG']['shop_name'], $url, $url, $GLOBALS['_CFG']['shop_name'], local_date('Y-m-d')), 1);
                 } elseif ($ck['stat'] == 1) {
                     $info = sprintf($GLOBALS['_LANG']['email_alreadyin_list'], $email);
@@ -2055,7 +2056,7 @@ class User extends Init
                     $sql = "UPDATE " . $GLOBALS['ecs']->table('email_list') . "SET hash = '$hash' WHERE email = '$email'";
                     $GLOBALS['db']->query($sql);
                     $info = $GLOBALS['_LANG']['email_re_check'];
-                    $url = $GLOBALS['ecs']->url() . "user.php?act=email_list&job=add_check&hash=$hash&email=$email";
+                    $url = $GLOBALS['ecs']->url() . "user . php ? act = email_list & job = add_check & hash = $hash & email = $email";
                     send_mail('', $email, $GLOBALS['_LANG']['check_mail'], sprintf($GLOBALS['_LANG']['check_mail_content'], $email, $GLOBALS['_CFG']['shop_name'], $url, $url, $GLOBALS['_CFG']['shop_name'], local_date('Y-m-d')), 1);
                 }
                 die($info);
@@ -2067,7 +2068,7 @@ class User extends Init
                     $sql = "UPDATE " . $GLOBALS['ecs']->table('email_list') . "SET hash = '$hash' WHERE email = '$email'";
                     $GLOBALS['db']->query($sql);
                     $info = $GLOBALS['_LANG']['email_check'];
-                    $url = $GLOBALS['ecs']->url() . "user.php?act=email_list&job=del_check&hash=$hash&email=$email";
+                    $url = $GLOBALS['ecs']->url() . "user . php ? act = email_list & job = del_check & hash = $hash & email = $email";
                     send_mail('', $email, $GLOBALS['_LANG']['check_mail'], sprintf($GLOBALS['_LANG']['check_mail_content'], $email, $GLOBALS['_CFG']['shop_name'], $url, $url, $GLOBALS['_CFG']['shop_name'], local_date('Y-m-d')), 1);
                 } else {
                     $info = $GLOBALS['_LANG']['email_not_alive'];
@@ -2105,7 +2106,8 @@ class User extends Init
                 show_message($info, $GLOBALS['_LANG']['back_home_lnk'], 'index.php');
             }
         } /* ajax 发送验证邮件 */
-        elseif ($action == 'send_hash_mail') {
+        elseif
+        ($action == 'send_hash_mail') {
             load_helper('passport');
 
             $result = array('error' => 0, 'message' => '', 'content' => '');
@@ -2126,7 +2128,8 @@ class User extends Init
             }
 
             die(json_encode($result));
-        } elseif ($action == 'track_packages') {
+        } elseif
+        ($action == 'track_packages') {
             load_helper('transaction');
             load_helper('order');
 
@@ -2147,7 +2150,8 @@ class User extends Init
             $GLOBALS['smarty']->assign('pager', $pager);
             $GLOBALS['smarty']->assign('orders', $orders);
             $GLOBALS['smarty']->display('user_transaction.dwt');
-        } elseif ($action == 'order_query') {
+        } elseif
+        ($action == 'order_query') {
             $_GET['order_sn'] = trim(substr($_GET['order_sn'], 1));
             $order_sn = empty($_GET['order_sn']) ? '' : addslashes($_GET['order_sn']);
 
@@ -2206,7 +2210,8 @@ class User extends Init
             $GLOBALS['smarty']->assign('order_query', $order_query);
             $result['content'] = $GLOBALS['smarty']->fetch('library/order_query.lbi');
             die(json_encode($result));
-        } elseif ($action == 'transform_points') {
+        } elseif
+        ($action == 'transform_points') {
             $rule = array();
             if (!empty($GLOBALS['_CFG']['points_rule'])) {
                 $rule = unserialize($GLOBALS['_CFG']['points_rule']);
@@ -2217,7 +2222,7 @@ class User extends Init
                 $GLOBALS['_LANG']['exchange_points'][0] = empty($cfg['uc_lang']['credits'][0][0]) ? $GLOBALS['_LANG']['exchange_points'][0] : $cfg['uc_lang']['credits'][0][0];
                 $GLOBALS['_LANG']['exchange_points'][1] = empty($cfg['uc_lang']['credits'][1][0]) ? $GLOBALS['_LANG']['exchange_points'][1] : $cfg['uc_lang']['credits'][1][0];
             }
-            $sql = "SELECT user_id, user_name, pay_points, rank_points FROM " . $GLOBALS['ecs']->table('users') . " WHERE user_id='$user_id'";
+            $sql = "SELECT user_id, user_name, pay_points, rank_points FROM " . $GLOBALS['ecs']->table('users') . " WHERE user_id = '$user_id'";
             $row = $GLOBALS['db']->getRow($sql);
             if ($GLOBALS['_CFG']['integrate_code'] == 'ucenter') {
                 $exchange_type = 'ucenter';
@@ -2283,7 +2288,8 @@ class User extends Init
             $GLOBALS['smarty']->assign('action', $action);
             $GLOBALS['smarty']->assign('lang', $GLOBALS['_LANG']);
             $GLOBALS['smarty']->display('user_transaction.dwt');
-        } elseif ($action == 'act_transform_points') {
+        } elseif
+        ($action == 'act_transform_points') {
             $rule_index = empty($_POST['rule_index']) ? '' : trim($_POST['rule_index']);
             $num = empty($_POST['num']) ? 0 : intval($_POST['num']);
 
@@ -2300,7 +2306,7 @@ class User extends Init
             $max_num = 0;
 
             /* 取出用户数据 */
-            $sql = "SELECT user_name, user_id, pay_points, rank_points FROM " . $GLOBALS['ecs']->table('users') . " WHERE user_id='$user_id'";
+            $sql = "SELECT user_name, user_id, pay_points, rank_points FROM " . $GLOBALS['ecs']->table('users') . " WHERE user_id = '$user_id'";
             $row = $GLOBALS['db']->getRow($sql);
             $bbs_points = $GLOBALS['user']->get_points($row['user_name']);
             $points_name = $GLOBALS['user']->get_points_name();
@@ -2359,13 +2365,14 @@ class User extends Init
                     $GLOBALS['user']->set_points($row['user_name'], array($bbs_key => $result_points)); //调整论坛积分
                     show_message(sprintf($GLOBALS['_LANG']['from_rank_points'], $num, $result_points, $points_name[$bbs_key]['title']), $GLOBALS['_LANG']['transform_points'], 'user.php?act=transform_points');
             }
-        } elseif ($action == 'act_transform_ucenter_points') {
+        } elseif
+        ($action == 'act_transform_ucenter_points') {
             $rule = array();
             if ($GLOBALS['_CFG']['points_rule']) {
                 $rule = unserialize($GLOBALS['_CFG']['points_rule']);
             }
             $shop_points = array(0 => 'rank_points', 1 => 'pay_points');
-            $sql = "SELECT user_id, user_name, pay_points, rank_points FROM " . $GLOBALS['ecs']->table('users') . " WHERE user_id='$user_id'";
+            $sql = "SELECT user_id, user_name, pay_points, rank_points FROM " . $GLOBALS['ecs']->table('users') . " WHERE user_id = '$user_id'";
             $row = $GLOBALS['db']->getRow($sql);
             $exchange_amount = intval($_POST['amount']);
             $fromcredits = intval($_POST['fromcredits']);
@@ -2397,19 +2404,24 @@ class User extends Init
             load_helper('uc');
             $result = exchange_points($row['user_id'], $fromcredits, $creditdesc, $appiddesc, $netamount);
             if ($result === true) {
-                $sql = "UPDATE " . $GLOBALS['ecs']->table('users') . " SET {$shop_points[$fromcredits]}={$shop_points[$fromcredits]}-'$exchange_amount' WHERE user_id='{$row['user_id']}'";
+                $sql = "UPDATE " . $GLOBALS['ecs']->table('users') . " SET {
+                    $shop_points[$fromcredits]}={
+                    $shop_points[$fromcredits]}-'$exchange_amount' WHERE user_id = '{$row['user_id']}'";
                 $GLOBALS['db']->query($sql);
-                $sql = "INSERT INTO " . $GLOBALS['ecs']->table('account_log') . "(user_id, {$shop_points[$fromcredits]}, change_time, change_desc, change_type)" . " VALUES ('{$row['user_id']}', '-$exchange_amount', '" . gmtime() . "', '" . $cfg['uc_lang']['exchange'] . "', '98')";
+                $sql = "INSERT INTO " . $GLOBALS['ecs']->table('account_log') . "(user_id, {
+                    $shop_points[$fromcredits]}, change_time, change_desc, change_type)" . " VALUES('{$row['user_id']}', '-$exchange_amount', '" . gmtime() . "', '" . $cfg['uc_lang']['exchange'] . "', '98')";
                 $GLOBALS['db']->query($sql);
                 show_message(sprintf($GLOBALS['_LANG']['exchange_success'], $exchange_amount, $GLOBALS['_LANG']['exchange_points'][$fromcredits], $netamount, $credit['title']), $GLOBALS['_LANG']['transform_points'], 'user.php?act=transform_points');
             } else {
                 show_message($GLOBALS['_LANG']['exchange_error_1'], $GLOBALS['_LANG']['transform_points'], 'user.php?act=transform_points');
             }
         } /* 清除商品浏览历史 */
-        elseif ($action == 'clear_history') {
+        elseif
+        ($action == 'clear_history') {
             setcookie('ECS[history]', '', 1, null, null, null, true);
         } /* 物流信息 */
-        elseif ($action == 'delivery_info') {
+        elseif
+        ($action == 'delivery_info') {
             $_GET['order_sn'] = trim($_GET['order_sn']);
             $order_sn = empty($_GET['order_sn']) ? '' : addslashes($_GET['order_sn']);
 
@@ -2428,7 +2440,8 @@ class User extends Init
             $GLOBALS['smarty']->assign('logistics_info', get_logistics_trace($order_sn, 0, $GLOBALS['_CFG']['lang']));
             $GLOBALS['smarty']->display('delivery_info.dwt');
         } /* ajax 物流信息 */
-        elseif ($action == 'ajax_delivery_info') {
+        elseif
+        ($action == 'ajax_delivery_info') {
             $_POST['order_sn'] = trim($_POST['order_sn']);
             $order_sn = empty($_POST['order_sn']) ? '' : addslashes($_POST['order_sn']);
 
@@ -2455,18 +2468,19 @@ class User extends Init
             $result['content'] = $GLOBALS['smarty']->fetch('library/delivery_info.lbi');
 
             die(json_encode($result));
-        } elseif ($action == 'ajax_validate_sms') {
+        } elseif
+        ($action == 'ajax_validate_sms') {
             load_helper('main', 'console');
             $time = time();
             $date = date('Ymd', $time);
             $pre_date = date('Ymd', $time - 64000);
 //    $ip = $_SERVER["REMOTE_ADDR"];
             $ip = ($_SERVER["HTTP_VIA"]) ? $_SERVER["HTTP_X_FORWARDED_FOR"] : $_SERVER["REMOTE_ADDR"];
-            if (file_exists(__FILE__ . $pre_date . ".txt")) {
-                unlink(__FILE__ . $pre_date . ".txt");
+            if (file_exists(__FILE__ . $pre_date . " . txt")) {
+                unlink(__FILE__ . $pre_date . " . txt");
             }//删除昨日记录
-            if (file_exists(__FILE__ . $date . ".txt")) {
-                $send_limit_ip = file_get_contents(__FILE__ . $date . ".txt");
+            if (file_exists(__FILE__ . $date . " . txt")) {
+                $send_limit_ip = file_get_contents(__FILE__ . $date . " . txt");
                 $data = unserialize($send_limit_ip);
                 if (isset($data[$ip]) && $data[$ip] > 9) {
                     make_json_result('当前IP已超当日限制');
@@ -2478,7 +2492,7 @@ class User extends Init
 
             }
             $post_data = json_decode(str_replace('\\', '', $_POST['JSON']), 1);
-            //判断是否经过验证码验证
+//判断是否经过验证码验证
             if ((!isset($_SESSION['v_code']) || $_SESSION['v_code'] != 'true') && !isset($post_data['no_need_vcode'])) {
                 make_json_result('v_code fail');
 
@@ -2503,17 +2517,18 @@ class User extends Init
                 make_json_result('phone number is incorrect');
 
             }
-            //短信发送限制
+//短信发送限制
             if ($is_send == 'succ') {
                 $_SESSION['last_send'] = $time;
                 $_SESSION[$mobile . '-send_time'] = $time;
                 $data = isset($data) ? $data : array();
                 $data[$ip] = isset($data[$ip]) ? ($data[$ip]) + 1 : 1;
-                file_put_contents(__FILE__ . $date . ".txt", serialize($data));
+                file_put_contents(__FILE__ . $date . " . txt", serialize($data));
             }
             make_json_result($is_send);
 
-        } elseif ($action == 'sms_get_password') {
+        } elseif
+        ($action == 'sms_get_password') {
             load_helper('passport');
 
             if ($_POST['sms_code'] != '' && $_POST['username'] != '') {

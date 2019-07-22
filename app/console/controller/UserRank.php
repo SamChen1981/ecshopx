@@ -9,8 +9,8 @@ class UserRank extends Init
 {
     public function index()
     {
-        $exc = new Exchange($GLOBALS['ecs']->table("user_rank"), $db, 'rank_id', 'rank_name');
-        $exc_user = new Exchange($GLOBALS['ecs']->table("users"), $db, 'user_rank', 'user_rank');
+        $exc = new Exchange($GLOBALS['ecs']->table("user_rank"), $GLOBALS['db'], 'rank_id', 'rank_name');
+        $exc_user = new Exchange($GLOBALS['ecs']->table("users"), $GLOBALS['db'], 'user_rank', 'user_rank');
 
         /*------------------------------------------------------ */
         //-- 会员等级列表

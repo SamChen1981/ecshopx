@@ -18,7 +18,7 @@ class Privilege extends Init
             $_REQUEST['act'] = trim($_REQUEST['act']);
         }
         /* 初始化 $exc 对象 */
-        $exc = new Exchange($GLOBALS['ecs']->table("admin_user"), $db, 'user_id', 'user_name');
+        $exc = new Exchange($GLOBALS['ecs']->table("admin_user"), $GLOBALS['db'], 'user_id', 'user_name');
 
         /*------------------------------------------------------ */
         //-- 退出登录

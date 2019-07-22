@@ -55,7 +55,7 @@ class SqlDump
      *
      * @return void
      */
-    public function __construct($db, $max_size = 0)
+    public function __construct($GLOBALS['db'], $max_size = 0)
     {
         $this->db = $db;
         if ($max_size > 0) {

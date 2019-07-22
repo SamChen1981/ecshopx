@@ -11,7 +11,7 @@ class Pack extends Init
     {
         $image = new Image($GLOBALS['_CFG']['bgcolor']);
 
-        $exc = new Exchange($GLOBALS['ecs']->table("pack"), $db, 'pack_id', 'pack_name');
+        $exc = new Exchange($GLOBALS['ecs']->table("pack"), $GLOBALS['db'], 'pack_id', 'pack_name');
 
         /*------------------------------------------------------ */
         //-- 包装列表

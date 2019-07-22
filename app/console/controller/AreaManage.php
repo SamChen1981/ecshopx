@@ -9,7 +9,7 @@ class AreaManage extends Init
 {
     public function index()
     {
-        $exc = new Exchange($GLOBALS['ecs']->table('region'), $db, 'region_id', 'region_name');
+        $exc = new Exchange($GLOBALS['ecs']->table('region'), $GLOBALS['db'], 'region_id', 'region_name');
 
         /* act操作项的初始化 */
         if (empty($_REQUEST['act'])) {

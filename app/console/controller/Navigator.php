@@ -11,7 +11,7 @@ class Navigator extends Init
     {
         admin_priv('navigator');
 
-        $exc = new Exchange($GLOBALS['ecs']->table("nav"), $db, 'id', 'name');
+        $exc = new Exchange($GLOBALS['ecs']->table("nav"), $GLOBALS['db'], 'id', 'name');
 
         /*------------------------------------------------------ */
         //-- 自定义导航栏列表

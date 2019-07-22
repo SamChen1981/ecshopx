@@ -12,7 +12,7 @@ class Article extends Init
         require_once(ROOT_PATH . "includes/fckeditor/fckeditor.php");
 
         /*初始化数据交换对象 */
-        $exc = new Exchange($GLOBALS['ecs']->table("article"), $db, 'article_id', 'title');
+        $exc = new Exchange($GLOBALS['ecs']->table("article"), $GLOBALS['db'], 'article_id', 'title');
         //$image = new Image();
 
         /* 允许上传的文件类型 */

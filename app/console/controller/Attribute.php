@@ -17,7 +17,7 @@ class Attribute extends Init
             $_REQUEST['act'] = 'list';
         }
 
-        $exc = new Exchange($GLOBALS['ecs']->table("attribute"), $db, 'attr_id', 'attr_name');
+        $exc = new Exchange($GLOBALS['ecs']->table("attribute"), $GLOBALS['db'], 'attr_id', 'attr_name');
 
         /*------------------------------------------------------ */
         //-- 属性列表

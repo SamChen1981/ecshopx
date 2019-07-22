@@ -11,7 +11,7 @@ class Card extends Init
     {
         $image = new Image($GLOBALS['_CFG']['bgcolor']);
 
-        $exc = new Exchange($GLOBALS['ecs']->table("card"), $db, 'card_id', 'card_name');
+        $exc = new Exchange($GLOBALS['ecs']->table("card"), $GLOBALS['db'], 'card_id', 'card_name');
 
         /*------------------------------------------------------ */
         //-- 包装列表

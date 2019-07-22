@@ -14,7 +14,7 @@ class UserMsg extends Init
         /* 权限判断 */
         admin_priv('feedback_priv');
         /*初始化数据交换对象 */
-        $exc = new Exchange($GLOBALS['ecs']->table("feedback"), $db, 'msg_id', 'msg_title');
+        $exc = new Exchange($GLOBALS['ecs']->table("feedback"), $GLOBALS['db'], 'msg_id', 'msg_title');
 
         /*------------------------------------------------------ */
         //-- 发送留言
