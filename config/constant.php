@@ -1,7 +1,7 @@
 <?php
 
-define('APPNAME', 'ECSHOP');
-define('VERSION', 'v4.0.5');
+define('APPNAME', 'SHOPUB');
+define('VERSION', 'v1.0.0');
 define('RELEASE', '20190703');
 define('EC_CHARSET', 'utf-8');
 define('ADMIN_PATH', 'admin');
