@@ -101,10 +101,6 @@ function assign_query_info()
     if ($GLOBALS['_LANG']['memory_info'] && function_exists('memory_get_usage')) {
         $GLOBALS['smarty']->assign('memory_info', sprintf($GLOBALS['_LANG']['memory_info'], memory_get_usage() / 1048576));
     }
-
-    /* 是否启用了 gzip */
-    $gzip_enabled = gzip_enabled() ? $GLOBALS['_LANG']['gzip_enabled'] : $GLOBALS['_LANG']['gzip_disabled'];
-    $GLOBALS['smarty']->assign('gzip_enabled', $gzip_enabled);
 }
 
 /**

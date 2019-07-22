@@ -197,17 +197,6 @@ class Init extends Controller
                     update_user_info();
                 }
             }
-
-            if (isset($smarty)) {
-                $GLOBALS['smarty']->assign('ecs_session', $_SESSION);
-            }
-        }
-
-        /* 判断是否支持 Gzip 模式 */
-        if (!defined('INIT_NO_SMARTY') && gzip_enabled()) {
-            ob_start('ob_gzhandler');
-        } else {
-            ob_start();
         }
     }
 }
