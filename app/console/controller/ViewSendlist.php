@@ -77,7 +77,7 @@ class ViewSendlist extends Init
 
                 $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('email_sendlist') . "WHERE id " . db_create_in($_POST['checkboxes']) . " ORDER BY pri DESC, last_send ASC";
                 $res = $GLOBALS['db']->query($sql);
-                while ($row = $GLOBALS['db']->fetchRow($res)) {
+                foreach ($res as $row) {
                     //发送列表不为空，邮件地址为空
                     if (!empty($row['id']) && empty($row['email'])) {
                         $sql = "DELETE FROM " . $GLOBALS['ecs']->table('email_sendlist') . " WHERE id = '$row[id]'";
@@ -145,7 +145,7 @@ class ViewSendlist extends Init
 
             $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('email_sendlist') . " ORDER BY pri DESC, last_send ASC";
             $res = $GLOBALS['db']->query($sql);
-            while ($row = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $row) {
                 //发送列表不为空，邮件地址为空
                 if (!empty($row['id']) && empty($row['email'])) {
                     $sql = "DELETE FROM " . $GLOBALS['ecs']->table('email_sendlist') . " WHERE id = '$row[id]'";

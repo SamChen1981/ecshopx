@@ -1114,7 +1114,7 @@ class User extends Init
                     "WHERE g.attr_id = a.attr_id " .
                     "AND g.goods_attr_id " . db_create_in($goods_attr_id);
                 $res = $GLOBALS['db']->query($sql);
-                while ($row = $GLOBALS['db']->fetchRow($res)) {
+                foreach ($res as $row) {
                     $attr_list[] = $row['attr_name'] . ': ' . $row['attr_value'];
                 }
                 $goods_attr = join(chr(13) . chr(10), $attr_list);
@@ -1223,7 +1223,7 @@ class User extends Init
                 " AND $account_type <> 0 " .
                 " ORDER BY log_id DESC";
             $res = $GLOBALS['db']->selectLimit($sql, $pager['size'], $pager['start']);
-            while ($row = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $row) {
                 $row['change_time'] = local_date($GLOBALS['_CFG']['date_format'], $row['change_time']);
                 $row['type'] = $row[$account_type] > 0 ? $GLOBALS['_LANG']['account_inc'] : $GLOBALS['_LANG']['account_dec'];
                 $row['user_money'] = price_format(abs($row['user_money']), false);
@@ -1863,7 +1863,7 @@ class User extends Init
                             $sql = "SELECT user_id FROM " . $GLOBALS['ecs']->table('users') . " WHERE parent_id IN($up_uid)";
                             $query = $GLOBALS['db']->query($sql);
                             $up_uid = '';
-                            while ($rt = $GLOBALS['db']->fetch_array($query)) {
+                            foreach ($query as $rt) {
                                 $up_uid .= $up_uid ? ",'$rt[user_id]'" : "'$rt[user_id]'";
                                 if ($i < $num) {
                                     $all_uid .= ", '$rt[user_id]'";
@@ -1942,7 +1942,7 @@ class User extends Init
 
                 $res = $GLOBALS['db']->SelectLimit($sql, $size, ($page - 1) * $size);
                 $logdb = array();
-                while ($rt = $GLOBALS['db']->fetchRow($res)) {
+                foreach ($res as $rt) {
                     if (!empty($rt['suid'])) {
                         //在affiliate_log有记录
                         if ($rt['separate_type'] == -1 || $rt['separate_type'] == -2) {
@@ -2139,7 +2139,7 @@ class User extends Init
             $res = $GLOBALS['db']->query($sql);
 
             $record_count = 0;
-            while ($item = $GLOBALS['db']->fetch_array($res)) {
+            foreach ($res as $item) {
                 $orders[] = $item;
                 $record_count += 1;
             }

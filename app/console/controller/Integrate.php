@@ -446,7 +446,7 @@ class Integrate extends Init
             $repeat_user = array();
 
             $query = $GLOBALS['db']->query("SELECT * FROM " . $GLOBALS['ecs']->table('users') . " ORDER BY `user_id` ASC");
-            while ($data = $GLOBALS['db']->fetch_array($query)) {
+            foreach ($query as $data) {
                 $salt = rand(100000, 999999);
                 $password = md5($data['password'] . $salt);
                 $data['username'] = trim(addslashes($data['user_name']));

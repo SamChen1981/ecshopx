@@ -344,7 +344,7 @@ class Order extends Init
                     ON g.brand_id = b.brand_id
             WHERE o.order_id = '$order[order_id]'";
             $res = $GLOBALS['db']->query($sql);
-            while ($row = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $row) {
                 /* 虚拟商品支持 */
                 if ($row['is_real'] == 0) {
                     /* 取得语言项 */
@@ -391,7 +391,7 @@ class Order extends Init
             $act_list = array();
             $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('order_action') . " WHERE order_id = '$order[order_id]' ORDER BY log_time DESC,action_id DESC";
             $res = $GLOBALS['db']->query($sql);
-            while ($row = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $row) {
                 $row['order_status'] = $GLOBALS['_LANG']['os'][$row['order_status']];
                 $row['pay_status'] = $GLOBALS['_LANG']['ps'][$row['pay_status']];
                 $row['shipping_status'] = $GLOBALS['_LANG']['ss'][$row['shipping_status']];
@@ -660,7 +660,7 @@ class Order extends Init
             $act_list = array();
             $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('order_action') . " WHERE order_id = '" . $delivery_order['order_id'] . "' AND action_place = 1 ORDER BY log_time DESC,action_id DESC";
             $res = $GLOBALS['db']->query($sql);
-            while ($row = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $row) {
                 $row['order_status'] = $GLOBALS['_LANG']['os'][$row['order_status']];
                 $row['pay_status'] = $GLOBALS['_LANG']['ps'][$row['pay_status']];
                 $row['shipping_status'] = ($row['shipping_status'] == SS_SHIPPED_ING) ? $GLOBALS['_LANG']['ss_admin'][SS_SHIPPED_ING] : $GLOBALS['_LANG']['ss'][$row['shipping_status']];
@@ -1289,7 +1289,7 @@ class Order extends Init
                     'FROM ' . $GLOBALS['ecs']->table('goods_attr') .
                     "WHERE goods_attr_id in($attr_list)";
                 $res = $GLOBALS['db']->query($sql);
-                while ($row = $GLOBALS['db']->fetchRow($res)) {
+                foreach ($res as $row) {
                     $attr_value[] = $row['attr_value'];
                 }
 
@@ -2686,7 +2686,7 @@ class Order extends Init
                         "LEFT JOIN " . $GLOBALS['ecs']->table('brand') . " AS b ON g.brand_id = b.brand_id " .
                         "WHERE o.order_id = '$order[order_id]' ";
                     $res = $GLOBALS['db']->query($sql);
-                    while ($row = $GLOBALS['db']->fetchRow($res)) {
+                    foreach ($res as $row) {
                         /* 虚拟商品支持 */
                         if ($row['is_real'] == 0) {
                             /* 取得语言项 */
@@ -2984,7 +2984,7 @@ class Order extends Init
                 $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('order_info') .
                     " WHERE order_sn " . db_create_in($sn_not_list);
                 $res = $GLOBALS['db']->query($sql);
-                while ($row = $GLOBALS['db']->fetchRow($res)) {
+                foreach ($res as $row) {
                     $order_list_no_fail[$row['order_id']]['order_id'] = $row['order_id'];
                     $order_list_no_fail[$row['order_id']]['order_sn'] = $row['order_sn'];
                     $order_list_no_fail[$row['order_id']]['order_status'] = $row['order_status'];
@@ -3770,7 +3770,7 @@ class Order extends Init
                     "AND g.goods_id = '$goods_id' ";
                 $goods['attr_list'] = array();
                 $res = $GLOBALS['db']->query($sql);
-                while ($row = $GLOBALS['db']->fetchRow($res)) {
+                foreach ($res as $row) {
                     $goods['attr_list'][$row['attr_id']][] = $row;
                 }
                 $goods['attr_list'] = array_values($goods['attr_list']);
@@ -3852,7 +3852,7 @@ class Order extends Init
                 $res = $GLOBALS['db']->query($sql);
 
                 $result['userlist'] = array();
-                while ($row = $GLOBALS['db']->fetchRow($res)) {
+                foreach ($res as $row) {
                     $result['userlist'][] = array('user_id' => $row['user_id'], 'user_name' => $row['user_name']);
                 }
             } else {
@@ -3883,7 +3883,7 @@ class Order extends Init
                 $res = $GLOBALS['db']->query($sql);
 
                 $result['goodslist'] = array();
-                while ($row = $GLOBALS['db']->fetchRow($res)) {
+                foreach ($res as $row) {
                     $result['goodslist'][] = array('goods_id' => $row['goods_id'], 'name' => $row['goods_id'] . '  ' . $row['goods_name'] . '  ' . $row['goods_sn']);
                 }
             } else {
@@ -3973,7 +3973,7 @@ class Order extends Init
                 "LEFT JOIN " . $GLOBALS['ecs']->table('brand') . " AS b ON g.brand_id = b.brand_id " .
                 "WHERE o.order_id = '{$order_id}' ";
             $res = $GLOBALS['db']->query($sql);
-            while ($row = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $row) {
                 /* 虚拟商品支持 */
                 if ($row['is_real'] == 0) {
                     /* 取得语言项 */
@@ -4569,7 +4569,7 @@ class Order extends Init
             "LEFT JOIN " . $GLOBALS['ecs']->table('brand') . " AS b ON g.brand_id = b.brand_id " .
             "WHERE o.order_id = '$order[order_id]' ";
         $res = $GLOBALS['db']->query($sql);
-        while ($row = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $row) {
             // 虚拟商品支持
             if ($row['is_real'] == 0) {
                 /* 取得语言项 */
@@ -4633,7 +4633,7 @@ class Order extends Init
 
         /* 生成结果数组 取存在货品的商品id 组合商品id与货品id */
         $good_product_str = '';
-        while ($_row = $GLOBALS['db']->fetch_array($resource)) {
+        foreach ($resource as $_row) {
             if ($_row['product_id'] > 0) {
                 /* 取存商品id */
                 $good_product_str .= ',' . $_row['goods_id'];

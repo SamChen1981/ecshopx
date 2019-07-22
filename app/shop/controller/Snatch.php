@@ -222,7 +222,7 @@ class Snatch extends Init
                     "WHERE g.attr_id = a.attr_id " .
                     "AND g.goods_attr_id " . db_create_in($goods_attr_id);
                 $res = $GLOBALS['db']->query($sql);
-                while ($row = $GLOBALS['db']->fetchRow($res)) {
+                foreach ($res as $row) {
                     $attr_list[] = $row['attr_name'] . ': ' . $row['attr_value'];
                 }
                 $goods_attr = join('', $attr_list);
@@ -329,7 +329,7 @@ class Snatch extends Init
         $sql = 'SELECT t1.log_id, t1.bid_price, t2.user_name FROM ' . $GLOBALS['ecs']->table('snatch_log') . ' AS t1, ' . $GLOBALS['ecs']->table('users') . " AS t2 WHERE snatch_id = '$id' AND t1.user_id = t2.user_id ORDER BY t1.log_id DESC LIMIT $num";
         $res = $GLOBALS['db']->query($sql);
         $price_list = array();
-        while ($row = $GLOBALS['db']->FetchRow($res)) {
+        foreach ($res as $row) {
             $price_list[] = array('bid_price' => price_format($row['bid_price'], false), 'user_name' => $row['user_name']);
         }
         return $price_list;
@@ -353,7 +353,7 @@ class Snatch extends Init
         $snatch_list = array();
         $overtime = 0;
         $res = $GLOBALS['db']->query($sql);
-        while ($row = $GLOBALS['db']->FetchRow($res)) {
+        foreach ($res as $row) {
             $overtime = $row['end_time'] > $now ? 0 : 1;
             $snatch_list[] = array(
                 'snatch_id' => $row['snatch_id'],

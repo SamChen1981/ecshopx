@@ -136,7 +136,7 @@ class ArticleAuto extends Init
                 " ORDER BY g. add_time DESC" .
                 " LIMIT " . $filter['start'] . ",$filter[page_size]";
             $query = $GLOBALS['db']->query($sql);
-            while ($rt = $GLOBALS['db']->fetch_array($query)) {
+            foreach ($query as $rt) {
                 if (!empty($rt['starttime'])) {
                     $rt['starttime'] = local_date('Y-m-d', $rt['starttime']);
                 }

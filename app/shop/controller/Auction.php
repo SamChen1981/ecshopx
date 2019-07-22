@@ -348,7 +348,7 @@ class Auction extends Init
                     "WHERE g.attr_id = a.attr_id " .
                     "AND g.goods_attr_id " . db_create_in($goods_attr_id);
                 $res = $GLOBALS['db']->query($sql);
-                while ($row = $GLOBALS['db']->fetchRow($res)) {
+                foreach ($res as $row) {
                     $attr_list[] = $row['attr_name'] . ': ' . $row['attr_value'];
                 }
                 $goods_attr = join(chr(13) . chr(10), $attr_list);
@@ -424,7 +424,7 @@ class Auction extends Init
             "WHERE a.act_type = '" . GAT_AUCTION . "' " .
             "AND a.start_time <= '$now' AND a.end_time >= '$now' AND a.is_finished < 2 ORDER BY a.act_id DESC";
         $res = $GLOBALS['db']->selectLimit($sql, $size, ($page - 1) * $size);
-        while ($row = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $row) {
             $ext_info = unserialize($row['ext_info']);
             $auction = array_merge($row, $ext_info);
             $auction['status_no'] = auction_status($auction);

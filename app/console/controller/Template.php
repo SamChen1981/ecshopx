@@ -135,7 +135,7 @@ class Template extends Init
 
             $rc = $GLOBALS['db']->query($sql);
             $db_dyna_libs = array();
-            while ($row = $GLOBALS['db']->FetchRow($rc)) {
+            foreach ($rc as $row) {
                 if ($row['type'] > 0) {
                     /* 动态内容 */
                     $db_dyna_libs[$row['region']][$row['library']][] = array('id' => $row['id'], 'number' => $row['number'], 'type' => $row['type']);
@@ -404,7 +404,7 @@ class Template extends Init
             /* 包含插件语言项 */
             $sql = "SELECT code FROM " . $GLOBALS['ecs']->table('plugins');
             $rs = $GLOBALS['db']->query($sql);
-            while ($row = $GLOBALS['db']->FetchRow($rs)) {
+            foreach ($rs as $row) {
                 /* 取得语言项 */
                 if (file_exists(ROOT_PATH . 'plugins/' . $row['code'] . '/languages/common_' . $GLOBALS['_CFG']['lang'] . '.php')) {
                     include_once(ROOT_PATH . 'plugins/' . $row['code'] . '/languages/common_' . $GLOBALS['_CFG']['lang'] . '.php');

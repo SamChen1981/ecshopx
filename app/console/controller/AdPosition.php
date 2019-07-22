@@ -283,7 +283,7 @@ class AdPosition extends Init
         $arr = array();
         $sql = 'SELECT * FROM ' . $GLOBALS['ecs']->table('ad_position') . ' ORDER BY position_id DESC';
         $res = $GLOBALS['db']->selectLimit($sql, $filter['page_size'], $filter['start']);
-        while ($rows = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $rows) {
             $position_desc = !empty($rows['position_desc']) ? sub_str($rows['position_desc'], 50, true) : '';
             $rows['position_desc'] = nl2br(htmlspecialchars($position_desc));
 

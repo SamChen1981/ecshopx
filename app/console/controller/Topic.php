@@ -310,7 +310,7 @@ class Topic extends Init
 
         $res = array();
 
-        while ($topic = $GLOBALS['db']->fetch_array($query)) {
+        foreach ($query as $topic) {
             $topic['start_time'] = local_date('Y-m-d', $topic['start_time']);
             $topic['end_time'] = local_date('Y-m-d', $topic['end_time']);
             $topic['url'] = $GLOBALS['ecs']->url() . 'topic.php?topic_id=' . $topic['topic_id'];

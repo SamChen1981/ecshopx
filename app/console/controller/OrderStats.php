@@ -132,7 +132,7 @@ class OrderStats extends Init
                         "AND i.add_time >= '$start_date_arr[$k]' AND i.add_time <= '$end_date_arr[$k]'" .
                         "GROUP BY i.pay_id ORDER BY order_num DESC";
                     $pay_res = $GLOBALS['db']->query($sql);
-                    while ($pay_item = $GLOBALS['db']->FetchRow($pay_res)) {
+                    foreach ($pay_res as $pay_item) {
                         $payment[strip_tags($pay_item['pay_name'])] = null;
 
                         $paydate = local_date('Y-m', $pay_item['pay_time']);
@@ -176,7 +176,7 @@ class OrderStats extends Init
                         "GROUP BY i.shipping_id ORDER BY order_num DESC";
 
                     $ship_res = $GLOBALS['db']->query($sql);
-                    while ($ship_item = $GLOBALS['db']->FetchRow($ship_res)) {
+                    foreach ($ship_res as $ship_item) {
                         $ship[$ship_item['ship_name']] = null;
 
                         $shipdate = local_date('Y-m', $ship_item['shipping_time']);
@@ -233,7 +233,7 @@ class OrderStats extends Init
                     "GROUP BY i.pay_id ORDER BY order_num DESC";
                 $pay_res = $GLOBALS['db']->query($sql);
 
-                while ($pay_item = $GLOBALS['db']->FetchRow($pay_res)) {
+                foreach ($pay_res as $pay_item) {
                     $pay_xml .= "<set value='" . $pay_item['order_num'] . "' name='" . strip_tags($pay_item['pay_name']) . "' color='" . $color_array[mt_rand(0, 7)] . "'/>";
                 }
                 $pay_xml .= "</graph>";
@@ -248,7 +248,7 @@ class OrderStats extends Init
                     "GROUP BY i.shipping_id ORDER BY order_num DESC";
                 $ship_res = $GLOBALS['db']->query($sql);
 
-                while ($ship_item = $GLOBALS['db']->fetchRow($ship_res)) {
+                foreach ($ship_res as $ship_item) {
                     $ship_xml .= "<set value='" . $ship_item['order_num'] . "' name='" . $ship_item['ship_name'] . "' color='" . $color_array[mt_rand(0, 7)] . "' />";
                 }
 

@@ -392,7 +392,7 @@ function get_category_recommend_goods($type = '', $cats = '', $brand = 0, $min =
 
     $idx = 0;
     $goods = array();
-    while ($row = $GLOBALS['db']->fetchRow($res)) {
+    foreach ($res as $row) {
         if ($row['promote_price'] > 0) {
             $promote_price = bargain_price($row['promote_price'], $row['promote_start_date'], $row['promote_end_date']);
             $goods[$idx]['promote_price'] = $promote_price > 0 ? price_format($promote_price) : '';
@@ -747,7 +747,7 @@ function assign_brand_goods($brand_id, $num = 0, $cat_id = 0, $order_rule = '')
 
     $idx = 0;
     $goods = array();
-    while ($row = $GLOBALS['db']->fetchRow($res)) {
+    foreach ($res as $row) {
         if ($row['promote_price'] > 0) {
             $promote_price = bargain_price($row['promote_price'], $row['promote_start_date'], $row['promote_end_date']);
         } else {
@@ -1095,7 +1095,7 @@ function auction_log($act_id)
         "AND act_id = '$act_id' " .
         "ORDER BY a.log_id DESC";
     $res = $GLOBALS['db']->query($sql);
-    while ($row = $GLOBALS['db']->fetchRow($res)) {
+    foreach ($res as $row) {
         $row['bid_time'] = local_date($GLOBALS['_CFG']['time_format'], $row['bid_time']);
         $row['formated_bid_price'] = price_format($row['bid_price'], false);
         $log[] = $row;
@@ -1232,7 +1232,7 @@ function get_goods_attr($goods_id)
         "AND a.attr_type = 1";
     $attr_id_list = $GLOBALS['db']->getCol($sql);
     $res = $GLOBALS['db']->query($sql);
-    while ($attr = $GLOBALS['db']->fetchRow($res)) {
+    foreach ($res as $attr) {
         if (defined('ECS_ADMIN')) {
             $attr['goods_attr_list'] = array(0 => $GLOBALS['_LANG']['select_please']);
         } else {
@@ -1246,7 +1246,7 @@ function get_goods_attr($goods_id)
         " WHERE goods_id = '$goods_id' " .
         "AND attr_id " . db_create_in($attr_id_list);
     $res = $GLOBALS['db']->query($sql);
-    while ($goods_attr = $GLOBALS['db']->fetchRow($res)) {
+    foreach ($res as $goods_attr) {
         $attr_list[$goods_attr['attr_id']]['goods_attr_list'][$goods_attr['goods_attr_id']] = $goods_attr['attr_value'];
     }
 
@@ -1277,7 +1277,7 @@ function get_goods_fittings($goods_list = array())
 
     $res = $GLOBALS['db']->query($sql);
 
-    while ($row = $GLOBALS['db']->fetchRow($res)) {
+    foreach ($res as $row) {
         $arr[$temp_index]['parent_id'] = $row['parent_id'];//配件的基本件ID
         $arr[$temp_index]['parent_name'] = $row['parent_name'];//配件的基本件的名称
         $arr[$temp_index]['parent_short_name'] = $GLOBALS['_CFG']['goods_name_length'] > 0 ?

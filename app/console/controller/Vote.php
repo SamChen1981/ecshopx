@@ -347,7 +347,7 @@ class Vote extends Init
         $res = $GLOBALS['db']->selectLimit($sql, $filter['page_size'], $filter['start']);
 
         $list = array();
-        while ($rows = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $rows) {
             $rows['begin_date'] = local_date('Y-m-d', $rows['start_time']);
             $rows['end_date'] = local_date('Y-m-d', $rows['end_time']);
             $list[] = $rows;
@@ -364,7 +364,7 @@ class Vote extends Init
             ' FROM ' . $GLOBALS['ecs']->table('vote_option') .
             " WHERE vote_id = '$id' ORDER BY option_order ASC, option_id DESC";
         $res = $GLOBALS['db']->query($sql);
-        while ($rows = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $rows) {
             $list[] = $rows;
         }
 

@@ -192,7 +192,7 @@ class Index extends Init
                 "LIMIT $limit";
             $res = $GLOBALS['db']->query($sql);
 
-            while ($row = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $row) {
                 /* 如果缩略图为空，使用默认图片 */
                 $row['goods_img'] = get_image_path($row['goods_id'], $row['goods_img']);
                 $row['thumb'] = get_image_path($row['goods_id'], $row['goods_thumb'], true);
@@ -242,7 +242,7 @@ class Index extends Init
         $res = $GLOBALS['db']->query($sql);
 
         $list = array();
-        while ($row = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $row) {
             $ext_info = unserialize($row['ext_info']);
             $arr = array_merge($row, $ext_info);
             $arr['formated_start_price'] = price_format($arr['start_price']);

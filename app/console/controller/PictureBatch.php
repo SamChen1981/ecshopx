@@ -224,7 +224,7 @@ class PictureBatch extends Init
         if ($type == 0) {
             $sql = "SELECT g.goods_id, g.original_img, g.goods_img, g.goods_thumb FROM " . $GLOBALS['ecs']->table('goods') . " AS g WHERE g.original_img > ''" . $GLOBALS['goods_where'];
             $res = $GLOBALS['db']->SelectLimit($sql, $page_size, ($page - 1) * $page_size);
-            while ($row = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $row) {
                 $goods_thumb = '';
                 $image = '';
 
@@ -321,7 +321,7 @@ class PictureBatch extends Init
             $sql = "SELECT album.goods_id, album.img_id, album.img_url, album.thumb_url, album.img_original FROM " . $GLOBALS['ecs']->table('goods_gallery') . " AS album " . $GLOBALS['album_where'];
             $res = $GLOBALS['db']->SelectLimit($sql, $page_size, ($page - 1) * $page_size);
 
-            while ($row = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $row) {
                 $thumb_url = '';
                 $image = '';
 
@@ -418,7 +418,7 @@ class PictureBatch extends Init
             $sql = "SELECT g.goods_id, g.original_img, g.goods_img, g.goods_thumb FROM " . $GLOBALS['ecs']->table('goods') . " AS g WHERE g.original_img > ''" . $goods_where;
             $res = $GLOBALS['db']->SelectLimit($sql, $page_size, ($page - 1) * $page_size);
 
-            while ($row = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $row) {
                 if ($thumb) {
                     get_image_path($row['goods_id'], '', true, 'goods', true);
                 }
@@ -430,7 +430,7 @@ class PictureBatch extends Init
             $sql = "SELECT album.goods_id, album.img_id, album.img_url, album.thumb_url, album.img_original FROM " . $GLOBALS['ecs']->table('goods_gallery') . " AS album " . $GLOBALS['album_where'];
             $res = $GLOBALS['db']->SelectLimit($sql, $page_size, ($page - 1) * $page_size);
 
-            while ($row = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $row) {
                 if ($thumb) {
                     get_image_path($row['goods_id'], $row['img_original'], true, 'gallery', true);
                 }

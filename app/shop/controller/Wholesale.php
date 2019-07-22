@@ -107,7 +107,7 @@ class Wholesale extends Init
             $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('wholesale') .
                 "WHERE enabled = 1 AND CONCAT(',', rank_ids, ',') LIKE '" . '%,' . $_SESSION['user_rank'] . ',%' . "'";
             $res = $GLOBALS['db']->query($sql);
-            while ($row = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $row) {
                 $price_list = unserialize($row['prices']);
                 foreach ($price_list as $attr_price) {
                     if ($attr_price['attr']) {
@@ -384,7 +384,7 @@ class Wholesale extends Init
             $GLOBALS['ecs']->table('goods') . " AS g " . $where .
             " AND w.goods_id = g.goods_id ";
         $res = $GLOBALS['db']->selectLimit($sql, $size, ($page - 1) * $size);
-        while ($row = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $row) {
             if (empty($row['goods_thumb'])) {
                 $row['goods_thumb'] = $GLOBALS['_CFG']['no_picture'];
             }

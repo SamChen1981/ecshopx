@@ -71,7 +71,7 @@ function insert_history()
             " WHERE $where AND is_on_sale = 1 AND is_alone_sale = 1 AND is_delete = 0";
         $query = $GLOBALS['db']->query($sql);
         $res = array();
-        while ($row = $GLOBALS['db']->fetch_array($query)) {
+        foreach ($query as $row) {
             $goods['goods_id'] = $row['goods_id'];
             $goods['goods_name'] = $row['goods_name'];
             $goods['short_name'] = $GLOBALS['_CFG']['goods_name_length'] > 0 ? sub_str($row['goods_name'], $GLOBALS['_CFG']['goods_name_length']) : $row['goods_name'];

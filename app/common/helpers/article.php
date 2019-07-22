@@ -39,7 +39,7 @@ function get_cat_articles($cat_id, $page = 1, $size = 20, $requirement = '')
 
     $arr = array();
     if ($res) {
-        while ($row = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $row) {
             $article_id = $row['article_id'];
 
             $arr[$article_id]['id'] = $article_id;

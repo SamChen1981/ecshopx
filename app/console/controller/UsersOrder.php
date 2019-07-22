@@ -121,7 +121,7 @@ class UsersOrder extends Init
         $user_orderinfo = array();
         $res = $GLOBALS['db']->query($sql);
 
-        while ($items = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $items) {
             $items['turnover'] = price_format($items['turnover']);
             $user_orderinfo[] = $items;
         }

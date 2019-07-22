@@ -329,7 +329,7 @@ class Brand extends Init
         $res = $GLOBALS['db']->selectLimit($sql, $filter['page_size'], $filter['start']);
 
         $arr = array();
-        while ($rows = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $rows) {
             $brand_logo = empty($rows['brand_logo']) ? '' :
                 '<a href="../' . DATA_DIR . '/brandlogo/' . $rows['brand_logo'] . '" target="_brank"><img src="images/image.svg" width="16" height="16" border="0" alt=' . $GLOBALS['_LANG']['brand_logo'] . ' /></a>';
             $site_url = empty($rows['site_url']) ? 'N/A' : '<a href="' . $rows['site_url'] . '" target="_brank">' . $rows['site_url'] . '</a>';

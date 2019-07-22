@@ -164,7 +164,7 @@ class GroupBuy extends Init
                         " WHERE order_id " . db_create_in($order_id_list) .
                         " GROUP BY order_id";
                     $res = $GLOBALS['db']->query($sql);
-                    while ($row = $GLOBALS['db']->fetchRow($res)) {
+                    foreach ($res as $row) {
                         $order_id = $row['order_id'];
                         $goods_amount = floatval($row['goods_amount']);
 
@@ -276,7 +276,7 @@ class GroupBuy extends Init
                         "AND extension_id = '$group_buy_id' " .
                         "AND (order_status = '" . OS_CONFIRMED . "' OR order_status = '" . OS_UNCONFIRMED . "') ";
                     $res = $GLOBALS['db']->query($sql);
-                    while ($order = $GLOBALS['db']->fetchRow($res)) {
+                    foreach ($res as $order) {
                         // 修改订单状态为已取消，付款状态为未付款
                         $order['order_status'] = OS_CANCELED;
                         $order['to_buyer'] = $GLOBALS['_LANG']['cancel_order_reason'];
@@ -340,7 +340,7 @@ class GroupBuy extends Init
                     "AND o.extension_id = '$group_buy_id' " .
                     "AND o.order_status = '" . OS_CONFIRMED . "'";
                 $res = $GLOBALS['db']->query($sql);
-                while ($order = $GLOBALS['db']->fetchRow($res)) {
+                foreach ($res as $order) {
                     /* 邮件模板赋值 */
                     $GLOBALS['smarty']->assign('consignee', $order['consignee']);
                     $GLOBALS['smarty']->assign('add_time', local_date($GLOBALS['_CFG']['time_format'], $order['add_time']));
@@ -653,7 +653,7 @@ class GroupBuy extends Init
         $res = $GLOBALS['db']->query($sql);
 
         $list = array();
-        while ($row = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $row) {
             $ext_info = unserialize($row['ext_info']);
             $stat = group_buy_stat($row['act_id'], $ext_info['deposit']);
             $arr = array_merge($row, $stat, $ext_info);

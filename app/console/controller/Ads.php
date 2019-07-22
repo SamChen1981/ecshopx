@@ -490,7 +490,7 @@ class Ads extends Init
 
         $res = $GLOBALS['db']->selectLimit($sql, $filter['page_size'], $filter['start']);
 
-        while ($rows = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $rows) {
             /* 广告类型的名称 */
             $rows['type'] = ($rows['media_type'] == 0) ? $GLOBALS['_LANG']['ad_img'] : '';
             $rows['type'] .= ($rows['media_type'] == 1) ? $GLOBALS['_LANG']['ad_flash'] : '';

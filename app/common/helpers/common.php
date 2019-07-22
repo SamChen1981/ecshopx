@@ -1010,7 +1010,7 @@ function virtual_card_result($order_sn, $goods)
 
     $cards = array();
 
-    while ($row = $GLOBALS['db']->FetchRow($res)) {
+    foreach ($res as $row) {
         /* 卡号和密码解密 */
         if ($row['crc32'] == 0 || $row['crc32'] == crc32(AUTH_KEY)) {
             $row['card_sn'] = decrypt($row['card_sn']);
@@ -2177,7 +2177,7 @@ function get_package_goods($package_id)
 
     /* 生成结果数组 取存在货品的商品id 组合商品id与货品id */
     $good_product_str = '';
-    while ($_row = $GLOBALS['db']->fetch_array($resource)) {
+    foreach ($resource as $_row) {
         if ($_row['product_id'] > 0) {
             /* 取存商品id */
             $good_product_str .= ',' . $_row['goods_id'];

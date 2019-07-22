@@ -257,7 +257,7 @@ class Exchange extends Init
                 "WHERE g.attr_id = a.attr_id " .
                 "AND g.goods_attr_id " . db_create_in($specs);
             $res = $GLOBALS['db']->query($sql);
-            while ($row = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $row) {
                 $attr_list[] = $row['attr_name'] . ': ' . $row['attr_value'];
             }
             $goods_attr = join(chr(13) . chr(10), $attr_list);
@@ -341,7 +341,7 @@ class Exchange extends Init
         $res = $GLOBALS['db']->selectLimit($sql, $size, ($page - 1) * $size);
 
         $arr = array();
-        while ($row = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $row) {
             /* 处理商品水印图片 */
             $watermark_img = '';
 
@@ -455,7 +455,7 @@ class Exchange extends Init
 
         $idx = 0;
         $goods = array();
-        while ($row = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $row) {
             $goods[$idx]['id'] = $row['goods_id'];
             $goods[$idx]['name'] = $row['goods_name'];
             $goods[$idx]['brief'] = $row['goods_brief'];

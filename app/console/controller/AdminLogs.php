@@ -32,7 +32,7 @@ class AdminLogs extends Init
             /* 查询IP地址列表 */
             $ip_list = array();
             $res = $GLOBALS['db']->query("SELECT DISTINCT ip_address FROM " . $GLOBALS['ecs']->table('admin_log'));
-            while ($row = $GLOBALS['db']->FetchRow($res)) {
+            foreach ($res as $row) {
                 $ip_list[$row['ip_address']] = $row['ip_address'];
             }
 
@@ -171,7 +171,7 @@ class AdminLogs extends Init
             $where . ' ORDER by ' . $filter['sort_by'] . ' ' . $filter['sort_order'];
         $res = $GLOBALS['db']->selectLimit($sql, $filter['page_size'], $filter['start']);
 
-        while ($rows = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $rows) {
             $rows['log_time'] = local_date($GLOBALS['_CFG']['time_format'], $rows['log_time']);
 
             $list[] = $rows;

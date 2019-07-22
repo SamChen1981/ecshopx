@@ -161,7 +161,7 @@ class shopex48
         /* 查询分类并循环处理 */
         $sql = "SELECT * FROM " . $this->sprefix . "goods_cat";
         $res = $this->sdb->query($sql);
-        while ($row = $this->sdb->fetchRow($res)) {
+        foreach ($res as $row) {
             $cat = array();
             $cat['cat_id'] = $row['cat_id'];
             $cat['cat_name'] = $row['cat_name'];
@@ -177,7 +177,7 @@ class shopex48
         /* 查询商品类型并循环处理 */
         $sql = "SELECT * FROM " . $this->sprefix . "goods_type";
         $res = $this->sdb->query($sql);
-        while ($row = $this->sdb->fetchRow($res)) {
+        foreach ($res as $row) {
             $type = array();
             $type['cat_id'] = $row['prop_cat_id'];
             $type['cat_name'] = $row['name'];
@@ -207,7 +207,7 @@ class shopex48
         /* 查询品牌并插入 */
         $sql = "SELECT * FROM " . $this->sprefix . "brand";
         $res = $this->sdb->query($sql);
-        while ($row = $this->sdb->fetchRow($res)) {
+        foreach ($res as $row) {
             $brand_logo = ecs_iconv($this->scharset, $this->tcharset, addslashes($row['brand_logo']));
             $logoarr = explode('|', $brand_logo);
             if (strpos($logoarr[0], 'http') === 0) {
@@ -252,7 +252,7 @@ class shopex48
         $brand_list = array();
         $sql = "SELECT brand_id, brand_name FROM " . $GLOBALS['ecs']->table('brand');
         $res = $GLOBALS['db']->query($sql);
-        while ($row = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $row) {
             $brand_list[$row['brand_name']] = $row['brand_id'];
         }
 
@@ -263,14 +263,14 @@ class shopex48
         $cat_type_list = array();
         $sql = "SELECT cat_id, supplier_cat_id FROM " . $this->sprefix . "goods_cat";
         $res = $this->sdb->query($sql);
-        while ($row = $this->sdb->fetchRow($res)) {
+        foreach ($res as $row) {
             $cat_type_list[$row['cat_id']] = $row['supplier_cat_id'];
         }
 
         /* 查询商品并处理 */
         $sql = "SELECT * FROM " . $this->sprefix . "goods";
         $res = $this->sdb->query($sql);
-        while ($row = $this->sdb->fetchRow($res)) {
+        foreach ($res as $row) {
             $goods = array();
 
 
@@ -313,7 +313,7 @@ class shopex48
             /* 商品相册 */
             $sql2 = "SELECT * FROM " . $this->sprefix . "gimages";
             $result = $this->sdb->query($sql2);
-            while ($row2 = $this->sdb->fetchRow($result)) {
+            foreach ($result as $row2) {
                 $goods_gallery = array();
                 $goods_gallery['goods_id'] = $row2['goods_id'];
                 $big_pic = $row2['big'];
@@ -353,7 +353,7 @@ class shopex48
         $sql = "SELECT * FROM " . $this->sprefix . "member_lv order by point desc";
         $res = $this->sdb->query($sql);
         $max_points = 50000;
-        while ($row = $this->sdb->fetchRow($res)) {
+        foreach ($res as $row) {
             $user_rank = array();
             $user_rank['rank_id'] = $row['member'];
             $user_rank['rank_name'] = $row['name'];
@@ -373,7 +373,7 @@ class shopex48
         /* 查询并插入会员 */
         $sql = "SELECT * FROM " . $this->sprefix . "members";
         $res = $this->sdb->query($sql);
-        while ($row = $this->sdb->fetchRow($res)) {
+        foreach ($res as $row) {
             $user = array();
             $user['user_id'] = $row['member_id'];
             $user['email'] = $row['email'];
@@ -406,7 +406,7 @@ class shopex48
         /* 收货人地址 */
         $sql = "SELECT * FROM " . $this->sprefix . "member_addrs";
         $res = $this->sdb->query($sql);
-        while ($row = $this->sdb->fetchRow($res)) {
+        foreach ($res as $row) {
             $address = array();
             $address['address_id'] = $row['addr_id'];
             $address['address_name'] = ecs_iconv($this->scharset, $this->tcharset, addslashes($row['name']));
@@ -430,7 +430,7 @@ class shopex48
         $temp_arr = array();
         $sql = "SELECT * FROM " . $this->sprefix . "goods_lv_price";
         $res = $this->sdb->query($sql);
-        while ($row = $this->sdb->fetchRow($res)) {
+        foreach ($res as $row) {
             if ($row['goods_id'] > 0 && $row['level_id'] > 0 && !isset($temp_arr[$row['goods_id']][$row['level_id']])) {
                 $temp_arr[$row['goods_id']][$row['level_id']] = true;
 
@@ -449,7 +449,7 @@ class shopex48
         /* 帐户明细 */
         $sql = "SELECT * FROM " . $this->sprefix . "advance_logs";
         $res = $this->sdb->query($sql);
-        while ($row = $this->sdb->fetchRow($res)) {
+        foreach ($res as $row) {
             $user_account = array();
             $user_account['user_id'] = $row['member_id'];
             $user_account['admin_user'] = $row['memo'];
@@ -483,7 +483,7 @@ class shopex48
         /* 文章 */
         $sql = "SELECT * FROM " . $this->sprefix . "articles";
         $res = $this->sdb->query($sql);
-        while ($row = $this->sdb->fetchRow($res)) {
+        foreach ($res as $row) {
             $article = array();
             $article['article_id'] = $row['article_id'];
             $article['cat_id'] = $row['node_id'];
@@ -502,7 +502,7 @@ class shopex48
         /* 友情链接 */
         $sql = "SELECT * FROM " . $this->sprefix . "link";
         $res = $this->sdb->query($sql);
-        while ($row = $this->sdb->fetchRow($res)) {
+        foreach ($res as $row) {
             $link = array();
             $link['link_id'] = $row['link_id'];
             $link['link_name'] = ecs_iconv($this->scharset, $this->tcharset, addslashes($row['link_name']));
@@ -535,7 +535,7 @@ class shopex48
         /* 订单 */
         $sql = "SELECT o.* FROM " . $this->sprefix . "orders AS o ";
         $res = $this->sdb->query($sql);
-        while ($row = $this->sdb->fetchRow($res)) {
+        foreach ($res as $row) {
             $order = array();
             $order['order_sn'] = $row['order_id'];
             $order['user_id'] = $row['member_id'];

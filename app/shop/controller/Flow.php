@@ -1540,7 +1540,7 @@ class Flow extends Init
                 //为天宫支付传递商品名
                 $sql = "SELECT goods_name FROM " . $GLOBALS['ecs']->table('order_goods') . " WHERE order_id =" . $order['order_id'];
                 $res = $GLOBALS['db']->query($sql);
-                while ($aaa[] = $GLOBALS['db']->fetchRow($res)) {
+                foreach ($res as $aaa[]) {
                     $bbb = array_values($aaa);
                 }
                 foreach ($bbb as $v) {
@@ -2024,7 +2024,7 @@ class Flow extends Init
             if ($val > 0) {
                 /* 判断是否为超出数量的优惠价格的配件 删除*/
                 $row_num = 1;
-                while ($offers_accessories_row = $GLOBALS['db']->fetchRow($offers_accessories_res)) {
+                foreach ($offers_accessories_res as $offers_accessories_row) {
                     if ($row_num > $val) {
                         $sql = "DELETE FROM " . $GLOBALS['ecs']->table('cart') .
                             " WHERE " . $where .
@@ -2052,7 +2052,7 @@ class Flow extends Init
             } //订货数量等于0
             else {
                 /* 如果是基本件并且有优惠价格的配件则删除优惠价格的配件 */
-                while ($offers_accessories_row = $GLOBALS['db']->fetchRow($offers_accessories_res)) {
+                foreach ($offers_accessories_res as $offers_accessories_row) {
                     $sql = "DELETE FROM " . $GLOBALS['ecs']->table('cart') .
                         " WHERE " . $where .
                         "AND rec_id = '" . $offers_accessories_row['rec_id'] . "' LIMIT 1";
@@ -2173,7 +2173,7 @@ class Flow extends Init
                     AND g.is_alone_sale = 0";
                 $res = $GLOBALS['db']->query($sql);
                 $_del_str = $id . ',';
-                while ($id_alone_sale_goods = $GLOBALS['db']->fetchRow($res)) {
+                foreach ($res as $id_alone_sale_goods) {
                     $_del_str .= $id_alone_sale_goods['rec_id'] . ',';
                 }
                 $_del_str = trim($_del_str, ',');
@@ -2217,7 +2217,7 @@ class Flow extends Init
             AND g.is_alone_sale = 0";
         $res = $GLOBALS['db']->query($sql);
         $rec_id = array();
-        while ($row = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $row) {
             $rec_id[$row['rec_id']][] = $row['parent_id'];
         }
 
@@ -2232,7 +2232,7 @@ class Flow extends Init
             AND extension_code <> 'package_buy'";
         $res = $GLOBALS['db']->query($sql);
         $cart_good = array();
-        while ($row = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $row) {
             $cart_good[] = $row['goods_id'];
         }
 
@@ -2304,7 +2304,7 @@ class Flow extends Init
             " AND act_type = '" . FAT_GOODS . "'" .
             " ORDER BY sort_order";
         $res = $GLOBALS['db']->query($sql);
-        while ($favourable = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $favourable) {
             $favourable['start_time'] = local_date($GLOBALS['_CFG']['time_format'], $favourable['start_time']);
             $favourable['end_time'] = local_date($GLOBALS['_CFG']['time_format'], $favourable['end_time']);
             $favourable['formated_min_amount'] = price_format($favourable['min_amount'], false);
@@ -2399,7 +2399,7 @@ class Flow extends Init
             " AND is_gift > 0" .
             " GROUP BY is_gift";
         $res = $GLOBALS['db']->query($sql);
-        while ($row = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $row) {
             $list[$row['is_gift']] = $row['num'];
         }
 

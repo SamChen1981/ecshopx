@@ -38,7 +38,7 @@ class Feed extends Init
                 $res = $GLOBALS['db']->query($sql);
 
                 if ($res !== false) {
-                    while ($row = $GLOBALS['db']->fetchRow($res)) {
+                    foreach ($res as $row) {
                         $item_url = build_uri('group_buy', array('gbid' => $row['act_id']), $row['act_name']);
                         $separator = (strpos($item_url, '?') === false) ? '?' : '&amp;';
                         $about = $uri . $item_url;
@@ -62,7 +62,7 @@ class Feed extends Init
                 $res = $GLOBALS['db']->query($sql);
 
                 if ($res !== false) {
-                    while ($row = $GLOBALS['db']->fetchRow($res)) {
+                    foreach ($res as $row) {
                         $item_url = build_uri('snatch', array('sid' => $row['act_id']), $row['act_name']);
                         $separator = (strpos($item_url, '?') === false) ? '?' : '&amp;';
                         $about = $uri . $item_url;
@@ -86,7 +86,7 @@ class Feed extends Init
                 $res = $GLOBALS['db']->query($sql);
 
                 if ($res !== false) {
-                    while ($row = $GLOBALS['db']->fetchRow($res)) {
+                    foreach ($res as $row) {
                         $item_url = build_uri('auction', array('auid' => $row['act_id']), $row['act_name']);
                         $separator = (strpos($item_url, '?') === false) ? '?' : '&amp;';
                         $about = $uri . $item_url;
@@ -109,7 +109,7 @@ class Feed extends Init
                 $res = $GLOBALS['db']->query($sql);
 
                 if ($res !== false) {
-                    while ($row = $GLOBALS['db']->fetchRow($res)) {
+                    foreach ($res as $row) {
                         $item_url = build_uri('exchange_goods', array('gid' => $row['goods_id']), $row['goods_name']);
                         $separator = (strpos($item_url, '?') === false) ? '?' : '&amp;';
                         $about = $uri . $item_url;
@@ -132,7 +132,7 @@ class Feed extends Init
                 $res = $GLOBALS['db']->query($sql);
 
                 if ($res !== false) {
-                    while ($row = $GLOBALS['db']->fetchRow($res)) {
+                    foreach ($res as $row) {
                         $item_url = 'activity.php';
                         $separator = (strpos($item_url, '?') === false) ? '?' : '&amp;';
                         $about = $uri . $item_url;
@@ -156,7 +156,7 @@ class Feed extends Init
                 $res = $GLOBALS['db']->query($sql);
 
                 if ($res !== false) {
-                    while ($row = $GLOBALS['db']->fetchRow($res)) {
+                    foreach ($res as $row) {
                         $item_url = 'package.php';
                         $separator = (strpos($item_url, '?') === false) ? '?' : '&amp;';
                         $about = $uri . $item_url;
@@ -179,7 +179,7 @@ class Feed extends Init
                 $res = $GLOBALS['db']->query($sql);
 
                 if ($res !== false) {
-                    while ($row = $GLOBALS['db']->fetchRow($res)) {
+                    foreach ($res as $row) {
                         $item_url = build_uri('article', array('aid' => $row['article_id']), $row['title']);
                         $separator = (strpos($item_url, '?') === false) ? '?' : '&amp;';
                         $about = $uri . $item_url;
@@ -205,7 +205,7 @@ class Feed extends Init
             $res = $GLOBALS['db']->query($sql);
 
             if ($res !== false) {
-                while ($row = $GLOBALS['db']->fetchRow($res)) {
+                foreach ($res as $row) {
                     $item_url = build_uri('goods', array('gid' => $row['goods_id']), $row['goods_name']);
                     $separator = (strpos($item_url, '?') === false) ? '?' : '&amp;';
                     $about = $uri . $item_url;

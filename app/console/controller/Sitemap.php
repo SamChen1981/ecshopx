@@ -52,7 +52,7 @@ class Sitemap extends Init
             $sql = "SELECT cat_id,cat_name FROM " . $GLOBALS['ecs']->table('category') . " ORDER BY parent_id";
             $res = $GLOBALS['db']->query($sql);
 
-            while ($row = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $row) {
                 $smi = new google_sitemap_item(
                     $domain . build_uri('category', array('cid' => $row['cat_id']), $row['cat_name']),
                     $today,
@@ -66,7 +66,7 @@ class Sitemap extends Init
             $sql = "SELECT cat_id,cat_name FROM " . $GLOBALS['ecs']->table('article_cat') . " WHERE cat_type=1";
             $res = $GLOBALS['db']->query($sql);
 
-            while ($row = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $row) {
                 $smi = new google_sitemap_item(
                     $domain . build_uri('article_cat', array('acid' => $row['cat_id']), $row['cat_name']),
                     $today,
@@ -80,7 +80,7 @@ class Sitemap extends Init
             $sql = "SELECT goods_id, goods_name FROM " . $GLOBALS['ecs']->table('goods') . " WHERE is_delete = 0";
             $res = $GLOBALS['db']->query($sql);
 
-            while ($row = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $row) {
                 $smi = new google_sitemap_item(
                     $domain . build_uri('goods', array('gid' => $row['goods_id']), $row['goods_name']),
                     $today,
@@ -94,7 +94,7 @@ class Sitemap extends Init
             $sql = "SELECT article_id,title,file_url,open_type FROM " . $GLOBALS['ecs']->table('article') . " WHERE is_open=1";
             $res = $GLOBALS['db']->query($sql);
 
-            while ($row = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $row) {
                 $article_url = $row['open_type'] != 1 ? build_uri('article', array('aid' => $row['article_id']), $row['title']) : trim($row['file_url']);
                 $smi = new google_sitemap_item(
                     $domain . $article_url,

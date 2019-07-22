@@ -170,7 +170,7 @@ class Search extends Init
 
                     $sql = 'SELECT DISTINCT goods_id FROM ' . $GLOBALS['ecs']->table('tag') . " WHERE tag_words LIKE '%$val%' ";
                     $res = $GLOBALS['db']->query($sql);
-                    while ($row = $GLOBALS['db']->FetchRow($res)) {
+                    foreach ($res as $row) {
                         $goods_ids[] = $row['goods_id'];
                     }
 
@@ -329,7 +329,7 @@ class Search extends Init
             $res = $GLOBALS['db']->SelectLimit($sql, $size, ($page - 1) * $size);
 
             $arr = array();
-            while ($row = $GLOBALS['db']->FetchRow($res)) {
+            foreach ($res as $row) {
                 if ($row['promote_price'] > 0) {
                     $promote_price = bargain_price($row['promote_price'], $row['promote_start_date'], $row['promote_end_date']);
                 } else {
@@ -483,7 +483,7 @@ class Search extends Init
                 ' ORDER BY cat_id, sort_order ASC';
             $res = $GLOBALS['db']->query($sql);
 
-            while ($row = $GLOBALS['db']->FetchRow($res)) {
+            foreach ($res as $row) {
                 if ($row['attr_index'] == 1 && $row['attr_input_type'] == 1) {
                     $row['attr_values'] = str_replace("\r", '', $row['attr_values']);
                     $options = explode("\n", $row['attr_values']);

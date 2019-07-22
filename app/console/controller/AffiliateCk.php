@@ -277,7 +277,7 @@ class AffiliateCk extends Init
 
 
         $query = $GLOBALS['db']->query($sql);
-        while ($rt = $GLOBALS['db']->fetch_array($query)) {
+        foreach ($query as $rt) {
             if (empty($separate_by) && $rt['up'] > 0) {
                 //按推荐注册分成
                 $rt['separate_able'] = 1;

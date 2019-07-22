@@ -347,7 +347,7 @@ class GoodsBatch extends Init
                 $brand_list = array();
                 $sql = "SELECT brand_id, brand_name FROM " . $GLOBALS['ecs']->table('brand');
                 $res = $GLOBALS['db']->query($sql);
-                while ($row = $GLOBALS['db']->fetchRow($res)) {
+                foreach ($res as $row) {
                     $brand_list[$row['brand_name']] = $row['brand_id'];
                 }
 
@@ -583,7 +583,7 @@ class GoodsBatch extends Init
             $member_price_list = array();
             $sql = "SELECT DISTINCT goods_id, user_rank, user_price FROM " . $GLOBALS['ecs']->table('member_price') . $where;
             $res = $GLOBALS['db']->query($sql);
-            while ($row = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $row) {
                 $member_price_list[$row['goods_id']][$row['user_rank']] = $row['user_price'];
             }
             $GLOBALS['smarty']->assign('member_price_list', $member_price_list);

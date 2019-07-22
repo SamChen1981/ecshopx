@@ -89,7 +89,7 @@ class Role extends Init
             $sql_query = "SELECT action_id, parent_id, action_code, relevance FROM " . $GLOBALS['ecs']->table('admin_action') .
                 " WHERE parent_id = 0";
             $res = $GLOBALS['db']->query($sql_query);
-            while ($rows = $GLOBALS['db']->FetchRow($res)) {
+            foreach ($res as $rows) {
                 $priv_arr[$rows['action_id']] = $rows;
             }
 
@@ -98,7 +98,7 @@ class Role extends Init
             $sql = "SELECT action_id, parent_id, action_code, relevance FROM " . $GLOBALS['ecs']->table('admin_action') .
                 " WHERE parent_id " . db_create_in(array_keys($priv_arr));
             $result = $GLOBALS['db']->query($sql);
-            while ($priv = $GLOBALS['db']->FetchRow($result)) {
+            foreach ($result as $priv) {
                 $priv_arr[$priv["parent_id"]]["priv"][$priv["action_code"]] = $priv;
             }
 
@@ -171,7 +171,7 @@ class Role extends Init
             $sql_query = "SELECT action_id, parent_id, action_code,relevance FROM " . $GLOBALS['ecs']->table('admin_action') .
                 " WHERE parent_id = 0";
             $res = $GLOBALS['db']->query($sql_query);
-            while ($rows = $GLOBALS['db']->FetchRow($res)) {
+            foreach ($res as $rows) {
                 $priv_arr[$rows['action_id']] = $rows;
             }
 
@@ -179,7 +179,7 @@ class Role extends Init
             $sql = "SELECT action_id, parent_id, action_code,relevance FROM " . $GLOBALS['ecs']->table('admin_action') .
                 " WHERE parent_id " . db_create_in(array_keys($priv_arr));
             $result = $GLOBALS['db']->query($sql);
-            while ($priv = $GLOBALS['db']->FetchRow($result)) {
+            foreach ($result as $priv) {
                 $priv_arr[$priv["parent_id"]]["priv"][$priv["action_code"]] = $priv;
             }
 

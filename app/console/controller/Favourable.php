@@ -185,7 +185,7 @@ class Favourable extends Init
             );
             $sql = "SELECT rank_id, rank_name FROM " . $GLOBALS['ecs']->table('user_rank');
             $res = $GLOBALS['db']->query($sql);
-            while ($row = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $row) {
                 $row['checked'] = strpos(',' . $favourable['user_rank'] . ',', ',' . $row['rank_id'] . ',') !== false;
                 $user_rank_list[] = $row;
             }
@@ -410,7 +410,7 @@ class Favourable extends Init
         $res = $GLOBALS['db']->query($sql);
 
         $list = array();
-        while ($row = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $row) {
             $row['start_time'] = local_date('Y-m-d H:i', $row['start_time']);
             $row['end_time'] = local_date('Y-m-d H:i', $row['end_time']);
 

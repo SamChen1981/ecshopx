@@ -21,7 +21,7 @@ class Compare extends Init
                 ' GROUP BY id_value ';
             $query = $GLOBALS['db']->query($sql);
             $cmt = array();
-            while ($row = $GLOBALS['db']->fetch_array($query)) {
+            foreach ($query as $row) {
                 $cmt[$row['id_value']] = $row;
             }
 
@@ -42,7 +42,7 @@ class Compare extends Init
             $ids = $_REQUEST['goods'];
             $attr_name = array();
             $type_id = 0;
-            while ($row = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $row) {
                 $goods_id = $row['goods_id'];
                 $type_id = $row['goods_type'];
                 $arr[$goods_id]['goods_id'] = $goods_id;
@@ -84,7 +84,7 @@ class Compare extends Init
             $attribute = array();
 
             $query = $GLOBALS['db']->query($sql);
-            while ($rt = $GLOBALS['db']->fetch_array($query)) {
+            foreach ($query as $rt) {
                 $attribute[$rt['attr_id']] = $rt['attr_name'];
             }
 

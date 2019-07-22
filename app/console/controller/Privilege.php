@@ -553,7 +553,7 @@ class Privilege extends Init
             /* 包含插件菜单语言项 */
             $sql = "SELECT code FROM " . $GLOBALS['ecs']->table('plugins');
             $rs = $GLOBALS['db']->query($sql);
-            while ($row = $GLOBALS['db']->FetchRow($rs)) {
+            foreach ($rs as $row) {
                 /* 取得语言项 */
                 if (file_exists(ROOT_PATH . 'plugins/' . $row['code'] . '/languages/common_' . $GLOBALS['_CFG']['lang'] . '.php')) {
                     include_once(ROOT_PATH . 'plugins/' . $row['code'] . '/languages/common_' . $GLOBALS['_CFG']['lang'] . '.php');
@@ -641,7 +641,7 @@ class Privilege extends Init
             $sql_query = "SELECT action_id, parent_id, action_code,relevance FROM " . $GLOBALS['ecs']->table('admin_action') .
                 " WHERE parent_id = 0";
             $res = $GLOBALS['db']->query($sql_query);
-            while ($rows = $GLOBALS['db']->FetchRow($res)) {
+            foreach ($res as $rows) {
                 $priv_arr[$rows['action_id']] = $rows;
             }
 
@@ -649,7 +649,7 @@ class Privilege extends Init
             $sql = "SELECT action_id, parent_id, action_code,relevance FROM " . $GLOBALS['ecs']->table('admin_action') .
                 " WHERE parent_id " . db_create_in(array_keys($priv_arr));
             $result = $GLOBALS['db']->query($sql);
-            while ($priv = $GLOBALS['db']->FetchRow($result)) {
+            foreach ($result as $priv) {
                 $priv_arr[$priv["parent_id"]]["priv"][$priv["action_code"]] = $priv;
             }
 

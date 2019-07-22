@@ -218,7 +218,7 @@ class GroupBuy extends Init
                 "WHERE g.attr_id = a.attr_id " .
                 "AND g.goods_attr_id " . db_create_in($specs);
             $res = $GLOBALS['db']->query($sql);
-            while ($row = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $row) {
                 $attr_list[] = $row['attr_name'] . ': ' . $row['attr_value'];
             }
             $goods_attr = join(chr(13) . chr(10), $attr_list);
@@ -291,7 +291,7 @@ class GroupBuy extends Init
             "WHERE b.act_type = '" . GAT_GROUP_BUY . "' " .
             "AND b.start_time <= '$now' AND b.is_finished < 3 ORDER BY b.act_id DESC";
         $res = $GLOBALS['db']->selectLimit($sql, $size, ($page - 1) * $size);
-        while ($group_buy = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $group_buy) {
             $ext_info = unserialize($group_buy['ext_info']);
             $group_buy = array_merge($group_buy, $ext_info);
 

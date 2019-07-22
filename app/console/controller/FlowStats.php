@@ -72,7 +72,7 @@ class FlowStats extends Init
 
                 $key = 0;
 
-                while ($val = $GLOBALS['db']->fetchRow($res)) {
+                foreach ($res as $val) {
                     $val['access_date'] = gmdate('m-d', $val['access_time'] + intval($timezone) * 3600);
                     $general_xml .= "<set name='$val[access_date]' value='$val[access_count]' color='" . chart_color($key) . "' />";
                     if ($val['access_count'] > $max) {
@@ -96,7 +96,7 @@ class FlowStats extends Init
 
                     $lastDay = 0;
 
-                    while ($val = $GLOBALS['db']->fetchRow($res)) {
+                    foreach ($res as $val) {
                         $day = gmdate('d', $val['access_time'] + $timezone * 3600);
 
                         if ($lastDay == 0) {
@@ -135,7 +135,7 @@ class FlowStats extends Init
                 $res = $GLOBALS['db']->query($sql);
 
                 $key = 0;
-                while ($val = $GLOBALS['db']->fetchRow($res)) {
+                foreach ($res as $val) {
                     $area = empty($val['area']) ? 'unknow' : $val['area'];
 
                     $area_xml .= "<set name='$area' value='$val[access_count]' color='" . chart_color($key) . "' />";
@@ -155,7 +155,7 @@ class FlowStats extends Init
                 $res = $GLOBALS['db']->query($sql);
                 $area_arr = array();
                 $category = array();
-                while ($val = $GLOBALS['db']->fetchRow($res)) {
+                foreach ($res as $val) {
                     $date = local_date('Y-m', $val['access_time']);
                     $area_arr[$val['area']] = null;
                     if (isset($category[$date][$val['area']])) {
@@ -201,7 +201,7 @@ class FlowStats extends Init
 
                 $key = 0;
 
-                while ($val = $GLOBALS['db']->fetchRow($res)) {
+                foreach ($res as $val) {
                     $from = empty($val['referer_domain']) ? $GLOBALS['_LANG']['input_url'] : $val['referer_domain'];
 
                     if ((strpos($from, '"') !== false) || (strpos($from, "'") !== false)) {
@@ -228,7 +228,7 @@ class FlowStats extends Init
 
                 $res = $GLOBALS['db']->query($sql);
                 $domain_arr = array();
-                while ($val = $GLOBALS['db']->fetchRow($res)) {
+                foreach ($res as $val) {
                     $date = local_date('Y-m', $val['access_time']);
                     $domain_arr[$val['referer_domain']] = null;
                     if (isset($category[$date][$val['referer_domain']])) {
@@ -312,7 +312,7 @@ class FlowStats extends Init
             $data .= $GLOBALS['_LANG']['date'] . "\t";
             $data .= $GLOBALS['_LANG']['access_count'] . "\t\n";
 
-            while ($val = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $val) {
                 $val['access_date'] = gmdate('m-d', $val['access_time'] + $timezone * 3600);
                 $data .= $val['access_date'] . "\t";
                 $data .= $val['access_count'] . "\t\n";
@@ -328,7 +328,7 @@ class FlowStats extends Init
             $data .= $GLOBALS['_LANG']['area'] . "\t";
             $data .= $GLOBALS['_LANG']['access_count'] . "\t\n";
 
-            while ($val = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $val) {
                 $data .= $val['area'] . "\t";
                 $data .= $val['access_count'] . "\t\n";
             }
@@ -344,7 +344,7 @@ class FlowStats extends Init
             $data .= $GLOBALS['_LANG']['url'] . "\t";
             $data .= $GLOBALS['_LANG']['access_count'] . "\t\n";
 
-            while ($val = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $val) {
                 $data .= ($val['referer_domain'] == "" ? $GLOBALS['_LANG']['input_url'] : $val['referer_domain']) . "\t";
                 $data .= $val['access_count'] . "\t\n";
             }

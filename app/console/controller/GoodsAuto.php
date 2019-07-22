@@ -159,7 +159,7 @@ class GoodsAuto extends Init
 
         $goodsdb = array();
 
-        while ($rt = $GLOBALS['db']->fetch_array($query)) {
+        foreach ($query as $rt) {
             if (!empty($rt['starttime'])) {
                 $rt['starttime'] = local_date('Y-m-d', $rt['starttime']);
             }

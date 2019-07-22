@@ -94,7 +94,7 @@ class VisitSold extends Init
             " GROUP BY og.goods_id ORDER BY g.click_count DESC " . $limit;
         $res = $GLOBALS['db']->query($sql);
 
-        while ($item = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $item) {
             if ($item['click_count'] <= 0) {
                 $item['scale'] = 0;
             } else {

@@ -172,7 +172,7 @@ class Wholesale extends Init
             $sql = "SELECT rank_id, rank_name FROM " . $GLOBALS['ecs']->table('user_rank') .
                 " ORDER BY special_rank, min_points";
             $res = $GLOBALS['db']->query($sql);
-            while ($rank = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $rank) {
                 if (!empty($wholesale['rank_ids']) && strpos($wholesale['rank_ids'], $rank['rank_id']) !== false) {
                     $rank['checked'] = 1;
                 }
@@ -343,7 +343,7 @@ class Wholesale extends Init
             $sql = "SELECT rank_id, rank_name FROM " . $GLOBALS['ecs']->table('user_rank') .
                 " ORDER BY special_rank, min_points";
             $res = $GLOBALS['db']->query($sql);
-            while ($rank = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $rank) {
                 if (!empty($wholesale['rank_ids']) && strpos($wholesale['rank_ids'], $rank['rank_id']) !== false) {
                     $rank['checked'] = 1;
                 }
@@ -575,7 +575,7 @@ class Wholesale extends Init
         $rank_list = array();
         $sql = "SELECT rank_id, rank_name FROM " . $GLOBALS['ecs']->table('user_rank');
         $res = $GLOBALS['db']->query($sql);
-        while ($row = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $row) {
             $rank_list[$row['rank_id']] = $row['rank_name'];
         }
 
@@ -617,7 +617,7 @@ class Wholesale extends Init
         $res = $GLOBALS['db']->query($sql);
 
         $list = array();
-        while ($row = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $row) {
             $rank_name_list = array();
             if ($row['rank_ids']) {
                 $rank_id_list = explode(',', $row['rank_ids']);

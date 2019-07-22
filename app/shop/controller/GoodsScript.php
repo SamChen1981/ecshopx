@@ -70,7 +70,7 @@ class GoodsScript extends Init
             $res = $GLOBALS['db']->query($sql);
 
             $goods_list = array();
-            while ($goods = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $goods) {
                 // 转换编码
                 $goods['goods_price'] = price_format($goods['goods_price']);
                 if ($charset != EC_CHARSET) {

@@ -465,7 +465,7 @@ class Database extends Init
 
             $num = 0;
             $list = array();
-            while ($row = $GLOBALS['db']->fetchRow($ret)) {
+            foreach ($ret as $row) {
                 if (strpos($row['Name'], '_session') !== false) {
                     $res['Msg_text'] = 'Ignore';
                     $row['Data_free'] = 'Ignore';

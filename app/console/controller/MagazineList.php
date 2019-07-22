@@ -103,7 +103,7 @@ class MagazineList extends Init
                         $add = '';
 
                         $i = 0;
-                        while ($rt = $GLOBALS['db']->fetch_array($query)) {
+                        foreach ($query as $rt) {
                             $time = time();
                             $add .= $add ? ",('$rt[email]','$id','$pri','$time')" : "('$rt[email]','$id','$pri','$time')";
                             $i++;
@@ -150,7 +150,7 @@ class MagazineList extends Init
                         $add = '';
 
                         $i = 0;
-                        while ($rt = $GLOBALS['db']->fetch_array($query)) {
+                        foreach ($query as $rt) {
                             $time = time();
                             $add .= $add ? ",('$rt[email]','$id','$pri','$time')" : "('$rt[email]','$id','$pri','$time')";
                             $i++;

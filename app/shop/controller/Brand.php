@@ -254,7 +254,7 @@ class Brand extends Init
         $res = $GLOBALS['db']->selectLimit($sql, $size, ($page - 1) * $size);
 
         $arr = array();
-        while ($row = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $row) {
             if ($row['promote_price'] > 0) {
                 $promote_price = bargain_price($row['promote_price'], $row['promote_start_date'], $row['promote_end_date']);
             } else {
@@ -299,7 +299,7 @@ class Brand extends Init
             "GROUP BY g.cat_id";
         $res = $GLOBALS['db']->query($sql);
 
-        while ($row = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $row) {
             $row['url'] = build_uri('brand', array('cid' => $row['cat_id'], 'bid' => $brand), $row['cat_name']);
             $arr[] = $row;
         }

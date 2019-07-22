@@ -569,7 +569,7 @@ class Bonus extends Init
             $res = $GLOBALS['db']->query($sql);
 
             $code_table = array();
-            while ($val = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $val) {
                 echo $val['bonus_sn'] . "\t";
                 echo $val['type_money'] . "\t";
                 if (!isset($code_table[$val['type_name']])) {
@@ -803,7 +803,7 @@ class Bonus extends Init
         $res = $GLOBALS['db']->query($sql);
 
         $sent_arr = array();
-        while ($row = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $row) {
             $sent_arr[$row['bonus_type_id']] = $row['sent_count'];
         }
 
@@ -815,7 +815,7 @@ class Bonus extends Init
         $res = $GLOBALS['db']->query($sql);
 
         $used_arr = array();
-        while ($row = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $row) {
             $used_arr[$row['bonus_type_id']] = $row['used_count'];
         }
 
@@ -841,7 +841,7 @@ class Bonus extends Init
         $arr = array();
         $res = $GLOBALS['db']->selectLimit($sql, $filter['page_size'], $filter['start']);
 
-        while ($row = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $row) {
             $row['send_by'] = $GLOBALS['_LANG']['send_by'][$row['send_type']];
             $row['send_count'] = isset($sent_arr[$row['type_id']]) ? $sent_arr[$row['type_id']] : 0;
             $row['use_count'] = isset($used_arr[$row['type_id']]) ? $used_arr[$row['type_id']] : 0;

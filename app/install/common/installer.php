@@ -138,7 +138,7 @@ function get_db_list($db_host, $db_port, $db_user, $db_pass)
     $result = mysqli_query($conn, 'SHOW DATABASES');
     if ($result !== false) {
         $limit = 0;
-        while ($row = mysqli_fetch_assoc($result)) {
+        foreach ($result as $row) {
             if (in_array($row['Database'], $filter_dbs)) {
                 continue;
             }

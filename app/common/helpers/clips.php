@@ -28,7 +28,7 @@ function get_collection_goods($user_id, $num = 10, $start = 0)
     $res = $GLOBALS['db']->selectLimit($sql, $num, $start);
 
     $goods_list = array();
-    while ($row = $GLOBALS['db']->fetchRow($res)) {
+    foreach ($res as $row) {
         if ($row['promote_price'] > 0) {
             $promote_price = bargain_price($row['promote_price'], $row['promote_start_date'], $row['promote_end_date']);
         } else {
@@ -90,7 +90,7 @@ function get_message_list($user_id, $user_name, $num, $start, $order_id = 0)
 
     $res = $GLOBALS['db']->SelectLimit($sql, $num, $start);
 
-    while ($rows = $GLOBALS['db']->fetchRow($res)) {
+    foreach ($res as $rows) {
         /* 取得留言的回复 */
         //if (empty($order_id))
         //{
@@ -232,7 +232,7 @@ function get_booking_list($user_id, $num, $start)
         "FROM " . $GLOBALS['ecs']->table('booking_goods') . " AS bg , " . $GLOBALS['ecs']->table('goods') . " AS g" . " WHERE bg.goods_id = g.goods_id AND bg.user_id = '$user_id' ORDER BY bg.booking_time DESC";
     $res = $GLOBALS['db']->SelectLimit($sql, $num, $start);
 
-    while ($row = $GLOBALS['db']->fetchRow($res)) {
+    foreach ($res as $row) {
         if (empty($row['dispose_note'])) {
             $row['dispose_note'] = 'N/A';
         }
@@ -468,7 +468,7 @@ function get_account_log($user_id, $num, $start)
     $res = $GLOBALS['db']->selectLimit($sql, $num, $start);
 
     if ($res) {
-        while ($rows = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $rows) {
             $rows['add_time'] = local_date($GLOBALS['_CFG']['date_format'], $rows['add_time']);
             $rows['admin_note'] = nl2br(htmlspecialchars($rows['admin_note']));
             $rows['short_admin_note'] = ($rows['admin_note'] > '') ? sub_str($rows['admin_note'], 30) : 'N/A';
@@ -721,7 +721,7 @@ function get_user_prompt($user_id)
         " WHERE act_type = '" . GAT_SNATCH . "'" .
         " AND (is_finished = 1 OR (is_finished = 0 AND end_time <= '$now'))";
     $res = $GLOBALS['db']->query($sql);
-    while ($row = $GLOBALS['db']->fetchRow($res)) {
+    foreach ($res as $row) {
         $act_id = $row['act_id'];
         $result = get_snatch_result($act_id);
         if (isset($result['order_count']) && $result['order_count'] == 0 && $result['user_id'] == $user_id) {
@@ -746,7 +746,7 @@ function get_user_prompt($user_id)
         " WHERE act_type = '" . GAT_AUCTION . "'" .
         " AND (is_finished = 1 OR (is_finished = 0 AND end_time <= '$now'))";
     $res = $GLOBALS['db']->query($sql);
-    while ($row = $GLOBALS['db']->fetchRow($res)) {
+    foreach ($res as $row) {
         $act_id = $row['act_id'];
         $auction = auction_info($act_id);
         if (isset($auction['last_bid']) && $auction['last_bid']['bid_user'] == $user_id && $auction['order_count'] == 0) {
@@ -800,7 +800,7 @@ function get_comment_list($user_id, $page_size, $start)
 
     $comments = array();
     $to_article = array();
-    while ($row = $GLOBALS['db']->fetchRow($res)) {
+    foreach ($res as $row) {
         $row['formated_add_time'] = local_date($GLOBALS['_CFG']['time_format'], $row['add_time']);
         if ($row['reply_time']) {
             $row['formated_reply_time'] = local_date($GLOBALS['_CFG']['time_format'], $row['reply_time']);

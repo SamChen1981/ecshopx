@@ -434,7 +434,7 @@ class Auction extends Init
         $res = $GLOBALS['db']->query($sql);
 
         $list = array();
-        while ($row = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $row) {
             $ext_info = unserialize($row['ext_info']);
             $arr = array_merge($row, $ext_info);
 

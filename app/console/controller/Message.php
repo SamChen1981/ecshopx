@@ -87,7 +87,7 @@ class Message extends Init
             if ($rec_arr[0] == 0) {
                 /* 获取管理员信息 */
                 $result = $GLOBALS['db']->query('SELECT user_id FROM ' . $GLOBALS['ecs']->table('admin_user') . 'WHERE user_id !=' . $_SESSION['admin_id']);
-                while ($rows = $GLOBALS['db']->FetchRow($result)) {
+                foreach ($result as $rows) {
                     $sql = "INSERT INTO " . $GLOBALS['ecs']->table('admin_message') . " (sender_id, receiver_id, sent_time, " .
                         "read_time, readed, deleted, title, message) " .
                         "VALUES ('" . $_SESSION['admin_id'] . "', '" . $rows['user_id'] . "', '" . gmtime() . "', " .

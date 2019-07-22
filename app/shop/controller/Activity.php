@@ -29,7 +29,7 @@ class Activity extends Init
         $user_rank_list[0] = $GLOBALS['_LANG']['not_user'];
         $sql = "SELECT rank_id, rank_name FROM " . $GLOBALS['ecs']->table('user_rank');
         $res = $GLOBALS['db']->query($sql);
-        while ($row = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $row) {
             $user_rank_list[$row['rank_id']] = $row['rank_name'];
         }
 
@@ -37,7 +37,7 @@ class Activity extends Init
         $res = $GLOBALS['db']->query($sql);
 
         $list = array();
-        while ($row = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $row) {
             $row['start_time'] = local_date('Y-m-d H:i', $row['start_time']);
             $row['end_time'] = local_date('Y-m-d H:i', $row['end_time']);
 

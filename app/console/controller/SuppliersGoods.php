@@ -230,7 +230,7 @@ class SuppliersGoods extends Init
                         " FROM " . $GLOBALS['ecs']->table('link_goods') .
                         " WHERE goods_id = '$_REQUEST[goods_id]' ";
                     $res = $GLOBALS['db']->query($sql);
-                    while ($row = $GLOBALS['db']->fetchRow($res)) {
+                    foreach ($res as $row) {
                         $GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('link_goods'), $row, 'INSERT');
                     }
 
@@ -238,7 +238,7 @@ class SuppliersGoods extends Init
                         " FROM " . $GLOBALS['ecs']->table('link_goods') .
                         " WHERE link_goods_id = '$_REQUEST[goods_id]' ";
                     $res = $GLOBALS['db']->query($sql);
-                    while ($row = $GLOBALS['db']->fetchRow($res)) {
+                    foreach ($res as $row) {
                         $GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('link_goods'), $row, 'INSERT');
                     }
 
@@ -251,7 +251,7 @@ class SuppliersGoods extends Init
                         "FROM " . $GLOBALS['ecs']->table('group_goods') .
                         " WHERE parent_id = '$_REQUEST[goods_id]' ";
                     $res = $GLOBALS['db']->query($sql);
-                    while ($row = $GLOBALS['db']->fetchRow($res)) {
+                    foreach ($res as $row) {
                         $GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('group_goods'), $row, 'INSERT');
                     }
 
@@ -264,7 +264,7 @@ class SuppliersGoods extends Init
                         "FROM " . $GLOBALS['ecs']->table('goods_article') .
                         " WHERE goods_id = '$_REQUEST[goods_id]' ";
                     $res = $GLOBALS['db']->query($sql);
-                    while ($row = $GLOBALS['db']->fetchRow($res)) {
+                    foreach ($res as $row) {
                         $GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('goods_article'), $row, 'INSERT');
                     }
 
@@ -278,7 +278,7 @@ class SuppliersGoods extends Init
                         "FROM " . $GLOBALS['ecs']->table('goods_attr') .
                         " WHERE goods_id = '$_REQUEST[goods_id]' ";
                     $res = $GLOBALS['db']->query($sql);
-                    while ($row = $GLOBALS['db']->fetchRow($res)) {
+                    foreach ($res as $row) {
                         $GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('goods_attr'), addslashes_deep($row), 'INSERT');
                     }
                 }
@@ -747,7 +747,7 @@ class SuppliersGoods extends Init
 
                 $attr_list = array();
 
-                while ($row = $GLOBALS['db']->fetchRow($attr_res)) {
+                foreach ($attr_res as $row) {
                     $attr_list[$row['attr_id']] = $row['attr_index'];
                 }
 
@@ -755,7 +755,7 @@ class SuppliersGoods extends Init
 
                 $res = $GLOBALS['db']->query($sql);
 
-                while ($row = $GLOBALS['db']->fetchRow($res)) {
+                foreach ($res as $row) {
                     $goods_attr_list[$row['attr_id']][$row['attr_value']] = array('sign' => 'delete', 'goods_attr_id' => $row['goods_attr_id']);
                 }
                 // 循环现有的，根据原有的做相应处理
@@ -1305,7 +1305,7 @@ class SuppliersGoods extends Init
                 "FROM " . $GLOBALS['ecs']->table('goods_gallery') .
                 " WHERE goods_id = '$goods_id'";
             $res = $GLOBALS['db']->query($sql);
-            while ($row = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $row) {
                 if (!empty($row['img_url'])) {
                     @unlink('../' . $row['img_url']);
                 }
@@ -1593,7 +1593,7 @@ class SuppliersGoods extends Init
             $res = $GLOBALS['db']->query($sql);
             $arr = array();
 
-            while ($row = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $row) {
                 $arr[] = array('value' => $row['article_id'], 'text' => $row['title'], 'data' => '');
             }
 

@@ -128,7 +128,7 @@ class Mysql extends Db
         $res = $this->query($sql);
         if ($res !== false) {
             $arr = array();
-            while ($row = mysqli_fetch_assoc($res)) {
+            foreach ($res as $row) {
                 $arr[] = $row;
             }
 
@@ -201,7 +201,7 @@ class Mysql extends Db
         $res = $this->query($sql);
         if ($res !== false) {
             $arr = array();
-            while ($row = mysqli_fetch_row($res)) {
+            foreach ($res as $row) {
                 $arr[] = $row[0];
             }
 

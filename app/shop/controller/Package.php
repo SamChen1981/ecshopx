@@ -35,7 +35,7 @@ class Package extends Init
         $res = $GLOBALS['db']->query($sql);
 
         $list = array();
-        while ($row = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $row) {
             $row['start_time'] = local_date('Y-m-d H:i', $row['start_time']);
             $row['end_time'] = local_date('Y-m-d H:i', $row['end_time']);
             $ext_arr = unserialize($row['ext_info']);

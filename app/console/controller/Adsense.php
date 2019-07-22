@@ -31,7 +31,7 @@ class Adsense extends Init
                 "FROM " . $GLOBALS['ecs']->table('ad') . " AS a, " . $GLOBALS['ecs']->table('adsense') . " AS b " .
                 "WHERE b.from_ad = a.ad_id ORDER by a.ad_name DESC";
             $res = $GLOBALS['db']->query($sql);
-            while ($rows = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $rows) {
                 /* 获取当前广告所产生的订单总数 */
                 $rows['referer'] = addslashes($rows['referer']);
                 $sql2 = 'SELECT COUNT(order_id) FROM ' . $GLOBALS['ecs']->table('order_info') . " WHERE from_ad='$rows[ad_id]' AND referer='$rows[referer]'";
@@ -52,7 +52,7 @@ class Adsense extends Init
             $goods_sql = "SELECT from_ad, referer, clicks FROM " . $GLOBALS['ecs']->table('adsense') .
                 " WHERE from_ad = '-1' ORDER by referer DESC";
             $goods_res = $GLOBALS['db']->query($goods_sql);
-            while ($rows2 = $GLOBALS['db']->fetchRow($goods_res)) {
+            foreach ($goods_res as $rows2) {
                 /* 获取当前广告所产生的订单总数 */
                 $rows2['referer'] = addslashes($rows2['referer']);
                 $rows2['order_num'] = $GLOBALS['db']->getOne("SELECT COUNT(order_id) FROM " . $GLOBALS['ecs']->table('order_info') . " WHERE referer='$rows2[referer]'");

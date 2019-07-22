@@ -20,7 +20,7 @@ class MailTemplate extends Init
             /* 包含插件语言项 */
             $sql = "SELECT code FROM " . $GLOBALS['ecs']->table('plugins');
             $rs = $GLOBALS['db']->query($sql);
-            while ($row = $GLOBALS['db']->FetchRow($rs)) {
+            foreach ($rs as $row) {
                 /* 取得语言项 */
                 if (file_exists('../plugins/' . $row['code'] . '/languages/common_' . $GLOBALS['_CFG']['lang'] . '.php')) {
                     include_once(ROOT_PATH . 'plugins/' . $row['code'] . '/languages/common_' . $GLOBALS['_CFG']['lang'] . '.php');
@@ -32,7 +32,7 @@ class MailTemplate extends Init
             $res = $GLOBALS['db']->query($sql);
             $cur = null;
 
-            while ($row = $GLOBALS['db']->FetchRow($res)) {
+            foreach ($res as $row) {
                 if ($cur == null) {
                     $cur = $row['template_id'];
                 }
@@ -77,7 +77,7 @@ class MailTemplate extends Init
             /* 包含插件语言项 */
             $sql = "SELECT code FROM " . $GLOBALS['ecs']->table('plugins');
             $rs = $GLOBALS['db']->query($sql);
-            while ($row = $GLOBALS['db']->FetchRow($rs)) {
+            foreach ($rs as $row) {
                 /* 取得语言项 */
                 if (file_exists('../plugins/' . $row['code'] . '/languages/common_' . $GLOBALS['_CFG']['lang'] . '.php')) {
                     include_once(ROOT_PATH . 'plugins/' . $row['code'] . '/languages/common_' . $GLOBALS['_CFG']['lang'] . '.php');
@@ -88,7 +88,7 @@ class MailTemplate extends Init
             $sql = "SELECT template_id, template_code FROM " . $GLOBALS['ecs']->table('mail_templates') . " WHERE  type = 'template'";
             $res = $GLOBALS['db']->query($sql);
 
-            while ($row = $GLOBALS['db']->FetchRow($res)) {
+            foreach ($res as $row) {
                 $len = strlen($GLOBALS['_LANG'][$row['template_code']]);
                 $templates[$row['template_id']] = $len < 18 ?
                     $GLOBALS['_LANG'][$row['template_code']] . str_repeat('&nbsp;', (18 - $len) / 2) . " [$row[template_code]]" :

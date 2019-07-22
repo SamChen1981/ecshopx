@@ -453,7 +453,7 @@ class Article extends Init
                         " AND file_url <> ''";
 
                     $res = $GLOBALS['db']->query($sql);
-                    while ($row = $GLOBALS['db']->fetchRow($res)) {
+                    foreach ($res as $row) {
                         $old_url = $row['file_url'];
                         if (strpos($old_url, 'http://') === false && strpos($old_url, 'https://') === false) {
                             @unlink(ROOT_PATH . $old_url);
@@ -583,7 +583,7 @@ class Article extends Init
         $arr = array();
         $res = $GLOBALS['db']->selectLimit($sql, $filter['page_size'], $filter['start']);
 
-        while ($rows = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $rows) {
             $rows['date'] = local_date($GLOBALS['_CFG']['time_format'], $rows['add_time']);
 
             $arr[] = $rows;

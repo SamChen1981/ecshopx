@@ -16,7 +16,7 @@ class Cron extends Init
             $cron_list = array();
             $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('crons');
             $res = $GLOBALS['db']->query($sql);
-            while ($row = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $row) {
                 $cron_list[$row['cron_code']] = $row;
             }
             $modules = read_modules('../includes/modules/cron');

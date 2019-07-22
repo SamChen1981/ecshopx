@@ -24,7 +24,7 @@ class Users extends Init
             $rs = $GLOBALS['db']->query($sql);
 
             $ranks = array();
-            while ($row = $GLOBALS['db']->FetchRow($rs)) {
+            foreach ($rs as $row) {
                 $ranks[$row['rank_id']] = $row['rank_name'];
             }
 
@@ -289,7 +289,7 @@ class Users extends Init
                         $sql = "SELECT user_id FROM " . $GLOBALS['ecs']->table('users') . " WHERE parent_id IN($up_uid)";
                         $query = $GLOBALS['db']->query($sql);
                         $up_uid = '';
-                        while ($rt = $GLOBALS['db']->fetch_array($query)) {
+                        foreach ($query as $rt) {
                             $up_uid .= $up_uid ? ",'$rt[user_id]'" : "'$rt[user_id]'";
                             $count++;
                         }
@@ -566,7 +566,7 @@ class Users extends Init
                     $sql = "SELECT user_id FROM " . $GLOBALS['ecs']->table('users') . " WHERE parent_id IN($up_uid)";
                     $query = $GLOBALS['db']->query($sql);
                     $up_uid = '';
-                    while ($rt = $GLOBALS['db']->fetch_array($query)) {
+                    foreach ($query as $rt) {
                         $up_uid .= $up_uid ? ",'$rt[user_id]'" : "'$rt[user_id]'";
                         $count++;
                     }

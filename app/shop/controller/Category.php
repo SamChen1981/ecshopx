@@ -392,7 +392,7 @@ class Category extends Init
         $res = $GLOBALS['db']->selectLimit($sql, $size, ($page - 1) * $size);
 
         $arr = array();
-        while ($row = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $row) {
             if ($row['promote_price'] > 0) {
                 $promote_price = bargain_price($row['promote_price'], $row['promote_start_date'], $row['promote_end_date']);
             } else {

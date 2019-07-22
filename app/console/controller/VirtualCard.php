@@ -310,7 +310,7 @@ class VirtualCard extends Init
                 $new_crc32 = crc32($_POST['new_string']);
                 $sql = "SELECT card_id, card_sn, card_password FROM " . $GLOBALS['ecs']->table('virtual_card') . " WHERE crc32 = '$old_crc32'";
                 $res = $GLOBALS['db']->query($sql);
-                while ($row = $GLOBALS['db']->fetchRow($res)) {
+                foreach ($res as $row) {
                     $row['card_sn'] = encrypt(decrypt($row['card_sn'], $_POST['old_string']), $_POST['new_string']);
                     $row['card_password'] = encrypt(decrypt($row['card_password'], $_POST['old_string']), $_POST['new_string']);
                     $row['crc32'] = $new_crc32;
@@ -398,7 +398,7 @@ class VirtualCard extends Init
             $stat = array('all' => 0, 'new' => 0, 'old' => 0, 'unknown' => 0);
             $sql = "SELECT crc32, count(*) AS cnt FROM " . $GLOBALS['ecs']->table('virtual_card') . " GROUP BY crc32";
             $res = $GLOBALS['db']->query($sql);
-            while ($row = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $row) {
                 $stat['all'] += $row['cnt'];
                 if (crc32($new_key) == $row['crc32']) {
                     $stat['new'] += $row['cnt'];
@@ -428,7 +428,7 @@ class VirtualCard extends Init
                 " WHERE crc32 = '$old_crc32' LIMIT $each_num";
             $res = $GLOBALS['db']->query($sql);
 
-            while ($row = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $row) {
                 $row['card_sn'] = encrypt(decrypt($row['card_sn'], OLD_AUTH_KEY));
                 $row['card_password'] = encrypt(decrypt($row['card_password'], OLD_AUTH_KEY));
                 $row['crc32'] = $new_crc32;
@@ -451,7 +451,7 @@ class VirtualCard extends Init
                 $stat = array('new' => 0, 'unknown' => 0);
                 $sql = "SELECT crc32, count(*) AS cnt FROM " . $GLOBALS['ecs']->table('virtual_card') . " GROUP BY crc32";
                 $res = $GLOBALS['db']->query($sql);
-                while ($row = $GLOBALS['db']->fetchRow($res)) {
+                foreach ($res as $row) {
                     if ($new_crc32 == $row['crc32']) {
                         $stat['new'] += $row['cnt'];
                     } else {

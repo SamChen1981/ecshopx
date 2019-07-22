@@ -240,7 +240,7 @@ function get_user_orders($user_id, $num = 10, $start = 0)
         " WHERE user_id = '$user_id' ORDER BY add_time DESC";
     $res = $GLOBALS['db']->SelectLimit($sql, $num, $start);
 
-    while ($row = $GLOBALS['db']->fetchRow($res)) {
+    foreach ($res as $row) {
         if ($row['order_status'] == OS_UNCONFIRMED) {
             $row['handler'] = "<a href=\"user.php?act=cancel_order&order_id=" . $row['order_id'] . "\" onclick=\"if (!confirm('" . $GLOBALS['_LANG']['confirm_cancel'] . "')) return false;\">" . $GLOBALS['_LANG']['cancel'] . "</a>";
         } elseif ($row['order_status'] == OS_SPLITED) {
@@ -753,7 +753,7 @@ function return_to_cart($order_id)
     $res = $GLOBALS['db']->query($sql);
 
     $time = gmtime();
-    while ($row = $GLOBALS['db']->fetchRow($res)) {
+    foreach ($res as $row) {
         // 查该商品信息：是否删除、是否上架
 
         $sql = "SELECT goods_sn, goods_name, goods_number, market_price, " .
@@ -950,7 +950,7 @@ function get_user_bouns_list($user_id, $num = 10, $start = 0)
     $day = getdate();
     $cur_date = local_mktime(23, 59, 59, $day['mon'], $day['mday'], $day['year']);
 
-    while ($row = $GLOBALS['db']->fetchRow($res)) {
+    foreach ($res as $row) {
         /* 先判断是否被使用，然后判断是否开始或过期 */
         if (empty($row['order_id'])) {
             /* 没有被使用 */

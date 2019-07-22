@@ -308,7 +308,7 @@ class Shophelp extends Init
             ' FROM ' . $GLOBALS['ecs']->table('article_cat') .
             ' WHERE cat_type = 0 ORDER BY sort_order';
         $res = $GLOBALS['db']->query($sql);
-        while ($rows = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $rows) {
             $sql = 'SELECT COUNT(*) FROM ' . $GLOBALS['ecs']->table('article') . " WHERE cat_id = '$rows[cat_id]'";
             $rows['num'] = $GLOBALS['db']->getOne($sql);
 
@@ -327,7 +327,7 @@ class Shophelp extends Init
             ' FROM ' . $GLOBALS['ecs']->table('article') .
             " WHERE cat_id = '$cat_id' ORDER BY article_type DESC";
         $res = $GLOBALS['db']->query($sql);
-        while ($rows = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $rows) {
             $rows['add_time'] = local_date($GLOBALS['_CFG']['time_format'], $rows['add_time']);
 
             $list[] = $rows;

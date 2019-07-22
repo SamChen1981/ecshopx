@@ -54,7 +54,7 @@ class AttentionList extends Init
                 $template = $GLOBALS['db']->getRow("SELECT * FROM " . $GLOBALS['ecs']->table('mail_templates') . " WHERE  template_code = 'attention_list' AND type = 'template'");
 
                 $i = 0;
-                while ($rt = $GLOBALS['db']->fetch_array($query)) {
+                foreach ($query as $rt) {
                     $time = time();
                     $goods_url = $GLOBALS['ecs']->url() . build_uri('goods', array('gid' => $id), $rt['goods_name']);
                     $GLOBALS['smarty']->assign(array('user_name' => $rt['user_name'], 'goods_name' => $rt['goods_name'], 'goods_url' => $goods_url, 'shop_name' => $GLOBALS['_CFG']['shop_title'], 'send_date' => local_date($GLOBALS['_CFG']['date_format'])));
@@ -101,7 +101,7 @@ class AttentionList extends Init
                 $template = $GLOBALS['db']->getRow("SELECT * FROM " . $GLOBALS['ecs']->table('mail_templates') . " WHERE  template_code = 'attention_list' AND type = 'template'");
 
                 $i = 0;
-                while ($rt = $GLOBALS['db']->fetch_array($query)) {
+                foreach ($query as $rt) {
                     $time = time();
 
                     $goods_url = $GLOBALS['ecs']->url() . build_uri('goods', array('gid' => $rt['goods_id']), $rt['user_name']);

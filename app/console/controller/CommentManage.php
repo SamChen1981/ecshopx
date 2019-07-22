@@ -320,7 +320,7 @@ class CommentManage extends Init
             " LIMIT " . $filter['start'] . "," . $filter['page_size'];
         $res = $GLOBALS['db']->query($sql);
 
-        while ($row = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $row) {
             $sql = ($row['comment_type'] == 0) ?
                 "SELECT goods_name FROM " . $GLOBALS['ecs']->table('goods') . " WHERE goods_id='$row[id_value]'" :
                 "SELECT title FROM " . $GLOBALS['ecs']->table('article') . " WHERE article_id='$row[id_value]'";

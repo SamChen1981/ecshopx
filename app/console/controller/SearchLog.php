@@ -67,7 +67,7 @@ class SearchLog extends Init
             "  LIMIT $filter[start],$filter[page_size]";
         $query = $GLOBALS['db']->query($sql);
 
-        while ($rt = $GLOBALS['db']->fetch_array($query)) {
+        foreach ($query as $rt) {
             $logdb[] = $rt;
         }
         $arr = array('logdb' => $logdb, 'filter' => $filter, 'page_count' => $filter['page_count'], 'record_count' => $filter['record_count']);

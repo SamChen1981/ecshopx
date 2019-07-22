@@ -29,7 +29,7 @@ class GoodsType extends Init
             $GLOBALS['smarty']->assign('page_count', $good_type_list['page_count']);
 
             $query = $GLOBALS['db']->query("SELECT a.cat_id FROM " . $GLOBALS['ecs']->table('attribute') . " AS a RIGHT JOIN " . $GLOBALS['ecs']->table('goods_attr') . " AS g ON g.attr_id = a.attr_id GROUP BY a.cat_id");
-            while ($row = $GLOBALS['db']->fetchRow($query)) {
+            foreach ($query as $row) {
                 $good_in_type[$row['cat_id']] = 1;
             }
             $GLOBALS['smarty']->assign('good_in_type', $good_in_type);

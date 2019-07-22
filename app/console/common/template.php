@@ -424,7 +424,7 @@ function move_plugin_library($tmp_name, &$msg)
     $return_value = true;
     $target_dir = ROOT_PATH . 'themes/' . $tmp_name;
     $source_dir = ROOT_PATH . 'themes/' . $GLOBALS['_CFG']['template'];
-    while ($row = $GLOBALS['db']->fetchRow($rec)) {
+    foreach ($rec as $row) {
         //先移动，移动失败试则拷贝
         if (!@rename($source_dir . $row['library'], $target_dir . $row['library'])) {
             if (!@copy(ROOT_PATH . 'plugins/' . $row['code'] . '/temp' . $row['library'], $target_dir . $row['library'])) {

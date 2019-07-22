@@ -46,7 +46,7 @@ class SearchengineStats extends Init
             $searchengine = array();
             $keyword = array();
 
-            while ($val = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $val) {
                 $keyword[$val['keyword']] = 1;
                 $searchengine[$val['searchengine']][$val['keyword']] = $val['count'];
             }
@@ -121,7 +121,7 @@ class SearchengineStats extends Init
             $searchengine = array();
             $keyword = array();
 
-            while ($val = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $val) {
                 $keyword[$val['keyword']] = 1;
                 $searchengine[$val['searchengine']][$val['keyword']] = $val['count'];
             }

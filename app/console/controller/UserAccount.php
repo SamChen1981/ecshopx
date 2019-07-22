@@ -34,7 +34,7 @@ class UserAccount extends Init
                 " WHERE enabled = 1 AND pay_code != 'cod' ORDER BY pay_id";
             $res = $GLOBALS['db']->query($sql);
 
-            while ($row = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $row) {
                 $payment[$row['pay_name']] = $row['pay_name'];
             }
 
@@ -78,7 +78,7 @@ class UserAccount extends Init
                 " WHERE enabled = 1 AND pay_code != 'cod' ORDER BY pay_id";
             $res = $GLOBALS['db']->query($sql);
 
-            while ($row = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $row) {
                 $payment[$row['pay_name']] = $row['pay_name'];
             }
 

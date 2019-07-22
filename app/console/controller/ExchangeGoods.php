@@ -319,7 +319,7 @@ class ExchangeGoods extends Init
         $arr = array();
         $res = $GLOBALS['db']->selectLimit($sql, $filter['page_size'], $filter['start']);
 
-        while ($rows = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $rows) {
             $arr[] = $rows;
         }
         return array('arr' => $arr, 'filter' => $filter, 'page_count' => $filter['page_count'], 'record_count' => $filter['record_count']);

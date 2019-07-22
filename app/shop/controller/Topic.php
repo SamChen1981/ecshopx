@@ -56,7 +56,7 @@ class Topic extends Init
 
             $sort_goods_arr = array();
 
-            while ($row = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $row) {
                 if ($row['promote_price'] > 0) {
                     $promote_price = bargain_price($row['promote_price'], $row['promote_start_date'], $row['promote_end_date']);
                     $row['promote_price'] = $promote_price > 0 ? price_format($promote_price) : '';

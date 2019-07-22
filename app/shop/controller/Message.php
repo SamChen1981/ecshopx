@@ -150,7 +150,7 @@ class Message extends Init
 
         $res = $GLOBALS['db']->SelectLimit($sql, $num, $start);
 
-        while ($rows = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $rows) {
             for ($i = 0; $i < count($rows); $i++) {
                 $msg[$rows['msg_time']]['user_name'] = htmlspecialchars($rows['user_name']);
                 $msg[$rows['msg_time']]['msg_content'] = str_replace('\r\n', '<br />', htmlspecialchars($rows['msg_content']));

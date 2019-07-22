@@ -1331,7 +1331,7 @@ function assign_comment($id, $type, $page = 1)
 
     $arr = array();
     $ids = '';
-    while ($row = $GLOBALS['db']->fetchRow($res)) {
+    foreach ($res as $row) {
         $ids .= $ids ? ",$row[comment_id]" : $row['comment_id'];
         $arr[$row['comment_id']]['id'] = $row['comment_id'];
         $arr[$row['comment_id']]['email'] = $row['email'];
@@ -1346,7 +1346,7 @@ function assign_comment($id, $type, $page = 1)
         $sql = 'SELECT * FROM ' . $GLOBALS['ecs']->table('comment') .
             " WHERE parent_id IN( $ids )";
         $res = $GLOBALS['db']->query($sql);
-        while ($row = $GLOBALS['db']->fetch_array($res)) {
+        foreach ($res as $row) {
             $arr[$row['parent_id']]['re_content'] = nl2br(str_replace('\n', '<br />', htmlspecialchars($row['content'])));
             $arr[$row['parent_id']]['re_add_time'] = local_date($GLOBALS['_CFG']['time_format'], $row['add_time']);
             $arr[$row['parent_id']]['re_email'] = $row['email'];
@@ -1610,7 +1610,7 @@ function get_library_number($library, $template = null)
             " WHERE theme = '" . $GLOBALS['_CFG']['template'] . "'" .
             " AND filename = '$template' AND remarks='' ";
         $res = $GLOBALS['db']->query($sql);
-        while ($row = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $row) {
             $lib = basename(strtolower(substr($row['library'], 0, strpos($row['library'], '.'))));
             $lib_list[$template][$lib] = $row['number'];
         }
@@ -1663,7 +1663,7 @@ function get_navigator($ctype = '', $catlist = array())
         'middle' => array(),
         'bottom' => array()
     );
-    while ($row = $GLOBALS['db']->fetchRow($res)) {
+    foreach ($res as $row) {
         $navlist[$row['type']][] = array(
             'name' => $row['name'],
             'opennew' => $row['opennew'],

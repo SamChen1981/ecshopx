@@ -196,7 +196,7 @@ class ShippingArea extends Init
                 "FROM " . $GLOBALS['ecs']->table('area_region') . " AS a, " . $GLOBALS['ecs']->table('region') . " AS r " .
                 "WHERE r.region_id=a.region_id AND a.shipping_area_id='$_REQUEST[id]'";
             $res = $GLOBALS['db']->query($sql);
-            while ($arr = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $arr) {
                 $regions[$arr['region_id']] = $arr['region_name'];
             }
 
@@ -269,7 +269,7 @@ class ShippingArea extends Init
                 // 查询所有区域 region_id => parent_id
                 $sql = "SELECT region_id, parent_id FROM " . $GLOBALS['ecs']->table('region');
                 $res = $GLOBALS['db']->query($sql);
-                while ($row = $GLOBALS['db']->fetchRow($res)) {
+                foreach ($res as $row) {
                     $region_list[$row['region_id']] = $row['parent_id'];
                 }
 
@@ -385,7 +385,7 @@ class ShippingArea extends Init
         }
         $res = $GLOBALS['db']->query($sql);
         $list = array();
-        while ($row = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $row) {
             $sql = "SELECT r.region_name " .
                 "FROM " . $GLOBALS['ecs']->table('area_region') . " AS a, " .
                 $GLOBALS['ecs']->table('region') . " AS r " .

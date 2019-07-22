@@ -34,7 +34,7 @@ class PickOut extends Init
             $cat_name = array();
             $in_goods = '';
 
-            while ($row = $GLOBALS['db']->fetchRow($rs)) {
+            foreach ($rs as $row) {
                 $condition[$row['cat_id']]['name'] = $row['cat_name'];
                 $in_cat[] = $row['cat_id'];
             }
@@ -56,7 +56,7 @@ class PickOut extends Init
                 " WHERE a.attr_id = g.attr_id " . $in_attr . " ORDER BY cat_id";
             $rs = $GLOBALS['db']->query($sql);
 
-            while ($row = $GLOBALS['db']->fetchRow($rs)) {
+            foreach ($rs as $row) {
                 if (empty($condition[$row['cat_id']]['cat'][$row['attr_id']]['cat_name'])) {
                     $condition[$row['cat_id']]['cat'][$row['attr_id']]['cat_name'] = $row['attr_name'];
                 }
@@ -107,7 +107,7 @@ class PickOut extends Init
                 /* 获取指定attr_id的名字 */
                 $sql = "SELECT attr_id, attr_name FROM " . $GLOBALS['ecs']->table('attribute') . " WHERE attr_id " . db_create_in(implode(',', $attr_picks));
                 $rs = $GLOBALS['db']->query($sql);
-                while ($row = $GLOBALS['db']->fetchRow($rs)) {
+                foreach ($rs as $row) {
                     $picks[] = array('name' => '<strong>' . $row['attr_name'] . ':</strong><br />' . htmlspecialchars(urldecode($_GET['attr'][$row['attr_id']])), 'url' => 'pick_out.php?cat_id=' . $cat_id . $this->search_url($attr_picks, $row['attr_id']));
                 }
 
@@ -140,7 +140,7 @@ class PickOut extends Init
             $sql = "SELECT DISTINCT g.attr_id, a.attr_name, g.attr_value FROM " . $GLOBALS['ecs']->table('goods_attr') . " AS g, " . $GLOBALS['ecs']->table('attribute') . " AS a WHERE a.attr_id = g.attr_id " . $in_attr . $in_goods;
             $rs = $GLOBALS['db']->query($sql);
 
-            while ($row = $GLOBALS['db']->fetchRow($rs)) {
+            foreach ($rs as $row) {
                 if (empty($condition[0]['cat'][$row['attr_id']]['cat_name'])) {
                     $condition[0]['cat'][$row['attr_id']]['cat_name'] = $row['attr_name'];
                 }
@@ -190,7 +190,7 @@ class PickOut extends Init
 
 
         $idx = 0;
-        while ($row = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $row) {
             if ($row['promote_price'] > 0) {
                 $promote_price = bargain_price($row['promote_price'], $row['promote_start_date'], $row['promote_end_date']);
             } else {

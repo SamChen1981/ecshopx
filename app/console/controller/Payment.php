@@ -20,7 +20,7 @@ class Payment extends Init
             $pay_list = array();
             $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('payment') . " WHERE enabled = '1' ORDER BY pay_order";
             $res = $GLOBALS['db']->query($sql);
-            while ($row = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $row) {
                 $pay_list[$row['pay_code']] = $row;
             }
 

@@ -200,7 +200,7 @@ function get_bonus_type()
         ' WHERE send_type = 3';
     $res = $GLOBALS['db']->query($sql);
 
-    while ($row = $GLOBALS['db']->fetchRow($res)) {
+    foreach ($res as $row) {
         $bonus[$row['type_id']] = $row['type_name'] . ' [' . sprintf($GLOBALS['_CFG']['currency_format'], $row['type_money']) . ']';
     }
 
@@ -223,7 +223,7 @@ function get_rank_list($is_special = false)
 
     $res = $GLOBALS['db']->query($sql);
 
-    while ($row = $GLOBALS['db']->fetchRow($res)) {
+    foreach ($res as $row) {
         $rank_list[$row['rank_id']] = $row['rank_name'];
     }
 
@@ -242,7 +242,7 @@ function get_user_rank($rankid, $where)
         ' ORDER BY user_id DESC';
     $res = $GLOBALS['db']->query($sql);
 
-    while ($row = $GLOBALS['db']->fetchRow($res)) {
+    foreach ($res as $row) {
         $user_list[$row['user_id']] = $row['user_name'];
     }
 
@@ -261,7 +261,7 @@ function get_position_list()
         'FROM ' . $GLOBALS['ecs']->table('ad_position');
     $res = $GLOBALS['db']->query($sql);
 
-    while ($row = $GLOBALS['db']->fetchRow($res)) {
+    foreach ($res as $row) {
         $position_list[$row['position_id']] = addslashes($row['position_name']) . ' [' . $row['ad_width'] . 'x' . $row['ad_height'] . ']';
     }
 
@@ -321,7 +321,7 @@ function get_article_list($filter)
         'FROM ' . $GLOBALS['ecs']->table('article') . ' AS a, ' . $GLOBALS['ecs']->table('article_cat') . ' AS c ' . $where;
     $res = $GLOBALS['db']->query($sql);
 
-    while ($row = $GLOBALS['db']->fetchRow($res)) {
+    foreach ($res as $row) {
         $ol->add_option($row['article_id'], $row['title']);
     }
 
@@ -381,7 +381,7 @@ function area_list($region_id)
     $sql = 'SELECT * FROM ' . $GLOBALS['ecs']->table('region') .
         " WHERE parent_id = '$region_id' ORDER BY region_id";
     $res = $GLOBALS['db']->query($sql);
-    while ($row = $GLOBALS['db']->fetchRow($res)) {
+    foreach ($res as $row) {
         $row['type'] = ($row['region_type'] == 0) ? $GLOBALS['_LANG']['country'] : '';
         $row['type'] .= ($row['region_type'] == 1) ? $GLOBALS['_LANG']['province'] : '';
         $row['type'] .= ($row['region_type'] == 2) ? $GLOBALS['_LANG']['city'] : '';
@@ -425,7 +425,7 @@ function goods_type_list($selected)
     $res = $GLOBALS['db']->query($sql);
 
     $lst = '';
-    while ($row = $GLOBALS['db']->fetchRow($res)) {
+    foreach ($res as $row) {
         $lst .= "<option value='$row[cat_id]'";
         $lst .= ($selected == $row['cat_id']) ? ' selected="true"' : '';
         $lst .= '>' . htmlspecialchars($row['cat_name']) . '</option>';
@@ -444,7 +444,7 @@ function get_pay_ids()
     $sql = 'SELECT pay_id, is_cod FROM ' . $GLOBALS['ecs']->table('payment') . ' WHERE enabled = 1';
     $res = $GLOBALS['db']->query($sql);
 
-    while ($row = $GLOBALS['db']->fetchRow($res)) {
+    foreach ($res as $row) {
         if ($row['is_cod']) {
             $ids['is_cod'] .= ',' . $row['pay_id'];
         } else {

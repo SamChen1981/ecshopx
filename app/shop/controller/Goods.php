@@ -273,7 +273,7 @@ class Goods extends Init
         $res = $GLOBALS['db']->query($sql);
 
         $arr = array();
-        while ($row = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $row) {
             $arr[$row['goods_id']]['goods_id'] = $row['goods_id'];
             $arr[$row['goods_id']]['goods_name'] = $row['goods_name'];
             $arr[$row['goods_id']]['short_name'] = $GLOBALS['_CFG']['goods_name_length'] > 0 ?
@@ -312,7 +312,7 @@ class Goods extends Init
         $res = $GLOBALS['db']->query($sql);
 
         $arr = array();
-        while ($row = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $row) {
             $row['url'] = $row['open_type'] != 1 ?
                 build_uri('article', array('aid' => $row['article_id']), $row['title']) : trim($row['file_url']);
             $row['add_time'] = local_date($GLOBALS['_CFG']['date_format'], $row['add_time']);
@@ -342,7 +342,7 @@ class Goods extends Init
         $res = $GLOBALS['db']->query($sql);
 
         $arr = array();
-        while ($row = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $row) {
             $arr[$row['rank_id']] = array(
                 'rank_name' => htmlspecialchars($row['rank_name']),
                 'price' => price_format($row['price']));
@@ -372,7 +372,7 @@ class Goods extends Init
 
         $key = 0;
         $arr = array();
-        while ($row = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $row) {
             $arr[$key]['goods_id'] = $row['goods_id'];
             $arr[$key]['goods_name'] = $row['goods_name'];
             $arr[$key]['short_name'] = $GLOBALS['_CFG']['goods_name_length'] > 0 ?

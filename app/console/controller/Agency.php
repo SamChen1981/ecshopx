@@ -320,7 +320,7 @@ class Agency extends Init
         $res = $GLOBALS['db']->selectLimit($sql, $filter['page_size'], $filter['start']);
 
         $arr = array();
-        while ($rows = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $rows) {
             $arr[] = $rows;
         }
 

@@ -337,7 +337,7 @@ class FriendLink extends Init
         $res = $GLOBALS['db']->selectLimit($sql, $filter['page_size'], $filter['start']);
 
         $list = array();
-        while ($rows = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $rows) {
             if (empty($rows['link_logo'])) {
                 $rows['link_logo'] = '';
             } else {

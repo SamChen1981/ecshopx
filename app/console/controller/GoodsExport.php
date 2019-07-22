@@ -75,7 +75,7 @@ class GoodsExport extends Init
 
             $content = implode(",", $GLOBALS['_LANG']['taobao']) . "\n";
 
-            while ($row = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $row) {
                 $goods_value['goods_name'] = '"' . $row['goods_name'] . '"';
                 $goods_value['shop_price'] = $row['shop_price'];
                 $goods_value['goods_number'] = $row['goods_number'];
@@ -145,7 +145,7 @@ class GoodsExport extends Init
 
             $content = implode("\t", $GLOBALS['_LANG']['taobao']) . "\n";
 
-            while ($row = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $row) {
                 $goods_value['goods_name'] = '"' . $row['goods_name'] . '"';
                 $goods_value['shop_price'] = $row['shop_price'];
                 $goods_value['goods_number'] = $row['goods_number'];
@@ -209,7 +209,7 @@ class GoodsExport extends Init
             $goods_value['is_real'] = 1;
             $content = '"' . implode('","', $GLOBALS['_LANG']['ecshop']) . "\"\n";
 
-            while ($row = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $row) {
                 $goods_value['goods_name'] = '"' . $row['goods_name'] . '"';
                 $goods_value['goods_sn'] = '"' . $row['goods_sn'] . '"';
                 $goods_value['brand_name'] = '"' . $row['brandname'] . '"';
@@ -342,7 +342,7 @@ class GoodsExport extends Init
 
             $content = '"' . implode('","', $GLOBALS['_LANG']['paipai']) . "\"\n";
 
-            while ($row = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $row) {
                 $goods_value['title'] = '"' . $row['goods_name'] . '"';
                 $goods_value['price'] = $row['shop_price'];
                 $goods_value['quantity'] = $row['goods_number'];
@@ -448,7 +448,7 @@ class GoodsExport extends Init
 
             $content = '"' . implode('","', $GLOBALS['_LANG']['paipai4']) . "\"\n";
 
-            while ($row = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $row) {
                 $goods_value['goods_name'] = '"' . $row['goods_name'] . '"';
                 $goods_value['price'] = $row['shop_price'];
                 $goods_value['quantity'] = $row['goods_number'];
@@ -515,7 +515,7 @@ class GoodsExport extends Init
             }
 
             $content = '"' . implode('","', $goods_field_name) . "\"\n";
-            while ($row = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $row) {
                 $goods_value = $goods_field_value;
                 isset($goods_value['goods_name']) && ($goods_value['goods_name'] = '"' . $row['goods_name'] . '"');
                 isset($goods_value['goods_sn']) && ($goods_value['goods_sn'] = '"' . $row['goods_sn'] . '"');
@@ -539,7 +539,7 @@ class GoodsExport extends Init
 
                 $sql = "SELECT `attr_id`, `attr_value` FROM " . $GLOBALS['ecs']->table('goods_attr') . " WHERE `goods_id` = '" . $row['goods_id'] . "'";
                 $query = $GLOBALS['db']->query($sql);
-                while ($attr = $GLOBALS['db']->fetchRow($query)) {
+                foreach ($query as $attr) {
                     if (in_array($attr['attr_id'], $goods_fields)) {
                         $goods_value[$attr['attr_id']] = '"' . $attr['attr_value'] . '"';
                     }
@@ -616,7 +616,7 @@ class GoodsExport extends Init
 
             $content = implode("\t", $GLOBALS['_LANG']['taobao46']) . "\n";
 
-            while ($row = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $row) {
 
                 /* 压缩图片 */
                 if (!empty($row['goods_img']) && is_file(ROOT_PATH . $row['goods_img'])) {
@@ -752,7 +752,7 @@ class GoodsExport extends Init
         $sql .= " ORDER BY `cat_id` ASC, `attr_id` ASC ";
         $attributes = array();
         $query = $GLOBALS['db']->query($sql);
-        while ($row = $GLOBALS['db']->fetchRow($query)) {
+        foreach ($query as $row) {
             $attributes[$row['attr_id']] = $row['attr_name'];
         }
         return $attributes;

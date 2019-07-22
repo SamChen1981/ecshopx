@@ -188,7 +188,7 @@ class AccountLog extends Init
         $res = $GLOBALS['db']->selectLimit($sql, $filter['page_size'], $filter['start']);
 
         $arr = array();
-        while ($row = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $row) {
             $row['change_time'] = local_date($GLOBALS['_CFG']['time_format'], $row['change_time']);
             $arr[] = $row;
         }

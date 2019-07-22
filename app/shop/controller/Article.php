@@ -147,7 +147,7 @@ class Article extends Init
         $res = $GLOBALS['db']->query($sql);
 
         $arr = array();
-        while ($row = $GLOBALS['db']->fetchRow($res)) {
+        foreach ($res as $row) {
             $arr[$row['goods_id']]['goods_id'] = $row['goods_id'];
             $arr[$row['goods_id']]['goods_name'] = $row['goods_name'];
             $arr[$row['goods_id']]['short_name'] = $GLOBALS['_CFG']['goods_name_length'] > 0 ?

@@ -123,7 +123,7 @@ class ShopConfig extends Init
             $arr = array();
             $sql = 'SELECT id, value FROM ' . $GLOBALS['ecs']->table('shop_config');
             $res = $GLOBALS['db']->query($sql);
-            while ($row = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $row) {
                 $arr[$row['id']] = $row['value'];
             }
             foreach ($_POST['value'] as $key => $val) {
@@ -157,7 +157,7 @@ class ShopConfig extends Init
             $file_var_list = array();
             $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('shop_config') . " WHERE parent_id > 0 AND type = 'file'";
             $res = $GLOBALS['db']->query($sql);
-            while ($row = $GLOBALS['db']->fetchRow($res)) {
+            foreach ($res as $row) {
                 $file_var_list[$row['code']] = $row;
             }
 

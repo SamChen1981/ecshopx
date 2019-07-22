@@ -285,7 +285,7 @@ class Sms extends Init
                     if ($rank_array['0'] == 1) {
                         $sql = 'SELECT mobile_phone FROM ' . $GLOBALS['ecs']->table('users') . "WHERE mobile_phone <>'' ";
                         $row = $GLOBALS['db']->query($sql);
-                        while ($rank_rs = $GLOBALS['db']->fetch_array($row)) {
+                        foreach ($row as $rank_rs) {
                             $value[] = $rank_rs['mobile_phone'];
                         }
                     } else {
@@ -301,7 +301,7 @@ class Sms extends Init
 
                         $row = $GLOBALS['db']->query($sql);
 
-                        while ($rank_rs = $GLOBALS['db']->fetch_array($row)) {
+                        foreach ($row as $rank_rs) {
                             $value[] = $rank_rs['mobile_phone'];
                         }
                     }
