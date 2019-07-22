@@ -29,7 +29,7 @@ class EditLanguages extends Init
             $lang_path = '../languages/' . $GLOBALS['_CFG']['lang'];
             $lang_dir = @opendir($lang_path);
 
-            while ($file = @readdir($lang_dir)) {
+            while ($file = readdir($lang_dir)) {
                 if (substr($file, -3) == "php") {
                     $filename = substr($file, 0, -4);
                     $lang_arr[$filename] = $file . ' - ' . @$GLOBALS['_LANG']['language_files'][$filename];

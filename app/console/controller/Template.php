@@ -416,7 +416,7 @@ class Template extends Init
             $library_dir = @opendir($library_path);
             $curr_library = '';
 
-            while ($file = @readdir($library_dir)) {
+            while ($file = readdir($library_dir)) {
                 if (substr($file, -3) == "lbi") {
                     $filename = substr($file, 0, -4);
                     $arr_library[$filename] = $file . ' - ' . @$GLOBALS['_LANG']['template_libs'][$filename];

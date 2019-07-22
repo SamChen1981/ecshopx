@@ -139,7 +139,7 @@ class Filecheck extends Init
         $exts = '/(' . $ext . ')$/i';
         $skips = explode(',', $skip);
 
-        while ($entry = @readdir($dir)) {
+        while ($entry = readdir($dir)) {
             $file = $currentdir . $entry;
 
             if ($entry != '.' && $entry != '..' && $entry != '.svn' && (preg_match($exts, $entry) || ($sub && is_dir($file))) && !in_array($entry, $skips)) {
