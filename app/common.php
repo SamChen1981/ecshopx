@@ -9,7 +9,7 @@ if (!function_exists('base_path')) {
      */
     function base_path($path = '')
     {
-        return dirname(__DIR__) . '/' . ($path ? $path . DIRECTORY_SEPARATOR : $path);
+        return dirname(__DIR__) . ($path ? DIRECTORY_SEPARATOR . $path : $path);
     }
 }
 
@@ -22,7 +22,7 @@ if (!function_exists('app_path')) {
      */
     function app_path($path = '')
     {
-        return base_path('app') . '/' . ($path ? $path . DIRECTORY_SEPARATOR : $path);
+        return base_path('app') . ($path ? DIRECTORY_SEPARATOR . $path : $path);
     }
 }
 
@@ -35,7 +35,7 @@ if (!function_exists('config_path')) {
      */
     function config_path($path = '')
     {
-        return base_path('config') . '/' . ($path ? $path . DIRECTORY_SEPARATOR : $path);
+        return base_path('config') . ($path ? DIRECTORY_SEPARATOR . $path : $path);
     }
 }
 
@@ -48,7 +48,7 @@ if (!function_exists('public_path')) {
      */
     function public_path($path = '')
     {
-        return base_path('public') . '/' . ($path ? ltrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR : $path);
+        return base_path('public') . ($path ? DIRECTORY_SEPARATOR . $path : $path);
     }
 }
 
@@ -61,7 +61,7 @@ if (!function_exists('runtime_path')) {
      */
     function runtime_path($path = '')
     {
-        return base_path('runtime') . '/' . ($path ? $path . DIRECTORY_SEPARATOR : $path);
+        return base_path('runtime') . ($path ? DIRECTORY_SEPARATOR . $path : $path);
     }
 }
 
