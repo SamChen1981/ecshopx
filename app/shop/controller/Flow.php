@@ -1873,7 +1873,7 @@ class Flow extends Init
 
             /* 取得优惠活动 */
             $favourable_list = $this->favourable_list($_SESSION['user_rank']);
-            usort($favourable_list, 'cmp_favourable');
+            usort($favourable_list, [$this, 'cmp_favourable']);
 
             $GLOBALS['smarty']->assign('favourable_list', $favourable_list);
 
