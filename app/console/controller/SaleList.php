@@ -55,7 +55,7 @@ class SaleList extends Init
             $GLOBALS['smarty']->assign('record_count', $sale_list_data['record_count']);
             $GLOBALS['smarty']->assign('page_count', $sale_list_data['page_count']);
 
-            make_json_result($GLOBALS['smarty']->fetch('sale_list.htm'), '', array('filter' => $sale_list_data['filter'], 'page_count' => $sale_list_data['page_count']));
+            return make_json_result($GLOBALS['smarty']->fetch('sale_list.htm'), '', array('filter' => $sale_list_data['filter'], 'page_count' => $sale_list_data['page_count']));
         }
         /*------------------------------------------------------ */
         //--商品明细列表

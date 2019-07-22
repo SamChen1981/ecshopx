@@ -32,7 +32,7 @@ class Shopinfo extends Init
         elseif ($_REQUEST['act'] == 'query') {
             $GLOBALS['smarty']->assign('list', $this->shopinfo_article_list());
 
-            make_json_result($GLOBALS['smarty']->fetch('shopinfo_list.htm'));
+            return make_json_result($GLOBALS['smarty']->fetch('shopinfo_list.htm'));
         }
 
         /*------------------------------------------------------ */
@@ -149,10 +149,10 @@ class Shopinfo extends Init
                 if ($exc->edit("title = '$title'", $id)) {
                     clear_cache_files();
                     admin_log($title, 'edit', 'shopinfo');
-                    make_json_result(stripslashes($title));
+                    return make_json_result(stripslashes($title));
                 }
             } else {
-                make_json_error(sprintf($GLOBALS['_LANG']['title_exist'], $title));
+                return make_json_error(sprintf($GLOBALS['_LANG']['title_exist'], $title));
             }
         }
 

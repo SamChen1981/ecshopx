@@ -58,7 +58,7 @@ class Bonus extends Init
             $sort_flag = sort_flag($list['filter']);
             $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
-            make_json_result(
+            return make_json_result(
                 $GLOBALS['smarty']->fetch('bonus_type.htm'),
                 '',
                 array('filter' => $list['filter'], 'page_count' => $list['page_count'])
@@ -77,11 +77,11 @@ class Bonus extends Init
 
             /* 检查红包类型名称是否重复 */
             if (!$exc->is_only('type_name', $id, $val)) {
-                make_json_error($GLOBALS['_LANG']['type_name_exist']);
+                return make_json_error($GLOBALS['_LANG']['type_name_exist']);
             } else {
                 $exc->edit("type_name='$val'", $id);
 
-                make_json_result(stripslashes($val));
+                return make_json_result(stripslashes($val));
             }
         }
 
@@ -97,11 +97,11 @@ class Bonus extends Init
 
             /* 检查红包类型名称是否重复 */
             if ($val <= 0) {
-                make_json_error($GLOBALS['_LANG']['type_money_error']);
+                return make_json_error($GLOBALS['_LANG']['type_money_error']);
             } else {
                 $exc->edit("type_money='$val'", $id);
 
-                make_json_result(number_format($val, 2));
+                return make_json_result(number_format($val, 2));
             }
         }
 
@@ -116,11 +116,11 @@ class Bonus extends Init
             $val = floatval($_POST['val']);
 
             if ($val < 0) {
-                make_json_error($GLOBALS['_LANG']['min_amount_empty']);
+                return make_json_error($GLOBALS['_LANG']['min_amount_empty']);
             } else {
                 $exc->edit("min_amount='$val'", $id);
 
-                make_json_result(number_format($val, 2));
+                return make_json_result(number_format($val, 2));
             }
         }
 
@@ -600,7 +600,7 @@ class Bonus extends Init
                     'data' => $val['shop_price']);
             }
 
-            make_json_result($opt);
+            return make_json_result($opt);
         }
 
         /*------------------------------------------------------ */
@@ -615,7 +615,7 @@ class Bonus extends Init
 
             foreach ($add_ids as $key => $val) {
                 $sql = "UPDATE " . $GLOBALS['ecs']->table('goods') . " SET bonus_type_id='$type_id' WHERE goods_id='$val'";
-                $GLOBALS['db']->query($sql, 'SILENT') or make_json_error($GLOBALS['db']->error());
+                $GLOBALS['db']->query($sql, 'SILENT') or return make_json_error($GLOBALS['db']->error());
             }
 
             /* 重新载入 */
@@ -628,7 +628,7 @@ class Bonus extends Init
                     'data' => '');
             }
 
-            make_json_result($opt);
+            return make_json_result($opt);
         }
 
         /*------------------------------------------------------ */
@@ -655,7 +655,7 @@ class Bonus extends Init
                     'data' => '');
             }
 
-            make_json_result($opt);
+            return make_json_result($opt);
         }
 
         /*------------------------------------------------------ */
@@ -668,7 +668,7 @@ class Bonus extends Init
                 " WHERE user_name LIKE '%" . mysql_like_quote($keywords) . "%' OR user_id LIKE '%" . mysql_like_quote($keywords) . "%'";
             $row = $GLOBALS['db']->getAll($sql);
 
-            make_json_result($row);
+            return make_json_result($row);
         }
 
         /*------------------------------------------------------ */
@@ -727,7 +727,7 @@ class Bonus extends Init
             $sort_flag = sort_flag($list['filter']);
             $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
-            make_json_result(
+            return make_json_result(
                 $GLOBALS['smarty']->fetch('bonus_list.htm'),
                 '',
                 array('filter' => $list['filter'], 'page_count' => $list['page_count'])

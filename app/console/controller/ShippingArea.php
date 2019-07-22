@@ -338,7 +338,7 @@ class ShippingArea extends Init
 
             /* 检查是否有重复的配送区域名称 */
             if (!$exc->is_only('shipping_area_name', $val, $id, "shipping_id = '$shipping_id'")) {
-                make_json_error($GLOBALS['_LANG']['repeat_area_name']);
+                return make_json_error($GLOBALS['_LANG']['repeat_area_name']);
             }
 
             /* 更新名称 */
@@ -348,7 +348,7 @@ class ShippingArea extends Init
             admin_log($val, 'edit', 'shipping_area');
 
             /* 返回 */
-            make_json_result(stripcslashes($val));
+            return make_json_result(stripcslashes($val));
         }
 
         /*------------------------------------------------------ */
@@ -369,7 +369,7 @@ class ShippingArea extends Init
 
             $list = $this->get_shipping_area_list($shipping_id);
             $GLOBALS['smarty']->assign('areas', $list);
-            make_json_result($GLOBALS['smarty']->fetch('shipping_area_list.htm'));
+            return make_json_result($GLOBALS['smarty']->fetch('shipping_area_list.htm'));
         }
     }
 

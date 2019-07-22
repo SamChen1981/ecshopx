@@ -62,7 +62,7 @@ class Ads extends Init
             $sort_flag = sort_flag($ads_list['filter']);
             $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
-            make_json_result(
+            return make_json_result(
                 $GLOBALS['smarty']->fetch('ads_list.htm'),
                 '',
                 array('filter' => $ads_list['filter'], 'page_count' => $ads_list['page_count'])
@@ -422,13 +422,13 @@ class Ads extends Init
 
             /* 检查广告名称是否重复 */
             if ($exc->num('ad_name', $ad_name, $id) != 0) {
-                make_json_error(sprintf($GLOBALS['_LANG']['ad_name_exist'], $ad_name));
+                return make_json_error(sprintf($GLOBALS['_LANG']['ad_name_exist'], $ad_name));
             } else {
                 if ($exc->edit("ad_name = '$ad_name'", $id)) {
                     admin_log($ad_name, 'edit', 'ads');
-                    make_json_result(stripslashes($ad_name));
+                    return make_json_result(stripslashes($ad_name));
                 } else {
-                    make_json_error($GLOBALS['db']->error());
+                    return make_json_error($GLOBALS['db']->error());
                 }
             }
         }

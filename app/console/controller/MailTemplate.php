@@ -118,7 +118,7 @@ class MailTemplate extends Init
             $GLOBALS['smarty']->assign('templates', $templates);
             $GLOBALS['smarty']->assign('template', $content);
 
-            make_json_result($GLOBALS['smarty']->fetch('mail_template.htm'));
+            return make_json_result($GLOBALS['smarty']->fetch('mail_template.htm'));
         }
 
         /*------------------------------------------------------ */

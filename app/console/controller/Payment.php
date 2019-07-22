@@ -174,7 +174,7 @@ class Payment extends Init
             }
             $config .= '</table>';
 
-            make_json_result($config);
+            return make_json_result($config);
         }
 
         /*------------------------------------------------------ */
@@ -494,17 +494,17 @@ class Payment extends Init
 
             /* 检查名称是否为空 */
             if (empty($name)) {
-                make_json_error($GLOBALS['_LANG']['name_is_null']);
+                return make_json_error($GLOBALS['_LANG']['name_is_null']);
             }
 
             /* 检查名称是否重复 */
             if (!$exc->is_only('pay_name', $name, $code)) {
-                make_json_error($GLOBALS['_LANG']['name_exists']);
+                return make_json_error($GLOBALS['_LANG']['name_exists']);
             }
 
             /* 更新支付方式名称 */
             $exc->edit("pay_name = '$name'", $code);
-            make_json_result(stripcslashes($name));
+            return make_json_result(stripcslashes($name));
         }
 
         /*------------------------------------------------------ */
@@ -521,7 +521,7 @@ class Payment extends Init
 
             /* 更新描述 */
             $exc->edit("pay_desc = '$desc'", $code);
-            make_json_result(stripcslashes($desc));
+            return make_json_result(stripcslashes($desc));
         }
 
         /*------------------------------------------------------ */
@@ -538,7 +538,7 @@ class Payment extends Init
 
             /* 更新排序 */
             $exc->edit("pay_order = '$order'", $code);
-            make_json_result(stripcslashes($order));
+            return make_json_result(stripcslashes($order));
         }
 
         /*------------------------------------------------------ */
@@ -565,7 +565,7 @@ class Payment extends Init
 
             /* 更新支付费用 */
             $exc->edit("pay_fee = '$pay_fee'", $code);
-            make_json_result(stripcslashes($pay_fee));
+            return make_json_result(stripcslashes($pay_fee));
         }
     }
 }

@@ -277,9 +277,9 @@ class ShopConfig extends Init
             $GLOBALS['_CFG']['mail_charset'] = trim($_POST['mail_charset']);
 
             if (send_mail('', $email, $GLOBALS['_LANG']['test_mail_title'], $GLOBALS['_LANG']['cfg_name']['email_content'], 0)) {
-                make_json_result('', $GLOBALS['_LANG']['sendemail_success'] . $email);
+                return make_json_result('', $GLOBALS['_LANG']['sendemail_success'] . $email);
             } else {
-                make_json_error(join("\n", $GLOBALS['err']->_message));
+                return make_json_error(join("\n", $GLOBALS['err']->_message));
             }
         }
 

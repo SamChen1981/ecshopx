@@ -44,7 +44,7 @@ class Pack extends Init
             $sort_flag = sort_flag($packs_list['filter']);
             $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
-            make_json_result($GLOBALS['smarty']->fetch('pack_list.htm'), '', array('filter' => $packs_list['filter'], 'page_count' => $packs_list['page_count']));
+            return make_json_result($GLOBALS['smarty']->fetch('pack_list.htm'), '', array('filter' => $packs_list['filter'], 'page_count' => $packs_list['page_count']));
         }
         /*------------------------------------------------------ */
         //-- 添加新包装
@@ -187,12 +187,12 @@ class Pack extends Init
             $pack_name = $exc->get_name($id);
 
             if (!$exc->is_only('pack_name', $val, $id)) {
-                make_json_error(sprintf($GLOBALS['_LANG']['packname_exist'], $pack_name));
+                return make_json_error(sprintf($GLOBALS['_LANG']['packname_exist'], $pack_name));
             } else {
                 $exc->edit("pack_name='$val'", $id);
 
                 admin_log($val, 'edit', 'pack');
-                make_json_result(stripslashes($val));
+                return make_json_result(stripslashes($val));
             }
         }
 
@@ -211,7 +211,7 @@ class Pack extends Init
 
             $exc->edit("pack_fee='$val'", $id);
             admin_log(addslashes($pack_name), 'edit', 'pack');
-            make_json_result(number_format($val, 2));
+            return make_json_result(number_format($val, 2));
         }
 
         /*------------------------------------------------------ */
@@ -229,7 +229,7 @@ class Pack extends Init
 
             $exc->edit("free_money='$val'", $id);
             admin_log(addslashes($pack_name), 'edit', 'pack');
-            make_json_result(number_format($val, 2));
+            return make_json_result(number_format($val, 2));
         }
 
         /*------------------------------------------------------ */
@@ -255,7 +255,7 @@ class Pack extends Init
                 return $this->redirect($url);
 
             } else {
-                make_json_error($GLOBALS['_LANG']['packremove_falure']);
+                return make_json_error($GLOBALS['_LANG']['packremove_falure']);
                 return false;
             }
         }

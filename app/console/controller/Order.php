@@ -154,7 +154,7 @@ class Order extends Init
             $GLOBALS['smarty']->assign('page_count', $order_list['page_count']);
             $sort_flag = sort_flag($order_list['filter']);
             $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
-            make_json_result($GLOBALS['smarty']->fetch('order_list.htm'), '', array('filter' => $order_list['filter'], 'page_count' => $order_list['page_count']));
+            return make_json_result($GLOBALS['smarty']->fetch('order_list.htm'), '', array('filter' => $order_list['filter'], 'page_count' => $order_list['page_count']));
         }
 
         /*------------------------------------------------------ */
@@ -581,7 +581,7 @@ class Order extends Init
 
             $sort_flag = sort_flag($result['filter']);
             $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
-            make_json_result($GLOBALS['smarty']->fetch('delivery_list.htm'), '', array('filter' => $result['filter'], 'page_count' => $result['page_count']));
+            return make_json_result($GLOBALS['smarty']->fetch('delivery_list.htm'), '', array('filter' => $result['filter'], 'page_count' => $result['page_count']));
         }
 
         /*------------------------------------------------------ */
@@ -1045,7 +1045,7 @@ class Order extends Init
 
             $sort_flag = sort_flag($result['filter']);
             $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
-            make_json_result($GLOBALS['smarty']->fetch('back_list.htm'), '', array('filter' => $result['filter'], 'page_count' => $result['page_count']));
+            return make_json_result($GLOBALS['smarty']->fetch('back_list.htm'), '', array('filter' => $result['filter'], 'page_count' => $result['page_count']));
         }
 
         /*------------------------------------------------------ */
@@ -3817,7 +3817,7 @@ class Order extends Init
             $order = order_info($order_id);
             $operable_list = $this->operable_list($order);
             if (!isset($operable_list['remove'])) {
-                make_json_error('Hacking attempt');
+                return make_json_error('Hacking attempt');
 
             }
 
@@ -3833,7 +3833,7 @@ class Order extends Init
                 return $this->redirect($url);
 
             } else {
-                make_json_error($GLOBALS['db']->errorMsg());
+                return make_json_error($GLOBALS['db']->errorMsg());
             }
         }
 
@@ -3905,19 +3905,19 @@ class Order extends Init
             $order_id = empty($_POST['id']) ? 0 : intval($_POST['id']);
 
             if ($order_id == 0) {
-                make_json_error('NO ORDER ID');
+                return make_json_error('NO ORDER ID');
 
             }
 
             $sql = 'UPDATE ' . $GLOBALS['ecs']->table('order_info') . " SET invoice_no='$no' WHERE order_id = '$order_id'";
             if ($GLOBALS['db']->query($sql)) {
                 if (empty($no)) {
-                    make_json_result('N/A');
+                    return make_json_result('N/A');
                 } else {
-                    make_json_result(stripcslashes($no));
+                    return make_json_result(stripcslashes($no));
                 }
             } else {
-                make_json_error($GLOBALS['db']->errorMsg());
+                return make_json_error($GLOBALS['db']->errorMsg());
             }
         }
 
@@ -3933,19 +3933,19 @@ class Order extends Init
             $order_id = empty($_POST['id']) ? 0 : intval($_POST['id']);
 
             if ($order_id == 0) {
-                make_json_error('NO ORDER ID');
+                return make_json_error('NO ORDER ID');
 
             }
 
             $sql = 'UPDATE ' . $GLOBALS['ecs']->table('order_info') . " SET pay_note='$no' WHERE order_id = '$order_id'";
             if ($GLOBALS['db']->query($sql)) {
                 if (empty($no)) {
-                    make_json_result('N/A');
+                    return make_json_result('N/A');
                 } else {
-                    make_json_result(stripcslashes($no));
+                    return make_json_result(stripcslashes($no));
                 }
             } else {
-                make_json_error($GLOBALS['db']->errorMsg());
+                return make_json_error($GLOBALS['db']->errorMsg());
             }
         }
         /*------------------------------------------------------ */
@@ -3953,7 +3953,7 @@ class Order extends Init
         /*------------------------------------------------------ */
         elseif ($_REQUEST['act'] == 'retry') {
             $_GET['id'] and order_retry($_GET['id']);
-            make_json_result('true');
+            return make_json_result('true');
         }
 
         /*------------------------------------------------------ */
@@ -3963,7 +3963,7 @@ class Order extends Init
             /* 取得订单商品 */
             $order_id = isset($_REQUEST['order_id']) ? intval($_REQUEST['order_id']) : 0;
             if (empty($order_id)) {
-                make_json_response('', 1, $GLOBALS['_LANG']['error_get_goods_info']);
+                return make_json_response('', 1, $GLOBALS['_LANG']['error_get_goods_info']);
             }
             $goods_list = array();
             $goods_attr = array();
@@ -4007,7 +4007,7 @@ class Order extends Init
             $GLOBALS['smarty']->assign('goods_list', $goods_list);
             $str = $GLOBALS['smarty']->fetch('order_goods_info.htm');
             $goods[] = array('order_id' => $order_id, 'str' => $str);
-            make_json_result($goods);
+            return make_json_result($goods);
         } elseif ($_REQUEST['act'] == 'install_cloud') {
             /**
              *  激活云起页面

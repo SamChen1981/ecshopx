@@ -241,15 +241,15 @@ class Flashplay extends Init
 
                     $error_msg = '';
                     if ($this->set_flash_data($flash_theme, $error_msg)) {
-                        make_json_error($error_msg);
+                        return make_json_error($error_msg);
                     } else {
-                        make_json_result($flash_theme, $GLOBALS['_LANG']['install_success']);
+                        return make_json_result($flash_theme, $GLOBALS['_LANG']['install_success']);
                     }
                 } else {
-                    make_json_error($GLOBALS['db']->error());
+                    return make_json_error($GLOBALS['db']->error());
                 }
             } else {
-                make_json_result($flash_theme, $GLOBALS['_LANG']['install_success']);
+                return make_json_result($flash_theme, $GLOBALS['_LANG']['install_success']);
             }
         }
 
@@ -466,7 +466,7 @@ class Flashplay extends Init
             $id = empty($_GET['id']) ? 0 : intval(trim($_GET['id']));
             $is_ajax = $_GET['is_ajax'];
             if (!$id || $is_ajax != '1') {
-                make_json_error($GLOBALS['_LANG']['edit_no']);
+                return make_json_error($GLOBALS['_LANG']['edit_no']);
             }
 
             /* 修改状态 */
@@ -500,9 +500,9 @@ class Flashplay extends Init
 
                 $GLOBALS['smarty']->fetch('flashplay_custom.htm');
 
-                make_json_result($GLOBALS['smarty']->fetch('flashplay_custom.htm'));
+                return make_json_result($GLOBALS['smarty']->fetch('flashplay_custom.htm'));
             } else {
-                make_json_error($GLOBALS['_LANG']['edit_no']);
+                return make_json_error($GLOBALS['_LANG']['edit_no']);
             }
         }
 

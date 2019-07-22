@@ -53,7 +53,7 @@ class Vote extends Init
             $GLOBALS['smarty']->assign('record_count', $vote_list['record_count']);
             $GLOBALS['smarty']->assign('page_count', $vote_list['page_count']);
 
-            make_json_result(
+            return make_json_result(
                 $GLOBALS['smarty']->fetch('vote_list.htm'),
                 '',
                 array('filter' => $vote_list['filter'], 'page_count' => $vote_list['page_count'])
@@ -192,7 +192,7 @@ class Vote extends Init
             $GLOBALS['smarty']->assign('id', $id);
             $GLOBALS['smarty']->assign('option_arr', $this->get_optionlist($id));
 
-            make_json_result($GLOBALS['smarty']->fetch('vote_option.htm'));
+            return make_json_result($GLOBALS['smarty']->fetch('vote_option.htm'));
         }
 
         /*------------------------------------------------------ */
@@ -209,7 +209,7 @@ class Vote extends Init
                 $sql = 'SELECT COUNT(*) FROM ' . $GLOBALS['ecs']->table('vote_option') .
                     " WHERE option_name = '$option_name' AND vote_id = '$vote_id'";
                 if ($GLOBALS['db']->getOne($sql) != 0) {
-                    make_json_error($GLOBALS['_LANG']['vote_option_exist']);
+                    return make_json_error($GLOBALS['_LANG']['vote_option_exist']);
                 } else {
                     $sql = 'INSERT INTO ' . $GLOBALS['ecs']->table('vote_option') . ' (vote_id, option_name, option_count) ' .
                         "VALUES ('$vote_id', '$option_name', 0)";
@@ -224,7 +224,7 @@ class Vote extends Init
 
                 }
             } else {
-                make_json_error($GLOBALS['_LANG']['js_languages']['option_name_empty']);
+                return make_json_error($GLOBALS['_LANG']['js_languages']['option_name_empty']);
             }
         }
 
@@ -239,11 +239,11 @@ class Vote extends Init
 
             /* 检查名称是否重复 */
             if ($exc->num("vote_name", $vote_name, $id) != 0) {
-                make_json_error(sprintf($GLOBALS['_LANG']['vote_name_exist'], $vote_name));
+                return make_json_error(sprintf($GLOBALS['_LANG']['vote_name_exist'], $vote_name));
             } else {
                 if ($exc->edit("vote_name = '$vote_name'", $id)) {
                     admin_log($vote_name, 'edit', 'vote');
-                    make_json_result(stripslashes($vote_name));
+                    return make_json_result(stripslashes($vote_name));
                 }
             }
         }
@@ -263,11 +263,11 @@ class Vote extends Init
             $sql = 'SELECT COUNT(*) FROM ' . $GLOBALS['ecs']->table('vote_option') .
                 " WHERE option_name = '$option_name' AND vote_id = '$vote_id' AND option_id <> $id";
             if ($GLOBALS['db']->getOne($sql) != 0) {
-                make_json_error(sprintf($GLOBALS['_LANG']['vote_option_exist'], $option_name));
+                return make_json_error(sprintf($GLOBALS['_LANG']['vote_option_exist'], $option_name));
             } else {
                 if ($exc_opn->edit("option_name = '$option_name'", $id)) {
                     admin_log($option_name, 'edit', 'vote');
-                    make_json_result(stripslashes($option_name));
+                    return make_json_result(stripslashes($option_name));
                 }
             }
         }
@@ -284,7 +284,7 @@ class Vote extends Init
 
             if ($exc_opn->edit("option_order = '$option_order'", $id)) {
                 admin_log($GLOBALS['_LANG']['edit_option_order'], 'edit', 'vote');
-                make_json_result(stripslashes($option_order));
+                return make_json_result(stripslashes($option_order));
             }
         }
 

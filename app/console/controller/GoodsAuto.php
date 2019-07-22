@@ -35,7 +35,7 @@ class GoodsAuto extends Init
             $sort_flag = sort_flag($goodsdb['filter']);
             $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
-            make_json_result($GLOBALS['smarty']->fetch('goods_auto.htm'), '', array('filter' => $goodsdb['filter'], 'page_count' => $goodsdb['page_count']));
+            return make_json_result($GLOBALS['smarty']->fetch('goods_auto.htm'), '', array('filter' => $goodsdb['filter'], 'page_count' => $goodsdb['page_count']));
         } elseif ($_REQUEST['act'] == 'del') {
             $goods_id = (int)$_REQUEST['goods_id'];
             $sql = "DELETE FROM " . $GLOBALS['ecs']->table('auto_manage') . " WHERE item_id = '$goods_id' AND type = 'goods'";
@@ -46,38 +46,38 @@ class GoodsAuto extends Init
             check_authz_json('goods_auto');
 
             if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', trim($_POST['val']))) {
-                make_json_error('');
+                return make_json_error('');
             }
 
             $id = intval($_POST['id']);
             $time = local_strtotime(trim($_POST['val']));
             if ($id <= 0 || $_POST['val'] == '0000-00-00' || $time <= 0) {
-                make_json_error('');
+                return make_json_error('');
             }
 
             $GLOBALS['db']->autoReplace($GLOBALS['ecs']->table('auto_manage'), array('item_id' => $id, 'type' => 'goods',
                 'starttime' => $time), array('starttime' => (string)$time));
 
             clear_cache_files();
-            make_json_result(stripslashes($_POST['val']), '', array('act' => 'goods_auto', 'id' => $id));
+            return make_json_result(stripslashes($_POST['val']), '', array('act' => 'goods_auto', 'id' => $id));
         } elseif ($_REQUEST['act'] == 'edit_endtime') {
             check_authz_json('goods_auto');
 
             if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', trim($_POST['val']))) {
-                make_json_error('');
+                return make_json_error('');
             }
 
             $id = intval($_POST['id']);
             $time = local_strtotime(trim($_POST['val']));
             if ($id <= 0 || $_POST['val'] == '0000-00-00' || $time <= 0) {
-                make_json_error('');
+                return make_json_error('');
             }
 
             $GLOBALS['db']->autoReplace($GLOBALS['ecs']->table('auto_manage'), array('item_id' => $id, 'type' => 'goods',
                 'endtime' => $time), array('endtime' => (string)$time));
 
             clear_cache_files();
-            make_json_result(stripslashes($_POST['val']), '', array('act' => 'goods_auto', 'id' => $id));
+            return make_json_result(stripslashes($_POST['val']), '', array('act' => 'goods_auto', 'id' => $id));
         } //批量上架
         elseif ($_REQUEST['act'] == 'batch_start') {
             admin_priv('goods_auto');

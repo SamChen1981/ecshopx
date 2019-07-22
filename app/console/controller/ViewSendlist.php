@@ -32,7 +32,7 @@ class ViewSendlist extends Init
             $sort_flag = sort_flag($listdb['filter']);
             $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
-            make_json_result($GLOBALS['smarty']->fetch('view_sendlist.htm'), '', array('filter' => $listdb['filter'], 'page_count' => $listdb['page_count']));
+            return make_json_result($GLOBALS['smarty']->fetch('view_sendlist.htm'), '', array('filter' => $listdb['filter'], 'page_count' => $listdb['page_count']));
         } elseif ($_REQUEST['act'] == 'del') {
             $id = (int)$_REQUEST['id'];
             $sql = "DELETE FROM " . $GLOBALS['ecs']->table('email_sendlist') . " WHERE id = '$id' LIMIT 1";

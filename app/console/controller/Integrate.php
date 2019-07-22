@@ -539,7 +539,7 @@ class Integrate extends Init
             $GLOBALS['smarty']->assign('record_count', $arr['record_count']);
             $GLOBALS['smarty']->assign('page_count', $arr['page_count']);
             $GLOBALS['smarty']->assign('full_page', 0);
-            make_json_result($GLOBALS['smarty']->fetch('integrates_modify.htm'), '', array('filter' => $arr['filter'], 'page_count' => $arr['page_count']));
+            return make_json_result($GLOBALS['smarty']->fetch('integrates_modify.htm'), '', array('filter' => $arr['filter'], 'page_count' => $arr['page_count']));
         }
 
         /*------------------------------------------------------ */

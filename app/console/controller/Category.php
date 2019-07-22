@@ -44,7 +44,7 @@ class Category extends Init
             $cat_list = cat_list(0, 0, false);
             $GLOBALS['smarty']->assign('cat_info', $cat_list);
 
-            make_json_result($GLOBALS['smarty']->fetch('category_list.htm'));
+            return make_json_result($GLOBALS['smarty']->fetch('category_list.htm'));
         }
         /*------------------------------------------------------ */
         //-- 添加商品分类
@@ -194,7 +194,7 @@ class Category extends Init
             $category = empty($_REQUEST['cat']) ? '' : json_str_iconv(trim($_REQUEST['cat']));
 
             if (cat_exists($category, $parent_id)) {
-                make_json_error($GLOBALS['_LANG']['catname_exist']);
+                return make_json_error($GLOBALS['_LANG']['catname_exist']);
             } else {
                 $sql = "INSERT INTO " . $GLOBALS['ecs']->table('category') . "(cat_name, parent_id, is_show)" .
                     "VALUES ( '$category', '$parent_id', 1)";
@@ -206,7 +206,7 @@ class Category extends Init
 
                 clear_cache_files();    // 清除缓存
 
-                make_json_result($arr);
+                return make_json_result($arr);
             }
         }
 
@@ -360,9 +360,9 @@ class Category extends Init
 
             if ($this->cat_update($id, array('sort_order' => $val))) {
                 clear_cache_files(); // 清除缓存
-                make_json_result($val);
+                return make_json_result($val);
             } else {
-                make_json_error($GLOBALS['db']->error());
+                return make_json_error($GLOBALS['db']->error());
             }
         }
 
@@ -378,9 +378,9 @@ class Category extends Init
 
             if ($this->cat_update($id, array('measure_unit' => $val))) {
                 clear_cache_files(); // 清除缓存
-                make_json_result($val);
+                return make_json_result($val);
             } else {
-                make_json_error($GLOBALS['db']->error());
+                return make_json_error($GLOBALS['db']->error());
             }
         }
 
@@ -396,14 +396,14 @@ class Category extends Init
 
             if ($val > 10 || $val < 0) {
                 /* 价格区间数超过范围 */
-                make_json_error($GLOBALS['_LANG']['grade_error']);
+                return make_json_error($GLOBALS['_LANG']['grade_error']);
             }
 
             if ($this->cat_update($id, array('grade' => $val))) {
                 clear_cache_files(); // 清除缓存
-                make_json_result($val);
+                return make_json_result($val);
             } else {
-                make_json_error($GLOBALS['db']->error());
+                return make_json_error($GLOBALS['db']->error());
             }
         }
 
@@ -440,9 +440,9 @@ class Category extends Init
                     $GLOBALS['db']->query("UPDATE " . $GLOBALS['ecs']->table('nav') . "SET ifshow = 0 WHERE ctype = 'c' AND cid = '" . $id . "' AND type = 'middle'");
                 }
                 clear_cache_files();
-                make_json_result($val);
+                return make_json_result($val);
             } else {
-                make_json_error($GLOBALS['db']->error());
+                return make_json_error($GLOBALS['db']->error());
             }
         }
 
@@ -458,9 +458,9 @@ class Category extends Init
 
             if ($this->cat_update($id, array('is_show' => $val)) != false) {
                 clear_cache_files();
-                make_json_result($val);
+                return make_json_result($val);
             } else {
-                make_json_error($GLOBALS['db']->error());
+                return make_json_error($GLOBALS['db']->error());
             }
         }
 
@@ -490,7 +490,7 @@ class Category extends Init
                     admin_log($cat_name, 'remove', 'category');
                 }
             } else {
-                make_json_error($cat_name . ' ' . $GLOBALS['_LANG']['cat_isleaf']);
+                return make_json_error($cat_name . ' ' . $GLOBALS['_LANG']['cat_isleaf']);
             }
 
             $url = 'category.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);

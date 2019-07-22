@@ -50,7 +50,7 @@ class UsersOrder extends Init
             $sort_flag = sort_flag($user_orderinfo['filter']);
             $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
-            make_json_result($GLOBALS['smarty']->fetch('users_order.htm'), '', array('filter' => $user_orderinfo['filter'], 'page_count' => $user_orderinfo['page_count']));
+            return make_json_result($GLOBALS['smarty']->fetch('users_order.htm'), '', array('filter' => $user_orderinfo['filter'], 'page_count' => $user_orderinfo['page_count']));
         } else {
             /* 权限判断 */
             admin_priv('client_flow_stats');

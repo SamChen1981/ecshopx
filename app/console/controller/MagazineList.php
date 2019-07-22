@@ -42,7 +42,7 @@ class MagazineList extends Init
             $sort_flag = sort_flag($magazinedb['filter']);
             $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
-            make_json_result($GLOBALS['smarty']->fetch('magazine_list.htm'), '', array('filter' => $magazinedb['filter'], 'page_count' => $magazinedb['page_count']));
+            return make_json_result($GLOBALS['smarty']->fetch('magazine_list.htm'), '', array('filter' => $magazinedb['filter'], 'page_count' => $magazinedb['page_count']));
         } elseif ($_REQUEST['act'] == 'add') {
             if (empty($_POST['step'])) {
                 include_once(ROOT_PATH . 'includes/fckeditor/fckeditor.php'); // 包含 html editor 类文件

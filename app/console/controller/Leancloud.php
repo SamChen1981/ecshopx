@@ -200,7 +200,7 @@ class Leancloud extends Init
             $GLOBALS['smarty']->assign('record_count', $count);
             $GLOBALS['smarty']->assign('page_count', $page_count);
 
-            make_json_result($GLOBALS['smarty']->fetch('leancloud.html'), '', array('filter' => $filter, 'page_count' => $page_count));
+            return make_json_result($GLOBALS['smarty']->fetch('leancloud.html'), '', array('filter' => $filter, 'page_count' => $page_count));
         } elseif ($_REQUEST['act'] == 'batch_remove') {
             /* 检查权限 */
             admin_priv('leancloud');

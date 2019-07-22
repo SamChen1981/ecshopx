@@ -346,7 +346,7 @@ class UserAccount extends Init
             $sort_flag = sort_flag($list['filter']);
             $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
-            make_json_result($GLOBALS['smarty']->fetch('user_account_list.htm'), '', array('filter' => $list['filter'], 'page_count' => $list['page_count']));
+            return make_json_result($GLOBALS['smarty']->fetch('user_account_list.htm'), '', array('filter' => $list['filter'], 'page_count' => $list['page_count']));
         }
         /*------------------------------------------------------ */
         //-- ajax删除一条信息
@@ -366,7 +366,7 @@ class UserAccount extends Init
                 return $this->redirect($url);
 
             } else {
-                make_json_error($GLOBALS['db']->error());
+                return make_json_error($GLOBALS['db']->error());
             }
         }
     }

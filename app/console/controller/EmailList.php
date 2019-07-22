@@ -48,7 +48,7 @@ class EmailList extends Init
             $sort_flag = sort_flag($emaildb['filter']);
             $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
-            make_json_result(
+            return make_json_result(
                 $GLOBALS['smarty']->fetch('email_list.htm'),
                 '',
                 array('filter' => $emaildb['filter'], 'page_count' => $emaildb['page_count'])

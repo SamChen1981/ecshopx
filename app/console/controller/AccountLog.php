@@ -81,7 +81,7 @@ class AccountLog extends Init
             $GLOBALS['smarty']->assign('record_count', $account_list['record_count']);
             $GLOBALS['smarty']->assign('page_count', $account_list['page_count']);
 
-            make_json_result(
+            return make_json_result(
                 $GLOBALS['smarty']->fetch('account_list.htm'),
                 '',
                 array('filter' => $account_list['filter'], 'page_count' => $account_list['page_count'])

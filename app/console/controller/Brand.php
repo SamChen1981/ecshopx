@@ -160,20 +160,20 @@ class Brand extends Init
 
             /* 检查名称是否重复 */
             if ($exc->num("brand_name", $name, $id) != 0) {
-                make_json_error(sprintf($GLOBALS['_LANG']['brandname_exist'], $name));
+                return make_json_error(sprintf($GLOBALS['_LANG']['brandname_exist'], $name));
             } else {
                 if ($exc->edit("brand_name = '$name'", $id)) {
                     admin_log($name, 'edit', 'brand');
-                    make_json_result(stripslashes($name));
+                    return make_json_result(stripslashes($name));
                 } else {
-                    make_json_result(sprintf($GLOBALS['_LANG']['brandedit_fail'], $name));
+                    return make_json_result(sprintf($GLOBALS['_LANG']['brandedit_fail'], $name));
                 }
             }
         } elseif ($_REQUEST['act'] == 'add_brand') {
             $brand = empty($_REQUEST['brand']) ? '' : json_str_iconv(trim($_REQUEST['brand']));
 
             if (brand_exists($brand)) {
-                make_json_error($GLOBALS['_LANG']['brand_name_exist']);
+                return make_json_error($GLOBALS['_LANG']['brand_name_exist']);
             } else {
                 $sql = "INSERT INTO " . $GLOBALS['ecs']->table('brand') . "(brand_name)" .
                     "VALUES ( '$brand')";
@@ -183,7 +183,7 @@ class Brand extends Init
 
                 $arr = array("id" => $brand_id, "brand" => $brand);
 
-                make_json_result($arr);
+                return make_json_result($arr);
             }
         }
         /*------------------------------------------------------ */
@@ -199,9 +199,9 @@ class Brand extends Init
             if ($exc->edit("sort_order = '$order'", $id)) {
                 admin_log(addslashes($name), 'edit', 'brand');
 
-                make_json_result($order);
+                return make_json_result($order);
             } else {
-                make_json_error(sprintf($GLOBALS['_LANG']['brandedit_fail'], $name));
+                return make_json_error(sprintf($GLOBALS['_LANG']['brandedit_fail'], $name));
             }
         }
 
@@ -216,7 +216,7 @@ class Brand extends Init
 
             $exc->edit("is_show='$val'", $id);
 
-            make_json_result($val);
+            return make_json_result($val);
         }
 
         /*------------------------------------------------------ */
@@ -277,7 +277,7 @@ class Brand extends Init
             $GLOBALS['smarty']->assign('record_count', $brand_list['record_count']);
             $GLOBALS['smarty']->assign('page_count', $brand_list['page_count']);
 
-            make_json_result(
+            return make_json_result(
                 $GLOBALS['smarty']->fetch('brand_list.htm'),
                 '',
                 array('filter' => $brand_list['filter'], 'page_count' => $brand_list['page_count'])

@@ -44,7 +44,7 @@ class Navigator extends Init
             $sort_flag = sort_flag($navdb['filter']);
             $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
-            make_json_result($GLOBALS['smarty']->fetch('navigator.htm'), '', array('filter' => $navdb['filter'], 'page_count' => $navdb['page_count']));
+            return make_json_result($GLOBALS['smarty']->fetch('navigator.htm'), '', array('filter' => $navdb['filter'], 'page_count' => $navdb['page_count']));
         }
         /*------------------------------------------------------ */
         //-- 自定义导航栏增加
@@ -198,13 +198,13 @@ class Navigator extends Init
 
             /* 检查输入的值是否合法 */
             if (!preg_match("/^[0-9]+$/", $order)) {
-                make_json_error(sprintf($GLOBALS['_LANG']['enter_int'], $order));
+                return make_json_error(sprintf($GLOBALS['_LANG']['enter_int'], $order));
             } else {
                 if ($exc->edit("vieworder = '$order'", $id)) {
                     clear_cache_files();
-                    make_json_result(stripslashes($order));
+                    return make_json_result(stripslashes($order));
                 } else {
-                    make_json_error($GLOBALS['db']->error());
+                    return make_json_error($GLOBALS['db']->error());
                 }
             }
         }
@@ -225,9 +225,9 @@ class Navigator extends Init
 
             if ($this->nav_update($id, array('ifshow' => $val)) != false) {
                 clear_cache_files();
-                make_json_result($val);
+                return make_json_result($val);
             } else {
-                make_json_error($GLOBALS['db']->error());
+                return make_json_error($GLOBALS['db']->error());
             }
         }
 
@@ -241,9 +241,9 @@ class Navigator extends Init
 
             if ($this->nav_update($id, array('opennew' => $val)) != false) {
                 clear_cache_files();
-                make_json_result($val);
+                return make_json_result($val);
             } else {
-                make_json_error($GLOBALS['db']->error());
+                return make_json_error($GLOBALS['db']->error());
             }
         }
     }

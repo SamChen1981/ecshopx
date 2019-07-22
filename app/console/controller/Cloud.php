@@ -36,7 +36,7 @@ class Cloud extends Init
         $must = array('version', 'ecs_lang', 'charset', 'patch', 'stamp', 'api_ver');
         if ($act == 'menu_api') {
             if (!admin_priv('all', '', false)) {
-                make_json_result('0');
+                return make_json_result('0');
             }
             $api_data = read_static_cache('menu_api');
 
@@ -56,15 +56,15 @@ class Cloud extends Init
                         }
                         $api_arr['api_time'] = date('Ymd');
                         write_static_cache('menu_api', $api_arr);
-                        make_json_result($api_arr['content']);
+                        return make_json_result($api_arr['content']);
                     } else {
-                        make_json_result('0');
+                        return make_json_result('0');
                     }
                 } else {
-                    make_json_result('0');
+                    return make_json_result('0');
                 }
             } else {
-                make_json_result($api_data['content']);
+                return make_json_result($api_data['content']);
             }
         } elseif ($act == 'load_crontab') {
             /*
@@ -96,15 +96,15 @@ class Cloud extends Init
                         }
                         $api_arr['api_time'] = date('Ymd');
                         write_static_cache('cloud_remind', $api_arr);
-                        make_json_result($api_arr['content']);
+                        return make_json_result($api_arr['content']);
                     } else {
-                        make_json_result('0');
+                        return make_json_result('0');
                     }
                 } else {
-                    make_json_result('0');
+                    return make_json_result('0');
                 }
             } else {
-                make_json_result($api_data['content']);
+                return make_json_result($api_data['content']);
             }
         } elseif ($act == 'close_remind') {
             $remind_id = $_REQUEST['remind_id'];
@@ -138,20 +138,20 @@ class Cloud extends Init
                         if ($api_arr['error'] == 1) {
                             $message = explode('|', $api_arr['content']);
                             $api_arr['content'] = '<li  class="cloud_close">' . $message['0'] . '&nbsp;&nbsp;&nbsp;&nbsp;' . $message['2'] . '</li>';
-                            make_json_result($api_arr['content']);
+                            return make_json_result($api_arr['content']);
                         } else {
                             clear_all_files();
-                            make_json_result('0');
+                            return make_json_result('0');
                         }
                     } else {
                         $message = explode('|', $api_arr['content']);
 
                         $api_arr['content'] = '<li  class="cloud_close">' . $message['0'] . '&nbsp;&nbsp;&nbsp;&nbsp;' . $GLOBALS['_LANG']['cloud_no_priv'] . '<img onclick="cloud_close( ' . $message['1'] . ')" src="images/no.svg" width="20"></li>';
 
-                        make_json_result($api_arr['content']);
+                        return make_json_result($api_arr['content']);
                     }
                 } else {
-                    make_json_result('0');
+                    return make_json_result('0');
                 }
             }
         } else {

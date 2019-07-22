@@ -479,7 +479,7 @@ class GoodsExport extends Init
         elseif ($_REQUEST['act'] == 'get_goods_fields') {
             $cat_id = isset($_REQUEST['cat_id']) ? intval($_REQUEST['cat_id']) : 0;
             $goods_fields = $this->my_array_merge($GLOBALS['_LANG']['custom'], $this->get_attributes($cat_id));
-            make_json_result($goods_fields);
+            return make_json_result($goods_fields);
         } elseif ($_REQUEST['act'] == 'act_export_custom') {
             /* 检查输出列 */
             if (empty($_POST['custom_goods_export'])) {
@@ -568,7 +568,7 @@ class GoodsExport extends Init
                     'goods_name' => $val['goods_name']
                 );
             }
-            make_json_result($opt);
+            return make_json_result($opt);
         } elseif ($_REQUEST['act'] == 'act_export_taobao V4.6') {
             /* 检查权限 */
             admin_priv('goods_export');

@@ -33,7 +33,7 @@ class SearchLog extends Init
             $GLOBALS['smarty']->assign('page_count', $logdb['page_count']);
             $GLOBALS['smarty']->assign('start_date', local_date('Y-m-d'));
             $GLOBALS['smarty']->assign('end_date', local_date('Y-m-d'));
-            make_json_result(
+            return make_json_result(
                 $GLOBALS['smarty']->fetch('search_log_list.htm'),
                 '',
                 array('filter' => $logdb['filter'], 'page_count' => $logdb['page_count'])

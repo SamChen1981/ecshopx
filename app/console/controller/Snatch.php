@@ -126,7 +126,7 @@ class Snatch extends Init
             $sort_flag = sort_flag($snatchs['filter']);
             $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
-            make_json_result(
+            return make_json_result(
                 $GLOBALS['smarty']->fetch('snatch_list.htm'),
                 '',
                 array('filter' => $snatchs['filter'], 'page_count' => $snatchs['page_count'])
@@ -148,11 +148,11 @@ class Snatch extends Init
                 " FROM " . $GLOBALS['ecs']->table('goods_activity') .
                 " WHERE act_type='" . GAT_SNATCH . "' AND act_name='$val' AND act_id <> '$id'";
             if ($GLOBALS['db']->getOne($sql)) {
-                make_json_error(sprintf($GLOBALS['_LANG']['snatch_name_exist'], $val));
+                return make_json_error(sprintf($GLOBALS['_LANG']['snatch_name_exist'], $val));
             }
 
             $exc->edit("act_name='$val'", $id);
-            make_json_result(stripslashes($val));
+            return make_json_result(stripslashes($val));
         }
 
         /*------------------------------------------------------ */
@@ -290,7 +290,7 @@ class Snatch extends Init
             $sort_flag = sort_flag($bid_list['filter']);
             $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
-            make_json_result(
+            return make_json_result(
                 $GLOBALS['smarty']->fetch('snatch_view.htm'),
                 '',
                 array('filter' => $bid_list['filter'], 'page_count' => $bid_list['page_count'])
@@ -310,7 +310,7 @@ class Snatch extends Init
                 $arr['products'] = get_good_products($arr['goods'][0]['goods_id']);
             }
 
-            make_json_result($arr);
+            return make_json_result($arr);
         }
 
         /*------------------------------------------------------ */
@@ -324,7 +324,7 @@ class Snatch extends Init
                 $arr['products'] = get_good_products($filters->goods_id);
             }
 
-            make_json_result($arr);
+            return make_json_result($arr);
         }
     }
 

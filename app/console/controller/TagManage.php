@@ -137,7 +137,7 @@ class TagManage extends Init
             $sort_flag = sort_flag($tag_list['filter']);
             $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
-            make_json_result(
+            return make_json_result(
                 $GLOBALS['smarty']->fetch('tag_manage.htm'),
                 '',
                 array('filter' => $tag_list['filter'], 'page_count' => $tag_list['page_count'])
@@ -161,7 +161,7 @@ class TagManage extends Init
                 );
             }
 
-            make_json_result($arr);
+            return make_json_result($arr);
         }
 
         /*------------------------------------------------------ */
@@ -213,7 +213,7 @@ class TagManage extends Init
                 return $this->redirect($url);
 
             } else {
-                make_json_error($GLOBALS['db']->error());
+                return make_json_error($GLOBALS['db']->error());
             }
         }
 
@@ -228,10 +228,10 @@ class TagManage extends Init
             $id = intval($_POST['id']);
 
             if (!$this->tag_is_only($name, $id)) {
-                make_json_error(sprintf($GLOBALS['_LANG']['tagword_exist'], $name));
+                return make_json_error(sprintf($GLOBALS['_LANG']['tagword_exist'], $name));
             } else {
                 $this->edit_tag($name, $id);
-                make_json_result(stripslashes($name));
+                return make_json_result(stripslashes($name));
             }
         }
     }

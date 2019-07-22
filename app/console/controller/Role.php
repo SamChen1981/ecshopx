@@ -72,7 +72,7 @@ class Role extends Init
         elseif ($_REQUEST['act'] == 'query') {
             $GLOBALS['smarty']->assign('admin_list', $this->get_role_list());
 
-            make_json_result($GLOBALS['smarty']->fetch('role_list.htm'));
+            return make_json_result($GLOBALS['smarty']->fetch('role_list.htm'));
         }
 
         /*------------------------------------------------------ */
@@ -235,7 +235,7 @@ class Role extends Init
             $num_sql = "SELECT count(*) FROM " . $GLOBALS['ecs']->table('admin_user') . " WHERE role_id = '$_GET[id]'";
             $remove_num = $GLOBALS['db']->getOne($num_sql);
             if ($remove_num > 0) {
-                make_json_error($GLOBALS['_LANG']['remove_cannot_user']);
+                return make_json_error($GLOBALS['_LANG']['remove_cannot_user']);
             } else {
                 $exc->drop($id);
                 $url = 'role.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);

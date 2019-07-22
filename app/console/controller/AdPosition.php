@@ -158,7 +158,7 @@ class AdPosition extends Init
             $GLOBALS['smarty']->assign('record_count', $position_list['record_count']);
             $GLOBALS['smarty']->assign('page_count', $position_list['page_count']);
 
-            make_json_result(
+            return make_json_result(
                 $GLOBALS['smarty']->fetch('ad_position_list.htm'),
                 '',
                 array('filter' => $position_list['filter'], 'page_count' => $position_list['page_count'])
@@ -176,13 +176,13 @@ class AdPosition extends Init
 
             /* 检查名称是否重复 */
             if ($exc->num("position_name", $position_name, $id) != 0) {
-                make_json_error(sprintf($GLOBALS['_LANG']['posit_name_exist'], $position_name));
+                return make_json_error(sprintf($GLOBALS['_LANG']['posit_name_exist'], $position_name));
             } else {
                 if ($exc->edit("position_name = '$position_name'", $id)) {
                     admin_log($position_name, 'edit', 'ads_position');
-                    make_json_result(stripslashes($position_name));
+                    return make_json_result(stripslashes($position_name));
                 } else {
-                    make_json_result(sprintf($GLOBALS['_LANG']['brandedit_fail'], $position_name));
+                    return make_json_result(sprintf($GLOBALS['_LANG']['brandedit_fail'], $position_name));
                 }
             }
         }
@@ -198,20 +198,20 @@ class AdPosition extends Init
 
             /* 宽度值必须是数字 */
             if (!preg_match("/^[\.0-9]+$/", $ad_width)) {
-                make_json_error($GLOBALS['_LANG']['width_number']);
+                return make_json_error($GLOBALS['_LANG']['width_number']);
             }
 
             /* 广告位宽度应在1-1024之间 */
             if ($ad_width > 1024 || $ad_width < 1) {
-                make_json_error($GLOBALS['_LANG']['width_value']);
+                return make_json_error($GLOBALS['_LANG']['width_value']);
             }
 
             if ($exc->edit("ad_width = '$ad_width'", $id)) {
                 clear_cache_files(); // 清除模版缓存
                 admin_log($ad_width, 'edit', 'ads_position');
-                make_json_result(stripslashes($ad_width));
+                return make_json_result(stripslashes($ad_width));
             } else {
-                make_json_error($GLOBALS['db']->error());
+                return make_json_error($GLOBALS['db']->error());
             }
         }
 
@@ -226,20 +226,20 @@ class AdPosition extends Init
 
             /* 高度值必须是数字 */
             if (!preg_match("/^[\.0-9]+$/", $ad_height)) {
-                make_json_error($GLOBALS['_LANG']['height_number']);
+                return make_json_error($GLOBALS['_LANG']['height_number']);
             }
 
             /* 广告位宽度应在1-1024之间 */
             if ($ad_height > 1024 || $ad_height < 1) {
-                make_json_error($GLOBALS['_LANG']['height_value']);
+                return make_json_error($GLOBALS['_LANG']['height_value']);
             }
 
             if ($exc->edit("ad_height = '$ad_height'", $id)) {
                 clear_cache_files(); // 清除模版缓存
                 admin_log($ad_height, 'edit', 'ads_position');
-                make_json_result(stripslashes($ad_height));
+                return make_json_result(stripslashes($ad_height));
             } else {
-                make_json_error($GLOBALS['db']->error());
+                return make_json_error($GLOBALS['db']->error());
             }
         }
 
@@ -255,7 +255,7 @@ class AdPosition extends Init
             $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('ad') . " WHERE position_id = '$id'";
 
             if ($GLOBALS['db']->getOne($sql) > 0) {
-                make_json_error($GLOBALS['_LANG']['not_del_adposit']);
+                return make_json_error($GLOBALS['_LANG']['not_del_adposit']);
             } else {
                 $exc->drop($id);
                 admin_log('', 'remove', 'ads_position');

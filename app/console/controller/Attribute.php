@@ -60,7 +60,7 @@ class Attribute extends Init
             $sort_flag = sort_flag($list['filter']);
             $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
-            make_json_result(
+            return make_json_result(
                 $GLOBALS['smarty']->fetch('attribute_list.htm'),
                 '',
                 array('filter' => $list['filter'], 'page_count' => $list['page_count'])
@@ -206,14 +206,14 @@ class Attribute extends Init
 
             /* 检查属性名称是否重复 */
             if (!$exc->is_only('attr_name', $val, $id, " cat_id = '$cat_id'")) {
-                make_json_error($GLOBALS['_LANG']['name_exist']);
+                return make_json_error($GLOBALS['_LANG']['name_exist']);
             }
 
             $exc->edit("attr_name='$val'", $id);
 
             admin_log($val, 'edit', 'attribute');
 
-            make_json_result(stripslashes($val));
+            return make_json_result(stripslashes($val));
         }
 
         /*------------------------------------------------------ */
@@ -230,7 +230,7 @@ class Attribute extends Init
 
             admin_log(addslashes($exc->get_name($id)), 'edit', 'attribute');
 
-            make_json_result(stripslashes($val));
+            return make_json_result(stripslashes($val));
         }
 
         /*------------------------------------------------------ */
@@ -271,7 +271,7 @@ class Attribute extends Init
                 $drop_confirm = $GLOBALS['_LANG']['drop_confirm'];
             }
 
-            make_json_result(array('attr_id' => $id, 'drop_confirm' => $drop_confirm));
+            return make_json_result(array('attr_id' => $id, 'drop_confirm' => $drop_confirm));
         }
 
         /*------------------------------------------------------ */
@@ -284,7 +284,7 @@ class Attribute extends Init
             $cat_id = intval($_GET['cat_id']);
             $groups = get_attr_groups($cat_id);
 
-            make_json_result($groups);
+            return make_json_result($groups);
         }
     }
 

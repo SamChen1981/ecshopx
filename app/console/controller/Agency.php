@@ -47,7 +47,7 @@ class Agency extends Init
             $sort_flag = sort_flag($agency_list['filter']);
             $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
-            make_json_result(
+            return make_json_result(
                 $GLOBALS['smarty']->fetch('agency_list.htm'),
                 '',
                 array('filter' => $agency_list['filter'], 'page_count' => $agency_list['page_count'])
@@ -65,14 +65,14 @@ class Agency extends Init
 
             /* 检查名称是否重复 */
             if ($exc->num("agency_name", $name, $id) != 0) {
-                make_json_error(sprintf($GLOBALS['_LANG']['agency_name_exist'], $name));
+                return make_json_error(sprintf($GLOBALS['_LANG']['agency_name_exist'], $name));
             } else {
                 if ($exc->edit("agency_name = '$name'", $id)) {
                     admin_log($name, 'edit', 'agency');
                     clear_cache_files();
-                    make_json_result(stripslashes($name));
+                    return make_json_result(stripslashes($name));
                 } else {
-                    make_json_result(sprintf($GLOBALS['_LANG']['agency_edit_fail'], $name));
+                    return make_json_result(sprintf($GLOBALS['_LANG']['agency_edit_fail'], $name));
                 }
             }
         }

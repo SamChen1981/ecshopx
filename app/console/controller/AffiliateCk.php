@@ -51,7 +51,7 @@ class AffiliateCk extends Init
             $sort_flag = sort_flag($logdb['filter']);
             $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
-            make_json_result($GLOBALS['smarty']->fetch('affiliate_ck_list.htm'), '', array('filter' => $logdb['filter'], 'page_count' => $logdb['page_count']));
+            return make_json_result($GLOBALS['smarty']->fetch('affiliate_ck_list.htm'), '', array('filter' => $logdb['filter'], 'page_count' => $logdb['page_count']));
         } /*
     取消分成，不再能对该订单进行分成
 */

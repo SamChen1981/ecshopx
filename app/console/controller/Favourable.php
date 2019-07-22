@@ -55,7 +55,7 @@ class Favourable extends Init
             $sort_flag = sort_flag($list['filter']);
             $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
-            make_json_result(
+            return make_json_result(
                 $GLOBALS['smarty']->fetch('favourable_list.htm'),
                 '',
                 array('filter' => $list['filter'], 'page_count' => $list['page_count'])
@@ -71,7 +71,7 @@ class Favourable extends Init
             $id = intval($_GET['id']);
             $favourable = favourable_info($id);
             if (empty($favourable)) {
-                make_json_error($GLOBALS['_LANG']['favourable_not_exist']);
+                return make_json_error($GLOBALS['_LANG']['favourable_not_exist']);
             }
             $name = $favourable['act_name'];
             $exc->drop($id);
@@ -133,7 +133,7 @@ class Favourable extends Init
                 " WHERE act_id = '$id' LIMIT 1";
             $GLOBALS['db']->query($sql);
 
-            make_json_result($val);
+            return make_json_result($val);
         }
 
         /*------------------------------------------------------ */
@@ -357,7 +357,7 @@ class Favourable extends Init
                 ));
             }
 
-            make_json_result($arr);
+            return make_json_result($arr);
         }
     }
 

@@ -60,7 +60,7 @@ class Article extends Init
             $sort_flag = sort_flag($article_list['filter']);
             $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
-            make_json_result(
+            return make_json_result(
                 $GLOBALS['smarty']->fetch('article_list.htm'),
                 '',
                 array('filter' => $article_list['filter'], 'page_count' => $article_list['page_count'])
@@ -279,14 +279,14 @@ class Article extends Init
 
             /* 检查文章标题是否重复 */
             if ($exc->num("title", $title, $id) != 0) {
-                make_json_error(sprintf($GLOBALS['_LANG']['title_exist'], $title));
+                return make_json_error(sprintf($GLOBALS['_LANG']['title_exist'], $title));
             } else {
                 if ($exc->edit("title = '$title'", $id)) {
                     clear_cache_files();
                     admin_log($title, 'edit', 'article');
-                    make_json_result(stripslashes($title));
+                    return make_json_result(stripslashes($title));
                 } else {
-                    make_json_error($GLOBALS['db']->error());
+                    return make_json_error($GLOBALS['db']->error());
                 }
             }
         }
@@ -303,7 +303,7 @@ class Article extends Init
             $exc->edit("is_open = '$val'", $id);
             clear_cache_files();
 
-            make_json_result($val);
+            return make_json_result($val);
         }
 
         /*------------------------------------------------------ */
@@ -318,7 +318,7 @@ class Article extends Init
             $exc->edit("article_type = '$val'", $id);
             clear_cache_files();
 
-            make_json_result($val);
+            return make_json_result($val);
         }
 
 
@@ -369,7 +369,7 @@ class Article extends Init
             foreach ($add_ids as $key => $val) {
                 $sql = 'INSERT INTO ' . $GLOBALS['ecs']->table('goods_article') . ' (goods_id, article_id) ' .
                     "VALUES ('$val', '$article_id')";
-                $GLOBALS['db']->query($sql, 'SILENT') or make_json_error($GLOBALS['db']->error());
+                $GLOBALS['db']->query($sql, 'SILENT') or return make_json_error($GLOBALS['db']->error());
             }
 
             /* 重新载入 */
@@ -382,7 +382,7 @@ class Article extends Init
                     'data' => '');
             }
 
-            make_json_result($opt);
+            return make_json_result($opt);
         }
 
         /*------------------------------------------------------ */
@@ -401,7 +401,7 @@ class Article extends Init
 
             $sql = "DELETE FROM " . $GLOBALS['ecs']->table('goods_article') .
                 " WHERE article_id = '$article_id' AND goods_id " . db_create_in($drop_goods);
-            $GLOBALS['db']->query($sql, 'SILENT') or make_json_error($GLOBALS['db']->error());
+            $GLOBALS['db']->query($sql);
 
             /* 重新载入 */
             $arr = $this->get_article_goods($article_id);
@@ -413,7 +413,7 @@ class Article extends Init
                     'data' => '');
             }
 
-            make_json_result($opt);
+            return make_json_result($opt);
         }
 
         /*------------------------------------------------------ */
@@ -431,7 +431,7 @@ class Article extends Init
                     'data' => $val['shop_price']);
             }
 
-            make_json_result($opt);
+            return make_json_result($opt);
         }
         /*------------------------------------------------------ */
         //-- 批量操作

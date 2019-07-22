@@ -287,7 +287,7 @@ class Privilege extends Init
         elseif ($_REQUEST['act'] == 'query') {
             $GLOBALS['smarty']->assign('admin_list', $this->get_admin_userlist());
 
-            make_json_result($GLOBALS['smarty']->fetch('privilege_list.htm'));
+            return make_json_result($GLOBALS['smarty']->fetch('privilege_list.htm'));
         }
 
         /*------------------------------------------------------ */
@@ -720,21 +720,21 @@ class Privilege extends Init
 
             /* demo这个管理员不允许删除 */
             if ($admin_name == 'demo') {
-                make_json_error($GLOBALS['_LANG']['edit_remove_cannot']);
+                return make_json_error($GLOBALS['_LANG']['edit_remove_cannot']);
             }
 
             /* ID为1的不允许删除 */
             if ($id == 1) {
-                make_json_error($GLOBALS['_LANG']['remove_cannot']);
+                return make_json_error($GLOBALS['_LANG']['remove_cannot']);
             }
 
             if ($admin_user_info['passport_uid']) {
-                make_json_error($GLOBALS['_LANG']['remove_cannot']);
+                return make_json_error($GLOBALS['_LANG']['remove_cannot']);
             }
 
             /* 管理员不能删除自己 */
             if ($id == $_SESSION['admin_id']) {
-                make_json_error($GLOBALS['_LANG']['remove_self_cannot']);
+                return make_json_error($GLOBALS['_LANG']['remove_self_cannot']);
             }
 
             if ($exc->drop($id)) {
@@ -760,7 +760,7 @@ class Privilege extends Init
             $sql = "SELECT `passport_uid` FROM " . $GLOBALS['ecs']->table('admin_user') . "WHERE user_name = '" . $_POST['username'] . "'";
             $rs = $GLOBALS['db']->getOne($sql);
             !empty($rs) and $result = 'yunqi';
-            make_json_result($result);
+            return make_json_result($result);
         }
     }
 

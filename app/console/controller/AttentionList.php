@@ -27,7 +27,7 @@ class AttentionList extends Init
             $GLOBALS['smarty']->assign('filter', $goodsdb['filter']);
             $GLOBALS['smarty']->assign('record_count', $goodsdb['record_count']);
             $GLOBALS['smarty']->assign('page_count', $goodsdb['page_count']);
-            make_json_result(
+            return make_json_result(
                 $GLOBALS['smarty']->fetch('attention_list.htm'),
                 '',
                 array('filter' => $goodsdb['filter'], 'page_count' => $goodsdb['page_count'])

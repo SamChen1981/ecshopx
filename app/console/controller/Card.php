@@ -45,7 +45,7 @@ class Card extends Init
             $sort_flag = sort_flag($cards_list['filter']);
             $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
-            make_json_result($GLOBALS['smarty']->fetch('card_list.htm'), '', array('filter' => $cards_list['filter'], 'page_count' => $cards_list['page_count']));
+            return make_json_result($GLOBALS['smarty']->fetch('card_list.htm'), '', array('filter' => $cards_list['filter'], 'page_count' => $cards_list['page_count']));
         }
         /*------------------------------------------------------ */
         //-- 删除贺卡
@@ -71,7 +71,7 @@ class Card extends Init
                 return $this->redirect($url);
 
             } else {
-                make_json_error($GLOBALS['db']->error());
+                return make_json_error($GLOBALS['db']->error());
             }
         }
         /*------------------------------------------------------ */
@@ -197,14 +197,14 @@ class Card extends Init
             $card_name = empty($_REQUEST['val']) ? '' : json_str_iconv(trim($_REQUEST['val']));
 
             if (!$exc->is_only('card_name', $card_name, $card_id)) {
-                make_json_error(sprintf($GLOBALS['_LANG']['cardname_exist'], $card_name));
+                return make_json_error(sprintf($GLOBALS['_LANG']['cardname_exist'], $card_name));
             }
             $old_card_name = $exc->get_name($card_id);
             if ($exc->edit("card_name='$card_name'", $card_id)) {
                 admin_log(addslashes($old_card_name), 'edit', 'card');
-                make_json_result(stripcslashes($card_name));
+                return make_json_result(stripcslashes($card_name));
             } else {
-                make_json_error($GLOBALS['db']->error());
+                return make_json_error($GLOBALS['db']->error());
             }
         }
         /*------------------------------------------------------ */
@@ -218,9 +218,9 @@ class Card extends Init
             $card_name = $exc->get_name($card_id);
             if ($exc->edit("card_fee ='$card_fee'", $card_id)) {
                 admin_log(addslashes($card_name), 'edit', 'card');
-                make_json_result($card_fee);
+                return make_json_result($card_fee);
             } else {
-                make_json_error($GLOBALS['db']->error());
+                return make_json_error($GLOBALS['db']->error());
             }
         }
         /*------------------------------------------------------ */
@@ -234,9 +234,9 @@ class Card extends Init
             $card_name = $exc->get_name($card_id);
             if ($exc->edit("free_money ='$free_money'", $card_id)) {
                 admin_log(addslashes($card_name), 'edit', 'card');
-                make_json_result($free_money);
+                return make_json_result($free_money);
             } else {
-                make_json_error($GLOBALS['db']->error());
+                return make_json_error($GLOBALS['db']->error());
             }
         }
     }

@@ -263,7 +263,7 @@ class Cron extends Init
                 "SET enable = '$val' " .
                 "WHERE cron_code = '$id' LIMIT 1";
             $GLOBALS['db']->query($sql);
-            make_json_result($val);
+            return make_json_result($val);
         } elseif ($_REQUEST['act'] == 'do') {
             if (isset($set_modules)) {
                 $set_modules = false;

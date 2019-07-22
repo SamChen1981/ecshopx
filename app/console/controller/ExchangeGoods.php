@@ -59,7 +59,7 @@ class ExchangeGoods extends Init
             $sort_flag = sort_flag($goods_list['filter']);
             $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
-            make_json_result(
+            return make_json_result(
                 $GLOBALS['smarty']->fetch('exchange_goods_list.htm'),
                 '',
                 array('filter' => $goods_list['filter'], 'page_count' => $goods_list['page_count'])
@@ -183,14 +183,14 @@ class ExchangeGoods extends Init
 
             /* 检查文章标题是否重复 */
             if ($exchange_integral < 0 || $exchange_integral == 0 && $_POST['val'] != "$goods_price") {
-                make_json_error($GLOBALS['_LANG']['exchange_integral_invalid']);
+                return make_json_error($GLOBALS['_LANG']['exchange_integral_invalid']);
             } else {
                 if ($exc->edit("exchange_integral = '$exchange_integral'", $id)) {
                     clear_cache_files();
                     admin_log($id, 'edit', 'exchange_goods');
-                    make_json_result(stripslashes($exchange_integral));
+                    return make_json_result(stripslashes($exchange_integral));
                 } else {
-                    make_json_error($GLOBALS['db']->error());
+                    return make_json_error($GLOBALS['db']->error());
                 }
             }
         }
@@ -207,7 +207,7 @@ class ExchangeGoods extends Init
             $exc->edit("is_exchange = '$val'", $id);
             clear_cache_files();
 
-            make_json_result($val);
+            return make_json_result($val);
         }
 
         /*------------------------------------------------------ */
@@ -222,7 +222,7 @@ class ExchangeGoods extends Init
             $exc->edit("is_hot = '$val'", $id);
             clear_cache_files();
 
-            make_json_result($val);
+            return make_json_result($val);
         }
 
         /*------------------------------------------------------ */
@@ -274,7 +274,7 @@ class ExchangeGoods extends Init
 
             $arr = get_goods_list($filters);
 
-            make_json_result($arr);
+            return make_json_result($arr);
         }
     }
 

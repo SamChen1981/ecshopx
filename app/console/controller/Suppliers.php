@@ -54,7 +54,7 @@ class Suppliers extends Init
             $sort_flag = sort_flag($result['filter']);
             $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
-            make_json_result(
+            return make_json_result(
                 $GLOBALS['smarty']->fetch('suppliers_list.htm'),
                 '',
                 array('filter' => $result['filter'], 'page_count' => $result['page_count'])
@@ -76,7 +76,7 @@ class Suppliers extends Init
             WHERE suppliers_name = '$name'
             AND suppliers_id <> '$id' ";
             if ($GLOBALS['db']->getOne($sql)) {
-                make_json_error(sprintf($GLOBALS['_LANG']['suppliers_name_exist'], $name));
+                return make_json_error(sprintf($GLOBALS['_LANG']['suppliers_name_exist'], $name));
             } else {
                 /* 保存供货商信息 */
                 $sql = "UPDATE " . $GLOBALS['ecs']->table('suppliers') . "
@@ -88,9 +88,9 @@ class Suppliers extends Init
 
                     clear_cache_files();
 
-                    make_json_result(stripslashes($name));
+                    return make_json_result(stripslashes($name));
                 } else {
-                    make_json_result(sprintf($GLOBALS['_LANG']['agency_edit_fail'], $name));
+                    return make_json_result(sprintf($GLOBALS['_LANG']['agency_edit_fail'], $name));
                 }
             }
         }
@@ -172,7 +172,7 @@ class Suppliers extends Init
                 $_suppliers['is_check'] = empty($suppliers['is_check']) ? 1 : 0;
                 $GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('suppliers'), $_suppliers, '', "suppliers_id = '$id'");
                 clear_cache_files();
-                make_json_result($_suppliers['is_check']);
+                return make_json_result($_suppliers['is_check']);
             }
 
 

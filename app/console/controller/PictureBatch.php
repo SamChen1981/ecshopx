@@ -80,12 +80,12 @@ class PictureBatch extends Init
 
                 /* 检查GD */
                 if ($image->gd_version() < 1) {
-                    make_json_error($GLOBALS['_LANG']['missing_gd']);
+                    return make_json_error($GLOBALS['_LANG']['missing_gd']);
                 }
 
                 /* 如果需要添加水印，检查水印文件 */
                 if ((!empty($GLOBALS['_CFG']['watermark'])) && ($GLOBALS['_CFG']['watermark_place'] > 0) && $watermark && (!$image->validate_image($GLOBALS['_CFG']['watermark']))) {
-                    make_json_error($image->error_msg());
+                    return make_json_error($image->error_msg());
                 }
                 $title = '';
 
@@ -246,7 +246,7 @@ class PictureBatch extends Init
                             $GLOBALS['err_msg'][] = $msg;
                             continue;
                         } else {
-                            make_json_error($msg);
+                            return make_json_error($msg);
                         }
                     }
 
@@ -259,7 +259,7 @@ class PictureBatch extends Init
                             $GLOBALS['err_msg'][] = $msg;
                             continue;
                         } else {
-                            make_json_error($msg);
+                            return make_json_error($msg);
                         }
                     }
 
@@ -297,7 +297,7 @@ class PictureBatch extends Init
                             $GLOBALS['err_msg'][] = $msg;
                             continue;
                         } else {
-                            make_json_error($msg);
+                            return make_json_error($msg);
                         }
                     }
                     /* 重新格式化图片名称 */
@@ -345,7 +345,7 @@ class PictureBatch extends Init
                             $GLOBALS['err_msg'][] = $msg;
                             continue;
                         } else {
-                            make_json_error($msg);
+                            return make_json_error($msg);
                         }
                     }
                     /* 重新格式化图片名称 */
@@ -379,7 +379,7 @@ class PictureBatch extends Init
                             $GLOBALS['err_msg'][] = $msg;
                             continue;
                         } else {
-                            make_json_error($msg);
+                            return make_json_error($msg);
                         }
                     }
                     /* 重新格式化图片名称 */
@@ -473,7 +473,7 @@ class PictureBatch extends Init
             if ($silent) {
                 $GLOBALS['err_msg'][] = $msg;
             } else {
-                make_json_error($msg);
+                return make_json_error($msg);
             }
         } else {
             if (file_exists(ROOT_PATH . $old_image . '.bak')) {

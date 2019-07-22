@@ -184,8 +184,10 @@ function check_authz($authz)
 function check_authz_json($authz)
 {
     if (!check_authz($authz)) {
-        make_json_error($GLOBALS['_LANG']['priv_error']);
+        return make_json_error($GLOBALS['_LANG']['priv_error']);
     }
+
+    return true;
 }
 
 /**
@@ -504,9 +506,7 @@ function make_json_response($content = '', $error = "0", $message = '', $append 
         }
     }
 
-    $val = json_encode($res);
-
-    exit($val);
+    return json_encode($res);
 }
 
 /**
@@ -518,7 +518,7 @@ function make_json_response($content = '', $error = "0", $message = '', $append 
  */
 function make_json_result($content, $message = '', $append = array())
 {
-    make_json_response($content, 0, $message, $append);
+    return make_json_response($content, 0, $message, $append);
 }
 
 /**
@@ -530,7 +530,7 @@ function make_json_result($content, $message = '', $append = array())
  */
 function make_json_error($msg)
 {
-    make_json_response('', 1, $msg);
+    return make_json_response('', 1, $msg);
 }
 
 /**

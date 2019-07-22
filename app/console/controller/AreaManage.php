@@ -81,12 +81,12 @@ class AreaManage extends Init
             $region_type = intval($_POST['region_type']);
 
             if (empty($region_name)) {
-                make_json_error($GLOBALS['_LANG']['region_name_empty']);
+                return make_json_error($GLOBALS['_LANG']['region_name_empty']);
             }
 
             /* 查看区域是否重复 */
             if (!$exc->is_only('region_name', $region_name, 0, "parent_id = '$parent_id'")) {
-                make_json_error($GLOBALS['_LANG']['region_name_exist']);
+                return make_json_error($GLOBALS['_LANG']['region_name_exist']);
             }
 
             $sql = "INSERT INTO " . $GLOBALS['ecs']->table('region') . " (parent_id, region_name, region_type) " .
@@ -100,9 +100,9 @@ class AreaManage extends Init
 
                 $GLOBALS['smarty']->assign('region_type', $region_type);
 
-                make_json_result($GLOBALS['smarty']->fetch('area_list.htm'));
+                return make_json_result($GLOBALS['smarty']->fetch('area_list.htm'));
             } else {
-                make_json_error($GLOBALS['_LANG']['add_area_error']);
+                return make_json_error($GLOBALS['_LANG']['add_area_error']);
             }
         }
 
@@ -117,7 +117,7 @@ class AreaManage extends Init
             $region_name = json_str_iconv(trim($_POST['val']));
 
             if (empty($region_name)) {
-                make_json_error($GLOBALS['_LANG']['region_name_empty']);
+                return make_json_error($GLOBALS['_LANG']['region_name_empty']);
             }
 
             $msg = '';
@@ -125,14 +125,14 @@ class AreaManage extends Init
             /* 查看区域是否重复 */
             $parent_id = $exc->get_name($id, 'parent_id');
             if (!$exc->is_only('region_name', $region_name, $id, "parent_id = '$parent_id'")) {
-                make_json_error($GLOBALS['_LANG']['region_name_exist']);
+                return make_json_error($GLOBALS['_LANG']['region_name_exist']);
             }
 
             if ($exc->edit("region_name = '$region_name'", $id)) {
                 admin_log($region_name, 'edit', 'area');
-                make_json_result(stripslashes($region_name));
+                return make_json_result(stripslashes($region_name));
             } else {
-                make_json_error($GLOBALS['db']->error());
+                return make_json_error($GLOBALS['db']->error());
             }
         }
 
@@ -151,7 +151,7 @@ class AreaManage extends Init
 //    $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('region') . " WHERE parent_id = '$id'";
 //    if ($GLOBALS['db']->getOne($sql) > 0)
 //    {
-//        make_json_error($GLOBALS['_LANG']['parent_id_exist']);
+//        return make_json_error($GLOBALS['_LANG']['parent_id_exist']);
 //    }
             $region_type = $region['region_type'];
             $delete_region[] = $id;
@@ -176,9 +176,9 @@ class AreaManage extends Init
                 $GLOBALS['smarty']->assign('region_arr', $region_arr);
                 $GLOBALS['smarty']->assign('region_type', $region['region_type']);
 
-                make_json_result($GLOBALS['smarty']->fetch('area_list.htm'));
+                return make_json_result($GLOBALS['smarty']->fetch('area_list.htm'));
             } else {
-                make_json_error($GLOBALS['db']->error());
+                return make_json_error($GLOBALS['db']->error());
             }
         }
     }

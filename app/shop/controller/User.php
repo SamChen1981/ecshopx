@@ -217,7 +217,7 @@ class User extends Init
                 $code = json_decode($code, 1);
                 $code = $code['code'];
                 if (!$code) {
-                    make_json_result('failed');
+                    return make_json_result('failed');
 
                 }
 
@@ -225,10 +225,10 @@ class User extends Init
                 $validator = new captcha();
                 if ($validator->check_word($code)) {
                     $_SESSION['v_code'] = 'true';
-                    make_json_result('succ');
+                    return make_json_result('succ');
 
                 } else {
-                    make_json_result('failed');
+                    return make_json_result('failed');
 
                 }
             }
@@ -2483,18 +2483,18 @@ class User extends Init
                 $send_limit_ip = file_get_contents(__FILE__ . $date . " . txt");
                 $data = unserialize($send_limit_ip);
                 if (isset($data[$ip]) && $data[$ip] > 9) {
-                    make_json_result('当前IP已超当日限制');
+                    return make_json_result('当前IP已超当日限制');
 
                 }
             }
             if (isset($_SESSION['last_send']) && $time < ((int)$_SESSION['last_send'] + 120)) {
-                make_json_result(($_SESSION['last_send'] + 120 - $time) . '秒后再试');
+                return make_json_result(($_SESSION['last_send'] + 120 - $time) . '秒后再试');
 
             }
             $post_data = json_decode(str_replace('\\', '', $_POST['JSON']), 1);
 //判断是否经过验证码验证
             if ((!isset($_SESSION['v_code']) || $_SESSION['v_code'] != 'true') && !isset($post_data['no_need_vcode'])) {
-                make_json_result('v_code fail');
+                return make_json_result('v_code fail');
 
             }
             $_SESSION['v_code'] = 'false';
@@ -2505,7 +2505,7 @@ class User extends Init
                 if (isset($post_data['action']) && $post_data['action'] == 'sms_get_password') {
                     $is_reg = $GLOBALS['user']->check_user($mobile);
                     if (!$is_reg) {
-                        make_json_result($GLOBALS['_LANG']['phone_number_reg_check_fail']);
+                        return make_json_result($GLOBALS['_LANG']['phone_number_reg_check_fail']);
                     }
                 }
                 $sms_code = mt_rand(100000, 999999);
@@ -2514,7 +2514,7 @@ class User extends Init
                 $is_send = $sms->send($mobile, '您本次的验证码为：' . $sms_code . '，十分钟内有效，请不要把验证码泄露给其他人，如非本人操作可不用理会');
                 $is_send = $is_send ? 'succ' : 'fail';
             } else {
-                make_json_result('phone number is incorrect');
+                return make_json_result('phone number is incorrect');
 
             }
 //短信发送限制
@@ -2525,7 +2525,7 @@ class User extends Init
                 $data[$ip] = isset($data[$ip]) ? ($data[$ip]) + 1 : 1;
                 file_put_contents(__FILE__ . $date . " . txt", serialize($data));
             }
-            make_json_result($is_send);
+            return make_json_result($is_send);
 
         } elseif
         ($action == 'sms_get_password') {

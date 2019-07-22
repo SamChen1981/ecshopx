@@ -55,7 +55,7 @@ class SaleOrder extends Init
             $sort_flag = sort_flag($goods_order_data['filter']);
             $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
-            make_json_result($GLOBALS['smarty']->fetch('sale_order.htm'), '', array('filter' => $goods_order_data['filter'], 'page_count' => $goods_order_data['page_count']));
+            return make_json_result($GLOBALS['smarty']->fetch('sale_order.htm'), '', array('filter' => $goods_order_data['filter'], 'page_count' => $goods_order_data['page_count']));
         } else {
             /* 权限检查 */
             admin_priv('sale_order_stats');

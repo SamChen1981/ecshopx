@@ -27,7 +27,7 @@ class Affiliate extends Init
         } elseif ($_REQUEST['act'] == 'query') {
             $GLOBALS['smarty']->assign('ur_here', $GLOBALS['_LANG']['affiliate']);
             $GLOBALS['smarty']->assign('config', $config);
-            make_json_result($GLOBALS['smarty']->fetch('affiliate.htm'), '', null);
+            return make_json_result($GLOBALS['smarty']->fetch('affiliate.htm'), '', null);
         }
         /*------------------------------------------------------ */
         //-- 增加下线分配方案
@@ -58,7 +58,7 @@ class Affiliate extends Init
 
                 $this->put_affiliate($config);
             } else {
-                make_json_error($GLOBALS['_LANG']['level_error']);
+                return make_json_error($GLOBALS['_LANG']['level_error']);
             }
 
             return $this->redirect('affiliate.php?act=query');
@@ -131,7 +131,7 @@ class Affiliate extends Init
             $config['item'][$key]['level_point'] = $val;
             $config['on'] = 1;
             $this->put_affiliate($config);
-            make_json_result(stripcslashes($val));
+            return make_json_result(stripcslashes($val));
         }
         /*------------------------------------------------------ */
         //-- Ajax修改设置
@@ -152,7 +152,7 @@ class Affiliate extends Init
             $config['item'][$key]['level_money'] = $val;
             $config['on'] = 1;
             $this->put_affiliate($config);
-            make_json_result(stripcslashes($val));
+            return make_json_result(stripcslashes($val));
         }
         /*------------------------------------------------------ */
         //-- 删除下线分成

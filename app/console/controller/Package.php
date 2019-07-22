@@ -192,7 +192,7 @@ class Package extends Init
             $sort_flag = sort_flag($packages['filter']);
             $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
-            make_json_result(
+            return make_json_result(
                 $GLOBALS['smarty']->fetch('package_list.htm'),
                 '',
                 array('filter' => $packages['filter'], 'page_count' => $packages['page_count'])
@@ -214,11 +214,11 @@ class Package extends Init
                 " FROM " . $GLOBALS['ecs']->table('goods_activity') .
                 " WHERE act_type='" . GAT_PACKAGE . "' AND act_name='$val' AND act_id <> '$id'";
             if ($GLOBALS['db']->getOne($sql)) {
-                make_json_error(sprintf($GLOBALS['_LANG']['package_exist'], $val));
+                return make_json_error(sprintf($GLOBALS['_LANG']['package_exist'], $val));
             }
 
             $exc->edit("act_name='$val'", $id);
-            make_json_result(stripslashes($val));
+            return make_json_result(stripslashes($val));
         }
 
         /*------------------------------------------------------ */
@@ -239,7 +239,7 @@ class Package extends Init
                 $opt[$key]['products'] = get_good_products($val['goods_id']);
             }
 
-            make_json_result($opt);
+            return make_json_result($opt);
         }
 
         /*------------------------------------------------------ */
@@ -263,7 +263,7 @@ class Package extends Init
 //        $opt[$key]['products'] = get_good_products($val['goods_id']);
 //    }
 //
-//    make_json_result($opt);
+//    return make_json_result($opt);
         //}
 
         /*------------------------------------------------------ */
@@ -299,7 +299,7 @@ class Package extends Init
             }
 
             clear_cache_files();
-            make_json_result($opt);
+            return make_json_result($opt);
         }
 
         /*------------------------------------------------------ */
@@ -353,7 +353,7 @@ class Package extends Init
             }
 
             clear_cache_files();
-            make_json_result($opt);
+            return make_json_result($opt);
         }
     }
 

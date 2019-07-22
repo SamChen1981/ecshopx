@@ -102,7 +102,7 @@ class UserAccountManage extends Init
             $sort_flag = sort_flag($order_list['filter']);
             $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
-            make_json_result($GLOBALS['smarty']->fetch('order_surplus_list.htm'), '', array('filter' => $order_list['filter'], 'page_count' => $order_list['page_count']));
+            return make_json_result($GLOBALS['smarty']->fetch('order_surplus_list.htm'), '', array('filter' => $order_list['filter'], 'page_count' => $order_list['page_count']));
         }
     }
 

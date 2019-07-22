@@ -56,7 +56,7 @@ class Auction extends Init
             $sort_flag = sort_flag($list['filter']);
             $GLOBALS['smarty']->assign($sort_flag['tag'], $sort_flag['img']);
 
-            make_json_result(
+            return make_json_result(
                 $GLOBALS['smarty']->fetch('auction_list.htm'),
                 '',
                 array('filter' => $list['filter'], 'page_count' => $list['page_count'])
@@ -72,10 +72,10 @@ class Auction extends Init
             $id = intval($_GET['id']);
             $auction = auction_info($id);
             if (empty($auction)) {
-                make_json_error($GLOBALS['_LANG']['auction_not_exist']);
+                return make_json_error($GLOBALS['_LANG']['auction_not_exist']);
             }
             if ($auction['bid_user_count'] > 0) {
-                make_json_error($GLOBALS['_LANG']['auction_cannot_remove']);
+                return make_json_error($GLOBALS['_LANG']['auction_cannot_remove']);
             }
             $name = $auction['act_name'];
             $exc->drop($id);
@@ -367,7 +367,7 @@ class Auction extends Init
                 $arr['products'] = get_good_products($arr['goods'][0]['goods_id']);
             }
 
-            make_json_result($arr);
+            return make_json_result($arr);
         }
 
         /*------------------------------------------------------ */
@@ -381,7 +381,7 @@ class Auction extends Init
                 $arr['products'] = get_good_products($filters->goods_id);
             }
 
-            make_json_result($arr);
+            return make_json_result($arr);
         }
     }
 

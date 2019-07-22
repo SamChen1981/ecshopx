@@ -241,10 +241,10 @@ class Shipping extends Init
                 $sql = "UPDATE " . $GLOBALS['ecs']->table('shipping') . " SET print_bg = '' WHERE shipping_id = '$shipping_id'";
                 $res = $GLOBALS['db']->query($sql);
             } else {
-                make_json_error($GLOBALS['_LANG']['js_languages']['upload_del_falid']);
+                return make_json_error($GLOBALS['_LANG']['js_languages']['upload_del_falid']);
             }
 
-            make_json_result($shipping_id);
+            return make_json_result($shipping_id);
         }
 
         /*------------------------------------------------------ */
@@ -323,17 +323,17 @@ class Shipping extends Init
 
             /* 检查名称是否为空 */
             if (empty($val)) {
-                make_json_error($GLOBALS['_LANG']['no_shipping_name']);
+                return make_json_error($GLOBALS['_LANG']['no_shipping_name']);
             }
 
             /* 检查名称是否重复 */
             if (!$exc->is_only('shipping_name', $val, $id)) {
-                make_json_error($GLOBALS['_LANG']['repeat_shipping_name']);
+                return make_json_error($GLOBALS['_LANG']['repeat_shipping_name']);
             }
 
             /* 更新支付方式名称 */
             $exc->edit("shipping_name = '$val'", $id);
-            make_json_result(stripcslashes($val));
+            return make_json_result(stripcslashes($val));
         }
 
         /*------------------------------------------------------ */
@@ -350,7 +350,7 @@ class Shipping extends Init
 
             /* 更新描述 */
             $exc->edit("shipping_desc = '$val'", $id);
-            make_json_result(stripcslashes($val));
+            return make_json_result(stripcslashes($val));
         }
 
         /*------------------------------------------------------ */
@@ -379,16 +379,16 @@ class Shipping extends Init
             $set_modules = true;
             include_once(ROOT_PATH . 'includes/modules/shipping/' . $id . '.php');
             if (isset($modules[0]['insure']) && $modules[0]['insure'] === false) {
-                make_json_error($GLOBALS['_LANG']['not_support_insure']);
+                return make_json_error($GLOBALS['_LANG']['not_support_insure']);
             }
 
             /* 更新保价费用 */
             $exc->edit("insure = '$val'", $id);
-            make_json_result(stripcslashes($val));
+            return make_json_result(stripcslashes($val));
         } elseif ($_REQUEST['act'] == 'shipping_priv') {
             check_authz_json('ship_manage');
 
-            make_json_result('');
+            return make_json_result('');
         }
         /*------------------------------------------------------ */
         //-- 修改配送方式排序
@@ -404,7 +404,7 @@ class Shipping extends Init
 
             /* 更新排序 */
             $exc->edit("shipping_order = '$order'", $code);
-            make_json_result(stripcslashes($order));
+            return make_json_result(stripcslashes($order));
         }
     }
 

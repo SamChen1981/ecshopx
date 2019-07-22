@@ -43,7 +43,7 @@ class Articlecat extends Init
             }
             $GLOBALS['smarty']->assign('articlecat', $articlecat);
 
-            make_json_result($GLOBALS['smarty']->fetch('articlecat_list.htm'));
+            return make_json_result($GLOBALS['smarty']->fetch('articlecat_list.htm'));
         }
 
         /*------------------------------------------------------ */
@@ -245,13 +245,13 @@ class Articlecat extends Init
 
             /* 检查输入的值是否合法 */
             if (!preg_match("/^[0-9]+$/", $order)) {
-                make_json_error(sprintf($GLOBALS['_LANG']['enter_int'], $order));
+                return make_json_error(sprintf($GLOBALS['_LANG']['enter_int'], $order));
             } else {
                 if ($exc->edit("sort_order = '$order'", $id)) {
                     clear_cache_files();
-                    make_json_result(stripslashes($order));
+                    return make_json_result(stripslashes($order));
                 } else {
-                    make_json_error($GLOBALS['db']->error());
+                    return make_json_error($GLOBALS['db']->error());
                 }
             }
         }
@@ -268,19 +268,19 @@ class Articlecat extends Init
             $cat_type = $GLOBALS['db']->getOne($sql);
             if ($cat_type == 2 || $cat_type == 3 || $cat_type == 4) {
                 /* 系统保留分类，不能删除 */
-                make_json_error($GLOBALS['_LANG']['not_allow_remove']);
+                return make_json_error($GLOBALS['_LANG']['not_allow_remove']);
             }
 
             $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('article_cat') . " WHERE parent_id = '$id'";
             if ($GLOBALS['db']->getOne($sql) > 0) {
                 /* 还有子分类，不能删除 */
-                make_json_error($GLOBALS['_LANG']['is_fullcat']);
+                return make_json_error($GLOBALS['_LANG']['is_fullcat']);
             }
 
             /* 非空的分类不允许删除 */
             $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('article') . " WHERE cat_id = '$id'";
             if ($GLOBALS['db']->getOne($sql) > 0) {
-                make_json_error(sprintf($GLOBALS['_LANG']['not_emptycat']));
+                return make_json_error(sprintf($GLOBALS['_LANG']['not_emptycat']));
             } else {
                 $exc->drop($id);
                 $GLOBALS['db']->query("DELETE FROM " . $GLOBALS['ecs']->table('nav') . "WHERE  ctype = 'a' AND cid = '$id' AND type = 'middle'");
@@ -325,9 +325,9 @@ class Articlecat extends Init
                     $GLOBALS['db']->query("UPDATE " . $GLOBALS['ecs']->table('nav') . " SET ifshow = 0 WHERE ctype='a' AND cid='$id' AND type = 'middle'");
                 }
                 clear_cache_files();
-                make_json_result($val);
+                return make_json_result($val);
             } else {
-                make_json_error($GLOBALS['db']->error());
+                return make_json_error($GLOBALS['db']->error());
             }
         }
     }

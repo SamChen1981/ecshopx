@@ -189,7 +189,7 @@ class Init extends Controller
                     setcookie($_COOKIE['ECSCP']['admin_pass'], '', 1, null, null, null, true);
 
                     if (!empty($_REQUEST['is_ajax'])) {
-                        make_json_error($GLOBALS['_LANG']['priv_error']);
+                        return make_json_error($GLOBALS['_LANG']['priv_error']);
                     } else {
                         return $this->redirect('privilege.php?act=login');
                     }
@@ -210,7 +210,7 @@ class Init extends Controller
                         setcookie($_COOKIE['ECSCP']['admin_pass'], '', 1, null, null, null, true);
 
                         if (!empty($_REQUEST['is_ajax'])) {
-                            make_json_error($GLOBALS['_LANG']['priv_error']);
+                            return make_json_error($GLOBALS['_LANG']['priv_error']);
                         } else {
                             return $this->redirect('privilege.php?act=login');
                         }
@@ -220,7 +220,7 @@ class Init extends Controller
                 }
             } else {
                 if (!empty($_REQUEST['is_ajax'])) {
-                    make_json_error($GLOBALS['_LANG']['priv_error']);
+                    return make_json_error($GLOBALS['_LANG']['priv_error']);
                 } else {
                     return $this->redirect('privilege.php?act=login');
                 }
@@ -237,7 +237,7 @@ class Init extends Controller
             if (!empty($_SERVER['HTTP_REFERER']) &&
                 strpos(preg_replace('/:\d+/', '', $_SERVER['HTTP_REFERER']), $admin_path) === false) {
                 if (!empty($_REQUEST['is_ajax'])) {
-                    make_json_error($GLOBALS['_LANG']['priv_error']);
+                    return make_json_error($GLOBALS['_LANG']['priv_error']);
                 } else {
                     return $this->redirect('privilege.php?act=login');
                 }

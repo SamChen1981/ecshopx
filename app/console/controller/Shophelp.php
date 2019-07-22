@@ -50,7 +50,7 @@ class Shophelp extends Init
             $cat_id = intval($_GET['cat']);
 
             $GLOBALS['smarty']->assign('list', $this->shophelp_article_list($cat_id));
-            make_json_result($GLOBALS['smarty']->fetch('shophelp_article_list.htm'));
+            return make_json_result($GLOBALS['smarty']->fetch('shophelp_article_list.htm'));
         }
 
         /*------------------------------------------------------ */
@@ -59,7 +59,7 @@ class Shophelp extends Init
         elseif ($_REQUEST['act'] == 'query') {
             $GLOBALS['smarty']->assign('list', $this->get_shophelp_list());
 
-            make_json_result($GLOBALS['smarty']->fetch('shophelp_cat_list.htm'));
+            return make_json_result($GLOBALS['smarty']->fetch('shophelp_cat_list.htm'));
         }
 
         /*------------------------------------------------------ */
@@ -171,14 +171,14 @@ class Shophelp extends Init
 
             /* 检查分类名称是否重复 */
             if ($exc_cat->num("cat_name", $cat_name, $id) != 0) {
-                make_json_error(sprintf($GLOBALS['_LANG']['catname_exist'], $cat_name));
+                return make_json_error(sprintf($GLOBALS['_LANG']['catname_exist'], $cat_name));
             } else {
                 if ($exc_cat->edit("cat_name = '$cat_name'", $id)) {
                     clear_cache_files();
                     admin_log($cat_name, 'edit', 'shophelpcat');
-                    make_json_result(stripslashes($cat_name));
+                    return make_json_result(stripslashes($cat_name));
                 } else {
-                    make_json_error($GLOBALS['db']->error());
+                    return make_json_error($GLOBALS['db']->error());
                 }
             }
         }
@@ -194,11 +194,11 @@ class Shophelp extends Init
 
             /* 检查输入的值是否合法 */
             if (!preg_match("/^[0-9]+$/", $order)) {
-                make_json_result('', sprintf($GLOBALS['_LANG']['enter_int'], $order));
+                return make_json_result('', sprintf($GLOBALS['_LANG']['enter_int'], $order));
             } else {
                 if ($exc_cat->edit("sort_order = '$order'", $id)) {
                     clear_cache_files();
-                    make_json_result(stripslashes($order));
+                    return make_json_result(stripslashes($order));
                 }
             }
         }
@@ -213,7 +213,7 @@ class Shophelp extends Init
 
             /* 非空的分类不允许删除 */
             if ($exc_article->num('cat_id', $id) != 0) {
-                make_json_error(sprintf($GLOBALS['_LANG']['not_emptycat']));
+                return make_json_error(sprintf($GLOBALS['_LANG']['not_emptycat']));
             } else {
                 $exc_cat->drop($id);
                 clear_cache_files();
@@ -240,7 +240,7 @@ class Shophelp extends Init
                 clear_cache_files();
                 admin_log('', 'remove', 'shophelp');
             } else {
-                make_json_error(sprintf($GLOBALS['_LANG']['remove_fail']));
+                return make_json_error(sprintf($GLOBALS['_LANG']['remove_fail']));
             }
 
             $url = 'shophelp.php?act=query_art&cat=' . $cat_id . '&' . str_replace('act=remove_art', '', $_SERVER['QUERY_STRING']);
@@ -260,7 +260,7 @@ class Shophelp extends Init
 
             if (!empty($cat_name)) {
                 if ($exc_cat->num("cat_name", $cat_name) != 0) {
-                    make_json_error($GLOBALS['_LANG']['catname_exist']);
+                    return make_json_error($GLOBALS['_LANG']['catname_exist']);
                 } else {
                     $sql = "INSERT INTO " . $GLOBALS['ecs']->table('article_cat') . " (cat_name, cat_type) VALUES ('$cat_name', 0)";
                     $GLOBALS['db']->query($sql);
@@ -271,7 +271,7 @@ class Shophelp extends Init
 
                 }
             } else {
-                make_json_error($GLOBALS['_LANG']['js_languages']['no_catname']);
+                return make_json_error($GLOBALS['_LANG']['js_languages']['no_catname']);
             }
 
             return $this->redirect('shophelp.php?act=list_cat');
@@ -292,10 +292,10 @@ class Shophelp extends Init
                 if ($exc_article->edit("title = '$title'", $id)) {
                     clear_cache_files();
                     admin_log($title, 'edit', 'shophelp');
-                    make_json_result(stripslashes($title));
+                    return make_json_result(stripslashes($title));
                 }
             } else {
-                make_json_error(sprintf($GLOBALS['_LANG']['articlename_exist'], $title));
+                return make_json_error(sprintf($GLOBALS['_LANG']['articlename_exist'], $title));
             }
         }
     }

@@ -462,12 +462,12 @@ class Template extends Init
 
                 $error_msg = '';
                 if (move_plugin_library($tpl_name, $error_msg)) {
-                    make_json_error($error_msg);
+                    return make_json_error($error_msg);
                 } else {
-                    make_json_result($this->read_style_and_tpl($tpl_name, $tpl_fg), $GLOBALS['_LANG']['install_template_success']);
+                    return make_json_result($this->read_style_and_tpl($tpl_name, $tpl_fg), $GLOBALS['_LANG']['install_template_success']);
                 }
             } else {
-                make_json_error($GLOBALS['db']->error());
+                return make_json_error($GLOBALS['db']->error());
             }
         }
 
@@ -486,9 +486,9 @@ class Template extends Init
             $done = $tar->saveTar();
 
             if ($done) {
-                make_json_result('..' . DIRECTORY_SEPARATOR . 'temp' . DIRECTORY_SEPARATOR . 'backup' . DIRECTORY_SEPARATOR . $template . '_' . date('Ymd') . '.tgz');
+                return make_json_result('..' . DIRECTORY_SEPARATOR . 'temp' . DIRECTORY_SEPARATOR . 'backup' . DIRECTORY_SEPARATOR . $template . '_' . date('Ymd') . '.tgz');
             } else {
-                make_json_error($GLOBALS['_LANG']['backup_failed']);
+                return make_json_error($GLOBALS['_LANG']['backup_failed']);
             }
         }
 
@@ -500,7 +500,7 @@ class Template extends Init
             $library = $this->load_library($GLOBALS['_CFG']['template'], trim($_GET['lib']));
             $message = ($library['mark'] & 7) ? '' : $GLOBALS['_LANG']['library_not_written'];
 
-            make_json_result($library['html'], $message);
+            return make_json_result($library['html'], $message);
         }
 
         /*------------------------------------------------------ */
@@ -519,9 +519,9 @@ class Template extends Init
             if (@file_exists($lib_file) === true && @file_put_contents($lib_file, $html)) {
                 @file_put_contents('../temp/backup/library/' . $GLOBALS['_CFG']['template'] . '-' . $_POST['lib'] . '.lbi', $org_html);
 
-                make_json_result('', $GLOBALS['_LANG']['update_lib_success']);
+                return make_json_result('', $GLOBALS['_LANG']['update_lib_success']);
             } else {
-                make_json_error(sprintf($GLOBALS['_LANG']['update_lib_failed'], 'themes/' . $GLOBALS['_CFG']['template'] . '/library'));
+                return make_json_error(sprintf($GLOBALS['_LANG']['update_lib_failed'], 'themes/' . $GLOBALS['_CFG']['template'] . '/library'));
             }
         }
 
@@ -537,9 +537,9 @@ class Template extends Init
             $lib_backup = str_replace("0xa", '', $lib_backup); // 过滤 0xa 非法字符
 
             if (file_exists($lib_backup) && filemtime($lib_backup) >= filemtime($lib_file)) {
-                make_json_result(str_replace("\xEF\xBB\xBF", '', file_get_contents($lib_backup)));
+                return make_json_result(str_replace("\xEF\xBB\xBF", '', file_get_contents($lib_backup)));
             } else {
-                make_json_result(str_replace("\xEF\xBB\xBF", '', file_get_contents($lib_file)));
+                return make_json_result(str_replace("\xEF\xBB\xBF", '', file_get_contents($lib_file)));
             }
         }
 
@@ -689,9 +689,9 @@ class Template extends Init
             $template = str_replace(['..', '/', '\/'], ['', '', ''], $template);
             $folder = ROOT_PATH . 'themes' . '/' . $template;
             if ($template != $curr_template && file_exists($folder) && $this->delete_tree($folder)) {
-                make_json_result('');
+                return make_json_result('');
             } else {
-                make_json_error('');
+                return make_json_error('');
             }
         }
     }

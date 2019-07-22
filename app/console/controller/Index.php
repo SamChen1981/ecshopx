@@ -980,7 +980,7 @@ class Index extends Init
             if (empty($_SESSION['last_check'])) {
                 $_SESSION['last_check'] = gmtime();
 
-                make_json_result('', '', array('new_orders' => 0, 'new_paid' => 0));
+                return make_json_result('', '', array('new_orders' => 0, 'new_paid' => 0));
             }
 
             /* 新订单 */
@@ -996,9 +996,9 @@ class Index extends Init
             $_SESSION['last_check'] = gmtime();
 
             if (!(is_numeric($arr['new_orders']) && is_numeric($arr['new_paid']))) {
-                make_json_error($GLOBALS['db']->error());
+                return make_json_error($GLOBALS['db']->error());
             } else {
-                make_json_result('', '', $arr);
+                return make_json_result('', '', $arr);
             }
         }
 
@@ -1016,14 +1016,14 @@ class Index extends Init
         } // 邮件群发处理
         elseif ($_REQUEST['act'] == 'send_mail') {
             if ($GLOBALS['_CFG']['send_mail_on'] == 'off') {
-                make_json_result('', $GLOBALS['_LANG']['send_mail_off'], 0);
+                return make_json_result('', $GLOBALS['_LANG']['send_mail_off'], 0);
             }
             $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('email_sendlist') . " ORDER BY pri DESC, last_send ASC LIMIT 1";
             $row = $GLOBALS['db']->getRow($sql);
 
             //发送列表为空
             if (empty($row['id'])) {
-                make_json_result('', $GLOBALS['_LANG']['mailsend_null'], 0);
+                return make_json_result('', $GLOBALS['_LANG']['mailsend_null'], 0);
             }
 
             //发送列表不为空，邮件地址为空
@@ -1031,7 +1031,7 @@ class Index extends Init
                 $sql = "DELETE FROM " . $GLOBALS['ecs']->table('email_sendlist') . " WHERE id = '$row[id]'";
                 $GLOBALS['db']->query($sql);
                 $count = $GLOBALS['db']->getOne("SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('email_sendlist'));
-                make_json_result('', $GLOBALS['_LANG']['mailsend_skip'], array('count' => $count, 'goon' => 1));
+                return make_json_result('', $GLOBALS['_LANG']['mailsend_skip'], array('count' => $count, 'goon' => 1));
             }
 
             //查询相关模板
@@ -1060,7 +1060,7 @@ class Index extends Init
                     } else {
                         $msg = sprintf($GLOBALS['_LANG']['mailsend_finished'], $row['email']);
                     }
-                    make_json_result('', $msg, array('count' => $count));
+                    return make_json_result('', $msg, array('count' => $count));
                 } else {
                     //发送出错
 
@@ -1074,14 +1074,14 @@ class Index extends Init
                     $GLOBALS['db']->query($sql);
 
                     $count = $GLOBALS['db']->getOne("SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('email_sendlist'));
-                    make_json_result('', sprintf($GLOBALS['_LANG']['mailsend_fail'], $row['email']), array('count' => $count));
+                    return make_json_result('', sprintf($GLOBALS['_LANG']['mailsend_fail'], $row['email']), array('count' => $count));
                 }
             } else {
                 //无效的邮件队列
                 $sql = "DELETE FROM " . $GLOBALS['ecs']->table('email_sendlist') . " WHERE id = '$row[id]'";
                 $GLOBALS['db']->query($sql);
                 $count = $GLOBALS['db']->getOne("SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('email_sendlist'));
-                make_json_result('', sprintf($GLOBALS['_LANG']['mailsend_fail'], $row['email']), array('count' => $count));
+                return make_json_result('', sprintf($GLOBALS['_LANG']['mailsend_fail'], $row['email']), array('count' => $count));
             }
         }
 
@@ -1100,15 +1100,15 @@ class Index extends Init
                 switch ($license['flag']) {
                     case 'login_succ':
                         if (isset($license['request']['info']['service']['ecshop_b2c']['cert_auth']['auth_str'])) {
-                            make_json_result(process_login_license($license['request']['info']['service']['ecshop_b2c']['cert_auth']));
+                            return make_json_result(process_login_license($license['request']['info']['service']['ecshop_b2c']['cert_auth']));
                         } else {
-                            make_json_error(0);
+                            return make_json_error(0);
                         }
                         break;
 
                     case 'login_fail':
                     case 'login_ping_fail':
-                        make_json_error(0);
+                        return make_json_error(0);
                         break;
 
                     case 'reg_succ':
@@ -1116,26 +1116,26 @@ class Index extends Init
                         switch ($_license['flag']) {
                             case 'login_succ':
                                 if (isset($_license['request']['info']['service']['ecshop_b2c']['cert_auth']['auth_str']) && $_license['request']['info']['service']['ecshop_b2c']['cert_auth']['auth_str'] != '') {
-                                    make_json_result(process_login_license($license['request']['info']['service']['ecshop_b2c']['cert_auth']));
+                                    return make_json_result(process_login_license($license['request']['info']['service']['ecshop_b2c']['cert_auth']));
                                 } else {
-                                    make_json_error(0);
+                                    return make_json_error(0);
                                 }
                                 break;
 
                             case 'login_fail':
                             case 'login_ping_fail':
-                                make_json_error(0);
+                                return make_json_error(0);
                                 break;
                         }
                         break;
 
                     case 'reg_fail':
                     case 'reg_ping_fail':
-                        make_json_error(0);
+                        return make_json_error(0);
                         break;
                 }
             } else {
-                make_json_error(0);
+                return make_json_error(0);
             }
         }
     }
