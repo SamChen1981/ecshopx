@@ -20,27 +20,53 @@ class ConvertTemplate extends Command
     {
         // 指令输出
         $output->writeln('convert template');
+
+        $this->handleExtension('default');
     }
 
+    /**
+     * 处理主题模板
+     * @param $theme
+     */
     protected function handleExtension($theme)
     {
+        $path = public_path('themes/' . $theme . '/html/*/');
+        $list = $this->getFilesByType($path, 'view.php');
 
+        foreach ($list as $item) {
+            $content = file_get_contents($item);
+            $content = $this->replaceRules($content);
+            file_put_contents($item, $content);
+        }
+
+        $this->handleStyle($theme);
     }
 
+    /**
+     * 处理主题样式
+     * @param $theme
+     */
     protected function handleStyle($theme)
     {
 
     }
 
-    protected function zz()
-    {
-    }
-
+    /**
+     * 获取文件列表
+     * @param $path
+     * @param $type
+     * @return array|false
+     */
     protected function getFilesByType($path, $type)
     {
-        return glob($path . '*.' . $type);
+        return glob(rtrim($path, '/') . '/*.' . ltrim($type, '.'));
     }
 
+    /**
+     * 替换模板标签
+     * @param $content
+     * @return string|string[]|null
+     */
     protected function replaceRules($content)
     {
         $label = [
@@ -65,7 +91,7 @@ class ConvertTemplate extends Command
              * include label
              * {include file="test"}
              */
-            '/\<\!-- \#BeginLibraryItem "(.+?)" --\>.*?\<\!-- \#EndLibraryItem --\>/s' => '{include file="$1"}',
+            '/\<\!-- \#BeginLibraryItem "(.+?)" --\>.*?\<\!-- \#EndLibraryItem --\>/s' => '{include file="\\1"}',
 
             '/\s+heq\s+/' => '===',
             '/\s+nheq\s+/' => '!==',
@@ -76,12 +102,12 @@ class ConvertTemplate extends Command
             '/\s+elt\s+/' => '<=',
             '/\s+lt\s+/' => '<',
 
-            '/\{foreach\s+from=\$(\S+?)\s+item=(\S+?)\s+key=(\S+?)\}/' => "<?php \$n=1; if(is_array($\\1)) foreach($\\1 as $\\3 => $\\2) { ?>",
-            '/\{foreach\s+from=\$(\S+?)\s+item=(\S+?)\s+name=(\S+?)\}/' => "<?php \$n=1; if(is_array($\\1)) foreach($\\1 as $\\3 => $\\2) { ?>",
-            '/\{foreach\s+from=\$(\S+?)\s+item=(\S+?)\}/' => "<?php \$n=1;if(is_array($\\1)) foreach($\\1 as $\\2) { ?>",
+            '/\{foreach\s+from=\$(\S+?)\s+item=(\S+?)\s+key=(\S+?)\}/' => "{foreach $\\1 as $\\3 => $\\2}",
+            '/\{foreach\s+from=\$(\S+?)\s+item=(\S+?)\s+name=(\S+?)\}/' => "{foreach $\\1 as $\\3 => $\\2}",
+            '/\{foreach\s+from=\$(\S+?)\s+item=(\S+?)\}/' => "{foreach $\\1 as $\\2}",
 
-            '{insert_scripts files=\'common.js,index.js\'}' => '',
-            '{insert name=\'ads\' id=$ads_id num=$ads_num}' => '',
+            '/\{insert_scripts\s+files=\'(.+?)\'}' => '{load href="\\1" /}',
+            //'/\{insert\s+name=\'ads\'\s+id=$ads_id num=$ads_num}' => '',
         ];
 
         foreach ($label as $key => $value) {
