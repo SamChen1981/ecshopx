@@ -1,54 +1,130 @@
 <?php
 
 return [
-    // 数据库类型
-    'type' => env('DB_CONNECTION', 'mysql'),
-    // 服务器地址
-    'hostname' => env('DB_HOST', '127.0.0.1'),
-    // 数据库名
-    'database' => env('DB_DATABASE', ''),
-    // 用户名
-    'username' => env('DB_USERNAME', 'root'),
-    // 密码
-    'password' => env('DB_PASSWORD', ''),
-    // 端口
-    'hostport' => env('DB_PORT', ''),
-    // 连接dsn
-    'dsn' => '',
-    // 数据库连接参数
-    'params' => [],
-    // 数据库编码默认采用utf8
-    'charset' => 'utf8',
-    // 数据库表前缀
-    'prefix' => env('DB_PREFIX', ''),
-    // 数据库调试模式
-    'debug' => env('APP_DEBUG', true),
-    // 数据库部署方式:0 集中式(单一服务器),1 分布式(主从服务器)
-    'deploy' => 0,
-    // 数据库读写是否分离 主从式有效
-    'rw_separate' => false,
-    // 读写分离后 主服务器数量
-    'master_num' => 1,
-    // 指定从服务器序号
-    'slave_no' => '',
-    // 自动读取主库数据
-    'read_master' => false,
-    // 是否严格检查字段是否存在
-    'fields_strict' => true,
-    // 数据集返回类型
-    'resultset_type' => 'array',
-    // 自动写入时间戳字段
-    'auto_timestamp' => false,
-    // 时间字段取出后的默认时间格式
-    'datetime_format' => 'Y-m-d H:i:s',
-    // 是否需要进行SQL性能分析
-    'sql_explain' => false,
-    // Builder类
-    'builder' => '',
-    // Query类
-    'query' => '\\think\\db\\Query',
-    // 是否需要断线重连
-    'break_reconnect' => false,
-    // 断线标识字符串
-    'break_match_str' => [],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Default Database Connection Name
+    |--------------------------------------------------------------------------
+    |
+    | Here you may specify which of the database connections below you wish
+    | to use as your default connection for all database work. Of course
+    | you may use many connections at once using the Database library.
+    |
+    */
+
+    'default' => env('DB_CONNECTION', 'mysql'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Database Connections
+    |--------------------------------------------------------------------------
+    |
+    | Here are each of the database connections setup for your application.
+    | Of course, examples of configuring each database platform that is
+    | supported by Laravel is shown below to make development simple.
+    |
+    |
+    | All database work in Laravel is done through the PHP PDO facilities
+    | so make sure you have the driver for your particular database of
+    | choice installed on your machine before you begin development.
+    |
+    */
+
+    'connections' => [
+
+        'sqlite' => [
+            'driver' => 'sqlite',
+            'database' => env('DB_DATABASE', database_path('database.sqlite')),
+            'prefix' => env('DB_PREFIX', ''),
+        ],
+
+        'mysql' => [
+            'driver' => 'mysql',
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', 3306),
+            'database' => env('DB_DATABASE', 'forge'),
+            'username' => env('DB_USERNAME', 'forge'),
+            'password' => env('DB_PASSWORD', ''),
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => env('DB_CHARSET', 'utf8mb4'),
+            'collation' => env('DB_COLLATION', 'utf8mb4_unicode_ci'),
+            'prefix' => env('DB_PREFIX', ''),
+            'strict' => env('DB_STRICT_MODE', true),
+            'engine' => env('DB_ENGINE', null),
+            'timezone' => env('DB_TIMEZONE', '+00:00'),
+        ],
+
+        'pgsql' => [
+            'driver' => 'pgsql',
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', 5432),
+            'database' => env('DB_DATABASE', 'forge'),
+            'username' => env('DB_USERNAME', 'forge'),
+            'password' => env('DB_PASSWORD', ''),
+            'charset' => env('DB_CHARSET', 'utf8'),
+            'prefix' => env('DB_PREFIX', ''),
+            'schema' => env('DB_SCHEMA', 'public'),
+            'sslmode' => env('DB_SSL_MODE', 'prefer'),
+        ],
+
+        'sqlsrv' => [
+            'driver' => 'sqlsrv',
+            'host' => env('DB_HOST', 'localhost'),
+            'port' => env('DB_PORT', 1433),
+            'database' => env('DB_DATABASE', 'forge'),
+            'username' => env('DB_USERNAME', 'forge'),
+            'password' => env('DB_PASSWORD', ''),
+            'charset' => env('DB_CHARSET', 'utf8'),
+            'prefix' => env('DB_PREFIX', ''),
+        ],
+
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Migration Repository Table
+    |--------------------------------------------------------------------------
+    |
+    | This table keeps track of all the migrations that have already run for
+    | your application. Using this information, we can determine which of
+    | the migrations on disk haven't actually been run in the database.
+    |
+    */
+
+    'migrations' => 'migrations',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Redis Databases
+    |--------------------------------------------------------------------------
+    |
+    | Redis is an open source, fast, and advanced key-value store that also
+    | provides a richer set of commands than a typical key-value systems
+    | such as APC or Memcached. Laravel makes it easy to dig right in.
+    |
+    */
+
+    'redis' => [
+
+        'client' => 'predis',
+
+        'cluster' => env('REDIS_CLUSTER', false),
+
+        'default' => [
+            'host' => env('REDIS_HOST', '127.0.0.1'),
+            'password' => env('REDIS_PASSWORD', null),
+            'port' => env('REDIS_PORT', 6379),
+            'database' => env('REDIS_DB', 0),
+        ],
+
+        'cache' => [
+            'host' => env('REDIS_HOST', '127.0.0.1'),
+            'password' => env('REDIS_PASSWORD', null),
+            'port' => env('REDIS_PORT', 6379),
+            'database' => env('REDIS_CACHE_DB', 1),
+        ],
+
+    ],
+
 ];

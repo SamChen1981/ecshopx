@@ -1,11 +1,28 @@
 <?php
 
-namespace think;
+/*
+|--------------------------------------------------------------------------
+| Create The Application
+|--------------------------------------------------------------------------
+|
+| First we need to get an application instance. This creates an instance
+| of the application / container and bootstraps the application so it
+| is ready to receive HTTP / Console requests from the environment.
+|
+*/
 
-// 加载基础文件
-require __DIR__ . '/../vendor/topthink/framework/base.php';
+$app = require __DIR__.'/../bootstrap/app.php';
 
-// 支持事先使用静态方法设置Request对象和Config对象
+/*
+|--------------------------------------------------------------------------
+| Run The Application
+|--------------------------------------------------------------------------
+|
+| Once we have the application, we can handle the incoming request
+| through the kernel, and send the associated response back to
+| the client's browser allowing them to enjoy the creative
+| and wonderful application we have prepared for them.
+|
+*/
 
-// 执行应用并响应
-Container::get('app')->run()->send();
+$app->run();
